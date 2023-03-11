@@ -632,7 +632,8 @@
         1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _instant_ be ? GetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getPossibleInstantsFor~ »).
+        1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _dateTime_, _disambiguation_).
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
@@ -1003,7 +1004,8 @@
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Perform ? ToTemporalOverflow(_resolvedOptions_).
             1. Let _instant_ be ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
-            1. Return ? GetPlainDateTimeFor(_item_.[[TimeZone]], _instant_, _item_.[[Calendar]]).
+            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_item_.[[TimeZone]], « ~getOffsetNanosecondsFor~ »).
+            1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _item_.[[Calendar]]).
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
             1. Perform ? ToTemporalOverflow(_resolvedOptions_).
             1. Return ? CreateTemporalDateTime(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], 0, 0, 0, 0, 0, 0, _item_.[[Calendar]]).

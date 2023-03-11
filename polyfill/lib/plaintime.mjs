@@ -3,6 +3,7 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { TimeZoneMethodRecord } from './methodrecord.mjs';
 
 import {
   ISO_YEAR,
@@ -291,7 +292,8 @@ export class PlainTime {
       nanosecond,
       calendar
     );
-    const instant = ES.GetInstantFor(timeZone, dt, 'compatible');
+    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getPossibleInstantsFor']);
+    const instant = ES.GetInstantFor(timeZoneRec, dt, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   getISOFields() {

@@ -570,8 +570,8 @@
   <emu-clause id="sec-temporal-torelativetemporalobject" type="abstract operation">
     <h1>
       ToRelativeTemporalObject (
-        _options_: an Object
-      ): either a normal completion containing a Record with fields [[PlainRelativeTo]] and [[ZonedRelativeTo]], or a throw completion
+        _options_: an Object,
+      ): either a normal completion containing a Record with fields [[PlainRelativeTo]], [[ZonedRelativeTo]], and [[TimeZoneRec]], or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -583,6 +583,9 @@
         If neither of those are possible, it throws a *RangeError*.
       </dd>
     </dl>
+    <p>
+      If the returned Record's [[ZonedRelativeTo]] field is *undefined*, then the [[TimeZoneRec]] field is also *undefined*, and vice versa.
+    </p>
     <emu-alg>
       1. Let _value_ be ? Get(_options_, *"relativeTo"*).
       1. If _value_ is *undefined*, return the Record { [[ZonedRelativeTo]]: *undefined*, [[PlainRelativeTo]]: *undefined* }.
@@ -590,12 +593,13 @@
       1. Let _matchBehaviour_ be ~match exactly~.
       1. If Type(_value_) is Object, then
         1. If _value_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _value_ }.
+          1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_value_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+          1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _value_, [[TimeZoneRec]]: _timeZoneRec_ }.
         1. If _value_ has an [[InitializedTemporalDate]] internal slot, then
-          1. Return the Record { [[PlainRelativeTo]]: _value_, [[ZonedRelativeTo]]: *undefined* }.
+          1. Return the Record { [[PlainRelativeTo]]: _value_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
         1. If _value_ has an [[InitializedTemporalDateTime]] internal slot, then
           1. Let _plainDate_ be ! CreateTemporalDate(_value_.[[ISOYear]], _value_.[[ISOMonth]], _value_.[[ISODay]], _value_.[[Calendar]]).
-          1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
+          1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
         1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_value_).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"* to _fieldNames_.
@@ -629,14 +633,15 @@
         1. Set _calendar_ to the ASCII-lowercase of _calendar_.
       1. If _timeZone_ is *undefined*, then
         1. Let _plainDate_ be ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
-        1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
+        1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
       1. If _offsetBehaviour_ is ~option~, then
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*, _matchBehaviour_).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZoneRec_, *"compatible"*, *"reject"*, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
-      1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
+      1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_, [[TimeZoneRec]]: _timeZoneRec_ }.
     </emu-alg>
   </emu-clause>
 

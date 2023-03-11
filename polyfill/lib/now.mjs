@@ -1,5 +1,6 @@
 import * as ES from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
+import { TimeZoneMethodRecord } from './methodrecord.mjs';
 
 const instant = () => {
   const Instant = GetIntrinsic('%Temporal.Instant%');
@@ -9,12 +10,14 @@ const plainDateTime = (calendarLike, temporalTimeZoneLike = ES.DefaultTimeZone()
   const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
   const calendar = ES.ToTemporalCalendarSlotValue(calendarLike);
   const inst = instant();
-  return ES.GetPlainDateTimeFor(timeZone, inst, calendar);
+  const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor']);
+  return ES.GetPlainDateTimeFor(timeZoneRec, inst, calendar);
 };
 const plainDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
   const inst = instant();
-  return ES.GetPlainDateTimeFor(timeZone, inst, 'iso8601');
+  const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor']);
+  return ES.GetPlainDateTimeFor(timeZoneRec, inst, 'iso8601');
 };
 const zonedDateTime = (calendarLike, temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
