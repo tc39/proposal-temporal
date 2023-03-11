@@ -858,7 +858,8 @@
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_temporalDate_.[[Calendar]]).
       1. If _calendar_ is not _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 12, 0, 0, 0, 0, 0, _dateTimeFormat_.[[Calendar]]).
-      1. Let _instant_ be ? GetInstantFor(_dateTimeFormat_.[[TimeZone]], _plainDateTime_, *"compatible"*).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getPossibleInstantsFor~ »).
+      1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
@@ -883,7 +884,8 @@
       1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
         1. Throw a *RangeError* exception.
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalYearMonth_.[[ISOYear]], _temporalYearMonth_.[[ISOMonth]], _temporalYearMonth_.[[ISODay]], 12, 0, 0, 0, 0, 0, _dateTimeFormat_.[[Calendar]]).
-      1. Let _instant_ be ? GetInstantFor(_dateTimeFormat_.[[TimeZone]], _plainDateTime_, *"compatible"*).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getPossibleInstantsFor~ »).
+      1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
@@ -909,7 +911,8 @@
       1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
         1. Throw a *RangeError* exception.
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalMonthDay_.[[ISOYear]], _temporalMonthDay_.[[ISOMonth]], _temporalMonthDay_.[[ISODay]], 12, 0, 0, 0, 0, 0, _dateTimeFormat_.[[Calendar]]).
-      1. Let _instant_ be ? GetInstantFor(_dateTimeFormat_.[[TimeZone]], _plainDateTime_, *"compatible"*).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getPossibleInstantsFor~ »).
+      1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
@@ -932,7 +935,8 @@
       1. Assert: _temporalTime_ has an [[InitializedTemporalTime]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"iso8601"*).
-      1. Let _instant_ be ? GetInstantFor(_dateTimeFormat_.[[TimeZone]], _plainDateTime_, *"compatible"*).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getPossibleInstantsFor~ »).
+      1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
@@ -957,7 +961,8 @@
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_dateTime_.[[Calendar]]).
       1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
         1. Throw a *RangeError* exception.
-      1. Let _instant_ be ? GetInstantFor(_dateTimeFormat_.[[TimeZone]], _dateTime_, *"compatible"*).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getPossibleInstantsFor~ »).
+      1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _dateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
           [[pattern]]: _pattern_.[[pattern]],
@@ -2601,10 +2606,10 @@
           <emu-alg>
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-            1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
             1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~getOffsetNanosecondsFor~ »).
+            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
             1. Return ? CalendarEra(_calendar_, _plainDateTime_).
           </emu-alg>
         </emu-clause>
@@ -2618,10 +2623,10 @@
           <emu-alg>
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-            1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
             1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~getOffsetNanosecondsFor~ »).
+            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
             1. Return ? CalendarEraYear(_calendar_, _plainDateTime_).
           </emu-alg>
         </emu-clause>

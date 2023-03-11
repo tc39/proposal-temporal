@@ -17,7 +17,6 @@ import {
   NANOSECONDS,
   CALENDAR,
   INSTANT,
-  TIME_ZONE,
   CreateSlots,
   GetSlot,
   SetSlot
@@ -250,7 +249,7 @@ export class Duration {
     }
 
     let largestUnit = ES.GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
-    let { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject(roundTo);
+    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.ToRelativeTemporalObject(roundTo);
     const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
     const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
     let smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
@@ -319,7 +318,7 @@ export class Duration {
       // if either is needed in one of the operations below, because the
       // conversion is user visible
       precalculatedPlainDateTime = ES.GetPlainDateTimeFor(
-        GetSlot(zonedRelativeTo, TIME_ZONE),
+        timeZoneRec,
         GetSlot(zonedRelativeTo, INSTANT),
         GetSlot(zonedRelativeTo, CALENDAR)
       );
@@ -351,6 +350,7 @@ export class Duration {
         roundingMode,
         plainRelativeTo,
         zonedRelativeTo,
+        timeZoneRec,
         precalculatedPlainDateTime
       ));
     if (zonedRelativeTo) {
@@ -370,6 +370,7 @@ export class Duration {
           smallestUnit,
           roundingMode,
           zonedRelativeTo,
+          timeZoneRec,
           precalculatedPlainDateTime
         ));
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceTimeDurationRelative(
@@ -382,6 +383,7 @@ export class Duration {
         nanoseconds,
         largestUnit,
         zonedRelativeTo,
+        timeZoneRec,
         precalculatedPlainDateTime
       ));
     } else {
@@ -428,7 +430,7 @@ export class Duration {
     } else {
       totalOf = ES.GetOptionsObject(totalOf);
     }
-    let { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject(totalOf);
+    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.ToRelativeTemporalObject(totalOf);
     const unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
 
     let precalculatedPlainDateTime;
@@ -445,7 +447,7 @@ export class Duration {
       // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
       // of the operations below, because the conversion is user visible
       precalculatedPlainDateTime = ES.GetPlainDateTimeFor(
-        GetSlot(zonedRelativeTo, TIME_ZONE),
+        timeZoneRec,
         GetSlot(zonedRelativeTo, INSTANT),
         GetSlot(zonedRelativeTo, CALENDAR)
       );
@@ -466,6 +468,7 @@ export class Duration {
     if (zonedRelativeTo) {
       const intermediate = ES.MoveRelativeZonedDateTime(
         zonedRelativeTo,
+        timeZoneRec,
         years,
         months,
         weeks,
@@ -481,7 +484,8 @@ export class Duration {
         microseconds,
         nanoseconds,
         unit,
-        intermediate
+        intermediate,
+        timeZoneRec
       );
     } else {
       balanceResult = ES.BalancePossiblyInfiniteTimeDuration(
@@ -518,6 +522,7 @@ export class Duration {
       'trunc',
       plainRelativeTo,
       zonedRelativeTo,
+      timeZoneRec,
       precalculatedPlainDateTime
     );
     return total;
@@ -655,19 +660,18 @@ export class Duration {
     ) {
       return 0;
     }
-    const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject(options);
+    const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.ToRelativeTemporalObject(options);
 
     const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
 
     if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
       const instant = GetSlot(zonedRelativeTo, INSTANT);
-      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
-      const precalculatedPlainDateTime = ES.GetPlainDateTimeFor(timeZone, instant, calendar);
+      const precalculatedPlainDateTime = ES.GetPlainDateTimeFor(timeZoneRec, instant, calendar);
 
       const after1 = ES.AddZonedDateTime(
         instant,
-        timeZone,
+        timeZoneRec,
         calendar,
         y1,
         mon1,
@@ -683,7 +687,7 @@ export class Duration {
       );
       const after2 = ES.AddZonedDateTime(
         instant,
-        timeZone,
+        timeZoneRec,
         calendar,
         y2,
         mon2,
