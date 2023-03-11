@@ -1,7 +1,7 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { TimeZoneMethodRecord } from './methodrecord.mjs';
+import { CalendarMethodRecord, TimeZoneMethodRecord } from './methodrecord.mjs';
 import {
   CALENDAR,
   EPOCHNANOSECONDS,
@@ -61,7 +61,8 @@ export class ZonedDateTime {
   }
   get day() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.CalendarDay(GetSlot(this, CALENDAR), dateTime(this));
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['day']);
+    return ES.CalendarDay(calendarRec, dateTime(this));
   }
   get hour() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -198,14 +199,14 @@ export class ZonedDateTime {
     ES.RejectTemporalLikeObject(temporalZonedDateTimeLike);
     const resolvedOptions = ES.SnapshotOwnProperties(ES.GetOptionsObject(options), null);
 
-    const calendar = GetSlot(this, CALENDAR);
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
     const timeZoneRec = new TimeZoneMethodRecord(GetSlot(this, TIME_ZONE), [
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZoneRec, GetSlot(this, INSTANT));
     const dt = ES.GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), GetSlot(this, CALENDAR), offsetNs);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
     let fields = ES.PrepareTemporalFields(dt, fieldNames, []);
     fields.hour = GetSlot(dt, ISO_HOUR);
     fields.minute = GetSlot(dt, ISO_MINUTE);
@@ -224,14 +225,14 @@ export class ZonedDateTime {
       'second'
     ]);
     const partialZonedDateTime = ES.PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
-    fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
+    fields = ES.CalendarMergeFields(calendarRec, fields, partialZonedDateTime);
     fields = ES.PrepareTemporalFields(fields, fieldNames, ['offset']);
 
     const disambiguation = ES.ToTemporalDisambiguation(resolvedOptions);
     const offset = ES.ToTemporalOffset(resolvedOptions, 'prefer');
 
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
-      ES.InterpretTemporalDateTimeFields(calendar, fields, resolvedOptions);
+      ES.InterpretTemporalDateTimeFields(calendarRec, fields, resolvedOptions);
     const newOffsetNs = ES.ParseDateTimeUTCOffset(fields.offset);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
@@ -251,7 +252,7 @@ export class ZonedDateTime {
       /* matchMinute = */ false
     );
 
-    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZoneRec.receiver, calendar);
+    return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZoneRec.receiver, calendarRec.receiver);
   }
   withPlainDate(temporalDate) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -586,19 +587,19 @@ export class ZonedDateTime {
   }
   toPlainYearMonth() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
     const dt = dateTime(this);
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
+    const fieldNames = ES.CalendarFields(calendarRec, ['monthCode', 'year']);
     const fields = ES.PrepareTemporalFields(dt, fieldNames, []);
-    return ES.CalendarYearMonthFromFields(calendar, fields);
+    return ES.CalendarYearMonthFromFields(calendarRec, fields);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
     const dt = dateTime(this);
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
+    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'monthCode']);
     const fields = ES.PrepareTemporalFields(dt, fieldNames, []);
-    return ES.CalendarMonthDayFromFields(calendar, fields);
+    return ES.CalendarMonthDayFromFields(calendarRec, fields);
   }
   getISOFields() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

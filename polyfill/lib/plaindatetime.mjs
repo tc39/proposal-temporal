@@ -1,7 +1,7 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { TimeZoneMethodRecord } from './methodrecord.mjs';
+import { CalendarMethodRecord, TimeZoneMethodRecord } from './methodrecord.mjs';
 
 import {
   ISO_YEAR,
@@ -77,7 +77,8 @@ export class PlainDateTime {
   }
   get day() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.CalendarDay(GetSlot(this, CALENDAR), this);
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['day']);
+    return ES.CalendarDay(calendarRec, this);
   }
   get hour() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -155,8 +156,8 @@ export class PlainDateTime {
     ES.RejectTemporalLikeObject(temporalDateTimeLike);
 
     const resolvedOptions = ES.SnapshotOwnProperties(ES.GetOptionsObject(options), null);
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
+    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
     let fields = ES.PrepareTemporalFields(this, fieldNames, []);
     fields.hour = GetSlot(this, ISO_HOUR);
     fields.minute = GetSlot(this, ISO_MINUTE);
@@ -166,10 +167,10 @@ export class PlainDateTime {
     fields.nanosecond = GetSlot(this, ISO_NANOSECOND);
     ES.Call(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
     const partialDateTime = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
-    fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);
+    fields = ES.CalendarMergeFields(calendarRec, fields, partialDateTime);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
-      ES.InterpretTemporalDateTimeFields(calendar, fields, resolvedOptions);
+      ES.InterpretTemporalDateTimeFields(calendarRec, fields, resolvedOptions);
 
     return ES.CreateTemporalDateTime(
       year,
@@ -181,7 +182,7 @@ export class PlainDateTime {
       millisecond,
       microsecond,
       nanosecond,
-      calendar
+      calendarRec.receiver
     );
   }
   withPlainTime(temporalTime = undefined) {
@@ -420,17 +421,17 @@ export class PlainDateTime {
   }
   toPlainYearMonth() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['monthCode', 'year']);
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
+    const fieldNames = ES.CalendarFields(calendarRec, ['monthCode', 'year']);
     const fields = ES.PrepareTemporalFields(this, fieldNames, []);
-    return ES.CalendarYearMonthFromFields(calendar, fields);
+    return ES.CalendarYearMonthFromFields(calendarRec, fields);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const calendar = GetSlot(this, CALENDAR);
-    const fieldNames = ES.CalendarFields(calendar, ['day', 'monthCode']);
+    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
+    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'monthCode']);
     const fields = ES.PrepareTemporalFields(this, fieldNames, []);
-    return ES.CalendarMonthDayFromFields(calendar, fields);
+    return ES.CalendarMonthDayFromFields(calendarRec, fields);
   }
   toPlainTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');

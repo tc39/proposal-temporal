@@ -63,3 +63,41 @@ export class TimeZoneMethodRecord extends MethodRecord {
     return this.call('getPossibleInstantsFor', [dateTime]);
   }
 }
+
+export class CalendarMethodRecord extends MethodRecord {
+  constructor(calendar, methodNames = []) {
+    super('Calendar', calendar, methodNames);
+  }
+
+  dateAdd(date, duration, options) {
+    return this.call('dateAdd', [date, duration, options]);
+  }
+
+  dateFromFields(fields, options) {
+    return this.call('dateFromFields', [fields, options]);
+  }
+
+  dateUntil(one, two, options) {
+    return this.call('dateUntil', [one, two, options]);
+  }
+
+  day(date) {
+    return this.call('day', [date]);
+  }
+
+  fields(fieldNames) {
+    return this.call('fields', [fieldNames]);
+  }
+
+  mergeFields(fields, additionalFields) {
+    return this.call('mergeFields', [fields, additionalFields]);
+  }
+
+  monthDayFromFields(fields, options) {
+    return this.call('monthDayFromFields', [fields, options]);
+  }
+
+  yearMonthFromFields(fields, options) {
+    return this.call('yearMonthFromFields', [fields, options]);
+  }
+}

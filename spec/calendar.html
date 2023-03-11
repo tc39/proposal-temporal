@@ -66,6 +66,280 @@
   <emu-clause id="sec-temporal-calendar-abstract-ops">
     <h1>Abstract Operations for Temporal.Calendar Objects</h1>
 
+    <emu-clause id="sec-temporal-calendar-methods-records">
+      <h1>Calendar Methods Records</h1>
+      <p>
+        A <dfn variants="Calendar Methods Records">Calendar Methods Record</dfn> is a Record value used to store a Temporal.Calendar object, or an Object implementing the calendar protocol, along with any methods that have been observably looked up on that object during the current operation.
+        Calendar Methods Records are produced by the abstract operation CreateCalendarMethodsRecord.
+      </p>
+      <p>
+        Calendar Methods Records have the fields listed in <emu-xref href="#table-temporal-calendar-methods-record-fields"></emu-xref>.
+      </p>
+      <emu-table id="table-temporal-calendar-methods-record-fields" caption="Calendar Methods Record Fields">
+        <table class="real-table">
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Receiver]]</td>
+            <td>a String or Object</td>
+            <td>
+              The calendar object, or a string indicating a built-in time zone.
+            </td>
+          </tr>
+          <tr>
+            <td>[[DateAdd]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `dateAdd` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.dateAdd%.
+            </td>
+          </tr>
+          <tr>
+            <td>[[DateFromFields]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `dateFromFields` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.dateFromFields%.
+            </td>
+          </tr>
+          <tr>
+            <td>[[DateUntil]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `dateUntil` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.dateUntil%.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Day]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `day` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.day%.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Fields]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `fields` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.fields%.
+            </td>
+          </tr>
+          <tr>
+            <td>[[MergeFields]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `mergeFields` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.mergeFields%.
+            </td>
+          </tr>
+          <tr>
+            <td>[[MonthDayFromFields]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `monthDayFromFields` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.monthDayFromFields%.
+            </td>
+          </tr>
+          <tr>
+            <td>[[YearMonthFromFields]]</td>
+            <td>a function object or *undefined*</td>
+            <td>
+              The calendar's `yearMonthFromFields` method.
+              For a built-in calendar this is always %Temporal.Calendar.prototype.yearMonthFromFields%.
+            </td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createcalendarmethodsrecord" type="abstract operation">
+      <h1>
+        CreateCalendarMethodsRecord (
+          _calendar_: a String or Object,
+          _methods_: a List of one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+        ): either a normal completion containing a Calendar Methods Record, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates a Calendar Methods Record from the given _calendar_, looking up the methods given in _methods_.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _record_ be the Calendar Methods Record {
+            [[Receiver]]: _calendar_,
+            [[DateAdd]]: *undefined*,
+            [[DateFromFields]]: *undefined*,
+            [[DateUntil]]: *undefined*,
+            [[Day]]: *undefined*,
+            [[Fields]]: *undefined*,
+            [[MergeFields]]: *undefined*,
+            [[MonthDayFromFields]]: *undefined*,
+            [[YearMonthFromFields]]: *undefined*
+          }.
+        1. For each element _methodName_ in _methods_, do
+          1. Perform ? CalendarMethodsRecordLookup(_record_, _methodName_).
+        1. Return _record_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarmethodsrecordlookup" type="abstract operation">
+      <h1>
+        CalendarMethodsRecordLookup (
+          _calendarRec_: a Calendar Methods Record,
+          _methodName_: one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+        ): either a normal completion containing ~unused~, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It looks up the given method on the given calendar.
+          For a built-in calendar, this lookup is unobservable and results in the intrinsic method.
+          If the calendar is an Object, the lookup is observable and may result in a user-code method.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, _methodName_) is *false*.
+        1. If _methodName_ is ~dateAdd~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[DateAdd]] to %Temporal.Calendar.prototype.dateAdd%.
+          1. Else,
+            1. Set _calendarRec_.[[DateAdd]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateAdd"*).
+            1. If _calendarRec_.[[GetOffsetNanosecondsFor]] is *undefined*, throw a *TypeError* exception.
+        1. Else if _methodName_ is ~dateFromFields~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[DateFromFields]] to %Temporal.TimeZone.prototype.dateFromFields%.
+          1. Else,
+            1. Set _calendarRec_.[[DateFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateFromFields"*).
+            1. If _calendarRec_.[[DateFromFields]] is *undefined*, throw a *TypeError* exception.
+        1. Else if _methodName_ is ~dateUntil~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[DateUntil]] to %Temporal.TimeZone.prototype.dateUntil%.
+          1. Else,
+            1. Set _calendarRec_.[[DateUntil]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateUntil"*).
+            1. If _calendarRec_.[[DateUntil]] is *undefined*, throw a *TypeError* exception.
+        1. Else if _methodName_ is ~day~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[Day]] to %Temporal.TimeZone.prototype.day%.
+          1. Else,
+            1. Set _calendarRec_.[[Day]] to ? GetMethod(_calendarRec_.[[Receiver]], *"day"*).
+            1. If _calendarRec_.[[Day]] is *undefined*, throw a *TypeError* exception.
+        1. Else if _methodName_ is ~fields~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[Fields]] to %Temporal.TimeZone.prototype.fields%.
+          1. Else,
+            1. Set _calendarRec_.[[Fields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"fields"*).
+            1. If _calendarRec_.[[Fields]] is *undefined*, throw a *TypeError* exception.
+        1. Else if _methodName_ is ~mergeFields~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[MergeFields]] to %Temporal.TimeZone.prototype.mergeFields%.
+          1. Else,
+            1. Set _calendarRec_.[[MergeFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"mergeFields"*).
+            1. If _calendarRec_.[[MergeFields]] is *undefined*, throw a *TypeError* exception.
+        1. Else if _methodName_ is ~monthDayFromFields~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[MonthDayFromFields]] to %Temporal.TimeZone.prototype.monthDayFromFields%.
+          1. Else,
+            1. Set _calendarRec_.[[MonthDayFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"monthDayFromFields"*).
+            1. If _calendarRec_.[[MonthDayFromFields]] is *undefined*, throw a *TypeError* exception.
+        1. Else if _methodName_ is ~yearMonthFromFields~, then
+          1. If _calendarRec_.[[Receiver]] is a String, then
+            1. Set _calendarRec_.[[YearMonthFromFields]] to %Temporal.TimeZone.prototype.yearMonthFromFields%.
+          1. Else,
+            1. Set _calendarRec_.[[YearMonthFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"yearMonthFromFields"*).
+            1. If _calendarRec_.[[YearMonthFromFields]] is *undefined*, throw a *TypeError* exception.
+        1. Return ~unused~.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarmethodsrecordhaslookedup" type="abstract operation">
+      <h1>
+        CalendarMethodsRecordHasLookedUp (
+          _calendarRec_: a Calendar Methods Record,
+          _methodName_: one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+        ): *true* or *false*
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It determines whether the given Calendar Methods Record has already looked up the given method.</dd>
+      </dl>
+      <emu-alg>
+        1. If _methodName_ is ~dateAdd~, then
+          1. Let _method_ be _calendarRec_.[[DateAdd]].
+        1. Else if _methodName_ is ~dateFromFields~, then
+          1. Let _method_ be _calendarRec_.[[DateFromFields]].
+        1. Else if _methodName_ is ~dateUntil~, then
+          1. Let _method_ be _calendarRec_.[[DateUntil]].
+        1. Else if _methodName_ is ~day~, then
+          1. Let _method_ be _calendarRec_.[[Day]].
+        1. Else if _methodName_ is ~fields~, then
+          1. Let _method_ be _calendarRec_.[[Fields]].
+        1. Else if _methodName_ is ~mergeFields~, then
+          1. Let _method_ be _calendarRec_.[[MergeFields]].
+        1. Else if _methodName_ is ~monthDayFromFields~, then
+          1. Let _method_ be _calendarRec_.[[MonthDayFromFields]].
+        1. Else if _methodName_ is ~yearMonthFromFields~, then
+          1. Let _method_ be _calendarRec_.[[YearMonthFromFields]].
+        1. If _method_ is *undefined*, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarmethodsrecordisbuiltin" type="abstract operation">
+      <h1>
+        CalendarMethodsRecordIsBuiltin (
+          _calendarRec_: a Calendar Methods Record,
+        ): *true* or *false*
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It determines whether the given Calendar Methods Record represents a built-in calendar (that is never exposed to user code.)</dd>
+      </dl>
+      <emu-alg>
+        1. If _calendarRec_.[[Receiver]] is a String, return *true*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarmethodsrecordcall" type="abstract operation">
+      <h1>
+        CalendarMethodsRecordCall (
+          _calendarRec_: a Calendar Methods Record,
+          _methodName_: one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+          _arguments_: a List of ECMAScript language values,
+        ): either a normal completion containing an ECMAScript language value, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the method _methodName_ stored in the Calendar Methods Record, with the stored receiver as the receiver, and the given _arguments_, and returns the result.</dd>
+      </dl>
+      <emu-alg>
+        1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, _methodName_) is *true*.
+        1. Let _receiver_ be _calendarRec_.[[Receiver]].
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, then
+          1. Set _receiver_ to ! CreateTemporalTimeZone(_calendarRec_.[[Receiver]]).
+        1. If _methodName_ is ~dateAdd~, then
+          1. Return ? Call(_calendarRec_.[[DateAdd]], _receiver_, _arguments_).
+        1. If _methodName_ is ~dateFromFields~, then
+          1. Return ? Call(_calendarRec_.[[DateFromFields]], _receiver_, _arguments_).
+        1. If _methodName_ is ~dateUntil~, then
+          1. Return ? Call(_calendarRec_.[[DateUntil]], _receiver_, _arguments_).
+        1. If _methodName_ is ~day~, then
+          1. Return ? Call(_calendarRec_.[[Day]], _receiver_, _arguments_).
+        1. If _methodName_ is ~fields~, then
+          1. Return ? Call(_calendarRec_.[[Fields]], _receiver_, _arguments_).
+        1. If _methodName_ is ~mergeFields~, then
+          1. Return ? Call(_calendarRec_.[[MergeFields]], _receiver_, _arguments_).
+        1. If _methodName_ is ~monthDayFromFields~, then
+          1. Return ? Call(_calendarRec_.[[MonthDayFromFields]], _receiver_, _arguments_).
+        1. If _methodName_ is ~yearMonthFromFields~, then
+          1. Return ? Call(_calendarRec_.[[YearMonthFromFields]], _receiver_, _arguments_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-createtemporalcalendar" type="abstract operation">
       <h1>
         CreateTemporalCalendar (
@@ -89,23 +363,24 @@
     <emu-clause id="sec-temporal-calendarfields" type="abstract operation">
       <h1>
         CalendarFields (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _fieldNames_: a List of Strings,
         ): either a normal completion containing a List of Strings, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It calls the `fields` method of the given _calendar_ with an array representation of _fieldNames_, and returns a List representation of the result.</dd>
+        <dd>It calls the `fields` method of the given calendar with an array representation of _fieldNames_, and returns a List representation of the result.</dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is a String, then
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, then
+          1. NOTE: %Temporal.Calendar.prototype.fields% is not called in this clause in order to avoid an unnecessary observable Array iteration.
           1. Assert: _fieldNames_ contains no String other than *"year"*, *"month"*, *"monthCode"*, or *"day"*.
-          1. If _calendar_ is *"iso8601"*, return _fieldNames_.
-          1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendar_, _fieldNames_).
+          1. If _calendarRec_.[[Receiver]] is *"iso8601"*, return _fieldNames_.
+          1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendarRec_.[[Receiver]], _fieldNames_).
           1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
             1. Append _desc_.[[Property]] to _fieldNames_.
           1. Return _fieldNames_.
-        1. Let _fieldsArray_ be ? Invoke(_calendar_, *"fields"*, « CreateArrayFromList(_fieldNames_) »).
+        1. Let _fieldsArray_ be ? CalendarMethodsRecordCall(_calendarRec_, ~fields~, « CreateArrayFromList(_fieldNames_) »).
         1. Let _iteratorRecord_ be ? GetIterator(_fieldsArray_, ~sync~).
         1. Return ? IteratorToListOfType(_iteratorRecord_, « String »).
       </emu-alg>
@@ -114,20 +389,18 @@
     <emu-clause id="sec-temporal-calendarmergefields" type="abstract operation">
       <h1>
         CalendarMergeFields (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           _additionalFields_: an Object,
         ): either a normal completion containing an Object, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It merges the properties of _fields_ and _additionalFields_ by calling the `mergeFields` method of the given _calendar_.</dd>
+        <dd>It merges the properties of _fields_ and _additionalFields_ by calling the `mergeFields` method of the given calendar.</dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.mergeFields%, _calendar_, « _fields_, _additionalFields_ »).
-        1. Let _result_ be ? Invoke(_calendar_, *"mergeFields"*, « _fields_, _additionalFields_ »).
+        1. Let _result_ be ? CalendarMethodsRecordCall(_calendarRec_, ~mergeFields~, « _fields_, _additionalFields_ »).
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _result_.
         1. If Type(_result_) is not Object, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
@@ -136,27 +409,22 @@
     <emu-clause id="sec-temporal-calendardateadd" type="abstract operation">
       <h1>
         CalendarDateAdd (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _date_: a Temporal.PlainDate,
           _duration_: a Temporal.Duration,
           optional _options_: an Object or *undefined*,
-          optional _dateAdd_: a function object or ~unused~,
         ): either a normal completion containing a Temporal.PlainDate, or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It adds _duration_ to _date_ by calling the `dateAdd` method of the given _calendar_, which may be a built-in calendar identifier.
-          If _dateAdd_ is present, the `dateAdd` method will not be observably looked up.
+          It adds _duration_ to _date_ by calling the `dateAdd` method of the given calendar.
         </dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.dateAdd%, _calendar_, « _date_, _duration_, _options_ »).
-        1. If _dateAdd_ is not present, set _dateAdd_ to ? GetMethod(_calendar_, *"dateAdd"*).
-        1. Let _addedDate_ be ? Call(_dateAdd_, _calendar_, « _date_, _duration_, _options_ »).
+        1. Let _addedDate_ be ? CalendarMethodsRecordCall(_calendarRec_, ~dateAdd~, « _date_, _duration_, _options_ »).
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _addedDate_.
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
         1. Return _addedDate_.
       </emu-alg>
@@ -165,26 +433,21 @@
     <emu-clause id="sec-temporal-calendardateuntil" type="abstract operation">
       <h1>
         CalendarDateUntil (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _one_: a Temporal.PlainDate,
           _two_: a Temporal.PlainDate,
           _options_: an Object or *undefined*,
-          optional _dateUntil_: a function object or ~unused~,
         ): either a normal completion containing a Temporal.Duration, or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It determines the difference between the dates _one_ and _two_ by calling the `dateUntil` method of the given _calendar_, which may be a built-in calendar identifier.
-          If _dateUntil_ is present, the `dateUntil` method will not be observably looked up.
+          It determines the difference between the dates _one_ and _two_ by calling the `dateUntil` method of the given calendar.
         </dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.dateUntil%, _calendar_, « _one_, _two_, _options_ »).
-        1. If _dateUntil_ is not present, set _dateUntil_ to ? GetMethod(_calendar_, *"dateUntil"*).
-        1. Let _duration_ be ? Call(_dateUntil_, _calendar_, « _one_, _two_, _options_ »).
+        1. Let _duration_ be ? CalendarMethodsRecordCall(_calendarRec_, ~dateUntil~, « _one_, _two_, _options_ »).
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _duration_.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Return _duration_.
       </emu-alg>
@@ -259,19 +522,17 @@
     <emu-clause id="sec-temporal-calendarday" type="abstract operation">
       <h1>
         CalendarDay (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainMonthDay,
         ): either a normal completion containing an integer, or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It calls the given _calendar_'s `day()` method and validates the result.</dd>
+        <dd>It calls the given calendar's `day()` method and validates the result.</dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.day%, _calendar_, « _dateLike_ »).
-        1. Let _result_ be ? Invoke(_calendar_, *"day"*, « _dateLike_ »).
+        1. Let _result_ be ? CalendarMethodsRecordCall(_calendarRec_, ~day~, « _dateLike_ »).
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _result_.
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
@@ -595,26 +856,21 @@
     <emu-clause id="sec-temporal-calendardatefromfields" type="abstract operation">
       <h1>
         CalendarDateFromFields (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           optional _options_: an Object or *undefined*,
-          optional _dateFromFields_: a function object,
         ): either a normal completion containing a `Temporal.PlainDate` or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It calls the given _calendar_'s `dateFromFields()` method and validates the result.
-          If _dateFromFields_ is present, the `dateFromFields` method will not be observably looked up.
+          It calls the given calendar's `dateFromFields()` method and validates the result.
         </dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.dateFromFields%, _calendar_, « _fields_, _options_ »).
-        1. If _dateFromFields_ is not present, set _dateFromFields_ to ? GetMethod(_calendar_, *"dateFromFields"*).
-        1. Let _date_ be ? Call(_calendar_, _dateFromFields_, « _fields_, _options_ »).
+        1. Let _date_ be ? CalendarMethodsRecordCall(_calendarRec_, ~dateFromFields~, « _fields_, _options_ »).
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _date_.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.
       </emu-alg>
@@ -623,21 +879,19 @@
     <emu-clause id="sec-temporal-calendaryearmonthfromfields" type="abstract operation">
       <h1>
         CalendarYearMonthFromFields (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           optional _options_: an Object or *undefined*,
         ): either a normal completion containing a `Temporal.PlainYearMonth` or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It calls the given _calendar_'s `yearMonthFromFields()` method and validates the result.</dd>
+        <dd>It calls the given calendar's `yearMonthFromFields()` method and validates the result.</dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.yearMonthFromFields%, _calendar_, « _fields_, _options_ »).
-        1. Let _yearMonth_ be ? Invoke(_calendar_, *"yearMonthFromFields"*, « _fields_, _options_ »).
+        1. Let _yearMonth_ be ? CalendarMethodsRecordCall(_calendarRec_, ~yearMonthFromFields~, « _fields_, _options_ »).
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _yearMonth_.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.
       </emu-alg>
@@ -646,21 +900,19 @@
     <emu-clause id="sec-temporal-calendarmonthdayfromfields" type="abstract operation">
       <h1>
         CalendarMonthDayFromFields (
-          _calendar_: a String or Object,
+          _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           optional _options_: an Object or *undefined*,
         ): either a normal completion containing a `Temporal.PlainMonthDay` or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It calls the given _calendar_'s `monthDayFromFields()` method and validates the result.</dd>
+        <dd>It calls the given calendar's `monthDayFromFields()` method and validates the result.</dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. If _calendar_ is a String, then
-          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.monthDayFromFields%, _calendar_, « _fields_, _options_ »).
-        1. Let _monthDay_ be ? Invoke(_calendar_, *"monthDayFromFields"*, « _fields_, _options_ »).
+        1. Let _monthDay_ be ? CalendarMethodsRecordCall(_calendarRec_, ~monthDayFromFields~, « _fields_, _options_ »).
+        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _monthDay_.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.
       </emu-alg>
