@@ -595,18 +595,23 @@
           _calendar_: a String or Object,
           _fields_: an Object,
           optional _options_: an Object or *undefined*,
+          optional _dateFromFields_: a function object,
         ): either a normal completion containing a `Temporal.PlainDate` or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It calls the given _calendar_'s `dateFromFields()` method and validates the result.</dd>
+        <dd>
+          It calls the given _calendar_'s `dateFromFields()` method and validates the result.
+          If _dateFromFields_ is present, the `dateFromFields` method will not be observably looked up.
+        </dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ? Call(%Temporal.Calendar.prototype.dateFromFields%, _calendar_, « _fields_, _options_ »).
-        1. Let _date_ be ? Invoke(_calendar_, *"dateFromFields"*, « _fields_, _options_ »).
+        1. If _dateFromFields_ is not present, set _dateFromFields_ to ? GetMethod(_calendar_, *"dateFromFields"*).
+        1. Let _date_ be ? Call(_calendar_, _dateFromFields_, « _fields_, _options_ »).
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.
       </emu-alg>

@@ -2041,13 +2041,13 @@ export function ConsolidateCalendars(one, two) {
   }
 }
 
-export function CalendarDateFromFields(calendar, fields, options) {
+export function CalendarDateFromFields(calendar, fields, options, dateFromFields) {
   if (typeof calendar === 'string') {
     const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
     calendar = new TemporalCalendar(calendar);
     return Call(GetIntrinsic('%Temporal.Calendar.prototype.dateFromFields%'), calendar, [fields, options]);
   }
-  const dateFromFields = GetMethod(calendar, 'dateFromFields');
+  dateFromFields ??= GetMethod(calendar, 'dateFromFields');
   const result = Call(dateFromFields, calendar, [fields, options]);
   if (!IsTemporalDate(result)) throw new TypeError('invalid result');
   return result;
