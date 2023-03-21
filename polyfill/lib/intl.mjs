@@ -2,7 +2,6 @@ import { ES } from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
   GetSlot,
-  INSTANT,
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
@@ -12,8 +11,7 @@ import {
   ISO_MILLISECOND,
   ISO_MICROSECOND,
   ISO_NANOSECOND,
-  CALENDAR,
-  TIME_ZONE
+  CALENDAR
 } from './slots.mjs';
 
 const DATE = Symbol('date');
@@ -21,11 +19,9 @@ const YM = Symbol('ym');
 const MD = Symbol('md');
 const TIME = Symbol('time');
 const DATETIME = Symbol('datetime');
-const ZONED = Symbol('zoneddatetime');
 const INST = Symbol('instant');
 const ORIGINAL = Symbol('original');
 const TZ_RESOLVED = Symbol('timezone');
-const TZ_GIVEN = Symbol('timezone-id-given');
 const CAL_ID = Symbol('calendar-id');
 const LOCALE = Symbol('locale');
 const OPTIONS = Symbol('options');
@@ -83,7 +79,6 @@ export function DateTimeFormat(locale = undefined, options = undefined) {
     this[OPTIONS] = options;
   }
 
-  this[TZ_GIVEN] = options.timeZone ? options.timeZone : null;
   this[LOCALE] = ro.locale;
   this[ORIGINAL] = original;
   this[TZ_RESOLVED] = ro.timeZone;
@@ -93,7 +88,6 @@ export function DateTimeFormat(locale = undefined, options = undefined) {
   this[MD] = monthDayAmend;
   this[TIME] = timeAmend;
   this[DATETIME] = datetimeAmend;
-  this[ZONED] = zonedDateTimeAmend;
   this[INST] = instantAmend;
 }
 
@@ -127,26 +121,17 @@ function resolvedOptions() {
   return this[ORIGINAL].resolvedOptions();
 }
 
-function adjustFormatterTimeZone(formatter, timeZone) {
-  if (!timeZone) return formatter;
-  const options = formatter.resolvedOptions();
-  if (options.timeZone === timeZone) return formatter;
-  return new IntlDateTimeFormat(options.locale, { ...options, timeZone });
-}
-
 function format(datetime, ...rest) {
-  let { instant, formatter, timeZone } = extractOverrides(datetime, this);
+  let { instant, formatter } = extractOverrides(datetime, this);
   if (instant && formatter) {
-    formatter = adjustFormatterTimeZone(formatter, timeZone);
     return formatter.format(instant.epochMilliseconds);
   }
   return this[ORIGINAL].format(datetime, ...rest);
 }
 
 function formatToParts(datetime, ...rest) {
-  let { instant, formatter, timeZone } = extractOverrides(datetime, this);
+  let { instant, formatter } = extractOverrides(datetime, this);
   if (instant && formatter) {
-    formatter = adjustFormatterTimeZone(formatter, timeZone);
     return formatter.formatToParts(instant.epochMilliseconds);
   }
   return this[ORIGINAL].formatToParts(datetime, ...rest);
@@ -157,14 +142,10 @@ function formatRange(a, b) {
     if (!sameTemporalType(a, b)) {
       throw new TypeError('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
-    const { instant: aa, formatter: aformatter, timeZone: atz } = extractOverrides(a, this);
-    const { instant: bb, formatter: bformatter, timeZone: btz } = extractOverrides(b, this);
-    if (atz && btz && atz !== btz) {
-      throw new RangeError('cannot format range between different time zones');
-    }
+    const { instant: aa, formatter: aformatter } = extractOverrides(a, this);
+    const { instant: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      const formatter = adjustFormatterTimeZone(aformatter, atz);
-      return formatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
+      return aformatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
     }
   }
   return this[ORIGINAL].formatRange(a, b);
@@ -175,14 +156,10 @@ function formatRangeToParts(a, b) {
     if (!sameTemporalType(a, b)) {
       throw new TypeError('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
-    const { instant: aa, formatter: aformatter, timeZone: atz } = extractOverrides(a, this);
-    const { instant: bb, formatter: bformatter, timeZone: btz } = extractOverrides(b, this);
-    if (atz && btz && atz !== btz) {
-      throw new RangeError('cannot format range between different time zones');
-    }
+    const { instant: aa, formatter: aformatter } = extractOverrides(a, this);
+    const { instant: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-      const formatter = adjustFormatterTimeZone(aformatter, atz);
-      return formatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
+      return aformatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
     }
   }
   return this[ORIGINAL].formatRangeToParts(a, b);
@@ -294,21 +271,6 @@ function datetimeAmend(options) {
       minute: 'numeric',
       second: 'numeric'
     });
-  }
-  return options;
-}
-
-function zonedDateTimeAmend(options) {
-  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-    options = ObjectAssign({}, options, {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric'
-    });
-    if (options.timeZoneName === undefined) options.timeZoneName = 'short';
   }
   return options;
 }
@@ -465,24 +427,9 @@ function extractOverrides(temporalObj, main) {
   }
 
   if (ES.IsTemporalZonedDateTime(temporalObj)) {
-    const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
-      throw new RangeError(
-        `cannot format ZonedDateTime with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
-      );
-    }
-
-    let timeZone = GetSlot(temporalObj, TIME_ZONE);
-    const objTimeZone = ES.ToTemporalTimeZoneIdentifier(timeZone);
-    if (main[TZ_GIVEN] && main[TZ_GIVEN] !== objTimeZone) {
-      throw new RangeError(`timeZone option ${main[TZ_GIVEN]} doesn't match actual time zone ${objTimeZone}`);
-    }
-
-    return {
-      instant: GetSlot(temporalObj, INSTANT),
-      formatter: getPropLazy(main, ZONED),
-      timeZone: objTimeZone
-    };
+    throw new TypeError(
+      'Temporal.ZonedDateTime not supported in DateTimeFormat methods. Use toLocaleString() instead.'
+    );
   }
 
   if (ES.IsTemporalInstant(temporalObj)) {
