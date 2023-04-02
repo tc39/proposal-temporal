@@ -921,6 +921,9 @@ const nonIsoHelperBase = {
         const diffMonths = calendarTwo.month - calendarOne.month;
         const diffDays = calendarTwo.day - calendarOne.day;
         const sign = this.compareCalendarDates(calendarTwo, calendarOne);
+        if (!sign) {
+          return { years: 0, months: 0, weeks: 0, days: 0 };
+        }
         if (largestUnit === 'year' && diffYears) {
           const isOneFurtherInYear = diffMonths * sign < 0 || (diffMonths === 0 && diffDays * sign < 0);
           years = isOneFurtherInYear ? diffYears - sign : diffYears;
