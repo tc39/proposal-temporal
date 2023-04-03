@@ -917,15 +917,18 @@ const nonIsoHelperBase = {
       }
       case 'month':
       case 'year': {
-        const diffYears = calendarTwo.year - calendarOne.year;
-        const diffMonths = calendarTwo.month - calendarOne.month;
-        const diffDays = calendarTwo.day - calendarOne.day;
         const sign = this.compareCalendarDates(calendarTwo, calendarOne);
         if (!sign) {
           return { years: 0, months: 0, weeks: 0, days: 0 };
         }
+        const diffYears = calendarTwo.year - calendarOne.year;
+        const diffDays = calendarTwo.day - calendarOne.day;
         if (largestUnit === 'year' && diffYears) {
-          const isOneFurtherInYear = diffMonths * sign < 0 || (diffMonths === 0 && diffDays * sign < 0);
+          let diffInYearSign = 0;
+          if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
+          if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
+          if (!diffInYearSign) diffInYearSign = Math.sign(diffDays);
+          const isOneFurtherInYear = diffInYearSign * sign < 0;
           years = isOneFurtherInYear ? diffYears - sign : diffYears;
         }
         const yearsAdded = years ? this.addCalendar(calendarOne, { years }, 'constrain', cache) : calendarOne;
