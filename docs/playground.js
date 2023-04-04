@@ -1745,7 +1745,7 @@
   var toStr$4 = Object.prototype.toString;
   var funcType = '[object Function]';
 
-  var implementation$2 = function bind(that) {
+  var implementation$3 = function bind(that) {
       var target = this;
       if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
           throw new TypeError(ERROR_MESSAGE + target);
@@ -1789,9 +1789,9 @@
       return bound;
   };
 
-  var implementation$1 = implementation$2;
+  var implementation$2 = implementation$3;
 
-  var functionBind = Function.prototype.bind || implementation$1;
+  var functionBind = Function.prototype.bind || implementation$2;
 
   var src;
   var hasRequiredSrc;
@@ -2237,7 +2237,7 @@
 
   (function (module) {
 
-  	// https://ecma-international.org/ecma-262/6.0/#sec-isarray
+  	// https://262.ecma-international.org/6.0/#sec-isarray
   	module.exports = IsArray$2;
   } (IsArray$3));
 
@@ -2250,9 +2250,9 @@
 
   var IsArray = IsArrayExports;
 
-  var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$1('%Function.prototype.apply%');
+  var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
 
-  // https://ecma-international.org/ecma-262/6.0/#sec-call
+  // https://262.ecma-international.org/6.0/#sec-call
 
   var Call = function Call(F, V) {
   	var argumentsList = arguments.length > 2 ? arguments[2] : [];
@@ -2264,109 +2264,115 @@
 
   var Call$1 = Call;
 
-  var hasPropertyDescriptors_1;
-  var hasRequiredHasPropertyDescriptors;
+  // https://262.ecma-international.org/6.0/#sec-ispropertykey
 
-  function requireHasPropertyDescriptors () {
-  	if (hasRequiredHasPropertyDescriptors) return hasPropertyDescriptors_1;
-  	hasRequiredHasPropertyDescriptors = 1;
+  var IsPropertyKey$4 = function IsPropertyKey(argument) {
+  	return typeof argument === 'string' || typeof argument === 'symbol';
+  };
+
+  var IsPropertyKey$5 = IsPropertyKey$4;
+
+  var gopd;
+  var hasRequiredGopd;
+
+  function requireGopd () {
+  	if (hasRequiredGopd) return gopd;
+  	hasRequiredGopd = 1;
 
   	var GetIntrinsic = getIntrinsic;
 
-  	var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
+  	var $gOPD = GetIntrinsic('%Object.getOwnPropertyDescriptor%', true);
 
-  	var hasPropertyDescriptors = function hasPropertyDescriptors() {
-  		if ($defineProperty) {
-  			try {
-  				$defineProperty({}, 'a', { value: 1 });
-  				return true;
-  			} catch (e) {
-  				// IE 8 has a broken defineProperty
-  				return false;
-  			}
-  		}
-  		return false;
-  	};
-
-  	hasPropertyDescriptors.hasArrayLengthDefineBug = function hasArrayLengthDefineBug() {
-  		// node v0.6 has a bug where array lengths can be Set but not Defined
-  		if (!hasPropertyDescriptors()) {
-  			return null;
-  		}
+  	if ($gOPD) {
   		try {
-  			return $defineProperty([], 'length', { value: 1 }).length !== 1;
+  			$gOPD([], 'length');
   		} catch (e) {
-  			// In Firefox 4-22, defining length on an array throws an exception.
-  			return true;
+  			// IE 8 has a broken gOPD
+  			$gOPD = null;
   		}
-  	};
+  	}
 
-  	hasPropertyDescriptors_1 = hasPropertyDescriptors;
-  	return hasPropertyDescriptors_1;
+  	gopd = $gOPD;
+  	return gopd;
   }
 
-  var DefineOwnProperty;
-  var hasRequiredDefineOwnProperty;
+  var isPropertyDescriptor;
+  var hasRequiredIsPropertyDescriptor;
 
-  function requireDefineOwnProperty () {
-  	if (hasRequiredDefineOwnProperty) return DefineOwnProperty;
-  	hasRequiredDefineOwnProperty = 1;
-
-  	var hasPropertyDescriptors = requireHasPropertyDescriptors();
+  function requireIsPropertyDescriptor () {
+  	if (hasRequiredIsPropertyDescriptor) return isPropertyDescriptor;
+  	hasRequiredIsPropertyDescriptor = 1;
 
   	var GetIntrinsic = getIntrinsic;
 
-  	var $defineProperty = hasPropertyDescriptors() && GetIntrinsic('%Object.defineProperty%', true);
+  	var has = requireSrc();
+  	var $TypeError = GetIntrinsic('%TypeError%');
 
-  	var hasArrayLengthDefineBug = hasPropertyDescriptors.hasArrayLengthDefineBug();
-
-  	// eslint-disable-next-line global-require
-  	var isArray = hasArrayLengthDefineBug && IsArray$2;
-
-  	var callBound = callBound$2;
-
-  	var $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
-
-  	// eslint-disable-next-line max-params
-  	DefineOwnProperty = function DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, desc) {
-  		if (!$defineProperty) {
-  			if (!IsDataDescriptor(desc)) {
-  				// ES3 does not support getters/setters
-  				return false;
-  			}
-  			if (!desc['[[Configurable]]'] || !desc['[[Writable]]']) {
-  				return false;
-  			}
-
-  			// fallback for ES3
-  			if (P in O && $isEnumerable(O, P) !== !!desc['[[Enumerable]]']) {
-  				// a non-enumerable existing property
-  				return false;
-  			}
-
-  			// property does not exist at all, or exists but is enumerable
-  			var V = desc['[[Value]]'];
-  			// eslint-disable-next-line no-param-reassign
-  			O[P] = V; // will use [[Define]]
-  			return SameValue(O[P], V);
+  	isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
+  		if (ES.Type(Desc) !== 'Object') {
+  			return false;
   		}
-  		if (
-  			hasArrayLengthDefineBug
-  			&& P === 'length'
-  			&& '[[Value]]' in desc
-  			&& isArray(O)
-  			&& O.length !== desc['[[Value]]']
-  		) {
-  			// eslint-disable-next-line no-param-reassign
-  			O.length = desc['[[Value]]'];
-  			return O.length === desc['[[Value]]'];
+  		var allowed = {
+  			'[[Configurable]]': true,
+  			'[[Enumerable]]': true,
+  			'[[Get]]': true,
+  			'[[Set]]': true,
+  			'[[Value]]': true,
+  			'[[Writable]]': true
+  		};
+
+  		for (var key in Desc) { // eslint-disable-line no-restricted-syntax
+  			if (has(Desc, key) && !allowed[key]) {
+  				return false;
+  			}
   		}
 
-  		$defineProperty(O, P, FromPropertyDescriptor(desc));
+  		if (ES.IsDataDescriptor(Desc) && ES.IsAccessorDescriptor(Desc)) {
+  			throw new $TypeError('Property Descriptors may not be both accessor and data descriptors');
+  		}
   		return true;
   	};
-  	return DefineOwnProperty;
+  	return isPropertyDescriptor;
   }
+
+  // https://262.ecma-international.org/5.1/#sec-8
+
+  var Type$7 = function Type(x) {
+  	if (x === null) {
+  		return 'Null';
+  	}
+  	if (typeof x === 'undefined') {
+  		return 'Undefined';
+  	}
+  	if (typeof x === 'function' || typeof x === 'object') {
+  		return 'Object';
+  	}
+  	if (typeof x === 'number') {
+  		return 'Number';
+  	}
+  	if (typeof x === 'boolean') {
+  		return 'Boolean';
+  	}
+  	if (typeof x === 'string') {
+  		return 'String';
+  	}
+  };
+
+  var ES5Type = Type$7;
+
+  // https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
+
+  var Type$5 = function Type(x) {
+  	if (typeof x === 'symbol') {
+  		return 'Symbol';
+  	}
+  	if (typeof x === 'bigint') {
+  		return 'BigInt';
+  	}
+  	return ES5Type(x);
+  };
+
+  var Type$6 = Type$5;
 
   var isMatchRecord;
   var hasRequiredIsMatchRecord;
@@ -2420,6 +2426,9 @@
   				'[[Writable]]': true
   			};
 
+  			if (!Desc) {
+  				return false;
+  			}
   			for (var key in Desc) { // eslint-disable-line
   				if (has(Desc, key) && !allowed[key]) {
   					return false;
@@ -2439,7 +2448,7 @@
   			return has(value, '[[Iterator]]') && has(value, '[[NextMethod]]') && has(value, '[[Done]]');
   		},
   		'PromiseCapability Record': function isPromiseCapabilityRecord(value) {
-  			return value
+  			return !!value
   				&& has(value, '[[Resolve]]')
   				&& typeof value['[[Resolve]]'] === 'function'
   				&& has(value, '[[Reject]]')
@@ -2449,7 +2458,7 @@
   				&& typeof value['[[Promise]]'].then === 'function';
   		},
   		'AsyncGeneratorRequest Record': function isAsyncGeneratorRequestRecord(value) {
-  			return value
+  			return !!value
   				&& has(value, '[[Completion]]') // TODO: confirm is a completion record
   				&& has(value, '[[Capability]]')
   				&& predicates['PromiseCapability Record'](value['[[Capability]]']);
@@ -2468,206 +2477,105 @@
   	return assertRecord;
   }
 
-  var fromPropertyDescriptor;
-  var hasRequiredFromPropertyDescriptor$1;
+  var IsAccessorDescriptor;
+  var hasRequiredIsAccessorDescriptor;
 
-  function requireFromPropertyDescriptor$1 () {
-  	if (hasRequiredFromPropertyDescriptor$1) return fromPropertyDescriptor;
-  	hasRequiredFromPropertyDescriptor$1 = 1;
+  function requireIsAccessorDescriptor () {
+  	if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
+  	hasRequiredIsAccessorDescriptor = 1;
 
-  	fromPropertyDescriptor = function fromPropertyDescriptor(Desc) {
-  		if (typeof Desc === 'undefined') {
-  			return Desc;
-  		}
-  		var obj = {};
-  		if ('[[Value]]' in Desc) {
-  			obj.value = Desc['[[Value]]'];
-  		}
-  		if ('[[Writable]]' in Desc) {
-  			obj.writable = !!Desc['[[Writable]]'];
-  		}
-  		if ('[[Get]]' in Desc) {
-  			obj.get = Desc['[[Get]]'];
-  		}
-  		if ('[[Set]]' in Desc) {
-  			obj.set = Desc['[[Set]]'];
-  		}
-  		if ('[[Enumerable]]' in Desc) {
-  			obj.enumerable = !!Desc['[[Enumerable]]'];
-  		}
-  		if ('[[Configurable]]' in Desc) {
-  			obj.configurable = !!Desc['[[Configurable]]'];
-  		}
-  		return obj;
-  	};
-  	return fromPropertyDescriptor;
-  }
-
-  // https://262.ecma-international.org/5.1/#sec-8
-
-  var Type$7 = function Type(x) {
-  	if (x === null) {
-  		return 'Null';
-  	}
-  	if (typeof x === 'undefined') {
-  		return 'Undefined';
-  	}
-  	if (typeof x === 'function' || typeof x === 'object') {
-  		return 'Object';
-  	}
-  	if (typeof x === 'number') {
-  		return 'Number';
-  	}
-  	if (typeof x === 'boolean') {
-  		return 'Boolean';
-  	}
-  	if (typeof x === 'string') {
-  		return 'String';
-  	}
-  };
-
-  var ES5Type = Type$7;
-
-  // https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
-
-  var Type$5 = function Type(x) {
-  	if (typeof x === 'symbol') {
-  		return 'Symbol';
-  	}
-  	if (typeof x === 'bigint') {
-  		return 'BigInt';
-  	}
-  	return ES5Type(x);
-  };
-
-  var Type$6 = Type$5;
-
-  var FromPropertyDescriptor;
-  var hasRequiredFromPropertyDescriptor;
-
-  function requireFromPropertyDescriptor () {
-  	if (hasRequiredFromPropertyDescriptor) return FromPropertyDescriptor;
-  	hasRequiredFromPropertyDescriptor = 1;
-
-  	var assertRecord = requireAssertRecord();
-  	var fromPropertyDescriptor = requireFromPropertyDescriptor$1();
+  	var has = requireSrc();
 
   	var Type = Type$5;
 
-  	// https://ecma-international.org/ecma-262/6.0/#sec-frompropertydescriptor
+  	var assertRecord = requireAssertRecord();
 
-  	FromPropertyDescriptor = function FromPropertyDescriptor(Desc) {
-  		if (typeof Desc !== 'undefined') {
-  			assertRecord(Type, 'Property Descriptor', 'Desc', Desc);
+  	// https://262.ecma-international.org/5.1/#sec-8.10.1
+
+  	IsAccessorDescriptor = function IsAccessorDescriptor(Desc) {
+  		if (typeof Desc === 'undefined') {
+  			return false;
   		}
 
-  		return fromPropertyDescriptor(Desc);
+  		assertRecord(Type, 'Property Descriptor', 'Desc', Desc);
+
+  		if (!has(Desc, '[[Get]]') && !has(Desc, '[[Set]]')) {
+  			return false;
+  		}
+
+  		return true;
   	};
-  	return FromPropertyDescriptor;
+  	return IsAccessorDescriptor;
   }
 
-  var gopd;
-  var hasRequiredGopd;
+  var IsDataDescriptor;
+  var hasRequiredIsDataDescriptor;
 
-  function requireGopd () {
-  	if (hasRequiredGopd) return gopd;
-  	hasRequiredGopd = 1;
+  function requireIsDataDescriptor () {
+  	if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
+  	hasRequiredIsDataDescriptor = 1;
+
+  	var has = requireSrc();
+
+  	var Type = Type$5;
+
+  	var assertRecord = requireAssertRecord();
+
+  	// https://262.ecma-international.org/5.1/#sec-8.10.2
+
+  	IsDataDescriptor = function IsDataDescriptor(Desc) {
+  		if (typeof Desc === 'undefined') {
+  			return false;
+  		}
+
+  		assertRecord(Type, 'Property Descriptor', 'Desc', Desc);
+
+  		if (!has(Desc, '[[Value]]') && !has(Desc, '[[Writable]]')) {
+  			return false;
+  		}
+
+  		return true;
+  	};
+  	return IsDataDescriptor;
+  }
+
+  var isPrimitive$4;
+  var hasRequiredIsPrimitive;
+
+  function requireIsPrimitive () {
+  	if (hasRequiredIsPrimitive) return isPrimitive$4;
+  	hasRequiredIsPrimitive = 1;
+
+  	isPrimitive$4 = function isPrimitive(value) {
+  		return value === null || (typeof value !== 'function' && typeof value !== 'object');
+  	};
+  	return isPrimitive$4;
+  }
+
+  var IsExtensible;
+  var hasRequiredIsExtensible;
+
+  function requireIsExtensible () {
+  	if (hasRequiredIsExtensible) return IsExtensible;
+  	hasRequiredIsExtensible = 1;
 
   	var GetIntrinsic = getIntrinsic;
 
-  	var $gOPD = GetIntrinsic('%Object.getOwnPropertyDescriptor%', true);
+  	var $preventExtensions = GetIntrinsic('%Object.preventExtensions%', true);
+  	var $isExtensible = GetIntrinsic('%Object.isExtensible%', true);
 
-  	if ($gOPD) {
-  		try {
-  			$gOPD([], 'length');
-  		} catch (e) {
-  			// IE 8 has a broken gOPD
-  			$gOPD = null;
+  	var isPrimitive = requireIsPrimitive();
+
+  	// https://262.ecma-international.org/6.0/#sec-isextensible-o
+
+  	IsExtensible = $preventExtensions
+  		? function IsExtensible(obj) {
+  			return !isPrimitive(obj) && $isExtensible(obj);
   		}
-  	}
-
-  	gopd = $gOPD;
-  	return gopd;
-  }
-
-  // https://ecma-international.org/ecma-262/6.0/#sec-ispropertykey
-
-  var IsPropertyKey$4 = function IsPropertyKey(argument) {
-  	return typeof argument === 'string' || typeof argument === 'symbol';
-  };
-
-  var IsPropertyKey$5 = IsPropertyKey$4;
-
-  var hasSymbols$2 = shams$1;
-
-  var shams = function hasToStringTagShams() {
-  	return hasSymbols$2() && !!Symbol.toStringTag;
-  };
-
-  var isRegex;
-  var hasRequiredIsRegex;
-
-  function requireIsRegex () {
-  	if (hasRequiredIsRegex) return isRegex;
-  	hasRequiredIsRegex = 1;
-
-  	var callBound = callBound$2;
-  	var hasToStringTag = shams();
-  	var has;
-  	var $exec;
-  	var isRegexMarker;
-  	var badStringifier;
-
-  	if (hasToStringTag) {
-  		has = callBound('Object.prototype.hasOwnProperty');
-  		$exec = callBound('RegExp.prototype.exec');
-  		isRegexMarker = {};
-
-  		var throwRegexMarker = function () {
-  			throw isRegexMarker;
+  		: function IsExtensible(obj) {
+  			return !isPrimitive(obj);
   		};
-  		badStringifier = {
-  			toString: throwRegexMarker,
-  			valueOf: throwRegexMarker
-  		};
-
-  		if (typeof Symbol.toPrimitive === 'symbol') {
-  			badStringifier[Symbol.toPrimitive] = throwRegexMarker;
-  		}
-  	}
-
-  	var $toString = callBound('Object.prototype.toString');
-  	var gOPD = Object.getOwnPropertyDescriptor;
-  	var regexClass = '[object RegExp]';
-
-  	isRegex = hasToStringTag
-  		// eslint-disable-next-line consistent-return
-  		? function isRegex(value) {
-  			if (!value || typeof value !== 'object') {
-  				return false;
-  			}
-
-  			var descriptor = gOPD(value, 'lastIndex');
-  			var hasLastIndexDataProperty = descriptor && has(descriptor, 'value');
-  			if (!hasLastIndexDataProperty) {
-  				return false;
-  			}
-
-  			try {
-  				$exec(value, badStringifier);
-  			} catch (e) {
-  				return e === isRegexMarker;
-  			}
-  		}
-  		: function isRegex(value) {
-  			// In older browsers, typeof regex incorrectly returns 'function'
-  			if (!value || (typeof value !== 'object' && typeof value !== 'function')) {
-  				return false;
-  			}
-
-  			return $toString(value) === regexClass;
-  		};
-  	return isRegex;
+  	return IsExtensible;
   }
 
   var ToBoolean;
@@ -2681,38 +2589,6 @@
 
   	ToBoolean = function ToBoolean(value) { return !!value; };
   	return ToBoolean;
-  }
-
-  var IsRegExp;
-  var hasRequiredIsRegExp;
-
-  function requireIsRegExp () {
-  	if (hasRequiredIsRegExp) return IsRegExp;
-  	hasRequiredIsRegExp = 1;
-
-  	var GetIntrinsic = getIntrinsic;
-
-  	var $match = GetIntrinsic('%Symbol.match%', true);
-
-  	var hasRegExpMatcher = requireIsRegex();
-
-  	var ToBoolean = requireToBoolean();
-
-  	// https://ecma-international.org/ecma-262/6.0/#sec-isregexp
-
-  	IsRegExp = function IsRegExp(argument) {
-  		if (!argument || typeof argument !== 'object') {
-  			return false;
-  		}
-  		if ($match) {
-  			var isRegExp = argument[$match];
-  			if (typeof isRegExp !== 'undefined') {
-  				return ToBoolean(isRegExp);
-  			}
-  		}
-  		return hasRegExpMatcher(argument);
-  	};
-  	return IsRegExp;
   }
 
   var IsCallableExports = {};
@@ -2895,128 +2771,6 @@
   	return ToPropertyDescriptor;
   }
 
-  var OrdinaryGetOwnProperty;
-  var hasRequiredOrdinaryGetOwnProperty;
-
-  function requireOrdinaryGetOwnProperty () {
-  	if (hasRequiredOrdinaryGetOwnProperty) return OrdinaryGetOwnProperty;
-  	hasRequiredOrdinaryGetOwnProperty = 1;
-
-  	var GetIntrinsic = getIntrinsic;
-
-  	var $gOPD = requireGopd();
-  	var $TypeError = GetIntrinsic('%TypeError%');
-
-  	var callBound = callBound$2;
-
-  	var $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
-
-  	var has = requireSrc();
-
-  	var IsArray = IsArrayExports;
-  	var IsPropertyKey = IsPropertyKey$4;
-  	var IsRegExp = requireIsRegExp();
-  	var ToPropertyDescriptor = requireToPropertyDescriptor();
-  	var Type = Type$5;
-
-  	// https://ecma-international.org/ecma-262/6.0/#sec-ordinarygetownproperty
-
-  	OrdinaryGetOwnProperty = function OrdinaryGetOwnProperty(O, P) {
-  		if (Type(O) !== 'Object') {
-  			throw new $TypeError('Assertion failed: O must be an Object');
-  		}
-  		if (!IsPropertyKey(P)) {
-  			throw new $TypeError('Assertion failed: P must be a Property Key');
-  		}
-  		if (!has(O, P)) {
-  			return void 0;
-  		}
-  		if (!$gOPD) {
-  			// ES3 / IE 8 fallback
-  			var arrayLength = IsArray(O) && P === 'length';
-  			var regexLastIndex = IsRegExp(O) && P === 'lastIndex';
-  			return {
-  				'[[Configurable]]': !(arrayLength || regexLastIndex),
-  				'[[Enumerable]]': $isEnumerable(O, P),
-  				'[[Value]]': O[P],
-  				'[[Writable]]': true
-  			};
-  		}
-  		return ToPropertyDescriptor($gOPD(O, P));
-  	};
-  	return OrdinaryGetOwnProperty;
-  }
-
-  var IsDataDescriptor;
-  var hasRequiredIsDataDescriptor;
-
-  function requireIsDataDescriptor () {
-  	if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
-  	hasRequiredIsDataDescriptor = 1;
-
-  	var has = requireSrc();
-
-  	var assertRecord = requireAssertRecord();
-
-  	var Type = Type$5;
-
-  	// https://ecma-international.org/ecma-262/6.0/#sec-isdatadescriptor
-
-  	IsDataDescriptor = function IsDataDescriptor(Desc) {
-  		if (typeof Desc === 'undefined') {
-  			return false;
-  		}
-
-  		assertRecord(Type, 'Property Descriptor', 'Desc', Desc);
-
-  		if (!has(Desc, '[[Value]]') && !has(Desc, '[[Writable]]')) {
-  			return false;
-  		}
-
-  		return true;
-  	};
-  	return IsDataDescriptor;
-  }
-
-  var isPrimitive$4;
-  var hasRequiredIsPrimitive;
-
-  function requireIsPrimitive () {
-  	if (hasRequiredIsPrimitive) return isPrimitive$4;
-  	hasRequiredIsPrimitive = 1;
-
-  	isPrimitive$4 = function isPrimitive(value) {
-  		return value === null || (typeof value !== 'function' && typeof value !== 'object');
-  	};
-  	return isPrimitive$4;
-  }
-
-  var IsExtensible;
-  var hasRequiredIsExtensible;
-
-  function requireIsExtensible () {
-  	if (hasRequiredIsExtensible) return IsExtensible;
-  	hasRequiredIsExtensible = 1;
-
-  	var GetIntrinsic = getIntrinsic;
-
-  	var $preventExtensions = GetIntrinsic('%Object.preventExtensions%', true);
-  	var $isExtensible = GetIntrinsic('%Object.isExtensible%', true);
-
-  	var isPrimitive = requireIsPrimitive();
-
-  	// https://ecma-international.org/ecma-262/6.0/#sec-isextensible-o
-
-  	IsExtensible = $preventExtensions
-  		? function IsExtensible(obj) {
-  			return !isPrimitive(obj) && $isExtensible(obj);
-  		}
-  		: function IsExtensible(obj) {
-  			return !isPrimitive(obj);
-  		};
-  	return IsExtensible;
-  }
-
   var _isNaN = Number.isNaN || function isNaN(a) {
   	return a !== a;
   };
@@ -3035,6 +2789,471 @@
 
   var SameValue$1 = SameValue;
 
+  var hasPropertyDescriptors_1;
+  var hasRequiredHasPropertyDescriptors;
+
+  function requireHasPropertyDescriptors () {
+  	if (hasRequiredHasPropertyDescriptors) return hasPropertyDescriptors_1;
+  	hasRequiredHasPropertyDescriptors = 1;
+
+  	var GetIntrinsic = getIntrinsic;
+
+  	var $defineProperty = GetIntrinsic('%Object.defineProperty%', true);
+
+  	var hasPropertyDescriptors = function hasPropertyDescriptors() {
+  		if ($defineProperty) {
+  			try {
+  				$defineProperty({}, 'a', { value: 1 });
+  				return true;
+  			} catch (e) {
+  				// IE 8 has a broken defineProperty
+  				return false;
+  			}
+  		}
+  		return false;
+  	};
+
+  	hasPropertyDescriptors.hasArrayLengthDefineBug = function hasArrayLengthDefineBug() {
+  		// node v0.6 has a bug where array lengths can be Set but not Defined
+  		if (!hasPropertyDescriptors()) {
+  			return null;
+  		}
+  		try {
+  			return $defineProperty([], 'length', { value: 1 }).length !== 1;
+  		} catch (e) {
+  			// In Firefox 4-22, defining length on an array throws an exception.
+  			return true;
+  		}
+  	};
+
+  	hasPropertyDescriptors_1 = hasPropertyDescriptors;
+  	return hasPropertyDescriptors_1;
+  }
+
+  var DefineOwnProperty;
+  var hasRequiredDefineOwnProperty;
+
+  function requireDefineOwnProperty () {
+  	if (hasRequiredDefineOwnProperty) return DefineOwnProperty;
+  	hasRequiredDefineOwnProperty = 1;
+
+  	var hasPropertyDescriptors = requireHasPropertyDescriptors();
+
+  	var GetIntrinsic = getIntrinsic;
+
+  	var $defineProperty = hasPropertyDescriptors() && GetIntrinsic('%Object.defineProperty%', true);
+
+  	var hasArrayLengthDefineBug = hasPropertyDescriptors.hasArrayLengthDefineBug();
+
+  	// eslint-disable-next-line global-require
+  	var isArray = hasArrayLengthDefineBug && IsArray$2;
+
+  	var callBound = callBound$2;
+
+  	var $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
+
+  	// eslint-disable-next-line max-params
+  	DefineOwnProperty = function DefineOwnProperty(IsDataDescriptor, SameValue, FromPropertyDescriptor, O, P, desc) {
+  		if (!$defineProperty) {
+  			if (!IsDataDescriptor(desc)) {
+  				// ES3 does not support getters/setters
+  				return false;
+  			}
+  			if (!desc['[[Configurable]]'] || !desc['[[Writable]]']) {
+  				return false;
+  			}
+
+  			// fallback for ES3
+  			if (P in O && $isEnumerable(O, P) !== !!desc['[[Enumerable]]']) {
+  				// a non-enumerable existing property
+  				return false;
+  			}
+
+  			// property does not exist at all, or exists but is enumerable
+  			var V = desc['[[Value]]'];
+  			// eslint-disable-next-line no-param-reassign
+  			O[P] = V; // will use [[Define]]
+  			return SameValue(O[P], V);
+  		}
+  		if (
+  			hasArrayLengthDefineBug
+  			&& P === 'length'
+  			&& '[[Value]]' in desc
+  			&& isArray(O)
+  			&& O.length !== desc['[[Value]]']
+  		) {
+  			// eslint-disable-next-line no-param-reassign
+  			O.length = desc['[[Value]]'];
+  			return O.length === desc['[[Value]]'];
+  		}
+
+  		$defineProperty(O, P, FromPropertyDescriptor(desc));
+  		return true;
+  	};
+  	return DefineOwnProperty;
+  }
+
+  var isFullyPopulatedPropertyDescriptor;
+  var hasRequiredIsFullyPopulatedPropertyDescriptor;
+
+  function requireIsFullyPopulatedPropertyDescriptor () {
+  	if (hasRequiredIsFullyPopulatedPropertyDescriptor) return isFullyPopulatedPropertyDescriptor;
+  	hasRequiredIsFullyPopulatedPropertyDescriptor = 1;
+
+  	isFullyPopulatedPropertyDescriptor = function isFullyPopulatedPropertyDescriptor(ES, Desc) {
+  		return !!Desc
+  			&& typeof Desc === 'object'
+  			&& '[[Enumerable]]' in Desc
+  			&& '[[Configurable]]' in Desc
+  			&& (ES.IsAccessorDescriptor(Desc) || ES.IsDataDescriptor(Desc));
+  	};
+  	return isFullyPopulatedPropertyDescriptor;
+  }
+
+  var fromPropertyDescriptor;
+  var hasRequiredFromPropertyDescriptor$1;
+
+  function requireFromPropertyDescriptor$1 () {
+  	if (hasRequiredFromPropertyDescriptor$1) return fromPropertyDescriptor;
+  	hasRequiredFromPropertyDescriptor$1 = 1;
+
+  	fromPropertyDescriptor = function fromPropertyDescriptor(Desc) {
+  		if (typeof Desc === 'undefined') {
+  			return Desc;
+  		}
+  		var obj = {};
+  		if ('[[Value]]' in Desc) {
+  			obj.value = Desc['[[Value]]'];
+  		}
+  		if ('[[Writable]]' in Desc) {
+  			obj.writable = !!Desc['[[Writable]]'];
+  		}
+  		if ('[[Get]]' in Desc) {
+  			obj.get = Desc['[[Get]]'];
+  		}
+  		if ('[[Set]]' in Desc) {
+  			obj.set = Desc['[[Set]]'];
+  		}
+  		if ('[[Enumerable]]' in Desc) {
+  			obj.enumerable = !!Desc['[[Enumerable]]'];
+  		}
+  		if ('[[Configurable]]' in Desc) {
+  			obj.configurable = !!Desc['[[Configurable]]'];
+  		}
+  		return obj;
+  	};
+  	return fromPropertyDescriptor;
+  }
+
+  var FromPropertyDescriptor;
+  var hasRequiredFromPropertyDescriptor;
+
+  function requireFromPropertyDescriptor () {
+  	if (hasRequiredFromPropertyDescriptor) return FromPropertyDescriptor;
+  	hasRequiredFromPropertyDescriptor = 1;
+
+  	var assertRecord = requireAssertRecord();
+  	var fromPropertyDescriptor = requireFromPropertyDescriptor$1();
+
+  	var Type = Type$5;
+
+  	// https://262.ecma-international.org/6.0/#sec-frompropertydescriptor
+
+  	FromPropertyDescriptor = function FromPropertyDescriptor(Desc) {
+  		if (typeof Desc !== 'undefined') {
+  			assertRecord(Type, 'Property Descriptor', 'Desc', Desc);
+  		}
+
+  		return fromPropertyDescriptor(Desc);
+  	};
+  	return FromPropertyDescriptor;
+  }
+
+  var IsGenericDescriptor;
+  var hasRequiredIsGenericDescriptor;
+
+  function requireIsGenericDescriptor () {
+  	if (hasRequiredIsGenericDescriptor) return IsGenericDescriptor;
+  	hasRequiredIsGenericDescriptor = 1;
+
+  	var assertRecord = requireAssertRecord();
+
+  	var IsAccessorDescriptor = requireIsAccessorDescriptor();
+  	var IsDataDescriptor = requireIsDataDescriptor();
+  	var Type = Type$5;
+
+  	// https://262.ecma-international.org/6.0/#sec-isgenericdescriptor
+
+  	IsGenericDescriptor = function IsGenericDescriptor(Desc) {
+  		if (typeof Desc === 'undefined') {
+  			return false;
+  		}
+
+  		assertRecord(Type, 'Property Descriptor', 'Desc', Desc);
+
+  		if (!IsAccessorDescriptor(Desc) && !IsDataDescriptor(Desc)) {
+  			return true;
+  		}
+
+  		return false;
+  	};
+  	return IsGenericDescriptor;
+  }
+
+  var ValidateAndApplyPropertyDescriptor;
+  var hasRequiredValidateAndApplyPropertyDescriptor;
+
+  function requireValidateAndApplyPropertyDescriptor () {
+  	if (hasRequiredValidateAndApplyPropertyDescriptor) return ValidateAndApplyPropertyDescriptor;
+  	hasRequiredValidateAndApplyPropertyDescriptor = 1;
+
+  	var GetIntrinsic = getIntrinsic;
+
+  	var $TypeError = GetIntrinsic('%TypeError%');
+
+  	var DefineOwnProperty = requireDefineOwnProperty();
+  	var isFullyPopulatedPropertyDescriptor = requireIsFullyPopulatedPropertyDescriptor();
+  	var isPropertyDescriptor = requireIsPropertyDescriptor();
+
+  	var FromPropertyDescriptor = requireFromPropertyDescriptor();
+  	var IsAccessorDescriptor = requireIsAccessorDescriptor();
+  	var IsDataDescriptor = requireIsDataDescriptor();
+  	var IsGenericDescriptor = requireIsGenericDescriptor();
+  	var IsPropertyKey = IsPropertyKey$4;
+  	var SameValue$1 = SameValue;
+  	var Type = Type$5;
+
+  	// https://262.ecma-international.org/13.0/#sec-validateandapplypropertydescriptor
+
+  	// see https://github.com/tc39/ecma262/pull/2468 for ES2022 changes
+
+  	// eslint-disable-next-line max-lines-per-function, max-statements, max-params
+  	ValidateAndApplyPropertyDescriptor = function ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current) {
+  		var oType = Type(O);
+  		if (oType !== 'Undefined' && oType !== 'Object') {
+  			throw new $TypeError('Assertion failed: O must be undefined or an Object');
+  		}
+  		if (!IsPropertyKey(P)) {
+  			throw new $TypeError('Assertion failed: P must be a Property Key');
+  		}
+  		if (Type(extensible) !== 'Boolean') {
+  			throw new $TypeError('Assertion failed: extensible must be a Boolean');
+  		}
+  		if (!isPropertyDescriptor({
+  			Type: Type,
+  			IsDataDescriptor: IsDataDescriptor,
+  			IsAccessorDescriptor: IsAccessorDescriptor
+  		}, Desc)) {
+  			throw new $TypeError('Assertion failed: Desc must be a Property Descriptor');
+  		}
+  		if (Type(current) !== 'Undefined' && !isPropertyDescriptor({
+  			Type: Type,
+  			IsDataDescriptor: IsDataDescriptor,
+  			IsAccessorDescriptor: IsAccessorDescriptor
+  		}, current)) {
+  			throw new $TypeError('Assertion failed: current must be a Property Descriptor, or undefined');
+  		}
+
+  		if (Type(current) === 'Undefined') { // step 2
+  			if (!extensible) {
+  				return false; // step 2.a
+  			}
+  			if (oType === 'Undefined') {
+  				return true; // step 2.b
+  			}
+  			if (IsAccessorDescriptor(Desc)) { // step 2.c
+  				return DefineOwnProperty(
+  					IsDataDescriptor,
+  					SameValue$1,
+  					FromPropertyDescriptor,
+  					O,
+  					P,
+  					Desc
+  				);
+  			}
+  			// step 2.d
+  			return DefineOwnProperty(
+  				IsDataDescriptor,
+  				SameValue$1,
+  				FromPropertyDescriptor,
+  				O,
+  				P,
+  				{
+  					'[[Configurable]]': !!Desc['[[Configurable]]'],
+  					'[[Enumerable]]': !!Desc['[[Enumerable]]'],
+  					'[[Value]]': Desc['[[Value]]'],
+  					'[[Writable]]': !!Desc['[[Writable]]']
+  				}
+  			);
+  		}
+
+  		// 3. Assert: current is a fully populated Property Descriptor.
+  		if (!isFullyPopulatedPropertyDescriptor({
+  			IsAccessorDescriptor: IsAccessorDescriptor,
+  			IsDataDescriptor: IsDataDescriptor
+  		}, current)) {
+  			throw new $TypeError('`current`, when present, must be a fully populated and valid Property Descriptor');
+  		}
+
+  		// 4. If every field in Desc is absent, return true.
+  		// this can't really match the assertion that it's a Property Descriptor in our JS implementation
+
+  		// 5. If current.[[Configurable]] is false, then
+  		if (!current['[[Configurable]]']) {
+  			if ('[[Configurable]]' in Desc && Desc['[[Configurable]]']) {
+  				// step 5.a
+  				return false;
+  			}
+  			if ('[[Enumerable]]' in Desc && !SameValue$1(Desc['[[Enumerable]]'], current['[[Enumerable]]'])) {
+  				// step 5.b
+  				return false;
+  			}
+  			if (!IsGenericDescriptor(Desc) && !SameValue$1(IsAccessorDescriptor(Desc), IsAccessorDescriptor(current))) {
+  				// step 5.c
+  				return false;
+  			}
+  			if (IsAccessorDescriptor(current)) { // step 5.d
+  				if ('[[Get]]' in Desc && !SameValue$1(Desc['[[Get]]'], current['[[Get]]'])) {
+  					return false;
+  				}
+  				if ('[[Set]]' in Desc && !SameValue$1(Desc['[[Set]]'], current['[[Set]]'])) {
+  					return false;
+  				}
+  			} else if (!current['[[Writable]]']) { // step 5.e
+  				if ('[[Writable]]' in Desc && Desc['[[Writable]]']) {
+  					return false;
+  				}
+  				if ('[[Value]]' in Desc && !SameValue$1(Desc['[[Value]]'], current['[[Value]]'])) {
+  					return false;
+  				}
+  			}
+  		}
+
+  		// 6. If O is not undefined, then
+  		if (oType !== 'Undefined') {
+  			var configurable;
+  			var enumerable;
+  			if (IsDataDescriptor(current) && IsAccessorDescriptor(Desc)) { // step 6.a
+  				configurable = ('[[Configurable]]' in Desc ? Desc : current)['[[Configurable]]'];
+  				enumerable = ('[[Enumerable]]' in Desc ? Desc : current)['[[Enumerable]]'];
+  				// Replace the property named P of object O with an accessor property having [[Configurable]] and [[Enumerable]] attributes as described by current and each other attribute set to its default value.
+  				return DefineOwnProperty(
+  					IsDataDescriptor,
+  					SameValue$1,
+  					FromPropertyDescriptor,
+  					O,
+  					P,
+  					{
+  						'[[Configurable]]': !!configurable,
+  						'[[Enumerable]]': !!enumerable,
+  						'[[Get]]': ('[[Get]]' in Desc ? Desc : current)['[[Get]]'],
+  						'[[Set]]': ('[[Set]]' in Desc ? Desc : current)['[[Set]]']
+  					}
+  				);
+  			} else if (IsAccessorDescriptor(current) && IsDataDescriptor(Desc)) {
+  				configurable = ('[[Configurable]]' in Desc ? Desc : current)['[[Configurable]]'];
+  				enumerable = ('[[Enumerable]]' in Desc ? Desc : current)['[[Enumerable]]'];
+  				// i. Replace the property named P of object O with a data property having [[Configurable]] and [[Enumerable]] attributes as described by current and each other attribute set to its default value.
+  				return DefineOwnProperty(
+  					IsDataDescriptor,
+  					SameValue$1,
+  					FromPropertyDescriptor,
+  					O,
+  					P,
+  					{
+  						'[[Configurable]]': !!configurable,
+  						'[[Enumerable]]': !!enumerable,
+  						'[[Value]]': ('[[Value]]' in Desc ? Desc : current)['[[Value]]'],
+  						'[[Writable]]': !!('[[Writable]]' in Desc ? Desc : current)['[[Writable]]']
+  					}
+  				);
+  			}
+
+  			// For each field of Desc that is present, set the corresponding attribute of the property named P of object O to the value of the field.
+  			return DefineOwnProperty(
+  				IsDataDescriptor,
+  				SameValue$1,
+  				FromPropertyDescriptor,
+  				O,
+  				P,
+  				Desc
+  			);
+  		}
+
+  		return true; // step 7
+  	};
+  	return ValidateAndApplyPropertyDescriptor;
+  }
+
+  var OrdinaryDefineOwnProperty;
+  var hasRequiredOrdinaryDefineOwnProperty;
+
+  function requireOrdinaryDefineOwnProperty () {
+  	if (hasRequiredOrdinaryDefineOwnProperty) return OrdinaryDefineOwnProperty;
+  	hasRequiredOrdinaryDefineOwnProperty = 1;
+
+  	var GetIntrinsic = getIntrinsic;
+
+  	var $gOPD = requireGopd();
+  	var $SyntaxError = GetIntrinsic('%SyntaxError%');
+  	var $TypeError = GetIntrinsic('%TypeError%');
+
+  	var isPropertyDescriptor = requireIsPropertyDescriptor();
+
+  	var IsAccessorDescriptor = requireIsAccessorDescriptor();
+  	var IsDataDescriptor = requireIsDataDescriptor();
+  	var IsExtensible = requireIsExtensible();
+  	var IsPropertyKey = IsPropertyKey$4;
+  	var ToPropertyDescriptor = requireToPropertyDescriptor();
+  	var SameValue$1 = SameValue;
+  	var Type = Type$5;
+  	var ValidateAndApplyPropertyDescriptor = requireValidateAndApplyPropertyDescriptor();
+
+  	// https://262.ecma-international.org/6.0/#sec-ordinarydefineownproperty
+
+  	OrdinaryDefineOwnProperty = function OrdinaryDefineOwnProperty(O, P, Desc) {
+  		if (Type(O) !== 'Object') {
+  			throw new $TypeError('Assertion failed: O must be an Object');
+  		}
+  		if (!IsPropertyKey(P)) {
+  			throw new $TypeError('Assertion failed: P must be a Property Key');
+  		}
+  		if (!isPropertyDescriptor({
+  			Type: Type,
+  			IsDataDescriptor: IsDataDescriptor,
+  			IsAccessorDescriptor: IsAccessorDescriptor
+  		}, Desc)) {
+  			throw new $TypeError('Assertion failed: Desc must be a Property Descriptor');
+  		}
+  		if (!$gOPD) {
+  			// ES3/IE 8 fallback
+  			if (IsAccessorDescriptor(Desc)) {
+  				throw new $SyntaxError('This environment does not support accessor property descriptors.');
+  			}
+  			var creatingNormalDataProperty = !(P in O)
+  				&& Desc['[[Writable]]']
+  				&& Desc['[[Enumerable]]']
+  				&& Desc['[[Configurable]]']
+  				&& '[[Value]]' in Desc;
+  			var settingExistingDataProperty = (P in O)
+  				&& (!('[[Configurable]]' in Desc) || Desc['[[Configurable]]'])
+  				&& (!('[[Enumerable]]' in Desc) || Desc['[[Enumerable]]'])
+  				&& (!('[[Writable]]' in Desc) || Desc['[[Writable]]'])
+  				&& '[[Value]]' in Desc;
+  			if (creatingNormalDataProperty || settingExistingDataProperty) {
+  				O[P] = Desc['[[Value]]']; // eslint-disable-line no-param-reassign
+  				return SameValue$1(O[P], Desc['[[Value]]']);
+  			}
+  			throw new $SyntaxError('This environment does not support defining non-writable, non-enumerable, or non-configurable properties');
+  		}
+  		var desc = $gOPD(O, P);
+  		var current = desc && ToPropertyDescriptor(desc);
+  		var extensible = IsExtensible(O);
+  		return ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current);
+  	};
+  	return OrdinaryDefineOwnProperty;
+  }
+
   var CreateDataProperty$1;
   var hasRequiredCreateDataProperty;
 
@@ -3046,17 +3265,11 @@
 
   	var $TypeError = GetIntrinsic('%TypeError%');
 
-  	var DefineOwnProperty = requireDefineOwnProperty();
-
-  	var FromPropertyDescriptor = requireFromPropertyDescriptor();
-  	var OrdinaryGetOwnProperty = requireOrdinaryGetOwnProperty();
-  	var IsDataDescriptor = requireIsDataDescriptor();
-  	var IsExtensible = requireIsExtensible();
   	var IsPropertyKey = IsPropertyKey$4;
-  	var SameValue$1 = SameValue;
+  	var OrdinaryDefineOwnProperty = requireOrdinaryDefineOwnProperty();
   	var Type = Type$5;
 
-  	// https://ecma-international.org/ecma-262/6.0/#sec-createdataproperty
+  	// https://262.ecma-international.org/6.0/#sec-createdataproperty
 
   	CreateDataProperty$1 = function CreateDataProperty(O, P, V) {
   		if (Type(O) !== 'Object') {
@@ -3065,25 +3278,13 @@
   		if (!IsPropertyKey(P)) {
   			throw new $TypeError('Assertion failed: IsPropertyKey(P) is not true');
   		}
-  		var oldDesc = OrdinaryGetOwnProperty(O, P);
-  		var extensible = !oldDesc || IsExtensible(O);
-  		var nonConfigurable = oldDesc && !oldDesc['[[Configurable]]'];
-  		if (nonConfigurable || !extensible) {
-  			return false;
-  		}
-  		return DefineOwnProperty(
-  			IsDataDescriptor,
-  			SameValue$1,
-  			FromPropertyDescriptor,
-  			O,
-  			P,
-  			{
-  				'[[Configurable]]': true,
-  				'[[Enumerable]]': true,
-  				'[[Value]]': V,
-  				'[[Writable]]': true
-  			}
-  		);
+  		var newDesc = {
+  			'[[Configurable]]': true,
+  			'[[Enumerable]]': true,
+  			'[[Value]]': V,
+  			'[[Writable]]': true
+  		};
+  		return OrdinaryDefineOwnProperty(O, P, newDesc);
   	};
   	return CreateDataProperty$1;
   }
@@ -3096,7 +3297,7 @@
   var IsPropertyKey$3 = IsPropertyKey$4;
   var Type$4 = Type$5;
 
-  // // https://ecma-international.org/ecma-262/6.0/#sec-createdatapropertyorthrow
+  // // https://262.ecma-international.org/6.0/#sec-createdatapropertyorthrow
 
   var CreateDataPropertyOrThrow = function CreateDataPropertyOrThrow(O, P, V) {
   	if (Type$4(O) !== 'Object') {
@@ -5345,7 +5546,7 @@
     if (!isString(f)) {
       var objects = [];
       for (var i = 0; i < arguments.length; i++) {
-        objects.push(inspect$1(arguments[i]));
+        objects.push(inspect$2(arguments[i]));
       }
       return objects.join(' ');
     }
@@ -5373,7 +5574,7 @@
       if (isNull(x) || !isObject(x)) {
         str += ' ' + x;
       } else {
-        str += ' ' + inspect$1(x);
+        str += ' ' + inspect$2(x);
       }
     }
     return str;
@@ -5440,7 +5641,7 @@
    * @param {Object} opts Optional options object that alters the output.
    */
   /* legacy: obj, showHidden, depth, colors*/
-  function inspect$1(obj, opts) {
+  function inspect$2(obj, opts) {
     // default options
     var ctx = {
       seen: [],
@@ -5466,7 +5667,7 @@
   }
 
   // http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-  inspect$1.colors = {
+  inspect$2.colors = {
     'bold' : [1, 22],
     'italic' : [3, 23],
     'underline' : [4, 24],
@@ -5483,7 +5684,7 @@
   };
 
   // Don't use 'blue' not visible on cmd.exe
-  inspect$1.styles = {
+  inspect$2.styles = {
     'special': 'cyan',
     'number': 'yellow',
     'boolean': 'yellow',
@@ -5497,11 +5698,11 @@
 
 
   function stylizeWithColor(str, styleType) {
-    var style = inspect$1.styles[styleType];
+    var style = inspect$2.styles[styleType];
 
     if (style) {
-      return '\u001b[' + inspect$1.colors[style][0] + 'm' + str +
-             '\u001b[' + inspect$1.colors[style][1] + 'm';
+      return '\u001b[' + inspect$2.colors[style][0] + 'm' + str +
+             '\u001b[' + inspect$2.colors[style][1] + 'm';
     } else {
       return str;
     }
@@ -5531,7 +5732,7 @@
         value &&
         isFunction(value.inspect) &&
         // Filter out the util module, it's inspect function is special
-        value.inspect !== inspect$1 &&
+        value.inspect !== inspect$2 &&
         // Also filter out any prototype objects using the circular check.
         !(value.constructor && value.constructor.prototype === value)) {
       var ret = value.inspect(recurseTimes, ctx);
@@ -5889,7 +6090,7 @@
     isNull: isNull,
     isBoolean: isBoolean,
     isArray: isArray,
-    inspect: inspect$1,
+    inspect: inspect$2,
     deprecate: deprecate,
     format: format$1,
     debuglog: debuglog
@@ -5903,7 +6104,7 @@
     deprecate: deprecate,
     format: format$1,
     inherits: inherits$1,
-    inspect: inspect$1,
+    inspect: inspect$2,
     isArray: isArray,
     isBoolean: isBoolean,
     isBuffer: isBuffer,
@@ -6463,12 +6664,12 @@
 
   var $TypeError$5 = GetIntrinsic$a('%TypeError%');
 
-  var inspect = requireObjectInspect();
+  var inspect$1 = requireObjectInspect();
 
   var IsPropertyKey$2 = IsPropertyKey$4;
   var Type$3 = Type$5;
 
-  // https://ecma-international.org/ecma-262/6.0/#sec-get-o-p
+  // https://262.ecma-international.org/6.0/#sec-get-o-p
 
   var Get = function Get(O, P) {
   	// 7.3.1.1
@@ -6477,7 +6678,7 @@
   	}
   	// 7.3.1.2
   	if (!IsPropertyKey$2(P)) {
-  		throw new $TypeError$5('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect(P));
+  		throw new $TypeError$5('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$1(P));
   	}
   	// 7.3.1.3
   	return O[P];
@@ -6531,7 +6732,7 @@
 
   var RequireObjectCoercible = requireRequireObjectCoercible();
 
-  // https://ecma-international.org/ecma-262/6.0/#sec-toobject
+  // https://262.ecma-international.org/6.0/#sec-toobject
 
   var ToObject = function ToObject(value) {
   	RequireObjectCoercible(value);
@@ -6554,7 +6755,7 @@
   	var IsPropertyKey = IsPropertyKey$4;
   	var ToObject$1 = ToObject;
 
-  	// https://ecma-international.org/ecma-262/6.0/#sec-getv
+  	// https://262.ecma-international.org/6.0/#sec-getv
 
   	GetV$1 = function GetV(V, P) {
   		// 7.3.2.1
@@ -6579,9 +6780,9 @@
   var IsCallable = requireIsCallable();
   var IsPropertyKey$1 = IsPropertyKey$4;
 
-  var debug = requireObjectInspect();
+  var inspect = requireObjectInspect();
 
-  // https://ecma-international.org/ecma-262/6.0/#sec-getmethod
+  // https://262.ecma-international.org/6.0/#sec-getmethod
 
   var GetMethod$1 = function GetMethod(O, P) {
   	// 7.3.9.1
@@ -6599,7 +6800,7 @@
 
   	// 7.3.9.5
   	if (!IsCallable(func)) {
-  		throw new $TypeError$4(P + ' is not a function: ' + debug(func));
+  		throw new $TypeError$4(inspect(P) + ' is not a function: ' + inspect(func));
   	}
 
   	// 7.3.9.6
@@ -6658,6 +6859,12 @@
 
   var isPrimitive$2 = function isPrimitive(value) {
   	return value === null || (typeof value !== 'function' && typeof value !== 'object');
+  };
+
+  var hasSymbols$2 = shams$1;
+
+  var shams = function hasToStringTagShams() {
+  	return hasSymbols$2() && !!Symbol.toStringTag;
   };
 
   var getDay = Date.prototype.getDay;
@@ -6797,7 +7004,7 @@
 
   var toPrimitive = es2015;
 
-  // https://ecma-international.org/ecma-262/6.0/#sec-toprimitive
+  // https://262.ecma-international.org/6.0/#sec-toprimitive
 
   var ToPrimitive$1 = function ToPrimitive(input) {
   	if (arguments.length > 1) {
@@ -6807,6 +7014,72 @@
   };
 
   var ToPrimitive$2 = ToPrimitive$1;
+
+  var isRegex;
+  var hasRequiredIsRegex;
+
+  function requireIsRegex () {
+  	if (hasRequiredIsRegex) return isRegex;
+  	hasRequiredIsRegex = 1;
+
+  	var callBound = callBound$2;
+  	var hasToStringTag = shams();
+  	var has;
+  	var $exec;
+  	var isRegexMarker;
+  	var badStringifier;
+
+  	if (hasToStringTag) {
+  		has = callBound('Object.prototype.hasOwnProperty');
+  		$exec = callBound('RegExp.prototype.exec');
+  		isRegexMarker = {};
+
+  		var throwRegexMarker = function () {
+  			throw isRegexMarker;
+  		};
+  		badStringifier = {
+  			toString: throwRegexMarker,
+  			valueOf: throwRegexMarker
+  		};
+
+  		if (typeof Symbol.toPrimitive === 'symbol') {
+  			badStringifier[Symbol.toPrimitive] = throwRegexMarker;
+  		}
+  	}
+
+  	var $toString = callBound('Object.prototype.toString');
+  	var gOPD = Object.getOwnPropertyDescriptor;
+  	var regexClass = '[object RegExp]';
+
+  	isRegex = hasToStringTag
+  		// eslint-disable-next-line consistent-return
+  		? function isRegex(value) {
+  			if (!value || typeof value !== 'object') {
+  				return false;
+  			}
+
+  			var descriptor = gOPD(value, 'lastIndex');
+  			var hasLastIndexDataProperty = descriptor && has(descriptor, 'value');
+  			if (!hasLastIndexDataProperty) {
+  				return false;
+  			}
+
+  			try {
+  				$exec(value, badStringifier);
+  			} catch (e) {
+  				return e === isRegexMarker;
+  			}
+  		}
+  		: function isRegex(value) {
+  			// In older browsers, typeof regex incorrectly returns 'function'
+  			if (!value || (typeof value !== 'object' && typeof value !== 'function')) {
+  				return false;
+  			}
+
+  			return $toString(value) === regexClass;
+  		};
+  	return isRegex;
+  }
 
   var safeRegexTest;
   var hasRequiredSafeRegexTest;
@@ -6833,200 +7106,6 @@
   	return safeRegexTest;
   }
 
-  var StringToNumber$1;
-  var hasRequiredStringToNumber;
-
-  function requireStringToNumber () {
-  	if (hasRequiredStringToNumber) return StringToNumber$1;
-  	hasRequiredStringToNumber = 1;
-
-  	var GetIntrinsic = getIntrinsic;
-
-  	var $Number = GetIntrinsic('%Number%');
-  	var $RegExp = GetIntrinsic('%RegExp%');
-  	var $TypeError = GetIntrinsic('%TypeError%');
-  	var $parseInteger = GetIntrinsic('%parseInt%');
-
-  	var callBound = callBound$2;
-  	var regexTester = requireSafeRegexTest();
-
-  	var $strSlice = callBound('String.prototype.slice');
-  	var isBinary = regexTester(/^0b[01]+$/i);
-  	var isOctal = regexTester(/^0o[0-7]+$/i);
-  	var isInvalidHexLiteral = regexTester(/^[-+]0x[0-9a-f]+$/i);
-  	var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
-  	var nonWSregex = new $RegExp('[' + nonWS + ']', 'g');
-  	var hasNonWS = regexTester(nonWSregex);
-
-  	// whitespace from: https://es5.github.io/#x15.5.4.20
-  	// implementation from https://github.com/es-shims/es5-shim/blob/v3.4.0/es5-shim.js#L1304-L1324
-  	var ws = [
-  		'\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003',
-  		'\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028',
-  		'\u2029\uFEFF'
-  	].join('');
-  	var trimRegex = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
-  	var $replace = callBound('String.prototype.replace');
-  	var $trim = function (value) {
-  		return $replace(value, trimRegex, '');
-  	};
-
-  	var Type = Type$5;
-
-  	// https://ecma-international.org/ecma-262/13.0/#sec-stringtonumber
-
-  	StringToNumber$1 = function StringToNumber(argument) {
-  		if (Type(argument) !== 'String') {
-  			throw new $TypeError('Assertion failed: `argument` is not a String');
-  		}
-  		if (isBinary(argument)) {
-  			return $Number($parseInteger($strSlice(argument, 2), 2));
-  		}
-  		if (isOctal(argument)) {
-  			return $Number($parseInteger($strSlice(argument, 2), 8));
-  		}
-  		if (hasNonWS(argument) || isInvalidHexLiteral(argument)) {
-  			return NaN;
-  		}
-  		var trimmed = $trim(argument);
-  		if (trimmed !== argument) {
-  			return StringToNumber(trimmed);
-  		}
-  		return $Number(argument);
-  	};
-  	return StringToNumber$1;
-  }
-
-  var GetIntrinsic$6 = getIntrinsic;
-
-  var $TypeError$3 = GetIntrinsic$6('%TypeError%');
-  var $Number$1 = GetIntrinsic$6('%Number%');
-  var isPrimitive = requireIsPrimitive();
-
-  var ToPrimitive = ToPrimitive$1;
-  var StringToNumber = requireStringToNumber();
-
-  // https://ecma-international.org/ecma-262/13.0/#sec-tonumber
-
-  var ToNumber$1 = function ToNumber(argument) {
-  	var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number$1);
-  	if (typeof value === 'symbol') {
-  		throw new $TypeError$3('Cannot convert a Symbol value to a number');
-  	}
-  	if (typeof value === 'bigint') {
-  		throw new $TypeError$3('Conversion from \'BigInt\' to \'number\' is not allowed.');
-  	}
-  	if (typeof value === 'string') {
-  		return StringToNumber(value);
-  	}
-  	return $Number$1(value);
-  };
-
-  var ToNumber$2 = ToNumber$1;
-
-  var sign = function sign(number) {
-  	return number >= 0 ? 1 : -1;
-  };
-
-  var abs = abs$2;
-  var floor = floor$2;
-  var ToNumber = ToNumber$1;
-
-  var $isNaN = _isNaN;
-  var $isFinite = _isFinite;
-  var $sign = sign;
-
-  // https://262.ecma-international.org/12.0/#sec-tointegerorinfinity
-
-  var ToIntegerOrInfinity$1 = function ToIntegerOrInfinity(value) {
-  	var number = ToNumber(value);
-  	if ($isNaN(number) || number === 0) { return 0; }
-  	if (!$isFinite(number)) { return number; }
-  	var integer = floor(abs(number));
-  	if (integer === 0) { return 0; }
-  	return $sign(number) * integer;
-  };
-
-  var ToIntegerOrInfinity$2 = ToIntegerOrInfinity$1;
-
-  var GetIntrinsic$5 = getIntrinsic;
-
-  var $Math = GetIntrinsic$5('%Math%');
-  var $Number = GetIntrinsic$5('%Number%');
-
-  var maxSafeInteger = $Number.MAX_SAFE_INTEGER || $Math.pow(2, 53) - 1;
-
-  var MAX_SAFE_INTEGER = maxSafeInteger;
-
-  var ToIntegerOrInfinity = ToIntegerOrInfinity$1;
-
-  var ToLength = function ToLength(argument) {
-  	var len = ToIntegerOrInfinity(argument);
-  	if (len <= 0) { return 0; } // includes converting -0 to +0
-  	if (len > MAX_SAFE_INTEGER) { return MAX_SAFE_INTEGER; }
-  	return len;
-  };
-
-  var ToLength$1 = ToLength;
-
-  var GetIntrinsic$4 = getIntrinsic;
-
-  var $String = GetIntrinsic$4('%String%');
-  var $TypeError$2 = GetIntrinsic$4('%TypeError%');
-
-  // https://ecma-international.org/ecma-262/6.0/#sec-tostring
-
-  var ToString = function ToString(argument) {
-  	if (typeof argument === 'symbol') {
-  		throw new $TypeError$2('Cannot convert a Symbol value to a string');
-  	}
-  	return $String(argument);
-  };
-
-  var ToString$1 = ToString;
-
-  var GetIntrinsic$3 = getIntrinsic;
-
-  var $TypeError$1 = GetIntrinsic$3('%TypeError%');
-
-  var has = requireSrc();
-
-  var IsPropertyKey = IsPropertyKey$4;
-  var Type = Type$5;
-
-  // https://ecma-international.org/ecma-262/6.0/#sec-hasownproperty
-
-  var HasOwnProperty = function HasOwnProperty(O, P) {
-  	if (Type(O) !== 'Object') {
-  		throw new $TypeError$1('Assertion failed: `O` must be an Object');
-  	}
-  	if (!IsPropertyKey(P)) {
-  		throw new $TypeError$1('Assertion failed: `P` must be a Property Key');
-  	}
-  	return has(O, P);
-  };
-
-  var HasOwnProperty$1 = HasOwnProperty;
-
-  var every = function every(array, predicate) {
-  	for (var i = 0; i < array.length; i += 1) {
-  		if (!predicate(array[i], i, array)) {
-  			return false;
-  		}
-  	}
-  	return true;
-  };
-
-  var every$1 = every;
-
-  var forEach = function forEach(array, callback) {
-  	for (var i = 0; i < array.length; i += 1) {
-  		callback(array[i], i, array); // eslint-disable-line callback-return
-  	}
-  };
-
-  var forEach$1 = forEach;
-
   var isArguments;
   var hasRequiredIsArguments;
 
@@ -7052,12 +7131,12 @@
   	return isArguments;
   }
 
-  var implementation;
-  var hasRequiredImplementation;
+  var implementation$1;
+  var hasRequiredImplementation$1;
 
-  function requireImplementation () {
-  	if (hasRequiredImplementation) return implementation;
-  	hasRequiredImplementation = 1;
+  function requireImplementation$1 () {
+  	if (hasRequiredImplementation$1) return implementation$1;
+  	hasRequiredImplementation$1 = 1;
 
   	var keysShim;
   	if (!Object.keys) {
@@ -7178,8 +7257,8 @@
   			return theKeys;
   		};
   	}
-  	implementation = keysShim;
-  	return implementation;
+  	implementation$1 = keysShim;
+  	return implementation$1;
   }
 
   var objectKeys;
@@ -7193,7 +7272,7 @@
   	var isArgs = requireIsArguments();
 
   	var origKeys = Object.keys;
-  	var keysShim = origKeys ? function keys(o) { return origKeys(o); } : requireImplementation();
+  	var keysShim = origKeys ? function keys(o) { return origKeys(o); } : requireImplementation$1();
 
   	var originalKeys = Object.keys;
 
@@ -7221,6 +7300,359 @@
   	objectKeys = keysShim;
   	return objectKeys;
   }
+
+  var defineProperties_1;
+  var hasRequiredDefineProperties;
+
+  function requireDefineProperties () {
+  	if (hasRequiredDefineProperties) return defineProperties_1;
+  	hasRequiredDefineProperties = 1;
+
+  	var keys = requireObjectKeys();
+  	var hasSymbols = typeof Symbol === 'function' && typeof Symbol('foo') === 'symbol';
+
+  	var toStr = Object.prototype.toString;
+  	var concat = Array.prototype.concat;
+  	var origDefineProperty = Object.defineProperty;
+
+  	var isFunction = function (fn) {
+  		return typeof fn === 'function' && toStr.call(fn) === '[object Function]';
+  	};
+
+  	var hasPropertyDescriptors = requireHasPropertyDescriptors()();
+
+  	var supportsDescriptors = origDefineProperty && hasPropertyDescriptors;
+
+  	var defineProperty = function (object, name, value, predicate) {
+  		if (name in object) {
+  			if (predicate === true) {
+  				if (object[name] === value) {
+  					return;
+  				}
+  			} else if (!isFunction(predicate) || !predicate()) {
+  				return;
+  			}
+  		}
+  		if (supportsDescriptors) {
+  			origDefineProperty(object, name, {
+  				configurable: true,
+  				enumerable: false,
+  				value: value,
+  				writable: true
+  			});
+  		} else {
+  			object[name] = value; // eslint-disable-line no-param-reassign
+  		}
+  	};
+
+  	var defineProperties = function (object, map) {
+  		var predicates = arguments.length > 2 ? arguments[2] : {};
+  		var props = keys(map);
+  		if (hasSymbols) {
+  			props = concat.call(props, Object.getOwnPropertySymbols(map));
+  		}
+  		for (var i = 0; i < props.length; i += 1) {
+  			defineProperty(object, props[i], map[props[i]], predicates[props[i]]);
+  		}
+  	};
+
+  	defineProperties.supportsDescriptors = !!supportsDescriptors;
+
+  	defineProperties_1 = defineProperties;
+  	return defineProperties_1;
+  }
+
+  var GetIntrinsic$6 = getIntrinsic;
+
+  var $String = GetIntrinsic$6('%String%');
+  var $TypeError$3 = GetIntrinsic$6('%TypeError%');
+
+  // https://262.ecma-international.org/6.0/#sec-tostring
+
+  var ToString = function ToString(argument) {
+  	if (typeof argument === 'symbol') {
+  		throw new $TypeError$3('Cannot convert a Symbol value to a string');
+  	}
+  	return $String(argument);
+  };
+
+  var ToString$1 = ToString;
+
+  var implementation;
+  var hasRequiredImplementation;
+
+  function requireImplementation () {
+  	if (hasRequiredImplementation) return implementation;
+  	hasRequiredImplementation = 1;
+
+  	var RequireObjectCoercible = requireRequireObjectCoercible();
+  	var ToString$1 = ToString;
+  	var callBound = callBound$2;
+  	var $replace = callBound('String.prototype.replace');
+
+  	var mvsIsWS = (/^\s$/).test('\u180E');
+  	/* eslint-disable no-control-regex */
+  	var leftWhitespace = mvsIsWS
+  		? /^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+/
+  		: /^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+/;
+  	var rightWhitespace = mvsIsWS
+  		? /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+$/
+  		: /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+$/;
+  	/* eslint-enable no-control-regex */
+
+  	implementation = function trim() {
+  		var S = ToString$1(RequireObjectCoercible(this));
+  		return $replace($replace(S, leftWhitespace, ''), rightWhitespace, '');
+  	};
+  	return implementation;
+  }
+
+  var polyfill;
+  var hasRequiredPolyfill;
+
+  function requirePolyfill () {
+  	if (hasRequiredPolyfill) return polyfill;
+  	hasRequiredPolyfill = 1;
+
+  	var implementation = requireImplementation();
+
+  	var zeroWidthSpace = '\u200b';
+  	var mongolianVowelSeparator = '\u180E';
+
+  	polyfill = function getPolyfill() {
+  		if (
+  			String.prototype.trim
+  			&& zeroWidthSpace.trim() === zeroWidthSpace
+  			&& mongolianVowelSeparator.trim() === mongolianVowelSeparator
+  			&& ('_' + mongolianVowelSeparator).trim() === ('_' + mongolianVowelSeparator)
+  			&& (mongolianVowelSeparator + '_').trim() === (mongolianVowelSeparator + '_')
+  		) {
+  			return String.prototype.trim;
+  		}
+  		return implementation;
+  	};
+  	return polyfill;
+  }
+
+  var shim;
+  var hasRequiredShim;
+
+  function requireShim () {
+  	if (hasRequiredShim) return shim;
+  	hasRequiredShim = 1;
+
+  	var define = requireDefineProperties();
+  	var getPolyfill = requirePolyfill();
+
+  	shim = function shimStringTrim() {
+  		var polyfill = getPolyfill();
+  		define(String.prototype, { trim: polyfill }, {
+  			trim: function testTrim() {
+  				return String.prototype.trim !== polyfill;
+  			}
+  		});
+  		return polyfill;
+  	};
+  	return shim;
+  }
+
+  var string_prototype_trim;
+  var hasRequiredString_prototype_trim;
+
+  function requireString_prototype_trim () {
+  	if (hasRequiredString_prototype_trim) return string_prototype_trim;
+  	hasRequiredString_prototype_trim = 1;
+
+  	var callBind = callBindExports;
+  	var define = requireDefineProperties();
+  	var RequireObjectCoercible = requireRequireObjectCoercible();
+
+  	var implementation = requireImplementation();
+  	var getPolyfill = requirePolyfill();
+  	var shim = requireShim();
+
+  	var bound = callBind(getPolyfill());
+  	var boundMethod = function trim(receiver) {
+  		RequireObjectCoercible(receiver);
+  		return bound(receiver);
+  	};
+
+  	define(boundMethod, {
+  		getPolyfill: getPolyfill,
+  		implementation: implementation,
+  		shim: shim
+  	});
+
+  	string_prototype_trim = boundMethod;
+  	return string_prototype_trim;
+  }
+
+  var StringToNumber$1;
+  var hasRequiredStringToNumber;
+
+  function requireStringToNumber () {
+  	if (hasRequiredStringToNumber) return StringToNumber$1;
+  	hasRequiredStringToNumber = 1;
+
+  	var GetIntrinsic = getIntrinsic;
+
+  	var $Number = GetIntrinsic('%Number%');
+  	var $RegExp = GetIntrinsic('%RegExp%');
+  	var $TypeError = GetIntrinsic('%TypeError%');
+  	var $parseInteger = GetIntrinsic('%parseInt%');
+
+  	var callBound = callBound$2;
+  	var regexTester = requireSafeRegexTest();
+
+  	var $strSlice = callBound('String.prototype.slice');
+  	var isBinary = regexTester(/^0b[01]+$/i);
+  	var isOctal = regexTester(/^0o[0-7]+$/i);
+  	var isInvalidHexLiteral = regexTester(/^[-+]0x[0-9a-f]+$/i);
+  	var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
+  	var nonWSregex = new $RegExp('[' + nonWS + ']', 'g');
+  	var hasNonWS = regexTester(nonWSregex);
+
+  	var $trim = requireString_prototype_trim();
+
+  	var Type = Type$5;
+
+  	// https://262.ecma-international.org/13.0/#sec-stringtonumber
+
+  	StringToNumber$1 = function StringToNumber(argument) {
+  		if (Type(argument) !== 'String') {
+  			throw new $TypeError('Assertion failed: `argument` is not a String');
+  		}
+  		if (isBinary(argument)) {
+  			return $Number($parseInteger($strSlice(argument, 2), 2));
+  		}
+  		if (isOctal(argument)) {
+  			return $Number($parseInteger($strSlice(argument, 2), 8));
+  		}
+  		if (hasNonWS(argument) || isInvalidHexLiteral(argument)) {
+  			return NaN;
+  		}
+  		var trimmed = $trim(argument);
+  		if (trimmed !== argument) {
+  			return StringToNumber(trimmed);
+  		}
+  		return $Number(argument);
+  	};
+  	return StringToNumber$1;
+  }
+
+  var GetIntrinsic$5 = getIntrinsic;
+
+  var $TypeError$2 = GetIntrinsic$5('%TypeError%');
+  var $Number$1 = GetIntrinsic$5('%Number%');
+  var isPrimitive = requireIsPrimitive();
+
+  var ToPrimitive = ToPrimitive$1;
+  var StringToNumber = requireStringToNumber();
+
+  // https://262.ecma-international.org/13.0/#sec-tonumber
+
+  var ToNumber$1 = function ToNumber(argument) {
+  	var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number$1);
+  	if (typeof value === 'symbol') {
+  		throw new $TypeError$2('Cannot convert a Symbol value to a number');
+  	}
+  	if (typeof value === 'bigint') {
+  		throw new $TypeError$2('Conversion from \'BigInt\' to \'number\' is not allowed.');
+  	}
+  	if (typeof value === 'string') {
+  		return StringToNumber(value);
+  	}
+  	return $Number$1(value);
+  };
+
+  var ToNumber$2 = ToNumber$1;
+
+  var sign = function sign(number) {
+  	return number >= 0 ? 1 : -1;
+  };
+
+  var abs = abs$2;
+  var floor = floor$2;
+  var ToNumber = ToNumber$1;
+
+  var $isNaN = _isNaN;
+  var $isFinite = _isFinite;
+  var $sign = sign;
+
+  // https://262.ecma-international.org/12.0/#sec-tointegerorinfinity
+
+  var ToIntegerOrInfinity$1 = function ToIntegerOrInfinity(value) {
+  	var number = ToNumber(value);
+  	if ($isNaN(number) || number === 0) { return 0; }
+  	if (!$isFinite(number)) { return number; }
+  	var integer = floor(abs(number));
+  	if (integer === 0) { return 0; }
+  	return $sign(number) * integer;
+  };
+
+  var ToIntegerOrInfinity$2 = ToIntegerOrInfinity$1;
+
+  var GetIntrinsic$4 = getIntrinsic;
+
+  var $Math = GetIntrinsic$4('%Math%');
+  var $Number = GetIntrinsic$4('%Number%');
+
+  var maxSafeInteger = $Number.MAX_SAFE_INTEGER || $Math.pow(2, 53) - 1;
+
+  var MAX_SAFE_INTEGER = maxSafeInteger;
+
+  var ToIntegerOrInfinity = ToIntegerOrInfinity$1;
+
+  var ToLength = function ToLength(argument) {
+  	var len = ToIntegerOrInfinity(argument);
+  	if (len <= 0) { return 0; } // includes converting -0 to +0
+  	if (len > MAX_SAFE_INTEGER) { return MAX_SAFE_INTEGER; }
+  	return len;
+  };
+
+  var ToLength$1 = ToLength;
+
+  var GetIntrinsic$3 = getIntrinsic;
+
+  var $TypeError$1 = GetIntrinsic$3('%TypeError%');
+
+  var has = requireSrc();
+
+  var IsPropertyKey = IsPropertyKey$4;
+  var Type = Type$5;
+
+  // https://262.ecma-international.org/6.0/#sec-hasownproperty
+
+  var HasOwnProperty = function HasOwnProperty(O, P) {
+  	if (Type(O) !== 'Object') {
+  		throw new $TypeError$1('Assertion failed: `O` must be an Object');
+  	}
+  	if (!IsPropertyKey(P)) {
+  		throw new $TypeError$1('Assertion failed: `P` must be a Property Key');
+  	}
+  	return has(O, P);
+  };
+
+  var HasOwnProperty$1 = HasOwnProperty;
+
+  var every = function every(array, predicate) {
+  	for (var i = 0; i < array.length; i += 1) {
+  		if (!predicate(array[i], i, array)) {
+  			return false;
+  		}
+  	}
+  	return true;
+  };
+
+  var every$1 = every;
+
+  var forEach = function forEach(array, callback) {
+  	for (var i = 0; i < array.length; i += 1) {
+  		callback(array[i], i, array); // eslint-disable-line callback-return
+  	}
+  };
+
+  var forEach$1 = forEach;
 
   var GetIntrinsic$2 = getIntrinsic;
 
@@ -10917,10 +11349,10 @@
       // may disambiguate
       var timeRemainderNs = ns2.subtract(intermediateNs);
       var intermediate = ES.CreateTemporalZonedDateTime(intermediateNs, timeZone, calendar);
+      // Finally, merge the date and time durations and return the merged result.
       var _ES$NanosecondsToDays2 = ES.NanosecondsToDays(timeRemainderNs, intermediate);
       timeRemainderNs = _ES$NanosecondsToDays2.nanoseconds;
       days = _ES$NanosecondsToDays2.days;
-      // Finally, merge the date and time durations and return the merged result.
       var _ES$BalanceDuration3 = ES.BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs, 'hour'),
         hours = _ES$BalanceDuration3.hours,
         minutes = _ES$BalanceDuration3.minutes,
@@ -11273,6 +11705,7 @@
         var dateLargestUnit = ES.LargerOfTwoTemporalUnits('day', largestUnit);
         var differenceOptions = ObjectCreate$8(null);
         differenceOptions.largestUnit = dateLargestUnit;
+        // Signs of date part and time part may not agree; balance them together
         var _ES$CalendarDateUntil4 = ES.CalendarDateUntil(calendar, relativeTo, end, differenceOptions);
         years = _ES$CalendarDateUntil4.years;
         months = _ES$CalendarDateUntil4.months;
@@ -14018,12 +14451,23 @@
         case 'month':
         case 'year':
           {
-            var diffYears = calendarTwo.year - calendarOne.year;
-            var diffMonths = calendarTwo.month - calendarOne.month;
-            var diffDays = calendarTwo.day - calendarOne.day;
             var sign = this.compareCalendarDates(calendarTwo, calendarOne);
+            if (!sign) {
+              return {
+                years: 0,
+                months: 0,
+                weeks: 0,
+                days: 0
+              };
+            }
+            var diffYears = calendarTwo.year - calendarOne.year;
+            var diffDays = calendarTwo.day - calendarOne.day;
             if (largestUnit === 'year' && diffYears) {
-              var isOneFurtherInYear = diffMonths * sign < 0 || diffMonths === 0 && diffDays * sign < 0;
+              var diffInYearSign = 0;
+              if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
+              if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
+              if (!diffInYearSign) diffInYearSign = Math.sign(diffDays);
+              var isOneFurtherInYear = diffInYearSign * sign < 0;
               years = isOneFurtherInYear ? diffYears - sign : diffYears;
             }
             var yearsAdded = years ? this.addCalendar(calendarOne, {
@@ -16717,12 +17161,12 @@
         var unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
 
         // Convert larger units down to days
+        // If the unit we're totalling is smaller than `days`, convert days down to that unit.
         var _ES$UnbalanceDuration2 = ES.UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo);
         years = _ES$UnbalanceDuration2.years;
         months = _ES$UnbalanceDuration2.months;
         weeks = _ES$UnbalanceDuration2.weeks;
         days = _ES$UnbalanceDuration2.days;
-        // If the unit we're totalling is smaller than `days`, convert days down to that unit.
         var intermediate;
         if (ES.IsTemporalZonedDateTime(relativeTo)) {
           intermediate = ES.MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
@@ -16733,6 +17177,7 @@
         } else if (balanceResult === 'negative overflow') {
           return -Infinity;
         }
+        // Finally, truncate to the correct unit and calculate remainder
         days = balanceResult.days;
         hours = balanceResult.hours;
         minutes = balanceResult.minutes;
@@ -16740,7 +17185,6 @@
         milliseconds = balanceResult.milliseconds;
         microseconds = balanceResult.microseconds;
         nanoseconds = balanceResult.nanoseconds;
-        // Finally, truncate to the correct unit and calculate remainder
         var _ES$RoundDuration2 = ES.RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, unit, 'trunc', relativeTo),
           total = _ES$RoundDuration2.total;
         return total;
@@ -18005,6 +18449,11 @@
         if (dayLengthNs.leq(0)) {
           throw new RangeError('cannot round a ZonedDateTime in a calendar with zero- or negative-length days');
         }
+        // Now reset all DateTime fields but leave the TimeZone. The offset will
+        // also be retained if the new date/time values are still OK with the old
+        // offset. Otherwise the offset will be changed to be compatible with the
+        // new date/time values. If DST disambiguation is required, the `compatible`
+        // disambiguation algorithm will be used.
         var _ES$RoundISODateTime = ES.RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode, dayLengthNs);
         year = _ES$RoundISODateTime.year;
         month = _ES$RoundISODateTime.month;
@@ -18015,11 +18464,6 @@
         millisecond = _ES$RoundISODateTime.millisecond;
         microsecond = _ES$RoundISODateTime.microsecond;
         nanosecond = _ES$RoundISODateTime.nanosecond;
-        // Now reset all DateTime fields but leave the TimeZone. The offset will
-        // also be retained if the new date/time values are still OK with the old
-        // offset. Otherwise the offset will be changed to be compatible with the
-        // new date/time values. If DST disambiguation is required, the `compatible`
-        // disambiguation algorithm will be used.
         var offsetNs = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
         var epochNanoseconds = ES.InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, 'compatible', 'prefer', /* matchMinute = */false);
         return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
