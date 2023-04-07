@@ -204,16 +204,15 @@
 There are two ways to do this.</p>
 <p>The recommended way is to create a class inheriting from <code>Temporal.TimeZone</code>.
 You must use one of the built-in time zones as the &quot;base time zone&quot;.
-In the class&#39;s constructor, call <code>super()</code> with the identifier of the base time zone.
-The class must override <code>toString()</code> to return its own identifier.
-Overriding <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, <code>getNextTransition()</code>, and <code>getPreviousTransition()</code> is optional.
-If you don&#39;t override the optional members, then they will behave as in the base time zone.
-You don&#39;t need to override any other methods such as <code>getOffsetStringFor()</code> because they will call <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code> internally.</p>
+In the class&#39;s constructor, call <code>super()</code> with the identifier of a built-in time zone to serve as a base.
+The class must override the <code>id</code> prototype property, and should override <code>toString()</code> and <code>toJSON()</code> to match.
+Overriding all the other properties of <code>Temporal.TimeZone.prototype</code> is optional.
+Any property that is not overridden will behave as in the base time zone.</p>
 <p>The other, more difficult, way to create a custom time zone is to create a plain object implementing the <code>Temporal.TimeZone</code> protocol, without subclassing.
-The object must have at least <code>getOffsetNanosecondsFor()</code>, <code>getPossibleInstantsFor()</code>, and <code>toString()</code> methods.
+The object must have at least <code>getOffsetNanosecondsFor()</code> and <code>getPossibleInstantsFor()</code> methods, and an <code>id</code> property.
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in <code>Temporal.TimeZone</code> objects.
-To interoperate with libraries or other code that you didn&#39;t write, then you should implement all the other <code>Temporal.TimeZone</code> members as well: <code>id</code>, <code>getOffsetStringFor()</code>, <code>getPlainDateTimeFor()</code>, <code>getInstantFor()</code>, <code>getNextTransition()</code>, <code>getPreviousTransition()</code>, and <code>toJSON()</code>.
+To interoperate with libraries or other code that you didn&#39;t write, then you should implement all the other <code>Temporal.TimeZone</code> members as well: <code>toString()</code>, <code>toJSON()</code>, <code>getOffsetStringFor()</code>, <code>getPlainDateTimeFor()</code>, <code>getInstantFor()</code>, <code>getNextTransition()</code>, <code>getPreviousTransition()</code>, and <code>toJSON()</code>.
 Your object must not have a <code>timeZone</code> property, so that it can be distinguished in <code>Temporal.TimeZone.from()</code> from other Temporal objects that have a time zone.</p>
 <p>The identifier of a custom time zone must consist of one or more components separated by slashes (<code>/</code>), as described in the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming">tzdata documentation</a>.
 Each component must consist of between one and 14 characters.
@@ -285,7 +284,7 @@ tz2 <span class="token operator">=</span> Temporal<span class="token punctuation
 <span class="token comment">/* WRONG */</span> tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-08:00[America/Vancouver]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws, ISO 8601 string without date-time part</span></code></pre><h2 id="properties">Properties</h2>
 <h3 id="id"><a class="heading-link" href="#id"></a>timeZone.<strong>id</strong> : string</h3><p>The <code>id</code> property gives an unambiguous identifier for the time zone.
 Effectively, this is the canonicalized version of whatever <code>timeZoneIdentifier</code> was passed as a parameter to the constructor.</p>
-<p>When subclassing <code>Temporal.TimeZone</code>, this property doesn&#39;t need to be overridden because the default implementation gives the result of calling <code>toString()</code>.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this property must be overridden to provide an identifier for the custom time zone.</p>
 <h2 id="methods">Methods</h2>
 <h3 id="getOffsetNanosecondsFor"><a class="heading-link" href="#getOffsetNanosecondsFor"></a>timeZone.<strong>getOffsetNanosecondsFor</strong>(<em>instant</em>: Temporal.Instant | string) : number</h3><p><strong>Parameters:</strong></p>
 <ul>

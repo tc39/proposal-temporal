@@ -166,7 +166,7 @@
 </li>
 <li><a href="#monthCode">monthCode</a>
 </li>
-<li><a href="#calendar">calendar</a>
+<li><a href="#calendarId">calendarId</a>
 </li>
 <li><a href="#era">era</a>
 </li>
@@ -206,6 +206,8 @@
 </li>
 <li><a href="#toPlainDate">toPlainDate</a>
 </li>
+<li><a href="#getCalendar">getCalendar</a>
+</li>
 <li><a href="#getISOFields">getISOFields</a>
 </li>
 </ul>
@@ -218,11 +220,11 @@ For example, it could be used to represent a particular instance of a monthly re
 <p><code>Temporal.PlainYearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.PlainDate</code> or even <code>Temporal.PlainDateTime</code>.
 A <code>Temporal.PlainYearMonth</code> can be converted into a <code>Temporal.PlainDate</code> by combining it with a day of the month, using the <code>toPlainDate()</code> method.</p>
 <h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-PlainYearMonth"><a class="heading-link" href="#new-Temporal-PlainYearMonth"></a><strong>new Temporal.PlainYearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>?: string | object, <em>referenceISODay</em>: number = 1) : Temporal.PlainYearMonth</h3><p><strong>Parameters:</strong></p>
+<h3 id="new-Temporal-PlainYearMonth"><a class="heading-link" href="#new-Temporal-PlainYearMonth"></a><strong>new Temporal.PlainYearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>: string | object = &quot;iso8601&quot;, <em>referenceISODay</em>: number = 1) : Temporal.PlainYearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
-<li><code>calendar</code> (optional <code>Temporal.Calendar</code>, plain object, or string): A calendar to project the month into.</li>
+<li><code>calendar</code> (optional string, <code>Temporal.Calendar</code> instance, or plain object): A calendar to project the month into.</li>
 <li><code>referenceISODay</code> (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
 For the ISO 8601 calendar, this parameter will default to 1 if omitted.
 For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.</li>
@@ -238,9 +240,12 @@ For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be 
 For other calendars, use <code>Temporal.PlainYearMonth.from()</code> which will automatically set the correct always set the <code>referenceISODay</code> to the first of the month when constructing the new object.</p>
 </blockquote>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainYearMonth</code> object.</p>
-<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
+<p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
+Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>referenceISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./plaindate.html#toPlainYearMonth"><code>toPlainYearMonth()</code></a> on any valid <code>Temporal.PlainDate</code> will succeed.
 If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then this function will throw a <code>RangeError</code>.</p>
+<p>Usually <code>calendar</code> will be a string containing the identifier of a built-in calendar, such as <code>&#39;islamic&#39;</code> or <code>&#39;gregory&#39;</code>.
+Use an object if you need to supply <a href="./calendar.html#custom-calendars">custom calendar behaviour</a>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -264,7 +269,7 @@ The default is <code>constrain</code>.</li>
 If the value is another <code>Temporal.PlainYearMonth</code> object, a new object representing the same month is returned.
 If the value is any other object, it must have <code>year</code> (or <code>era</code> and <code>eraYear</code>), <code>month</code> (or <code>monthCode</code>) properties, and optionally a <code>calendar</code> property.
 A <code>Temporal.PlainYearMonth</code> will be constructed from these properties.</p>
-<p>If the <code>calendar</code> property is not present, it&#39;s assumed to be <code>Temporal.Calendar.from(&#39;iso8601&#39;)</code>, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
+<p>If the <code>calendar</code> property is not present, it&#39;s assumed to be <code>&#39;iso8601&#39;</code> (identifying the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>).
 In this calendar, <code>era</code> is ignored.</p>
 <p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the year and the month are optional and will be ignored.</p>
@@ -349,7 +354,8 @@ ym<span class="token punctuation">.</span>monthCode<span class="token punctuatio
 ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-23[u-ca=hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 5779</span>
 ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span>
-ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => 'M05L'</span></code></pre><h3 id="calendar"><a class="heading-link" href="#calendar"></a>yearMonth.<strong>calendar</strong> : object</h3><p>The <code>calendar</code> read-only property gives the calendar that the <code>year</code> and <code>month</code> properties are interpreted in.</p>
+ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => 'M05L'</span></code></pre><h3 id="calendarId"><a class="heading-link" href="#calendarId"></a>yearMonth.<strong>calendarId</strong> : object</h3><p>The <code>calendarId</code> read-only property gives the identifier of the calendar that the <code>year</code>, <code>month</code>, and <code>monthCode</code> properties are interpreted in.
+If <code>yearMonth</code> was created with a custom calendar object, this gives the <code>id</code> property of that project.</p>
 <h3 id="era"><a class="heading-link" href="#era"></a>yearMonth.<strong>era</strong> : string | undefined</h3><h3 id="eraYear"><a class="heading-link" href="#eraYear"></a>yearMonth.<strong>eraYear</strong> : number | undefined</h3><p>In calendars that use eras, the <code>era</code> and <code>eraYear</code> read-only properties can be used together to resolve an era-relative year.
 Both properties are <code>undefined</code> when using the ISO 8601 calendar.
 As inputs to <code>from</code> or <code>with</code>, <code>era</code> and <code>eraYear</code> can be used instead of <code>year</code>.
@@ -645,7 +651,10 @@ Use <code>Temporal.PlainYearMonth.compare()</code> for this, or <code>yearMonth.
 The converted object carries a copy of all the relevant fields of <code>yearMonth</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-06-24</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>yearMonth.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>yearMonth</code> in the ISO 8601 calendar, as well as the value of <code>yearMonth.calendar</code>.</p>
+ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-06-24</span></code></pre><h3 id="getCalendar"><a class="heading-link" href="#getCalendar"></a>yearMonth.<strong>getCalendar</strong>(): object</h3><p><strong>Returns:</strong> a <code>Temporal.Calendar</code> instance or plain object representing the calendar in which <code>yearMonth</code> is reckoned.</p>
+<p>This method is mainly useful if you need an object on which to call calendar methods.
+Most code will not need to use it.</p>
+<h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>yearMonth.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>yearMonth</code> in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) that <code>yearMonth</code> is reckoned in.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.</p>
 <p>The value of the <code>isoDay</code> property will be equal to the <code>referenceISODay</code> constructor argument passed when <code>yearMonth</code> was constructed.</p>
