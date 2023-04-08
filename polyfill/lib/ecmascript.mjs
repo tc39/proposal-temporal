@@ -5250,6 +5250,8 @@ export function CompareISODate(y1, m1, d1, y2, m2, d2) {
   return 0;
 }
 
+// Not abstract operations from the spec
+
 export function NonNegativeBigIntDivmod(x, y) {
   let { quotient, remainder } = x.divmod(y);
   if (remainder.lesser(0)) {
@@ -5257,6 +5259,16 @@ export function NonNegativeBigIntDivmod(x, y) {
     remainder = remainder.plus(y);
   }
   return { quotient, remainder };
+}
+
+export function BigIntFloorDiv(left, right) {
+  left = bigInt(left);
+  right = bigInt(right);
+  const { quotient, remainder } = left.divmod(right);
+  if (!remainder.isZero() && !left.isNegative() != !right.isNegative()) {
+    return quotient.prev();
+  }
+  return quotient;
 }
 
 export function ToBigInt(arg) {
