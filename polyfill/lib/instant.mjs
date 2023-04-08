@@ -36,17 +36,17 @@ export class Instant {
   get epochSeconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return +value.divide(1e9);
+    return ES.BigIntFloorDiv(value, 1e9).toJSNumber();
   }
   get epochMilliseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
-    return +value.divide(1e6);
+    return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
   }
   get epochMicroseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return bigIntIfAvailable(value.divide(1e3));
+    return bigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
   }
   get epochNanoseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');

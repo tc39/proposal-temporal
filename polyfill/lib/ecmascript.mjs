@@ -5146,6 +5146,7 @@ export const ES = ObjectAssign({}, ES2022, {
     return 0;
   },
 
+  // Not abstract operations from the spec
   NonNegativeBigIntDivmod: (x, y) => {
     let { quotient, remainder } = x.divmod(y);
     if (remainder.lesser(0)) {
@@ -5154,6 +5155,16 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     return { quotient, remainder };
   },
+  BigIntFloorDiv: (left, right) => {
+    left = bigInt(left);
+    right = bigInt(right);
+    const { quotient, remainder } = left.divmod(right);
+    if (!remainder.isZero() && !left.isNegative() != !right.isNegative()) {
+      return quotient.prev();
+    }
+    return quotient;
+  },
+
   ToBigInt: (arg) => {
     if (bigInt.isInstance(arg)) {
       return arg;
