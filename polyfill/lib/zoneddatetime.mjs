@@ -96,17 +96,17 @@ export class ZonedDateTime {
   get epochSeconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return +value.divide(1e9);
+    return ES.BigIntFloorDiv(value, 1e9).toJSNumber();
   }
   get epochMilliseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return +value.divide(1e6);
+    return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
   }
   get epochMicroseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return bigIntIfAvailable(value.divide(1e3));
+    return bigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
   }
   get epochNanoseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
