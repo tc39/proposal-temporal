@@ -16710,15 +16710,6 @@
 	      nanoseconds
 	    } = ES.AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo));
 	    ({
-	      years,
-	      months,
-	      weeks,
-	      days
-	    } = ES.BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
-	    if (ES.IsTemporalZonedDateTime(relativeTo)) {
-	      relativeTo = ES.MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
-	    }
-	    ({
 	      days,
 	      hours,
 	      minutes,
@@ -16727,6 +16718,12 @@
 	      microseconds,
 	      nanoseconds
 	    } = ES.BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, relativeTo));
+	    ({
+	      years,
+	      months,
+	      weeks,
+	      days
+	    } = ES.BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
 	    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	  }
 	  total(totalOf) {
