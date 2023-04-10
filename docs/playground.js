@@ -12424,6 +12424,7 @@
 	    if (d1 !== d2) return ES.ComparisonResult(d1 - d2);
 	    return 0;
 	  },
+	  // Not abstract operations from the spec
 	  NonNegativeBigIntDivmod: (x, y) => {
 	    let {
 	      quotient,
@@ -12437,6 +12438,18 @@
 	      quotient,
 	      remainder
 	    };
+	  },
+	  BigIntFloorDiv: (left, right) => {
+	    left = BigIntegerExports(left);
+	    right = BigIntegerExports(right);
+	    const {
+	      quotient,
+	      remainder
+	    } = left.divmod(right);
+	    if (!remainder.isZero() && !left.isNegative() != !right.isNegative()) {
+	      return quotient.prev();
+	    }
+	    return quotient;
 	  },
 	  ToBigInt: arg => {
 	    if (BigIntegerExports.isInstance(arg)) {
@@ -13016,17 +13029,17 @@
 	  get epochSeconds() {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return +value.divide(1e9);
+	    return ES.BigIntFloorDiv(value, 1e9).toJSNumber();
 	  }
 	  get epochMilliseconds() {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    const value = BigIntegerExports(GetSlot(this, EPOCHNANOSECONDS));
-	    return +value.divide(1e6);
+	    return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
 	  }
 	  get epochMicroseconds() {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return bigIntIfAvailable$2(value.divide(1e3));
+	    return bigIntIfAvailable$2(ES.BigIntFloorDiv(value, 1e3));
 	  }
 	  get epochNanoseconds() {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -17704,17 +17717,17 @@
 	  get epochSeconds() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return +value.divide(1e9);
+	    return ES.BigIntFloorDiv(value, 1e9).toJSNumber();
 	  }
 	  get epochMilliseconds() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return +value.divide(1e6);
+	    return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
 	  }
 	  get epochMicroseconds() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return bigIntIfAvailable$1(value.divide(1e3));
+	    return bigIntIfAvailable$1(ES.BigIntFloorDiv(value, 1e3));
 	  }
 	  get epochNanoseconds() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
