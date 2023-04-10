@@ -107,11 +107,11 @@ export class ZonedDateTime {
   get epochMicroseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return bigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
+    return ES.BigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
   }
   get epochNanoseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
+    return ES.BigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
   }
   get dayOfWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -610,10 +610,6 @@ export class ZonedDateTime {
 }
 
 MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');
-
-function bigIntIfAvailable(wrapper) {
-  return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
-}
 
 function dateTime(zdt) {
   return ES.GetPlainDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));

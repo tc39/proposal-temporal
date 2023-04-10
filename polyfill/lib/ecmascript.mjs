@@ -5168,6 +5168,9 @@ export const ES = ObjectAssign({}, ES2022, {
     }
     return quotient;
   },
+  BigIntIfAvailable: (wrapper) => {
+    return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
+  },
 
   ToBigInt: (arg) => {
     if (bigInt.isInstance(arg)) {
