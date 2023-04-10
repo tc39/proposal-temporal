@@ -5277,6 +5277,10 @@ export function BigIntFloorDiv(left, right) {
   return quotient;
 }
 
+export function BigIntIfAvailable(wrapper) {
+  return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
+}
+
 export function ToBigInt(arg) {
   if (bigInt.isInstance(arg)) {
     return arg;

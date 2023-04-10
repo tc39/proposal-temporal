@@ -46,11 +46,11 @@ export class Instant {
   get epochMicroseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return bigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
+    return ES.BigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
   }
   get epochNanoseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    return bigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
+    return ES.BigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
   }
 
   add(temporalDurationLike) {
@@ -192,7 +192,3 @@ export class Instant {
 }
 
 MakeIntrinsicClass(Instant, 'Temporal.Instant');
-
-function bigIntIfAvailable(wrapper) {
-  return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
-}
