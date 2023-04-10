@@ -611,7 +611,7 @@
       </dl>
       <emu-alg>
         1. If _timeZoneSlotValue_ is a String, then
-          1. Assert: IsAvailableTimeZoneName(_timeZoneSlotValue_) is *true*.
+          1. Assert: Either IsTimeZoneOffsetString(_timeZoneSlotValue_) or IsAvailableTimeZoneName(_timeZoneSlotValue_) is *true*.
           1. Return _timeZoneSlotValue_.
         1. Let _identifier_ be ? Get(_timeZoneSlotValue_, *"id"*).
         1. If _identifier_ is not a String, throw a *TypeError* exception.
