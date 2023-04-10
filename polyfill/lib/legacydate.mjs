@@ -3,8 +3,9 @@ import { Instant } from './instant.mjs';
 
 import bigInt from 'big-integer';
 
+const DatePrototypeValueOf = Date.prototype.valueOf;
+
 export function toTemporalInstant() {
-  // Observable access to valueOf is not correct here, but unavoidable
-  const epochNanoseconds = bigInt(+this).multiply(1e6);
+  const epochNanoseconds = bigInt(ES.Call(DatePrototypeValueOf, this, [])).multiply(1e6);
   return new Instant(ES.BigIntIfAvailable(epochNanoseconds));
 }
