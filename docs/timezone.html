@@ -212,8 +212,7 @@ Any property that is not overridden will behave as in the base time zone.</p>
 The object must have at least <code>getOffsetNanosecondsFor()</code> and <code>getPossibleInstantsFor()</code> methods, and an <code>id</code> property.
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in <code>Temporal.TimeZone</code> objects.
-To interoperate with libraries or other code that you didn&#39;t write, then you should implement all the other <code>Temporal.TimeZone</code> members as well: <code>toString()</code>, <code>toJSON()</code>, <code>getOffsetStringFor()</code>, <code>getPlainDateTimeFor()</code>, <code>getInstantFor()</code>, <code>getNextTransition()</code>, <code>getPreviousTransition()</code>, and <code>toJSON()</code>.
-Your object must not have a <code>timeZone</code> property, so that it can be distinguished in <code>Temporal.TimeZone.from()</code> from other Temporal objects that have a time zone.</p>
+To interoperate with libraries or other code that you didn&#39;t write, then you should implement all the other <code>Temporal.TimeZone</code> members as well: <code>toString()</code>, <code>toJSON()</code>, <code>getOffsetStringFor()</code>, <code>getPlainDateTimeFor()</code>, <code>getInstantFor()</code>, <code>getNextTransition()</code>, <code>getPreviousTransition()</code>, and <code>toJSON()</code>.</p>
 <p>The identifier of a custom time zone must consist of one or more components separated by slashes (<code>/</code>), as described in the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming">tzdata documentation</a>.
 Each component must consist of between one and 14 characters.
 Valid characters are ASCII letters, <code>.</code>, <code>-</code>, and <code>_</code>.

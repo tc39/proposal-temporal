@@ -9431,27 +9431,17 @@
 	    }
 	    return result;
 	  },
+	  ObjectImplementsTemporalCalendarProtocol: object => {
+	    if (ES.IsTemporalCalendar(object)) return true;
+	    return 'dateAdd' in object && 'dateFromFields' in object && 'dateUntil' in object && 'day' in object && 'dayOfWeek' in object && 'dayOfYear' in object && 'daysInMonth' in object && 'daysInWeek' in object && 'daysInYear' in object && 'fields' in object && 'id' in object && 'inLeapYear' in object && 'mergeFields' in object && 'month' in object && 'monthCode' in object && 'monthDayFromFields' in object && 'monthsInYear' in object && 'weekOfYear' in object && 'year' in object && 'yearMonthFromFields' in object && 'yearOfWeek' in object;
+	  },
 	  ToTemporalCalendarSlotValue: calendarLike => {
 	    if (ES.Type(calendarLike) === 'Object') {
-	      if (ES.IsTemporalCalendar(calendarLike)) return calendarLike;
 	      if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
-	      if (ES.IsTemporalTime(calendarLike)) {
-	        throw new RangeError('Expected a calendar object but received a Temporal.PlainTime');
+	      if (!ES.ObjectImplementsTemporalCalendarProtocol(calendarLike)) {
+	        throw new TypeError('expected a Temporal.Calendar or object implementing the Temporal.Calendar protocol');
 	      }
-	      if (ES.IsTemporalTimeZone(calendarLike)) {
-	        throw new RangeError('Expected a calendar object but received a Temporal.TimeZone');
-	      }
-	      if (!('calendar' in calendarLike)) return calendarLike;
-	      calendarLike = calendarLike.calendar;
-	      if (ES.Type(calendarLike) === 'Object') {
-	        if (ES.IsTemporalTime(calendarLike)) {
-	          throw new RangeError('Expected a calendar object as the calendar property but received a Temporal.PlainTime');
-	        }
-	        if (ES.IsTemporalTimeZone(calendarLike)) {
-	          throw new RangeError('Expected a calendar object as the calendar property but received a Temporal.TimeZone');
-	        }
-	        if (!('calendar' in calendarLike)) return calendarLike;
-	      }
+	      return calendarLike;
 	    }
 	    const identifier = ES.ToString(calendarLike);
 	    if (ES.IsBuiltinCalendar(identifier)) return ES.ASCIILowercase(identifier);
@@ -9557,21 +9547,17 @@
 	    if (!ES.IsTemporalMonthDay(result)) throw new TypeError('invalid result');
 	    return result;
 	  },
+	  ObjectImplementsTemporalTimeZoneProtocol: object => {
+	    if (ES.IsTemporalTimeZone(object)) return true;
+	    return 'getOffsetNanosecondsFor' in object && 'getPossibleInstantsFor' in object && 'id' in object;
+	  },
 	  ToTemporalTimeZoneSlotValue: temporalTimeZoneLike => {
 	    if (ES.Type(temporalTimeZoneLike) === 'Object') {
-	      if (ES.IsTemporalTimeZone(temporalTimeZoneLike)) return temporalTimeZoneLike;
 	      if (ES.IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
-	      if (ES.IsTemporalCalendar(temporalTimeZoneLike)) {
-	        throw new RangeError('Expected a time zone object but received a Temporal.Calendar');
+	      if (!ES.ObjectImplementsTemporalTimeZoneProtocol(temporalTimeZoneLike)) {
+	        throw new TypeError('expected a Temporal.TimeZone or object implementing the Temporal.TimeZone protocol');
 	      }
-	      if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
-	      temporalTimeZoneLike = temporalTimeZoneLike.timeZone;
-	      if (ES.Type(temporalTimeZoneLike) === 'Object') {
-	        if (ES.IsTemporalCalendar(temporalTimeZoneLike)) {
-	          throw new RangeError('Expected a time zone object as the timeZone property but received a Temporal.Calendar');
-	        }
-	        if (!('timeZone' in temporalTimeZoneLike)) return temporalTimeZoneLike;
-	      }
+	      return temporalTimeZoneLike;
 	    }
 	    const identifier = ES.ToString(temporalTimeZoneLike);
 	    return ES.ParseTemporalTimeZone(identifier);

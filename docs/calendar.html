@@ -311,11 +311,10 @@ Overriding all the other properties of <code>Temporal.Calendar.prototype</code> 
 Any property that&#39;s not overridden will behave as in the base calendar.
 It&#39;s recommended to override <code>dateFromFields()</code>, <code>monthDayFromFields()</code>, <code>yearMonthFromFields()</code>, and <code>dateAdd()</code>so that they return Temporal objects with the custom calendar and not the base calendar.</p>
 <p>The other, more difficult, way to create a custom calendar is to create a plain object implementing the <code>Temporal.Calendar</code> protocol, without subclassing.
-The object must implement all of the <code>Temporal.Calendar</code> properties and methods except for <code>fields()</code>, <code>mergeFields()</code>, <code>toString()</code>, and <code>toJSON()</code>.
-Any object with the required methods will return the correct output from any Temporal property or method.
+The object must implement all of the <code>Temporal.Calendar</code> properties and methods except for <code>toString()</code> and <code>toJSON()</code>.
+Any object with the required properties and methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom calendars act like built-in <code>Temporal.Calendar</code> objects.
-To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>fields()</code>, <code>mergeFields()</code>, <code>toString()</code>, and <code>toJSON()</code> methods as well.
-Your object must not have a <code>calendar</code> property, so that it can be distinguished in <code>Temporal.Calendar.from()</code> from other Temporal objects that have a calendar.</p>
+To interoperate with libraries or other code that you didn&#39;t write, then you should implement the <code>toString()</code> and <code>toJSON()</code> methods as well.</p>
 <p>The identifier of a custom calendar must consist of one or more components of between 3 and 8 ASCII alphanumeric characters each, separated by dashes, as described in <a href="https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier">Unicode Technical Standard 35</a>.</p>
 <p>Custom calendars are responsible for interpreting and validating all inputs, including options.
 Calendars should (and built-in calendars will) throw a TypeError if a required option is missing or has the wrong type, but throw a RangeError if it&#39;s present but has an invalid value.</p>
