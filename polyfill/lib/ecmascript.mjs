@@ -2587,6 +2587,9 @@ export const ES = ObjectAssign({}, ES2022, {
     return ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   },
   GetNamedTimeZoneNextTransition: (id, epochNanoseconds) => {
+    if (epochNanoseconds.lesser(BEFORE_FIRST_DST)) {
+      return ES.GetNamedTimeZoneNextTransition(id, BEFORE_FIRST_DST);
+    }
     const uppercap = ES.SystemUTCEpochNanoSeconds().plus(DAY_NANOS.multiply(366));
     let leftNanos = epochNanoseconds;
     let leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
