@@ -2702,6 +2702,7 @@ export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
   let rightOffsetNs = leftOffsetNs;
   while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
     rightNanos = bigInt(leftNanos).plus(DAY_NANOS.multiply(2 * 7));
+    if (rightNanos.greater(NS_MAX)) return null;
     rightOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
     if (leftOffsetNs === rightOffsetNs) {
       leftNanos = rightNanos;
@@ -2731,13 +2732,14 @@ export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
     }
   }
 
-  const lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
   let rightNanos = bigInt(epochNanoseconds).minus(1);
+  if (rightNanos.lesser(BEFORE_FIRST_DST)) return null;
   let rightOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
   let leftNanos = rightNanos;
   let leftOffsetNs = rightOffsetNs;
-  while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(lowercap) === 1) {
+  while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(BEFORE_FIRST_DST) === 1) {
     leftNanos = bigInt(rightNanos).minus(DAY_NANOS.multiply(2 * 7));
+    if (leftNanos.lesser(BEFORE_FIRST_DST)) return null;
     leftOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
     if (rightOffsetNs === leftOffsetNs) {
       rightNanos = leftNanos;
