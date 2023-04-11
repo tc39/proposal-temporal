@@ -2589,8 +2589,27 @@ export function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
 export function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {
   const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
     GetNamedTimeZoneDateTimeParts(id, epochNanoseconds);
-  const utc = GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-  if (utc === null) throw new RangeError('Date outside of supported range');
+
+  // The pattern of leap years in the ISO 8601 calendar repeats every 400
+  // years. To avoid overflowing at the edges of the range, we reduce the year
+  // to the remainder after dividing by 400, and then add back all the
+  // nanoseconds from the multiples of 400 years at the end.
+  const reducedYear = year % 400;
+  const yearCycles = (year - reducedYear) / 400;
+  const nsIn400YearCycle = bigInt(400 * 365 + 97).multiply(DAY_NANOS);
+
+  const reducedUTC = GetUTCEpochNanoseconds(
+    reducedYear,
+    month,
+    day,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond
+  );
+  const utc = reducedUTC.plus(nsIn400YearCycle.multiply(yearCycles));
   return +utc.minus(epochNanoseconds);
 }
 
