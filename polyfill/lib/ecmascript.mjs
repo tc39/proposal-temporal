@@ -2692,6 +2692,9 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
 }
 
 export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
+  if (epochNanoseconds.lesser(BEFORE_FIRST_DST)) {
+    return GetNamedTimeZoneNextTransition(id, BEFORE_FIRST_DST);
+  }
   const uppercap = SystemUTCEpochNanoSeconds().plus(DAY_NANOS.multiply(366));
   let leftNanos = epochNanoseconds;
   let leftOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
