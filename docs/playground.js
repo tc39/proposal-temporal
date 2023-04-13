@@ -36,11 +36,7 @@
 		return a;
 	}
 
-	var BigIntegerExports = {};
-	var BigInteger = {
-	  get exports(){ return BigIntegerExports; },
-	  set exports(v){ BigIntegerExports = v; },
-	};
+	var BigInteger = {exports: {}};
 
 	(function (module) {
 		var bigInt = (function (undefined$1) {
@@ -1490,6 +1486,9 @@
 		}
 	} (BigInteger));
 
+	var BigIntegerExports = BigInteger.exports;
+	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
+
 	/* eslint complexity: [2, 18], max-statements: [2, 33] */
 	var shams$1 = function hasSymbols() {
 		if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
@@ -1954,11 +1953,7 @@
 		return value;
 	};
 
-	var callBindExports = {};
-	var callBind$2 = {
-	  get exports(){ return callBindExports; },
-	  set exports(v){ callBindExports = v; },
-	};
+	var callBind$2 = {exports: {}};
 
 	(function (module) {
 
@@ -2006,8 +2001,10 @@
 			$defineProperty(module.exports, 'apply', { value: applyBind });
 		} else {
 			module.exports.apply = applyBind;
-		}
+		} 
 	} (callBind$2));
+
+	var callBindExports = callBind$2.exports;
 
 	var GetIntrinsic$e = getIntrinsic;
 
@@ -2023,11 +2020,7 @@
 		return intrinsic;
 	};
 
-	var IsArrayExports = {};
-	var IsArray$3 = {
-	  get exports(){ return IsArrayExports; },
-	  set exports(v){ IsArrayExports = v; },
-	};
+	var callBound$3 = /*@__PURE__*/getDefaultExportFromCjs(callBound$2);
 
 	var GetIntrinsic$d = getIntrinsic;
 
@@ -2036,24 +2029,21 @@
 	// eslint-disable-next-line global-require
 	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
 
-	var IsArray$2 = $Array.isArray || function IsArray(argument) {
+	var IsArray$3 = $Array.isArray || function IsArray(argument) {
 		return toStr$3(argument) === '[object Array]';
 	};
 
-	(function (module) {
+	// https://262.ecma-international.org/6.0/#sec-isarray
+	var IsArray$1 = IsArray$3;
 
-		// https://262.ecma-international.org/6.0/#sec-isarray
-		module.exports = IsArray$2;
-	} (IsArray$3));
-
-	var IsArray$1 = /*@__PURE__*/getDefaultExportFromCjs(IsArrayExports);
+	var IsArray$2 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$1);
 
 	var GetIntrinsic$c = getIntrinsic;
 	var callBound$1 = callBound$2;
 
 	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
 
-	var IsArray = IsArrayExports;
+	var IsArray = IsArray$1;
 
 	var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
 
@@ -2067,7 +2057,7 @@
 		return $apply(F, V, argumentsList);
 	};
 
-	var Call$1 = Call;
+	var Call$1 = /*@__PURE__*/getDefaultExportFromCjs(Call);
 
 	// https://262.ecma-international.org/6.0/#sec-ispropertykey
 
@@ -2075,7 +2065,7 @@
 		return typeof argument === 'string' || typeof argument === 'symbol';
 	};
 
-	var IsPropertyKey$5 = IsPropertyKey$4;
+	var IsPropertyKey$5 = /*@__PURE__*/getDefaultExportFromCjs(IsPropertyKey$4);
 
 	var gopd;
 	var hasRequiredGopd;
@@ -2177,7 +2167,7 @@
 		return ES5Type(x);
 	};
 
-	var Type$6 = Type$5;
+	var Type$6 = /*@__PURE__*/getDefaultExportFromCjs(Type$5);
 
 	var isMatchRecord;
 	var hasRequiredIsMatchRecord;
@@ -2396,12 +2386,6 @@
 		return ToBoolean;
 	}
 
-	var IsCallableExports = {};
-	var IsCallable$1 = {
-	  get exports(){ return IsCallableExports; },
-	  set exports(v){ IsCallableExports = v; },
-	};
-
 	var fnToStr = Function.prototype.toString;
 	var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
 	var badArrayLike;
@@ -2502,18 +2486,17 @@
 			return tryFunctionObject(value);
 		};
 
+	var IsCallable$1;
 	var hasRequiredIsCallable;
 
 	function requireIsCallable () {
-		if (hasRequiredIsCallable) return IsCallableExports;
+		if (hasRequiredIsCallable) return IsCallable$1;
 		hasRequiredIsCallable = 1;
-		(function (module) {
 
-			// http://262.ecma-international.org/5.1/#sec-9.11
+		// http://262.ecma-international.org/5.1/#sec-9.11
 
-			module.exports = isCallable$1;
-	} (IsCallable$1));
-		return IsCallableExports;
+		IsCallable$1 = isCallable$1;
+		return IsCallable$1;
 	}
 
 	var ToPropertyDescriptor;
@@ -2592,7 +2575,7 @@
 		return $isNaN$3(x) && $isNaN$3(y);
 	};
 
-	var SameValue$1 = SameValue;
+	var SameValue$1 = /*@__PURE__*/getDefaultExportFromCjs(SameValue);
 
 	var hasPropertyDescriptors_1;
 	var hasRequiredHasPropertyDescriptors;
@@ -2651,7 +2634,7 @@
 		var hasArrayLengthDefineBug = hasPropertyDescriptors.hasArrayLengthDefineBug();
 
 		// eslint-disable-next-line global-require
-		var isArray = hasArrayLengthDefineBug && IsArray$2;
+		var isArray = hasArrayLengthDefineBug && IsArray$3;
 
 		var callBound = callBound$2;
 
@@ -3118,7 +3101,7 @@
 		return success;
 	};
 
-	var CreateDataPropertyOrThrow$1 = CreateDataPropertyOrThrow;
+	var CreateDataPropertyOrThrow$1 = /*@__PURE__*/getDefaultExportFromCjs(CreateDataPropertyOrThrow);
 
 	var global$1 = (typeof global !== "undefined" ? global :
 	  typeof self !== "undefined" ? self :
@@ -6489,13 +6472,7 @@
 		return O[P];
 	};
 
-	var Get$1 = Get;
-
-	var RequireObjectCoercibleExports = {};
-	var RequireObjectCoercible$1 = {
-	  get exports(){ return RequireObjectCoercibleExports; },
-	  set exports(v){ RequireObjectCoercibleExports = v; },
-	};
+	var Get$1 = /*@__PURE__*/getDefaultExportFromCjs(Get);
 
 	var CheckObjectCoercible;
 	var hasRequiredCheckObjectCoercible;
@@ -6519,16 +6496,15 @@
 		return CheckObjectCoercible;
 	}
 
+	var RequireObjectCoercible$1;
 	var hasRequiredRequireObjectCoercible;
 
 	function requireRequireObjectCoercible () {
-		if (hasRequiredRequireObjectCoercible) return RequireObjectCoercibleExports;
+		if (hasRequiredRequireObjectCoercible) return RequireObjectCoercible$1;
 		hasRequiredRequireObjectCoercible = 1;
-		(function (module) {
 
-			module.exports = requireCheckObjectCoercible();
-	} (RequireObjectCoercible$1));
-		return RequireObjectCoercibleExports;
+		RequireObjectCoercible$1 = requireCheckObjectCoercible();
+		return RequireObjectCoercible$1;
 	}
 
 	var GetIntrinsic$9 = getIntrinsic;
@@ -6544,7 +6520,7 @@
 		return $Object(value);
 	};
 
-	var ToObject$1 = ToObject;
+	var ToObject$1 = /*@__PURE__*/getDefaultExportFromCjs(ToObject);
 
 	var GetV$1;
 	var hasRequiredGetV;
@@ -6612,7 +6588,7 @@
 		return func;
 	};
 
-	var GetMethod$2 = GetMethod$1;
+	var GetMethod$2 = /*@__PURE__*/getDefaultExportFromCjs(GetMethod$1);
 
 	var GetIntrinsic$7 = getIntrinsic;
 
@@ -6660,7 +6636,7 @@
 		return floor$1(absValue) === absValue;
 	};
 
-	var IsIntegralNumber$1 = IsIntegralNumber;
+	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
 
 	var isPrimitive$2 = function isPrimitive(value) {
 		return value === null || (typeof value !== 'function' && typeof value !== 'object');
@@ -6693,11 +6669,7 @@
 		return hasToStringTag ? tryDateObject(value) : toStr$1.call(value) === dateClass;
 	};
 
-	var isSymbolExports = {};
-	var isSymbol$1 = {
-	  get exports(){ return isSymbolExports; },
-	  set exports(v){ isSymbolExports = v; },
-	};
+	var isSymbol$1 = {exports: {}};
 
 	var toStr = Object.prototype.toString;
 	var hasSymbols$1 = hasSymbols$4();
@@ -6732,6 +6704,8 @@
 			return false ;
 		};
 	}
+
+	var isSymbolExports = isSymbol$1.exports;
 
 	var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
@@ -6818,7 +6792,7 @@
 		return toPrimitive(input);
 	};
 
-	var ToPrimitive$2 = ToPrimitive$1;
+	var ToPrimitive$2 = /*@__PURE__*/getDefaultExportFromCjs(ToPrimitive$1);
 
 	var isRegex;
 	var hasRequiredIsRegex;
@@ -7181,7 +7155,7 @@
 		return $String(argument);
 	};
 
-	var ToString$1 = ToString;
+	var ToString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToString);
 
 	var implementation;
 	var hasRequiredImplementation;
@@ -7370,7 +7344,7 @@
 		return $Number$1(value);
 	};
 
-	var ToNumber$2 = ToNumber$1;
+	var ToNumber$2 = /*@__PURE__*/getDefaultExportFromCjs(ToNumber$1);
 
 	var sign = function sign(number) {
 		return number >= 0 ? 1 : -1;
@@ -7395,7 +7369,7 @@
 		return $sign(number) * integer;
 	};
 
-	var ToIntegerOrInfinity$2 = ToIntegerOrInfinity$1;
+	var ToIntegerOrInfinity$2 = /*@__PURE__*/getDefaultExportFromCjs(ToIntegerOrInfinity$1);
 
 	var GetIntrinsic$4 = getIntrinsic;
 
@@ -7415,7 +7389,7 @@
 		return len;
 	};
 
-	var ToLength$1 = ToLength;
+	var ToLength$1 = /*@__PURE__*/getDefaultExportFromCjs(ToLength);
 
 	var GetIntrinsic$3 = getIntrinsic;
 
@@ -7438,7 +7412,7 @@
 		return has(O, P);
 	};
 
-	var HasOwnProperty$1 = HasOwnProperty;
+	var HasOwnProperty$1 = /*@__PURE__*/getDefaultExportFromCjs(HasOwnProperty);
 
 	var every = function every(array, predicate) {
 		for (var i = 0; i < array.length; i += 1) {
@@ -7449,7 +7423,7 @@
 		return true;
 	};
 
-	var every$1 = every;
+	var every$1 = /*@__PURE__*/getDefaultExportFromCjs(every);
 
 	var forEach = function forEach(array, callback) {
 		for (var i = 0; i < array.length; i += 1) {
@@ -7457,7 +7431,7 @@
 		}
 	};
 
-	var forEach$1 = forEach;
+	var forEach$1 = /*@__PURE__*/getDefaultExportFromCjs(forEach);
 
 	var GetIntrinsic$2 = getIntrinsic;
 
@@ -7480,7 +7454,7 @@
 		return ownKeys;
 	};
 
-	var OwnPropertyKeys$1 = OwnPropertyKeys;
+	var OwnPropertyKeys$1 = /*@__PURE__*/getDefaultExportFromCjs(OwnPropertyKeys);
 
 	var some = function some(array, predicate) {
 		for (var i = 0; i < array.length; i += 1) {
@@ -7491,22 +7465,13 @@
 		return false;
 	};
 
-	var some$1 = some;
+	var some$1 = /*@__PURE__*/getDefaultExportFromCjs(some);
 
-	var GetIntrinsicExports = {};
-	var GetIntrinsic$1 = {
-	  get exports(){ return GetIntrinsicExports; },
-	  set exports(v){ GetIntrinsicExports = v; },
-	};
+	// TODO: remove, semver-major
 
-	(function (module) {
+	var GetIntrinsic$1 = getIntrinsic;
 
-		// TODO: remove, semver-major
-
-		module.exports = getIntrinsic;
-	} (GetIntrinsic$1));
-
-	var ESGetIntrinsic = /*@__PURE__*/getDefaultExportFromCjs(GetIntrinsicExports);
+	var ESGetIntrinsic = /*@__PURE__*/getDefaultExportFromCjs(GetIntrinsic$1);
 
 	/* global true */
 	const INTRINSICS = {};
@@ -7680,14 +7645,14 @@
 	const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
 	const StringPrototypeReplace = String.prototype.replace;
 	const $TypeError = GetIntrinsic('%TypeError%');
-	const $isEnumerable = callBound$2('Object.prototype.propertyIsEnumerable');
+	const $isEnumerable = callBound$3('Object.prototype.propertyIsEnumerable');
 	const DAY_SECONDS = 86400;
-	const DAY_NANOS = BigIntegerExports(DAY_SECONDS).multiply(1e9);
-	const NS_MIN = BigIntegerExports(-DAY_SECONDS).multiply(1e17);
-	const NS_MAX = BigIntegerExports(DAY_SECONDS).multiply(1e17);
+	const DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
+	const NS_MIN = bigInt(-DAY_SECONDS).multiply(1e17);
+	const NS_MAX = bigInt(DAY_SECONDS).multiply(1e17);
 	const YEAR_MIN = -271821;
 	const YEAR_MAX = 275760;
-	const BEFORE_FIRST_DST = BigIntegerExports(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
+	const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
 	const BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
 	const ToIntegerWithTruncation = value => {
@@ -7771,7 +7736,7 @@
 	    if (Type$6(target) !== 'Object') {
 	      throw new $TypeError('Assertion failed: "target" must be an Object');
 	    }
-	    if (!IsArray$1(excludedKeys) || !every$1(excludedKeys, IsPropertyKey$5)) {
+	    if (!IsArray$2(excludedKeys) || !every$1(excludedKeys, IsPropertyKey$5)) {
 	      throw new $TypeError('Assertion failed: "excludedKeys" must be a List of Property Keys');
 	    }
 	    if (typeof source === 'undefined' || source === null) {
@@ -8927,7 +8892,7 @@
 	    for (let index = 0; index < possibleInstants.length; index++) {
 	      const candidate = possibleInstants[index];
 	      const candidateOffset = ES.GetOffsetNanosecondsFor(timeZone, candidate);
-	      const roundedCandidateOffset = ES.RoundNumberToIncrement(BigIntegerExports(candidateOffset), 60e9, 'halfExpand').toJSNumber();
+	      const roundedCandidateOffset = ES.RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
 	      if (candidateOffset === offsetNs || matchMinute && roundedCandidateOffset === offsetNs) {
 	        return GetSlot(candidate, EPOCHNANOSECONDS);
 	      }
@@ -9763,7 +9728,7 @@
 	    let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 	    function formatNumber(num) {
 	      if (num <= NumberMaxSafeInteger) return num.toString(10);
-	      return BigIntegerExports(num).toString();
+	      return bigInt(num).toString();
 	    }
 	    const years = GetSlot(duration, YEARS);
 	    const months = GetSlot(duration, MONTHS);
@@ -10004,7 +9969,7 @@
 	    return "".concat(sign).concat(hourString, ":").concat(minuteString).concat(post);
 	  },
 	  FormatISOTimeZoneOffsetString: offsetNanoseconds => {
-	    offsetNanoseconds = ES.RoundNumberToIncrement(BigIntegerExports(offsetNanoseconds), 60e9, 'halfExpand').toJSNumber();
+	    offsetNanoseconds = ES.RoundNumberToIncrement(bigInt(offsetNanoseconds), 60e9, 'halfExpand').toJSNumber();
 	    const sign = offsetNanoseconds < 0 ? '-' : '+';
 	    offsetNanoseconds = MathAbs$1(offsetNanoseconds);
 	    const minutes = offsetNanoseconds / 60e9 % 60;
@@ -10021,9 +9986,9 @@
 	    legacyDate.setUTCFullYear(year, month - 1, day);
 	    const ms = legacyDate.getTime();
 	    if (NumberIsNaN(ms)) return null;
-	    let ns = BigIntegerExports(ms).multiply(1e6);
-	    ns = ns.plus(BigIntegerExports(microsecond).multiply(1e3));
-	    ns = ns.plus(BigIntegerExports(nanosecond));
+	    let ns = bigInt(ms).multiply(1e6);
+	    ns = ns.plus(bigInt(microsecond).multiply(1e3));
+	    ns = ns.plus(bigInt(nanosecond));
 	    if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) return null;
 	    return ns;
 	  },
@@ -10031,7 +9996,7 @@
 	    const {
 	      quotient,
 	      remainder
-	    } = BigIntegerExports(epochNanoseconds).divmod(1e6);
+	    } = bigInt(epochNanoseconds).divmod(1e6);
 	    let epochMilliseconds = +quotient;
 	    let nanos = +remainder;
 	    if (nanos < 0) {
@@ -10084,8 +10049,8 @@
 	    let leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
 	    let rightNanos = leftNanos;
 	    let rightOffsetNs = leftOffsetNs;
-	    while (leftOffsetNs === rightOffsetNs && BigIntegerExports(leftNanos).compare(uppercap) === -1) {
-	      rightNanos = BigIntegerExports(leftNanos).plus(DAY_NANOS.multiply(2 * 7));
+	    while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
+	      rightNanos = bigInt(leftNanos).plus(DAY_NANOS.multiply(2 * 7));
 	      rightOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
 	      if (leftOffsetNs === rightOffsetNs) {
 	        leftNanos = rightNanos;
@@ -10108,12 +10073,12 @@
 	      }
 	    }
 	    const lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
-	    let rightNanos = BigIntegerExports(epochNanoseconds).minus(1);
+	    let rightNanos = bigInt(epochNanoseconds).minus(1);
 	    let rightOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
 	    let leftNanos = rightNanos;
 	    let leftOffsetNs = rightOffsetNs;
-	    while (rightOffsetNs === leftOffsetNs && BigIntegerExports(rightNanos).compare(lowercap) === 1) {
-	      leftNanos = BigIntegerExports(rightNanos).minus(DAY_NANOS.multiply(2 * 7));
+	    while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(lowercap) === 1) {
+	      leftNanos = bigInt(rightNanos).minus(DAY_NANOS.multiply(2 * 7));
 	      leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
 	      if (rightOffsetNs === leftOffsetNs) {
 	        rightNanos = leftNanos;
@@ -10156,7 +10121,7 @@
 	    const latest = ES.GetNamedTimeZoneOffsetNanoseconds(id, nsLater);
 	    const found = earliest === latest ? [earliest] : [earliest, latest];
 	    return found.map(offsetNanoseconds => {
-	      const epochNanoseconds = BigIntegerExports(ns).minus(offsetNanoseconds);
+	      const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
 	      const parts = ES.GetNamedTimeZoneDateTimeParts(id, epochNanoseconds);
 	      if (year !== parts.year || month !== parts.month || day !== parts.day || hour !== parts.hour || minute !== parts.minute || second !== parts.second || millisecond !== parts.millisecond || microsecond !== parts.microsecond || nanosecond !== parts.nanosecond) {
 	        return undefined;
@@ -10317,12 +10282,12 @@
 	    };
 	  },
 	  BalanceTime: (hour, minute, second, millisecond, microsecond, nanosecond) => {
-	    hour = BigIntegerExports(hour);
-	    minute = BigIntegerExports(minute);
-	    second = BigIntegerExports(second);
-	    millisecond = BigIntegerExports(millisecond);
-	    microsecond = BigIntegerExports(microsecond);
-	    nanosecond = BigIntegerExports(nanosecond);
+	    hour = bigInt(hour);
+	    minute = bigInt(minute);
+	    second = bigInt(second);
+	    millisecond = bigInt(millisecond);
+	    microsecond = bigInt(microsecond);
+	    nanosecond = bigInt(nanosecond);
 	    let quotient;
 	    ({
 	      quotient,
@@ -10364,22 +10329,22 @@
 	    };
 	  },
 	  TotalDurationNanoseconds: (days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetShift) => {
-	    if (days !== 0) nanoseconds = BigIntegerExports(nanoseconds).subtract(offsetShift);
-	    hours = BigIntegerExports(hours).add(BigIntegerExports(days).multiply(24));
-	    minutes = BigIntegerExports(minutes).add(hours.multiply(60));
-	    seconds = BigIntegerExports(seconds).add(minutes.multiply(60));
-	    milliseconds = BigIntegerExports(milliseconds).add(seconds.multiply(1000));
-	    microseconds = BigIntegerExports(microseconds).add(milliseconds.multiply(1000));
-	    return BigIntegerExports(nanoseconds).add(microseconds.multiply(1000));
+	    if (days !== 0) nanoseconds = bigInt(nanoseconds).subtract(offsetShift);
+	    hours = bigInt(hours).add(bigInt(days).multiply(24));
+	    minutes = bigInt(minutes).add(hours.multiply(60));
+	    seconds = bigInt(seconds).add(minutes.multiply(60));
+	    milliseconds = bigInt(milliseconds).add(seconds.multiply(1000));
+	    microseconds = bigInt(microseconds).add(milliseconds.multiply(1000));
+	    return bigInt(nanoseconds).add(microseconds.multiply(1000));
 	  },
 	  NanosecondsToDays: (nanoseconds, relativeTo) => {
 	    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	    const sign = MathSign(nanoseconds);
-	    nanoseconds = BigIntegerExports(nanoseconds);
+	    nanoseconds = bigInt(nanoseconds);
 	    let dayLengthNs = 86400e9;
 	    if (sign === 0) return {
 	      days: 0,
-	      nanoseconds: BigIntegerExports.zero,
+	      nanoseconds: bigInt.zero,
 	      dayLengthNs
 	    };
 	    if (!ES.IsTemporalZonedDateTime(relativeTo)) {
@@ -10419,7 +10384,7 @@
 	    // back inside the period where it belongs. Note that this case only can
 	    // happen for positive durations because the only direction that
 	    // `disambiguation: 'compatible'` can change clock time is forwards.
-	    days = BigIntegerExports(days);
+	    days = bigInt(days);
 	    if (sign === 1) {
 	      while (days.greater(0) && intermediateNs.greater(endNs)) {
 	        days = days.prev();
@@ -10489,7 +10454,7 @@
 	    }
 	    const sign = nanoseconds.lesser(0) ? -1 : 1;
 	    nanoseconds = nanoseconds.abs();
-	    microseconds = milliseconds = seconds = minutes = hours = BigIntegerExports.zero;
+	    microseconds = milliseconds = seconds = minutes = hours = bigInt.zero;
 	    switch (largestUnit) {
 	      case 'year':
 	      case 'month':
@@ -10612,10 +10577,10 @@
 	    const oneWeek = new TemporalDuration(0, 0, sign);
 
 	    // Perform arithmetic in the mathematical integer domain
-	    years = BigIntegerExports(years);
-	    months = BigIntegerExports(months);
-	    weeks = BigIntegerExports(weeks);
-	    days = BigIntegerExports(days);
+	    years = bigInt(years);
+	    months = bigInt(months);
+	    weeks = bigInt(weeks);
+	    days = bigInt(days);
 	    switch (largestUnit) {
 	      case 'year':
 	        // no-op
@@ -10731,10 +10696,10 @@
 	    const oneWeek = new TemporalDuration(0, 0, sign);
 
 	    // Perform arithmetic in the mathematical integer domain
-	    years = BigIntegerExports(years);
-	    months = BigIntegerExports(months);
-	    weeks = BigIntegerExports(weeks);
-	    days = BigIntegerExports(days);
+	    years = bigInt(years);
+	    months = bigInt(months);
+	    weeks = bigInt(weeks);
+	    days = bigInt(days);
 	    switch (largestUnit) {
 	      case 'year':
 	        {
@@ -11607,7 +11572,7 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = ES.BalanceDuration(d1 + d2, BigIntegerExports(h1).add(h2), BigIntegerExports(min1).add(min2), BigIntegerExports(s1).add(s2), BigIntegerExports(ms1).add(ms2), BigIntegerExports(µs1).add(µs2), BigIntegerExports(ns1).add(ns2), largestUnit));
+	      } = ES.BalanceDuration(d1 + d2, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
 	    } else if (ES.IsTemporalDate(relativeTo)) {
 	      const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	      const calendar = GetSlot(relativeTo, CALENDAR);
@@ -11634,7 +11599,7 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = ES.BalanceDuration(days, BigIntegerExports(h1).add(h2), BigIntegerExports(min1).add(min2), BigIntegerExports(s1).add(s2), BigIntegerExports(ms1).add(ms2), BigIntegerExports(µs1).add(µs2), BigIntegerExports(ns1).add(ns2), largestUnit));
+	      } = ES.BalanceDuration(days, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
 	    } else {
 	      // relativeTo is a ZonedDateTime
 	      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
@@ -11686,14 +11651,14 @@
 	    };
 	  },
 	  AddInstant: (epochNanoseconds, h, min, s, ms, µs, ns) => {
-	    let sum = BigIntegerExports.zero;
-	    sum = sum.plus(BigIntegerExports(ns));
-	    sum = sum.plus(BigIntegerExports(µs).multiply(1e3));
-	    sum = sum.plus(BigIntegerExports(ms).multiply(1e6));
-	    sum = sum.plus(BigIntegerExports(s).multiply(1e9));
-	    sum = sum.plus(BigIntegerExports(min).multiply(60 * 1e9));
-	    sum = sum.plus(BigIntegerExports(h).multiply(60 * 60 * 1e9));
-	    const result = BigIntegerExports(epochNanoseconds).plus(sum);
+	    let sum = bigInt.zero;
+	    sum = sum.plus(bigInt(ns));
+	    sum = sum.plus(bigInt(µs).multiply(1e3));
+	    sum = sum.plus(bigInt(ms).multiply(1e6));
+	    sum = sum.plus(bigInt(s).multiply(1e9));
+	    sum = sum.plus(bigInt(min).multiply(60 * 1e9));
+	    sum = sum.plus(bigInt(h).multiply(60 * 60 * 1e9));
+	    const result = bigInt(epochNanoseconds).plus(sum);
 	    ES.ValidateEpochNanoseconds(result);
 	    return result;
 	  },
@@ -11930,8 +11895,8 @@
 	      quotient,
 	      remainder
 	    } = quantity.divmod(increment);
-	    if (remainder.equals(BigIntegerExports.zero)) return quantity;
-	    const sign = remainder.lt(BigIntegerExports.zero) ? -1 : 1;
+	    if (remainder.equals(bigInt.zero)) return quantity;
+	    const sign = remainder.lt(bigInt.zero) ? -1 : 1;
 	    const tiebreaker = remainder.multiply(2).abs();
 	    const tie = tiebreaker.equals(increment);
 	    const expandIsNearer = tiebreaker.gt(increment);
@@ -12009,11 +11974,11 @@
 	  },
 	  RoundTime: function (hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
 	    let dayLengthNs = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 86400e9;
-	    let quantity = BigIntegerExports.zero;
+	    let quantity = bigInt.zero;
 	    switch (unit) {
 	      case 'day':
 	      case 'hour':
-	        quantity = BigIntegerExports(hour);
+	        quantity = bigInt(hour);
 	      // fall through
 	      case 'minute':
 	        quantity = quantity.multiply(60).plus(minute);
@@ -12208,8 +12173,8 @@
 	          // the duration. This lets us do days-or-larger rounding using BigInt
 	          // math which reduces precision loss.
 	          oneYearDays = MathAbs$1(oneYearDays);
-	          const divisor = BigIntegerExports(oneYearDays).multiply(dayLengthNs);
-	          nanoseconds = divisor.multiply(years).plus(BigIntegerExports(days).multiply(dayLengthNs)).plus(nanoseconds);
+	          const divisor = bigInt(oneYearDays).multiply(dayLengthNs);
+	          nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
 	          const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
 	          const {
 	            quotient,
@@ -12253,8 +12218,8 @@
 	            } = ES.MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
 	          }
 	          oneMonthDays = MathAbs$1(oneMonthDays);
-	          const divisor = BigIntegerExports(oneMonthDays).multiply(dayLengthNs);
-	          nanoseconds = divisor.multiply(months).plus(BigIntegerExports(days).multiply(dayLengthNs)).plus(nanoseconds);
+	          const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
+	          nanoseconds = divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
 	          const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
 	          const {
 	            quotient,
@@ -12287,8 +12252,8 @@
 	            } = ES.MoveRelativeDate(calendar, relativeTo, oneWeek, dateAdd));
 	          }
 	          oneWeekDays = MathAbs$1(oneWeekDays);
-	          const divisor = BigIntegerExports(oneWeekDays).multiply(dayLengthNs);
-	          nanoseconds = divisor.multiply(weeks).plus(BigIntegerExports(days).multiply(dayLengthNs)).plus(nanoseconds);
+	          const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
+	          nanoseconds = divisor.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
 	          const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
 	          const {
 	            quotient,
@@ -12301,7 +12266,7 @@
 	        }
 	      case 'day':
 	        {
-	          const divisor = BigIntegerExports(dayLengthNs);
+	          const divisor = bigInt(dayLengthNs);
 	          nanoseconds = divisor.multiply(days).plus(nanoseconds);
 	          const rounded = ES.RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
 	          const {
@@ -12316,7 +12281,7 @@
 	      case 'hour':
 	        {
 	          const divisor = 3600e9;
-	          nanoseconds = BigIntegerExports(hours).multiply(3600e9).plus(BigIntegerExports(minutes).multiply(60e9)).plus(BigIntegerExports(seconds).multiply(1e9)).plus(BigIntegerExports(milliseconds).multiply(1e6)).plus(BigIntegerExports(microseconds).multiply(1e3)).plus(nanoseconds);
+	          nanoseconds = bigInt(hours).multiply(3600e9).plus(bigInt(minutes).multiply(60e9)).plus(bigInt(seconds).multiply(1e9)).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
 	          const {
 	            quotient,
 	            remainder
@@ -12330,7 +12295,7 @@
 	      case 'minute':
 	        {
 	          const divisor = 60e9;
-	          nanoseconds = BigIntegerExports(minutes).multiply(60e9).plus(BigIntegerExports(seconds).multiply(1e9)).plus(BigIntegerExports(milliseconds).multiply(1e6)).plus(BigIntegerExports(microseconds).multiply(1e3)).plus(nanoseconds);
+	          nanoseconds = bigInt(minutes).multiply(60e9).plus(bigInt(seconds).multiply(1e9)).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
 	          const {
 	            quotient,
 	            remainder
@@ -12344,7 +12309,7 @@
 	      case 'second':
 	        {
 	          const divisor = 1e9;
-	          nanoseconds = BigIntegerExports(seconds).multiply(1e9).plus(BigIntegerExports(milliseconds).multiply(1e6)).plus(BigIntegerExports(microseconds).multiply(1e3)).plus(nanoseconds);
+	          nanoseconds = bigInt(seconds).multiply(1e9).plus(bigInt(milliseconds).multiply(1e6)).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
 	          const {
 	            quotient,
 	            remainder
@@ -12358,7 +12323,7 @@
 	      case 'millisecond':
 	        {
 	          const divisor = 1e6;
-	          nanoseconds = BigIntegerExports(milliseconds).multiply(1e6).plus(BigIntegerExports(microseconds).multiply(1e3)).plus(nanoseconds);
+	          nanoseconds = bigInt(milliseconds).multiply(1e6).plus(bigInt(microseconds).multiply(1e3)).plus(nanoseconds);
 	          const {
 	            quotient,
 	            remainder
@@ -12372,7 +12337,7 @@
 	      case 'microsecond':
 	        {
 	          const divisor = 1e3;
-	          nanoseconds = BigIntegerExports(microseconds).multiply(1e3).plus(nanoseconds);
+	          nanoseconds = bigInt(microseconds).multiply(1e3).plus(nanoseconds);
 	          const {
 	            quotient,
 	            remainder
@@ -12386,7 +12351,7 @@
 	      case 'nanosecond':
 	        {
 	          total = nanoseconds;
-	          nanoseconds = ES.RoundNumberToIncrement(BigIntegerExports(nanoseconds), increment, roundingMode).toJSNumber();
+	          nanoseconds = ES.RoundNumberToIncrement(bigInt(nanoseconds), increment, roundingMode).toJSNumber();
 	          break;
 	        }
 	    }
@@ -12426,8 +12391,8 @@
 	    };
 	  },
 	  BigIntFloorDiv: (left, right) => {
-	    left = BigIntegerExports(left);
-	    right = BigIntegerExports(right);
+	    left = bigInt(left);
+	    right = bigInt(right);
 	    const {
 	      quotient,
 	      remainder
@@ -12438,7 +12403,7 @@
 	    return quotient;
 	  },
 	  ToBigInt: arg => {
-	    if (BigIntegerExports.isInstance(arg)) {
+	    if (bigInt.isInstance(arg)) {
 	      return arg;
 	    }
 	    const prim = ES.ToPrimitive(arg, Number);
@@ -12455,16 +12420,16 @@
 	      // eslint: no-fallthrough: false
 	      case 'bigint':
 	        try {
-	          return BigIntegerExports(prim);
+	          return bigInt(prim);
 	        } catch (e) {
 	          if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
 	          throw e;
 	        }
 	      case 'boolean':
 	        if (prim) {
-	          return BigIntegerExports(1);
+	          return bigInt(1);
 	        } else {
-	          return BigIntegerExports.zero;
+	          return bigInt.zero;
 	        }
 	    }
 	  },
@@ -12475,9 +12440,9 @@
 	    let ns = Date.now() % 1e6;
 	    return () => {
 	      const ms = Date.now();
-	      const result = BigIntegerExports(ms).multiply(1e6).plus(ns);
+	      const result = bigInt(ms).multiply(1e6).plus(ns);
 	      ns = ms % 1e6;
-	      return BigIntegerExports.min(NS_MAX, BigIntegerExports.max(NS_MIN, result));
+	      return bigInt.min(NS_MAX, bigInt.max(NS_MIN, result));
 	    };
 	  })(),
 	  DefaultTimeZone: () => {
@@ -12514,8 +12479,8 @@
 	function bisect(getState, left, right) {
 	  let lstate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : getState(left);
 	  let rstate = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : getState(right);
-	  left = BigIntegerExports(left);
-	  right = BigIntegerExports(right);
+	  left = bigInt(left);
+	  right = bigInt(right);
 	  while (right.minus(left).greater(1)) {
 	    let middle = left.plus(right).divide(2);
 	    const mstate = getState(middle);
@@ -12545,11 +12510,9 @@
 	const MD = Symbol('md');
 	const TIME = Symbol('time');
 	const DATETIME = Symbol('datetime');
-	const ZONED = Symbol('zoneddatetime');
 	const INST = Symbol('instant');
 	const ORIGINAL = Symbol('original');
 	const TZ_RESOLVED = Symbol('timezone');
-	const TZ_GIVEN = Symbol('timezone-id-given');
 	const CAL_ID = Symbol('calendar-id');
 	const LOCALE = Symbol('locale');
 	const OPTIONS = Symbol('options');
@@ -12605,7 +12568,6 @@
 	  } else {
 	    this[OPTIONS] = options;
 	  }
-	  this[TZ_GIVEN] = options.timeZone ? options.timeZone : null;
 	  this[LOCALE] = ro.locale;
 	  this[ORIGINAL] = original;
 	  this[TZ_RESOLVED] = ro.timeZone;
@@ -12615,7 +12577,6 @@
 	  this[MD] = monthDayAmend;
 	  this[TIME] = timeAmend;
 	  this[DATETIME] = datetimeAmend;
-	  this[ZONED] = zonedDateTimeAmend;
 	  this[INST] = instantAmend;
 	}
 	DateTimeFormat.supportedLocalesOf = function () {
@@ -12641,23 +12602,12 @@
 	function resolvedOptions() {
 	  return this[ORIGINAL].resolvedOptions();
 	}
-	function adjustFormatterTimeZone(formatter, timeZone) {
-	  if (!timeZone) return formatter;
-	  const options = formatter.resolvedOptions();
-	  if (options.timeZone === timeZone) return formatter;
-	  return new IntlDateTimeFormat$1(options.locale, {
-	    ...options,
-	    timeZone
-	  });
-	}
 	function format(datetime) {
 	  let {
 	    instant,
-	    formatter,
-	    timeZone
+	    formatter
 	  } = extractOverrides(datetime, this);
 	  if (instant && formatter) {
-	    formatter = adjustFormatterTimeZone(formatter, timeZone);
 	    return formatter.format(instant.epochMilliseconds);
 	  }
 	  for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -12668,11 +12618,9 @@
 	function formatToParts(datetime) {
 	  let {
 	    instant,
-	    formatter,
-	    timeZone
+	    formatter
 	  } = extractOverrides(datetime, this);
 	  if (instant && formatter) {
-	    formatter = adjustFormatterTimeZone(formatter, timeZone);
 	    return formatter.formatToParts(instant.epochMilliseconds);
 	  }
 	  for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -12687,20 +12635,14 @@
 	    }
 	    const {
 	      instant: aa,
-	      formatter: aformatter,
-	      timeZone: atz
+	      formatter: aformatter
 	    } = extractOverrides(a, this);
 	    const {
 	      instant: bb,
-	      formatter: bformatter,
-	      timeZone: btz
+	      formatter: bformatter
 	    } = extractOverrides(b, this);
-	    if (atz && btz && atz !== btz) {
-	      throw new RangeError('cannot format range between different time zones');
-	    }
 	    if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-	      const formatter = adjustFormatterTimeZone(aformatter, atz);
-	      return formatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
+	      return aformatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
 	    }
 	  }
 	  return this[ORIGINAL].formatRange(a, b);
@@ -12712,20 +12654,14 @@
 	    }
 	    const {
 	      instant: aa,
-	      formatter: aformatter,
-	      timeZone: atz
+	      formatter: aformatter
 	    } = extractOverrides(a, this);
 	    const {
 	      instant: bb,
-	      formatter: bformatter,
-	      timeZone: btz
+	      formatter: bformatter
 	    } = extractOverrides(b, this);
-	    if (atz && btz && atz !== btz) {
-	      throw new RangeError('cannot format range between different time zones');
-	    }
 	    if (aa && bb && aformatter && bformatter && aformatter === bformatter) {
-	      const formatter = adjustFormatterTimeZone(aformatter, atz);
-	      return formatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
+	      return aformatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
 	    }
 	  }
 	  return this[ORIGINAL].formatRangeToParts(a, b);
@@ -12829,20 +12765,6 @@
 	      minute: 'numeric',
 	      second: 'numeric'
 	    });
-	  }
-	  return options;
-	}
-	function zonedDateTimeAmend(options) {
-	  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-	    options = ObjectAssign$2({}, options, {
-	      year: 'numeric',
-	      month: 'numeric',
-	      day: 'numeric',
-	      hour: 'numeric',
-	      minute: 'numeric',
-	      second: 'numeric'
-	    });
-	    if (options.timeZoneName === undefined) options.timeZoneName = 'short';
 	  }
 	  return options;
 	}
@@ -12960,20 +12882,7 @@
 	    };
 	  }
 	  if (ES.IsTemporalZonedDateTime(temporalObj)) {
-	    const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-	    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
-	      throw new RangeError("cannot format ZonedDateTime with calendar ".concat(calendar, " in locale with calendar ").concat(main[CAL_ID]));
-	    }
-	    let timeZone = GetSlot(temporalObj, TIME_ZONE);
-	    const objTimeZone = ES.ToTemporalTimeZoneIdentifier(timeZone);
-	    if (main[TZ_GIVEN] && main[TZ_GIVEN] !== objTimeZone) {
-	      throw new RangeError("timeZone option ".concat(main[TZ_GIVEN], " doesn't match actual time zone ").concat(objTimeZone));
-	    }
-	    return {
-	      instant: GetSlot(temporalObj, INSTANT),
-	      formatter: getPropLazy(main, ZONED),
-	      timeZone: objTimeZone
-	    };
+	    throw new TypeError('Temporal.ZonedDateTime not supported in DateTimeFormat methods. Use toLocaleString() instead.');
 	  }
 	  if (ES.IsTemporalInstant(temporalObj)) {
 	    return {
@@ -13019,7 +12928,7 @@
 	  }
 	  get epochMilliseconds() {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-	    const value = BigIntegerExports(GetSlot(this, EPOCHNANOSECONDS));
+	    const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
 	    return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
 	  }
 	  get epochMicroseconds() {
@@ -13080,7 +12989,7 @@
 	    other = ES.ToTemporalInstant(other);
 	    const one = GetSlot(this, EPOCHNANOSECONDS);
 	    const two = GetSlot(other, EPOCHNANOSECONDS);
-	    return BigIntegerExports(one).equals(two);
+	    return bigInt(one).equals(two);
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
@@ -13139,13 +13048,13 @@
 	  }
 	  static fromEpochSeconds(epochSeconds) {
 	    epochSeconds = ES.ToNumber(epochSeconds);
-	    const epochNanoseconds = BigIntegerExports(epochSeconds).multiply(1e9);
+	    const epochNanoseconds = bigInt(epochSeconds).multiply(1e9);
 	    ES.ValidateEpochNanoseconds(epochNanoseconds);
 	    return new Instant(epochNanoseconds);
 	  }
 	  static fromEpochMilliseconds(epochMilliseconds) {
 	    epochMilliseconds = ES.ToNumber(epochMilliseconds);
-	    const epochNanoseconds = BigIntegerExports(epochMilliseconds).multiply(1e6);
+	    const epochNanoseconds = bigInt(epochMilliseconds).multiply(1e6);
 	    ES.ValidateEpochNanoseconds(epochNanoseconds);
 	    return new Instant(epochNanoseconds);
 	  }
@@ -13171,8 +13080,8 @@
 	    two = ES.ToTemporalInstant(two);
 	    one = GetSlot(one, EPOCHNANOSECONDS);
 	    two = GetSlot(two, EPOCHNANOSECONDS);
-	    if (BigIntegerExports(one).lesser(two)) return -1;
-	    if (BigIntegerExports(one).greater(two)) return 1;
+	    if (bigInt(one).lesser(two)) return -1;
+	    if (bigInt(one).greater(two)) return 1;
 	    return 0;
 	  }
 	}
@@ -17626,6 +17535,7 @@
 	MakeIntrinsicClass(PlainYearMonth, 'Temporal.PlainYearMonth');
 
 	const ArrayPrototypePush = Array.prototype.push;
+	const customResolvedOptions = DateTimeFormat.prototype.resolvedOptions;
 	const ObjectCreate = Object.create;
 	class ZonedDateTime {
 	  constructor(epochNanoseconds, timeZone) {
@@ -17959,7 +17869,7 @@
 	    other = ES.ToTemporalZonedDateTime(other);
 	    const one = GetSlot(this, EPOCHNANOSECONDS);
 	    const two = GetSlot(other, EPOCHNANOSECONDS);
-	    if (!BigIntegerExports(one).equals(two)) return false;
+	    if (!bigInt(one).equals(two)) return false;
 	    if (!ES.TimeZoneEquals(GetSlot(this, TIME_ZONE), GetSlot(other, TIME_ZONE))) return false;
 	    return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
 	  }
@@ -17989,7 +17899,35 @@
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    return new DateTimeFormat(locales, options).format(this);
+	    options = ES.GetOptionsObject(options);
+	    const optionsCopy = ObjectCreate(null);
+	    // This is not quite per specification, but this polyfill's DateTimeFormat
+	    // already doesn't match the InitializeDateTimeFormat operation, and the
+	    // access order might change anyway;
+	    // see https://github.com/tc39/ecma402/issues/747
+	    ES.CopyDataProperties(optionsCopy, options, ['timeZone']);
+	    if (options.timeZone !== undefined) {
+	      throw new TypeError('ZonedDateTime toLocaleString does not accept a timeZone option');
+	    }
+	    if (optionsCopy.year === undefined && optionsCopy.month === undefined && optionsCopy.day === undefined && optionsCopy.weekday === undefined && optionsCopy.dateStyle === undefined && optionsCopy.hour === undefined && optionsCopy.minute === undefined && optionsCopy.second === undefined && optionsCopy.timeStyle === undefined && optionsCopy.dayPeriod === undefined && optionsCopy.timeZoneName === undefined) {
+	      optionsCopy.timeZoneName = 'short';
+	      // The rest of the defaults will be filled in by formatting the Instant
+	    }
+
+	    let timeZone = ES.ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
+	    if (ES.IsTimeZoneOffsetString(timeZone)) {
+	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
+	      throw new RangeError('toLocaleString does not support offset string time zones');
+	    }
+	    timeZone = ES.GetCanonicalTimeZoneIdentifier(timeZone);
+	    optionsCopy.timeZone = timeZone;
+	    const formatter = new DateTimeFormat(locales, optionsCopy);
+	    const localeCalendarIdentifier = ES.Call(customResolvedOptions, formatter, []).calendar;
+	    const calendarIdentifier = ES.ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
+	    if (calendarIdentifier !== 'iso8601' && localeCalendarIdentifier !== 'iso8601' && localeCalendarIdentifier !== calendarIdentifier) {
+	      throw new RangeError("cannot format ZonedDateTime with calendar ".concat(calendarIdentifier) + " in locale with calendar ".concat(localeCalendarIdentifier));
+	    }
+	    return formatter.format(GetSlot(this, INSTANT));
 	  }
 	  toJSON() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -18082,8 +18020,8 @@
 	    two = ES.ToTemporalZonedDateTime(two);
 	    const ns1 = GetSlot(one, EPOCHNANOSECONDS);
 	    const ns2 = GetSlot(two, EPOCHNANOSECONDS);
-	    if (BigIntegerExports(ns1).lesser(ns2)) return -1;
-	    if (BigIntegerExports(ns1).greater(ns2)) return 1;
+	    if (bigInt(ns1).lesser(ns2)) return -1;
+	    if (bigInt(ns1).greater(ns2)) return 1;
 	    return 0;
 	  }
 	}
@@ -18118,7 +18056,7 @@
 
 	function toTemporalInstant() {
 	  // Observable access to valueOf is not correct here, but unavoidable
-	  const epochNanoseconds = BigIntegerExports(+this).multiply(1e6);
+	  const epochNanoseconds = bigInt(+this).multiply(1e6);
 	  return new Instant(bigIntIfAvailable(epochNanoseconds));
 	}
 	function bigIntIfAvailable(wrapper) {
