@@ -32,7 +32,6 @@ import IsIntegralNumber from 'es-abstract/2022/IsIntegralNumber.js';
 import ToIntegerOrInfinity from 'es-abstract/2022/ToIntegerOrInfinity.js';
 import IsPropertyKey from 'es-abstract/2022/IsPropertyKey.js';
 import SameValue from 'es-abstract/2022/SameValue.js';
-import ToLength from 'es-abstract/2022/ToLength.js';
 import ToNumber from 'es-abstract/2022/ToNumber.js';
 import ToObject from 'es-abstract/2022/ToObject.js';
 import ToPrimitive from 'es-abstract/2022/ToPrimitive.js';
@@ -217,7 +216,6 @@ export {
   HasOwnProperty,
   IsIntegralNumber,
   ToIntegerOrInfinity,
-  ToLength,
   ToNumber,
   ToObject,
   ToPrimitive,
