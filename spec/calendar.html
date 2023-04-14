@@ -702,13 +702,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarequals" aoid="CalendarEquals">
-      <h1>CalendarEquals ( _one_, _two_ )</h1>
-      <p>
-        The abstract operation CalendarEquals takes two arguments _one_ and _two_, which must be Objects.
-        It returns *true* if its arguments represent the same calendar.
-        It performs the following steps:
-      </p>
+    <emu-clause id="sec-temporal-calendarequals" type="abstract operation">
+      <h1>
+        CalendarEquals (
+          _one_: a String or Object,
+          _two_: a String or Object,
+        ): either a normal completion containing either *true* or *false*, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns *true* if its arguments represent calendars using the same identifier.</dd>
+      </dl>
       <emu-alg>
         1. If _one_ and _two_ are the same Object value, return *true*.
         1. Let _calendarOne_ be ? ToTemporalCalendarIdentifier(_one_).
@@ -718,13 +722,20 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-consolidatecalendars" aoid="ConsolidateCalendars">
-      <h1>ConsolidateCalendars ( _one_, _two_ )</h1>
-      <p>
-        The abstract operation ConsolidateCalendars takes two arguments _one_ and _two_, which must be Objects.
-        It returns the calendar that should take priority when combining two Temporal objects with different calendars, or throws an exception if the calendars cannot be combined.
-        It performs the following steps:
-      </p>
+    <emu-clause id="sec-temporal-consolidatecalendars" type="abstract operation">
+      <h1>
+        ConsolidateCalendars (
+          _one_: a String or Object,
+          _two_: a String or Object,
+        ): either a normal completion containing either a String or Object, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns the calendar that should take priority when combining two Temporal objects with different calendars, or throws an exception if the calendars cannot be combined.
+          Calendars can be combined when they have the same identifier or exactly one of them has identifier *"iso8601"*, and _calendarTwo_ takes priority in any combination unless it is the calendar with that identifier.
+        </dd>
+      </dl>
       <emu-alg>
         1. If _one_ and _two_ are the same Object value, return _two_.
         1. Let _calendarOne_ be ? ToTemporalCalendarIdentifier(_one_).

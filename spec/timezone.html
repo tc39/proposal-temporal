@@ -789,13 +789,17 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-timezoneequals" aoid="TimeZoneEquals">
-      <h1>TimeZoneEquals ( _one_, _two_ )</h1>
-      <p>
-        The abstract operation TimeZoneEquals takes two arguments _one_ and _two_, which must be Objects.
-        It returns *true* if its arguments represent the same time zone.
-        It performs the following steps:
-      </p>
+    <emu-clause id="sec-temporal-timezoneequals" type="abstract operation">
+      <h1>
+        TimeZoneEquals (
+          _one_: a String or Object,
+          _two_: a String or Object,
+        ): either a normal completion containing either *true* or *false*, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns *true* if its arguments represent time zones using the same identifier.</dd>
+      </dl>
       <emu-alg>
         1. If _one_ and _two_ are the same Object value, return *true*.
         1. Let _timeZoneOne_ be ? ToTemporalTimeZoneIdentifier(_one_).
