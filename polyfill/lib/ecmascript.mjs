@@ -2732,6 +2732,20 @@ export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
     }
   }
 
+  // We assume most time zones either have regular DST rules that extend
+  // indefinitely into the future, or they have no DST transitions between now
+  // and next year. Africa/Casablanca and Africa/El_Aaiun are unique cases
+  // that fit neither of these. Their irregular DST transitions are
+  // precomputed until 2087 in the current time zone database, so requesting
+  // the previous transition for an instant far in the future may take an
+  // extremely long time as it loops backward 2 weeks at a time.
+  if (id === 'Africa/Casablanca' || id === 'Africa/El_Aaiun') {
+    const lastPrecomputed = GetSlot(ToTemporalInstant('2088-01-01T00Z'), EPOCHNANOSECONDS);
+    if (lastPrecomputed.lesser(epochNanoseconds)) {
+      return GetNamedTimeZonePreviousTransition(id, lastPrecomputed);
+    }
+  }
+
   let rightNanos = bigInt(epochNanoseconds).minus(1);
   if (rightNanos.lesser(BEFORE_FIRST_DST)) return null;
   let rightOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
