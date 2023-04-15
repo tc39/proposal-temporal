@@ -12,6 +12,8 @@ npm run build262
 export NODE_V8_COVERAGE=coverage/tmp/
 rm -rf $NODE_V8_COVERAGE
 
+export TIMEOUT=30000
+
 # Run the tests in chunks, by subdirectory
 # Works around memory leak with vm.Script and NODE_V8_COVERAGE
 subdirs=$(find test262/test/*/Temporal/* -maxdepth 0 -type d -exec basename "{}" ";" | sort -u)
