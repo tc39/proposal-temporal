@@ -1,6 +1,3 @@
-intl402/Temporal/TimeZone/prototype/getNextTransition/transition-at-instant-boundaries.js
-intl402/Temporal/TimeZone/prototype/getPreviousTransition/transition-at-instant-boundaries.js
-
 # Caused by https://bugs.chromium.org/p/chromium/issues/detail?id=1416538
 # Remove these lines after that bug is fixed.
 staging/Intl402/Temporal/old/date-time-format.js
