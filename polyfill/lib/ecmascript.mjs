@@ -257,7 +257,7 @@ export function CopyDataProperties(target, source, excludedKeys, excludedValues)
   }
 
   if (typeof source === 'undefined' || source === null) {
-    return target;
+    return;
   }
 
   var from = ToObject(source);
@@ -285,8 +285,6 @@ export function CopyDataProperties(target, source, excludedKeys, excludedValues)
       if (excluded === false) CreateDataPropertyOrThrow(target, nextKey, propValue);
     }
   });
-
-  return target;
 }
 
 export function IsTemporalInstant(item) {
