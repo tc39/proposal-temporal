@@ -2006,14 +2006,14 @@
 
 	var callBindExports = callBind$2.exports;
 
-	var GetIntrinsic$e = getIntrinsic;
+	var GetIntrinsic$d = getIntrinsic;
 
 	var callBind$1 = callBindExports;
 
-	var $indexOf = callBind$1(GetIntrinsic$e('String.prototype.indexOf'));
+	var $indexOf = callBind$1(GetIntrinsic$d('String.prototype.indexOf'));
 
 	var callBound$2 = function callBoundIntrinsic(name, allowMissing) {
-		var intrinsic = GetIntrinsic$e(name, !!allowMissing);
+		var intrinsic = GetIntrinsic$d(name, !!allowMissing);
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
 			return callBind$1(intrinsic);
 		}
@@ -2022,9 +2022,9 @@
 
 	var callBound$3 = /*@__PURE__*/getDefaultExportFromCjs(callBound$2);
 
-	var GetIntrinsic$d = getIntrinsic;
+	var GetIntrinsic$c = getIntrinsic;
 
-	var $Array = GetIntrinsic$d('%Array%');
+	var $Array = GetIntrinsic$c('%Array%');
 
 	// eslint-disable-next-line global-require
 	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
@@ -2038,14 +2038,14 @@
 
 	var IsArray$2 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$1);
 
-	var GetIntrinsic$c = getIntrinsic;
+	var GetIntrinsic$b = getIntrinsic;
 	var callBound$1 = callBound$2;
 
-	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
+	var $TypeError$7 = GetIntrinsic$b('%TypeError%');
 
 	var IsArray = IsArray$1;
 
-	var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
+	var $apply = GetIntrinsic$b('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
@@ -3077,9 +3077,9 @@
 		return CreateDataProperty$1;
 	}
 
-	var GetIntrinsic$b = getIntrinsic;
+	var GetIntrinsic$a = getIntrinsic;
 
-	var $TypeError$6 = GetIntrinsic$b('%TypeError%');
+	var $TypeError$6 = GetIntrinsic$a('%TypeError%');
 
 	var CreateDataProperty = requireCreateDataProperty();
 	var IsPropertyKey$3 = IsPropertyKey$4;
@@ -6448,9 +6448,9 @@
 		return objectInspect;
 	}
 
-	var GetIntrinsic$a = getIntrinsic;
+	var GetIntrinsic$9 = getIntrinsic;
 
-	var $TypeError$5 = GetIntrinsic$a('%TypeError%');
+	var $TypeError$5 = GetIntrinsic$9('%TypeError%');
 
 	var inspect$1 = requireObjectInspect();
 
@@ -6507,9 +6507,9 @@
 		return RequireObjectCoercible$1;
 	}
 
-	var GetIntrinsic$9 = getIntrinsic;
+	var GetIntrinsic$8 = getIntrinsic;
 
-	var $Object = GetIntrinsic$9('%Object%');
+	var $Object = GetIntrinsic$8('%Object%');
 
 	var RequireObjectCoercible = requireRequireObjectCoercible();
 
@@ -6553,9 +6553,9 @@
 		return GetV$1;
 	}
 
-	var GetIntrinsic$8 = getIntrinsic;
+	var GetIntrinsic$7 = getIntrinsic;
 
-	var $TypeError$4 = GetIntrinsic$8('%TypeError%');
+	var $TypeError$4 = GetIntrinsic$7('%TypeError%');
 
 	var GetV = requireGetV();
 	var IsCallable = requireIsCallable();
@@ -6590,9 +6590,9 @@
 
 	var GetMethod$2 = /*@__PURE__*/getDefaultExportFromCjs(GetMethod$1);
 
-	var GetIntrinsic$7 = getIntrinsic;
+	var GetIntrinsic$6 = getIntrinsic;
 
-	var $abs = GetIntrinsic$7('%Math.abs%');
+	var $abs = GetIntrinsic$6('%Math.abs%');
 
 	// http://262.ecma-international.org/5.1/#sec-5.2
 
@@ -7141,10 +7141,10 @@
 		return defineProperties_1;
 	}
 
-	var GetIntrinsic$6 = getIntrinsic;
+	var GetIntrinsic$5 = getIntrinsic;
 
-	var $String = GetIntrinsic$6('%String%');
-	var $TypeError$3 = GetIntrinsic$6('%TypeError%');
+	var $String = GetIntrinsic$5('%String%');
+	var $TypeError$3 = GetIntrinsic$5('%TypeError%');
 
 	// https://262.ecma-international.org/6.0/#sec-tostring
 
@@ -7319,10 +7319,10 @@
 		return StringToNumber$1;
 	}
 
-	var GetIntrinsic$5 = getIntrinsic;
+	var GetIntrinsic$4 = getIntrinsic;
 
-	var $TypeError$2 = GetIntrinsic$5('%TypeError%');
-	var $Number$1 = GetIntrinsic$5('%Number%');
+	var $TypeError$2 = GetIntrinsic$4('%TypeError%');
+	var $Number = GetIntrinsic$4('%Number%');
 	var isPrimitive = requireIsPrimitive();
 
 	var ToPrimitive = ToPrimitive$1;
@@ -7331,7 +7331,7 @@
 	// https://262.ecma-international.org/13.0/#sec-tonumber
 
 	var ToNumber$1 = function ToNumber(argument) {
-		var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number$1);
+		var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number);
 		if (typeof value === 'symbol') {
 			throw new $TypeError$2('Cannot convert a Symbol value to a number');
 		}
@@ -7341,7 +7341,7 @@
 		if (typeof value === 'string') {
 			return StringToNumber(value);
 		}
-		return $Number$1(value);
+		return $Number(value);
 	};
 
 	var ToNumber$2 = /*@__PURE__*/getDefaultExportFromCjs(ToNumber$1);
@@ -7360,7 +7360,7 @@
 
 	// https://262.ecma-international.org/12.0/#sec-tointegerorinfinity
 
-	var ToIntegerOrInfinity$1 = function ToIntegerOrInfinity(value) {
+	var ToIntegerOrInfinity = function ToIntegerOrInfinity(value) {
 		var number = ToNumber(value);
 		if ($isNaN(number) || number === 0) { return 0; }
 		if (!$isFinite(number)) { return number; }
@@ -7369,27 +7369,7 @@
 		return $sign(number) * integer;
 	};
 
-	var ToIntegerOrInfinity$2 = /*@__PURE__*/getDefaultExportFromCjs(ToIntegerOrInfinity$1);
-
-	var GetIntrinsic$4 = getIntrinsic;
-
-	var $Math = GetIntrinsic$4('%Math%');
-	var $Number = GetIntrinsic$4('%Number%');
-
-	var maxSafeInteger = $Number.MAX_SAFE_INTEGER || $Math.pow(2, 53) - 1;
-
-	var MAX_SAFE_INTEGER = maxSafeInteger;
-
-	var ToIntegerOrInfinity = ToIntegerOrInfinity$1;
-
-	var ToLength = function ToLength(argument) {
-		var len = ToIntegerOrInfinity(argument);
-		if (len <= 0) { return 0; } // includes converting -0 to +0
-		if (len > MAX_SAFE_INTEGER) { return MAX_SAFE_INTEGER; }
-		return len;
-	};
-
-	var ToLength$1 = /*@__PURE__*/getDefaultExportFromCjs(ToLength);
+	var ToIntegerOrInfinity$1 = /*@__PURE__*/getDefaultExportFromCjs(ToIntegerOrInfinity);
 
 	var GetIntrinsic$3 = getIntrinsic;
 
@@ -7682,7 +7662,7 @@
 	  if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
 	  return number;
 	};
-	const BUILTIN_CASTS = new Map([['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToString$1], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['years', ToIntegerIfIntegral], ['months', ToIntegerIfIntegral], ['weeks', ToIntegerIfIntegral], ['days', ToIntegerIfIntegral], ['hours', ToIntegerIfIntegral], ['minutes', ToIntegerIfIntegral], ['seconds', ToIntegerIfIntegral], ['milliseconds', ToIntegerIfIntegral], ['microseconds', ToIntegerIfIntegral], ['nanoseconds', ToIntegerIfIntegral], ['era', ToString$1], ['eraYear', ToIntegerOrInfinity$2], ['offset', ToString$1]]);
+	const BUILTIN_CASTS = new Map([['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToString$1], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['years', ToIntegerIfIntegral], ['months', ToIntegerIfIntegral], ['weeks', ToIntegerIfIntegral], ['days', ToIntegerIfIntegral], ['hours', ToIntegerIfIntegral], ['minutes', ToIntegerIfIntegral], ['seconds', ToIntegerIfIntegral], ['milliseconds', ToIntegerIfIntegral], ['microseconds', ToIntegerIfIntegral], ['nanoseconds', ToIntegerIfIntegral], ['era', ToString$1], ['eraYear', ToIntegerOrInfinity$1], ['offset', ToString$1]]);
 	const BUILTIN_DEFAULTS = new Map([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
 
 	// each item is [plural, singular, category]
@@ -7702,8 +7682,7 @@
 	  GetMethod: GetMethod$2,
 	  HasOwnProperty: HasOwnProperty$1,
 	  IsIntegralNumber: IsIntegralNumber$1,
-	  ToIntegerOrInfinity: ToIntegerOrInfinity$2,
-	  ToLength: ToLength$1,
+	  ToIntegerOrInfinity: ToIntegerOrInfinity$1,
 	  ToNumber: ToNumber$2,
 	  ToObject: ToObject$1,
 	  ToPrimitive: ToPrimitive$2,
