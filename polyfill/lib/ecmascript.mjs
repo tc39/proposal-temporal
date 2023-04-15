@@ -257,7 +257,7 @@ export const ES = ObjectAssign({}, ES2022, {
     }
 
     if (typeof source === 'undefined' || source === null) {
-      return target;
+      return;
     }
 
     var from = ToObject(source);
@@ -285,8 +285,6 @@ export const ES = ObjectAssign({}, ES2022, {
         if (excluded === false) CreateDataPropertyOrThrow(target, nextKey, propValue);
       }
     });
-
-    return target;
   },
   ToPositiveIntegerWithTruncation,
   ToIntegerWithTruncation,
