@@ -9922,8 +9922,16 @@
 	      microsecond,
 	      nanosecond
 	    } = ES.GetNamedTimeZoneDateTimeParts(id, epochNanoseconds);
-	    const utc = ES.GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-	    if (utc === null) throw new RangeError('Date outside of supported range');
+
+	    // The pattern of leap years in the ISO 8601 calendar repeats every 400
+	    // years. To avoid overflowing at the edges of the range, we reduce the year
+	    // to the remainder after dividing by 400, and then add back all the
+	    // nanoseconds from the multiples of 400 years at the end.
+	    const reducedYear = year % 400;
+	    const yearCycles = (year - reducedYear) / 400;
+	    const nsIn400YearCycle = bigInt(400 * 365 + 97).multiply(DAY_NANOS);
+	    const reducedUTC = ES.GetUTCEpochNanoseconds(reducedYear, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+	    const utc = reducedUTC.plus(nsIn400YearCycle.multiply(yearCycles));
 	    return +utc.minus(epochNanoseconds);
 	  },
 	  FormatTimeZoneOffsetString: offsetNanoseconds => {
@@ -10022,6 +10030,9 @@
 	    return ES.BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	  },
 	  GetNamedTimeZoneNextTransition: (id, epochNanoseconds) => {
+	    if (epochNanoseconds.lesser(BEFORE_FIRST_DST)) {
+	      return ES.GetNamedTimeZoneNextTransition(id, BEFORE_FIRST_DST);
+	    }
 	    const uppercap = ES.SystemUTCEpochNanoSeconds().plus(DAY_NANOS.multiply(366));
 	    let leftNanos = epochNanoseconds;
 	    let leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
@@ -10029,6 +10040,7 @@
 	    let rightOffsetNs = leftOffsetNs;
 	    while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
 	      rightNanos = bigInt(leftNanos).plus(DAY_NANOS.multiply(2 * 7));
+	      if (rightNanos.greater(NS_MAX)) return null;
 	      rightOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
 	      if (leftOffsetNs === rightOffsetNs) {
 	        leftNanos = rightNanos;
@@ -10050,13 +10062,28 @@
 	        return prevBeforeNextYear;
 	      }
 	    }
-	    const lowercap = BEFORE_FIRST_DST; // 1847-01-01T00:00:00Z
+
+	    // We assume most time zones either have regular DST rules that extend
+	    // indefinitely into the future, or they have no DST transitions between now
+	    // and next year. Africa/Casablanca and Africa/El_Aaiun are unique cases
+	    // that fit neither of these. Their irregular DST transitions are
+	    // precomputed until 2087 in the current time zone database, so requesting
+	    // the previous transition for an instant far in the future may take an
+	    // extremely long time as it loops backward 2 weeks at a time.
+	    if (id === 'Africa/Casablanca' || id === 'Africa/El_Aaiun') {
+	      const lastPrecomputed = GetSlot(ES.ToTemporalInstant('2088-01-01T00Z'), EPOCHNANOSECONDS);
+	      if (lastPrecomputed.lesser(epochNanoseconds)) {
+	        return ES.GetNamedTimeZonePreviousTransition(id, lastPrecomputed);
+	      }
+	    }
 	    let rightNanos = bigInt(epochNanoseconds).minus(1);
+	    if (rightNanos.lesser(BEFORE_FIRST_DST)) return null;
 	    let rightOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
 	    let leftNanos = rightNanos;
 	    let leftOffsetNs = rightOffsetNs;
-	    while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(lowercap) === 1) {
+	    while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(BEFORE_FIRST_DST) === 1) {
 	      leftNanos = bigInt(rightNanos).minus(DAY_NANOS.multiply(2 * 7));
+	      if (leftNanos.lesser(BEFORE_FIRST_DST)) return null;
 	      leftOffsetNs = ES.GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
 	      if (rightOffsetNs === leftOffsetNs) {
 	        rightNanos = leftNanos;
@@ -10198,6 +10225,17 @@
 	      year,
 	      month
 	    } = ES.BalanceISOYearMonth(year, month));
+
+	    // The pattern of leap years in the ISO 8601 calendar repeats every 400
+	    // years. So if we have more than 400 years in days, there's no need to
+	    // convert days to a year 400 times. We can convert a multiple of 400 all at
+	    // once.
+	    const daysIn400YearCycle = 400 * 365 + 97;
+	    if (MathAbs$1(day) > daysIn400YearCycle) {
+	      const nCycles = MathTrunc(day / daysIn400YearCycle);
+	      year += 400 * nCycles;
+	      day -= nCycles * daysIn400YearCycle;
+	    }
 	    let daysInYear = 0;
 	    let testYear = month > 2 ? year : year - 1;
 	    while (daysInYear = ES.LeapYear(testYear) ? 366 : 365, day < -daysInYear) {
@@ -12380,6 +12418,9 @@
 	    }
 	    return quotient;
 	  },
+	  BigIntIfAvailable: wrapper => {
+	    return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
+	  },
 	  ToBigInt: arg => {
 	    if (bigInt.isInstance(arg)) {
 	      return arg;
@@ -12912,11 +12953,11 @@
 	  get epochMicroseconds() {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return bigIntIfAvailable$2(ES.BigIntFloorDiv(value, 1e3));
+	    return ES.BigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
 	  }
 	  get epochNanoseconds() {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-	    return bigIntIfAvailable$2(GetSlot(this, EPOCHNANOSECONDS));
+	    return ES.BigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
 	  }
 	  add(temporalDurationLike) {
 	    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -13064,9 +13105,6 @@
 	  }
 	}
 	MakeIntrinsicClass(Instant, 'Temporal.Instant');
-	function bigIntIfAvailable$2(wrapper) {
-	  return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
-	}
 
 	/* global true */
 	const ArrayIncludes = Array.prototype.includes;
@@ -17598,11 +17636,11 @@
 	  get epochMicroseconds() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return bigIntIfAvailable$1(ES.BigIntFloorDiv(value, 1e3));
+	    return ES.BigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
 	  }
 	  get epochNanoseconds() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    return bigIntIfAvailable$1(GetSlot(this, EPOCHNANOSECONDS));
+	    return ES.BigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
 	  }
 	  get dayOfWeek() {
 	    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -18004,9 +18042,6 @@
 	  }
 	}
 	MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');
-	function bigIntIfAvailable$1(wrapper) {
-	  return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
-	}
 	function dateTime(zdt) {
 	  return ES.GetPlainDateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, INSTANT), GetSlot(zdt, CALENDAR));
 	}
@@ -18032,13 +18067,10 @@
 		ZonedDateTime: ZonedDateTime
 	});
 
+	const DatePrototypeValueOf = Date.prototype.valueOf;
 	function toTemporalInstant() {
-	  // Observable access to valueOf is not correct here, but unavoidable
-	  const epochNanoseconds = bigInt(+this).multiply(1e6);
-	  return new Instant(bigIntIfAvailable(epochNanoseconds));
-	}
-	function bigIntIfAvailable(wrapper) {
-	  return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
+	  const epochNanoseconds = bigInt(ES.Call(DatePrototypeValueOf, this, [])).multiply(1e6);
+	  return new Instant(ES.BigIntIfAvailable(epochNanoseconds));
 	}
 
 	// This is an alternate entry point that polyfills Temporal onto the global
