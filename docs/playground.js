@@ -7719,7 +7719,7 @@
 	      throw new $TypeError('Assertion failed: "excludedKeys" must be a List of Property Keys');
 	    }
 	    if (typeof source === 'undefined' || source === null) {
-	      return target;
+	      return;
 	    }
 	    var from = ToObject$1(source);
 	    var keys = OwnPropertyKeys$1(from);
@@ -7743,7 +7743,6 @@
 	        if (excluded === false) CreateDataPropertyOrThrow$1(target, nextKey, propValue);
 	      }
 	    });
-	    return target;
 	  },
 	  ToPositiveIntegerWithTruncation,
 	  ToIntegerWithTruncation,
