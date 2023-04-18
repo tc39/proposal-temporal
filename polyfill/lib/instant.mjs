@@ -1,6 +1,6 @@
 /* global __debug__ */
 
-import { ES } from './ecmascript.mjs';
+import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
