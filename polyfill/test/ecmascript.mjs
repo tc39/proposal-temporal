@@ -9,7 +9,7 @@ const { deepEqual, equal, throws } = assert;
 
 import bigInt from 'big-integer';
 
-import { ES } from '../lib/ecmascript.mjs';
+import * as ES from '../lib/ecmascript.mjs';
 import { GetSlot, TIMEZONE_ID } from '../lib/slots.mjs';
 import { TimeZone } from '../lib/timezone.mjs';
 

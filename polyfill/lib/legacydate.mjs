@@ -1,4 +1,4 @@
-import { ES } from './ecmascript.mjs';
+import * as ES from './ecmascript.mjs';
 import { Instant } from './instant.mjs';
 
 import bigInt from 'big-integer';

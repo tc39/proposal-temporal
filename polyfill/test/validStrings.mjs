@@ -5,7 +5,7 @@
 // node test/validStrings.mjs
 
 import assert from 'assert';
-import { ES } from '../lib/ecmascript.mjs';
+import * as ES from '../lib/ecmascript.mjs';
 
 const timezoneNames = Intl.supportedValuesOf('timeZone');
 const calendarNames = Intl.supportedValuesOf('calendar');
