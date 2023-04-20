@@ -1,4 +1,4 @@
-import { ES } from './ecmascript.mjs';
+import * as ES from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import {
   GetSlot,

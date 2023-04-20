@@ -1,6 +1,6 @@
 /* global __debug__ */
 
-import { ES } from './ecmascript.mjs';
+import * as ES from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import {
   CALENDAR_ID,
