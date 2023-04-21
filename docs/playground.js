@@ -9444,13 +9444,13 @@
 	  const cal2 = ToTemporalCalendarIdentifier(two);
 	  return cal1 === cal2;
 	}
+
 	// This operation is not in the spec, it implements the following:
 	// "If ? CalendarEquals(one, two) is false, throw a RangeError exception."
 	// This is so that we can build an informative error message without
 	// re-getting the .id properties.
-
-	function CalendarEqualsOrThrow(one, two, errorMessageAction) {
-	  if (one === two) return true;
+	function ThrowIfCalendarsNotEqual(one, two, errorMessageAction) {
+	  if (one === two) return;
 	  const cal1 = ToTemporalCalendarIdentifier(one);
 	  const cal2 = ToTemporalCalendarIdentifier(two);
 	  if (cal1 !== cal2) {
@@ -11334,7 +11334,7 @@
 	  other = ToTemporalDate(other);
 	  const calendar = GetSlot(plainDate, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
-	  CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
+	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 	  const resolvedOptions = ObjectCreate$8(null);
 	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
@@ -11361,7 +11361,7 @@
 	  other = ToTemporalDateTime(other);
 	  const calendar = GetSlot(plainDateTime, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
-	  CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
+	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 	  const resolvedOptions = ObjectCreate$8(null);
 	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
@@ -11440,7 +11440,7 @@
 	  other = ToTemporalYearMonth(other);
 	  const calendar = GetSlot(yearMonth, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
-	  CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between months');
+	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between months');
 	  const resolvedOptions = ObjectCreate$8(null);
 	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
@@ -11470,7 +11470,7 @@
 	  other = ToTemporalZonedDateTime(other);
 	  const calendar = GetSlot(zonedDateTime, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
-	  CalendarEqualsOrThrow(calendar, otherCalendar, 'compute difference between dates');
+	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 	  const resolvedOptions = ObjectCreate$8(null);
 	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
