@@ -3300,7 +3300,7 @@ export function UnbalanceDurationRelative(years, months, weeks, days, largestUni
           dateAdd = GetMethod(calendar, 'dateAdd');
           dateUntil = GetMethod(calendar, 'dateUntil');
         }
-        while (!years.abs().isZero()) {
+        while (!years.isZero()) {
           const newRelativeTo = CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
           const untilOptions = ObjectCreate(null);
           untilOptions.largestUnit = 'month';
@@ -3317,7 +3317,7 @@ export function UnbalanceDurationRelative(years, months, weeks, days, largestUni
         if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
         const dateAdd = typeof calendar !== 'string' ? GetMethod(calendar, 'dateAdd') : undefined;
         // balance years down to days
-        while (!years.abs().isZero()) {
+        while (!years.isZero()) {
           let oneYearDays;
           ({ relativeTo, days: oneYearDays } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd));
           days = days.add(oneYearDays);
@@ -3325,7 +3325,7 @@ export function UnbalanceDurationRelative(years, months, weeks, days, largestUni
         }
 
         // balance months down to days
-        while (!months.abs().isZero()) {
+        while (!months.isZero()) {
           let oneMonthDays;
           ({ relativeTo, days: oneMonthDays } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
           days = days.add(oneMonthDays);
@@ -3339,7 +3339,7 @@ export function UnbalanceDurationRelative(years, months, weeks, days, largestUni
         if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
         const dateAdd = typeof calendar !== 'string' ? GetMethod(calendar, 'dateAdd') : undefined;
         // balance years down to days
-        while (!years.abs().isZero()) {
+        while (!years.isZero()) {
           let oneYearDays;
           ({ relativeTo, days: oneYearDays } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd));
           days = days.add(oneYearDays);
@@ -3347,7 +3347,7 @@ export function UnbalanceDurationRelative(years, months, weeks, days, largestUni
         }
 
         // balance months down to days
-        while (!months.abs().isZero()) {
+        while (!months.isZero()) {
           let oneMonthDays;
           ({ relativeTo, days: oneMonthDays } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
           days = days.add(oneMonthDays);
@@ -3355,7 +3355,7 @@ export function UnbalanceDurationRelative(years, months, weeks, days, largestUni
         }
 
         // balance weeks down to days
-        while (!weeks.abs().isZero()) {
+        while (!weeks.isZero()) {
           let oneWeekDays;
           ({ relativeTo, days: oneWeekDays } = MoveRelativeDate(calendar, relativeTo, oneWeek, dateAdd));
           days = days.add(oneWeekDays);
