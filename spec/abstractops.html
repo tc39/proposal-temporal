@@ -1151,7 +1151,8 @@
           TimeFraction
 
       DurationMinutesPart :
-          DurationWholeMinutes DurationMinutesFraction? MinutesDesignator DurationSecondsPart?
+          DurationWholeMinutes DurationMinutesFraction MinutesDesignator
+          DurationWholeMinutes MinutesDesignator DurationSecondsPart?
 
       DurationWholeHours :
           DecimalDigits[~Sep]
@@ -1160,8 +1161,9 @@
           TimeFraction
 
       DurationHoursPart :
-          DurationWholeHours DurationHoursFraction? HoursDesignator DurationMinutesPart
-          DurationWholeHours DurationHoursFraction? HoursDesignator DurationSecondsPart?
+          DurationWholeHours DurationHoursFraction HoursDesignator
+          DurationWholeHours HoursDesignator DurationMinutesPart
+          DurationWholeHours HoursDesignator DurationSecondsPart?
 
       DurationTime :
           TimeDesignator DurationHoursPart
@@ -1466,14 +1468,14 @@
       1. Let _daysMV_ be ? ToIntegerWithTruncation(CodePointsToString(_days_)).
       1. Let _hoursMV_ be ? ToIntegerWithTruncation(CodePointsToString(_hours_)).
       1. If _fHours_ is not empty, then
-        1. If any of _minutes_, _fMinutes_, _seconds_, _fSeconds_ is not empty, throw a *RangeError* exception.
+        1. Assert: _minutes_, _fMinutes_, _seconds_, and _fSeconds_ are empty.
         1. Let _fHoursDigits_ be the substring of CodePointsToString(_fHours_) from 1.
         1. Let _fHoursScale_ be the length of _fHoursDigits_.
         1. Let _minutesMV_ be ? ToIntegerWithTruncation(_fHoursDigits_) / 10<sup>_fHoursScale_</sup> &times; 60.
       1. Else,
         1. Let _minutesMV_ be ? ToIntegerWithTruncation(CodePointsToString(_minutes_)).
       1. If _fMinutes_ is not empty, then
-        1. If any of _seconds_, _fSeconds_ is not empty, throw a *RangeError* exception.
+        1. Assert: _seconds_ and _fSeconds_ are empty.
         1. Let _fMinutesDigits_ be the substring of CodePointsToString(_fMinutes_) from 1.
         1. Let _fMinutesScale_ be the length of _fMinutesDigits_.
         1. Let _secondsMV_ be ? ToIntegerWithTruncation(_fMinutesDigits_) / 10<sup>_fMinutesScale_</sup> &times; 60.
