@@ -338,12 +338,29 @@ const annotatedMonthDay = withSyntaxConstraints(
   }
 );
 
-const durationFraction = withCode(fraction, (data, result) => {
+const durationSecondsFraction = withCode(fraction, (data, result) => {
   result = result.slice(1);
   const fraction = result.padEnd(9, '0');
   data.milliseconds = +fraction.slice(0, 3) * data.factor;
   data.microseconds = +fraction.slice(3, 6) * data.factor;
   data.nanoseconds = +fraction.slice(6, 9) * data.factor;
+});
+const durationMinutesFraction = withCode(fraction, (data, result) => {
+  result = result.slice(1);
+  const ns = +result.padEnd(9, '0') * 60;
+  data.seconds = Math.trunc(ns / 1e9) * data.factor;
+  data.milliseconds = Math.trunc((ns % 1e9) / 1e6) * data.factor;
+  data.microseconds = Math.trunc((ns % 1e6) / 1e3) * data.factor;
+  data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
+});
+const durationHoursFraction = withCode(fraction, (data, result) => {
+  result = result.slice(1);
+  const ns = +result.padEnd(9, '0') * 3600;
+  data.minutes = Math.trunc(ns / 6e10) * data.factor;
+  data.seconds = Math.trunc((ns % 6e10) / 1e9) * data.factor;
+  data.milliseconds = Math.trunc((ns % 1e9) / 1e6) * data.factor;
+  data.microseconds = Math.trunc((ns % 1e6) / 1e3) * data.factor;
+  data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
 });
 
 const digitsNotInfinite = withSyntaxConstraints(oneOrMore(digit()), (result) => {
@@ -351,18 +368,16 @@ const digitsNotInfinite = withSyntaxConstraints(oneOrMore(digit()), (result) => 
 });
 const durationSeconds = seq(
   withCode(digitsNotInfinite, (data, result) => (data.seconds = +result * data.factor)),
-  [durationFraction],
+  [durationSecondsFraction],
   secondsDesignator
 );
 const durationMinutes = seq(
   withCode(digitsNotInfinite, (data, result) => (data.minutes = +result * data.factor)),
-  minutesDesignator,
-  [durationSeconds]
+  choice(seq(minutesDesignator, [durationSeconds]), seq(durationMinutesFraction, minutesDesignator))
 );
 const durationHours = seq(
   withCode(digitsNotInfinite, (data, result) => (data.hours = +result * data.factor)),
-  hoursDesignator,
-  [choice(durationMinutes, durationSeconds)]
+  choice(seq(hoursDesignator, [choice(durationMinutes, durationSeconds)]), seq(durationHoursFraction, hoursDesignator))
 );
 const durationTime = seq(timeDesignator, choice(durationHours, durationMinutes, durationSeconds));
 const durationDays = seq(
