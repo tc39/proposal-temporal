@@ -184,14 +184,14 @@ export namespace Temporal {
   };
 
   export type ShowCalendarOption = {
-    calendarName?: 'auto' | 'always' | 'never';
+    calendarName?: 'auto' | 'always' | 'never' | 'critical';
   };
 
   export type CalendarTypeToStringOptions = Partial<ToStringPrecisionOptions & ShowCalendarOption>;
 
   export type ZonedDateTimeToStringOptions = Partial<
     CalendarTypeToStringOptions & {
-      timeZoneName?: 'auto' | 'never';
+      timeZoneName?: 'auto' | 'never' | 'critical';
       offset?: 'auto' | 'never';
     }
   >;
@@ -639,6 +639,7 @@ export namespace Temporal {
     dayOfWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     dayOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     weekOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
+    yearOfWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     daysInWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     daysInMonth(
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
@@ -680,7 +681,17 @@ export namespace Temporal {
     toJSON?(): string;
   }
 
-  export type CalendarLike = CalendarProtocol | string;
+  /**
+   * Any of these types can be passed to Temporal methods instead of a Temporal.Calendar.
+   * */
+  export type CalendarLike =
+    | string
+    | CalendarProtocol
+    | ZonedDateTime
+    | PlainDateTime
+    | PlainDate
+    | PlainYearMonth
+    | PlainMonthDay;
 
   /**
    * A `Temporal.Calendar` is a representation of a calendar system. It includes
@@ -719,6 +730,7 @@ export namespace Temporal {
     dayOfWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     dayOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     weekOfYear(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
+    yearOfWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     daysInWeek(date: Temporal.PlainDate | Temporal.PlainDateTime | PlainDateLike | string): number;
     daysInMonth(
       date: Temporal.PlainDate | Temporal.PlainDateTime | Temporal.PlainYearMonth | PlainDateLike | string
@@ -801,9 +813,11 @@ export namespace Temporal {
     readonly monthCode: string;
     readonly day: number;
     readonly calendarId: string;
+    getCalendar(): CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
+    readonly yearOfWeek: number;
     readonly daysInWeek: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
@@ -834,7 +848,6 @@ export namespace Temporal {
     ): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
-    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -916,9 +929,11 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     readonly calendarId: string;
+    getCalendar(): CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
+    readonly yearOfWeek: number;
     readonly daysInWeek: number;
     readonly daysInYear: number;
     readonly daysInMonth: number;
@@ -954,7 +969,6 @@ export namespace Temporal {
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     toPlainTime(): Temporal.PlainTime;
-    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -989,10 +1003,10 @@ export namespace Temporal {
     readonly monthCode: string;
     readonly day: number;
     readonly calendarId: string;
+    getCalendar(): CalendarProtocol;
     equals(other: Temporal.PlainMonthDay | PlainMonthDayLike | string): boolean;
     with(monthDayLike: PlainMonthDayLike, options?: AssignmentOptions): Temporal.PlainMonthDay;
     toPlainDate(year: { year: number }): Temporal.PlainDate;
-    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1001,17 +1015,14 @@ export namespace Temporal {
     readonly [Symbol.toStringTag]: 'Temporal.PlainMonthDay';
   }
 
-  export type PlainTimeLike =
-    | {
-        hour?: number;
-        minute?: number;
-        second?: number;
-        millisecond?: number;
-        microsecond?: number;
-        nanosecond?: number;
-      }
-    | Temporal.ZonedDateTime
-    | Temporal.PlainDateTime;
+  export type PlainTimeLike = {
+    hour?: number;
+    minute?: number;
+    second?: number;
+    millisecond?: number;
+    microsecond?: number;
+    nanosecond?: number;
+  };
 
   type PlainTimeISOFields = {
     isoHour: number;
@@ -1104,7 +1115,10 @@ export namespace Temporal {
     toJSON?(): string;
   }
 
-  export type TimeZoneLike = TimeZoneProtocol | string;
+  /**
+   * Any of these types can be passed to Temporal methods instead of a Temporal.TimeZone.
+   * */
+  export type TimeZoneLike = string | TimeZoneProtocol | ZonedDateTime;
 
   /**
    * A `Temporal.TimeZone` is a representation of a time zone: either an
@@ -1113,9 +1127,10 @@ export namespace Temporal {
    * and UTC at a particular time, and daylight saving time (DST) changes; or
    * simply a particular UTC offset with no DST.
    *
-   * Since `Temporal.Instant` and `Temporal.PlainDateTime` do not contain any time
-   * zone information, a `Temporal.TimeZone` object is required to convert
-   * between the two.
+   * `Temporal.ZonedDateTime` is the only Temporal type to contain a time zone.
+   * Other types, like `Temporal.Instant` and `Temporal.PlainDateTime`, do not
+   * contain any time zone information, and a `Temporal.TimeZone` object is
+   * required to convert between them.
    *
    * See https://tc39.es/proposal-temporal/docs/timezone.html for more details.
    */
@@ -1170,6 +1185,7 @@ export namespace Temporal {
     readonly month: number;
     readonly monthCode: string;
     readonly calendarId: string;
+    getCalendar(): CalendarProtocol;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly monthsInYear: number;
@@ -1190,7 +1206,6 @@ export namespace Temporal {
       options?: DifferenceOptions<'year' | 'month'>
     ): Temporal.Duration;
     toPlainDate(day: { day: number }): Temporal.PlainDate;
-    getCalendar(): CalendarProtocol;
     getISOFields(): PlainDateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
@@ -1255,10 +1270,13 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     readonly timeZoneId: string;
+    getTimeZone(): TimeZoneProtocol;
     readonly calendarId: string;
+    getCalendar(): CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number;
+    readonly yearOfWeek: number;
     readonly hoursInDay: number;
     readonly daysInWeek: number;
     readonly daysInMonth: number;
@@ -1304,8 +1322,6 @@ export namespace Temporal {
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
     toPlainTime(): Temporal.PlainTime;
-    getCalendar(): CalendarProtocol;
-    getTimeZone(): TimeZoneProtocol;
     getISOFields(): ZonedDateTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
