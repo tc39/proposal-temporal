@@ -364,22 +364,26 @@ const durationHoursFraction = withCode(fraction, (data, result) => {
 const digitsNotInfinite = withSyntaxConstraints(oneOrMore(digit()), (result) => {
   if (!Number.isFinite(+result)) throw new SyntaxError('try again on infinity');
 });
+const timeDurationDigits = (factor) =>
+  withSyntaxConstraints(between(1, 16, digit()), (result) => {
+    if (!Number.isSafeInteger(+result * factor)) throw new SyntaxError('try again on unsafe integer');
+  });
 const durationSeconds = seq(
-  withCode(digitsNotInfinite, (data, result) => (data.seconds = +result * data.factor)),
+  withCode(timeDurationDigits(1), (data, result) => (data.seconds = +result * data.factor)),
   [durationSecondsFraction],
   secondsDesignator
 );
 const durationMinutes = seq(
-  withCode(digitsNotInfinite, (data, result) => (data.minutes = +result * data.factor)),
+  withCode(timeDurationDigits(60), (data, result) => (data.minutes = +result * data.factor)),
   choice(seq(minutesDesignator, [durationSeconds]), seq(durationMinutesFraction, minutesDesignator))
 );
 const durationHours = seq(
-  withCode(digitsNotInfinite, (data, result) => (data.hours = +result * data.factor)),
+  withCode(timeDurationDigits(3600), (data, result) => (data.hours = +result * data.factor)),
   choice(seq(hoursDesignator, [choice(durationMinutes, durationSeconds)]), seq(durationHoursFraction, hoursDesignator))
 );
 const durationTime = seq(timeDesignator, choice(durationHours, durationMinutes, durationSeconds));
 const durationDays = seq(
-  withCode(digitsNotInfinite, (data, result) => (data.days = +result * data.factor)),
+  withCode(timeDurationDigits(86400), (data, result) => (data.days = +result * data.factor)),
   daysDesignator
 );
 const durationWeeks = seq(

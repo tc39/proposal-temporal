@@ -14,6 +14,9 @@ import './datemath.mjs';
 // tests of internals, not suitable for test262
 import './ecmascript.mjs';
 
+// Power-of-10 math
+import './math.mjs';
+
 Promise.resolve()
   .then(() => {
     return Demitasse.report(Pretty.reporter);
