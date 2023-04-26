@@ -36,26 +36,41 @@ function checkFloat(value, float) {
 describe('Normalized time duration', () => {
   describe('construction', () => {
     it('basic', () => {
-      check(new TimeDuration(123456789_987654321n), 123456789, 987654321);
-      check(new TimeDuration(-987654321_123456789n), -987654321, -123456789);
+      check(new TimeDuration(123456789, 987654321), 123456789, 987654321);
+      check(new TimeDuration(-987654321, -123456789), -987654321, -123456789);
     });
 
     it('either sign with zero in the other component', () => {
-      check(new TimeDuration(123n), 0, 123);
-      check(new TimeDuration(-123n), 0, -123);
-      check(new TimeDuration(123_000_000_000n), 123, 0);
-      check(new TimeDuration(-123_000_000_000n), -123, 0);
+      check(new TimeDuration(0, 123), 0, 123);
+      check(new TimeDuration(0, -123), 0, -123);
+      check(new TimeDuration(123, 0), 123, 0);
+      check(new TimeDuration(-123, 0), -123, 0);
+    });
+
+    it('-0 is normalized', () => {
+      const d = new TimeDuration(-0, -0);
+      check(d, 0, 0);
+      assert(!Object.is(d.sec, -0));
+      assert(!Object.is(d.subsec, -0));
     });
   });
 
   describe('construction impossible', () => {
     it('out of range', () => {
-      throws(() => new TimeDuration(2n ** 53n * 1_000_000_000n));
-      throws(() => new TimeDuration(-(2n ** 53n * 1_000_000_000n)));
+      throws(() => new TimeDuration(2 ** 53, 0));
+      throws(() => new TimeDuration(-(2 ** 53), 0));
+      throws(() => new TimeDuration(Number.MAX_SAFE_INTEGER, 1e9));
+      throws(() => new TimeDuration(-Number.MAX_SAFE_INTEGER, -1e9));
     });
 
     it('not an integer', () => {
-      throws(() => new TimeDuration(Math.PI));
+      throws(() => new TimeDuration(Math.PI, 0));
+      throws(() => new TimeDuration(0, Math.PI));
+    });
+
+    it('mixed signs', () => {
+      throws(() => new TimeDuration(1, -1));
+      throws(() => new TimeDuration(-1, 1));
     });
   });
 
@@ -121,104 +136,104 @@ describe('Normalized time duration', () => {
 
   describe('abs()', () => {
     it('positive', () => {
-      const d = new TimeDuration(123_456_654_321n);
+      const d = new TimeDuration(123, 456_654_321);
       check(d.abs(), 123, 456_654_321);
     });
 
     it('negative', () => {
-      const d = new TimeDuration(-123_456_654_321n);
+      const d = new TimeDuration(-123, -456_654_321);
       check(d.abs(), 123, 456_654_321);
     });
 
     it('zero', () => {
-      const d = new TimeDuration(0n);
+      const d = new TimeDuration(0, 0);
       check(d.abs(), 0, 0);
     });
   });
 
   describe('add()', () => {
     it('basic', () => {
-      const d1 = new TimeDuration(123_456_654_321_123_456n);
-      const d2 = new TimeDuration(654_321_123_456_654_321n);
+      const d1 = new TimeDuration(123_456_654, 321_123_456);
+      const d2 = new TimeDuration(654_321_123, 456_654_321);
       check(d1.add(d2), 777_777_777, 777_777_777);
     });
 
     it('negative', () => {
-      const d1 = new TimeDuration(-123_456_654_321_123_456n);
-      const d2 = new TimeDuration(-654_321_123_456_654_321n);
+      const d1 = new TimeDuration(-123_456_654, -321_123_456);
+      const d2 = new TimeDuration(-654_321_123, -456_654_321);
       check(d1.add(d2), -777_777_777, -777_777_777);
     });
 
     it('signs differ', () => {
-      const d1 = new TimeDuration(333_333_333_333_333_333n);
-      const d2 = new TimeDuration(-222_222_222_222_222_222n);
+      const d1 = new TimeDuration(333_333_333, 333_333_333);
+      const d2 = new TimeDuration(-222_222_222, -222_222_222);
       check(d1.add(d2), 111_111_111, 111_111_111);
 
-      const d3 = new TimeDuration(-333_333_333_333_333_333n);
-      const d4 = new TimeDuration(222_222_222_222_222_222n);
+      const d3 = new TimeDuration(-333_333_333, -333_333_333);
+      const d4 = new TimeDuration(222_222_222, 222_222_222);
       check(d3.add(d4), -111_111_111, -111_111_111);
     });
 
     it('cross zero', () => {
-      const d1 = new TimeDuration(222_222_222_222_222_222n);
-      const d2 = new TimeDuration(-333_333_333_333_333_333n);
+      const d1 = new TimeDuration(222_222_222, 222_222_222);
+      const d2 = new TimeDuration(-333_333_333, -333_333_333);
       check(d1.add(d2), -111_111_111, -111_111_111);
     });
 
     it('overflow from subseconds to seconds', () => {
-      const d1 = new TimeDuration(999_999_999n);
-      const d2 = new TimeDuration(2n);
+      const d1 = new TimeDuration(0, 999_999_999);
+      const d2 = new TimeDuration(0, 2);
       check(d1.add(d2), 1, 1);
     });
 
     it('fails on overflow', () => {
-      const d1 = new TimeDuration(2n ** 52n * 1_000_000_000n);
+      const d1 = new TimeDuration(2 ** 52, 0);
       throws(() => d1.add(d1), RangeError);
     });
   });
 
   describe('add24HourDays()', () => {
     it('basic', () => {
-      const d = new TimeDuration(111_111_111_111_111_111n);
+      const d = new TimeDuration(111_111_111, 111_111_111);
       check(d.add24HourDays(10), 111_975_111, 111_111_111);
     });
 
     it('negative', () => {
-      const d = new TimeDuration(-111_111_111_111_111_111n);
+      const d = new TimeDuration(-111_111_111, -111_111_111);
       check(d.add24HourDays(-10), -111_975_111, -111_111_111);
     });
 
     it('signs differ', () => {
-      const d1 = new TimeDuration(864000_000_000_000n);
+      const d1 = new TimeDuration(864000, 0);
       check(d1.add24HourDays(-5), 432000, 0);
 
-      const d2 = new TimeDuration(-864000_000_000_000n);
+      const d2 = new TimeDuration(-864000, 0);
       check(d2.add24HourDays(5), -432000, 0);
     });
 
     it('cross zero', () => {
-      const d1 = new TimeDuration(86400_000_000_000n);
+      const d1 = new TimeDuration(86400, 0);
       check(d1.add24HourDays(-2), -86400, 0);
 
-      const d2 = new TimeDuration(-86400_000_000_000n);
+      const d2 = new TimeDuration(-86400, 0);
       check(d2.add24HourDays(3), 172800, 0);
     });
 
     it('overflow from subseconds to seconds', () => {
-      const d1 = new TimeDuration(-86400_333_333_333n);
+      const d1 = new TimeDuration(-86400, -333_333_333);
       check(d1.add24HourDays(2), 86399, 666_666_667);
 
-      const d2 = new TimeDuration(86400_333_333_333n);
+      const d2 = new TimeDuration(86400, 333_333_333);
       check(d2.add24HourDays(-2), -86399, -666_666_667);
     });
 
     it('does not accept non-integers', () => {
-      const d = new TimeDuration(0n);
+      const d = new TimeDuration(0, 0);
       throws(() => d.add24HourDays(1.5), Error);
     });
 
     it('fails on overflow', () => {
-      const d = new TimeDuration(0n);
+      const d = new TimeDuration(0, 0);
       throws(() => d.add24HourDays(104249991375), RangeError);
       throws(() => d.add24HourDays(-104249991375), RangeError);
     });
@@ -226,52 +241,52 @@ describe('Normalized time duration', () => {
 
   describe('addToEpochNs()', () => {
     it('basic', () => {
-      const d = new TimeDuration(123_456_654_321_123_456n);
+      const d = new TimeDuration(123_456_654, 321_123_456);
       checkBigInt(d.addToEpochNs(654_321_123_456_654_321n), 777_777_777_777_777_777n);
     });
 
     it('negative', () => {
-      const d = new TimeDuration(-123_456_654_321_123_456n);
+      const d = new TimeDuration(-123_456_654, -321_123_456);
       checkBigInt(d.addToEpochNs(-654_321_123_456_654_321n), -777_777_777_777_777_777n);
     });
 
     it('signs differ', () => {
-      const d1 = new TimeDuration(333_333_333_333_333_333n);
+      const d1 = new TimeDuration(333_333_333, 333_333_333);
       checkBigInt(d1.addToEpochNs(-222_222_222_222_222_222n), 111_111_111_111_111_111n);
 
-      const d2 = new TimeDuration(-333_333_333_333_333_333n);
+      const d2 = new TimeDuration(-333_333_333, -333_333_333);
       checkBigInt(d2.addToEpochNs(222_222_222_222_222_222n), -111_111_111_111_111_111n);
     });
 
     it('cross zero', () => {
-      const d = new TimeDuration(222_222_222_222_222_222n);
+      const d = new TimeDuration(222_222_222, 222_222_222);
       checkBigInt(d.addToEpochNs(-333_333_333_333_333_333n), -111_111_111_111_111_111n);
     });
 
     it('does not fail on overflow, epochNs overflow is checked elsewhere', () => {
-      const d = new TimeDuration(86400_0000_0000_000_000_000n);
+      const d = new TimeDuration(86400_0000_0000, 0);
       checkBigInt(d.addToEpochNs(86400_0000_0000_000_000_000n), 172800_0000_0000_000_000_000n);
     });
   });
 
   describe('cmp()', () => {
     it('equal', () => {
-      const d1 = new TimeDuration(123_000_000_456n);
-      const d2 = new TimeDuration(123_000_000_456n);
+      const d1 = new TimeDuration(123, 456);
+      const d2 = new TimeDuration(123, 456);
       equal(d1.cmp(d2), 0);
       equal(d2.cmp(d1), 0);
     });
 
     it('unequal', () => {
-      const smaller = new TimeDuration(123_000_000_456n);
-      const larger = new TimeDuration(654_000_000_321n);
+      const smaller = new TimeDuration(123, 456);
+      const larger = new TimeDuration(654, 321);
       equal(smaller.cmp(larger), -1);
       equal(larger.cmp(smaller), 1);
     });
 
     it('cross sign', () => {
-      const neg = new TimeDuration(-654_000_000_321n);
-      const pos = new TimeDuration(123_000_000_456n);
+      const neg = new TimeDuration(-654, -321);
+      const pos = new TimeDuration(123, 456);
       equal(neg.cmp(pos), -1);
       equal(pos.cmp(neg), 1);
     });
@@ -279,64 +294,64 @@ describe('Normalized time duration', () => {
 
   describe('divmod()', () => {
     it('divide by 1', () => {
-      const d = new TimeDuration(1_234_567_890_987n);
+      const d = new TimeDuration(1_234, 567_890_987);
       const { quotient, remainder } = d.divmod(1);
       equal(quotient, 1234567890987);
       check(remainder, 0, 0);
     });
 
     it('divide by self', () => {
-      const d = new TimeDuration(1_234_567_890n);
+      const d = new TimeDuration(1, 234_567_890);
       const { quotient, remainder } = d.divmod(1_234_567_890);
       equal(quotient, 1);
       check(remainder, 0, 0);
     });
 
     it('no remainder', () => {
-      const d = new TimeDuration(1_234_000_000n);
+      const d = new TimeDuration(1, 234_000_000);
       const { quotient, remainder } = d.divmod(1e6);
       equal(quotient, 1234);
       check(remainder, 0, 0);
     });
 
     it('divide by -1', () => {
-      const d = new TimeDuration(1_234_567_890_987n);
+      const d = new TimeDuration(1_234, 567_890_987);
       const { quotient, remainder } = d.divmod(-1);
       equal(quotient, -1_234_567_890_987);
       check(remainder, 0, 0);
     });
 
     it('zero seconds remainder has sign of dividend', () => {
-      const d1 = new TimeDuration(1_234_567_890n);
+      const d1 = new TimeDuration(1, 234_567_890);
       let { quotient, remainder } = d1.divmod(-1e6);
       equal(quotient, -1234);
       check(remainder, 0, 567890);
-      const d2 = new TimeDuration(-1_234_567_890n);
+      const d2 = new TimeDuration(-1, -234_567_890);
       ({ quotient, remainder } = d2.divmod(1e6));
       equal(quotient, -1234);
       check(remainder, 0, -567890);
     });
 
     it('nonzero seconds remainder has sign of dividend', () => {
-      const d1 = new TimeDuration(10_234_567_890n);
+      const d1 = new TimeDuration(10, 234_567_890);
       let { quotient, remainder } = d1.divmod(-9e9);
       equal(quotient, -1);
       check(remainder, 1, 234567890);
-      const d2 = new TimeDuration(-10_234_567_890n);
+      const d2 = new TimeDuration(-10, -234_567_890);
       ({ quotient, remainder } = d2.divmod(9e9));
       equal(quotient, -1);
       check(remainder, -1, -234567890);
     });
 
     it('negative with zero seconds remainder', () => {
-      const d = new TimeDuration(-1_234_567_890n);
+      const d = new TimeDuration(-1, -234_567_890);
       const { quotient, remainder } = d.divmod(-1e6);
       equal(quotient, 1234);
       check(remainder, 0, -567890);
     });
 
     it('negative with nonzero seconds remainder', () => {
-      const d = new TimeDuration(-10_234_567_890n);
+      const d = new TimeDuration(-10, -234_567_890);
       const { quotient, remainder } = d.divmod(-9e9);
       equal(quotient, 1);
       check(remainder, -1, -234567890);
@@ -350,7 +365,7 @@ describe('Normalized time duration', () => {
     });
 
     it('quotient smaller than seconds', () => {
-      const d = new TimeDuration(90061_333666999n);
+      const d = new TimeDuration(90061, 333666999);
       const result1 = d.divmod(1000);
       equal(result1.quotient, 90061333666);
       check(result1.remainder, 0, 999);
@@ -372,31 +387,31 @@ describe('Normalized time duration', () => {
 
   describe('fdiv()', () => {
     it('divide by 1', () => {
-      const d = new TimeDuration(1_234_567_890_987n);
+      const d = new TimeDuration(1_234, 567_890_987);
       equal(d.fdiv(1), 1_234_567_890_987);
     });
 
     it('no remainder', () => {
-      const d = new TimeDuration(1_234_000_000n);
+      const d = new TimeDuration(1, 234_000_000);
       equal(d.fdiv(1e6), 1234);
     });
 
     it('divide by -1', () => {
-      const d = new TimeDuration(1_234_567_890_987n);
+      const d = new TimeDuration(1_234, 567_890_987);
       equal(d.fdiv(-1), -1_234_567_890_987);
     });
 
     it('opposite sign', () => {
-      const d1 = new TimeDuration(1_234_567_890n);
+      const d1 = new TimeDuration(1, 234_567_890);
       checkFloat(d1.fdiv(-1e6), -1234.56789);
-      const d2 = new TimeDuration(-1_234_567_890n);
+      const d2 = new TimeDuration(-1, -234_567_890);
       checkFloat(d2.fdiv(1e6), -1234.56789);
       const d3 = new TimeDuration(-432n);
       checkFloat(d3.fdiv(864), -0.5);
     });
 
     it('negative', () => {
-      const d = new TimeDuration(-1_234_567_890n);
+      const d = new TimeDuration(-1, -234_567_890);
       checkFloat(d.fdiv(-1e6), 1234.56789);
     });
 
@@ -406,7 +421,7 @@ describe('Normalized time duration', () => {
     });
 
     it('quotient smaller than seconds', () => {
-      const d = new TimeDuration(90061_333666999n);
+      const d = new TimeDuration(90061, 333666999);
       checkFloat(d.fdiv(1000), 90061333666.999);
       checkFloat(d.fdiv(10), 9006133366699.9);
       // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
@@ -414,7 +429,7 @@ describe('Normalized time duration', () => {
     });
 
     it('divide by 0', () => {
-      const d = new TimeDuration(90061_333666999n);
+      const d = new TimeDuration(90061, 333666999);
       throws(() => d.fdiv(0), Error);
     });
 
@@ -425,25 +440,25 @@ describe('Normalized time duration', () => {
   });
 
   it('isZero()', () => {
-    assert(new TimeDuration(0n).isZero());
-    assert(!new TimeDuration(1_000_000_000n).isZero());
-    assert(!new TimeDuration(-1n).isZero());
-    assert(!new TimeDuration(1_000_000_001n).isZero());
+    assert(new TimeDuration(0, 0).isZero());
+    assert(!new TimeDuration(1, 0).isZero());
+    assert(!new TimeDuration(0, -1).isZero());
+    assert(!new TimeDuration(1, 1).isZero());
   });
 
   describe('round()', () => {
     it('basic', () => {
-      const d = new TimeDuration(1_234_567_890n);
+      const d = new TimeDuration(1, 234_567_890);
       check(d.round(1000, 'halfExpand'), 1, 234568000);
     });
 
     it('increment 1', () => {
-      const d = new TimeDuration(1_234_567_890n);
+      const d = new TimeDuration(1, 234_567_890);
       check(d.round(1, 'ceil'), 1, 234567890);
     });
 
     it('rounds up from subseconds to seconds', () => {
-      const d = new TimeDuration(1_999_999_999n);
+      const d = new TimeDuration(1, 999_999_999);
       check(d.round(1e9, 'halfExpand'), 2, 0);
     });
 
@@ -467,13 +482,13 @@ describe('Normalized time duration', () => {
             const expected = expectations[roundingMode][ix];
 
             it(`rounds ${value} ns to ${expected} ns`, () => {
-              const d = new TimeDuration(BigInt(value));
+              const d = new TimeDuration(0, value);
               const result = d.round(increment, roundingMode);
               check(result, 0, expected);
             });
 
             it(`rounds ${value} s to ${expected} s`, () => {
-              const d = new TimeDuration(BigInt(value * 1e9));
+              const d = new TimeDuration(value, 0);
               const result = d.round(increment * 1e9, roundingMode);
               check(result, expected, 0);
             });
@@ -484,24 +499,24 @@ describe('Normalized time duration', () => {
   });
 
   it('sign()', () => {
-    equal(new TimeDuration(0n).sign(), 0);
-    equal(new TimeDuration(-1n).sign(), -1);
-    equal(new TimeDuration(-1_000_000_000n).sign(), -1);
-    equal(new TimeDuration(1n).sign(), 1);
-    equal(new TimeDuration(1_000_000_000n).sign(), 1);
+    equal(new TimeDuration(0, 0).sign(), 0);
+    equal(new TimeDuration(0, -1).sign(), -1);
+    equal(new TimeDuration(-1, 0).sign(), -1);
+    equal(new TimeDuration(0, 1).sign(), 1);
+    equal(new TimeDuration(1, 0).sign(), 1);
   });
 
   describe('subtract', () => {
     it('basic', () => {
-      const d1 = new TimeDuration(321_987654321n);
-      const d2 = new TimeDuration(123_123456789n);
+      const d1 = new TimeDuration(321, 987654321);
+      const d2 = new TimeDuration(123, 123456789);
       check(d1.subtract(d2), 198, 864197532);
       check(d2.subtract(d1), -198, -864197532);
     });
 
     it('signs differ in result', () => {
-      const d1 = new TimeDuration(3661_001001001n);
-      const d2 = new TimeDuration(86400_000_000_000n);
+      const d1 = new TimeDuration(3661, 1001001);
+      const d2 = new TimeDuration(86400, 0);
       check(d1.subtract(d2), -82738, -998998999);
       check(d2.subtract(d1), 82738, 998998999);
     });

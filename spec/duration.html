@@ -885,15 +885,17 @@
             <th>Meaning</th>
           </tr>
           <tr>
-            <td>[[TotalNanoseconds]]</td>
+            <td>[[Seconds]]</td>
+            <td>an integer in the interval from 0 (inclusive) to 2<sup>53</sup> (exclusive)</td>
             <td>
-              an integer in the inclusive interval from -maxTimeDuration to maxTimeDuration, where
-              <emu-eqn id="eqn-maxTimeDuration" aoid="maxTimeDuration">
-                maxTimeDuration = 2<sup>53</sup> &times; 10<sup>9</sup> - 1 = 9,007,199,254,740,991,999,999,999
-              </emu-eqn>
+              A number of seconds.
             </td>
+          </tr>
+          <tr>
+            <td>[[Subseconds]]</td>
+            <td>an integer in the inclusive interval from 0 to 999,999,999</td>
             <td>
-              The number of nanoseconds in the duration.
+              A number of nanoseconds that is less than 1 second.
             </td>
           </tr>
         </table>
@@ -1363,8 +1365,10 @@
         1. Set _milliseconds_ to _milliseconds_ + _seconds_ &times; 1000.
         1. Set _microseconds_ to _microseconds_ + _milliseconds_ &times; 1000.
         1. Set _nanoseconds_ to _nanoseconds_ + _microseconds_ &times; 1000.
-        1. Assert: abs(_nanoseconds_) &le; maxTimeDuration.
-        1. Return the Record { [[TotalNanoseconds]]: _nanoseconds_ }.
+        1. Let _subseconds_ be remainder(_nanoseconds_, 10<sup>9</sup>).
+        1. Let _normalizedSeconds_ be truncate(_nanoseconds_ / 10<sup>9</sup>).
+        1. Assert: abs(_normalizedSeconds_) &lt; 2<sup>53</sup>.
+        1. Return the Record { [[Seconds]]: _normalizedSeconds_, [[Subseconds]]: _subseconds_ }.
       </emu-alg>
     </emu-clause>
 
@@ -1453,8 +1457,10 @@
         <dd>It performs a comparison of two Normalized Time Duration Records.</dd>
       </dl>
       <emu-alg>
-        1. If _one_.[[TotalNanoseconds]] &gt; _two_.[[TotalNanoseconds]], return 1.
-        1. If _one_.[[TotalNanoseconds]] &lt; _two_.[[TotalNanoseconds]], return -1.
+        1. If _one_.[[Seconds]] &gt; _two_.[[Seconds]], return 1.
+        1. If _one_.[[Seconds]] &lt; _two_.[[Seconds]], return -1.
+        1. If _one_.[[Subseconds]] &gt; _two_.[[Subseconds]], return 1.
+        1. If _one_.[[Subseconds]] &lt; _two_.[[Subseconds]], return -1.
         1. Return 0.
       </emu-alg>
     </emu-clause>
@@ -1506,8 +1512,9 @@
         <dd>It returns *true* if _d_ is a zero duration, *false* otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If _d_.[[TotalNanoseconds]] = 0, return *true*.
-        1. Return *false*.
+        1. If _d_.[[Seconds]] &ne; 0, return *false*.
+        1. If _d_.[[Subseconds]] &ne; 0, return *false*.
+        1. Return *true*.
       </emu-alg>
     </emu-clause>
 

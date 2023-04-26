@@ -17,7 +17,7 @@ import './ecmascript.mjs';
 // Power-of-10 math
 import './math.mjs';
 
-// Internal 96-bit integer implementation, not suitable for test262
+// Internal 96-bit integer as 2×f64 implementation, not suitable for test262
 import './timeduration.mjs';
 
 Promise.resolve()
