@@ -9469,13 +9469,14 @@
 	    throw new RangeError('irreconcilable calendars');
 	  }
 	}
-	function CalendarDateFromFields(calendar, fields, options) {
+	function CalendarDateFromFields(calendar, fields, options, dateFromFields) {
+	  var _dateFromFields;
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
 	    return Call$1(GetIntrinsic('%Temporal.Calendar.prototype.dateFromFields%'), calendar, [fields, options]);
 	  }
-	  const dateFromFields = GetMethod$2(calendar, 'dateFromFields');
+	  (_dateFromFields = dateFromFields) !== null && _dateFromFields !== void 0 ? _dateFromFields : dateFromFields = GetMethod$2(calendar, 'dateFromFields');
 	  const result = Call$1(dateFromFields, calendar, [fields, options]);
 	  if (!IsTemporalDate(result)) throw new TypeError('invalid result');
 	  return result;
@@ -9541,13 +9542,14 @@
 	  const Time = GetIntrinsic('%Temporal.PlainTime%');
 	  return new Time(GetSlot(dateTime, ISO_HOUR), GetSlot(dateTime, ISO_MINUTE), GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND));
 	}
-	function GetOffsetNanosecondsFor(timeZone, instant) {
+	function GetOffsetNanosecondsFor(timeZone, instant, getOffsetNanosecondsFor) {
+	  var _getOffsetNanoseconds;
 	  if (typeof timeZone === 'string') {
 	    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
 	    timeZone = new TemporalTimeZone(timeZone);
 	    return Call$1(GetIntrinsic('%Temporal.TimeZone.prototype.getOffsetNanosecondsFor%'), timeZone, [instant]);
 	  }
-	  const getOffsetNanosecondsFor = GetMethod$2(timeZone, 'getOffsetNanosecondsFor');
+	  (_getOffsetNanoseconds = getOffsetNanosecondsFor) !== null && _getOffsetNanoseconds !== void 0 ? _getOffsetNanoseconds : getOffsetNanosecondsFor = GetMethod$2(timeZone, 'getOffsetNanosecondsFor');
 	  const offsetNs = Call$1(getOffsetNanosecondsFor, timeZone, [instant]);
 	  if (typeof offsetNs !== 'number') {
 	    throw new TypeError('bad return from getOffsetNanosecondsFor');
@@ -9654,12 +9656,14 @@
 	  throw new Error("assertion failed: invalid disambiguation value ".concat(disambiguation));
 	}
 	function GetPossibleInstantsFor(timeZone, dateTime) {
+	  var _getPossibleInstantsF;
+	  let getPossibleInstantsFor = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 	  if (typeof timeZone === 'string') {
 	    const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
 	    timeZone = new TemporalTimeZone(timeZone);
 	    return Call$1(GetIntrinsic('%Temporal.TimeZone.prototype.getPossibleInstantsFor%'), timeZone, [dateTime]);
 	  }
-	  const getPossibleInstantsFor = GetMethod$2(timeZone, 'getPossibleInstantsFor');
+	  (_getPossibleInstantsF = getPossibleInstantsFor) !== null && _getPossibleInstantsF !== void 0 ? _getPossibleInstantsF : getPossibleInstantsFor = GetMethod$2(timeZone, 'getPossibleInstantsFor');
 	  const possibleInstants = Call$1(getPossibleInstantsFor, timeZone, [dateTime]);
 	  const result = [];
 	  for (const instant of possibleInstants) {
@@ -10624,7 +10628,7 @@
 	          dateAdd = GetMethod$2(calendar, 'dateAdd');
 	          dateUntil = GetMethod$2(calendar, 'dateUntil');
 	        }
-	        while (!years.abs().isZero()) {
+	        while (!years.isZero()) {
 	          const newRelativeTo = CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
 	          const untilOptions = ObjectCreate$8(null);
 	          untilOptions.largestUnit = 'month';
@@ -10641,7 +10645,7 @@
 	        if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$2(calendar, 'dateAdd') : undefined;
 	        // balance years down to days
-	        while (!years.abs().isZero()) {
+	        while (!years.isZero()) {
 	          let oneYearDays;
 	          ({
 	            relativeTo,
@@ -10652,7 +10656,7 @@
 	        }
 
 	        // balance months down to days
-	        while (!months.abs().isZero()) {
+	        while (!months.isZero()) {
 	          let oneMonthDays;
 	          ({
 	            relativeTo,
@@ -10669,7 +10673,7 @@
 	        if (!calendar) throw new RangeError('a starting point is required for balancing calendar units');
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$2(calendar, 'dateAdd') : undefined;
 	        // balance years down to days
-	        while (!years.abs().isZero()) {
+	        while (!years.isZero()) {
 	          let oneYearDays;
 	          ({
 	            relativeTo,
@@ -10680,7 +10684,7 @@
 	        }
 
 	        // balance months down to days
-	        while (!months.abs().isZero()) {
+	        while (!months.isZero()) {
 	          let oneMonthDays;
 	          ({
 	            relativeTo,
@@ -10691,7 +10695,7 @@
 	        }
 
 	        // balance weeks down to days
-	        while (!weeks.abs().isZero()) {
+	        while (!weeks.isZero()) {
 	          let oneWeekDays;
 	          ({
 	            relativeTo,
@@ -11175,8 +11179,7 @@
 	  const date1 = CreateTemporalDate(y1, mon1, d1, calendar);
 	  const date2 = CreateTemporalDate(y2, mon2, d2, calendar);
 	  const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-	  const untilOptions = ObjectCreate$8(null);
-	  CopyDataProperties(untilOptions, options, []);
+	  const untilOptions = CopyOptions(options);
 	  untilOptions.largestUnit = dateLargestUnit;
 	  let {
 	    years,
@@ -11313,8 +11316,7 @@
 	function DifferenceTemporalInstant(operation, instant, other, options) {
 	  const sign = operation === 'since' ? -1 : 1;
 	  other = ToTemporalInstant(other);
-	  const resolvedOptions = ObjectCreate$8(null);
-	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+	  const resolvedOptions = CopyOptions(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'second');
 	  const onens = GetSlot(instant, EPOCHNANOSECONDS);
 	  const twons = GetSlot(other, EPOCHNANOSECONDS);
@@ -11335,8 +11337,7 @@
 	  const calendar = GetSlot(plainDate, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
-	  const resolvedOptions = ObjectCreate$8(null);
-	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+	  const resolvedOptions = CopyOptions(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
 	  resolvedOptions.largestUnit = settings.largestUnit;
 	  let {
@@ -11362,8 +11363,7 @@
 	  const calendar = GetSlot(plainDateTime, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
-	  const resolvedOptions = ObjectCreate$8(null);
-	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+	  const resolvedOptions = CopyOptions(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
 	  let {
 	    years,
@@ -11405,8 +11405,7 @@
 	function DifferenceTemporalPlainTime(operation, plainTime, other, options) {
 	  const sign = operation === 'since' ? -1 : 1;
 	  other = ToTemporalTime(other);
-	  const resolvedOptions = ObjectCreate$8(null);
-	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+	  const resolvedOptions = CopyOptions(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
 	  let {
 	    hours,
@@ -11441,8 +11440,7 @@
 	  const calendar = GetSlot(yearMonth, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between months');
-	  const resolvedOptions = ObjectCreate$8(null);
-	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+	  const resolvedOptions = CopyOptions(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
 	  resolvedOptions.largestUnit = settings.largestUnit;
 	  const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
@@ -11471,8 +11469,7 @@
 	  const calendar = GetSlot(zonedDateTime, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
-	  const resolvedOptions = ObjectCreate$8(null);
-	  CopyDataProperties(resolvedOptions, GetOptionsObject(options), []);
+	  const resolvedOptions = CopyOptions(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
 	  resolvedOptions.largestUnit = settings.largestUnit;
 	  const ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
@@ -11898,8 +11895,7 @@
 	  const startDate = CalendarDateFromFields(calendar, fields);
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-	  const optionsCopy = ObjectCreate$8(null);
-	  CopyDataProperties(optionsCopy, options, []);
+	  const optionsCopy = CopyOptions(options);
 	  const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, options);
 	  const addedDateFields = PrepareTemporalFields(addedDate, fieldNames, []);
 	  return CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
@@ -12497,6 +12493,11 @@
 	  if (options === undefined) return ObjectCreate$8(null);
 	  if (Type$6(options) === 'Object') return options;
 	  throw new TypeError("Options parameter must be an object, not ".concat(options === null ? 'null' : "a ".concat(typeof options)));
+	}
+	function CopyOptions(options) {
+	  const optionsCopy = ObjectCreate$8(null);
+	  CopyDataProperties(optionsCopy, GetOptionsObject(options), []);
+	  return optionsCopy;
 	}
 	function GetOption(options, property, allowedValues, fallback) {
 	  let value = options[property];
