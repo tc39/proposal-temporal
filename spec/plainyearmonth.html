@@ -684,7 +684,6 @@
           1. Let _date_ be _intermediateDate_.
         1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _optionsCopy_ be ? CopyOptions(_options_).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _options_).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _options_, _dateAdd_).
         1. Let _addedDateFields_ be ? PrepareTemporalFields(_addedDate_, _fieldNames_, «»).
         1. Return ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _optionsCopy_).
