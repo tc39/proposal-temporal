@@ -11890,13 +11890,24 @@
 	  const calendar = GetSlot(yearMonth, CALENDAR);
 	  const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
 	  const fields = PrepareTemporalFields(yearMonth, fieldNames, []);
+	  const fieldsCopy = ObjectCreate$8(null);
+	  CopyDataProperties(fieldsCopy, fields, []);
+	  fields.day = 1;
+	  let startDate = CalendarDateFromFields(calendar, fields);
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-	  fields.day = sign < 0 ? CalendarDaysInMonth(calendar, yearMonth) : 1;
-	  const startDate = CalendarDateFromFields(calendar, fields);
+	  const dateAdd = GetMethod$2(calendar, 'dateAdd');
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
+	  if (sign < 0) {
+	    const oneMonthDuration = new Duration(0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
+	    const nextMonth = CalendarDateAdd(calendar, startDate, oneMonthDuration, undefined, dateAdd);
+	    const minusDayDuration = new Duration(0, 0, 0, -1, 0, 0, 0, 0, 0, 0);
+	    const endOfMonth = CalendarDateAdd(calendar, nextMonth, minusDayDuration, undefined, dateAdd);
+	    fieldsCopy.day = CalendarDay(calendar, endOfMonth);
+	    startDate = CalendarDateFromFields(calendar, fieldsCopy);
+	  }
 	  const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  const optionsCopy = CopyOptions(options);
-	  const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, options);
+	  const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, options, dateAdd);
 	  const addedDateFields = PrepareTemporalFields(addedDate, fieldNames, []);
 	  return CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
 	}
