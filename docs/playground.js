@@ -11890,8 +11890,7 @@
 	  const calendar = GetSlot(yearMonth, CALENDAR);
 	  const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
 	  const fields = PrepareTemporalFields(yearMonth, fieldNames, []);
-	  const fieldsCopy = ObjectCreate$8(null);
-	  CopyDataProperties(fieldsCopy, fields, []);
+	  const fieldsCopy = CopyOptions(fields);
 	  fields.day = 1;
 	  let startDate = CalendarDateFromFields(calendar, fields);
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
