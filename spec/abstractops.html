@@ -1389,10 +1389,13 @@
         1. If _parseResult_ is not a Parse Node, then
           1. Set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
           1. If _parseResult_ is a Parse Node, then
+            1. Let _foundCalendar_ be *undefined*.
             1. For each |Annotation| Parse Node _annotation_ contained within _parseResult_, do
               1. Let _key_ be the source text matched by the |AnnotationKey| Parse Node contained within _annotation_.
               1. Let _value_ be the source text matched by the |AnnotationValue| Parse Node contained within _annotation_.
-              1. If CodePointsToString(_key_) is *"u-ca"* and the ASCII-lowercase of CodePointsToString(_value_) is not *"iso8601"*, throw a *RangeError* exception.
+              1. If CodePointsToString(_key_) is *"u-ca"*, and _foundCalendar_ is *undefined*, then
+                1. Set _foundCalendar_ to CodePointsToString(_value_).
+            1. If _foundCalendar_ is not *undefined* and the ASCII-lowercase of _foundCalendar_ is not *"iso8601"*, throw a *RangeError* exception.
       1. If _parseResult_ is not a Parse Node, throw a *RangeError* exception.
       1. Let each of _year_, _month_, _day_, _hour_, _minute_, _second_, and _fSeconds_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, and |TimeFraction| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
       1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace the first code point with U+002D (HYPHEN-MINUS).
