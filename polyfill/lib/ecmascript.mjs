@@ -1062,27 +1062,37 @@ export function PrepareTemporalFields(
   bag,
   fields,
   requiredFields,
+  duplicateBehaviour = 'throw',
   { emptySourceErrorMessage = 'no supported properties found' } = {}
 ) {
   const result = ObjectCreate(null);
   let any = false;
   Call(ArrayPrototypeSort, fields, []);
+  let previousProperty = undefined;
   for (let index = 0; index < fields.length; index++) {
     const property = fields[index];
-    let value = bag[property];
-    if (value !== undefined) {
-      any = true;
-      if (BUILTIN_CASTS.has(property)) {
-        value = BUILTIN_CASTS.get(property)(value);
-      }
-      result[property] = value;
-    } else if (requiredFields !== 'partial') {
-      if (Call(ArrayIncludes, requiredFields, [property])) {
-        throw new TypeError(`required property '${property}' missing or undefined`);
-      }
-      value = BUILTIN_DEFAULTS.get(property);
-      result[property] = value;
+    if (property === 'constructor' || property === '__proto__') {
+      throw new RangeError(`Calendar fields cannot be named ${property}`);
     }
+    if (property !== previousProperty) {
+      let value = bag[property];
+      if (value !== undefined) {
+        any = true;
+        if (BUILTIN_CASTS.has(property)) {
+          value = BUILTIN_CASTS.get(property)(value);
+        }
+        result[property] = value;
+      } else if (requiredFields !== 'partial') {
+        if (Call(ArrayIncludes, requiredFields, [property])) {
+          throw new TypeError(`required property '${property}' missing or undefined`);
+        }
+        value = BUILTIN_DEFAULTS.get(property);
+        result[property] = value;
+      }
+    } else if (duplicateBehaviour === 'throw') {
+      throw new RangeError('Duplicate calendar fields');
+    }
+    previousProperty = property;
   }
   if (requiredFields === 'partial' && !any) {
     throw new TypeError(emptySourceErrorMessage);
