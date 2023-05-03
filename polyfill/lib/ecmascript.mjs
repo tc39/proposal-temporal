@@ -19,6 +19,7 @@ const ObjectEntries = Object.entries;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 const StringFromCharCode = String.fromCharCode;
 const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
+const StringPrototypeMatchAll = String.prototype.matchAll;
 const StringPrototypeReplace = String.prototype.replace;
 
 import bigInt from 'big-integer';
@@ -378,6 +379,28 @@ export function FormatCalendarAnnotation(id, showCalendar) {
   return `[${flag}u-ca=${id}]`;
 }
 
+// Not a separate abstract operation in the spec, because it only occurs in one
+// place: ParseISODateTime. In the code it's more convenient to split up
+// ParseISODateTime for the YYYY-MM, MM-DD, and THH:MM:SS parse goals, so it's
+// repeated four times.
+function processAnnotations(annotations) {
+  let calendar;
+  let calendarWasCritical = false;
+  for (const [, critical, key, value] of Call(StringPrototypeMatchAll, annotations, [PARSE.annotation])) {
+    if (key === 'u-ca') {
+      if (calendar === undefined) {
+        calendar = value;
+        calendarWasCritical = critical === '!';
+      } else if (critical === '!' || calendarWasCritical) {
+        throw new RangeError(`Invalid annotations in ${annotations}: more than one u-ca present with critical flag`);
+      }
+    } else if (critical === '!') {
+      throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
+    }
+  }
+  return calendar;
+}
+
 export function ParseISODateTime(isoString) {
   // ZDT is the superset of fields for every other Temporal type
   const match = PARSE.zoneddatetime.exec(isoString);
@@ -418,15 +441,7 @@ export function ParseISODateTime(isoString) {
     if (offset === '-00:00') offset = '+00:00';
   }
   const ianaName = match[19];
-  const annotations = match[20];
-  let calendar;
-  for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
-    if (key === 'u-ca') {
-      if (calendar === undefined) calendar = value;
-    } else if (critical === '!') {
-      throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
-    }
-  }
+  const calendar = processAnnotations(match[20]);
   RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   return {
     year,
@@ -468,7 +483,7 @@ export function ParseTemporalDateString(isoString) {
 
 export function ParseTemporalTimeString(isoString) {
   const match = PARSE.time.exec(isoString);
-  let hour, minute, second, millisecond, microsecond, nanosecond, annotations;
+  let hour, minute, second, millisecond, microsecond, nanosecond;
   if (match) {
     hour = ToIntegerOrInfinity(match[1]);
     minute = ToIntegerOrInfinity(match[2] || match[5]);
@@ -478,12 +493,7 @@ export function ParseTemporalTimeString(isoString) {
     millisecond = ToIntegerOrInfinity(fraction.slice(0, 3));
     microsecond = ToIntegerOrInfinity(fraction.slice(3, 6));
     nanosecond = ToIntegerOrInfinity(fraction.slice(6, 9));
-    annotations = match[14];
-    for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
-      if (key !== 'u-ca' && critical === '!') {
-        throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
-      }
-    }
+    processAnnotations(match[14]); // ignore found calendar
     if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
   } else {
     let z, hasTime;
@@ -519,14 +529,7 @@ export function ParseTemporalYearMonthString(isoString) {
     if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     year = ToIntegerOrInfinity(yearString);
     month = ToIntegerOrInfinity(match[2]);
-    const annotations = match[3];
-    for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
-      if (key === 'u-ca') {
-        if (calendar === undefined) calendar = value;
-      } else if (critical === '!') {
-        throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
-      }
-    }
+    calendar = processAnnotations(match[3]);
     if (calendar !== undefined && calendar !== 'iso8601') {
       throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
     }
@@ -544,14 +547,7 @@ export function ParseTemporalMonthDayString(isoString) {
   if (match) {
     month = ToIntegerOrInfinity(match[1]);
     day = ToIntegerOrInfinity(match[2]);
-    const annotations = match[3];
-    for (const [, critical, key, value] of annotations.matchAll(PARSE.annotation)) {
-      if (key === 'u-ca') {
-        if (calendar === undefined) calendar = value;
-      } else if (critical === '!') {
-        throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
-      }
-    }
+    calendar = processAnnotations(match[3]);
     if (calendar !== undefined && calendar !== 'iso8601') {
       throw new RangeError('MM-DD format is only valid with iso8601 calendar');
     }

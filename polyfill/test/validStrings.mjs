@@ -284,7 +284,12 @@ const calendarName = withCode(choice(...calendarNames), (data, result) => {
   if (!data.calendar) data.calendar = result;
 });
 const calendarAnnotation = seq('[', [annotationCriticalFlag], 'u-ca=', calendarName, ']');
-const annotations = oneOrMore(choice(calendarAnnotation, annotation));
+const annotations = withSyntaxConstraints(oneOrMore(choice(calendarAnnotation, annotation)), (result) => {
+  const numCalendarAnnotations = (result.match(/u-ca=/g) ?? []).length;
+  if (numCalendarAnnotations > 1 && /\[!u-ca=/.test(result)) {
+    throw new SyntaxError('more than one calendar annotation and at least one critical');
+  }
+});
 const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
