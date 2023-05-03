@@ -3,10 +3,8 @@ import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, GetSlot } from './slots.mjs';
 
-const ArrayPrototypePush = Array.prototype.push;
+const ArrayPrototypeConcat = Array.prototype.concat;
 const ObjectCreate = Object.create;
-const SetPrototypeAdd = Set.prototype.add;
-const SetPrototypeForEach = Set.prototype.forEach;
 
 export class PlainMonthDay {
   constructor(isoMonth, isoDay, calendar = 'iso8601', referenceISOYear = 1972) {
@@ -84,20 +82,8 @@ export class PlainMonthDay {
     const inputFieldNames = ES.CalendarFields(calendar, ['year']);
     const inputFields = ES.PrepareTemporalFields(item, inputFieldNames, []);
     let mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
-
-    // TODO: Use MergeLists abstract operation.
-    const uniqueFieldNames = new Set();
-    for (let index = 0; index < receiverFieldNames.length; index++) {
-      ES.Call(SetPrototypeAdd, uniqueFieldNames, [receiverFieldNames[index]]);
-    }
-    for (let index = 0; index < inputFieldNames.length; index++) {
-      ES.Call(SetPrototypeAdd, uniqueFieldNames, [inputFieldNames[index]]);
-    }
-    const mergedFieldNames = [];
-    ES.Call(SetPrototypeForEach, uniqueFieldNames, [
-      (element) => ES.Call(ArrayPrototypePush, mergedFieldNames, [element])
-    ]);
-    mergedFields = ES.PrepareTemporalFields(mergedFields, mergedFieldNames, []);
+    const concatenatedFieldNames = ES.Call(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
+    mergedFields = ES.PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], 'ignore');
     const options = ObjectCreate(null);
     options.overflow = 'reject';
     return ES.CalendarDateFromFields(calendar, mergedFields, options);
