@@ -413,6 +413,7 @@ export class Duration {
       weeks,
       days,
       largestUnit,
+      smallestUnit,
       plainRelativeTo,
       calendarRec
     ));
