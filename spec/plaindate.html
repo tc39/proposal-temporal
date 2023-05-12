@@ -1058,7 +1058,7 @@
         1. If _roundingGranularityIsNoop_ is *false*, then
           1. Let _roundRecord_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0, _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _temporalDate_, _calendarRec_).
           1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
-          1. Set _result_ to ? BalanceDateDurationRelative(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _roundResult_.[[Days]], _settings_.[[LargestUnit]], _temporalDate_, _calendarRec_).
+          1. Set _result_ to ? BalanceDateDurationRelative(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _roundResult_.[[Days]], _settings_.[[LargestUnit]], _settings_.[[SmallestUnit]], _temporalDate_, _calendarRec_).
         1. Return ! CreateTemporalDuration(_sign_ &times; _result_.[[Years]], _sign_ &times; _result_.[[Months]], _sign_ &times; _result_.[[Weeks]], _sign_ &times; _result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>

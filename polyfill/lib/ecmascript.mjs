@@ -3573,102 +3573,91 @@ export function UnbalanceDateDurationRelative(years, months, weeks, days, larges
   }
 }
 
-export function BalanceDateDurationRelative(years, months, weeks, days, largestUnit, plainRelativeTo, calendarRec) {
-  // dateAdd, dateUntil must be looked up if units are not 0 and largestUnit == year
-  // dateAdd must be looked up if units are not 0 and largestUnit == month or week
+export function BalanceDateDurationRelative(
+  years,
+  months,
+  weeks,
+  days,
+  largestUnit,
+  smallestUnit,
+  plainRelativeTo,
+  calendarRec
+) {
+  // calendarRec must have looked up dateAdd and dateUntil
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-  if (sign === 0 || (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week')) {
+
+  // If no nonzero calendar units, then there's nothing to balance.
+  // If largestUnit is 'day' or lower, then the balance is a no-op.
+  // In both cases, return early. Anything after this requires a calendar.
+  if (
+    (years === 0 && months === 0 && weeks === 0 && days === 0) ||
+    (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week')
+  ) {
     return { years, months, weeks, days };
   }
 
   if (!plainRelativeTo) throw new RangeError(`a starting point is required for ${largestUnit}s balancing`);
 
-  const oneYear = new TemporalDuration(sign);
-  const oneMonth = new TemporalDuration(0, sign);
-  const oneWeek = new TemporalDuration(0, 0, sign);
-
-  // Perform arithmetic in the mathematical integer domain
-  years = bigInt(years);
-  months = bigInt(months);
-  weeks = bigInt(weeks);
-  days = bigInt(days);
+  const untilOptions = ObjectCreate(null);
+  untilOptions.largestUnit = largestUnit;
 
   switch (largestUnit) {
     case 'year': {
-      // balance days up to years
-      let newRelativeTo, oneYearDays;
-      ({ relativeTo: newRelativeTo, days: oneYearDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneYear));
-      while (days.abs().geq(MathAbs(oneYearDays))) {
-        days = days.subtract(oneYearDays);
-        years = years.add(sign);
-        plainRelativeTo = newRelativeTo;
-        ({ relativeTo: newRelativeTo, days: oneYearDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneYear));
+      // There is a special case for smallestUnit === week, because months and
+      // years aren't equal to an integer number of weeks. We don't want "1 year
+      // and 5 weeks" to balance to "1 year, 1 month, and 5 days" which would
+      // contravene the requested smallestUnit.
+      if (smallestUnit === 'week') {
+        // balance months up to years
+        const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(years, months));
+        const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
+        return {
+          years: GetSlot(untilResult, YEARS),
+          months: GetSlot(untilResult, MONTHS),
+          weeks,
+          days: 0
+        };
       }
-
-      // balance days up to months
-      let oneMonthDays;
-      ({ relativeTo: newRelativeTo, days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth));
-      while (days.abs().geq(MathAbs(oneMonthDays))) {
-        days = days.subtract(oneMonthDays);
-        months = months.add(sign);
-        plainRelativeTo = newRelativeTo;
-        ({ relativeTo: newRelativeTo, days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth));
-      }
-
-      // balance months up to years
-      newRelativeTo = CalendarDateAdd(calendarRec, plainRelativeTo, oneYear);
-      const untilOptions = ObjectCreate(null);
-      untilOptions.largestUnit = 'month';
-      let untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, newRelativeTo, untilOptions);
-      let oneYearMonths = GetSlot(untilResult, MONTHS);
-      while (months.abs().geq(MathAbs(oneYearMonths))) {
-        months = months.subtract(oneYearMonths);
-        years = years.add(sign);
-        plainRelativeTo = newRelativeTo;
-        newRelativeTo = CalendarDateAdd(calendarRec, plainRelativeTo, oneYear);
-        const untilOptions = ObjectCreate(null);
-        untilOptions.largestUnit = 'month';
-        untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, newRelativeTo, untilOptions);
-        oneYearMonths = GetSlot(untilResult, MONTHS);
-      }
-      break;
+      // balance weeks, months and days up to years
+      const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(years, months, weeks, days));
+      const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
+      return {
+        years: GetSlot(untilResult, YEARS),
+        months: GetSlot(untilResult, MONTHS),
+        weeks: GetSlot(untilResult, WEEKS),
+        days: GetSlot(untilResult, DAYS)
+      };
     }
     case 'month': {
-      // balance days up to months
-      let newRelativeTo, oneMonthDays;
-      ({ relativeTo: newRelativeTo, days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth));
-      while (days.abs().geq(MathAbs(oneMonthDays))) {
-        days = days.subtract(oneMonthDays);
-        months = months.add(sign);
-        plainRelativeTo = newRelativeTo;
-        ({ relativeTo: newRelativeTo, days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth));
+      // Same special case for rounding to weeks as above; in this case we
+      // don't need to balance.
+      if (smallestUnit === 'week') {
+        return { years: 0, months, weeks, days: 0 };
       }
-      break;
+      // balance weeks and days up to months
+      const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(0, months, weeks, days));
+      const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
+      return {
+        years: 0,
+        months: GetSlot(untilResult, MONTHS),
+        weeks: GetSlot(untilResult, WEEKS),
+        days: GetSlot(untilResult, DAYS)
+      };
     }
     case 'week': {
       // balance days up to weeks
-      let newRelativeTo, oneWeekDays;
-      ({ relativeTo: newRelativeTo, days: oneWeekDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneWeek));
-      while (days.abs().geq(MathAbs(oneWeekDays))) {
-        days = days.subtract(oneWeekDays);
-        weeks = weeks.add(sign);
-        plainRelativeTo = newRelativeTo;
-        ({ relativeTo: newRelativeTo, days: oneWeekDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneWeek));
-      }
-      break;
+      const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(0, 0, weeks, days));
+      const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
+      return {
+        years: 0,
+        months: 0,
+        weeks: GetSlot(untilResult, WEEKS),
+        days: GetSlot(untilResult, DAYS)
+      };
     }
     default:
-      // no-op
-      break;
+    // not reached
   }
-
-  return {
-    years: years.toJSNumber(),
-    months: months.toJSNumber(),
-    weeks: weeks.toJSNumber(),
-    days: days.toJSNumber()
-  };
 }
 
 export function CreateNegatedTemporalDuration(duration) {
@@ -4255,6 +4244,7 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
       weeks,
       days,
       settings.largestUnit,
+      settings.smallestUnit,
       plainDate,
       calendarRec
     ));
@@ -4353,6 +4343,7 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
       weeks,
       days,
       settings.largestUnit,
+      settings.smallestUnit,
       relativeTo,
       calendarRec
     ));
@@ -4486,7 +4477,16 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
       thisDate,
       calendarRec
     ));
-    ({ years, months } = BalanceDateDurationRelative(years, months, 0, 0, settings.largestUnit, thisDate, calendarRec));
+    ({ years, months } = BalanceDateDurationRelative(
+      years,
+      months,
+      0,
+      0,
+      settings.largestUnit,
+      settings.smallestUnit,
+      thisDate,
+      calendarRec
+    ));
   }
 
   return new Duration(sign * years, sign * months, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -4612,6 +4612,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
         weeks,
         days,
         settings.largestUnit,
+        settings.smallestUnit,
         plainRelativeTo,
         calendarRec
       ));
