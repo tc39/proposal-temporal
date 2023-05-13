@@ -3821,7 +3821,11 @@ export function DifferenceISODateTime(
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
   const untilOptions = CopyOptions(options);
   untilOptions.largestUnit = dateLargestUnit;
-  let { years, months, weeks, days } = CalendarDateUntil(calendar, date1, date2, untilOptions);
+  const untilResult = CalendarDateUntil(calendar, date1, date2, untilOptions);
+  const years = GetSlot(untilResult, YEARS);
+  const months = GetSlot(untilResult, MONTHS);
+  const weeks = GetSlot(untilResult, WEEKS);
+  let days = GetSlot(untilResult, DAYS);
   // Signs of date part and time part may not agree; balance them together
   ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
     days,
@@ -3990,7 +3994,11 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
   resolvedOptions.largestUnit = settings.largestUnit;
 
-  let { years, months, weeks, days } = CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
+  const untilResult = CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
+  let years = GetSlot(untilResult, YEARS);
+  let months = GetSlot(untilResult, MONTHS);
+  let weeks = GetSlot(untilResult, WEEKS);
+  let days = GetSlot(untilResult, DAYS);
 
   if (settings.smallestUnit !== 'day' || settings.roundingIncrement !== 1) {
     ({ years, months, weeks, days } = RoundDuration(
@@ -4390,7 +4398,11 @@ export function AddDuration(
     const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
     const differenceOptions = ObjectCreate(null);
     differenceOptions.largestUnit = dateLargestUnit;
-    ({ years, months, weeks, days } = CalendarDateUntil(calendar, relativeTo, end, differenceOptions));
+    const untilResult = CalendarDateUntil(calendar, relativeTo, end, differenceOptions);
+    years = GetSlot(untilResult, YEARS);
+    months = GetSlot(untilResult, MONTHS);
+    weeks = GetSlot(untilResult, WEEKS);
+    days = GetSlot(untilResult, DAYS);
     // Signs of date part and time part may not agree; balance them together
     ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
       days,
@@ -5143,7 +5155,7 @@ export function RoundDuration(
       const wholeDaysLater = CalendarDateAdd(calendar, relativeTo, wholeDays, undefined, dateAdd);
       const untilOptions = ObjectCreate(null);
       untilOptions.largestUnit = 'year';
-      const yearsPassed = CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions).years;
+      const yearsPassed = GetSlot(CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions), YEARS);
       years += yearsPassed;
       const oldRelativeTo = relativeTo;
       const yearsPassedDuration = new TemporalDuration(yearsPassed);
