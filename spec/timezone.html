@@ -568,6 +568,23 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-canonicalizetimezoneoffsetstring" type="abstract operation">
+      <h1>
+        CanonicalizeTimeZoneOffsetString (
+          _offsetString_: a String
+        ): a String
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _offsetString_, which must be a valid time zone offset string, into its canonical form.</dd>
+      </dl>
+      <emu-alg>
+        1. Assert: IsTimeZoneOffsetString(_offsetString_) is *true*.
+        1. Let _offsetNanoseconds_ be ParseTimeZoneOffsetString(_offsetString_).
+        1. Return ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-totemporaltimezoneslotvalue" type="abstract operation">
       <h1>
         ToTemporalTimeZoneSlotValue (
@@ -588,14 +605,11 @@
         1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_identifier_).
         1. If _parseResult_.[[Name]] is not *undefined*, then
           1. Let _name_ be _parseResult_.[[Name]].
-          1. If IsTimeZoneOffsetString(_name_) is *true*, then
-            1. Let _offsetNanoseconds_ be ParseTimeZoneOffsetString(_name_).
-            1. Return ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
+          1. If IsTimeZoneOffsetString(_name_) is *true*, return CanonicalizeTimeZoneOffsetString(_name_).
           1. If IsAvailableTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
           1. Return ! CanonicalizeTimeZoneName(_name_).
         1. If _parseResult_.[[Z]] is *true*, return *"UTC"*.
-        1. Let _offsetNanoseconds_ be ParseTimeZoneOffsetString(_parseResult_.[[OffsetString]]).
-        1. Return ! FormatTimeZoneOffsetString(_offsetNanoseconds_).
+        1. Return CanonicalizeTimeZoneOffsetString(_parseResult_.[[OffsetString]]).
       </emu-alg>
     </emu-clause>
 
