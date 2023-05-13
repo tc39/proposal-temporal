@@ -601,8 +601,9 @@
             1. Return _temporalTimeZoneLike_.[[TimeZone]].
           1. If ? ObjectImplementsTemporalTimeZoneProtocol(_temporalTimeZoneLike_) is *false*, throw a *TypeError* exception.
           1. Return _temporalTimeZoneLike_.
-        1. Let _identifier_ be ? ToString(_temporalTimeZoneLike_).
-        1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_identifier_).
+        1. Assert: No non-String, non-Object value, when coerced to a String, is an available time zone identifier.
+        1. If Type(_temporalTimeZoneLike_) is not String, throw a *TypeError* exception.
+        1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_temporalTimeZoneLike_).
         1. If _parseResult_.[[Name]] is not *undefined*, then
           1. Let _name_ be _parseResult_.[[Name]].
           1. If IsTimeZoneOffsetString(_name_) is *true*, return CanonicalizeTimeZoneOffsetString(_name_).
