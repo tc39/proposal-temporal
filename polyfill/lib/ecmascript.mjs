@@ -5157,10 +5157,9 @@ export function RoundDuration(
       untilOptions.largestUnit = 'year';
       const yearsPassed = GetSlot(CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions), YEARS);
       years += yearsPassed;
-      const oldRelativeTo = relativeTo;
       const yearsPassedDuration = new TemporalDuration(yearsPassed);
-      relativeTo = CalendarDateAdd(calendar, relativeTo, yearsPassedDuration, undefined, dateAdd);
-      const daysPassed = DaysUntil(oldRelativeTo, relativeTo);
+      let daysPassed;
+      ({ relativeTo, days: daysPassed } = MoveRelativeDate(calendar, relativeTo, yearsPassedDuration, dateAdd));
       days -= daysPassed;
       const oneYear = new TemporalDuration(days < 0 ? -1 : 1);
       let { days: oneYearDays } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd);
