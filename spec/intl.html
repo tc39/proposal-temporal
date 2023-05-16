@@ -208,9 +208,8 @@
         1. Let _opt_ be a new Record.
         1. Let _matcher_ be ? GetOption(_options_, *"localeMatcher"*, *"string"*, « *"lookup"*, *"best fit"* », *"best fit"*).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
-        1. Let _calendar_ be ? GetOption(_options_, *"calendar"*, *"string"*, *undefined*, *undefined*).
-        1. If _calendar_ is not *undefined*, then
-          1. If _calendar_ does not match the Unicode Locale Identifier `type` nonterminal, throw a *RangeError* exception.
+        1. Let _calendar_ be ? Get(_options_, *"calendar"*).
+        1. Set _calendar_ to ? InterpretCalendarOption(_calendar_).
         1. Set _opt_.[[ca]] to _calendar_.
         1. Let _numberingSystem_ be ? GetOption(_options_, *"numberingSystem"*, *"string"*, *undefined*, *undefined*).
         1. If _numberingSystem_ is not *undefined*, then
@@ -240,17 +239,15 @@
           1. If _hc_ is *null*, set _hc_ to _hcDefault_.
         1. <del>Set _dateTimeFormat_.[[HourCycle]] to _hc_.</del>
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
-        1. If _timeZone_ is *undefined*, then
-          1. <ins>If _toLocaleStringTimeZone_ is present, then</ins>
-            1. <ins>Set _timeZone_ to _toLocaleStringTimeZone_.</ins>
-          1. <ins>Else,</ins>
-            1. Set _timeZone_ to DefaultTimeZone().
-        1. Else,
-          1. <ins>If _toLocaleStringTimeZone_ is present, throw a *TypeError* exception.</ins>
-          1. Set _timeZone_ to ? ToString(_timeZone_).
-          1. If <del>the result of IsValidTimeZoneName(_timeZone_)</del><ins>IsAvailableTimeZoneName(_timeZone_)</ins> is *false*, then
-            1. Throw a *RangeError* exception.
-          1. Set _timeZone_ to CanonicalizeTimeZoneName(_timeZone_).
+        1. Set _timeZone_ to ? InterpretTimeZoneOption(_timeZone_).
+        1. <del>Let _timeZone_ be ? Get(_options_, *"timeZone"*).</del>
+        1. <del>If _timeZone_ is *undefined*, then</del>
+          1. <del>Set _timeZone_ to DefaultTimeZone().</del>
+        1. <del>Else,</del>
+          1. <del>Set _timeZone_ to ? ToString(_timeZone_).</del>
+          1. <del>If the result of IsValidTimeZoneName(_timeZone_) is *false*, then</del>
+            1. <del>Throw a *RangeError* exception.</del>
+          1. <del>Set _timeZone_ to CanonicalizeTimeZoneName(_timeZone_).</del>
         1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
         1. Let _formatOptions_ be a new Record.
         1. Set _formatOptions_.[[hourCycle]] to _hc_.
@@ -376,6 +373,79 @@
       </emu-table>
       </ins>
     </emu-clause>
+
+    <ins class="block">
+    <emu-clause id="sec-interprettimezoneoption" type="abstract operation">
+      <h1>InterpretTimeZoneOption (
+          _timeZone_: an ECMAScript value,
+          optional _toLocaleStringTimeZone_: a String
+        ): either a normal completion containing a String, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines the time zone identifier to use when creating a %DateTimeFormat% instance.
+          If _toLocaleStringTimeZone_ is provided, it must be a canonical time zone identifier and it will be used to implement the behaviour of `Temporal.ZonedDateTime.prototype.toLocaleString`.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. If _timeZone_ is *undefined*, then
+          1. If _toLocaleStringTimeZone_ is present, return _toLocaleStringTimeZone_.
+          1. Return DefaultTimeZone().
+        1. Assert: _toLocaleStringTimeZone_ is not present.
+        1. Assert: No non-String, non-Object value, when coerced to a String, is an available time zone identifier.
+        1. If Type(_timeZone_) is String, then
+          1. If IsAvailableTimeZoneName(_timeZone_) is *true*, return CanonicalizeTimeZoneName(_timeZone_).
+          1. Set _timeZone_ to ? ExtractTimeZoneIdentifierFromString (_timeZone_).
+        1. Else,
+          1. If Type(_timeZone_) is not Object, throw a *TypeError* exception.
+          1. If _timeZone_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Set _timeZone_ to ? ToTemporalTimeZoneIdentifier(_timeZone_.[[TimeZone]]).
+          1. Else if ? ObjectImplementsTemporalTimeZoneProtocol (_timeZone_) is *true*, then
+            1. Set _timeZone_ to ? ToTemporalTimeZoneIdentifier(_timeZone_).
+          1. Else,
+            1. Set _timeZone_ to ? ToString(_timeZone_).
+            1. NOTE: To maintain %DateTimeFormat% backwards compatibility, this abstract operation (unlike ToTemporalTimeZoneSlotValue) accepts an object that can be coerced to an available time zone identifier even if ObjectImplementsTemporalTimeZoneProtocol returns *false*, and in that case ToString is used instead of reading the *id* property of the object.
+        1. If IsTimeZoneOffsetString(_timeZone_) is *true*, throw a *RangeError* exception.
+        1. If IsAvailableTimeZoneName(_timeZone_) is *false*, throw a *RangeError* exception.
+        1. Set _timeZone_ to CanonicalizeTimeZoneName(_timeZone_).
+        1. Return _timeZone_.
+      </emu-alg>
+    </emu-clause>
+    </ins>
+
+    <ins class="block">
+    <emu-clause id="sec-interpretcalendaroption" type="abstract operation">
+      <h1>
+        InterpretCalendarOption (
+          _calendar_: an ECMAScript value
+        ): either a normal completion containing a String, or a throw completion</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It determines the calendar identifier to use when creating a %DateTimeFormat% instance.</dd>
+      </dl>
+
+      <emu-alg>
+        1. If _calendar_ is *undefined*, return _calendar_.
+        1. Assert: No non-String, non-Object value, when coerced to a String, is a built-in calendar identifier.
+        1. If Type(_calendar_) is String, then
+          1. If IsBuiltinCalendar is *true*, return _calendar_.
+          1. Set _calendar_ to ? ParseTemporalCalendarString(_calendar_).
+        1. Else,
+          1. If Type(_calendar_) is not Object, throw a *TypeError* exception.
+          1. If _calendar_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Set _calendar_ to _calendar_.[[Calendar]].
+            1. If Type(_calendar_) is String, return _calendar_.
+            1. Set _calendar_ to ? ToTemporalCalendarIdentifier(_calendar_).
+          1. Else if _calendar_ has an [[InitializedTemporalCalendar]] internal slot, then
+            1. Set _calendar_ to ? ToTemporalCalendarIdentifier(_calendar_).
+          1. Else, set _calendar_ to ? ToString(_calendar_).
+          1. NOTE: To maintain %DateTimeFormat% backwards compatibility, this abstract operation (unlike ToTemporalCalendarSlotValue) accepts an object that can be coerced to a built-in calendar identifier even if it would return *false* from ObjectImplementsTemporalCalendarProtocol, and in that case ToString is used instead of reading the *id* property of the object.
+        1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
+        1. Return _calendar_.
+      </emu-alg>
+    </emu-clause>
+    </ins>
 
     <emu-clause id="sec-datetime-format-functions">
       <h1>DateTime Format Functions</h1>

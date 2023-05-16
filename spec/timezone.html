@@ -585,6 +585,33 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-extracttimezoneidentifierfromstring" type="abstract operation">
+      <h1>
+        ExtractTimeZoneIdentifierFromString (
+          _temporalTimeZoneLike_: a String,
+        ): either a normal completion containing a String, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It extracts a time zone identifier from a string.
+          If _temporalTimeZoneLike_ is not a time zone identifier, then it must be a string with a time zone annotation that is accepted by ParseTemporalZonedDateTimeString or a string with a UTC offset that is accepted by ParseTemporalInstant.
+          If the result is an offset time zone identifier, then its canonical form is returned.
+          If the result is a named time zone identifier, then it will be resolved to its canonical name.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_temporalTimeZoneLike_).
+        1. If _parseResult_.[[Name]] is not *undefined*, then
+          1. Let _name_ be _parseResult_.[[Name]].
+          1. If IsTimeZoneOffsetString(_name_) is *true*, return CanonicalizeTimeZoneOffsetString(_name_).
+          1. If IsAvailableTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
+          1. Return ! CanonicalizeTimeZoneName(_name_).
+        1. If _parseResult_.[[Z]] is *true*, return *"UTC"*.
+        1. Return CanonicalizeTimeZoneOffsetString(_parseResult_.[[OffsetString]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-totemporaltimezoneslotvalue" type="abstract operation">
       <h1>
         ToTemporalTimeZoneSlotValue (
@@ -596,21 +623,17 @@
         <dd>It attempts to derive a value from _temporalTimeZoneLike_ that is suitable for storing in a Temporal.ZonedDateTime's [[TimeZone]] internal slot, and returns that value if found or throws an exception if not.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_temporalTimeZoneLike_) is Object, then
-          1. If _temporalTimeZoneLike_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Return _temporalTimeZoneLike_.[[TimeZone]].
-          1. If ? ObjectImplementsTemporalTimeZoneProtocol(_temporalTimeZoneLike_) is *false*, throw a *TypeError* exception.
-          1. Return _temporalTimeZoneLike_.
         1. Assert: No non-String, non-Object value, when coerced to a String, is an available time zone identifier.
-        1. If Type(_temporalTimeZoneLike_) is not String, throw a *TypeError* exception.
-        1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_temporalTimeZoneLike_).
-        1. If _parseResult_.[[Name]] is not *undefined*, then
-          1. Let _name_ be _parseResult_.[[Name]].
-          1. If IsTimeZoneOffsetString(_name_) is *true*, return CanonicalizeTimeZoneOffsetString(_name_).
-          1. If IsAvailableTimeZoneName(_name_) is *false*, throw a *RangeError* exception.
-          1. Return ! CanonicalizeTimeZoneName(_name_).
-        1. If _parseResult_.[[Z]] is *true*, return *"UTC"*.
-        1. Return CanonicalizeTimeZoneOffsetString(_parseResult_.[[OffsetString]]).
+        1. If Type(_temporalTimeZoneLike_) is String, then
+          1. If IsAvailableTimeZoneName(_temporalTimeZoneLike_) is *true*, return CanonicalizeTimeZoneName(_temporalTimeZoneLike_).
+          1. Set _temporalTimeZoneLike_ to ? ExtractTimeZoneIdentifierFromString (_temporalTimeZoneLike_).
+        1. Else,
+          1. If Type(_temporalTimeZoneLike_) is not Object, throw a *TypeError* exception.
+          1. If _temporalTimeZoneLike_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+            1. Set _temporalTimeZoneLike_ to _temporalTimeZoneLike_.[[TimeZone]].
+          1. Else if ? ObjectImplementsTemporalTimeZoneProtocol(_temporalTimeZoneLike_) is *false*, then
+            1. Throw a *TypeError* exception.
+        1. Return _temporalTimeZoneLike_.
       </emu-alg>
     </emu-clause>
 
