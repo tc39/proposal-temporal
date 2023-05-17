@@ -125,7 +125,7 @@ export class PlainYearMonth {
     const inputFields = ES.PrepareTemporalFields(item, inputFieldNames, []);
     let mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
     const concatenatedFieldNames = ES.Call(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
-    mergedFields = ES.PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], 'ignore');
+    mergedFields = ES.PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
     const options = ObjectCreate(null);
     options.overflow = 'reject';
     return ES.CalendarDateFromFields(calendar, mergedFields, options);

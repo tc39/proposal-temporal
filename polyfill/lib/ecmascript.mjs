@@ -3,6 +3,7 @@
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
 const ArrayPrototypeSort = Array.prototype.sort;
+const ArrayPrototypeFind = Array.prototype.find;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const IntlSupportedValuesOf = globalThis.Intl.supportedValuesOf;
 const MathAbs = Math.abs;
@@ -186,8 +187,6 @@ const BUILTIN_CASTS = new Map([
   ['milliseconds', ToIntegerIfIntegral],
   ['microseconds', ToIntegerIfIntegral],
   ['nanoseconds', ToIntegerIfIntegral],
-  ['era', ToPrimitiveAndRequireString],
-  ['eraYear', ToIntegerOrInfinity],
   ['offset', ToPrimitiveAndRequireString]
 ]);
 
@@ -1105,11 +1104,21 @@ export function PrepareTemporalFields(
   bag,
   fields,
   requiredFields,
+  extraFieldDescriptors = [],
   duplicateBehaviour = 'throw',
   { emptySourceErrorMessage = 'no supported properties found' } = {}
 ) {
   const result = ObjectCreate(null);
   let any = false;
+  if (extraFieldDescriptors) {
+    for (let index = 0; index < extraFieldDescriptors.length; index++) {
+      let desc = extraFieldDescriptors[index];
+      Call(ArrayPrototypePush, fields, [desc.property]);
+      if (desc.required === true && requiredFields !== 'partial') {
+        Call(ArrayPrototypePush, requiredFields, [desc.property]);
+      }
+    }
+  }
   Call(ArrayPrototypeSort, fields, []);
   let previousProperty = undefined;
   for (let index = 0; index < fields.length; index++) {
@@ -1123,6 +1132,14 @@ export function PrepareTemporalFields(
         any = true;
         if (BUILTIN_CASTS.has(property)) {
           value = BUILTIN_CASTS.get(property)(value);
+        } else if (extraFieldDescriptors) {
+          const matchingDescriptor = Call(ArrayPrototypeFind, extraFieldDescriptors, [
+            (desc) => desc.property === property
+          ]);
+          if (matchingDescriptor) {
+            const convertor = matchingDescriptor.conversion;
+            value = convertor(value);
+          }
         }
         result[property] = value;
       } else if (requiredFields !== 'partial') {
@@ -1145,7 +1162,7 @@ export function PrepareTemporalFields(
 
 export function ToTemporalTimeRecord(bag, completeness = 'complete') {
   const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
-  const partial = PrepareTemporalFields(bag, fields, 'partial', { emptySourceErrorMessage: 'invalid time-like' });
+  const partial = PrepareTemporalFields(bag, fields, 'partial', undefined, undefined, { emptySourceErrorMessage: 'invalid time-like' });
   const result = {};
   for (let index = 0; index < fields.length; index++) {
     const field = fields[index];
