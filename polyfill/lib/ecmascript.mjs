@@ -3,6 +3,7 @@
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
 const ArrayPrototypeSort = Array.prototype.sort;
+const ArrayPrototypeFind = Array.prototype.find;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const MathMin = Math.min;
 const MathMax = Math.max;
@@ -164,8 +165,6 @@ const BUILTIN_CASTS = new Map([
   ['milliseconds', ToIntegerIfIntegral],
   ['microseconds', ToIntegerIfIntegral],
   ['nanoseconds', ToIntegerIfIntegral],
-  ['era', ToString],
-  ['eraYear', ToIntegerOrInfinity],
   ['offset', ToString]
 ]);
 
@@ -1060,10 +1059,20 @@ export function PrepareTemporalFields(
   bag,
   fields,
   requiredFields,
-  { emptySourceErrorMessage = 'no supported properties found' } = {}
+  { emptySourceErrorMessage = 'no supported properties found' } = {},
+  extraFieldDescriptors = []
 ) {
   const result = ObjectCreate(null);
   let any = false;
+  if (extraFieldDescriptors) {
+    for (let index = 0; index < extraFieldDescriptors.length; index++) {
+      let desc = extraFieldDescriptors[index];
+      Call(ArrayPrototypePush, fields, [desc.property]);
+      if (desc.required === true && requiredFields !== 'partial') {
+        Call(ArrayPrototypePush, requiredFields, [desc.property]);
+      }
+    }
+  }
   Call(ArrayPrototypeSort, fields, []);
   for (let index = 0; index < fields.length; index++) {
     const property = fields[index];
@@ -1072,6 +1081,14 @@ export function PrepareTemporalFields(
       any = true;
       if (BUILTIN_CASTS.has(property)) {
         value = BUILTIN_CASTS.get(property)(value);
+      } else if (extraFieldDescriptors) {
+        const matchingDescriptor = Call(ArrayPrototypeFind, extraFieldDescriptors, [
+          (desc) => desc.property === property
+        ]);
+        if (matchingDescriptor) {
+          const convertor = matchingDescriptor.conversion;
+          value = convertor(value);
+        }
       }
       result[property] = value;
     } else if (requiredFields !== 'partial') {
