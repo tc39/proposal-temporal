@@ -1735,6 +1735,16 @@
   	return hasSymbolSham();
   };
 
+  var test = {
+  	foo: {}
+  };
+
+  var $Object$1 = Object;
+
+  var hasProto$1 = function hasProto() {
+  	return { __proto__: test }.foo === test.foo && !({ __proto__: null } instanceof $Object$1);
+  };
+
   /* eslint no-invalid-this: 1 */
 
   var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
@@ -1846,18 +1856,23 @@
   	: throwTypeError;
 
   var hasSymbols$3 = hasSymbols$4();
+  var hasProto = hasProto$1();
 
-  var getProto = Object.getPrototypeOf || function (x) { return x.__proto__; }; // eslint-disable-line no-proto
+  var getProto = Object.getPrototypeOf || (
+  	hasProto
+  		? function (x) { return x.__proto__; } // eslint-disable-line no-proto
+  		: null
+  );
 
   var needsEval = {};
 
-  var TypedArray = typeof Uint8Array === 'undefined' ? undefined$1 : getProto(Uint8Array);
+  var TypedArray = typeof Uint8Array === 'undefined' || !getProto ? undefined$1 : getProto(Uint8Array);
 
   var INTRINSICS$1 = {
   	'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
   	'%Array%': Array,
   	'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-  	'%ArrayIteratorPrototype%': hasSymbols$3 ? getProto([][Symbol.iterator]()) : undefined$1,
+  	'%ArrayIteratorPrototype%': hasSymbols$3 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
   	'%AsyncFromSyncIteratorPrototype%': undefined$1,
   	'%AsyncFunction%': needsEval,
   	'%AsyncGenerator%': needsEval,
@@ -1887,10 +1902,10 @@
   	'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
   	'%isFinite%': isFinite,
   	'%isNaN%': isNaN,
-  	'%IteratorPrototype%': hasSymbols$3 ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+  	'%IteratorPrototype%': hasSymbols$3 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
   	'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
   	'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-  	'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+  	'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
   	'%Math%': Math,
   	'%Number%': Number,
   	'%Object%': Object,
@@ -1903,10 +1918,10 @@
   	'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
   	'%RegExp%': RegExp,
   	'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-  	'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+  	'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
   	'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
   	'%String%': String,
-  	'%StringIteratorPrototype%': hasSymbols$3 ? getProto(''[Symbol.iterator]()) : undefined$1,
+  	'%StringIteratorPrototype%': hasSymbols$3 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
   	'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
   	'%SyntaxError%': $SyntaxError,
   	'%ThrowTypeError%': ThrowTypeError,
@@ -1922,12 +1937,14 @@
   	'%WeakSet%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet
   };
 
-  try {
-  	null.error; // eslint-disable-line no-unused-expressions
-  } catch (e) {
-  	// https://github.com/tc39/proposal-shadowrealm/pull/384#issuecomment-1364264229
-  	var errorProto = getProto(getProto(e));
-  	INTRINSICS$1['%Error.prototype%'] = errorProto;
+  if (getProto) {
+  	try {
+  		null.error; // eslint-disable-line no-unused-expressions
+  	} catch (e) {
+  		// https://github.com/tc39/proposal-shadowrealm/pull/384#issuecomment-1364264229
+  		var errorProto = getProto(getProto(e));
+  		INTRINSICS$1['%Error.prototype%'] = errorProto;
+  	}
   }
 
   var doEval = function doEval(name) {
@@ -1945,7 +1962,7 @@
   		}
   	} else if (name === '%AsyncIteratorPrototype%') {
   		var gen = doEval('%AsyncGenerator%');
-  		if (gen) {
+  		if (gen && getProto) {
   			value = getProto(gen.prototype);
   		}
   	}
