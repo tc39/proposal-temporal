@@ -5610,10 +5610,7 @@ export function RoundDuration(
   timeZoneRec = undefined,
   precalculatedPlainDateTime = undefined
 ) {
-  // dateAdd must be looked up if:
-  //  - unit is year, month, or week
-  //  - unit is day, zonedRelativeTo defined, and any of years...weeks != 0
-  // dateUntil must be looked up if unit is year
+  // dateAdd and dateUntil must be looked up
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 
   if ((unit === 'year' || unit === 'month' || unit === 'week') && !plainRelativeTo) {
@@ -5713,21 +5710,32 @@ export function RoundDuration(
       plainRelativeTo = yearsMonthsLater;
       days += weeksInDays;
 
-      // Months may be different lengths of days depending on the calendar,
-      // convert days to months in a loop as described above under 'years'.
-      const sign = MathSign(days);
+      const isoResult = AddISODate(
+        GetSlot(plainRelativeTo, ISO_YEAR),
+        GetSlot(plainRelativeTo, ISO_MONTH),
+        GetSlot(plainRelativeTo, ISO_DAY),
+        0,
+        0,
+        0,
+        days,
+        'constrain'
+      );
+      const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
+      const untilOptions = ObjectCreate(null);
+      untilOptions.largestUnit = 'month';
+      const monthsPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), MONTHS);
+      months += monthsPassed;
+      const monthsPassedDuration = new TemporalDuration(0, monthsPassed);
+      let daysPassed;
+      ({ relativeTo: plainRelativeTo, days: daysPassed } = MoveRelativeDate(
+        calendarRec,
+        plainRelativeTo,
+        monthsPassedDuration
+      ));
+      days -= daysPassed;
       const oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
-      let oneMonthDays;
-      ({ relativeTo: plainRelativeTo, days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth));
-      while (MathAbs(days) >= MathAbs(oneMonthDays)) {
-        months += sign;
-        days -= oneMonthDays;
-        ({ relativeTo: plainRelativeTo, days: oneMonthDays } = MoveRelativeDate(
-          calendarRec,
-          plainRelativeTo,
-          oneMonth
-        ));
-      }
+      let { days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth);
+
       oneMonthDays = MathAbs(oneMonthDays);
       const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
       nanoseconds = divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
@@ -5739,17 +5747,32 @@ export function RoundDuration(
       break;
     }
     case 'week': {
-      // Weeks may be different lengths of days depending on the calendar,
-      // convert days to weeks in a loop as described above under 'years'.
-      const sign = MathSign(days);
+      const isoResult = AddISODate(
+        GetSlot(plainRelativeTo, ISO_YEAR),
+        GetSlot(plainRelativeTo, ISO_MONTH),
+        GetSlot(plainRelativeTo, ISO_DAY),
+        0,
+        0,
+        0,
+        days,
+        'constrain'
+      );
+      const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
+      const untilOptions = ObjectCreate(null);
+      untilOptions.largestUnit = 'week';
+      const weeksPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), WEEKS);
+      weeks += weeksPassed;
+      const weeksPassedDuration = new TemporalDuration(0, 0, weeksPassed);
+      let daysPassed;
+      ({ relativeTo: plainRelativeTo, days: daysPassed } = MoveRelativeDate(
+        calendarRec,
+        plainRelativeTo,
+        weeksPassedDuration
+      ));
+      days -= daysPassed;
       const oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
-      let oneWeekDays;
-      ({ relativeTo: plainRelativeTo, days: oneWeekDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneWeek));
-      while (MathAbs(days) >= MathAbs(oneWeekDays)) {
-        weeks += sign;
-        days -= oneWeekDays;
-        ({ relativeTo: plainRelativeTo, days: oneWeekDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneWeek));
-      }
+      let { days: oneWeekDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneWeek);
+
       oneWeekDays = MathAbs(oneWeekDays);
       const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
       nanoseconds = divisor.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
