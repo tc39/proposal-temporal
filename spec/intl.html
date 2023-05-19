@@ -2465,7 +2465,7 @@
           <emu-alg>
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-            1. Let _dateTimeFormat_ be ! OrdinaryCreateFromConstructor(%DateTimeFormat%, %DateTimeFormat.protoytpe%, « [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[Weekday]], [[Era]], [[Year]], [[Month]], [[Day]], [[DayPeriod]], [[Hour]], [[Minute]], [[Second]], [[FractionalSecondDigits]], [[TimeZoneName]], [[HourCycle]], [[Pattern]], [[BoundFormat]] »).
+            1. Let _dateTimeFormat_ be ! OrdinaryCreateFromConstructor(%DateTimeFormat%, %DateTimeFormat.prototype%, « [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[Weekday]], [[Era]], [[Year]], [[Month]], [[Day]], [[DayPeriod]], [[Hour]], [[Minute]], [[Second]], [[FractionalSecondDigits]], [[TimeZoneName]], [[HourCycle]], [[Pattern]], [[BoundFormat]] »).
             1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_zonedDateTime_.[[TimeZone]]).
             1. If IsTimeZoneOffsetString(_timeZone_) is *true*, throw a *RangeError* exception.
             1. If IsAvailableTimeZoneName(_timeZone_) is *false*, throw a *RangeError* exception.
