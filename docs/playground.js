@@ -11483,11 +11483,11 @@
     var dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
     var untilOptions = CopyOptions(options);
     untilOptions.largestUnit = dateLargestUnit;
-    var _CalendarDateUntil = CalendarDateUntil(calendar, date1, date2, untilOptions),
-      years = _CalendarDateUntil.years,
-      months = _CalendarDateUntil.months,
-      weeks = _CalendarDateUntil.weeks,
-      days = _CalendarDateUntil.days;
+    var untilResult = CalendarDateUntil(calendar, date1, date2, untilOptions);
+    var years = GetSlot(untilResult, YEARS);
+    var months = GetSlot(untilResult, MONTHS);
+    var weeks = GetSlot(untilResult, WEEKS);
+    var days = GetSlot(untilResult, DAYS);
     // Signs of date part and time part may not agree; balance them together
     var _BalanceDuration2 = BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
     days = _BalanceDuration2.days;
@@ -11635,11 +11635,11 @@
     var resolvedOptions = CopyOptions(options);
     var settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
     resolvedOptions.largestUnit = settings.largestUnit;
-    var _CalendarDateUntil2 = CalendarDateUntil(calendar, plainDate, other, resolvedOptions),
-      years = _CalendarDateUntil2.years,
-      months = _CalendarDateUntil2.months,
-      weeks = _CalendarDateUntil2.weeks,
-      days = _CalendarDateUntil2.days;
+    var untilResult = CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
+    var years = GetSlot(untilResult, YEARS);
+    var months = GetSlot(untilResult, MONTHS);
+    var weeks = GetSlot(untilResult, WEEKS);
+    var days = GetSlot(untilResult, DAYS);
     if (settings.smallestUnit !== 'day' || settings.roundingIncrement !== 1) {
       var _RoundDuration2 = RoundDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, plainDate);
       years = _RoundDuration2.years;
@@ -11737,9 +11737,9 @@
     var otherFields = PrepareTemporalFields(other, fieldNames, []);
     otherFields.day = 1;
     var otherDate = CalendarDateFromFields(calendar, otherFields);
-    var _CalendarDateUntil3 = CalendarDateUntil(calendar, thisDate, otherDate, resolvedOptions),
-      years = _CalendarDateUntil3.years,
-      months = _CalendarDateUntil3.months;
+    var _CalendarDateUntil = CalendarDateUntil(calendar, thisDate, otherDate, resolvedOptions),
+      years = _CalendarDateUntil.years,
+      months = _CalendarDateUntil.months;
     if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
       var _RoundDuration5 = RoundDuration(years, months, 0, 0, 0, 0, 0, 0, 0, 0, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, thisDate);
       years = _RoundDuration5.years;
@@ -11892,12 +11892,12 @@
       var dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
       var differenceOptions = ObjectCreate$8(null);
       differenceOptions.largestUnit = dateLargestUnit;
+      var untilResult = CalendarDateUntil(calendar, relativeTo, end, differenceOptions);
+      years = GetSlot(untilResult, YEARS);
+      months = GetSlot(untilResult, MONTHS);
+      weeks = GetSlot(untilResult, WEEKS);
+      days = GetSlot(untilResult, DAYS);
       // Signs of date part and time part may not agree; balance them together
-      var _CalendarDateUntil4 = CalendarDateUntil(calendar, relativeTo, end, differenceOptions);
-      years = _CalendarDateUntil4.years;
-      months = _CalendarDateUntil4.months;
-      weeks = _CalendarDateUntil4.weeks;
-      days = _CalendarDateUntil4.days;
       var _BalanceDuration7 = BalanceDuration(days, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit);
       days = _BalanceDuration7.days;
       hours = _BalanceDuration7.hours;
@@ -12448,16 +12448,17 @@
           var wholeDaysLater = CalendarDateAdd(calendar, relativeTo, wholeDays, undefined, dateAdd);
           var untilOptions = ObjectCreate$8(null);
           untilOptions.largestUnit = 'year';
-          var yearsPassed = CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions).years;
+          var yearsPassed = GetSlot(CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions), YEARS);
           years += yearsPassed;
-          var oldRelativeTo = relativeTo;
           var yearsPassedDuration = new TemporalDuration(yearsPassed);
-          relativeTo = CalendarDateAdd(calendar, relativeTo, yearsPassedDuration, undefined, dateAdd);
-          var daysPassed = DaysUntil(oldRelativeTo, relativeTo);
+          var daysPassed;
+          var _MoveRelativeDate14 = MoveRelativeDate(calendar, relativeTo, yearsPassedDuration, dateAdd);
+          relativeTo = _MoveRelativeDate14.relativeTo;
+          daysPassed = _MoveRelativeDate14.days;
           days -= daysPassed;
           var oneYear = new TemporalDuration(days < 0 ? -1 : 1);
-          var _MoveRelativeDate14 = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd),
-            oneYearDays = _MoveRelativeDate14.days;
+          var _MoveRelativeDate15 = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd),
+            oneYearDays = _MoveRelativeDate15.days;
 
           // Note that `nanoseconds` below (here and in similar code for months,
           // weeks, and days further below) isn't actually nanoseconds for the
@@ -12497,15 +12498,15 @@
           var sign = MathSign(days);
           var oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
           var oneMonthDays;
-          var _MoveRelativeDate15 = MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd5);
-          relativeTo = _MoveRelativeDate15.relativeTo;
-          oneMonthDays = _MoveRelativeDate15.days;
+          var _MoveRelativeDate16 = MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd5);
+          relativeTo = _MoveRelativeDate16.relativeTo;
+          oneMonthDays = _MoveRelativeDate16.days;
           while (MathAbs$1(days) >= MathAbs$1(oneMonthDays)) {
             months += sign;
             days -= oneMonthDays;
-            var _MoveRelativeDate16 = MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd5);
-            relativeTo = _MoveRelativeDate16.relativeTo;
-            oneMonthDays = _MoveRelativeDate16.days;
+            var _MoveRelativeDate17 = MoveRelativeDate(calendar, relativeTo, oneMonth, _dateAdd5);
+            relativeTo = _MoveRelativeDate17.relativeTo;
+            oneMonthDays = _MoveRelativeDate17.days;
           }
           oneMonthDays = MathAbs$1(oneMonthDays);
           var _divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
@@ -12528,15 +12529,15 @@
           var oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
           var _dateAdd6 = typeof calendar !== 'string' ? GetMethod$2(calendar, 'dateAdd') : undefined;
           var oneWeekDays;
-          var _MoveRelativeDate17 = MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd6);
-          relativeTo = _MoveRelativeDate17.relativeTo;
-          oneWeekDays = _MoveRelativeDate17.days;
+          var _MoveRelativeDate18 = MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd6);
+          relativeTo = _MoveRelativeDate18.relativeTo;
+          oneWeekDays = _MoveRelativeDate18.days;
           while (MathAbs$1(days) >= MathAbs$1(oneWeekDays)) {
             weeks += _sign2;
             days -= oneWeekDays;
-            var _MoveRelativeDate18 = MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd6);
-            relativeTo = _MoveRelativeDate18.relativeTo;
-            oneWeekDays = _MoveRelativeDate18.days;
+            var _MoveRelativeDate19 = MoveRelativeDate(calendar, relativeTo, oneWeek, _dateAdd6);
+            relativeTo = _MoveRelativeDate19.relativeTo;
+            oneWeekDays = _MoveRelativeDate19.days;
           }
           oneWeekDays = MathAbs$1(oneWeekDays);
           var _divisor2 = bigInt(oneWeekDays).multiply(dayLengthNs);
