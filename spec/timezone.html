@@ -191,6 +191,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
+        1. If _timeZone_.[[OffsetNanoseconds]] is not ~empty~, return FormatTimeZoneOffsetString(_timeZone_.[[OffsetNanoseconds]]).
         1. Return _timeZone_.[[Identifier]].
       </emu-alg>
     </emu-clause>
@@ -204,7 +205,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
-        1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return 𝔽(_timeZone_.[[OffsetNanoseconds]]).
+        1. If _timeZone_.[[OffsetNanoseconds]] is not ~empty~, return 𝔽(_timeZone_.[[OffsetNanoseconds]]).
         1. Return 𝔽(GetNamedTimeZoneOffsetNanoseconds(_timeZone_.[[Identifier]], _instant_.[[Nanoseconds]])).
       </emu-alg>
     </emu-clause>
@@ -260,7 +261,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
-        1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, then
+        1. If _timeZone_.[[OffsetNanoseconds]] is not ~empty~, then
           1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
           1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ - ℤ(_timeZone_.[[OffsetNanoseconds]]) ».
         1. Else,
@@ -283,7 +284,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
-        1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return *null*.
+        1. If _timeZone_.[[OffsetNanoseconds]] is not ~empty~, return *null*.
         1. Let _transition_ be GetNamedTimeZoneNextTransition(_timeZone_.[[Identifier]], _startingPoint_.[[Nanoseconds]]).
         1. If _transition_ is *null*, return *null*.
         1. Return ! CreateTemporalInstant(_transition_).
@@ -299,7 +300,7 @@
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
-        1. If _timeZone_.[[OffsetNanoseconds]] is not *undefined*, return *null*.
+        1. If _timeZone_.[[OffsetNanoseconds]] is not ~empty~, return *null*.
         1. Let _transition_ be GetNamedTimeZonePreviousTransition(_timeZone_.[[Identifier]], _startingPoint_.[[Nanoseconds]]).
         1. If _transition_ is *null*, return *null*.
         1. Return ! CreateTemporalInstant(_transition_).
@@ -314,6 +315,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
+        1. If _timeZone_.[[OffsetNanoseconds]] is not ~empty~, return FormatTimeZoneOffsetString(_timeZone_.[[OffsetNanoseconds]]).
         1. Return _timeZone_.[[Identifier]].
       </emu-alg>
     </emu-clause>
@@ -326,6 +328,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
+        1. If _timeZone_.[[OffsetNanoseconds]] is not ~empty~, return FormatTimeZoneOffsetString(_timeZone_.[[OffsetNanoseconds]]).
         1. Return _timeZone_.[[Identifier]].
       </emu-alg>
     </emu-clause>
@@ -362,7 +365,7 @@
               [[Identifier]]
             </td>
             <td>
-              A String value.
+              A String value representing the identifier of an available named time zone, or ~empty~ if the instance represents an offset time zone.
             </td>
           </tr>
           <tr>
@@ -370,7 +373,8 @@
               [[OffsetNanoseconds]]
             </td>
             <td>
-              An integer for nanoseconds representing the constant offset of this time zone to UTC, or *undefined* if the time zone is an IANA time zone.
+              An integer for nanoseconds representing the constant offset of this time zone relative to UTC, or ~empty~ if the instance represents a named time zone.
+              If not ~empty~, this value must be greater than &minus;8.64 &times; 10<sup>13</sup> nanoseconds (&minus;24 hours) and smaller than &plus;8.64 &times; 10<sup>13</sup> nanoseconds (&plus;24 hours).
             </td>
           </tr>
         </tbody>
@@ -396,16 +400,28 @@
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.TimeZone%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.TimeZone.prototype%"*, « [[InitializedTemporalTimeZone]], [[Identifier]], [[OffsetNanoseconds]] »).
         1. If IsTimeZoneOffsetString(_identifier_) is *true*, then
-          1. Let _offsetNanosecondsResult_ be ParseTimeZoneOffsetString(_identifier_).
-          1. Set _object_.[[Identifier]] to ! FormatTimeZoneOffsetString(_offsetNanosecondsResult_).
-          1. Set _object_.[[OffsetNanoseconds]] to _offsetNanosecondsResult_.
+          1. Set _object_.[[Identifier]] to ~empty~.
+          1. Set _object_.[[OffsetNanoseconds]] to ParseTimeZoneOffsetString(_identifier_).
         1. Else,
           1. Assert: ! CanonicalizeTimeZoneName(_identifier_) is _identifier_.
           1. Set _object_.[[Identifier]] to _identifier_.
-          1. Set _object_.[[OffsetNanoseconds]] to *undefined*.
+          1. Set _object_.[[OffsetNanoseconds]] to ~empty~.
         1. Return _object_.
       </emu-alg>
-    </emu-clause>
+
+      <emu-note>
+        <p>
+          Most implementations support only a short, fixed list of available named time zone identifiers.
+          For example, the IANA Time Zone Database in 2022 contained fewer than 600 identifiers.
+          Although the [[Identifier]] internal slot is a String in this specification, implementations may choose to store named time zone identifiers it in any other form (for example as an enumeration or index into a List of identifier strings) as long as the String can be regenerated when needed.
+        </p>
+        <p>
+          Similar flexibility exists for the storage of the [[OffsetNanoseconds]] internal slot, which can be interchangeably represented as a 6-byte integer or as a String value that may be as long as 19 characters.
+          ParseTimeZoneOffsetString and FormatTimeZoneOffsetString may be used to losslessly convert one representation to the other.
+          Implementations are free to store either or both representations.
+        </p>
+      </emu-note>
+     </emu-clause>
 
     <emu-clause id="sec-temporal-getisopartsfromepoch" type="abstract operation">
       <h1>
