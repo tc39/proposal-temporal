@@ -3149,8 +3149,7 @@ export function BalanceTimeDuration(
   milliseconds,
   microseconds,
   nanoseconds,
-  largestUnit,
-  relativeTo = undefined
+  largestUnit
 ) {
   let result = BalancePossiblyInfiniteTimeDuration(
     days,
@@ -3160,8 +3159,7 @@ export function BalanceTimeDuration(
     milliseconds,
     microseconds,
     nanoseconds,
-    largestUnit,
-    relativeTo
+    largestUnit
   );
   if (result === 'positive overflow' || result === 'negative overflow') {
     throw new RangeError('Duration out of range');
@@ -3178,45 +3176,26 @@ export function BalancePossiblyInfiniteTimeDuration(
   milliseconds,
   microseconds,
   nanoseconds,
-  largestUnit,
-  relativeTo = undefined
+  largestUnit
 ) {
-  if (IsTemporalZonedDateTime(relativeTo)) {
-    const endNs = AddZonedDateTime(
-      GetSlot(relativeTo, INSTANT),
-      GetSlot(relativeTo, TIME_ZONE),
-      GetSlot(relativeTo, CALENDAR),
-      0,
-      0,
-      0,
-      days,
-      hours,
-      minutes,
-      seconds,
-      milliseconds,
-      microseconds,
-      nanoseconds
-    );
-    const startNs = GetSlot(relativeTo, EPOCHNANOSECONDS);
-    nanoseconds = endNs.subtract(startNs);
-  } else {
-    nanoseconds = TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
-  }
-  if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
-    ({ days, nanoseconds } = NanosecondsToDays(nanoseconds, relativeTo));
-  } else {
-    days = 0;
-  }
+  nanoseconds = TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
 
   const sign = nanoseconds.lesser(0) ? -1 : 1;
   nanoseconds = nanoseconds.abs();
-  microseconds = milliseconds = seconds = minutes = hours = bigInt.zero;
+  microseconds = milliseconds = seconds = minutes = hours = days = bigInt.zero;
 
   switch (largestUnit) {
     case 'year':
     case 'month':
     case 'week':
     case 'day':
+      ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
+      ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
+      ({ quotient: seconds, remainder: milliseconds } = milliseconds.divmod(1000));
+      ({ quotient: minutes, remainder: seconds } = seconds.divmod(60));
+      ({ quotient: hours, remainder: minutes } = minutes.divmod(60));
+      ({ quotient: days, remainder: hours } = hours.divmod(24));
+      break;
     case 'hour':
       ({ quotient: microseconds, remainder: nanoseconds } = nanoseconds.divmod(1000));
       ({ quotient: milliseconds, remainder: microseconds } = microseconds.divmod(1000));
@@ -3248,6 +3227,7 @@ export function BalancePossiblyInfiniteTimeDuration(
       throw new Error('assert not reached');
   }
 
+  days = days.toJSNumber() * sign;
   hours = hours.toJSNumber() * sign;
   minutes = minutes.toJSNumber() * sign;
   seconds = seconds.toJSNumber() * sign;
@@ -3270,6 +3250,84 @@ export function BalancePossiblyInfiniteTimeDuration(
       return 'negative overflow';
     }
   }
+  return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
+}
+
+export function BalanceTimeDurationRelative(
+  days,
+  hours,
+  minutes,
+  seconds,
+  milliseconds,
+  microseconds,
+  nanoseconds,
+  largestUnit,
+  zonedRelativeTo
+) {
+  let result = BalancePossiblyInfiniteTimeDurationRelative(
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    largestUnit,
+    zonedRelativeTo
+  );
+  if (result === 'positive overflow' || result === 'negative overflow') {
+    throw new RangeError('Duration out of range');
+  }
+  return result;
+}
+
+export function BalancePossiblyInfiniteTimeDurationRelative(
+  days,
+  hours,
+  minutes,
+  seconds,
+  milliseconds,
+  microseconds,
+  nanoseconds,
+  largestUnit,
+  zonedRelativeTo
+) {
+  const endNs = AddZonedDateTime(
+    GetSlot(zonedRelativeTo, INSTANT),
+    GetSlot(zonedRelativeTo, TIME_ZONE),
+    GetSlot(zonedRelativeTo, CALENDAR),
+    0,
+    0,
+    0,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  );
+  const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+  nanoseconds = endNs.subtract(startNs);
+
+  if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
+    ({ days, nanoseconds } = NanosecondsToDays(nanoseconds, zonedRelativeTo));
+    largestUnit = 'hour';
+  } else {
+    days = 0;
+  }
+
+  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalancePossiblyInfiniteTimeDuration(
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    nanoseconds,
+    largestUnit
+  ));
+
   return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
 }
 
