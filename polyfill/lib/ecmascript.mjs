@@ -3141,7 +3141,7 @@ export function NanosecondsToDays(nanoseconds, relativeTo) {
   return { days: days.toJSNumber(), nanoseconds, dayLengthNs: MathAbs(dayLengthNs) };
 }
 
-export function BalanceDuration(
+export function BalanceTimeDuration(
   days,
   hours,
   minutes,
@@ -3152,7 +3152,7 @@ export function BalanceDuration(
   largestUnit,
   relativeTo = undefined
 ) {
-  let result = BalancePossiblyInfiniteDuration(
+  let result = BalancePossiblyInfiniteTimeDuration(
     days,
     hours,
     minutes,
@@ -3170,7 +3170,7 @@ export function BalanceDuration(
   }
 }
 
-export function BalancePossiblyInfiniteDuration(
+export function BalancePossiblyInfiniteTimeDuration(
   days,
   hours,
   minutes,
@@ -3273,7 +3273,7 @@ export function BalancePossiblyInfiniteDuration(
   return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
 }
 
-export function UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+export function UnbalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
   const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   if (sign === 0) return { years, months, weeks, days };
@@ -3380,7 +3380,7 @@ export function UnbalanceDurationRelative(years, months, weeks, days, largestUni
   };
 }
 
-export function BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+export function BalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
   const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
   if (sign === 0) return { years, months, weeks, days };
@@ -3765,7 +3765,7 @@ export function DifferenceInstant(ns1, ns2, increment, smallestUnit, largestUnit
     smallestUnit,
     roundingMode
   ));
-  return BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+  return BalanceTimeDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 }
 
 export function DifferenceISODateTime(
@@ -3810,7 +3810,7 @@ export function DifferenceISODateTime(
   const dateSign = CompareISODate(y2, mon2, d2, y1, mon1, d1);
   if (dateSign === -timeSign) {
     ({ year: y1, month: mon1, day: d1 } = BalanceISODate(y1, mon1, d1 - timeSign));
-    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
       -timeSign,
       hours,
       minutes,
@@ -3833,7 +3833,7 @@ export function DifferenceISODateTime(
   const weeks = GetSlot(untilResult, WEEKS);
   let days = GetSlot(untilResult, DAYS);
   // Signs of date part and time part may not agree; balance them together
-  ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+  ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
     days,
     hours,
     minutes,
@@ -3899,7 +3899,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   ({ nanoseconds: timeRemainderNs, days } = NanosecondsToDays(timeRemainderNs, intermediate));
 
   // Finally, merge the date and time durations and return the merged result.
-  let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+  let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
     0,
     0,
     0,
@@ -4081,7 +4081,7 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
     settings.roundingMode,
     relativeTo
   ));
-  ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+  ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
     days,
     hours,
     minutes,
@@ -4143,7 +4143,7 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
     settings.smallestUnit,
     settings.roundingMode
   ));
-  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
     0,
     hours,
     minutes,
@@ -4381,7 +4381,7 @@ export function AddDuration(
       throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
     }
     years = months = weeks = 0;
-    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
       d1 + d2,
       bigInt(h1).add(h2),
       bigInt(min1).add(min2),
@@ -4410,7 +4410,7 @@ export function AddDuration(
     weeks = GetSlot(untilResult, WEEKS);
     days = GetSlot(untilResult, DAYS);
     // Signs of date part and time part may not agree; balance them together
-    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+    ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
       days,
       bigInt(h1).add(h2),
       bigInt(min1).add(min2),
@@ -4747,7 +4747,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
     };
   }
   let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
-  ({ days } = BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
+  ({ days } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
 
   options = GetOptionsObject(options);
 
@@ -5084,7 +5084,7 @@ export function AdjustRoundedDurationDays(
       relativeTo
     ));
     timeRemainderNs = RoundInstant(timeRemainderNs.subtract(dayLengthNs), increment, unit, roundingMode);
-    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceDuration(
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
       0,
       0,
       0,
