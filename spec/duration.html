@@ -1896,9 +1896,10 @@
         1. Let _dayStart_ be ? AddZonedDateTime(_relativeTo_.[[Nanoseconds]], _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], _years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _dayEnd_ be ? AddZonedDateTime(_dayStart_, _relativeTo_.[[TimeZone]], _relativeTo_.[[Calendar]], 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0).
         1. Let _dayLengthNs_ be ℝ(_dayEnd_ - _dayStart_).
-        1. If (_timeRemainderNs_ - _dayLengthNs_) &times; _direction_ &lt; 0, then
+        1. Let _oneDayLess_ be _timeRemainderNs_ - _dayLengthNs_.
+        1. If _oneDayLess_ &times; _direction_ &lt; 0, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Set _timeRemainderNs_ to ℝ(RoundTemporalInstant(ℤ(_timeRemainderNs_ - _dayLengthNs_), _increment_, _unit_, _roundingMode_)).
+        1. Set _timeRemainderNs_ to ℝ(RoundTemporalInstant(ℤ(_oneDayLess_), _increment_, _unit_, _roundingMode_)).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
         1. Let _adjustedTimeDuration_ be ? BalanceTimeDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hour"*).
         1. Return ! CreateDurationRecord(_adjustedDateDuration_.[[Years]], _adjustedDateDuration_.[[Months]], _adjustedDateDuration_.[[Weeks]], _adjustedDateDuration_.[[Days]], _adjustedTimeDuration_.[[Hours]], _adjustedTimeDuration_.[[Minutes]], _adjustedTimeDuration_.[[Seconds]], _adjustedTimeDuration_.[[Milliseconds]], _adjustedTimeDuration_.[[Microseconds]], _adjustedTimeDuration_.[[Nanoseconds]]).

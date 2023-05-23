@@ -5111,7 +5111,8 @@ export function AdjustRoundedDurationDays(
   );
   const dayLengthNs = dayEnd.subtract(dayStart);
 
-  if (timeRemainderNs.subtract(dayLengthNs).multiply(direction).geq(0)) {
+  const oneDayLess = timeRemainderNs.subtract(dayLengthNs);
+  if (oneDayLess.multiply(direction).geq(0)) {
     ({ years, months, weeks, days } = AddDuration(
       years,
       months,
@@ -5135,7 +5136,7 @@ export function AdjustRoundedDurationDays(
       0,
       relativeTo
     ));
-    timeRemainderNs = RoundInstant(timeRemainderNs.subtract(dayLengthNs), increment, unit, roundingMode);
+    timeRemainderNs = RoundInstant(oneDayLess, increment, unit, roundingMode);
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
       0,
       0,
