@@ -132,7 +132,7 @@ export class Calendar {
     duration = ES.ToTemporalDuration(duration);
     options = ES.GetOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    const { days } = ES.BalanceDuration(
+    const { days } = ES.BalanceTimeDuration(
       GetSlot(duration, DAYS),
       GetSlot(duration, HOURS),
       GetSlot(duration, MINUTES),
