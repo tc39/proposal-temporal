@@ -3045,25 +3045,18 @@ export function TotalDurationNanoseconds(
   return bigInt(nanoseconds).add(microseconds.multiply(1000));
 }
 
-export function NanosecondsToDays(nanoseconds, relativeTo) {
+export function NanosecondsToDays(nanoseconds, zonedRelativeTo) {
   const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
   const sign = MathSign(nanoseconds);
   nanoseconds = bigInt(nanoseconds);
-  let dayLengthNs = 86400e9;
-  if (sign === 0) return { days: 0, nanoseconds: bigInt.zero, dayLengthNs };
-  if (!IsTemporalZonedDateTime(relativeTo)) {
-    let days;
-    ({ quotient: days, remainder: nanoseconds } = nanoseconds.divmod(dayLengthNs));
-    days = days.toJSNumber();
-    return { days, nanoseconds, dayLengthNs };
-  }
+  if (sign === 0) return { days: 0, nanoseconds: bigInt.zero, dayLengthNs: DAY_NANOS.toJSNumber() };
 
-  const startNs = GetSlot(relativeTo, EPOCHNANOSECONDS);
-  const start = GetSlot(relativeTo, INSTANT);
+  const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+  const start = GetSlot(zonedRelativeTo, INSTANT);
   const endNs = startNs.add(nanoseconds);
   const end = new TemporalInstant(endNs);
-  const timeZone = GetSlot(relativeTo, TIME_ZONE);
-  const calendar = GetSlot(relativeTo, CALENDAR);
+  const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+  const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 
   // Find the difference in days only.
   const dtStart = GetPlainDateTimeFor(timeZone, start, calendar);
@@ -3114,6 +3107,7 @@ export function NanosecondsToDays(nanoseconds, relativeTo) {
 
   let isOverflow = false;
   let relativeInstant = new TemporalInstant(intermediateNs);
+  let dayLengthNs;
   do {
     // calculate length of the next day (day that contains the time remainder)
     const oneDayFartherNs = AddZonedDateTime(relativeInstant, timeZone, calendar, 0, 0, 0, sign, 0, 0, 0, 0, 0, 0);
@@ -5189,12 +5183,15 @@ export function RoundDuration(
   let dayLengthNs;
   if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
     nanoseconds = TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
-    let intermediate;
-    if (zdtRelative) {
-      intermediate = MoveRelativeZonedDateTime(zdtRelative, years, months, weeks, days);
-    }
     let deltaDays;
-    ({ days: deltaDays, nanoseconds, dayLengthNs } = NanosecondsToDays(nanoseconds, intermediate));
+    if (zdtRelative) {
+      const intermediate = MoveRelativeZonedDateTime(zdtRelative, years, months, weeks, days);
+      ({ days: deltaDays, nanoseconds, dayLengthNs } = NanosecondsToDays(nanoseconds, intermediate));
+    } else {
+      ({ quotient: deltaDays, remainder: nanoseconds } = nanoseconds.divmod(DAY_NANOS));
+      deltaDays = deltaDays.toJSNumber();
+      dayLengthNs = DAY_NANOS.toJSNumber();
+    }
     days += deltaDays;
     hours = minutes = seconds = milliseconds = microseconds = 0;
   }
