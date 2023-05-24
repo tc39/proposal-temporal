@@ -1899,9 +1899,9 @@
         1. Let _oneDayLess_ be _timeRemainderNs_ - _dayLengthNs_.
         1. If _oneDayLess_ &times; _direction_ &lt; 0, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Set _timeRemainderNs_ to ℝ(RoundTemporalInstant(ℤ(_oneDayLess_), _increment_, _unit_, _roundingMode_)).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, _relativeTo_).
-        1. Let _adjustedTimeDuration_ be ? BalanceTimeDuration(0, 0, 0, 0, 0, 0, _timeRemainderNs_, *"hour"*).
+        1. Let _adjustedTimeDuration_ be ! RoundDuration(_adjustedDateDuration_.[[Years]], _adjustedDateDuration_.[[Months]], _adjustedDateDuration_.[[Weeks]], _adjustedDateDuration_.[[Days]], 0, 0, 0, 0, 0, _oneDayLess_, _increment_, _unit_, _roundingMode_).
+        1. Set _adjustedTimeDuration_ to ? BalanceTimeDuration(0, _adjustedTimeDuration_.[[Hours]], _adjustedTimeDuration_.[[Minutes]], _adjustedTimeDuration_.[[Seconds]], _adjustedTimeDuration_.[[Milliseconds]], _adjustedTimeDuration_.[[Microseconds]], _adjustedTimeDuration_.[[Nanoseconds]], *"hour"*).
         1. Return ! CreateDurationRecord(_adjustedDateDuration_.[[Years]], _adjustedDateDuration_.[[Months]], _adjustedDateDuration_.[[Weeks]], _adjustedDateDuration_.[[Days]], _adjustedTimeDuration_.[[Hours]], _adjustedTimeDuration_.[[Minutes]], _adjustedTimeDuration_.[[Seconds]], _adjustedTimeDuration_.[[Milliseconds]], _adjustedTimeDuration_.[[Microseconds]], _adjustedTimeDuration_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>

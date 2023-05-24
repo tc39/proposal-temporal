@@ -5136,15 +5136,29 @@ export function AdjustRoundedDurationDays(
       0,
       relativeTo
     ));
-    timeRemainderNs = RoundInstant(oneDayLess, increment, unit, roundingMode);
+    ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
+      years,
+      months,
+      weeks,
+      days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      oneDayLess.toJSNumber(),
+      increment,
+      unit,
+      roundingMode
+    ));
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
       0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      timeRemainderNs.toJSNumber(),
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds,
       'hour'
     ));
   }
