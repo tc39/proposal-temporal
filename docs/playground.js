@@ -7957,6 +7957,7 @@
   var ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
   var StringFromCharCode = String.fromCharCode;
   var StringPrototypeCharCodeAt = String.prototype.charCodeAt;
+  var StringPrototypeMatchAll = String.prototype.matchAll;
   var StringPrototypeReplace = String.prototype.replace;
   var $TypeError = GetIntrinsic('%TypeError%');
   var $isEnumerable = callBound$3('Object.prototype.propertyIsEnumerable');
@@ -8135,6 +8136,40 @@
     var flag = showCalendar === 'critical' ? '!' : '';
     return "[".concat(flag, "u-ca=").concat(id, "]");
   }
+
+  // Not a separate abstract operation in the spec, because it only occurs in one
+  // place: ParseISODateTime. In the code it's more convenient to split up
+  // ParseISODateTime for the YYYY-MM, MM-DD, and THH:MM:SS parse goals, so it's
+  // repeated four times.
+  function processAnnotations(annotations) {
+    var calendar;
+    var calendarWasCritical = false;
+    var _iterator = _createForOfIteratorHelper(Call$1(StringPrototypeMatchAll, annotations, [annotation])),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var _step$value = _slicedToArray(_step.value, 4),
+          critical = _step$value[1],
+          key = _step$value[2],
+          value = _step$value[3];
+        if (key === 'u-ca') {
+          if (calendar === undefined) {
+            calendar = value;
+            calendarWasCritical = critical === '!';
+          } else if (critical === '!' || calendarWasCritical) {
+            throw new RangeError("Invalid annotations in ".concat(annotations, ": more than one u-ca present with critical flag"));
+          }
+        } else if (critical === '!') {
+          throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
+        }
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    return calendar;
+  }
   function ParseISODateTime(isoString) {
     // ZDT is the superset of fields for every other Temporal type
     var match = zoneddatetime.exec(isoString);
@@ -8175,27 +8210,7 @@
       if (offset === '-00:00') offset = '+00:00';
     }
     var ianaName = match[19];
-    var annotations = match[20];
-    var calendar;
-    var _iterator = _createForOfIteratorHelper(annotations.matchAll(annotation)),
-      _step;
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var _step$value = _slicedToArray(_step.value, 4),
-          critical = _step$value[1],
-          key = _step$value[2],
-          value = _step$value[3];
-        if (key === 'u-ca') {
-          if (calendar === undefined) calendar = value;
-        } else if (critical === '!') {
-          throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
-        }
-      }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
-    }
+    var calendar = processAnnotations(match[20]);
     RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     return {
       year: year,
@@ -8232,7 +8247,7 @@
   }
   function ParseTemporalTimeString(isoString) {
     var match = time.exec(isoString);
-    var hour, minute, second, millisecond, microsecond, nanosecond, annotations;
+    var hour, minute, second, millisecond, microsecond, nanosecond;
     if (match) {
       hour = ToIntegerOrInfinity$1(match[1]);
       minute = ToIntegerOrInfinity$1(match[2] || match[5]);
@@ -8242,24 +8257,7 @@
       millisecond = ToIntegerOrInfinity$1(fraction.slice(0, 3));
       microsecond = ToIntegerOrInfinity$1(fraction.slice(3, 6));
       nanosecond = ToIntegerOrInfinity$1(fraction.slice(6, 9));
-      annotations = match[14];
-      var _iterator2 = _createForOfIteratorHelper(annotations.matchAll(annotation)),
-        _step2;
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _step2$value = _slicedToArray(_step2.value, 4),
-            critical = _step2$value[1],
-            key = _step2$value[2],
-            value = _step2$value[3];
-          if (key !== 'u-ca' && critical === '!') {
-            throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
-          }
-        }
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
-      }
+      processAnnotations(match[14]); // ignore found calendar
       if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
     } else {
       var z, hasTime;
@@ -8320,26 +8318,7 @@
       if (yearString === '-000000') throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
       year = ToIntegerOrInfinity$1(yearString);
       month = ToIntegerOrInfinity$1(match[2]);
-      var annotations = match[3];
-      var _iterator3 = _createForOfIteratorHelper(annotations.matchAll(annotation)),
-        _step3;
-      try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var _step3$value = _slicedToArray(_step3.value, 4),
-            critical = _step3$value[1],
-            key = _step3$value[2],
-            value = _step3$value[3];
-          if (key === 'u-ca') {
-            if (calendar === undefined) calendar = value;
-          } else if (critical === '!') {
-            throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
-          }
-        }
-      } catch (err) {
-        _iterator3.e(err);
-      } finally {
-        _iterator3.f();
-      }
+      calendar = processAnnotations(match[3]);
       if (calendar !== undefined && calendar !== 'iso8601') {
         throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
       }
@@ -8366,26 +8345,7 @@
     if (match) {
       month = ToIntegerOrInfinity$1(match[1]);
       day = ToIntegerOrInfinity$1(match[2]);
-      var annotations = match[3];
-      var _iterator4 = _createForOfIteratorHelper(annotations.matchAll(annotation)),
-        _step4;
-      try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          var _step4$value = _slicedToArray(_step4.value, 4),
-            critical = _step4$value[1],
-            key = _step4$value[2],
-            value = _step4$value[3];
-          if (key === 'u-ca') {
-            if (calendar === undefined) calendar = value;
-          } else if (critical === '!') {
-            throw new RangeError("Unrecognized annotation: !".concat(key, "=").concat(value));
-          }
-        }
-      } catch (err) {
-        _iterator4.e(err);
-      } finally {
-        _iterator4.f();
-      }
+      calendar = processAnnotations(match[3]);
       if (calendar !== undefined && calendar !== 'iso8601') {
         throw new RangeError('MM-DD format is only valid with iso8601 calendar');
       }
@@ -8655,19 +8615,19 @@
   }
   function ToLimitedTemporalDuration(item, disallowedProperties) {
     var record = ToTemporalDurationRecord(item);
-    var _iterator5 = _createForOfIteratorHelper(disallowedProperties),
-      _step5;
+    var _iterator2 = _createForOfIteratorHelper(disallowedProperties),
+      _step2;
     try {
-      for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-        var property = _step5.value;
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var property = _step2.value;
         if (record[property] !== 0) {
           throw new RangeError("Duration field ".concat(property, " not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead."));
         }
       }
     } catch (err) {
-      _iterator5.e(err);
+      _iterator2.e(err);
     } finally {
-      _iterator5.f();
+      _iterator2.f();
     }
     return record;
   }
@@ -9474,18 +9434,18 @@
     var fields = GetMethod$2(calendar, 'fields');
     fieldNames = Call$1(fields, calendar, [fieldNames]);
     var result = [];
-    var _iterator6 = _createForOfIteratorHelper(fieldNames),
-      _step6;
+    var _iterator3 = _createForOfIteratorHelper(fieldNames),
+      _step3;
     try {
-      for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-        var name = _step6.value;
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+        var name = _step3.value;
         if (Type$6(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
         Call$1(ArrayPrototypePush$4, result, [name]);
       }
     } catch (err) {
-      _iterator6.e(err);
+      _iterator3.e(err);
     } finally {
-      _iterator6.f();
+      _iterator3.f();
     }
     return result;
   }
@@ -10037,20 +9997,20 @@
     (_getPossibleInstantsF = getPossibleInstantsFor) !== null && _getPossibleInstantsF !== void 0 ? _getPossibleInstantsF : getPossibleInstantsFor = GetMethod$2(timeZone, 'getPossibleInstantsFor');
     var possibleInstants = Call$1(getPossibleInstantsFor, timeZone, [dateTime]);
     var result = [];
-    var _iterator7 = _createForOfIteratorHelper(possibleInstants),
-      _step7;
+    var _iterator4 = _createForOfIteratorHelper(possibleInstants),
+      _step4;
     try {
-      for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-        var instant = _step7.value;
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+        var instant = _step4.value;
         if (!IsTemporalInstant(instant)) {
           throw new TypeError('bad return from getPossibleInstantsFor');
         }
         Call$1(ArrayPrototypePush$4, result, [instant]);
       }
     } catch (err) {
-      _iterator7.e(err);
+      _iterator4.e(err);
     } finally {
-      _iterator7.f();
+      _iterator4.f();
     }
     return result;
   }
