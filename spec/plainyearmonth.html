@@ -628,7 +628,7 @@
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
-        1. Let _resolvedOptions_ be ? CopyOptions(_options_).
+        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~date~, &laquo; *"week"*, *"day"* &raquo;, *"month"*, *"year"*).
         1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
@@ -682,7 +682,7 @@
         1. Else,
           1. Let _date_ be _intermediateDate_.
         1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _optionsCopy_ be ? CopyOptions(_options_).
+        1. Let _optionsCopy_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _options_, _dateAdd_).
         1. Let _addedDateFields_ be ? PrepareTemporalFields(_addedDate_, _fieldNames_, «»).
         1. Return ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _optionsCopy_).
