@@ -666,8 +666,7 @@
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
-        1. Let _fieldsCopy_ be OrdinaryObjectCreate(*null*).
-        1. Perform ! CopyDataProperties(_fieldsCopy_, _fields_, «»).
+        1. Let _fieldsCopy_ be ! SnapshotOwnProperties(_fields_, *null*).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, *1*<sub>𝔽</sub>).
         1. Let _intermediateDate_ be ? CalendarDateFromFields(_calendar_, _fields_).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
