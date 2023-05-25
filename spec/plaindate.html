@@ -978,7 +978,7 @@
         1. If _operation_ is ~since~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalDate(_other_).
         1. If ? CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
-        1. Let _resolvedOptions_ be ? CopyOptions(_options_).
+        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~date~, &laquo; &raquo;, *"day"*, *"day"*).
         1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. Let _result_ be ? CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_, _other_, _resolvedOptions_).

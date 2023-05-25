@@ -150,27 +150,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-copyoptions" type="abstract operation">
-    <h1>
-      CopyOptions (
-        _options_: an ECMAScript language value,
-      ): either a normal completion containing an Object, or a throw completion
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd>
-        It returns an Object suitable for use with GetOption.
-        Unlike GetOptionsObject, it will never return the same Object as _options_ itself.
-        It always returns a new Object for which the value in its [[Prototype]] internal slot is *null* and every property is a data property.
-      </dd>
-    </dl>
-    <emu-alg>
-      1. Let _optionsCopy_ be OrdinaryObjectCreate(*null*).
-      1. Perform ? CopyDataProperties(_optionsCopy_, ? GetOptionsObject(_options_), &laquo; &raquo;).
-      1. Return _optionsCopy_.
-    </emu-alg>
-  </emu-clause>
-
   <!-- Copied from ECMA-402 GetOption -->
   <emu-clause id="sec-getoption" type="abstract operation">
     <h1>

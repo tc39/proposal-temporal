@@ -1421,7 +1421,7 @@
         1. Set _other_ to ? ToTemporalZonedDateTime(_other_).
         1. If ? CalendarEquals(_zonedDateTime_.[[Calendar]], _other_.[[Calendar]]) is *false*, then
           1. Throw a *RangeError* exception.
-        1. Let _resolvedOptions_ be ? CopyOptions(_options_).
+        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
         1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. If _settings_.[[LargestUnit]] is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
