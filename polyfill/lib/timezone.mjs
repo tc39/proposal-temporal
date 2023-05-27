@@ -20,20 +20,25 @@ import {
 } from './slots.mjs';
 
 export class TimeZone {
-  constructor(timeZoneIdentifier) {
+  constructor(identifier) {
     // Note: if the argument is not passed, GetCanonicalTimeZoneIdentifier(undefined) will throw.
     //       This check exists only to improve the error message.
     if (arguments.length < 1) {
       throw new RangeError('missing argument: identifier is required');
     }
 
-    timeZoneIdentifier = ES.GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
+    let stringIdentifier = ES.ToString(identifier);
+    if (ES.IsTimeZoneOffsetString(stringIdentifier)) {
+      stringIdentifier = ES.CanonicalizeTimeZoneOffsetString(stringIdentifier);
+    } else {
+      stringIdentifier = ES.GetCanonicalTimeZoneIdentifier(stringIdentifier);
+    }
     CreateSlots(this);
-    SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
+    SetSlot(this, TIMEZONE_ID, stringIdentifier);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${timeZoneIdentifier}>`,
+        value: `${this[Symbol.toStringTag]} <${stringIdentifier}>`,
         writable: false,
         enumerable: false,
         configurable: false
