@@ -248,7 +248,7 @@ const temporalSign = withCode(
 );
 const temporalDecimalFraction = fraction;
 function saveOffset(data, result) {
-  data.offset = ES.GetCanonicalTimeZoneIdentifier(result).toString();
+  data.offset = ES.CanonicalizeTimeZoneOffsetString(result);
 }
 const utcOffset = withCode(
   seq(
@@ -270,7 +270,7 @@ const timeZoneUTCOffsetName = seq(
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
-  (data, result) => (data.ianaName = result)
+  (data, result) => (data.tzName = result)
 );
 const timeZoneAnnotation = seq('[', [annotationCriticalFlag], timeZoneIdentifier, ']');
 const aKeyLeadingChar = choice(lcalpha(), character('_'));
@@ -447,9 +447,9 @@ const comparisonItems = {
   ],
   MonthDay: ['month', 'day', 'calendar'],
   Time: [...timeItems],
-  TimeZone: ['offset', 'ianaName'],
+  TimeZone: ['offset', 'tzName'],
   YearMonth: ['year', 'month', 'calendar'],
-  ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'ianaName', 'calendar']
+  ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'tzName', 'calendar']
 };
 const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];
 
@@ -465,7 +465,7 @@ function fuzzMode(mode) {
       const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
       for (let prop of comparisonItems[mode]) {
         let expected = generatedData[prop];
-        if (prop !== 'ianaName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
+        if (prop !== 'tzName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
         assert.equal(parsed[prop], expected, prop);
       }
       console.log(`${fuzzed} => ok`);
