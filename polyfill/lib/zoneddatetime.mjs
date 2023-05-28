@@ -444,12 +444,11 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
 
-    const optionsCopy = ObjectCreate(null);
     // This is not quite per specification, but this polyfill's DateTimeFormat
     // already doesn't match the InitializeDateTimeFormat operation, and the
     // access order might change anyway;
     // see https://github.com/tc39/ecma402/issues/747
-    ES.CopyDataProperties(optionsCopy, options, ['timeZone']);
+    const optionsCopy = ES.SnapshotOwnProperties(options, null, ['timeZone']);
 
     if (options.timeZone !== undefined) {
       throw new TypeError('ZonedDateTime toLocaleString does not accept a timeZone option');

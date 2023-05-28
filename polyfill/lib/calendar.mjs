@@ -111,12 +111,8 @@ export class Calendar {
   }
   mergeFields(fields, additionalFields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    fields = ES.ToObject(fields);
-    const fieldsCopy = ObjectCreate(null);
-    ES.CopyDataProperties(fieldsCopy, fields, [], [undefined]);
-    additionalFields = ES.ToObject(additionalFields);
-    const additionalFieldsCopy = ObjectCreate(null);
-    ES.CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
+    const fieldsCopy = ES.SnapshotOwnProperties(fields, null, [], [undefined]);
+    const additionalFieldsCopy = ES.SnapshotOwnProperties(additionalFields, null, [], [undefined]);
     const additionalKeys = ReflectOwnKeys(additionalFieldsCopy);
     const overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
     const merged = ObjectCreate(null);
