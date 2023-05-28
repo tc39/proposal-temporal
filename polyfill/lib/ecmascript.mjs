@@ -3815,7 +3815,7 @@ export function DifferenceISODateTime(
   const date1 = CreateTemporalDate(y1, mon1, d1, calendar);
   const date2 = CreateTemporalDate(y2, mon2, d2, calendar);
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-  const untilOptions = CopyOptions(options);
+  const untilOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   untilOptions.largestUnit = dateLargestUnit;
   const untilResult = CalendarDateUntil(calendar, date1, date2, untilOptions);
   const years = GetSlot(untilResult, YEARS);
@@ -3951,7 +3951,7 @@ export function DifferenceTemporalInstant(operation, instant, other, options) {
   const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalInstant(other);
 
-  const resolvedOptions = CopyOptions(options);
+  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'second');
 
   const onens = GetSlot(instant, EPOCHNANOSECONDS);
@@ -3986,7 +3986,7 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 
-  const resolvedOptions = CopyOptions(options);
+  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
   resolvedOptions.largestUnit = settings.largestUnit;
 
@@ -4026,7 +4026,7 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 
-  const resolvedOptions = CopyOptions(options);
+  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
 
   let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
@@ -4101,7 +4101,7 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
   const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalTime(other);
 
-  const resolvedOptions = CopyOptions(options);
+  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
 
   let { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = DifferenceTime(
@@ -4165,7 +4165,7 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between months');
 
-  const resolvedOptions = CopyOptions(options);
+  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
   resolvedOptions.largestUnit = settings.largestUnit;
 
@@ -4209,7 +4209,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 
-  const resolvedOptions = CopyOptions(options);
+  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
   resolvedOptions.largestUnit = settings.largestUnit;
 
@@ -4744,7 +4744,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
   const calendar = GetSlot(yearMonth, CALENDAR);
   const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
   const fields = PrepareTemporalFields(yearMonth, fieldNames, []);
-  const fieldsCopy = CopyOptions(fields);
+  const fieldsCopy = SnapshotOwnProperties(GetOptionsObject(fields), null);
   fields.day = 1;
   let startDate = CalendarDateFromFields(calendar, fields);
   const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -4759,7 +4759,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
     startDate = CalendarDateFromFields(calendar, fieldsCopy);
   }
   const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-  const optionsCopy = CopyOptions(options);
+  const optionsCopy = SnapshotOwnProperties(GetOptionsObject(options), null);
   const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, options, dateAdd);
   const addedDateFields = PrepareTemporalFields(addedDate, fieldNames, []);
 
@@ -5412,10 +5412,10 @@ export function GetOptionsObject(options) {
   throw new TypeError(`Options parameter must be an object, not ${options === null ? 'null' : `a ${typeof options}`}`);
 }
 
-function CopyOptions(options) {
-  const optionsCopy = ObjectCreate(null);
-  CopyDataProperties(optionsCopy, GetOptionsObject(options), []);
-  return optionsCopy;
+export function SnapshotOwnProperties(source, proto, excludedKeys = [], excludedValues = []) {
+  const copy = ObjectCreate(proto);
+  CopyDataProperties(copy, ToObject(source), excludedKeys, excludedValues);
+  return copy;
 }
 
 export function GetOption(options, property, allowedValues, fallback) {
