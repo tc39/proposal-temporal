@@ -154,7 +154,7 @@ If the time zone and offset are in conflict, then the `offset` option is used to
   See the documentation of `with()` for more details about why this option is used.
 - `'reject'`: Throw a `RangeError` if the offset is not valid for the provided date and time in the provided time zone.
 
-An example of why `offset` is needed is Brazil which permanently stopped using DST in 2019.
+An example of why `offset` is needed is Brazil's abolition of DST in 2019.
 This change meant that previously-stored values for 2020 and beyond might now be ambiguous.
 For details about problems like this and how to solve them with `offset`, see [Ambiguity Caused by Permanent Changes to a Time Zone Definition](./ambiguity.md#ambiguity-caused-by-permanent-changes-to-a-time-zone-definition).
 
@@ -764,12 +764,11 @@ For example, if a `Temporal.ZonedDateTime` is set to the "second" 1:30AM on a da
 Because the existing offset is valid for the new time, it will be retained so the result will be the "second" 1:45AM.
 However, if the existing offset is not valid for the new result (e.g. `.with({hour: 0})`), then the default behavior will change the offset to match the new local time in that time zone.
 
-Options on `with` behave identically to options on `from`, with only the following exceptions:
+If the `offset` option is set to `'ignore'` (or in very rare cases when `'prefer'` is used), then the object's current time zone and the `disambiguation` option determine the offset is used for times that are ambiguous due to DST and other time zone offset transitions.
+Otherwise, the `offset` option determines the offset during skipped or repeated clock times and the `disambiguation` option is ignored.
 
-- The default for `offset` is `'prefer'` to support the use case described above.
-- If the input's `timeZone` field is both provided and has a different ID than the current object, then the object's current `offsetNanoseconds` field will be ignored regardless of the `offset` option chosen.
-
-Please see the documentation of `from` for more details on options behavior.
+Other than the `offset` option behaviors noted above, options on `with` behave identically to options on `from`.
+See the documentation of `from` for more details on options behavior.
 
 Usage example:
 
@@ -794,6 +793,8 @@ This method is similar to `with`, but with a few important differences:
 - `withPlainTime` accepts strings, Temporal objects, or object property bags.
   `with` only accepts object property bags and does not accept strings nor `Temporal.PlainTime` objects because they can contain calendar information.
 - `withPlainTime` will default all missing time units to zero, while `with` will only change units that are present in the input object.
+- `withPlainTime` does not accept options like `disambiguation` or `offset`.
+  For fine-grained control, use `with`.
 
 If `plainTime` is a `Temporal.PlainTime` object, then this method returns the same result as `plainTime.toZonedDateTime({ plainTime: zonedDateTime, timeZone: zonedDateTime})` but can be easier to use, especially when chained to previous operations that return a `Temporal.ZonedDateTime`.
 
@@ -833,6 +834,8 @@ This method is similar to `with`, but with a few important differences:
 - `withPlainDate` accepts strings, Temporal objects, or object property bags.
   `with` only accepts object property bags and does not accept strings nor `Temporal.PlainDate` objects because they can contain calendar information.
 - `withPlainDate` will update all date units, while `with` only changes individual units that are present in the input, e.g. setting the `day` to `1` while leaving `month` and `year` unchanged.
+- `withPlainDate` does not accept options like `disambiguation` or `offset`.
+  For fine-grained control, use `with`.
 
 If `plainDate` is a `Temporal.PlainDate` object, then this method returns the same result as `plainDate.toZonedDateTime({ plainDate: zonedDateTime, timeZone: zonedDateTime})` but can be easier to use, especially when chained to previous operations that return a `Temporal.ZonedDateTime`.
 
