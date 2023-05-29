@@ -11451,7 +11451,7 @@
     var date1 = CreateTemporalDate(y1, mon1, d1, calendar);
     var date2 = CreateTemporalDate(y2, mon2, d2, calendar);
     var dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-    var untilOptions = CopyOptions(options);
+    var untilOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
     untilOptions.largestUnit = dateLargestUnit;
     var untilResult = CalendarDateUntil(calendar, date1, date2, untilOptions);
     var years = GetSlot(untilResult, YEARS);
@@ -11582,7 +11582,7 @@
   function DifferenceTemporalInstant(operation, instant, other, options) {
     var sign = operation === 'since' ? -1 : 1;
     other = ToTemporalInstant(other);
-    var resolvedOptions = CopyOptions(options);
+    var resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
     var settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'second');
     var onens = GetSlot(instant, EPOCHNANOSECONDS);
     var twons = GetSlot(other, EPOCHNANOSECONDS);
@@ -11602,7 +11602,7 @@
     var calendar = GetSlot(plainDate, CALENDAR);
     var otherCalendar = GetSlot(other, CALENDAR);
     ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
-    var resolvedOptions = CopyOptions(options);
+    var resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
     var settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
     resolvedOptions.largestUnit = settings.largestUnit;
     var untilResult = CalendarDateUntil(calendar, plainDate, other, resolvedOptions);
@@ -11626,7 +11626,7 @@
     var calendar = GetSlot(plainDateTime, CALENDAR);
     var otherCalendar = GetSlot(other, CALENDAR);
     ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
-    var resolvedOptions = CopyOptions(options);
+    var resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
     var settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
     var _DifferenceISODateTim3 = DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, settings.largestUnit, resolvedOptions),
       years = _DifferenceISODateTim3.years,
@@ -11665,7 +11665,7 @@
   function DifferenceTemporalPlainTime(operation, plainTime, other, options) {
     var sign = operation === 'since' ? -1 : 1;
     other = ToTemporalTime(other);
-    var resolvedOptions = CopyOptions(options);
+    var resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
     var settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
     var _DifferenceTime2 = DifferenceTime(GetSlot(plainTime, ISO_HOUR), GetSlot(plainTime, ISO_MINUTE), GetSlot(plainTime, ISO_SECOND), GetSlot(plainTime, ISO_MILLISECOND), GetSlot(plainTime, ISO_MICROSECOND), GetSlot(plainTime, ISO_NANOSECOND), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND)),
       hours = _DifferenceTime2.hours,
@@ -11697,7 +11697,7 @@
     var calendar = GetSlot(yearMonth, CALENDAR);
     var otherCalendar = GetSlot(other, CALENDAR);
     ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between months');
-    var resolvedOptions = CopyOptions(options);
+    var resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
     var settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
     resolvedOptions.largestUnit = settings.largestUnit;
     var fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
@@ -11724,7 +11724,7 @@
     var calendar = GetSlot(zonedDateTime, CALENDAR);
     var otherCalendar = GetSlot(other, CALENDAR);
     ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
-    var resolvedOptions = CopyOptions(options);
+    var resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
     var settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
     resolvedOptions.largestUnit = settings.largestUnit;
     var ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
@@ -12121,7 +12121,7 @@
     var calendar = GetSlot(yearMonth, CALENDAR);
     var fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
     var fields = PrepareTemporalFields(yearMonth, fieldNames, []);
-    var fieldsCopy = CopyOptions(fields);
+    var fieldsCopy = SnapshotOwnProperties(GetOptionsObject(fields), null);
     fields.day = 1;
     var startDate = CalendarDateFromFields(calendar, fields);
     var sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -12136,7 +12136,7 @@
       startDate = CalendarDateFromFields(calendar, fieldsCopy);
     }
     var durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-    var optionsCopy = CopyOptions(options);
+    var optionsCopy = SnapshotOwnProperties(GetOptionsObject(options), null);
     var addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, options, dateAdd);
     var addedDateFields = PrepareTemporalFields(addedDate, fieldNames, []);
     return CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
@@ -12712,10 +12712,12 @@
     if (Type$6(options) === 'Object') return options;
     throw new TypeError("Options parameter must be an object, not ".concat(options === null ? 'null' : "a ".concat(_typeof(options))));
   }
-  function CopyOptions(options) {
-    var optionsCopy = ObjectCreate$8(null);
-    CopyDataProperties(optionsCopy, GetOptionsObject(options), []);
-    return optionsCopy;
+  function SnapshotOwnProperties(source, proto) {
+    var excludedKeys = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+    var excludedValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+    var copy = ObjectCreate$8(proto);
+    CopyDataProperties(copy, ToObject$1(source), excludedKeys, excludedValues);
+    return copy;
   }
   function GetOption(options, property, allowedValues, fallback) {
     var value = options[property];
@@ -13495,12 +13497,8 @@
       key: "mergeFields",
       value: function mergeFields(fields, additionalFields) {
         if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-        fields = ToObject$1(fields);
-        var fieldsCopy = ObjectCreate$6(null);
-        CopyDataProperties(fieldsCopy, fields, [], [undefined]);
-        additionalFields = ToObject$1(additionalFields);
-        var additionalFieldsCopy = ObjectCreate$6(null);
-        CopyDataProperties(additionalFieldsCopy, additionalFields, [], [undefined]);
+        var fieldsCopy = SnapshotOwnProperties(fields, null, [], [undefined]);
+        var additionalFieldsCopy = SnapshotOwnProperties(additionalFields, null, [], [undefined]);
         var additionalKeys = ReflectOwnKeys(additionalFieldsCopy);
         var overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
         var merged = ObjectCreate$6(null);
@@ -18682,12 +18680,12 @@
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
         if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
         options = GetOptionsObject(options);
-        var optionsCopy = ObjectCreate(null);
+
         // This is not quite per specification, but this polyfill's DateTimeFormat
         // already doesn't match the InitializeDateTimeFormat operation, and the
         // access order might change anyway;
         // see https://github.com/tc39/ecma402/issues/747
-        CopyDataProperties(optionsCopy, options, ['timeZone']);
+        var optionsCopy = SnapshotOwnProperties(options, null, ['timeZone']);
         if (options.timeZone !== undefined) {
           throw new TypeError('ZonedDateTime toLocaleString does not accept a timeZone option');
         }
