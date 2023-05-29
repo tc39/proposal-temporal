@@ -8017,10 +8017,11 @@
   var DURATION_FIELDS = ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'];
   var IntlDateTimeFormatEnUsCache = new Map();
   function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
-    var instance = IntlDateTimeFormatEnUsCache.get(timeZoneIdentifier);
+    var lowercaseIdentifier = ASCIILowercase(timeZoneIdentifier);
+    var instance = IntlDateTimeFormatEnUsCache.get(lowercaseIdentifier);
     if (instance === undefined) {
       instance = new IntlDateTimeFormat$2('en-us', {
-        timeZone: String(timeZoneIdentifier),
+        timeZone: lowercaseIdentifier,
         hour12: false,
         era: 'short',
         year: 'numeric',
@@ -8030,7 +8031,7 @@
         minute: 'numeric',
         second: 'numeric'
       });
-      IntlDateTimeFormatEnUsCache.set(timeZoneIdentifier, instance);
+      IntlDateTimeFormatEnUsCache.set(lowercaseIdentifier, instance);
     }
     return instance;
   }
@@ -8115,16 +8116,22 @@
       throw new TypeError('with() does not support a timeZone property');
     }
   }
+  function CanonicalizeTimeZoneOffsetString(offsetString) {
+    var offsetNs = ParseTimeZoneOffsetString(offsetString);
+    return FormatTimeZoneOffsetString(offsetNs);
+  }
   function ParseTemporalTimeZone(stringIdent) {
     var _ParseTemporalTimeZon = ParseTemporalTimeZoneString(stringIdent),
-      ianaName = _ParseTemporalTimeZon.ianaName,
+      tzName = _ParseTemporalTimeZon.tzName,
       offset = _ParseTemporalTimeZon.offset,
       z = _ParseTemporalTimeZon.z;
-    if (ianaName) return GetCanonicalTimeZoneIdentifier(ianaName);
+    if (tzName) {
+      if (IsTimeZoneOffsetString(tzName)) return CanonicalizeTimeZoneOffsetString(tzName);
+      return GetCanonicalTimeZoneIdentifier(tzName);
+    }
     if (z) return 'UTC';
-    // if !ianaName && !z then offset must be present
-    var offsetNs = ParseTimeZoneOffsetString(offset);
-    return FormatTimeZoneOffsetString(offsetNs);
+    // if !tzName && !z then offset must be present
+    return CanonicalizeTimeZoneOffsetString(offset);
   }
   function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
     if (showCalendar === 'never') return '';
@@ -8209,7 +8216,7 @@
       }
       if (offset === '-00:00') offset = '+00:00';
     }
-    var ianaName = match[19];
+    var tzName = match[19];
     var calendar = processAnnotations(match[20]);
     RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     return {
@@ -8223,7 +8230,7 @@
       millisecond: millisecond,
       microsecond: microsecond,
       nanosecond: nanosecond,
-      ianaName: ianaName,
+      tzName: tzName,
       offset: offset,
       z: z,
       calendar: calendar
@@ -8236,7 +8243,7 @@
   }
   function ParseTemporalZonedDateTimeString(isoString) {
     var result = ParseISODateTime(isoString);
-    if (!result.ianaName) throw new RangeError('Temporal.ZonedDateTime requires a time zone ID in brackets');
+    if (!result.tzName) throw new RangeError('Temporal.ZonedDateTime requires a time zone ID in brackets');
     return result;
   }
   function ParseTemporalDateTimeString(isoString) {
@@ -8369,12 +8376,12 @@
   function ParseTemporalTimeZoneString(stringIdent) {
     var bareID = new RegExp("^".concat(timeZoneID.source, "$"), 'i');
     if (bareID.test(stringIdent)) return {
-      ianaName: stringIdent
+      tzName: stringIdent
     };
     try {
       // Try parsing ISO string instead
       var result = ParseISODateTime(stringIdent);
-      if (result.z || result.offset || result.ianaName) {
+      if (result.z || result.offset || result.tzName) {
         return result;
       }
     } catch (_unused3) {
@@ -8842,7 +8849,7 @@
       timeZone = fields.timeZone;
       if (timeZone !== undefined) timeZone = ToTemporalTimeZoneSlotValue(timeZone);
     } else {
-      var ianaName, z;
+      var tzName, z;
       var _ParseISODateTime4 = ParseISODateTime(ToString$1(relativeTo));
       year = _ParseISODateTime4.year;
       month = _ParseISODateTime4.month;
@@ -8854,11 +8861,11 @@
       microsecond = _ParseISODateTime4.microsecond;
       nanosecond = _ParseISODateTime4.nanosecond;
       calendar = _ParseISODateTime4.calendar;
-      ianaName = _ParseISODateTime4.ianaName;
+      tzName = _ParseISODateTime4.tzName;
       offset = _ParseISODateTime4.offset;
       z = _ParseISODateTime4.z;
-      if (ianaName) {
-        timeZone = ToTemporalTimeZoneSlotValue(ianaName);
+      if (tzName) {
+        timeZone = ToTemporalTimeZoneSlotValue(tzName);
         if (z) {
           offsetBehaviour = 'exact';
         } else if (!offset) {
@@ -9258,7 +9265,7 @@
       microsecond = _InterpretTemporalDat3.microsecond;
       nanosecond = _InterpretTemporalDat3.nanosecond;
     } else {
-      var ianaName, z;
+      var tzName, z;
       var _ParseTemporalZonedDa = ParseTemporalZonedDateTimeString(ToString$1(item));
       year = _ParseTemporalZonedDa.year;
       month = _ParseTemporalZonedDa.month;
@@ -9269,11 +9276,11 @@
       millisecond = _ParseTemporalZonedDa.millisecond;
       microsecond = _ParseTemporalZonedDa.microsecond;
       nanosecond = _ParseTemporalZonedDa.nanosecond;
-      ianaName = _ParseTemporalZonedDa.ianaName;
+      tzName = _ParseTemporalZonedDa.tzName;
       offset = _ParseTemporalZonedDa.offset;
       z = _ParseTemporalZonedDa.z;
       calendar = _ParseTemporalZonedDa.calendar;
-      timeZone = ToTemporalTimeZoneSlotValue(ianaName);
+      timeZone = ToTemporalTimeZoneSlotValue(tzName);
       if (z) {
         offsetBehaviour = 'exact';
       } else if (!offset) {
@@ -10214,10 +10221,10 @@
     return result;
   }
   function IsTimeZoneOffsetString(string) {
-    return OFFSET.test(String(string));
+    return OFFSET.test(string);
   }
   function ParseTimeZoneOffsetString(string) {
-    var match = OFFSET.exec(String(string));
+    var match = OFFSET.exec(string);
     if (!match) {
       throw new RangeError("invalid time zone offset: ".concat(string));
     }
@@ -10228,12 +10235,15 @@
     var nanoseconds = +((match[5] || 0) + '000000000').slice(0, 9);
     return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
   }
+
+  // In the spec, GetCanonicalTimeZoneIdentifier is infallible and is always
+  // preceded by a call to IsAvailableTimeZoneName. However in the polyfill,
+  // we don't (yet) have a way to check if a time zone ID is valid without
+  // also canonicalizing it. So we combine both operations into one function,
+  // which will return the canonical ID if the ID is valid, and will throw
+  // if it's not.
   function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
-    if (IsTimeZoneOffsetString(timeZoneIdentifier)) {
-      var offsetNs = ParseTimeZoneOffsetString(timeZoneIdentifier);
-      return FormatTimeZoneOffsetString(offsetNs);
-    }
-    var formatter = getIntlDateTimeFormatEnUsForTimeZone(String(timeZoneIdentifier));
+    var formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier);
     return formatter.resolvedOptions().timeZone;
   }
   function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {
@@ -17854,19 +17864,24 @@
   MakeIntrinsicClass(PlainTime, 'Temporal.PlainTime');
 
   var TimeZone = /*#__PURE__*/function () {
-    function TimeZone(timeZoneIdentifier) {
+    function TimeZone(identifier) {
       _classCallCheck(this, TimeZone);
       // Note: if the argument is not passed, GetCanonicalTimeZoneIdentifier(undefined) will throw.
       //       This check exists only to improve the error message.
       if (arguments.length < 1) {
         throw new RangeError('missing argument: identifier is required');
       }
-      timeZoneIdentifier = GetCanonicalTimeZoneIdentifier(timeZoneIdentifier);
+      var stringIdentifier = ToString$1(identifier);
+      if (IsTimeZoneOffsetString(stringIdentifier)) {
+        stringIdentifier = CanonicalizeTimeZoneOffsetString(stringIdentifier);
+      } else {
+        stringIdentifier = GetCanonicalTimeZoneIdentifier(stringIdentifier);
+      }
       CreateSlots(this);
-      SetSlot(this, TIMEZONE_ID, timeZoneIdentifier);
+      SetSlot(this, TIMEZONE_ID, stringIdentifier);
       {
         Object.defineProperty(this, '_repr_', {
-          value: "".concat(this[Symbol.toStringTag], " <").concat(timeZoneIdentifier, ">"),
+          value: "".concat(this[Symbol.toStringTag], " <").concat(stringIdentifier, ">"),
           writable: false,
           enumerable: false,
           configurable: false
