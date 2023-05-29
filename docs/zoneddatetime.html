@@ -388,7 +388,7 @@ This option is rarely used when calling <code>from()</code>.
 See the documentation of <code>with()</code> for more details about why this option is used.</li>
 <li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> if the offset is not valid for the provided date and time in the provided time zone.</li>
 </ul>
-<p>An example of why <code>offset</code> is needed is Brazil which permanently stopped using DST in 2019.
+<p>An example of why <code>offset</code> is needed is Brazil&#39;s abolition of DST in 2019.
 This change meant that previously-stored values for 2020 and beyond might now be ambiguous.
 For details about problems like this and how to solve them with <code>offset</code>, see <a href="./ambiguity.html#ambiguity-caused-by-permanent-changes-to-a-time-zone-definition">Ambiguity Caused by Permanent Changes to a Time Zone Definition</a>.</p>
 <p>The <code>offset</code> option is ignored if an offset is not present in the input.
@@ -792,12 +792,10 @@ This default prevents DST disambiguation from causing unexpected one-hour change
 For example, if a <code>Temporal.ZonedDateTime</code> is set to the &quot;second&quot; 1:30AM on a day where the 1-2AM clock hour is repeated after a backwards DST transition, then calling <code>.with({minute: 45})</code> will result in an ambiguity which is resolved using the default <code>offset: &#39;prefer&#39;</code> option.
 Because the existing offset is valid for the new time, it will be retained so the result will be the &quot;second&quot; 1:45AM.
 However, if the existing offset is not valid for the new result (e.g. <code>.with({hour: 0})</code>), then the default behavior will change the offset to match the new local time in that time zone.</p>
-<p>Options on <code>with</code> behave identically to options on <code>from</code>, with only the following exceptions:</p>
-<ul>
-<li>The default for <code>offset</code> is <code>&#39;prefer&#39;</code> to support the use case described above.</li>
-<li>If the input&#39;s <code>timeZone</code> field is both provided and has a different ID than the current object, then the object&#39;s current <code>offsetNanoseconds</code> field will be ignored regardless of the <code>offset</code> option chosen.</li>
-</ul>
-<p>Please see the documentation of <code>from</code> for more details on options behavior.</p>
+<p>If the <code>offset</code> option is set to <code>&#39;ignore&#39;</code> (or in very rare cases when <code>&#39;prefer&#39;</code> is used), then the object&#39;s current time zone and the <code>disambiguation</code> option determine the offset is used for times that are ambiguous due to DST and other time zone offset transitions.
+Otherwise, the <code>offset</code> option determines the offset during skipped or repeated clock times and the <code>disambiguation</code> option is ignored.</p>
+<p>Other than the <code>offset</code> option behaviors noted above, options on <code>with</code> behave identically to options on <code>from</code>.
+See the documentation of <code>from</code> for more details on options behavior.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1995-12-07T03:24:00-06:00[America/Chicago]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zdt<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2015</span><span class="token punctuation">,</span> <span class="token literal-property property">minute</span><span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2015-12-07T03:31:00-06:00[America/Chicago]</span></code></pre><h3 id="withPlainTime"><a class="heading-link" href="#withPlainTime"></a>zonedDateTime.<strong>withPlainTime</strong>(<em>plainTime</em>?: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
@@ -812,6 +810,8 @@ If omitted, the clock time of the result will be <code>00:00:00</code>.</li>
 <li><code>withPlainTime</code> accepts strings, Temporal objects, or object property bags.
 <code>with</code> only accepts object property bags and does not accept strings nor <code>Temporal.PlainTime</code> objects because they can contain calendar information.</li>
 <li><code>withPlainTime</code> will default all missing time units to zero, while <code>with</code> will only change units that are present in the input object.</li>
+<li><code>withPlainTime</code> does not accept options like <code>disambiguation</code> or <code>offset</code>.
+For fine-grained control, use <code>with</code>.</li>
 </ul>
 <p>If <code>plainTime</code> is a <code>Temporal.PlainTime</code> object, then this method returns the same result as <code>plainTime.toZonedDateTime({ plainTime: zonedDateTime, timeZone: zonedDateTime})</code> but can be easier to use, especially when chained to previous operations that return a <code>Temporal.ZonedDateTime</code>.</p>
 <p>Usage example:</p>
@@ -839,6 +839,8 @@ To resolve the error, first convert one of the instances to the same calendar or
 <li><code>withPlainDate</code> accepts strings, Temporal objects, or object property bags.
 <code>with</code> only accepts object property bags and does not accept strings nor <code>Temporal.PlainDate</code> objects because they can contain calendar information.</li>
 <li><code>withPlainDate</code> will update all date units, while <code>with</code> only changes individual units that are present in the input, e.g. setting the <code>day</code> to <code>1</code> while leaving <code>month</code> and <code>year</code> unchanged.</li>
+<li><code>withPlainDate</code> does not accept options like <code>disambiguation</code> or <code>offset</code>.
+For fine-grained control, use <code>with</code>.</li>
 </ul>
 <p>If <code>plainDate</code> is a <code>Temporal.PlainDate</code> object, then this method returns the same result as <code>plainDate.toZonedDateTime({ plainDate: zonedDateTime, timeZone: zonedDateTime})</code> but can be easier to use, especially when chained to previous operations that return a <code>Temporal.ZonedDateTime</code>.</p>
 <p>Usage example:</p>
