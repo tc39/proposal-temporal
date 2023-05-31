@@ -5182,10 +5182,10 @@ export function RoundDuration(
   relativeTo = undefined
 ) {
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-  let calendar, zdtRelative;
+  let calendar, zonedRelativeTo;
   if (relativeTo) {
     if (IsTemporalZonedDateTime(relativeTo)) {
-      zdtRelative = relativeTo;
+      zonedRelativeTo = relativeTo;
       relativeTo = ToTemporalDate(relativeTo);
     } else if (!IsTemporalDate(relativeTo)) {
       throw new TypeError('starting point must be PlainDate or ZonedDateTime');
@@ -5199,8 +5199,8 @@ export function RoundDuration(
   if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
     nanoseconds = TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
     let deltaDays;
-    if (zdtRelative) {
-      const intermediate = MoveRelativeZonedDateTime(zdtRelative, years, months, weeks, days);
+    if (zonedRelativeTo) {
+      const intermediate = MoveRelativeZonedDateTime(zonedRelativeTo, years, months, weeks, days);
       ({ days: deltaDays, nanoseconds, dayLengthNs } = NanosecondsToDays(nanoseconds, intermediate));
     } else {
       ({ quotient: deltaDays, remainder: nanoseconds } = nanoseconds.divmod(DAY_NANOS));
