@@ -816,7 +816,8 @@
           1. If _mid_.[[Month]] = _end_.[[Month]], then
             1. Assert: _mid_.[[Year]] = _end_.[[Year]].
             1. Let _days_ be _end_.[[Day]] - _mid_.[[Day]].
-          1. Else if _sign_ &lt; 0, let _days_ be -_mid_.[[Day]] - (ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
+          1. Else,
+            1. If _sign_ &lt; 0, let _days_ be -_mid_.[[Day]] - (ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
           1. Else, let _days_ be _end_.[[Day]] + (ISODaysInMonth(_mid_.[[Year]], _mid_.[[Month]]) - _mid_.[[Day]]).
           1. If _largestUnit_ is *"month"*, then
             1. Set _months_ to _months_ + _years_ &times; 12.
