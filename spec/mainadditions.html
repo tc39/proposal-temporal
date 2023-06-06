@@ -251,7 +251,8 @@
           1. If _numberOfArgs_ > 4, let _min_ be ? ToNumber(_values_[4]); else let _min_ be *+0*<sub>𝔽</sub>.
           1. If _numberOfArgs_ > 5, let _s_ be ? ToNumber(_values_[5]); else let _s_ be *+0*<sub>𝔽</sub>.
           1. If _numberOfArgs_ > 6, let _milli_ be ? ToNumber(_values_[6]); else let _milli_ be *+0*<sub>𝔽</sub>.
-          1. If _y_ is *NaN*, let _yr_ be *NaN*.
+          1. If _y_ is *NaN*, then
+            1. Let _yr_ be *NaN*.
           1. Else,
             1. Let _yi_ be ! ToIntegerOrInfinity(_y_).
             1. If 0 ≤ _yi_ ≤ 99, let _yr_ be *1900*<sub>𝔽</sub> + 𝔽(_yi_); otherwise, let _yr_ be _y_.
