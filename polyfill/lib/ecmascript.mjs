@@ -5424,7 +5424,7 @@ export function GetOptionsObject(options) {
 
 export function SnapshotOwnProperties(source, proto, excludedKeys = [], excludedValues = []) {
   const copy = ObjectCreate(proto);
-  CopyDataProperties(copy, ToObject(source), excludedKeys, excludedValues);
+  CopyDataProperties(copy, source, excludedKeys, excludedValues);
   return copy;
 }
 
