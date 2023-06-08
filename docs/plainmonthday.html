@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalplainmonthday">Temporal.PlainMonthDay</h1>
-<details>
+<h1 id="temporalplainmonthday"><a class="heading-link" href="#temporalplainmonthday"></a>Temporal.PlainMonthDay</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#constructor">Constructor</a>
@@ -195,8 +194,7 @@
 For example, it could be used to represent a yearly recurring event, like &quot;Bastille Day is on the 14th of July.&quot;</p>
 <p>If you need to refer to a certain instance of a calendar event, in a particular year, use <code>Temporal.PlainDate</code> or even <code>Temporal.PlainDateTime</code>.
 A <code>Temporal.PlainMonthDay</code> can be converted into a <code>Temporal.PlainDate</code> by combining it with a year, using the <code>toPlainDate()</code> method.</p>
-<h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-PlainMonthDay"><a class="heading-link" href="#new-Temporal-PlainMonthDay"></a><strong>new Temporal.PlainMonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>: string | object = &quot;iso8601&quot;, <em>referenceISOYear</em>: number = 1972) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
+<h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-PlainMonthDay"><a class="heading-link" href="#new-Temporal-PlainMonthDay"></a><strong>new Temporal.PlainMonthDay</strong>(<em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>: string | object = &quot;iso8601&quot;, <em>referenceISOYear</em>: number = 1972) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
 <li><code>isoDay</code> (number): A day of the month, ranging between 1 and 31 inclusive.</li>
@@ -224,8 +222,7 @@ Use an object if you need to supply <a href="./calendar.html#custom-calendars">c
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Pi day</span>
 md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainMonthDay</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 03-14</span>
 <span class="token comment">// Leap day</span>
-md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainMonthDay</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 02-29</span></code></pre><h2 id="static-methods">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainMonthDay.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
+md <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainMonthDay</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">29</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 02-29</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainMonthDay.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired date.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date.
@@ -298,8 +295,7 @@ md <span class="token operator">=</span> Temporal<span class="token punctuation"
 md<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => 'M05L'</span>
 md<span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 15</span>
 md<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// undefined</span>
-<span class="token comment">// (month property is not present in this type; use monthCode instead)</span></code></pre><h2 id="properties">Properties</h2>
-<h3 id="monthCode"><a class="heading-link" href="#monthCode"></a>monthDay.<strong>monthCode</strong> : string</h3><h3 id="day"><a class="heading-link" href="#day"></a>monthDay.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
+<span class="token comment">// (month property is not present in this type; use monthCode instead)</span></code></pre><h2 id="properties"><a class="heading-link" href="#properties"></a>Properties</h3><h3 id="monthCode"><a class="heading-link" href="#monthCode"></a>monthDay.<strong>monthCode</strong> : string</h3><h3 id="day"><a class="heading-link" href="#day"></a>monthDay.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of the date individually.</p>
 <ul>
 <li><code>monthCode</code> is a calendar-specific string that identifies the month in a year-independent way.
 For common (non-leap) months, <code>monthCode</code> should be <code> </code> <code>M${month}</code> <code> </code>, where <code>month</code> is zero padded up to two digits.
@@ -322,8 +318,7 @@ md<span class="token punctuation">.</span>day<span class="token punctuation">;</
 md<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => undefined</span>
 <span class="token comment">// (no `month` property; use `monthCode` instead)</span></code></pre><h3 id="calendarId"><a class="heading-link" href="#calendarId"></a>monthDay.<strong>calendarId</strong> : object</h3><p>The <code>calendarId</code> read-only property gives the calendar that the <code>monthCode</code> and <code>day</code> properties are interpreted in.
 If <code>monthDay</code> was created with a custom calendar object, this gives the <code>id</code> property of that object.</p>
-<h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>options</em>?: object) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
+<h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>options</em>?: object) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>monthDayLike</code> (object): an object with some or all of the properties that are accepted by <code>Temporal.PlainMonthDay.from</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.

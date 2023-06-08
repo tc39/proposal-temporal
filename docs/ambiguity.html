@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="time-zones-and-resolving-ambiguity">Time Zones and Resolving Ambiguity</h1>
-<details>
+<h1 id="time-zones-and-resolving-ambiguity"><a class="heading-link" href="#time-zones-and-resolving-ambiguity"></a>Time Zones and Resolving Ambiguity</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#understanding-clock-time-vs-exact-time">Understanding Clock Time vs. Exact Time</a>
@@ -163,8 +162,7 @@
 </ul>
 </details>
 
-<h2 id="understanding-clock-time-vs-exact-time">Understanding Clock Time vs. Exact Time</h2>
-<p>The core concept in Temporal is the distinction between <strong>wall-clock time</strong> (also called &quot;local time&quot; or &quot;clock time&quot;) which depends on the time zone of the clock and <strong>exact time</strong> (also called &quot;UTC time&quot;) which is the same everywhere.</p>
+<h2 id="understanding-clock-time-vs-exact-time"><a class="heading-link" href="#understanding-clock-time-vs-exact-time"></a>Understanding Clock Time vs. Exact Time</h3><p>The core concept in Temporal is the distinction between <strong>wall-clock time</strong> (also called &quot;local time&quot; or &quot;clock time&quot;) which depends on the time zone of the clock and <strong>exact time</strong> (also called &quot;UTC time&quot;) which is the same everywhere.</p>
 <p>Wall-clock time is controlled by local governmental authorities, so it can abruptly change.
 When Daylight Saving Time (DST) starts or if a country moves to another time zone, then local clocks will instantly change.
 Exact time however has a consistent global definition and is represented by a special time zone called <a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a> (from Wikipedia):</p>
@@ -184,8 +182,7 @@ For example, <code>Temporal.Instant</code> (an exact-time type) can be construct
 This most often refers to an exact time represented by the number of seconds since Unix epoch.
 Temporal avoids using this terminology, however, because of historical ambiguity surrounding the term &quot;timestamp&quot;.
 For example, many databases have a type called <code>TIMESTAMP</code>, but its meaning varies: in <a href="https://dev.mysql.com/doc/refman/8.0/en/datetime.html">MySQL</a>, it is an exact time; in <a href="https://docs.oracle.com/cd/B19306_01/server.102/b14225/ch4datetime.htm#i1006050">Oracle Database</a>, it is the number of seconds since the <em>wall-clock time</em> January 1, 1970 (a quantity one might call a &quot;local timestamp&quot;); and in <a href="https://docs.microsoft.com/en-us/answers/questions/238819/purpose-to-use-timestamp-datatype-in-sql-server.html">Microsoft SQL Server</a>, it is a monotonically increasing value unrelated to date and time.</p>
-<h2 id="understanding-time-zones-offset-changes-and-dst">Understanding Time Zones, Offset Changes, and DST</h2>
-<p>A <strong>Time Zone</strong> defines the rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See <a href="#ambiguity-due-to-dst-or-other-time-zone-offset-changes">below</a> for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)</p>
+<h2 id="understanding-time-zones-offset-changes-and-dst"><a class="heading-link" href="#understanding-time-zones-offset-changes-and-dst"></a>Understanding Time Zones, Offset Changes, and DST</h3><p>A <strong>Time Zone</strong> defines the rules that control how local wall-clock time relates to UTC. You can think of a time zone as a function that accepts an exact time and returns a UTC offset, and a corresponding function for conversions in the opposite direction. (See <a href="#ambiguity-due-to-dst-or-other-time-zone-offset-changes">below</a> for why exact → local conversions are 1:1, but local → exact conversions can be ambiguous.)</p>
 <p>Temporal uses the <a href="https://en.wikipedia.org/wiki/Tz_database"><strong>IANA Time Zone Database</strong></a> (or &quot;TZ database&quot;), which you can think of as a global repository of time zone functions. Each IANA time zone has:</p>
 <ul>
 <li>A <strong>time zone ID</strong> that usually refers to a geographic area anchored by a city (e.g. <code>Europe/Paris</code> or <code>Africa/Kampala</code>) but can also denote single-offset time zones like <code>UTC</code> (a consistent <code>+00:00</code> offset) or <code>Etc/GMT+5</code> (which for historical reasons is a negative offset <code>-05:00</code>).</li>
@@ -196,8 +193,7 @@ Offsets can also change permanently due to political changes, e.g. a country swi
 <p>The TZ database is updated several times per year in response to political changes around the world.
 Each update contains changes to time zone definitions.
 These changes usually affect only future date/time values, but occasionally fixes are made to past ranges too, for example when new historical sources are discovered about early-20th century timekeeping.</p>
-<h2 id="wall-clock-time-exact-time-and-time-zones-in-temporal">Wall-Clock Time, Exact Time, and Time Zones in Temporal</h2>
-<p>In Temporal:</p>
+<h2 id="wall-clock-time-exact-time-and-time-zones-in-temporal"><a class="heading-link" href="#wall-clock-time-exact-time-and-time-zones-in-temporal"></a>Wall-Clock Time, Exact Time, and Time Zones in Temporal</h3><p>In Temporal:</p>
 <ul>
 <li>The <a href="./instant.html"><code>Temporal.Instant</code></a> type represents exact time only.</li>
 <li>The <a href="./plaindatetime.html"><code>Temporal.PlainDateTime</code></a> type represents calendar date and wall-clock time, as do other narrower types: <a href="./plaindate.html"><code>Temporal.PlainDate</code></a>, <a href="./plaintime.html"><code>Temporal.PlainTime</code></a>, <a href="./plainyearmonth.html"><code>Temporal.PlainYearMonth</code></a>, and <a href="./plainmonthday.html"><code>Temporal.PlainMonthDay</code></a>.
@@ -261,8 +257,7 @@ epochNano <span class="token operator">=</span> inst<span class="token punctuati
 epochMilli <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480000</span>
 epochSecs <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="ambiguity-due-to-dst-or-other-time-zone-offset-changes">Ambiguity Due to DST or Other Time Zone Offset Changes</h2>
-<p>Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be <strong>time ambiguity</strong> where it&#39;s not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible UTC times for one clock time.</p>
+<h2 id="ambiguity-due-to-dst-or-other-time-zone-offset-changes"><a class="heading-link" href="#ambiguity-due-to-dst-or-other-time-zone-offset-changes"></a>Ambiguity Due to DST or Other Time Zone Offset Changes</h3><p>Usually, a time zone definition provides a bidirectional 1:1 mapping between any particular local date and clock time and its corresponding UTC date and time. However, near a time zone offset transition there can be <strong>time ambiguity</strong> where it&#39;s not clear what offset should be used to convert a wall-clock time into an exact time. This ambiguity leads to two possible UTC times for one clock time.</p>
 <ul>
 <li>When offsets change in a backward direction, the same clock time will be repeated.
 For example, 1:30AM happened twice on Sunday, 4 November 2018 in California.
@@ -278,8 +273,7 @@ When the clock advanced from 1:59AM to 2:00AM, local time immediately skipped to
 To avoid errors in this one-hour-per year case, most computing environments (including ECMAScript) will convert skipped clock times to exact times using either the offset before the transition or the offset after the transition.</li>
 </ul>
 <p>In both cases, resolving the ambiguity when converting the local time into exact time requires choosing which of two possible offsets to use, or deciding to throw an exception.</p>
-<h2 id="resolving-time-ambiguity-in-temporal">Resolving Time Ambiguity in Temporal</h2>
-<p>In <code>Temporal</code>, if the exact time or time zone offset is known, then there is no ambiguity possible. For example:</p>
+<h2 id="resolving-time-ambiguity-in-temporal"><a class="heading-link" href="#resolving-time-ambiguity-in-temporal"></a>Resolving Time Ambiguity in Temporal</h3><p>In <code>Temporal</code>, if the exact time or time zone offset is known, then there is no ambiguity possible. For example:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// No ambiguity possible because source is exact time in UTC</span>
 inst <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T17:35:24.485Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -332,8 +326,7 @@ This mode also matches the behavior of cross-platform standards like <a href="ht
 <li><a href="./plaindatetime.html#toZonedDateTime"><code>Temporal.PlainDateTime.prototype.toZonedDateTime</code></a></li>
 <li><a href="./timezone.html#getInstantFor"><code>Temporal.TimeZone.prototype.getInstantFor</code></a>.</li>
 </ul>
-<h2 id="examples-dst-disambiguation">Examples: DST Disambiguation</h2>
-<blockquote>
+<h2 id="examples-dst-disambiguation"><a class="heading-link" href="#examples-dst-disambiguation"></a>Examples: DST Disambiguation</h3><blockquote>
 <p>This explanation was adapted from the <a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone documentation</a>.</p>
 </blockquote>
 <p>When entering DST, clocks move forward an hour.
@@ -398,8 +391,7 @@ later<span class="token punctuation">.</span><span class="token function">since<
   <span class="token comment">// => PT1H</span>
   <span class="token comment">// ... but 1 hour later in real-world time)</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="ambiguity-caused-by-permanent-changes-to-a-time-zone-definition">Ambiguity Caused by Permanent Changes to a Time Zone Definition</h2>
-<p>Time zone definitions can change.
+<h2 id="ambiguity-caused-by-permanent-changes-to-a-time-zone-definition"><a class="heading-link" href="#ambiguity-caused-by-permanent-changes-to-a-time-zone-definition"></a>Ambiguity Caused by Permanent Changes to a Time Zone Definition</h3><p>Time zone definitions can change.
 Almost always these changes are forward-looking so don&#39;t affect historical data.
 But computers sometimes store data about the future!
 For example, a calendar app might record that a user wants to be reminded of a friend&#39;s birthday next year.</p>
@@ -425,8 +417,7 @@ Because the existing offset is valid for the new time, it will be retained so th
 However, if the existing offset is not valid for the new result (e.g. <code>.with({hour: 0})</code>), then the default behavior will change the offset to match the new local time in that time zone.</p>
 <p>Note that offset vs. timezone conflicts only matter for <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a> because no other Temporal type accepts both an IANA time zone and a time zone offset as an input to any method.
 For example, <a href="./instant.html#from"><code>Temporal.Instant.from</code></a> will never run into conflicts because the <a href="./instant.html"><code>Temporal.Instant</code></a> type ignores the time zone in the input and only uses the offset.</p>
-<h2 id="examples-offset-option">Examples: <code>offset</code> option</h2>
-<p>The primary reason to use the <code>offset</code> option is for parsing values which were saved before a change to that time zone&#39;s time zone definition.
+<h2 id="examples-offset-option"><a class="heading-link" href="#examples-offset-option"></a>Examples: <code>offset</code> option</h3><p>The primary reason to use the <code>offset</code> option is for parsing values which were saved before a change to that time zone&#39;s time zone definition.
 For example, Brazil stopped observing Daylight Saving Time in 2019, with the final transition out of DST on February 16, 2019.
 The change to stop DST permanently was announced in April 2019.
 Now imagine that an app running in 2018 (before these changes were announced) had saved a far-future time in a string format that contained both offset and IANA time zone.

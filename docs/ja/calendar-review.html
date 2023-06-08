@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,11 +140,9 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporal-におけるカレンダーシステムのサポート">Temporal におけるカレンダーシステムのサポート</h1>
-<p><a href="https://github.com/tc39/proposal-temporal/">ECMAScript Temporal</a>は、ECMAScript における新しい日時 API です。ECMAScript は世界中のユーザーに向けて設計されているため、高品質な国際化サポートを設計目標としています。</p>
+<h1 id="temporal-におけるカレンダーシステムのサポート"><a class="heading-link" href="#temporal-におけるカレンダーシステムのサポート"></a>Temporal におけるカレンダーシステムのサポート</h3><p><a href="https://github.com/tc39/proposal-temporal/">ECMAScript Temporal</a>は、ECMAScript における新しい日時 API です。ECMAScript は世界中のユーザーに向けて設計されているため、高品質な国際化サポートを設計目標としています。</p>
 <p>このドキュメントでは、Temporal がなぜ / どのようにしてカレンダーシステムをサポートするのか、そして開発者が遭遇するかもしれないカレンダーに関する問題と、それを回避する方法について説明します。前半の節では、Temporal でカレンダーシステムをサポートするに至った経緯を説明します。後半の節では、過去に検討されたカレンダーシステムの設計について説明し、なぜそれらではなく現在のアプローチが選択されたのかを説明します。</p>
-<h2 id="背景とモチベーション">背景とモチベーション</h2>
-<p>カレンダーシステムは、「特定の時刻」と「年、月、日といった人間が読みやすい数値」を対応付ける方法を提供します。</p>
+<h2 id="背景とモチベーション"><a class="heading-link" href="#背景とモチベーション"></a>背景とモチベーション</h3><p>カレンダーシステムは、「特定の時刻」と「年、月、日といった人間が読みやすい数値」を対応付ける方法を提供します。</p>
 <p>世界中で多く使用されているのはグレゴリオ暦です。ここでは太陽暦、月、日が使われ、これらの値は季節に同期します。しかし世界中には、その他のカレンダーシステムを存在しています。有名なものでは、ユダヤ暦、ヒジュラ暦、仏滅紀元、ヒンドゥー暦、中国暦、和暦、そしてエチオピア暦などです。</p>
 <p>今日はグレゴリオ暦で&quot;March 4, 2021&quot;ですが、その他のカレンダーでは次のように表されます。</p>
 <!-- prettier-ignore-start -->
@@ -209,8 +207,7 @@ inFourMonths<span class="token punctuation">.</span><span class="token function"
 date<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>inFourMonths<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">largestUnit</span><span class="token operator">:</span> <span class="token string">'month'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P4M</span></code></pre><p>定義より、年、月、日から bag of fields（訳注：コンストラクタに与える日付の情報を含んだオブジェクトのこと）を生成するにはカレンダーシステムを指定する必要があります。</p>
 <p>そのような際にカレンダーシステムが指定されていない場合、Temporal は ISO カレンダーが省略されているものとみなします。これは、Temporal がカレンダーの省略を想定する唯一の場所です。</p>
 <pre class="language-javascript"><code class="language-javascript">Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2019</span><span class="token punctuation">,</span> <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">28</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>次の Temporal タイプはすべて内部にカレンダーを持っています：<code>Temporal.ZonedDateTime</code>、<code>Temporal.PlainDateTime</code>、<code>Temporal.PlainDate</code>、<code>Temporal.PlainYearMonth</code>、<code>Temporal.PlainMonthDay</code></p>
-<h2 id="予期しないカレンダーの問題">予期しないカレンダーの問題</h2>
-<p>Temporal の多くの日付操作においてカレンダーを意識することは、世界中の多くのアプリケーション利用者にとって重要です。しかし、これは新しい問題を引き起こします：もし、コードが特定のカレンダーを想定して作られている場合、予期していないカレンダーの日付を扱おうとするとバグが発生します。このバグは、悪意を持って利用されてしまうかもしれません。</p>
+<h2 id="予期しないカレンダーの問題"><a class="heading-link" href="#予期しないカレンダーの問題"></a>予期しないカレンダーの問題</h3><p>Temporal の多くの日付操作においてカレンダーを意識することは、世界中の多くのアプリケーション利用者にとって重要です。しかし、これは新しい問題を引き起こします：もし、コードが特定のカレンダーを想定して作られている場合、予期していないカレンダーの日付を扱おうとするとバグが発生します。このバグは、悪意を持って利用されてしまうかもしれません。</p>
 <p>この節では、私達が「予期しないカレンダーの問題（Unexpected Calendar Problem）」と呼んでいるものについて説明し、それをユーザーランドのコードで軽減する方法も説明します。</p>
 <h3 id="問題の定義"><a class="heading-link" href="#問題の定義"></a>問題の定義</h3><p>以下はこの問題の典型的な例です：一年の最後の日かどうかを判定する関数があります。これは、1 年が 12 ヶ月で、1 年の最後の月の長さが 31 日であることを想定しています。</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">isLastDayOfYear</span><span class="token punctuation">(</span><span class="token parameter">date</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -231,8 +228,7 @@ hebrewNewYearsEve <span class="token operator">=</span> Temporal<span class="tok
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">isLastDayOfYear</span><span class="token punctuation">(</span>hebrewNewYearsEve<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span>
 <span class="token comment">// （trueとなるべき）</span></code></pre><h3 id="予期しないカレンダーの問題を緩和する方法"><a class="heading-link" href="#予期しないカレンダーの問題を緩和する方法"></a>予期しないカレンダーの問題を緩和する方法</h3><p>この問題を回避する方法は 2 つあります。ベストプラクティスは、どのようなカレンダーにも対応できる、カレンダーセーフなコードを書くことです。もう 1 つの方法は、カレンダーのバリデーションや変換処理を実装することです。これにより、対応しているカレンダーの日付のみを処理できるようになります。</p>
-<h4 id="カレンダーセーフなコードを書く">カレンダーセーフなコードを書く</h4>
-<p>予期しないカレンダーの問題を回避する最も良い方法は、ビルトインのすべてのカレンダーに対応する、カレンダーセーフなコードを書くことです。例えば上記のコードに関しては、ISO カレンダーの定数をハードコーディングする代わりに<code>monthsInYear</code>や<code>daysInMonth</code>を用いることで、簡単にカレンダーセーフなコードに書き換えられます。開発者は、<a href="https://tc39.es/proposal-temporal/docs/calendar.html#writing-cross-calendar-code">カレンダーセーフな Temporal コードを書くためのベストプラクティス</a>にしたがうことで、すべてのビルトインカレンダーで動作するコードを書くことができます。</p>
+<h4 id="カレンダーセーフなコードを書く"><a class="heading-link" href="#カレンダーセーフなコードを書く"></a>カレンダーセーフなコードを書く</h3><p>予期しないカレンダーの問題を回避する最も良い方法は、ビルトインのすべてのカレンダーに対応する、カレンダーセーフなコードを書くことです。例えば上記のコードに関しては、ISO カレンダーの定数をハードコーディングする代わりに<code>monthsInYear</code>や<code>daysInMonth</code>を用いることで、簡単にカレンダーセーフなコードに書き換えられます。開発者は、<a href="https://tc39.es/proposal-temporal/docs/calendar.html#writing-cross-calendar-code">カレンダーセーフな Temporal コードを書くためのベストプラクティス</a>にしたがうことで、すべてのビルトインカレンダーで動作するコードを書くことができます。</p>
 <p>ドキュメントに記載がある以外にも、Temporal API そのものが、カレンダーセーフなコードを書きやすいように既に設計されています。例えば：</p>
 <ul>
 <li>ISO を含むすべてのビルトインカレンダーは、<code>year</code>、<code>month</code>、<code>day</code>、<code>monthCode</code>といった、日付に関する共通したフィールドを持っています。これらのフィールドに関する操作は、すべてのビルトインカレンダーで共通です。</li>
@@ -242,14 +238,12 @@ hebrewNewYearsEve <span class="token operator">=</span> Temporal<span class="tok
 <li>暗黙的なデフォルトのカレンダーシステムはありません。開発者はどのカレンダーシステムを用いるのかを明示的に指定しなければならず、ISO に関するショートカットのためのメソッド名には、わかりやすいように接尾辞がついています（例：<code>Temporal.now.zonedDateTimeISO()</code>。</li>
 <li>Temporal はユーザーの環境からカレンダーを推測しません。どのカレンダーシステムを使用するかは、アプリケーションやライブラリの開発者、または日付を入力するユーザーによって明示的に決定されます。</li>
 </ul>
-<h4 id="カレンダーのバリデーションと変更">カレンダーのバリデーションと変更</h4>
-<p>Temporal を用いることでカレンダーセーフなコードを簡単に記述できますが、それでも開発者による作業が必要です。一部の開発者はこの作業を行いません。これは、ISO 以外のカレンダーの存在を知らない、または理解していないことが原因である場合があります。または、ISO カレンダーのみを使用するアプリケーションを書いている場合、わざわざカレンダーセーフのベストプラクティスに従わないかもしれません。あるいは、自身が書くコードではベストプラクティスが守られているが、それが依存するコードではそうでない場合があります。通常、ECMAScript アプリケーションにはたくさんの依存関係があり、時間と労力の関係上、それらと日時データを相互運用する必要があるかもしれません。</p>
+<h4 id="カレンダーのバリデーションと変更"><a class="heading-link" href="#カレンダーのバリデーションと変更"></a>カレンダーのバリデーションと変更</h3><p>Temporal を用いることでカレンダーセーフなコードを簡単に記述できますが、それでも開発者による作業が必要です。一部の開発者はこの作業を行いません。これは、ISO 以外のカレンダーの存在を知らない、または理解していないことが原因である場合があります。または、ISO カレンダーのみを使用するアプリケーションを書いている場合、わざわざカレンダーセーフのベストプラクティスに従わないかもしれません。あるいは、自身が書くコードではベストプラクティスが守られているが、それが依存するコードではそうでない場合があります。通常、ECMAScript アプリケーションにはたくさんの依存関係があり、時間と労力の関係上、それらと日時データを相互運用する必要があるかもしれません。</p>
 <p>このような場合、開発者は入力される日時データについて、「意図したカレンダーシステムであることをバリデートする」か、「カレンダーシステムを意図したものに変更する」必要があります。バリデーションと変更のどちらが望ましいかは、ユースケースによります。</p>
 <p>カレンダーシステムを変更する場合:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>カレンダーシステムをバリデートする場合:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>calendar<span class="token punctuation">.</span>id <span class="token operator">!==</span> <span class="token string">'iso8601'</span><span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'invalid calendar'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>ここで言う「入力」とは外部データに限らないことに注意してください。例えば、依存している日付ライブラリから返されるデータなども「入力」です。ライブラリや入力ソースが特定のカレンダーシステムをサポートしていると明示しない限り、それらからのデータ（日時オブジェクトやそれに変換される文字列）はすべて「外部」であり、カレンダーシステムのバリデーションや変更のための処理が必要です。それらのデータをそのまま使用するのはカレンダーセーフではありません。</p>
-<h2 id="検討されていた代替案">検討されていた代替案</h2>
-<p>カレンダーシステムを Temporal に統合することは、API 設計におけるもっとも挑戦的な部分でした。以下では、私達が現在の設計の前に検討していたカレンダー API の代替案を簡単に説明します。（現在の設計も含めて）検討された設計はどれも理想的なものではないことに注意してください。これらの設計は、場合によっては回避策が必要となる既知の欠陥を持っています。以下の選択肢と比較して、現状の設計が全体を通して最善の選択であると私達は信じています。</p>
+<h2 id="検討されていた代替案"><a class="heading-link" href="#検討されていた代替案"></a>検討されていた代替案</h3><p>カレンダーシステムを Temporal に統合することは、API 設計におけるもっとも挑戦的な部分でした。以下では、私達が現在の設計の前に検討していたカレンダー API の代替案を簡単に説明します。（現在の設計も含めて）検討された設計はどれも理想的なものではないことに注意してください。これらの設計は、場合によっては回避策が必要となる既知の欠陥を持っています。以下の選択肢と比較して、現状の設計が全体を通して最善の選択であると私達は信じています。</p>
 <h3 id="代替案-1-データモデルにカレンダーを含めない"><a class="heading-link" href="#代替案-1-データモデルにカレンダーを含めない"></a>代替案 1: データモデルにカレンダーを含めない</h3><p>現状の Temporal の設計に対して、カレンダーの情報を Temporal のインスタンスから分離して管理するという代替案があります。これにより、「予期しないカレンダーの問題」を回避できるという利点がありますが、API の利用者への負担が大きいという問題があります：</p>
 <ul>
 <li><p>カレンダーに固有のフィールド（<code>month</code>、<code>day</code>、<code>year</code>など）やプロパティ（<code>daysInMonth</code>、<code>inLeapYear</code>）を利用する際に、その都度パラメタが必要になります。つまり、これらの値を参照するのではなく、<code>date.calendarMonth(&#39;chinese&#39;)</code>のように Getter を介して値を取得することになります。</p>

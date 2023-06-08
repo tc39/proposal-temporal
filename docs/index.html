@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporal">Temporal</h1>
-<details>
+<h1 id="temporal"><a class="heading-link" href="#temporal"></a>Temporal</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#introduction">Introduction</a>
@@ -187,8 +186,7 @@
 </ul>
 </details>
 
-<h2 id="introduction">Introduction</h2>
-<p><code>Date</code> has been a long-standing pain point in ECMAScript.
+<h2 id="introduction"><a class="heading-link" href="#introduction"></a>Introduction</h3><p><code>Date</code> has been a long-standing pain point in ECMAScript.
 This is a proposal for <code>Temporal</code>, a global <code>Object</code> that acts as a top-level namespace (like <code>Math</code>), that brings a modern date/time API to the ECMAScript language.
 For a detailed look at some of the problems with <code>Date</code>, and the motivations for Temporal, see:
 <a href="https://maggiepint.com/2017/04/09/fixing-javascript-date-getting-started/">Fixing JavaScript Date</a>.</p>
@@ -201,10 +199,8 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <li>Supporting non-Gregorian calendars</li>
 </ul>
 <p>Temporal provides separate ECMAScript classes for date-only, time-only, and other scoped use cases. This makes code more readable and prevents bugs caused by incorrectly assuming 0, UTC, or the local time zone for values that are actually unknown.</p>
-<h2 id="cookbook">Cookbook</h2>
-<p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
-<h2 id="api-documentation">API Documentation</h2>
-<p>The Temporal API follows a convention of using types whose names start with &quot;Plain&quot; (like <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, and <code>Temporal.PlainDateTime</code>) for objects which do not have an associated time zone.
+<h2 id="cookbook"><a class="heading-link" href="#cookbook"></a>Cookbook</h3><p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
+<h2 id="api-documentation"><a class="heading-link" href="#api-documentation"></a>API Documentation</h3><p>The Temporal API follows a convention of using types whose names start with &quot;Plain&quot; (like <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, and <code>Temporal.PlainDateTime</code>) for objects which do not have an associated time zone.
 Converting between such types and exact time types (<code>Temporal.Instant</code> and <code>Temporal.ZonedDateTime</code>) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.</p>
 <p>Several important concepts are explained elsewhere: <a href="./ambiguity.html">exact time, wall-clock time, time zones, DST, handling ambiguity, and more</a>.</p>
 <h3 id="Temporal-Now"><a class="heading-link" href="#Temporal-Now"></a><strong>Temporal.Now</strong></h3><ul>
@@ -290,8 +286,7 @@ This is used for date/time arithmetic and for measuring differences between <cod
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 duration<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">unit</span><span class="token operator">:</span> <span class="token string">'second'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span></code></pre><p>See <a href="./duration.html">Temporal.Duration Documentation</a> for detailed documentation.</p>
-<h4 id="balancing">Balancing</h4>
-<p>Unlike the other Temporal types, the units in <code>Temporal.Duration</code> don&#39;t naturally wrap around to 0: you may want to have a duration of &quot;90 minutes,&quot; and you don&#39;t want it to unexpectedly turn into &quot;1 hour and 30 minutes.&quot;</p>
+<h4 id="balancing"><a class="heading-link" href="#balancing"></a>Balancing</h3><p>Unlike the other Temporal types, the units in <code>Temporal.Duration</code> don&#39;t naturally wrap around to 0: you may want to have a duration of &quot;90 minutes,&quot; and you don&#39;t want it to unexpectedly turn into &quot;1 hour and 30 minutes.&quot;</p>
 <p>See <a href="./balancing.html">Duration balancing</a> for more on this topic.</p>
 <h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset, or UTC itself.
 Time zones translate from a date/time in UTC to a local date/time.
@@ -312,17 +307,14 @@ Under the hood, this math is done by methods on the calendars.</p>
 <span class="token keyword">const</span> date <span class="token operator">=</span> cal<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">1999</span><span class="token punctuation">,</span> <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span>
 date<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span> <span class="token comment">// => 365</span></code></pre><p>See <a href="./calendar.html">Temporal.Calendar Documentation</a> for detailed documentation.</p>
-<h2 id="object-relationship">Object relationship</h2>
-<img src="object-model.svg">
+<h2 id="object-relationship"><a class="heading-link" href="#object-relationship"></a>Object relationship</h3><img src="object-model.svg">
 
-<h2 id="string-persistence-parsing-and-formatting">String persistence, parsing, and formatting</h2>
-<p>All <code>Temporal</code> types have a string representation for persistence and interoperability.
+<h2 id="string-persistence-parsing-and-formatting"><a class="heading-link" href="#string-persistence-parsing-and-formatting"></a>String persistence, parsing, and formatting</h3><p>All <code>Temporal</code> types have a string representation for persistence and interoperability.
 The correspondence between types and machine-readable strings is shown below.
 For more information about string parsing, serialization, and formatting in <code>Temporal</code> (including how Temporal is using industry standards like ISO 8601 and RFC 3339), see <a href="./strings.html">String Parsing, Serialization, and Formatting</a>.</p>
 <img src="persistence-model.svg">
 
-<h2 id="other-documentation">Other documentation</h2>
-<ul>
+<h2 id="other-documentation"><a class="heading-link" href="#other-documentation"></a>Other documentation</h3><ul>
 <li><a href="./ambiguity.html">Ambiguity</a> &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.</li>
 <li><a href="./balancing.html">Balancing</a> &mdash; Explanation of when <code>Temporal.Duration</code> units wrap around to 0 and when they don&#39;t.</li>
 <li><a href="./calendar-review.html">Why do Temporal instances have a Calendar?</a> &mdash; Background about why types like <code>Temporal.PlainDate</code> or <code>Temporal.ZonedDateTime</code> contain a calendar.

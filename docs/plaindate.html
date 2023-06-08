@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalplaindate">Temporal.PlainDate</h1>
-<details>
+<h1 id="temporalplaindate"><a class="heading-link" href="#temporalplaindate"></a>Temporal.PlainDate</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#constructor">Constructor</a>
@@ -242,8 +241,7 @@ For example, it could be used to represent an event on a calendar which happens 
 A <code>Temporal.PlainDate</code> can be converted into a <code>Temporal.ZonedDateTime</code> by combining it with a <code>Temporal.PlainTime</code> and <code>Temporal.TimeZone</code> using the <code>toZonedDateTime()</code> method.
 It can also be combined with a <code>Temporal.PlainTime</code> to yield a &quot;zoneless&quot; <code>Temporal.PlainDateTime</code> using the <code>toPlainDateTime()</code> method.</p>
 <p><code>Temporal.PlainYearMonth</code> and <code>Temporal.PlainMonthDay</code> carry less information than <code>Temporal.PlainDate</code> and should be used when complete information is not required.</p>
-<h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-PlainDate"><a class="heading-link" href="#new-Temporal-PlainDate"></a><strong>new Temporal.PlainDate</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>: string | object = &quot;iso8601&quot;) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+<h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-PlainDate"><a class="heading-link" href="#new-Temporal-PlainDate"></a><strong>new Temporal.PlainDate</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>isoDay</em>: number, <em>calendar</em>: string | object = &quot;iso8601&quot;) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
@@ -264,8 +262,7 @@ Use an object if you need to supply <a href="./calendar.html#custom-calendars">c
 </blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Pi day in 2020</span>
-date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-03-14</span></code></pre><h2 id="static-methods">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainDate.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-03-14</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainDate.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired date.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date.
@@ -348,8 +345,7 @@ For example:</p>
 two <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2015-07-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1930-02-18'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>one<span class="token punctuation">,</span> two<span class="token punctuation">,</span> three<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
-sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '1930-02-18 2006-08-24 2015-07-14'</span></code></pre><h2 id="properties">Properties</h2>
-<h3 id="year"><a class="heading-link" href="#year"></a>date.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>date.<strong>month</strong> : number</h3><h3 id="monthCode"><a class="heading-link" href="#monthCode"></a>date.<strong>monthCode</strong> : string</h3><h3 id="day"><a class="heading-link" href="#day"></a>date.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of a date individually.</p>
+sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '1930-02-18 2006-08-24 2015-07-14'</span></code></pre><h2 id="properties"><a class="heading-link" href="#properties"></a>Properties</h3><h3 id="year"><a class="heading-link" href="#year"></a>date.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>date.<strong>month</strong> : number</h3><h3 id="monthCode"><a class="heading-link" href="#monthCode"></a>date.<strong>monthCode</strong> : string</h3><h3 id="day"><a class="heading-link" href="#day"></a>date.<strong>day</strong> : number</h3><p>The above read-only properties allow accessing each component of a date individually.</p>
 <ul>
 <li><code>year</code> is a signed integer representing the number of years relative to a calendar-specific epoch.
 For calendars that use eras, the anchor is usually aligned with the latest era so that <code>eraYear === year</code> for all dates in that era.
@@ -456,8 +452,7 @@ Its value is <code>true</code> if the year is a leap year, and <code>false</code
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDateISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// example output: true</span>
 <span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
-date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>date.<strong>with</strong>(<em>dateLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>date.<strong>with</strong>(<em>dateLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateLike</code> (object): an object with some or all of the properties of a <code>Temporal.PlainDate</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.

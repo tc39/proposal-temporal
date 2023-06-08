@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporal-におけるタイムゾーンとサマータイム、曖昧性の解決">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</h1>
-<details>
+<h1 id="temporal-におけるタイムゾーンとサマータイム、曖昧性の解決"><a class="heading-link" href="#temporal-におけるタイムゾーンとサマータイム、曖昧性の解決"></a>Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#clock-time-と-exact-time-の違いを理解する">Clock Time と Exact Time の違いを理解する</a>
@@ -163,8 +162,7 @@
 </ul>
 </details>
 
-<h2 id="clock-time-と-exact-time-の違いを理解する">Clock Time と Exact Time の違いを理解する</h2>
-<p>Temporal の中核となるコンセプトは、<strong>wall-clock time</strong>（<em>ローカル時間</em> や <em>clock time</em> とも呼ばれる、タイムゾーンに依存した時刻）と <strong>exact time</strong>（<em>UTC 時間</em> とも呼ばれる、地球上のどこでも同じ時刻）を区別することです。</p>
+<h2 id="clock-time-と-exact-time-の違いを理解する"><a class="heading-link" href="#clock-time-と-exact-time-の違いを理解する"></a>Clock Time と Exact Time の違いを理解する</h3><p>Temporal の中核となるコンセプトは、<strong>wall-clock time</strong>（<em>ローカル時間</em> や <em>clock time</em> とも呼ばれる、タイムゾーンに依存した時刻）と <strong>exact time</strong>（<em>UTC 時間</em> とも呼ばれる、地球上のどこでも同じ時刻）を区別することです。</p>
 <p>wall-clock time は地方政府によって制御されているため、突然変更される可能性があります。サマータイムが導入されたり、ある国のタイムゾーンが他のものに変更されたりすると、ローカル時間は即座に変更されます。exact time は変更されない国際的な定義を持っており、<a href="https://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC</a>という特別なタイムゾーンで呼ばれています。Wikipedia の定義によれば、</p>
 <blockquote>
 <p><strong>Coordinated Universal Time</strong> （UTC）は、世界が時計と時刻を調整、規制するための時間の基準です。これは、経度 0 度における平均太陽時から 1 秒以内のものであり、サマータイムによる調整は行われていません。これは実質的にグリニッジ標準時（GMT）の後継です。</p>
@@ -173,16 +171,14 @@
 <p><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>と<a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a>は特定の時刻と時間を表現するための標準規格です。例：2020-09-06T17:35:24.485Z。ここで Z は UTC を表す接尾辞です。</p>
 <p>Temporal は exact time を表す 2 つのタイプを持っています。<code>Temporal.Instant</code>は exact time だけを持ち、他の情報を持ちません。<code>Temporal.ZonedDateTime</code>は exact time の他にタイムゾーンやカレンダーシステムの情報を持ちます。</p>
 <p>exact time を表す他の方法は、<a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>（1970 年 1 月 1 日の真夜中）からの差分を数値で表すことです。例えば、<code>Temporal.Instant</code>（exact-time タイプ）は epoch からの経過ナノ秒を表す<code>BigInt</code>で構成できます。</p>
-<h2 id="タイムゾーンオフセットの変更とサマータイムを理解する">タイムゾーンオフセットの変更とサマータイムを理解する</h2>
-<p><strong>タイムゾーン</strong> は UTC と wall-clock がどのように関連しているかを定義します。タイムゾーンは、exact time を受け取って UTC オフセットを返す関数、および反対方向への変換に対応する関数と考えられます。（なぜ exact -&gt; local の変換は 1 対 1 なのに、local -&gt; exact への変換は曖昧なのかの理由は<a href="#%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%BE%E3%83%BC%E3%83%B3%E3%82%AA%E3%83%95%E3%82%BB%E3%83%83%E3%83%88%E3%81%AE%E5%A4%89%E6%9B%B4%E3%82%84-dst-%E3%81%AB%E3%82%88%E3%82%8B%E6%9B%96%E6%98%A7%E6%80%A7">後述</a>します）。</p>
+<h2 id="タイムゾーンオフセットの変更とサマータイムを理解する"><a class="heading-link" href="#タイムゾーンオフセットの変更とサマータイムを理解する"></a>タイムゾーンオフセットの変更とサマータイムを理解する</h3><p><strong>タイムゾーン</strong> は UTC と wall-clock がどのように関連しているかを定義します。タイムゾーンは、exact time を受け取って UTC オフセットを返す関数、および反対方向への変換に対応する関数と考えられます。（なぜ exact -&gt; local の変換は 1 対 1 なのに、local -&gt; exact への変換は曖昧なのかの理由は<a href="#%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%BE%E3%83%BC%E3%83%B3%E3%82%AA%E3%83%95%E3%82%BB%E3%83%83%E3%83%88%E3%81%AE%E5%A4%89%E6%9B%B4%E3%82%84-dst-%E3%81%AB%E3%82%88%E3%82%8B%E6%9B%96%E6%98%A7%E6%80%A7">後述</a>します）。</p>
 <p>Temporal は <a href="https://en.wikipedia.org/wiki/Tz_database"><strong>IANA Time Zone Database</strong></a>（TZ database とも呼ばれる）を使用します。これは、タイムゾーン関数の世界的なリポジトリであると考えられます。各 IANA タイムゾーンは以下のものを持ちます：</p>
 <ul>
 <li><strong>time zone ID</strong> は、地理的な範囲を市などで表したものです（例）。例えば <code>Europe/Paris</code>、<code>Africa/Kampala</code> などです。また、1 つのタイムゾーンオフセットも表すこともできます。例えば <code>UTC</code>（<code>+00:00</code> オフセットの定数）や <code>Etc/GMT+5</code>（歴史的な経緯でこれは<code>-05:00</code>の意味）</li>
 <li><strong>タイムゾーンオフセット定義</strong> は、すべての UTC のオフセットのデータベースで、1970 年 1 月 1 日からのすべての情報が記載されています（例）。これは、ある UTC の範囲（未来の範囲も含まれる）を特定のオフセットに写像するテーブルであると考えられます。いくつかのタイムゾーンは、オフセットが一時的に変わったりすることがあります。例えば <strong>サマータイム</strong> が導入されていると、春の初めと秋の終わりでオフセットが年に 2 回も変更されます。オフセットは、国がタイムゾーンを変更するように決定するなどの、政治的な理由で恒久的に変更される場合もまたあります。</li>
 </ul>
 <p>TZ データベースは世界の政治的な変化によって年に数回アップデートされます。各アップデートにはタイムゾーン定義の変更が含まれます。これらの変更は通常は未来の date/time 値にのみ影響するものです。しかし、ごくまれに過去の範囲が修正されることもあります。例えば、20 世紀初頭の計時に関する新たな歴史的資料が発見された場合などです。</p>
-<h2 id="temporal-における-wall-clock-time、exact-time、タイムゾーン">Temporal における Wall-Clock Time、Exact Time、タイムゾーン</h2>
-<p>Temporal では：</p>
+<h2 id="temporal-における-wall-clock-time、exact-time、タイムゾーン"><a class="heading-link" href="#temporal-における-wall-clock-time、exact-time、タイムゾーン"></a>Temporal における Wall-Clock Time、Exact Time、タイムゾーン</h3><p>Temporal では：</p>
 <ul>
 <li><a href="../instant.html"><code>Temporal.Instant</code></a>タイプは exact time のみを表します</li>
 <li><a href="../plaindatetime.html"><code>Temporal.PlainDateTime</code></a>はカレンダー上の日付と wall-clock time を表します。これは次のような、より狭いタイプでも同様です：<a href="../plaindate.html"><code>Temporal.PlainDate</code></a>、<a href="../plaintime.html"><code>Temporal.PlainTime</code></a>、<a href="../plainyearmonth.html"><code>Temporal.PlainYearMonth</code></a>、<a href="../plainmonthday.html"><code>Temporal.PlainMonthDay</code></a>。<br>これらのタイプは特定のカレンダーシステムを持っており、デフォルトでは<code>&#39;iso8601&#39;</code>（ISO 8601 のカレンダー）です。これは他の<code>&#39;islamic&#39;</code>や<code>&#39;japanese&#39;</code>といった<a href="../calendar.html">カレンダー</a>で上書きすることもできます。</li>
@@ -246,16 +242,14 @@ epochNano <span class="token operator">=</span> inst<span class="token punctuati
 epochMilli <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480000</span>
 epochSecs <span class="token operator">=</span> inst<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span> <span class="token comment">// => 1576536480</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="タイムゾーンオフセットの変更や-dst-による曖昧性">タイムゾーンオフセットの変更や DST による曖昧性</h2>
-<p>通常、タイムゾーンの定義は、「local date / clock time」と「UTC date / time」を 1 対 1 に対応付けます。</p>
+<h2 id="タイムゾーンオフセットの変更や-dst-による曖昧性"><a class="heading-link" href="#タイムゾーンオフセットの変更や-dst-による曖昧性"></a>タイムゾーンオフセットの変更や DST による曖昧性</h3><p>通常、タイムゾーンの定義は、「local date / clock time」と「UTC date / time」を 1 対 1 に対応付けます。</p>
 <p>しかし、タイムゾーンの変更される付近では、 <strong>時間の曖昧性</strong> が発生する場合があります。ここでは、wall-clock time を exact time に変換するためにどのオフセットを使えばいいかが明確ではありません。この曖昧性によって、1 つの UTC time に対して 2 つの clock time が発生します。</p>
 <ul>
 <li>オフセットが負の方向に変化すると、同じ clock time が繰り返されます。例えば、2018 年 11 月 4 日のカリフォルニアでは、午前 1 時 30 分が 2 回発生しました。&quot;最初の&quot;午前 1 時 30 分は、太平洋夏時間（<code>-07:00</code>）でした。その 30 分後、夏時間が終了し太平洋標準時（<code>-08:00</code>）が有効になり、さらに 30 分後に 2 回目の午前 1 時 30 分が発生しました。これは、&quot;2018 年 11 月 4 日午前 1 時 30 分（日）&quot;が <em>どちらの</em> 午前 1 時 30 分なのかわからないということを意味します。つまり、clock time が曖昧になっています。</li>
 <li>オフセットが正の方向に変化すると、local clock time はスキップされます。例えば、カリフォルニアでは夏時間が 2018 年 3 月 11 日（日）に開始されました。時計が午前 1 時 59 分から午前 2 時 00 分に進んだ瞬間、local time は即座に午前 3 時 00 分にスキップされました。午前 2 時 30 分は発生しなかったのです！この 1 年に 1 時間分だけ発生するエラーケースに対処するために、多くのプログラミング環境（ECMAScript を含む）では、変化後か変化前のどちらかのオフセットを使って、スキップされた clock time を exact time に変換します。</li>
 </ul>
 <p>いずれのケースにせよ、local time と exact time に変換する際の曖昧性を解決するためには、ありうる 2 つのオフセットのどちらかを使用するか、エラーを発せさせる決定をする必要があります。</p>
-<h2 id="temporal-における日時の曖昧性の解決">Temporal における日時の曖昧性の解決</h2>
-<p><code>Temporal</code>では、もし exact time またはタイムゾーンがわかっているなら、日時の曖昧性は発生しません。例：</p>
+<h2 id="temporal-における日時の曖昧性の解決"><a class="heading-link" href="#temporal-における日時の曖昧性の解決"></a>Temporal における日時の曖昧性の解決</h3><p><code>Temporal</code>では、もし exact time またはタイムゾーンがわかっているなら、日時の曖昧性は発生しません。例：</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// ソースがUTCにおけるexact timeなので曖昧性は発生しない</span>
 inst <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-09-06T17:35:24.485Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -306,8 +300,7 @@ zdtAmbiguous <span class="token operator">=</span> dt<span class="token punctuat
 <li><a href="../plaindatetime.html#toZonedDateTime"><code>Temporal.PlainDateTime.prototype.toZonedDateTime</code></a></li>
 <li><a href="../timezone.html#getInstantFor"><code>Temporal.TimeZone.prototype.getInstantFor</code></a>.</li>
 </ul>
-<h2 id="例；サマータイムとdisambiguation曖昧性解消">例；サマータイムと<code>disambiguation</code>曖昧性解消</h2>
-<blockquote>
+<h2 id="例；サマータイムとdisambiguation曖昧性解消"><a class="heading-link" href="#例；サマータイムとdisambiguation曖昧性解消"></a>例；サマータイムと<code>disambiguation</code>曖昧性解消</h3><blockquote>
 <p>この説明は<a href="https://github.com/moment/momentjs.com/blob/master/docs/moment-timezone/01-using-timezones/02-parsing-ambiguous-inputs.html">moment-timezone のドキュメント</a>に対応しています。</p>
 </blockquote>
 <p>サマータイムに入ると、時計が 1 時間進みます。しかし実際には、時刻ではなくオフセットが動いているのです。オフセットが正の方向に動くと、1 時間が魔法のように消えてなくなります。もし、あなたがコンピュータのデジタル時計を見ていたなら、あなたは時計が 1:58、1:59、3:00 と変化するのに気づくでしょう。オフセットを含めて考えると、実際に何が起こっているのかを簡単に理解できます。</p>
@@ -359,8 +352,7 @@ later<span class="token punctuation">.</span><span class="token function">since<
   <span class="token comment">// => PT1H</span>
   <span class="token comment">// ... 実際は1時間の差がある</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="タイムゾーン定義が永続的に変更されることによる曖昧性の発生">タイムゾーン定義が永続的に変更されることによる曖昧性の発生</h2>
-<p>タイムゾーンの定義は変更される可能性があります。ほとんどの場合、これらの変更は未来の日時に対する変更であり、過去に格納された過去の日時には影響がありません。しかし、コンピュータは時々未来に関するデータを格納することがあります！例えば、カレンダーアプリはユーザーがリマインドしてほしい友達の来年の誕生日を記録します。未来の日時データをオフセットとタイムゾーンと共に記録し、さらにタイムゾーンの定義が変更された場合、新しいタイムゾーン定義と古いタイムゾーン定義が衝突する可能性があります。このようなケースでは、衝突を解決するために<a href="../zoneddatetime.html#from"><code>Temporal.ZonedDateTime.from</code></a>の<code>offset</code>オプションが用いられます。</p>
+<h2 id="タイムゾーン定義が永続的に変更されることによる曖昧性の発生"><a class="heading-link" href="#タイムゾーン定義が永続的に変更されることによる曖昧性の発生"></a>タイムゾーン定義が永続的に変更されることによる曖昧性の発生</h3><p>タイムゾーンの定義は変更される可能性があります。ほとんどの場合、これらの変更は未来の日時に対する変更であり、過去に格納された過去の日時には影響がありません。しかし、コンピュータは時々未来に関するデータを格納することがあります！例えば、カレンダーアプリはユーザーがリマインドしてほしい友達の来年の誕生日を記録します。未来の日時データをオフセットとタイムゾーンと共に記録し、さらにタイムゾーンの定義が変更された場合、新しいタイムゾーン定義と古いタイムゾーン定義が衝突する可能性があります。このようなケースでは、衝突を解決するために<a href="../zoneddatetime.html#from"><code>Temporal.ZonedDateTime.from</code></a>の<code>offset</code>オプションが用いられます。</p>
 <ul>
 <li><code>&#39;use&#39;</code>: タイムゾーンオフセットが入力から与えられている場合、それを日時の評価に用います。これにより exact time は記録されているものを変わりませんが、local time はもともとのものから変化します。</li>
 <li><code>&#39;ignore&#39;</code>: 入力から得られるタイムゾーンオフセットを無視し、最新のタイムゾーン定義から得られるオフセットを用いて日時を評価します。これにより local time は記録されているものと変わりませんが、exact time はもともとのものから変化します。</li>
@@ -371,8 +363,7 @@ later<span class="token punctuation">.</span><span class="token function">since<
 <p><a href="../zoneddatetime.html#with"><code>Temporal.ZonedDateTime.with</code></a>では、デフォルトは<code>&#39;prefer&#39;</code>です。</p>
 <p>このデフォルト値は、時刻のフィールドを変更した場合に発生するサマータイムの曖昧性を防ぐのに役立ちます。例えば、<a href="../zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a>が「サマータイムによって午前 1 時〜2 時が繰り返される日の、&quot;2 回目の&quot;午前 1 時 30 分」に設定されていて、<code>.with({minute: 45})</code>をデフォルトの<code>offset: &#39;prefer&#39;</code>オプションで呼び出したとします。すると、曖昧性はデフォルトのオプションによって解決されます。なぜなら、現状のオフセットは新しい日時でも依然として有効であり、&quot;2 回目の&quot;午前 1 時 45 分が返されるからです。しかし、現状のオフセットが新しい日時で無効の場合（例：<code>.with({hour: 0})</code>）、デフォルトオプションはオフセットをタイムゾーンに合うように変更します。</p>
 <p>このようなオフセットとタイムゾーンの衝突は<a href="../zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a>でのみ考慮されることに注意してください。なぜなら、他の<code>Temporal</code>タイプは IANA タイムゾーンとタイムゾーンオフセットを同時に考慮することがないからです。例えば、<a href="../instant.html#from"><code>Temporal.Instant.from</code></a>では衝突は発生しません。なせなら、<a href="../instant.html"><code>Temporal.Instant</code></a>は入力されたタイムゾーンを無視し、常にオフセットを用いて日時を評価するからです。</p>
-<h2 id="例-offset-オプション">例: <code>offset</code> オプション</h2>
-<p><code>offset</code>オプションを用いる一番の理由は、タイムゾーン定義が変更される前に保存された日時データを解釈することです。例えば、ブラジルは 2019 年にサマータイムを廃止し、サマータイムによる最後のオフセット変化は 2019 年 2 月 16 日に行われました。サマータイムを永続的に廃止することがアナウンスされたのは 2019 年の 4 月のことでした。ここで、2018 年（サマータイムの廃止がアナウンスされる前）に動いていたアプリが遠い未来の日時をオフセットと IANA タイムゾーンの両方の値を持つフォーマットとして保存していたと想像してみましょう。このようなフォーマットは<a href="../zoneddatetime.html#toString"><code>Temporal.ZonedDateTime.prototype.toString</code></a>だけでなく、他のプラットフォームである<a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html"><code>Java.time.ZonedDateTime</code></a>などでも使用されます。</p>
+<h2 id="例-offset-オプション"><a class="heading-link" href="#例-offset-オプション"></a>例: <code>offset</code> オプション</h3><p><code>offset</code>オプションを用いる一番の理由は、タイムゾーン定義が変更される前に保存された日時データを解釈することです。例えば、ブラジルは 2019 年にサマータイムを廃止し、サマータイムによる最後のオフセット変化は 2019 年 2 月 16 日に行われました。サマータイムを永続的に廃止することがアナウンスされたのは 2019 年の 4 月のことでした。ここで、2018 年（サマータイムの廃止がアナウンスされる前）に動いていたアプリが遠い未来の日時をオフセットと IANA タイムゾーンの両方の値を持つフォーマットとして保存していたと想像してみましょう。このようなフォーマットは<a href="../zoneddatetime.html#toString"><code>Temporal.ZonedDateTime.prototype.toString</code></a>だけでなく、他のプラットフォームである<a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html"><code>Java.time.ZonedDateTime</code></a>などでも使用されます。</p>
 <p>ここでは、記録された日時がサンパウロにおける 2020 年 1 月 15 日であると仮定しましょう。</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2020</span><span class="token punctuation">,</span> <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">15</span><span class="token punctuation">,</span> <span class="token literal-property property">hour</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token literal-property property">timeZone</span><span class="token operator">:</span> <span class="token string">'America/Sao_Paulo'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,131 +140,10 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporal-cookbook"><code>Temporal</code> Cookbook</h1>
-<h2 id="overview">Overview</h2>
-<ul>
-<li><a href="#overview">Overview</a>
-</li>
-<li><a href="#running-the-cookbook-files">Running the cookbook files</a>
-</li>
-<li><a href="#frequently-asked-questions">Frequently Asked Questions</a>
-<ul>
-<li><a href="#current-date-and-time">Current date and time</a>
-</li>
-<li><a href="#unix-timestamp">Unix timestamp</a>
-</li>
-</ul>
-</li>
-<li><a href="#converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</a>
-<ul>
-<li><a href="#legacy-date--temporalinstant-andor-temporalzoneddatetime">Legacy Date = Temporal.Instant and/or Temporal.ZonedDateTime</a>
-</li>
-<li><a href="#date-only-values-legacy-date--temporalplaindate">Date-only values: legacy Date = Temporal.PlainDate</a>
-</li>
-<li><a href="#temporal-types--legacy-date">Temporal types = legacy Date</a>
-</li>
-</ul>
-</li>
-<li><a href="#construction">Construction</a>
-<ul>
-<li><a href="#time-zone-object-from-name">Time zone object from name</a>
-</li>
-<li><a href="#calendar-input-element">Calendar input element</a>
-</li>
-</ul>
-</li>
-<li><a href="#converting-between-types">Converting between types</a>
-<ul>
-<li><a href="#noon-on-a-particular-date">Noon on a particular date</a>
-</li>
-<li><a href="#birthday-in-2030">Birthday in 2030</a>
-</li>
-</ul>
-</li>
-<li><a href="#serialization">Serialization</a>
-<ul>
-<li><a href="#zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</a>
-</li>
-</ul>
-</li>
-<li><a href="#sorting">Sorting</a>
-<ul>
-<li><a href="#sort-plaindatetime-values">Sort PlainDateTime values</a>
-</li>
-<li><a href="#sort-iso-datetime-strings">Sort ISO date/time strings</a>
-</li>
-</ul>
-</li>
-<li><a href="#rounding">Rounding</a>
-<ul>
-<li><a href="#round-a-time-down-to-whole-hours">Round a time down to whole hours</a>
-</li>
-<li><a href="#round-a-date-to-the-nearest-start-of-the-month">Round a date to the nearest start of the month</a>
-</li>
-</ul>
-</li>
-<li><a href="#time-zone-conversion">Time zone conversion</a>
-<ul>
-<li><a href="#preserving-local-time">Preserving local time</a>
-</li>
-<li><a href="#preserving-exact-time">Preserving exact time</a>
-</li>
-<li><a href="#daily-occurrence-in-local-time">Daily occurrence in local time</a>
-</li>
-<li><a href="#utc-offset-for-a-zoned-event-as-a-string">UTC offset for a zoned event, as a string</a>
-</li>
-<li><a href="#utc-offset-for-a-zoned-event-as-a-number-of-seconds">UTC offset for a zoned event, as a number of seconds</a>
-</li>
-<li><a href="#offset-between-two-time-zones-at-an-exact-time">Offset between two time zones at an exact time</a>
-</li>
-<li><a href="#dealing-with-dates-and-times-in-a-fixed-location">Dealing with dates and times in a fixed location</a>
-</li>
-<li><a href="#book-a-meeting-across-time-zones">Book a meeting across time zones</a>
-</li>
-</ul>
-</li>
-<li><a href="#arithmetic">Arithmetic</a>
-<ul>
-<li><a href="#how-many-days-until-a-future-date">How many days until a future date</a>
-</li>
-<li><a href="#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</a>
-</li>
-<li><a href="#nearest-offset-transition-in-a-time-zone">Nearest offset transition in a time zone</a>
-</li>
-<li><a href="#comparison-of-an-exact-time-to-business-hours">Comparison of an exact time to business hours</a>
-</li>
-<li><a href="#flight-arrivaldepartureduration">Flight arrival/departure/duration</a>
-</li>
-<li><a href="#push-back-a-launch-date">Push back a launch date</a>
-</li>
-<li><a href="#schedule-a-reminder-ahead-of-matching-a-record-setting-duration">Schedule a reminder ahead of matching a record-setting duration</a>
-</li>
-<li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a>
-</li>
-<li><a href="#manipulating-the-day-of-the-month">Manipulating the day of the month</a>
-</li>
-<li><a href="#same-date-in-another-month">Same date in another month</a>
-</li>
-<li><a href="#next-weekly-occurrence">Next weekly occurrence</a>
-</li>
-<li><a href="#weekday-of-yearly-occurrence">Weekday of yearly occurrence</a>
-</li>
-</ul>
-</li>
-<li><a href="#advanced-use-cases">Advanced use cases</a>
-<ul>
-<li><a href="#extra-expanded-years">Extra-expanded years</a>
-</li>
-<li><a href="#new-york-stock-exchange-time-zone">New York Stock Exchange time zone</a>
-</li>
-</ul>
-</li>
-</ul>
+<h1 id="temporal-cookbook"><a class="heading-link" href="#temporal-cookbook"></a><code>Temporal</code> Cookbook</h3><h2 id="overview"><a class="heading-link" href="#overview"></a>Overview</h3><!-- toc -->
 
-<h2 id="running-the-cookbook-files">Running the cookbook files</h2>
-<p>Running cookbook files: see instructions in <a href="https://github.com/tc39/proposal-temporal/tree/main/polyfill#running-cookbook-files">../polyfill/README.md</a></p>
-<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
-<p>These are some of the most common tasks that people ask questions about on StackOverflow with legacy <code>Date</code>.
+<h2 id="running-the-cookbook-files"><a class="heading-link" href="#running-the-cookbook-files"></a>Running the cookbook files</h3><p>Running cookbook files: see instructions in <a href="https://github.com/tc39/proposal-temporal/tree/main/polyfill#running-cookbook-files">../polyfill/README.md</a></p>
+<h2 id="frequently-asked-questions"><a class="heading-link" href="#frequently-asked-questions"></a>Frequently Asked Questions</h3><p>These are some of the most common tasks that people ask questions about on StackOverflow with legacy <code>Date</code>.
 Here&#39;s how they would look using <code>Temporal</code>.</p>
 <h3 id="current-date-and-time"><a class="heading-link" href="#current-date-and-time"></a>Current date and time</h3><p>How to get the current date and time in the local time zone?</p>
 <!-- prettier-ignore-start -->
@@ -301,8 +180,7 @@ timeStamp<span class="token punctuation">.</span>epochMilliseconds<span class="t
 timeStamp<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="converting-between-temporal-types-and-legacy-date">Converting between <code>Temporal</code> types and legacy <code>Date</code></h2>
-<h3 id="legacy-date--temporalinstant-andor-temporalzoneddatetime"><a class="heading-link" href="#legacy-date--temporalinstant-andor-temporalzoneddatetime"></a>Legacy <code>Date</code> =&gt; <code>Temporal.Instant</code> and/or <code>Temporal.ZonedDateTime</code></h3><p>Here&#39;s how to convert legacy ECMAScript <code>Date</code> into a <code>Temporal.Instant</code> or <code>Temporal.ZonedDateTime</code> instance corresponding to the same instant in exact time.</p>
+<h2 id="converting-between-temporal-types-and-legacy-date"><a class="heading-link" href="#converting-between-temporal-types-and-legacy-date"></a>Converting between <code>Temporal</code> types and legacy <code>Date</code></h3><h3 id="legacy-date--temporalinstant-andor-temporalzoneddatetime"><a class="heading-link" href="#legacy-date--temporalinstant-andor-temporalzoneddatetime"></a>Legacy <code>Date</code> =&gt; <code>Temporal.Instant</code> and/or <code>Temporal.ZonedDateTime</code></h3><p>Here&#39;s how to convert legacy ECMAScript <code>Date</code> into a <code>Temporal.Instant</code> or <code>Temporal.ZonedDateTime</code> instance corresponding to the same instant in exact time.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> legacyDate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'1970-01-01T00:00:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> instant <span class="token operator">=</span> legacyDate<span class="token punctuation">.</span><span class="token function">toTemporalInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -407,8 +285,7 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>result3<span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2020-01-01T00:00:01.001Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="construction">Construction</h2>
-<h3 id="time-zone-object-from-name"><a class="heading-link" href="#time-zone-object-from-name"></a>Time zone object from name</h3><p><code>Temporal.TimeZone.from()</code> can convert an IANA time zone name into a <code>Temporal.TimeZone</code> object, if you need to call <code>Temporal.TimeZone</code> methods.
+<h2 id="construction"><a class="heading-link" href="#construction"></a>Construction</h3><h3 id="time-zone-object-from-name"><a class="heading-link" href="#time-zone-object-from-name"></a>Time zone object from name</h3><p><code>Temporal.TimeZone.from()</code> can convert an IANA time zone name into a <code>Temporal.TimeZone</code> object, if you need to call <code>Temporal.TimeZone</code> methods.
 Usually this is not necessary.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Construct a Temporal.TimeZone from an IANA name:</span>
@@ -440,8 +317,7 @@ datePicker<span class="token punctuation">.</span>max <span class="token operato
 datePicker<span class="token punctuation">.</span>value <span class="token operator">=</span> today<span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="converting-between-types">Converting between types</h2>
-<h3 id="noon-on-a-particular-date"><a class="heading-link" href="#noon-on-a-particular-date"></a>Noon on a particular date</h3><p>An example of combining a calendar date (<code>Temporal.PlainDate</code>) and a wall-clock time (<code>Temporal.PlainTime</code>) into a <code>Temporal.PlainDateTime</code>.</p>
+<h2 id="converting-between-types"><a class="heading-link" href="#converting-between-types"></a>Converting between types</h3><h3 id="noon-on-a-particular-date"><a class="heading-link" href="#noon-on-a-particular-date"></a>Noon on a particular date</h3><p>An example of combining a calendar date (<code>Temporal.PlainDate</code>) and a wall-clock time (<code>Temporal.PlainTime</code>) into a <code>Temporal.PlainDateTime</code>.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-05-14'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -462,8 +338,7 @@ birthdayIn2030<span class="token punctuation">.</span>dayOfWeek<span class="toke
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>birthdayIn2030<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'2030-12-15'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="serialization">Serialization</h2>
-<h3 id="zoned-instant-from-instant-and-time-zone"><a class="heading-link" href="#zoned-instant-from-instant-and-time-zone"></a>Zoned instant from instant and time zone</h3><p>To serialize an exact-time <code>Temporal.Instant</code> into a string, use <code>toString()</code>.
+<h2 id="serialization"><a class="heading-link" href="#serialization"></a>Serialization</h3><h3 id="zoned-instant-from-instant-and-time-zone"><a class="heading-link" href="#zoned-instant-from-instant-and-time-zone"></a>Zoned instant from instant and time zone</h3><p>To serialize an exact-time <code>Temporal.Instant</code> into a string, use <code>toString()</code>.
 Without any arguments, this gives you a string in UTC time.</p>
 <p>If you need your string to include a UTC offset, then use the <code>timeZone</code> option of <code>Temporal.Instant.prototype.toString()</code> which will return a string serialization of the wall-clock time in that time zone corresponding to the exact time.</p>
 <p>This loses the information about which time zone the string was in, because it only preserves the UTC offset from the time zone at that particular exact time.
@@ -493,8 +368,7 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 <span class="token function">assert</span><span class="token punctuation">(</span>zoned<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>result3<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="sorting">Sorting</h2>
-<p>Each <code>Temporal</code> type has a <code>compare()</code> static method, which can be passed to <code>Array.prototype.sort()</code> as the compare function in order to sort an array of <code>Temporal</code> types.</p>
+<h2 id="sorting"><a class="heading-link" href="#sorting"></a>Sorting</h3><p>Each <code>Temporal</code> type has a <code>compare()</code> static method, which can be passed to <code>Array.prototype.sort()</code> as the compare function in order to sort an array of <code>Temporal</code> types.</p>
 <h3 id="sort-plaindatetime-values"><a class="heading-link" href="#sort-plaindatetime-values"></a>Sort PlainDateTime values</h3><p>Sort a list of <code>Temporal.PlainDateTime</code>s, for example in order to get a conference schedule in the correct order.
 Sorting other <code>Temporal</code> types would work exactly the same way.</p>
 <!-- prettier-ignore-start -->
@@ -582,8 +456,7 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
 <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="rounding">Rounding</h2>
-<h3 id="round-a-time-down-to-whole-hours"><a class="heading-link" href="#round-a-time-down-to-whole-hours"></a>Round a time down to whole hours</h3><p>Use the <code>round()</code> method of each <code>Temporal</code> type if you want to round the time fields.
+<h2 id="rounding"><a class="heading-link" href="#rounding"></a>Rounding</h3><h3 id="round-a-time-down-to-whole-hours"><a class="heading-link" href="#round-a-time-down-to-whole-hours"></a>Round a time down to whole hours</h3><p>Use the <code>round()</code> method of each <code>Temporal</code> type if you want to round the time fields.
 Here&#39;s an example of rounding a time <em>down</em> to the previously occurring whole hour:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'12:38:28.138818731'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -612,8 +485,7 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 </code></pre><!-- prettier-ignore-end -->
 
 <p>See also <a href="#push-back-a-launch-date">Push back a launch date</a> for an easier way to round up unconditionally to the <em>next</em> start of a month.</p>
-<h2 id="time-zone-conversion">Time zone conversion</h2>
-<h3 id="preserving-local-time"><a class="heading-link" href="#preserving-local-time"></a>Preserving local time</h3><p>Map a zoneless date and time of day into a <code>Temporal.Instant</code> instance at which the local date and time of day in a specified time zone matches it.
+<h2 id="time-zone-conversion"><a class="heading-link" href="#time-zone-conversion"></a>Time zone conversion</h3><h3 id="preserving-local-time"><a class="heading-link" href="#preserving-local-time"></a>Preserving local time</h3><p>Map a zoneless date and time of day into a <code>Temporal.Instant</code> instance at which the local date and time of day in a specified time zone matches it.
 This is easily done with <code>dateTime.toZonedDateTime(timeZone).toInstant()</code>, but here is an example of implementing different disambiguation behaviors than the <code>&#39;compatible&#39;</code>, <code>&#39;earlier&#39;</code>, <code>&#39;later&#39;</code>, and <code>&#39;reject&#39;</code> ones built in to <code>Temporal</code>.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
@@ -1120,8 +992,7 @@ timeZones<span class="token punctuation">.</span><span class="token function">fo
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="arithmetic">Arithmetic</h2>
-<h3 id="how-many-days-until-a-future-date"><a class="heading-link" href="#how-many-days-until-a-future-date"></a>How many days until a future date</h3><p>An example HTML form inspired by <a href="https://www.timeanddate.com/date/durationresult.html">Days Calculator</a> on timeanddate.com:</p>
+<h2 id="arithmetic"><a class="heading-link" href="#arithmetic"></a>Arithmetic</h3><h3 id="how-many-days-until-a-future-date"><a class="heading-link" href="#how-many-days-until-a-future-date"></a>How many days until a future date</h3><p>An example HTML form inspired by <a href="https://www.timeanddate.com/date/durationresult.html">Days Calculator</a> on timeanddate.com:</p>
 <form action="#how-many-days-until-a-future-date">
   <label>
     Enter future date:
@@ -1655,8 +1526,7 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h2 id="advanced-use-cases">Advanced use cases</h2>
-<p>These are not expected to be part of the normal usage of <code>Temporal</code>, but show some unusual things that can be done with <code>Temporal</code>.
+<h2 id="advanced-use-cases"><a class="heading-link" href="#advanced-use-cases"></a>Advanced use cases</h3><p>These are not expected to be part of the normal usage of <code>Temporal</code>, but show some unusual things that can be done with <code>Temporal</code>.
 Since they are generally larger than these cookbook recipes, they&#39;re on their own pages.</p>
 <h3 id="extra-expanded-years"><a class="heading-link" href="#extra-expanded-years"></a>Extra-expanded years</h3><p>Extend <code>Temporal</code> to support arbitrarily-large years (e.g., <strong>+635427810-02-02</strong>) for astronomical purposes.</p>
 <p>→ <a href="cookbook-expandedyears.html">Extra-expanded years</a></p>

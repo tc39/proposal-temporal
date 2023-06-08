@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalzoneddatetime">Temporal.ZonedDateTime</h1>
-<details>
+<h1 id="temporalzoneddatetime"><a class="heading-link" href="#temporalzoneddatetime"></a>Temporal.ZonedDateTime</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#constructor">Constructor</a>
@@ -292,8 +291,7 @@ This behavior is also be helpful for developers who are not sure which of those 
 <p>A <code>Temporal.ZonedDateTime</code> instance can be losslessly converted into every other <code>Temporal</code> type except <code>Temporal.Duration</code>.
 <code>Temporal.Instant</code>, <code>Temporal.PlainDateTime</code>, <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, <code>Temporal.PlainYearMonth</code>, and <code>Temporal.PlainMonthDay</code> all carry less information and can be used when complete information is not required.</p>
 <p>The <code>Temporal.ZonedDateTime</code> API is a superset of <code>Temporal.PlainDateTime</code>, which makes it easy to port code back and forth between the two types as needed. Because <code>Temporal.PlainDateTime</code> is not aware of time zones, in use cases where the time zone is known it&#39;s recommended to use <code>Temporal.ZonedDateTime</code> which will automatically adjust for DST and can convert easily to <code>Temporal.Instant</code> without having to re-specify the time zone.</p>
-<h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-ZonedDateTime"><a class="heading-link" href="#new-Temporal-ZonedDateTime"></a><strong>new Temporal.ZonedDateTime</strong>(<em>epochNanoseconds</em>: bigint, <em>timeZone</em>: string | object, <em>calendar</em>: string | object = &quot;iso8601&quot;) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-ZonedDateTime"><a class="heading-link" href="#new-Temporal-ZonedDateTime"></a><strong>new Temporal.ZonedDateTime</strong>(<em>epochNanoseconds</em>: bigint, <em>timeZone</em>: string | object, <em>calendar</em>: string | object = &quot;iso8601&quot;) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>epochNanoseconds</code> (bigint): A number of nanoseconds.</li>
 <li><code>timeZone</code> (string, <code>Temporal.TimeZone</code> instance, or plain object): The time zone in which the event takes place.</li>
@@ -316,8 +314,7 @@ Use an object if you need to supply <a href="./calendar.html#custom-calendars">c
   <span class="token comment">// => 1969-12-31T16:00:00-08:00[America/Los_Angeles]</span>
   <span class="token comment">// same, but shorter</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="static-methods">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.ZonedDateTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.ZonedDateTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired date, time, time zone, and calendar.</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>
@@ -486,8 +483,7 @@ Temporal<span class="token punctuation">.</span>Instant<span class="token punctu
   <span class="token comment">// => -1</span>
   <span class="token comment">// (because `Temporal.Instant` and `Temporal.ZonedDateTime` both compare real-world exact times)</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="properties">Properties</h2>
-<h3 id="year"><a class="heading-link" href="#year"></a>zonedDateTime.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>zonedDateTime.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>zonedDateTime.<strong>day</strong> : number</h3><h3 id="hour"><a class="heading-link" href="#hour"></a>zonedDateTime.<strong>hour</strong>: number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>zonedDateTime.<strong>minute</strong>: number</h3><h3 id="second"><a class="heading-link" href="#second"></a>zonedDateTime.<strong>second</strong>: number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>zonedDateTime.<strong>millisecond</strong>: number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>zonedDateTime.<strong>microsecond</strong>: number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>zonedDateTime.<strong>nanosecond</strong>: number</h3><p>The above read-only properties allow accessing each component of a date or time individually.</p>
+<h2 id="properties"><a class="heading-link" href="#properties"></a>Properties</h3><h3 id="year"><a class="heading-link" href="#year"></a>zonedDateTime.<strong>year</strong> : number</h3><h3 id="month"><a class="heading-link" href="#month"></a>zonedDateTime.<strong>month</strong> : number</h3><h3 id="day"><a class="heading-link" href="#day"></a>zonedDateTime.<strong>day</strong> : number</h3><h3 id="hour"><a class="heading-link" href="#hour"></a>zonedDateTime.<strong>hour</strong>: number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>zonedDateTime.<strong>minute</strong>: number</h3><h3 id="second"><a class="heading-link" href="#second"></a>zonedDateTime.<strong>second</strong>: number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>zonedDateTime.<strong>millisecond</strong>: number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>zonedDateTime.<strong>microsecond</strong>: number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>zonedDateTime.<strong>nanosecond</strong>: number</h3><p>The above read-only properties allow accessing each component of a date or time individually.</p>
 <p>Date unit details:</p>
 <ul>
 <li><code>year</code> is a signed integer representing the number of years relative to a calendar-specific epoch.
@@ -755,8 +751,7 @@ repeated0130 <span class="token operator">=</span> daylightTime0130<span class="
   <span class="token comment">// => 2020-11-01T01:30:00-08:00[America/Los_Angeles]</span>
   <span class="token comment">// This is Pacific Standard Time 1:30AM</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>zonedDateTime.<strong>with</strong>(<em>zonedDateTimeLike</em>: object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>zonedDateTime.<strong>with</strong>(<em>zonedDateTimeLike</em>: object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>zonedDateTimeLike</code> (object): an object with some of the properties of a <code>Temporal.ZonedDateTime</code> (including <code>offset</code>, but not <code>timeZone</code> or <code>calendar</code>).</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>

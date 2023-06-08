@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalinstant">Temporal.Instant</h1>
-<details>
+<h1 id="temporalinstant"><a class="heading-link" href="#temporalinstant"></a>Temporal.Instant</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#interoperability-with-date">Interoperability with Date</a>
@@ -234,8 +233,7 @@ zdtLA<span class="token punctuation">.</span><span class="token function">toPlai
 For interoperability with <code>Date</code> and other APIs, <code>Temporal.Instant</code> also offers conversion properties and methods for seconds, milliseconds, or microseconds since epoch.
 A <code>Temporal.Instant</code> can also be created from an ISO 8601 / RFC 3339 string like <code>&#39;2020-01-23T17:04:36.491865121-08:00&#39;</code> or <code>&#39;2020-01-24T01:04Z&#39;</code>.</p>
 <p>Like Unix time, <code>Temporal.Instant</code> ignores leap seconds.</p>
-<h2 id="interoperability-with-date">Interoperability with <code>Date</code></h2>
-<p><code>Temporal.Instant</code> is the easiest way to interoperate between <code>Temporal</code> objects and code using <code>Date</code>.
+<h2 id="interoperability-with-date"><a class="heading-link" href="#interoperability-with-date"></a>Interoperability with <code>Date</code></h3><p><code>Temporal.Instant</code> is the easiest way to interoperate between <code>Temporal</code> objects and code using <code>Date</code>.
 Because <code>Date</code> and <code>Temporal.Instant</code> both use a time-since-epoch data model, conversions between them are zero-parameter method calls that are lossless (except sub-millisecond precision is truncated when converting to <code>Date</code>).</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Convert from `Temporal.Instant` to `Date` (which uses millisecond precision)</span>
@@ -262,8 +260,7 @@ dateOnly <span class="token operator">=</span> zonedDateTime<span class="token p
 For example, the example above constructs the <code>Date</code> using local-timezone parameters, so it uses the system time zone: <code>Temporal.Now.timeZone()</code>.
 But if the <code>Date</code> had been initialized with a string like <code>&#39;2019-12-31&#39;</code>, then getting the same date back in a <code>Temporal.PlainDate</code> would require using the <code>&#39;UTC&#39;</code> time zone instead.</p>
 <p>For discussion and code examples about picking the correct time zone, and also about <code>Date</code>&lt;=&gt;<code>Temporal</code> interoperability in general, see <a href="cookbook.html#converting-between-temporal-types-and-legacy-date">Converting between <code>Temporal</code> types and legacy <code>Date</code></a> in the documentation cookbook.</p>
-<h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-Instant"><a class="heading-link" href="#new-Temporal-Instant"></a><strong>new Temporal.Instant</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+<h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-Instant"><a class="heading-link" href="#new-Temporal-Instant"></a><strong>new Temporal.Instant</strong>(<em>epochNanoseconds</em> : bigint) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>epochNanoseconds</code> (bigint): A number of nanoseconds.</li>
 </ul>
@@ -279,8 +276,7 @@ This range covers approximately half a million years. If <code>epochNanoseconds<
 <span class="token comment">// When was the Unix epoch?</span>
 epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1970-01-01T00:00:00Z</span>
 <span class="token comment">// Dates before the Unix epoch are negative</span>
-turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1900-01-01T00:00:00Z</span></code></pre><h2 id="static-methods">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Instant.<strong>from</strong>(<em>thing</em>: any) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1900-01-01T00:00:00Z</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Instant.<strong>from</strong>(<em>thing</em>: any) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired exact time.</li>
 </ul>
@@ -361,8 +357,7 @@ two <span class="token operator">=</span> Temporal<span class="token punctuation
 three <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochSeconds</span><span class="token punctuation">(</span><span class="token number">1.2e9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted <span class="token operator">=</span> <span class="token punctuation">[</span>three<span class="token punctuation">,</span> one<span class="token punctuation">,</span> two<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span>compare<span class="token punctuation">)</span><span class="token punctuation">;</span>
 sorted<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// => '2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20:00Z'</span></code></pre><h2 id="properties">Properties</h2>
-<h3 id="epochSeconds"><a class="heading-link" href="#epochSeconds"></a>instant.<strong>epochSeconds</strong> : number</h3><p>The value of this property is an integer number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and <code>instant</code>.
+<span class="token comment">// => '2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20:00Z'</span></code></pre><h2 id="properties"><a class="heading-link" href="#properties"></a>Properties</h3><h3 id="epochSeconds"><a class="heading-link" href="#epochSeconds"></a>instant.<strong>epochSeconds</strong> : number</h3><p>The value of this property is an integer number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and <code>instant</code>.
 This number will be negative if <code>instant</code> is before 1970.
 The number of seconds is truncated towards zero.</p>
 <p>Use this property if you need to interface with some other system that reckons time in seconds since the Unix epoch.</p>
@@ -377,8 +372,7 @@ An example:</p>
 The number of seconds is truncated towards zero.</p>
 <h3 id="epochNanoseconds"><a class="heading-link" href="#epochNanoseconds"></a>instant.<strong>epochNanoseconds</strong> : bigint</h3><p>Same as <code>epochSeconds</code>, but the value is a bigint with nanosecond (10<sup>&minus;9</sup> second) precision.</p>
 <p>The value of this property is suitable to be passed to <code>new Temporal.Instant()</code>.</p>
-<h2 id="methods">Methods</h2>
-<h3 id="toZonedDateTimeISO"><a class="heading-link" href="#toZonedDateTimeISO"></a>instant.<strong>toZonedDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="toZonedDateTimeISO"><a class="heading-link" href="#toZonedDateTimeISO"></a>instant.<strong>toZonedDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (object or string): either<ul>
 <li>a <code>Temporal.TimeZone</code> object</li>

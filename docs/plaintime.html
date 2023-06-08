@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="temporalplaintime">Temporal.PlainTime</h1>
-<details>
+<h1 id="temporalplaintime"><a class="heading-link" href="#temporalplaintime"></a>Temporal.PlainTime</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
 <li><a href="#constructor">Constructor</a>
@@ -215,8 +214,7 @@ For example, it could be used to represent an event that happens daily at a cert
 <p><code>Temporal.PlainTime</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.PlainDateTime</code>.
 A <code>Temporal.PlainTime</code> can be converted into a <code>Temporal.ZonedDateTime</code> by combining it with a <code>Temporal.PlainDate</code> and <code>Temporal.TimeZone</code> using the <code>toZonedDateTime()</code> method.
 It can also be combined with a <code>Temporal.PlainDate</code> to yield a &quot;zoneless&quot; <code>Temporal.PlainDateTime</code> using the <code>toPlainDateTime()</code> method.</p>
-<h2 id="constructor">Constructor</h2>
-<h3 id="new-Temporal-PlainTime"><a class="heading-link" href="#new-Temporal-PlainTime"></a><strong>new Temporal.PlainTime</strong>(<em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-PlainTime"><a class="heading-link" href="#new-Temporal-PlainTime"></a><strong>new Temporal.PlainTime</strong>(<em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoHour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
 <li><code>isoMinute</code> (optional number): A minute, ranging between 0 and 59 inclusive.</li>
@@ -231,8 +229,7 @@ Otherwise, <code>Temporal.PlainTime.from()</code>, which accepts more kinds of i
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.</p>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour</span>
-time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainTime</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 13:37:00</span></code></pre><h2 id="static-methods">Static methods</h2>
-<h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+time <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainTime</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 13:37:00</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>thing</code>: The value representing the desired time.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the time.
@@ -337,8 +334,7 @@ zdtValid <span class="token operator">=</span> zdtBase<span class="token punctua
 <span class="token comment">// The skipped time 2:30AM is disambiguated to 3:30AM, so the instants are equal</span>
 Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>zdtSkipped<span class="token punctuation">,</span> zdtValid<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 0</span>
 <span class="token comment">// 2:30 is earlier than 3:30 on a wall clock</span>
-Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>timeSkipped<span class="token punctuation">,</span> timeValid<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -1</span></code></pre><h2 id="properties">Properties</h2>
-<h3 id="hour"><a class="heading-link" href="#hour"></a>time.<strong>hour</strong>: number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>time.<strong>minute</strong>: number</h3><h3 id="second"><a class="heading-link" href="#second"></a>time.<strong>second</strong>: number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>time.<strong>millisecond</strong>: number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>time.<strong>microsecond</strong>: number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>time.<strong>nanosecond</strong>: number</h3><p>The above read-only properties allow accessing each component of the time individually.</p>
+Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>timeSkipped<span class="token punctuation">,</span> timeValid<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => -1</span></code></pre><h2 id="properties"><a class="heading-link" href="#properties"></a>Properties</h3><h3 id="hour"><a class="heading-link" href="#hour"></a>time.<strong>hour</strong>: number</h3><h3 id="minute"><a class="heading-link" href="#minute"></a>time.<strong>minute</strong>: number</h3><h3 id="second"><a class="heading-link" href="#second"></a>time.<strong>second</strong>: number</h3><h3 id="millisecond"><a class="heading-link" href="#millisecond"></a>time.<strong>millisecond</strong>: number</h3><h3 id="microsecond"><a class="heading-link" href="#microsecond"></a>time.<strong>microsecond</strong>: number</h3><h3 id="nanosecond"><a class="heading-link" href="#nanosecond"></a>time.<strong>nanosecond</strong>: number</h3><p>The above read-only properties allow accessing each component of the time individually.</p>
 <p>Usage examples:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -349,8 +345,7 @@ time<span class="token punctuation">.</span>millisecond<span class="token punctu
 time<span class="token punctuation">.</span>microsecond<span class="token punctuation">;</span> <span class="token comment">// => 346</span>
 time<span class="token punctuation">.</span>nanosecond<span class="token punctuation">;</span>  <span class="token comment">// => 205</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="methods">Methods</h2>
-<h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeLike</code> (object): an object with some or all of the properties of a <code>Temporal.PlainTime</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.

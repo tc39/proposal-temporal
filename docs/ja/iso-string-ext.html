@@ -111,7 +111,7 @@
       }
       .heading-link:hover { text-decoration: none; }
       .heading-link::before { content: '¶'; }
-      h3:hover .heading-link { opacity: 1; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
       .banner {
         /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
         background-color: #fce94f;
@@ -140,8 +140,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<h1 id="ecmascript-拡張の-iso-8601-と-rfc-3339">ECMAScript 拡張の ISO-8601 と RFC 3339</h1>
-<p><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a>と<a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a>は、日時データをコンピュータが扱いやすいようにシリアライズするための業界標準規格です。</p>
+<h1 id="ecmascript-拡張の-iso-8601-と-rfc-3339"><a class="heading-link" href="#ecmascript-拡張の-iso-8601-と-rfc-3339"></a>ECMAScript 拡張の ISO-8601 と RFC 3339</h3><p><a href="https://en.wikipedia.org/wiki/ISO_8601">ISO-8601</a>と<a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a>は、日時データをコンピュータが扱いやすいようにシリアライズするための業界標準規格です。</p>
 <p>しかし、これらの規格は、ECMAScript ユーザーが望むすべてのケースで十分とは言えません。ISO-8601 や RFC 3339 がカバーしていない、以下の 3 つの重要なユースケースがあります：</p>
 <ol>
 <li>IANA タイムゾーン名</li>
@@ -149,8 +148,7 @@
 <li>カレンダーシステム</li>
 </ol>
 <p>このドキュメントの目的は、<code>Temporal</code>のために ISO-8601 や RFC 3339 を補足することです。</p>
-<h2 id="iana-タイムゾーン名">IANA タイムゾーン名</h2>
-<p>Joda Time（現在は java.time）のような、ブラケットを用いてタイムゾーンを付記するようなライブラリの先例がいくつかあります。ECMAScript では、この記法を入力と出力の両方で完全にサポートする予定です。</p>
+<h2 id="iana-タイムゾーン名"><a class="heading-link" href="#iana-タイムゾーン名"></a>IANA タイムゾーン名</h3><p>Joda Time（現在は java.time）のような、ブラケットを用いてタイムゾーンを付記するようなライブラリの先例がいくつかあります。ECMAScript では、この記法を入力と出力の両方で完全にサポートする予定です。</p>
 <p>例:</p>
 <pre><code>2007-12-03T10:15:30+01:00[Europe/Paris]</code></pre><p>ISO-8601 も RFC 3339 も、この記法については言及していませんが、<code>Temporal</code>ではこれらを事実上の業界標準として採用します。</p>
 <p>タイムゾーンの文字列は、タイムゾーンデータベースのルールにしたがって書かれます。（詳しくは<a href="timezone.html">timezone.md</a>を参照）ルールに関する詳しい情報は<a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html">こちらのドキュメント</a>を参照してください。</p>
@@ -161,12 +159,10 @@ ASCII 文字、<code>&#39;.&#39;</code>、<code>&#39;-&#39;</code>、<code>&#39;
 タイムゾーン名の曖昧さを避けるために、数字は用いない。
 14 文字を超えてはいけない。また、<code>&#39;-&#39;</code>から始まってはいけない。</p>
 </blockquote>
-<h2 id="「月と日」の構文">「月と日」の構文</h2>
-<p>ISO-8601 と RFC 3339 は <code>Temporal.PlainDate</code>、<code>Temporal.PlainTime</code>、<code>Temporal.PlainDateTime</code>および<code>Temporal.PlainYearMonth</code>に対応する記法を提供していますが、特別な場合を除いて<code>Temporal.PlainMonthDay</code>に対応する記法はありません。したがって、<code>Temporal</code>では次のような記法を追加で定義します。</p>
+<h2 id="「月と日」の構文"><a class="heading-link" href="#「月と日」の構文"></a>「月と日」の構文</h3><p>ISO-8601 と RFC 3339 は <code>Temporal.PlainDate</code>、<code>Temporal.PlainTime</code>、<code>Temporal.PlainDateTime</code>および<code>Temporal.PlainYearMonth</code>に対応する記法を提供していますが、特別な場合を除いて<code>Temporal.PlainMonthDay</code>に対応する記法はありません。したがって、<code>Temporal</code>では次のような記法を追加で定義します。</p>
 <pre><code>07-04</code></pre><p>上記の文字列は ISO カレンダー上の 7 月 4 日を表します。</p>
 <p>RFC 3339 では月と日の構文をサポートするための<code>--07-04</code>という記法が定義されていますが、<code>Temporal</code>はこの記法を入力として受け付けますが、出力することはありません。</p>
-<h2 id="カレンダーシステム">カレンダーシステム</h2>
-<p>ISO 以外のカレンダーを用いて<code>Temporal</code>における永続性を実現するためには、カレンダーシステムの識別子を記法として追加する必要があります。</p>
+<h2 id="カレンダーシステム"><a class="heading-link" href="#カレンダーシステム"></a>カレンダーシステム</h3><p>ISO 以外のカレンダーを用いて<code>Temporal</code>における永続性を実現するためには、カレンダーシステムの識別子を記法として追加する必要があります。</p>
 <p>私達は、カレンダーシステムの識別子を ISO 8601 や RFC 3339 として表現する既存の方法を見つけられませんでした。したがって、新たに次のような拡張を提案します：<em>カレンダー固有の日付は、シリアライズされた文字列上では ISO カレンダーの日付として表されます。カレンダーを表す接尾辞は、文字列をコンピュータが読み取る際に、どのカレンダーシステムへ ISO カレンダーの日付を変換するかを示します。</em></p>
 <p>例えば、ユダヤ暦における <strong>28 Iyar 5780</strong> を文字列にパースすると次のようになります。</p>
 <pre><code>2020-05-22[u-ca=hebrew]</code></pre><p>現在 CalConnect や IETF Calsify といった団体と協力して、この構文の標準化を進めています。</p>
@@ -196,8 +192,7 @@ ASCII 文字、<code>&#39;.&#39;</code>、<code>&#39;-&#39;</code>、<code>&#39;
 <pre><code>2020-05-22T07:19:35.356-04:00[America/Indiana/Indianapolis][u-ca=islamic-umalqura]</code></pre><h3 id="カレンダー固有の-yearmonth-と-monthday"><a class="heading-link" href="#カレンダー固有の-yearmonth-と-monthday"></a>カレンダー固有の YearMonth と MonthDay</h3><p>データモデルに関する<a href="https://github.com/tc39/proposal-temporal/issues/391">#391</a>の議論にもとづき、ISO 以外のカレンダーで<code>Temporal.YearMonth</code>や<code>Temporal.MonthDay</code>を使いたい場合は<code>Temporal.PlainDate</code>を代わりに用いることとします。例えば、ユダヤ暦で&quot;Iyar 5780&quot;（訳注：5780 は年、Iyar は月を表している）を<code>Temporal.YearMonth</code>で表したい場合、その月の最初の日を使って<code>2020-04-25</code>という表現が用いられます。</p>
 <p>ISO 文字列として表現すると次のようになります。</p>
 <pre><code>2020-04-25[u-ca=hebrew]</code></pre><p>この文字列が<code>Temporal.PlainDate</code>、<code>Temporal.YearMonth</code>または<code>Temporal.MonthDay</code>の、どのデータ型を表すかは曖昧なため、デシリアライズする際には適切なコンストラクタを使用するように気をつける必要があります。</p>
-<h2 id="文字列による永続性の概要">文字列による永続性の概要</h2>
-<p>すべての<code>Temporal</code>タイプは、永続化と相互運用性のための文字列表現を持っています。ほとんどのタイプは、既存の標準のみを使用し、そうではない一部の例外だけを上記で説明しました。タイプと文字列の対応を以下に示します。</p>
+<h2 id="文字列による永続性の概要"><a class="heading-link" href="#文字列による永続性の概要"></a>文字列による永続性の概要</h3><p>すべての<code>Temporal</code>タイプは、永続化と相互運用性のための文字列表現を持っています。ほとんどのタイプは、既存の標準のみを使用し、そうではない一部の例外だけを上記で説明しました。タイプと文字列の対応を以下に示します。</p>
 <img src="../persistence-model.svg">
     <footer>
       <p>
