@@ -1505,8 +1505,8 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Let _fieldsCopy_ be ? SnapshotOwnProperties(_fields_, *null*, « », « *undefined* »).
-        1. Let _additionalFieldsCopy_ be ? SnapshotOwnProperties(_additionalFields_, *null*, « », « *undefined* »).
+        1. Let _fieldsCopy_ be ? SnapshotOwnProperties(? ToObject(_fields_), *null*, « », « *undefined* »).
+        1. Let _additionalFieldsCopy_ be ? SnapshotOwnProperties(? ToObject(_additionalFields_), *null*, « », « *undefined* »).
         1. NOTE: Every property of _fieldsCopy_ and _additionalFieldsCopy_ is an enumerable data property with a non-*undefined* value, but some property keys may be Symbols.
         1. Let _additionalKeys_ be ! _additionalFieldsCopy_.[[OwnPropertyKeys]]().
         1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.

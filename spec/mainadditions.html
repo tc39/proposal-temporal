@@ -190,7 +190,7 @@
     <emu-clause id="sec-snapshotownproperties" type="abstract operation">
       <h1>
         SnapshotOwnProperties (
-          _source_: an ECMAScript language value,
+          _source_: an Object,
           _proto_: an Object or *null*,
           optional _excludedKeys_: a List of property keys,
           optional _excludedValues_: a List of ECMAScript language values,
@@ -206,7 +206,7 @@
         1. Let _copy_ be OrdinaryObjectCreate(_proto_).
         1. If _excludedKeys_ is not present, set _excludedKeys_ to « ».
         1. If _excludedValues_ is not present, set _excludedValues_ to « ».
-        1. Perform ? CopyDataProperties(_copy_, ? ToObject(_source_), _excludedKeys_, _excludedValues_).
+        1. Perform ? CopyDataProperties(_copy_, _source_, _excludedKeys_, _excludedValues_).
         1. Return _copy_.
       </emu-alg>
     </emu-clause>
