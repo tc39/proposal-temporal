@@ -978,15 +978,11 @@
           U+2212
 
       UnpaddedHour :
-          DecimalDigit
-          `1` DecimalDigit
-          `20`
-          `21`
-          `22`
-          `23`
+          Hour[~Padded]
 
-      Hour :
-          `0` DecimalDigit
+      Hour[Padded] :
+          [~Padded] DecimalDigit
+          [+Padded] `0` DecimalDigit
           `1` DecimalDigit
           `20`
           `21`
@@ -1042,15 +1038,9 @@
       AnnotationCriticalFlag :
           `!`
 
-      DateFourDigitYear :
-          DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-
-      DateExtendedYear :
-          Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-
       DateYear :
-          DateFourDigitYear
-          DateExtendedYear
+          DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
       DateMonth :
           `0` NonZeroDigit
@@ -1071,11 +1061,9 @@
       DateSpecYearMonth :
           DateYear `-`? DateMonth
 
-      TwoDashes :
-          `--`
-
       DateSpecMonthDay :
-          TwoDashes? DateMonth `-`? DateDay
+          `--` DateMonth `-`? DateDay
+          DateMonth `-`? DateDay
 
       ValidMonthDay :
           DateMonth `-`? `0` NonZeroDigit
@@ -1089,7 +1077,7 @@
           DateYear DateMonth DateDay
 
       TimeHour :
-          Hour
+          Hour[+Padded]
 
       TimeMinute :
           MinuteSecond
@@ -1117,12 +1105,10 @@
           UTCOffset
           UTCDesignator
 
-      TimeZoneUTCOffsetName :
-          Sign Hour
-          Sign Hour `:` MinuteSecond
-          Sign Hour MinuteSecond
-          Sign Hour `:` MinuteSecond `:` MinuteSecond Fraction?
-          Sign Hour MinuteSecond MinuteSecond Fraction?
+      TimeZoneUTCOffsetName[Extended] :
+          Sign Hour[+Padded]
+          Sign Hour[+Padded] TimeSeparator[?Extended] MinuteSecond
+          Sign Hour[+Padded] TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond Fraction?
 
       TZLeadingChar :
           Alpha
@@ -1130,9 +1116,7 @@
           `_`
 
       TZChar[Legacy] :
-          Alpha
-          `.`
-          `-`
+          TZLeadingChar
           `_`
           [+Legacy] `+`
           [+Legacy] DecimalDigit
@@ -1158,17 +1142,15 @@
           TimeZoneIANANameComponent[?Legacy]
           TimeZoneIANANameComponent[?Legacy] `/` TimeZoneIANANameTail[?Legacy]
 
-      TimeZoneIANALegacyName :
+      TimeZoneIANAName :
+          TimeZoneIANANameTail[~Legacy]
           TimeZoneIANANameTail[+Legacy] [&gt; but only if `etc/gmt` |ASCIISign| |UnpaddedHour| matches the ASCII-lowercase of the sequence of code points matched by (|TimeZoneIANANameTail|)]
           TimeZoneIANANameTail[+Legacy] [&gt; but only if the sequence of code points matched by |TimeZoneIANANameTail| is an ASCII-case-insensitive match for an element of « *"Etc/GMT0"*, *"GMT0"*, *"GMT-0"*, *"GMT+0"*, *"EST5EDT"*, *"CST6CDT"*, *"MST7MDT"*, *"PST8PDT"* »]
 
-      TimeZoneIANAName :
-          TimeZoneIANANameTail[~Legacy]
-          TimeZoneIANALegacyName
-
       TimeZoneIdentifier :
           TimeZoneIANAName
-          TimeZoneUTCOffsetName
+          TimeZoneUTCOffsetName[+Extended]
+          TimeZoneUTCOffsetName[~Extended]
 
       TimeZoneAnnotation :
           `[` AnnotationCriticalFlag? TimeZoneIdentifier `]`
@@ -1182,25 +1164,17 @@
           DecimalDigit
           `-`
 
-      AValChar :
-          Alpha
-          DecimalDigit
-
-      AnnotationKeyTail :
-          AKeyChar AnnotationKeyTail?
-
       AnnotationKey :
-          AKeyLeadingChar AnnotationKeyTail?
+          AKeyLeadingChar
+          AnnotationKey AKeyChar
 
       AnnotationValueComponent :
-          AValChar AnnotationValueComponent?
-
-      AnnotationValueTail :
-          AnnotationValueComponent
-          AnnotationValueComponent `-` AnnotationValueTail
+          Alpha AnnotationValueComponent?
+          DecimalDigit AnnotationValueComponent?
 
       AnnotationValue :
-          AnnotationValueTail
+          AnnotationValueComponent
+          AnnotationValueComponent `-` AnnotationValue
 
       Annotation :
           `[` AnnotationCriticalFlag? AnnotationKey `=` AnnotationValue `]`
@@ -1338,12 +1312,12 @@
     <emu-clause id="sec-temporal-iso8601grammar-early-errors">
       <h1>Early errors</h1>
       <emu-grammar>
-        DateExtendedYear :
+        DateYear :
           Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
       </emu-grammar>
       <ul>
         <li>
-          It is a Syntax Error if |DateExtendedYear| is *"-000000"* or *"−000000"* (U+2212 MINUS SIGN followed by `000000`).
+          It is a Syntax Error if |DateYear| is *"-000000"* or *"−000000"* (U+2212 MINUS SIGN followed by `000000`).
         </li>
       </ul>
     </emu-clause>
