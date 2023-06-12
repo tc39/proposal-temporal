@@ -97,7 +97,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Return DefaultTimeZone().
+        1. Return SystemTimeZoneIdentifier().
       </emu-alg>
     </emu-clause>
 
@@ -250,7 +250,7 @@
       <h1>SystemDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Let _timeZone_ be DefaultTimeZone().
+          1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
@@ -263,7 +263,7 @@
       <h1>SystemZonedDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Let _timeZone_ be DefaultTimeZone().
+          1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).

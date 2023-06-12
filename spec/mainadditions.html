@@ -8,6 +8,7 @@
     <p>
       This section lists amendments which must be made to <a href="https://tc39.es/ecma262/">ECMA-262, the ECMAScript® 2023 Language Specification</a>, other than the addition of the new sections specifying the Temporal object and everything related to it.
       Text to be added is marked <ins>like this</ins>, and text to be deleted is marked <del>like this</del>.
+      Blocks of unmodified text between modified sections are marked by [...].
     </p>
   </emu-note>
 
@@ -16,22 +17,17 @@
 
     <emu-note type="editor">
       <p>
-        This section intends to move the definitions of ASCII-uppercase, ASCII-lowercase, and ASCII-case-insensitive match from ECMA-402 into ECMA-262, after the definition of the ASCII word characters, and generalizes the former two definitions to cover sequences of code points.
+        This section intends to move the definitions of ASCII-uppercase, ASCII-lowercase, and ASCII-case-insensitive match from ECMA-402 into ECMA-262, after the definition of the ASCII word characters.
+        The definitions include minor editorial changes from ECMA-402 to address feedback from the ECMA-262 editors.
       </p>
     </emu-note>
 
     <p>[...]</p>
 
     <ins class="block">
-      <p>
-        The <dfn>ASCII-uppercase</dfn> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) with the corresponding ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units. The ASCII-uppercase of a sequence of Unicode code points _A_ is the sequence of code points derived from _A_ by replacing each occurrence of an ASCII lowercase letter code point (U+0061 through U+007A, inclusive) with the corresponding ASCII uppercase letter code point (U+0041 through U+005A, inclusive) while preserving all other code points.
-      </p>
-      <p>
-        The <dfn>ASCII-lowercase</dfn> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) with the corresponding ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) while preserving all other code units. The ASCII-lowercase of a sequence of Unicode code points _A_ is the sequence of code points derived from _A_ by replacing each occurrence of an ASCII uppercase letter code point (U+0041 through U+005A, inclusive) with the corresponding ASCII lowercase letter code point (U+0061 through U+007A, inclusive) while preserving all other code points.
-      </p>
-      <p>
-        A String value _A_ is an <dfn>ASCII-case-insensitive match</dfn> for String value _B_ if the ASCII-uppercase of _A_ is exactly the same sequence of code units as the ASCII-uppercase of _B_. A sequence of Unicode code points _A_ is an ASCII-case-insensitive match for _B_ if _B_ is an ASCII-case-insensitive match for ! CodePointsToString(_A_).
-      </p>
+      <p>The <dfn>ASCII-uppercase</dfn> of a String _S_ is the String derived from _S_ by replacing each occurrence of an ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) with the corresponding ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units.</p>
+      <p>The <dfn>ASCII-lowercase</dfn> of a String _S_ is the String derived from _S_ by replacing each occurrence of an ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) with the corresponding ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) while preserving all other code units.</p>
+      <p>A String _A_ is an <dfn variants="ASCII-case-insensitive matches,ASCII-case-insensitive,ASCII-case-insensitive comparison,ASCII-case-insensitive comparisons">ASCII-case-insensitive match</dfn> for a String _B_ if the ASCII-lowercase of _A_ is the ASCII-lowercase of _B_.</p>
     </ins>
   </emu-clause>
 
@@ -211,6 +207,71 @@
       </emu-alg>
     </emu-clause>
   </ins>
+
+  <emu-clause id="sec-overview-of-date-objects-and-definitions-of-abstract-operations">
+    <h1>Overview of Date Objects and Definitions of Abstract Operations</h1>
+
+    <p>[...]</p>
+
+    <emu-clause id="sec-time-zone-identifiers">
+      <h1>Time Zone Identifiers</h1>
+
+      <p>
+        Time zones in ECMAScript are represented by <dfn variants="time zone identifier">time zone identifiers</dfn>, which are Strings composed entirely of code units in the inclusive interval from <del>0x0000 to 0x007F</del><ins>0x0021 to 0x007E</ins>.
+        Time zones supported by an ECMAScript implementation may be <dfn variants="available named time zone">available named time zones</dfn>, represented by the [[Identifier]] field of the Time Zone Identifier Records returned by AvailableNamedTimeZoneIdentifiers, or <dfn variants="offset time zone">offset time zones</dfn>, represented by Strings for which IsTimeZoneOffsetString returns *true*.
+        <ins>Time zone identifiers are compared using ASCII-case-insensitive comparisons.</ins>
+      </p>
+      <p>
+        A <dfn variants="primary time zone identifiers">primary time zone identifier</dfn> is the preferred identifier for an available named time zone.
+        A <dfn variants="non-primary time zone identifiers">non-primary time zone identifier</dfn> is an identifier for an available named time zone that is not a primary time zone identifier.
+        An <dfn variants="available named time zone identifiers">available named time zone identifier</dfn> is either a primary time zone identifier or a non-primary time zone identifier.
+        Each available named time zone identifier is associated with exactly one available named time zone.
+        Each available named time zone is associated with exactly one primary time zone identifier and zero or more non-primary time zone identifiers.
+      </p>
+      <p>
+        ECMAScript implementations must support an available named time zone with the identifier *"UTC"*, which must be the primary time zone identifier for the UTC time zone.
+        In addition, implementations may support any number of other available named time zones.
+      </p>
+      <p>
+        Implementations that follow the requirements for time zones as described in the ECMA-402 Internationalization API specification are called <dfn>time zone aware</dfn>.
+        Time zone aware implementations must support available named time zones corresponding to the Zone and Link names of the IANA Time Zone Database, and only such names.
+        In time zone aware implementations, a primary time zone identifier is a Zone name, and a non-primary time zone identifier is a Link name, respectively, in the IANA Time Zone Database except as specifically overridden by AvailableNamedTimeZoneIdentifiers as specified in the ECMA-402 specification.
+        Implementations that do not support the entire IANA Time Zone Database are still recommended to use IANA Time Zone Database names as identifiers to represent time zones.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-availablenamedtimezoneidentifiers" type="implementation-defined abstract operation">
+      <h1>AvailableNamedTimeZoneIdentifiers ( ): a List of Time Zone Identifier Records</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          Its result describes all available named time zone identifiers in this implementation, as well as the primary time zone identifier corresponding to each available named time zone identifier.
+          The List is ordered according to the [[Identifier]] field of each Time Zone Identifier Record.
+        </dd>
+      </dl>
+      <p>
+        Time zone aware implementations, including all implementations that implement the ECMA-402 Internationalization API, must implement the AvailableNamedTimeZoneIdentifiers abstract operation as specified in the ECMA-402 specification.
+        For implementations that are not time zone aware, AvailableNamedTimeZoneIdentifiers performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. If the implementation does not include local political rules for any time zones, then
+          1. Return « the Time Zone Identifier Record { [[Identifier]]: *"UTC"*, [[PrimaryIdentifier]]: *"UTC"* } ».
+        1. Let _identifiers_ be the List of unique available named time zone identifiers.
+        1. <del>Sort _identifiers_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as the argument.</del>
+        1. <ins>Set _identifiers_ to SortStringListByCodeUnit(_identifiers_).</ins>
+        1. Let _result_ be a new empty List.
+        1. For each element _identifier_ of _identifiers_, do
+          1. Let _primary_ be _identifier_.
+          1. If _identifier_ is a non-primary time zone identifier in this implementation and _identifier_ is not *"UTC"*, then
+            1. Set _primary_ to the primary time zone identifier associated with _identifier_.
+            1. NOTE: An implementation may need to resolve _identifier_ iteratively to obtain the primary time zone identifier.
+          1. Let _record_ be the Time Zone Identifier Record { [[Identifier]]: _identifier_, [[PrimaryIdentifier]]: _primary_ }.
+          1. Append _record_ to _result_.
+        1. Assert: _result_ contains a Time Zone Identifier Record _r_ such that _r_.[[Identifier]] is *"UTC"* and _r_.[[PrimaryIdentifier]] is *"UTC"*.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
 
   <emu-clause id="sec-temporal-date-constructor">
     <h1><a href="https://tc39.es/ecma262/#sec-date-constructor">The Date Constructor</a></h1>
