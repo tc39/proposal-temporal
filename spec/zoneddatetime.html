@@ -454,8 +454,8 @@
         1. Let _tomorrow_ be ? CreateTemporalDateTime(_tomorrowFields_.[[Year]], _tomorrowFields_.[[Month]], _tomorrowFields_.[[Day]], 0, 0, 0, 0, 0, 0, *"iso8601"*).
         1. Let _todayInstant_ be ? GetInstantFor(_timeZoneRec_, _today_, *"compatible"*).
         1. Let _tomorrowInstant_ be ? GetInstantFor(_timeZoneRec_, _tomorrow_, *"compatible"*).
-        1. Let _diffNs_ be _tomorrowInstant_.[[Nanoseconds]] - _todayInstant_.[[Nanoseconds]].
-        1. Return 𝔽(_diffNs_ / (3.6 &times; 10<sup>12</sup>)).
+        1. Let _diff_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_tomorrowInstant_.[[Nanoseconds]], _todayInstant_.[[Nanoseconds]]).
+        1. Return 𝔽(DivideNormalizedTimeDuration(_diff_, 3.6 &times; 10<sup>12</sup>)).
       </emu-alg>
     </emu-clause>
 
@@ -1290,12 +1290,7 @@
           _months_: an integer,
           _weeks_: an integer,
           _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
-          _nanoseconds_: an integer,
+          _norm_: a Normalized Time Duration Record,
           optional _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
           optional _options_: an Object,
         ): either a normal completion containing a BigInt or an abrupt completion
@@ -1315,7 +1310,7 @@
         1. If _options_ is not present, set _options_ to *undefined*.
         1. Assert: Type(_options_) is Object or Undefined.
         1. If _years_ = 0, _months_ = 0, _weeks_ = 0, and _days_ = 0, then
-          1. Return ? AddInstant(_epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+          1. Return ? AddInstant(_epochNanoseconds_, _norm_).
         1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
         1. If _precalculatedPlainDateTime_ is not *undefined*, then
           1. Let _temporalDateTime_ be _precalculatedPlainDateTime_.
@@ -1324,14 +1319,14 @@
         1. If _years_ = 0, and _months_ = 0, and _weeks_ = 0, then
           1. Let _overflow_ be ? ToTemporalOverflow(_options_).
           1. Let _intermediate_ be ? AddDaysToZonedDateTime(_instant_, _temporalDateTime_, _timeZoneRec_, _calendarRec_.[[Receiver]], _days_, _overflow_).[[EpochNanoseconds]].
-          1. Return ? AddInstant(_intermediate_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+          1. Return ? AddInstant(_intermediate_, _norm_).
         1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
         1. Let _datePart_ be ! CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendarRec_.[[Receiver]]).
         1. Let _dateDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendarRec_, _datePart_, _dateDuration_, _options_).
         1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendarRec_.[[Receiver]]).
         1. Let _intermediateInstant_ be ? GetInstantFor(_timeZoneRec_, _intermediateDateTime_, *"compatible"*).
-        1. Return ? AddInstant(_intermediateInstant_.[[Nanoseconds]], _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Return ? AddInstant(_intermediateInstant_.[[Nanoseconds]], _norm_).
       </emu-alg>
     </emu-clause>
 
@@ -1385,7 +1380,7 @@
           _largestUnit_: a String,
           _options_: an Object,
           _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
-        ): either a normal completion containing a Duration Record or an abrupt completion
+        ): either a normal completion containing a Normalized Duration Record, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1396,7 +1391,7 @@
       <p>Unless _ns1_ and _ns2_ are equal, _timeZoneRec_ must have looked up both `getOffsetNanosecondsFor` and `getPossibleInstantsFor`.</p>
       <emu-alg>
         1. If _ns1_ is _ns2_, then
-          1. Return ! CreateDurationRecord(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
+          1. Return ! CreateNormalizedDurationRecord(0, 0, 0, 0, ZeroTimeDuration()).
         1. If _precalculatedPlainDateTime_ is *undefined*, then
           1. Let _startInstant_ be ! CreateTemporalInstant(_ns1_).
           1. Let _startDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _startInstant_, _calendarRec_.[[Receiver]]).
@@ -1405,41 +1400,39 @@
         1. Let _endInstant_ be ! CreateTemporalInstant(_ns2_).
         1. Let _endDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _endInstant_, _calendarRec_.[[Receiver]]).
         1. Let _dateDifference_ be ? DifferenceISODateTime(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], _startDateTime_.[[ISOHour]], _startDateTime_.[[ISOMinute]], _startDateTime_.[[ISOSecond]], _startDateTime_.[[ISOMillisecond]], _startDateTime_.[[ISOMicrosecond]], _startDateTime_.[[ISONanosecond]], _endDateTime_.[[ISOYear]], _endDateTime_.[[ISOMonth]], _endDateTime_.[[ISODay]], _endDateTime_.[[ISOHour]], _endDateTime_.[[ISOMinute]], _endDateTime_.[[ISOSecond]], _endDateTime_.[[ISOMillisecond]], _endDateTime_.[[ISOMicrosecond]], _endDateTime_.[[ISONanosecond]], _calendarRec_, _largestUnit_, _options_).
-        1. Let _intermediateNs_ be ? AddZonedDateTime(_ns1_, _timeZoneRec_, _calendarRec_, _dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], 0, 0, 0, 0, 0, 0, 0, _startDateTime_).
-        1. Let _timeRemainderNs_ be _ns2_ - _intermediateNs_.
+        1. Let _intermediateNs_ be ? AddZonedDateTime(_ns1_, _timeZoneRec_, _calendarRec_, _dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], 0, ZeroTimeDuration(), _startDateTime_).
+        1. Let _norm_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_ns2_, _intermediateNs_).
         1. Let _intermediate_ be ! CreateTemporalZonedDateTime(_intermediateNs_, _timeZoneRec_.[[Receiver]], _calendarRec_.[[Receiver]]).
-        1. Let _result_ be ? NanosecondsToDays(ℝ(_timeRemainderNs_), _intermediate_, _timeZoneRec_).
-        1. Let _timeDifference_ be ! BalanceTimeDuration(0, 0, 0, 0, 0, 0, _result_.[[Nanoseconds]], *"hour"*).
-        1. Return ! CreateDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _result_.[[Days]], _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]]).
+        1. Let _result_ be ? NormalizedTimeDurationToDays(_norm_, _intermediate_, _timeZoneRec_).
+        1. Return ! CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _result_.[[Days]], _result_.[[Remainder]]).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-nanosecondstodays" type="abstract operation">
+    <emu-clause id="sec-temporal-normalizedtimedurationtodays" type="abstract operation">
       <h1>
-        NanosecondsToDays (
-          _nanoseconds_: an integer,
+        NormalizedTimeDurationToDays (
+          _norm_: a Normalized Time Duration Record,
           _zonedRelativeTo_: a Temporal.ZonedDateTime,
           _timeZoneRec_: a Time Zone Methods Record,
           optional _precalculatedPlainDateTime_: a Temporal.PlainDateTime,
-        ): either a normal completion containing a Record with fields [[Days]] (an integer), [[Nanoseconds]] (an integer), and [[DayLength]] (an integer), or an abrupt completion
+        ): either a normal completion containing a Record with fields [[Days]] (an integer), [[Remainder]] (a Normalized Time Duration Record), and [[DayLength]] (an integer), or an abrupt completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It converts a number of _nanoseconds_ relative to a Temporal.ZonedDateTime _zonedRelativeTo_ (if supplied), and converts it into a number of days and remainder of nanoseconds, taking into account any offset changes in the time zone of _zonedRelativeTo_.
+          It converts a normalized time duration _norm_ relative to a Temporal.ZonedDateTime _zonedRelativeTo_, and converts it into a number of days and a remainder normalized time duration, taking into account any offset changes in the time zone of _zonedRelativeTo_.
           It also returns the length of the last day in nanoseconds, for rounding purposes.
         </dd>
       </dl>
       <p>Unless _nanoseconds_ = 0, _timeZoneRec_ must have looked up both `getOffsetNanosecondsFor` and `getPossibleInstantsFor`.</p>
       <emu-alg>
-        1. If _nanoseconds_ = 0, then
-          1. Return the Record { [[Days]]: 0, [[Nanoseconds]]: 0, [[DayLength]]: nsPerDay }.
-        1. If _nanoseconds_ &lt; 0, let _sign_ be -1; else, let _sign_ be 1.
-        1. Let _startNs_ be ℝ(_zonedRelativeTo_.[[Nanoseconds]]).
-        1. Let _startInstant_ be ! CreateTemporalInstant(ℤ(_startNs_)).
-        1. Let _endNs_ be _startNs_ + _nanoseconds_.
-        1. If IsValidEpochNanoseconds(ℤ(_endNs_)) is *false*, throw a *RangeError* exception.
-        1. Let _endInstant_ be ! CreateTemporalInstant(ℤ(_endNs_)).
+        1. Let _sign_ be NormalizedTimeDurationSign(_norm_).
+        1. If _sign_ = 0, then
+          1. Return the Record { [[Days]]: 0, [[Remainder]]: _norm_, [[DayLength]]: nsPerDay }.
+        1. Let _startNs_ be _zonedRelativeTo_.[[Nanoseconds]].
+        1. Let _startInstant_ be ! CreateTemporalInstant(_startNs_).
+        1. Let _endNs_ be ? AddInstant(_startNs_, _norm_).
+        1. Let _endInstant_ be ! CreateTemporalInstant(_endNs_).
         1. If _precalculatedPlainDateTime_ is present, let _startDateTime_ be _precalculatedPlainDateTime_; else let _startDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _startInstant_, *"iso8601"*).
         1. Let _endDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _endInstant_, *"iso8601"*).
         1. Let _date1_ be ! CreateTemporalDate(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], *"iso8601"*).
@@ -1455,28 +1448,29 @@
           1. Repeat, while _days_ &gt; 0 and ℝ(_relativeResult_.[[EpochNanoseconds]]) &gt; _endNs_,
             1. Set _days_ to _days_ - 1.
             1. Set _relativeResult_ to ? AddDaysToZonedDateTime(_startInstant_, _startDateTime_, _timeZoneRec_, _zonedRelativeTo_.[[Calendar]], _days_).
-        1. Set _nanoseconds_ to _endNs_ - ℝ(_relativeResult_.[[EpochNanoseconds]]).
+        1. Set _norm_ to NormalizedTimeDurationFromEpochNanosecondsDifference(_endNs_, _relativeResult_.[[EpochNanoseconds]]).
         1. Let _done_ be *false*.
         1. Let _dayLengthNs_ be ~unset~.
         1. Repeat, while _done_ is *false*,
           1. Let _oneDayFarther_ be ? AddDaysToZonedDateTime(_relativeResult_.[[Instant]], _relativeResult_.[[DateTime]], _timeZoneRec_, _zonedRelativeTo_.[[Calendar]], _sign_).
-          1. Set _dayLengthNs_ to ℝ(_oneDayFarther_.[[EpochNanoseconds]] - _relativeResult_.[[EpochNanoseconds]]).
-          1. If (_nanoseconds_ - _dayLengthNs_) &times; _sign_ &ge; 0, then
-            1. Set _nanoseconds_ to _nanoseconds_ - _dayLengthNs_.
+          1. Set _dayLengthNs_ to NormalizedTimeDurationFromEpochNanosecondsDifference(_oneDayFarther_.[[EpochNanoseconds]], _relativeResult_.[[EpochNanoseconds]]).
+          1. Let _oneDayLess_ be ! SubtractNormalizedTimeDuration(_norm_, _dayLengthNs_).
+          1. If NormalizedTimeDurationSign(_oneDayLess_) &times; _sign_ &ge; 0, then
+            1. Set _norm_ to _oneDayLess_.
             1. Set _relativeResult_ to _oneDayFarther_.
             1. Set _days_ to _days_ + _sign_.
           1. Else,
             1. Set _done_ to *true*.
         1. If _days_ &lt; 0 and _sign_ = 1, throw a *RangeError* exception.
         1. If _days_ &gt; 0 and _sign_ = -1, throw a *RangeError* exception.
-        1. If _nanoseconds_ &lt; 0, then
+        1. If NormalizedTimeDurationSign(_norm_) = -1, then
           1. Assert: _sign_ is -1.
-        1. If _nanoseconds_ &gt; 0 and _sign_ = -1, throw a *RangeError* exception.
-        1. Assert: The inequality abs(_nanoseconds_) &lt; abs(_dayLengthNs_) holds.
+        1. If NormalizedTimeDurationSign(_norm_) = 1 and _sign_ = -1, throw a *RangeError* exception.
+        1. Assert: CompareNormalizedTimeDuration(NormalizedTimeDurationAbs(_norm_), NormalizedTimeDurationAbs(_dayLengthNs_)) = -1.
         1. Return the Record {
           [[Days]]: _days_,
-          [[Nanoseconds]]: _nanoseconds_,
-          [[DayLength]]: abs(_dayLengthNs_)
+          [[Remainder]]: _norm_,
+          [[DayLength]]: ℝ(NormalizedTimeDurationAbs(_dayLengthNs_).[[TotalNanoseconds]])
           }.
       </emu-alg>
     </emu-clause>
@@ -1501,7 +1495,8 @@
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
         1. If _settings_.[[LargestUnit]] is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
-          1. Let _result_ be DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[LargestUnit]], _settings_.[[RoundingMode]]).
+          1. Let _norm_ be DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
+          1. Let _result_ be BalanceTimeDuration(_norm_, _settings_.[[LargestUnit]]).
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]]).
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
           1. Throw a *RangeError* exception.
@@ -1513,15 +1508,18 @@
         1. Let _precalculatedPlainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
         1. Let _plainRelativeTo_ be ! CreateTemporalDate(_precalculatedPlainDateTime_.[[ISOYear]], _precalculatedPlainDateTime_.[[ISOMonth]], _precalculatedPlainDateTime_.[[ISODay]], _calendarRec_.[[Receiver]]).
         1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
-        1. Let _difference_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _settings_.[[LargestUnit]], _resolvedOptions_, _precalculatedPlainDateTime_).
+        1. Let _result_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _settings_.[[LargestUnit]], _resolvedOptions_, _precalculatedPlainDateTime_).
         1. If _settings_.[[SmallestUnit]] is *"nanosecond"* and _settings_.[[RoundingIncrement]] is 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
-        1. If _roundingGranularityIsNoop_ is *true*, then
-          1. Return ! CreateTemporalDuration(_sign_ &times; _difference_.[[Years]], _sign_ &times; _difference_.[[Months]], _sign_ &times; _difference_.[[Weeks]], _sign_ &times; _difference_.[[Days]], _sign_ &times; _difference_.[[Hours]], _sign_ &times; _difference_.[[Minutes]], _sign_ &times; _difference_.[[Seconds]], _sign_ &times; _difference_.[[Milliseconds]], _sign_ &times; _difference_.[[Microseconds]], _sign_ &times; _difference_.[[Nanoseconds]]).
-        1. Let _roundRecord_ be ? RoundDuration(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _difference_.[[Hours]], _difference_.[[Minutes]], _difference_.[[Seconds]], _difference_.[[Milliseconds]], _difference_.[[Microseconds]], _difference_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _plainRelativeTo_, _calendarRec_, _zonedDateTime_, _timeZoneRec_, _precalculatedPlainDateTime_).
-        1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
-        1. Let _adjustResult_ be ? AdjustRoundedDurationDays(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _roundResult_.[[Days]], _roundResult_.[[Hours]], _roundResult_.[[Minutes]], _roundResult_.[[Seconds]], _roundResult_.[[Milliseconds]], _roundResult_.[[Microseconds]], _roundResult_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _zonedDateTime_, _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_).
-        1. Let _result_ be ? BalanceDateDurationRelative(_adjustResult_.[[Years]], _adjustResult_.[[Months]], _adjustResult_.[[Weeks]], _adjustResult_.[[Days]], _settings_.[[LargestUnit]], _settings_.[[SmallestUnit]], _plainRelativeTo_, _calendarRec_).
-        1. Return ! CreateTemporalDuration(_sign_ &times; _result_.[[Years]], _sign_ &times; _result_.[[Months]], _sign_ &times; _result_.[[Weeks]], _sign_ &times; _result_.[[Days]], _sign_ &times; _adjustResult_.[[Hours]], _sign_ &times; _adjustResult_.[[Minutes]], _sign_ &times; _adjustResult_.[[Seconds]], _sign_ &times; _adjustResult_.[[Milliseconds]], _sign_ &times; _adjustResult_.[[Microseconds]], _sign_ &times; _adjustResult_.[[Nanoseconds]]).
+        1. If _roundingGranularityIsNoop_ is *false*, then
+          1. Let _roundRecord_ be ? RoundDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[NormalizedTime]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _plainRelativeTo_, _calendarRec_, _zonedDateTime_, _timeZoneRec_, _precalculatedPlainDateTime_).
+          1. Let _roundResult_ be _roundRecord_.[[NormalizedDuration]].
+          1. Let _daysResult_ be ! NormalizedTimeDurationToDays(_roundResult_.[[NormalizedTime]], _zonedDateTime_, _timeZoneRec_).
+          1. Let _days_ be _roundResult_.[[Days]] + _daysResult_.[[Days]].
+          1. Let _adjustResult_ be ? AdjustRoundedDurationDays(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _days_, _daysResult_.[[NormalizedTime]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _zonedDateTime_, _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_).
+          1. Let _balanceResult_ be ? BalanceDateDurationRelative(_adjustResult_.[[Years]], _adjustResult_.[[Months]], _adjustResult_.[[Weeks]], _adjustResult_.[[Days]], _settings_.[[LargestUnit]], _settings_.[[SmallestUnit]], _plainRelativeTo_, _calendarRec_).
+          1. Set _result_ to ? CombineDateAndNormalizedTimeDuration(_balanceResult_, _adjustResult_.[[NormalizedTime]]).
+        1. Let _timeResult_ be BalanceTimeDuration(_result_.[[NormalizedTime]], *"hour"*).
+        1. Return ! CreateTemporalDuration(_sign_ &times; _result_.[[Years]], _sign_ &times; _result_.[[Months]], _sign_ &times; _result_.[[Weeks]], _sign_ &times; _result_.[[Days]], _sign_ &times; _timeResult_.[[Hours]], _sign_ &times; _timeResult_.[[Minutes]], _sign_ &times; _timeResult_.[[Seconds]], _sign_ &times; _timeResult_.[[Milliseconds]], _sign_ &times; _timeResult_.[[Microseconds]], _sign_ &times; _timeResult_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
     <emu-clause id="sec-temporal-adddurationtoOrsubtractdurationfromzoneddatetime" type="abstract operation">
@@ -1543,7 +1541,8 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~date-add~ »).
-        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _sign_ &times; _duration_.[[Years]], _sign_ &times; _duration_.[[Months]], _sign_ &times; _duration_.[[Weeks]], _sign_ &times; _duration_.[[Days]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]], *undefined*, _options_).
+        1. Let _norm_ be NormalizeTimeDuration(_sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _sign_ &times; _duration_.[[Years]], _sign_ &times; _duration_.[[Months]], _sign_ &times; _duration_.[[Weeks]], _sign_ &times; _duration_.[[Days]], _norm_, *undefined*, _options_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZoneRec_.[[Receiver]], _calendarRec_.[[Receiver]]).
       </emu-alg>
     </emu-clause>
