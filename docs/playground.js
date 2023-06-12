@@ -10478,35 +10478,21 @@
 	  microseconds = bigInt(microseconds).add(milliseconds.multiply(1000));
 	  return bigInt(nanoseconds).add(microseconds.multiply(1000));
 	}
-	function NanosecondsToDays(nanoseconds, relativeTo) {
+	function NanosecondsToDays(nanoseconds, zonedRelativeTo) {
 	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	  const sign = MathSign(nanoseconds);
 	  nanoseconds = bigInt(nanoseconds);
-	  let dayLengthNs = 86400e9;
 	  if (sign === 0) return {
 	    days: 0,
 	    nanoseconds: bigInt.zero,
-	    dayLengthNs
+	    dayLengthNs: DAY_NANOS.toJSNumber()
 	  };
-	  if (!IsTemporalZonedDateTime(relativeTo)) {
-	    let days;
-	    ({
-	      quotient: days,
-	      remainder: nanoseconds
-	    } = nanoseconds.divmod(dayLengthNs));
-	    days = days.toJSNumber();
-	    return {
-	      days,
-	      nanoseconds,
-	      dayLengthNs
-	    };
-	  }
-	  const startNs = GetSlot(relativeTo, EPOCHNANOSECONDS);
-	  const start = GetSlot(relativeTo, INSTANT);
+	  const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+	  const start = GetSlot(zonedRelativeTo, INSTANT);
 	  const endNs = startNs.add(nanoseconds);
 	  const end = new TemporalInstant(endNs);
-	  const timeZone = GetSlot(relativeTo, TIME_ZONE);
-	  const calendar = GetSlot(relativeTo, CALENDAR);
+	  const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+	  const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 
 	  // Find the difference in days only.
 	  const dtStart = GetPlainDateTimeFor(timeZone, start, calendar);
@@ -10537,6 +10523,7 @@
 	  nanoseconds = endNs.subtract(intermediateNs);
 	  let isOverflow = false;
 	  let relativeInstant = new TemporalInstant(intermediateNs);
+	  let dayLengthNs;
 	  do {
 	    // calculate length of the next day (day that contains the time remainder)
 	    const oneDayFartherNs = AddZonedDateTime(relativeInstant, timeZone, calendar, 0, 0, 0, sign, 0, 0, 0, 0, 0, 0);
@@ -10567,40 +10554,49 @@
 	    dayLengthNs: MathAbs$1(dayLengthNs)
 	  };
 	}
-	function BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
-	  let relativeTo = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : undefined;
-	  let result = BalancePossiblyInfiniteDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, relativeTo);
+	function BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
+	  let result = BalancePossiblyInfiniteTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 	  if (result === 'positive overflow' || result === 'negative overflow') {
 	    throw new RangeError('Duration out of range');
 	  } else {
 	    return result;
 	  }
 	}
-	function BalancePossiblyInfiniteDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
-	  let relativeTo = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : undefined;
-	  if (IsTemporalZonedDateTime(relativeTo)) {
-	    const endNs = AddZonedDateTime(GetSlot(relativeTo, INSTANT), GetSlot(relativeTo, TIME_ZONE), GetSlot(relativeTo, CALENDAR), 0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-	    const startNs = GetSlot(relativeTo, EPOCHNANOSECONDS);
-	    nanoseconds = endNs.subtract(startNs);
-	  } else {
-	    nanoseconds = TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
-	  }
-	  if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
-	    ({
-	      days,
-	      nanoseconds
-	    } = NanosecondsToDays(nanoseconds, relativeTo));
-	  } else {
-	    days = 0;
-	  }
+	function BalancePossiblyInfiniteTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
+	  nanoseconds = TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
 	  const sign = nanoseconds.lesser(0) ? -1 : 1;
 	  nanoseconds = nanoseconds.abs();
-	  microseconds = milliseconds = seconds = minutes = hours = bigInt.zero;
+	  microseconds = milliseconds = seconds = minutes = hours = days = bigInt.zero;
 	  switch (largestUnit) {
 	    case 'year':
 	    case 'month':
 	    case 'week':
 	    case 'day':
+	      ({
+	        quotient: microseconds,
+	        remainder: nanoseconds
+	      } = nanoseconds.divmod(1000));
+	      ({
+	        quotient: milliseconds,
+	        remainder: microseconds
+	      } = microseconds.divmod(1000));
+	      ({
+	        quotient: seconds,
+	        remainder: milliseconds
+	      } = milliseconds.divmod(1000));
+	      ({
+	        quotient: minutes,
+	        remainder: seconds
+	      } = seconds.divmod(60));
+	      ({
+	        quotient: hours,
+	        remainder: minutes
+	      } = minutes.divmod(60));
+	      ({
+	        quotient: days,
+	        remainder: hours
+	      } = hours.divmod(24));
+	      break;
 	    case 'hour':
 	      ({
 	        quotient: microseconds,
@@ -10676,6 +10672,7 @@
 	    default:
 	      throw new Error('assert not reached');
 	  }
+	  days = days.toJSNumber() * sign;
 	  hours = hours.toJSNumber() * sign;
 	  minutes = minutes.toJSNumber() * sign;
 	  seconds = seconds.toJSNumber() * sign;
@@ -10699,7 +10696,45 @@
 	    nanoseconds
 	  };
 	}
-	function UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+	function BalanceTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, zonedRelativeTo) {
+	  let result = BalancePossiblyInfiniteTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, zonedRelativeTo);
+	  if (result === 'positive overflow' || result === 'negative overflow') {
+	    throw new RangeError('Duration out of range');
+	  }
+	  return result;
+	}
+	function BalancePossiblyInfiniteTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, zonedRelativeTo) {
+	  const endNs = AddZonedDateTime(GetSlot(zonedRelativeTo, INSTANT), GetSlot(zonedRelativeTo, TIME_ZONE), GetSlot(zonedRelativeTo, CALENDAR), 0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+	  const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+	  nanoseconds = endNs.subtract(startNs);
+	  if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
+	    ({
+	      days,
+	      nanoseconds
+	    } = NanosecondsToDays(nanoseconds, zonedRelativeTo));
+	    largestUnit = 'hour';
+	  } else {
+	    days = 0;
+	  }
+	  ({
+	    hours,
+	    minutes,
+	    seconds,
+	    milliseconds,
+	    microseconds,
+	    nanoseconds
+	  } = BalancePossiblyInfiniteTimeDuration(0, 0, 0, 0, 0, 0, nanoseconds, largestUnit));
+	  return {
+	    days,
+	    hours,
+	    minutes,
+	    seconds,
+	    milliseconds,
+	    microseconds,
+	    nanoseconds
+	  };
+	}
+	function UnbalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  if (sign === 0) return {
@@ -10821,7 +10856,7 @@
 	    days: days.toJSNumber()
 	  };
 	}
-	function BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+	function BalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  if (sign === 0) return {
@@ -11255,7 +11290,7 @@
 	    microseconds,
 	    nanoseconds
 	  } = RoundDuration(0, 0, 0, 0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, increment, smallestUnit, roundingMode));
-	  return BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
+	  return BalanceTimeDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 	}
 	function DifferenceISODateTime(y1, mon1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2, calendar, largestUnit, options) {
 	  let {
@@ -11281,7 +11316,7 @@
 	      milliseconds,
 	      microseconds,
 	      nanoseconds
-	    } = BalanceDuration(-timeSign, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
+	    } = BalanceTimeDuration(-timeSign, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
 	  }
 	  const date1 = CreateTemporalDate(y1, mon1, d1, calendar);
 	  const date2 = CreateTemporalDate(y2, mon2, d2, calendar);
@@ -11302,7 +11337,7 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
+	  } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
 	  return {
 	    years,
 	    months,
@@ -11362,7 +11397,7 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs, 'hour');
+	  } = BalanceTimeDuration(0, 0, 0, 0, 0, 0, timeRemainderNs, 'hour');
 	  return {
 	    years,
 	    months,
@@ -11503,7 +11538,7 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit));
+	  } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit));
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
 	}
@@ -11535,7 +11570,7 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = BalanceDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit));
+	  } = BalanceTimeDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit));
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(0, 0, 0, 0, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
 	}
@@ -11709,7 +11744,7 @@
 	      milliseconds,
 	      microseconds,
 	      nanoseconds
-	    } = BalanceDuration(d1 + d2, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
+	    } = BalanceTimeDuration(d1 + d2, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
 	  } else if (IsTemporalDate(relativeTo)) {
 	    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	    const calendar = GetSlot(relativeTo, CALENDAR);
@@ -11735,7 +11770,7 @@
 	      milliseconds,
 	      microseconds,
 	      nanoseconds
-	    } = BalanceDuration(days, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
+	    } = BalanceTimeDuration(days, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
 	  } else {
 	    // relativeTo is a ZonedDateTime
 	    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
@@ -11989,7 +12024,7 @@
 	  } = duration;
 	  ({
 	    days
-	  } = BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
+	  } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
 	  options = GetOptionsObject(options);
 	  const calendar = GetSlot(yearMonth, CALENDAR);
 	  const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
@@ -12217,14 +12252,14 @@
 	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	  const dayEnd = AddZonedDateTime(new TemporalInstant(dayStart), timeZone, calendar, 0, 0, 0, direction, 0, 0, 0, 0, 0, 0);
 	  const dayLengthNs = dayEnd.subtract(dayStart);
-	  if (timeRemainderNs.subtract(dayLengthNs).multiply(direction).geq(0)) {
+	  const oneDayLess = timeRemainderNs.subtract(dayLengthNs);
+	  if (oneDayLess.multiply(direction).geq(0)) {
 	    ({
 	      years,
 	      months,
 	      weeks,
 	      days
 	    } = AddDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, 0, 0, 0, direction, 0, 0, 0, 0, 0, 0, relativeTo));
-	    timeRemainderNs = RoundInstant(timeRemainderNs.subtract(dayLengthNs), increment, unit, roundingMode);
 	    ({
 	      hours,
 	      minutes,
@@ -12232,7 +12267,15 @@
 	      milliseconds,
 	      microseconds,
 	      nanoseconds
-	    } = BalanceDuration(0, 0, 0, 0, 0, 0, timeRemainderNs.toJSNumber(), 'hour'));
+	    } = RoundDuration(years, months, weeks, days, 0, 0, 0, 0, 0, oneDayLess.toJSNumber(), increment, unit, roundingMode));
+	    ({
+	      hours,
+	      minutes,
+	      seconds,
+	      milliseconds,
+	      microseconds,
+	      nanoseconds
+	    } = BalanceTimeDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'hour'));
 	  }
 	  return {
 	    years,
@@ -12250,10 +12293,10 @@
 	function RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, increment, unit, roundingMode) {
 	  let relativeTo = arguments.length > 13 && arguments[13] !== undefined ? arguments[13] : undefined;
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-	  let calendar, zdtRelative;
+	  let calendar, zonedRelativeTo;
 	  if (relativeTo) {
 	    if (IsTemporalZonedDateTime(relativeTo)) {
-	      zdtRelative = relativeTo;
+	      zonedRelativeTo = relativeTo;
 	      relativeTo = ToTemporalDate(relativeTo);
 	    } else if (!IsTemporalDate(relativeTo)) {
 	      throw new TypeError('starting point must be PlainDate or ZonedDateTime');
@@ -12266,16 +12309,22 @@
 	  let dayLengthNs;
 	  if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
 	    nanoseconds = TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
-	    let intermediate;
-	    if (zdtRelative) {
-	      intermediate = MoveRelativeZonedDateTime(zdtRelative, years, months, weeks, days);
-	    }
 	    let deltaDays;
-	    ({
-	      days: deltaDays,
-	      nanoseconds,
-	      dayLengthNs
-	    } = NanosecondsToDays(nanoseconds, intermediate));
+	    if (zonedRelativeTo) {
+	      const intermediate = MoveRelativeZonedDateTime(zonedRelativeTo, years, months, weeks, days);
+	      ({
+	        days: deltaDays,
+	        nanoseconds,
+	        dayLengthNs
+	      } = NanosecondsToDays(nanoseconds, intermediate));
+	    } else {
+	      ({
+	        quotient: deltaDays,
+	        remainder: nanoseconds
+	      } = nanoseconds.divmod(DAY_NANOS));
+	      deltaDays = deltaDays.toJSNumber();
+	      dayLengthNs = DAY_NANOS.toJSNumber();
+	    }
 	    days += deltaDays;
 	    hours = minutes = seconds = milliseconds = microseconds = 0;
 	  }
@@ -13357,7 +13406,7 @@
 	    const overflow = ToTemporalOverflow(options);
 	    const {
 	      days
-	    } = BalanceDuration(GetSlot(duration, DAYS), GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS), 'day');
+	    } = BalanceTimeDuration(GetSlot(duration, DAYS), GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS), 'day');
 	    const id = GetSlot(this, CALENDAR_ID);
 	    return impl[id].dateAdd(date, GetSlot(duration, YEARS), GetSlot(duration, MONTHS), GetSlot(duration, WEEKS), days, overflow, id);
 	  }
@@ -16757,7 +16806,7 @@
 	      months,
 	      weeks,
 	      days
-	    } = UnbalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
+	    } = UnbalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
 	    ({
 	      years,
 	      months,
@@ -16770,33 +16819,45 @@
 	      microseconds,
 	      nanoseconds
 	    } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo));
-	    ({
-	      years,
-	      months,
-	      weeks,
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo));
-	    ({
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = BalanceDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, relativeTo));
+	    if (IsTemporalZonedDateTime(relativeTo)) {
+	      ({
+	        years,
+	        months,
+	        weeks,
+	        days,
+	        hours,
+	        minutes,
+	        seconds,
+	        milliseconds,
+	        microseconds,
+	        nanoseconds
+	      } = AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo));
+	      ({
+	        days,
+	        hours,
+	        minutes,
+	        seconds,
+	        milliseconds,
+	        microseconds,
+	        nanoseconds
+	      } = BalanceTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, relativeTo));
+	    } else {
+	      ({
+	        days,
+	        hours,
+	        minutes,
+	        seconds,
+	        milliseconds,
+	        microseconds,
+	        nanoseconds
+	      } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
+	    }
 	    ({
 	      years,
 	      months,
 	      weeks,
 	      days
-	    } = BalanceDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
+	    } = BalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
 	    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	  }
 	  total(totalOf) {
@@ -16828,13 +16889,15 @@
 	      months,
 	      weeks,
 	      days
-	    } = UnbalanceDurationRelative(years, months, weeks, days, unit, relativeTo));
+	    } = UnbalanceDateDurationRelative(years, months, weeks, days, unit, relativeTo));
 	    // If the unit we're totalling is smaller than `days`, convert days down to that unit.
-	    let intermediate;
+	    let balanceResult;
 	    if (IsTemporalZonedDateTime(relativeTo)) {
-	      intermediate = MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
+	      const intermediate = MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
+	      balanceResult = BalancePossiblyInfiniteTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit, intermediate);
+	    } else {
+	      balanceResult = BalancePossiblyInfiniteTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit);
 	    }
-	    let balanceResult = BalancePossiblyInfiniteDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit, intermediate);
 	    if (balanceResult === 'positive overflow') {
 	      return Infinity;
 	    } else if (balanceResult === 'negative overflow') {
@@ -16938,10 +17001,10 @@
 	    if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
 	      ({
 	        days: d1
-	      } = UnbalanceDurationRelative(y1, mon1, w1, d1, 'day', relativeTo));
+	      } = UnbalanceDateDurationRelative(y1, mon1, w1, d1, 'day', relativeTo));
 	      ({
 	        days: d2
-	      } = UnbalanceDurationRelative(y2, mon2, w2, d2, 'day', relativeTo));
+	      } = UnbalanceDateDurationRelative(y2, mon2, w2, d2, 'day', relativeTo));
 	    }
 	    ns1 = TotalDurationNanoseconds(d1, h1, min1, s1, ms1, µs1, ns1, shift1);
 	    ns2 = TotalDurationNanoseconds(d2, h2, min2, s2, ms2, µs2, ns2, shift2);
