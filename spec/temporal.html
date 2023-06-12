@@ -220,11 +220,21 @@
       <p>ECMAScript hosts that are not web browsers must use the default implementation of HostSystemUTCEpochNanoseconds.</p>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-systemutcepochmilliseconds" aoid="SystemUTCEpochMilliseconds">
+      <h1>SystemUTCEpochMilliseconds ( )</h1>
+      <emu-alg>
+        1. Let _global_ be GetGlobalObject().
+        1. Let _nowNs_ be HostSystemUTCEpochNanoseconds(_global_).
+        1. Return 𝔽(floor(_nowNs_ / 10<sup>6</sup>)).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-systemutcepochnanoseconds" aoid="SystemUTCEpochNanoseconds">
       <h1>SystemUTCEpochNanoseconds ( )</h1>
       <emu-alg>
         1. Let _global_ be GetGlobalObject().
-        1. Return ℤ(HostSystemUTCEpochNanoseconds(_global_)).
+        1. Let _nowNs_ be HostSystemUTCEpochNanoseconds(_global_).
+        1. Return ℤ(_nowNs_).
       </emu-alg>
     </emu-clause>
 
