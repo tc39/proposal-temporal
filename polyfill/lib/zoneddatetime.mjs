@@ -18,6 +18,7 @@ import {
   TIME_ZONE,
   GetSlot
 } from './slots.mjs';
+import { TimeDuration } from './timeduration.mjs';
 
 import bigInt from 'big-integer';
 
@@ -157,9 +158,8 @@ export class ZonedDateTime {
     );
     const todayNs = GetSlot(ES.GetInstantFor(timeZoneRec, today, 'compatible'), EPOCHNANOSECONDS);
     const tomorrowNs = GetSlot(ES.GetInstantFor(timeZoneRec, tomorrow, 'compatible'), EPOCHNANOSECONDS);
-    const diffNs = tomorrowNs.subtract(todayNs);
-    const { quotient, remainder } = diffNs.divmod(3.6e12);
-    return quotient.toJSNumber() + remainder.toJSNumber() / 3.6e12;
+    const diff = TimeDuration.fromEpochNsDiff(tomorrowNs, todayNs);
+    return diff.fdiv(3.6e12);
   }
   get daysInWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

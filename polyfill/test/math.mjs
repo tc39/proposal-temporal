@@ -5,9 +5,9 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { deepEqual } = assert;
+const { deepEqual, equal } = assert;
 
-import { TruncatingDivModByPowerOf10 as div } from '../lib/math.mjs';
+import { TruncatingDivModByPowerOf10 as div, FMAPowerOf10 as fma } from '../lib/math.mjs';
 
 describe('Math', () => {
   describe('TruncatingDivModByPowerOf10', () => {
@@ -60,6 +60,47 @@ describe('Math', () => {
       deepEqual(div(9007199254740990926258176, 9), { div: Number.MAX_SAFE_INTEGER - 1, mod: 926258176 }));
     it('-9007199254740990926258176/10**9 = -MAX_SAFE_INTEGER+1, -926258176', () =>
       deepEqual(div(-9007199254740990926258176, 9), { div: -Number.MAX_SAFE_INTEGER + 1, mod: -926258176 }));
+  });
+
+  describe('FMAPowerOf10', () => {
+    it('0*10**0+0 = 0', () => equal(fma(0, 0, 0), 0));
+    it('-0*10**0-0 = -0', () => equal(fma(-0, 0, -0), -0));
+    it('1*10**0+0 = 1', () => equal(fma(1, 0, 0), 1));
+    it('-1*10**0+0 = -1', () => equal(fma(-1, 0, 0), -1));
+    it('0*10**50+1234 = 1234', () => equal(fma(0, 50, 1234), 1234));
+    it('-0*10**50-1234 = -1234', () => equal(fma(-0, 50, -1234), -1234));
+    it('1234*10**12+0', () => equal(fma(1234, 12, 0), 1234000000000000));
+    it('-1234*10**12-0', () => equal(fma(-1234, 12, -0), -1234000000000000));
+
+    it('2*10**2+45 = 245', () => equal(fma(2, 2, 45), 245));
+    it('2*10**3+45 = 2045', () => equal(fma(2, 3, 45), 2045));
+    it('2*10**4+45 = 20045', () => equal(fma(2, 4, 45), 20045));
+    it('2*10**5+45 = 200045', () => equal(fma(2, 5, 45), 200045));
+    it('2*10**6+45 = 2000045', () => equal(fma(2, 6, 45), 2000045));
+
+    it('-2*10**2-45 = -245', () => equal(fma(-2, 2, -45), -245));
+    it('-2*10**3-45 = -2045', () => equal(fma(-2, 3, -45), -2045));
+    it('-2*10**4-45 = -20045', () => equal(fma(-2, 4, -45), -20045));
+    it('-2*10**5-45 = -200045', () => equal(fma(-2, 5, -45), -200045));
+    it('-2*10**6-45 = -2000045', () => equal(fma(-2, 6, -45), -2000045));
+
+    it('8692288669465520*10**9+321414345 = 8692288669465520321414345, rounded to 8692288669465520839327744', () =>
+      equal(fma(8692288669465520, 9, 321414345), 8692288669465520839327744));
+    it('-8692288669465520*10**9-321414345 = -8692288669465520321414345, rounded to -8692288669465520839327744', () =>
+      equal(fma(-8692288669465520, 9, -321414345), -8692288669465520839327744));
+
+    it('MAX_SAFE_INTEGER*10**3+999 rounded to 9007199254740992000', () =>
+      equal(fma(Number.MAX_SAFE_INTEGER, 3, 999), 9007199254740992000));
+    it('-MAX_SAFE_INTEGER*10**3-999 rounded to -9007199254740992000', () =>
+      equal(fma(-Number.MAX_SAFE_INTEGER, 3, -999), -9007199254740992000));
+    it('MAX_SAFE_INTEGER*10**6+999999 rounded to 9007199254740992000000', () =>
+      equal(fma(Number.MAX_SAFE_INTEGER, 6, 999999), 9007199254740992000000));
+    it('-MAX_SAFE_INTEGER*10**6-999999 rounded to -9007199254740992000000', () =>
+      equal(fma(-Number.MAX_SAFE_INTEGER, 6, -999999), -9007199254740992000000));
+    it('MAX_SAFE_INTEGER*10**3+999 rounded to 9007199254740992000', () =>
+      equal(fma(Number.MAX_SAFE_INTEGER, 9, 999999999), 9007199254740992000000000));
+    it('-MAX_SAFE_INTEGER*10**3-999 rounded to -9007199254740992000', () =>
+      equal(fma(-Number.MAX_SAFE_INTEGER, 9, -999999999), -9007199254740992000000000));
   });
 });
 

@@ -22,6 +22,7 @@ import {
   HasSlot,
   SetSlot
 } from './slots.mjs';
+import { TimeDuration } from './timeduration.mjs';
 
 const ArrayFrom = Array.from;
 const ArrayIncludes = Array.prototype.includes;
@@ -157,16 +158,15 @@ export class Calendar {
     duration = ES.ToTemporalDuration(duration);
     options = ES.GetOptionsObject(options);
     const overflow = ES.ToTemporalOverflow(options);
-    const { days } = ES.BalanceTimeDuration(
-      GetSlot(duration, DAYS),
+    const norm = TimeDuration.normalize(
       GetSlot(duration, HOURS),
       GetSlot(duration, MINUTES),
       GetSlot(duration, SECONDS),
       GetSlot(duration, MILLISECONDS),
       GetSlot(duration, MICROSECONDS),
-      GetSlot(duration, NANOSECONDS),
-      'day'
+      GetSlot(duration, NANOSECONDS)
     );
+    const days = GetSlot(duration, DAYS) + ES.BalanceTimeDuration(norm, 'day').days;
     const id = GetSlot(this, CALENDAR_ID);
     return impl[id].dateAdd(
       date,
