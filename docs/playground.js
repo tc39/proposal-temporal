@@ -12614,7 +12614,7 @@
 	  let excludedKeys = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 	  let excludedValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 	  const copy = ObjectCreate$8(proto);
-	  CopyDataProperties(copy, ToObject$1(source), excludedKeys, excludedValues);
+	  CopyDataProperties(copy, source, excludedKeys, excludedValues);
 	  return copy;
 	}
 	function GetOption(options, property, allowedValues, fallback) {
@@ -13334,8 +13334,8 @@
 	  }
 	  mergeFields(fields, additionalFields) {
 	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-	    const fieldsCopy = SnapshotOwnProperties(fields, null, [], [undefined]);
-	    const additionalFieldsCopy = SnapshotOwnProperties(additionalFields, null, [], [undefined]);
+	    const fieldsCopy = SnapshotOwnProperties(ToObject$1(fields), null, [], [undefined]);
+	    const additionalFieldsCopy = SnapshotOwnProperties(ToObject$1(additionalFields), null, [], [undefined]);
 	    const additionalKeys = ReflectOwnKeys(additionalFieldsCopy);
 	    const overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
 	    const merged = ObjectCreate$6(null);
