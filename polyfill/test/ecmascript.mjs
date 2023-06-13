@@ -8,6 +8,7 @@ import { strict as assert } from 'assert';
 const { deepEqual, equal, throws } = assert;
 
 import bigInt from 'big-integer';
+import { readFileSync } from 'fs';
 
 import * as ES from '../lib/ecmascript.mjs';
 import { GetSlot, TIMEZONE_ID } from '../lib/slots.mjs';
@@ -63,6 +64,61 @@ describe('ECMAScript', () => {
         });
       });
     }
+  });
+
+  describe('GetAvailableNamedTimeZoneIdentifier', () => {
+    it('Case-normalizes time zone IDs', () => {
+      // eslint-disable-next-line max-len
+      // curl -s https://raw.githubusercontent.com/unicode-org/cldr-json/main/cldr-json/cldr-bcp47/bcp47/timezone.json > cldr-timezone.json
+      const cldrTimeZonePath = new URL('./cldr-timezone.json', import.meta.url);
+      const cldrTimeZoneJson = JSON.parse(readFileSync(cldrTimeZonePath));
+
+      // get CLDR's time zone IDs
+      const cldrIdentifiers = Object.entries(cldrTimeZoneJson.keyword.u.tz)
+        .filter((z) => !z[0].startsWith('_')) // ignore metadata elements
+        .map((z) => z[1]._alias) // pull out the list of IANA IDs for each CLDR zone
+        .filter(Boolean) // CLDR deprecated zones no longer have an IANA ID
+        .flatMap((ids) => ids.split(' ')) // expand all space-delimited IANA IDs for each zone
+        .filter((id) => !['America/Ciudad_Juarez'].includes(id)) // exclude IDs that are too new to be supported
+        .filter((id) => !['Etc/Unknown'].includes(id)); // see https://github.com/tc39/proposal-canonical-tz/pull/25
+
+      // These 4 legacy IDs are in TZDB, in Wikipedia, and accepted by ICU, but they're not in CLDR data.
+      // Not sure where they come from, perhaps hard-coded into ICU, but we'll test them anyway.
+      const missingFromCLDR = ['CET', 'EET', 'MET', 'WET'];
+
+      // All IDs that we know about
+      const ids = [...new Set([...missingFromCLDR, ...cldrIdentifiers, ...Intl.supportedValuesOf('timeZone')])];
+
+      for (const id of ids) {
+        const lower = id.toLowerCase();
+        const upper = id.toUpperCase();
+        equal(ES.GetAvailableNamedTimeZoneIdentifier(id)?.identifier, id);
+        equal(ES.GetAvailableNamedTimeZoneIdentifier(upper)?.identifier, id);
+        equal(ES.GetAvailableNamedTimeZoneIdentifier(lower)?.identifier, id);
+      }
+    });
+    it('Returns canonical IDs', () => {
+      const ids = Intl.supportedValuesOf('timeZone');
+      for (const id of ids) {
+        equal(ES.GetAvailableNamedTimeZoneIdentifier(id).primaryIdentifier, id);
+      }
+      const knownAliases = [
+        ['America/Atka', 'America/Adak'],
+        ['America/Knox_IN', 'America/Indiana/Knox'],
+        ['Asia/Ashkhabad', 'Asia/Ashgabat'],
+        ['Asia/Dacca', 'Asia/Dhaka'],
+        ['Asia/Istanbul', 'Europe/Istanbul'],
+        ['Asia/Macao', 'Asia/Macau'],
+        ['Asia/Thimbu', 'Asia/Thimphu'],
+        ['Asia/Ujung_Pandang', 'Asia/Makassar'],
+        ['Asia/Ulan_Bator', 'Asia/Ulaanbaatar']
+      ];
+      for (const [identifier, primaryIdentifier] of knownAliases) {
+        const record = ES.GetAvailableNamedTimeZoneIdentifier(identifier);
+        equal(record.identifier, identifier);
+        equal(record.primaryIdentifier, primaryIdentifier);
+      }
+    });
   });
 });
 
