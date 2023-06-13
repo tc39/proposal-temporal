@@ -7732,6 +7732,7 @@
 	const ArrayPrototypePush$4 = Array.prototype.push;
 	const ArrayPrototypeSort = Array.prototype.sort;
 	const IntlDateTimeFormat$2 = globalThis.Intl.DateTimeFormat;
+	const IntlSupportedValuesOf = globalThis.Intl.supportedValuesOf;
 	const MathAbs$1 = Math.abs;
 	const MathFloor$1 = Math.floor;
 	const MathMax = Math.max;
@@ -7915,7 +7916,9 @@
 	  } = ParseTemporalTimeZoneString(stringIdent);
 	  if (tzName) {
 	    if (IsTimeZoneOffsetString(tzName)) return CanonicalizeTimeZoneOffsetString(tzName);
-	    return GetCanonicalTimeZoneIdentifier(tzName);
+	    const record = GetAvailableNamedTimeZoneIdentifier(tzName);
+	    if (!record) throw new RangeError("Unrecognized time zone ".concat(tzName));
+	    return record.primaryIdentifier;
 	  }
 	  if (z) return 'UTC';
 	  // if !tzName && !z then offset must be present
@@ -10024,16 +10027,96 @@
 	  const nanoseconds = +((match[5] || 0) + '000000000').slice(0, 9);
 	  return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
 	}
+	let canonicalTimeZoneIdsCache = undefined;
+	function GetAvailableNamedTimeZoneIdentifier(identifier) {
+	  var _canonicalTimeZoneIds, _specialCases$segment, _specialCases$segment2;
+	  // The most common case is when the identifier is a canonical time zone ID.
+	  // Fast-path that case by caching all canonical IDs. For old ECMAScript
+	  // implementations lacking this API, set the cache to `null` to avoid retries.
+	  if (canonicalTimeZoneIdsCache === undefined) {
+	    const canonicalTimeZoneIds = IntlSupportedValuesOf === null || IntlSupportedValuesOf === void 0 ? void 0 : IntlSupportedValuesOf('timeZone');
+	    canonicalTimeZoneIdsCache = canonicalTimeZoneIds ? new Map(canonicalTimeZoneIds.map(id => [ASCIILowercase(id), id])) : null;
+	  }
+	  const lower = ASCIILowercase(identifier);
+	  let primaryIdentifier = (_canonicalTimeZoneIds = canonicalTimeZoneIdsCache) === null || _canonicalTimeZoneIds === void 0 ? void 0 : _canonicalTimeZoneIds.get(lower);
+	  if (primaryIdentifier) return {
+	    identifier: primaryIdentifier,
+	    primaryIdentifier
+	  };
 
-	// In the spec, GetCanonicalTimeZoneIdentifier is infallible and is always
-	// preceded by a call to IsAvailableTimeZoneName. However in the polyfill,
-	// we don't (yet) have a way to check if a time zone ID is valid without
-	// also canonicalizing it. So we combine both operations into one function,
-	// which will return the canonical ID if the ID is valid, and will throw
-	// if it's not.
-	function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
-	  const formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier);
-	  return formatter.resolvedOptions().timeZone;
+	  // It's not already a primary identifier, so get its primary identifier (or
+	  // return if it's not an available named time zone ID).
+	  try {
+	    const formatter = getIntlDateTimeFormatEnUsForTimeZone(identifier);
+	    primaryIdentifier = formatter.resolvedOptions().timeZone;
+	  } catch {
+	    return undefined;
+	  }
+
+	  // The identifier is an alias (a deprecated identifier that's a synonym for a
+	  // primary identifier), so we need to case-normalize the identifier to match
+	  // the IANA TZDB, e.g. america/new_york => America/New_York. There's no
+	  // built-in way to do this using Intl.DateTimeFormat, but the we can normalize
+	  // almost all aliases (modulo a few special cases) using the TZDB's basic
+	  // capitalization pattern:
+	  // 1. capitalize the first letter of the identifier
+	  // 2. capitalize the letter after every slash, dash, or underscore delimiter
+	  const standardCase = [...lower].map((c, i) => i === 0 || '/-_'.includes(lower[i - 1]) ? c.toUpperCase() : c).join('');
+	  const segments = standardCase.split('/');
+	  if (segments.length === 1) {
+	    // If a single-segment legacy ID is 2-3 chars or contains a number or dash, then
+	    // (except for the "GB-Eire" special case) the case-normalized form is uppercase.
+	    // These are: GMT+0, GMT-0, GB, NZ, PRC, ROC, ROK, UCT, GMT, GMT0, CET, CST6CDT,
+	    // EET, EST, HST, MET, MST, MST7MDT, PST8PDT, WET, NZ-CHAT, and W-SU.
+	    // Otherwise it's standard form: first letter capitalized, e.g. Iran, Egypt, Hongkong
+	    if (lower === 'gb-eire') return {
+	      identifier: 'GB-Eire',
+	      primaryIdentifier
+	    };
+	    return {
+	      identifier: lower.length <= 3 || /[-0-9]/.test(lower) ? lower.toUpperCase() : segments[0],
+	      primaryIdentifier
+	    };
+	  }
+
+	  // All Etc zone names are uppercase except three exceptions.
+	  if (segments[0] === 'Etc') {
+	    const etcName = ['Zulu', 'Greenwich', 'Universal'].includes(segments[1]) ? segments[1] : segments[1].toUpperCase();
+	    return {
+	      identifier: "Etc/".concat(etcName),
+	      primaryIdentifier
+	    };
+	  }
+
+	  // Legacy US identifiers like US/Alaska or US/Indiana-Starke are 2 segments and use standard form.
+	  if (segments[0] === 'Us') return {
+	    identifier: "US/".concat(segments[1]),
+	    primaryIdentifier
+	  };
+
+	  // For multi-segment IDs, there's a few special cases in the second/third segments
+	  const specialCases = {
+	    Act: 'ACT',
+	    Lhi: 'LHI',
+	    Nsw: 'NSW',
+	    Dar_Es_Salaam: 'Dar_es_Salaam',
+	    Port_Of_Spain: 'Port_of_Spain',
+	    Isle_Of_Man: 'Isle_of_Man',
+	    Comodrivadavia: 'ComodRivadavia',
+	    Knox_In: 'Knox_IN',
+	    Dumontdurville: 'DumontDUrville',
+	    Mcmurdo: 'McMurdo',
+	    Denoronha: 'DeNoronha',
+	    Easterisland: 'EasterIsland',
+	    Bajanorte: 'BajaNorte',
+	    Bajasur: 'BajaSur'
+	  };
+	  segments[1] = (_specialCases$segment = specialCases[segments[1]]) !== null && _specialCases$segment !== void 0 ? _specialCases$segment : segments[1];
+	  if (segments.length > 2) segments[2] = (_specialCases$segment2 = specialCases[segments[2]]) !== null && _specialCases$segment2 !== void 0 ? _specialCases$segment2 : segments[2];
+	  return {
+	    identifier: segments.join('/'),
+	    primaryIdentifier
+	  };
 	}
 	function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {
 	  const {
@@ -12729,7 +12812,8 @@
 	const DATETIME = Symbol('datetime');
 	const INST = Symbol('instant');
 	const ORIGINAL = Symbol('original');
-	const TZ_RESOLVED = Symbol('timezone');
+	const TZ_CANONICAL = Symbol('timezone-canonical');
+	const TZ_ORIGINAL = Symbol('timezone-original');
 	const CAL_ID = Symbol('calendar-id');
 	const LOCALE = Symbol('locale');
 	const OPTIONS = Symbol('options');
@@ -12787,7 +12871,7 @@
 	  }
 	  this[LOCALE] = ro.locale;
 	  this[ORIGINAL] = original;
-	  this[TZ_RESOLVED] = ro.timeZone;
+	  this[TZ_CANONICAL] = ro.timeZone;
 	  this[CAL_ID] = ro.calendar;
 	  this[DATE] = dateAmend;
 	  this[YM] = yearMonthAmend;
@@ -12795,6 +12879,25 @@
 	  this[TIME] = timeAmend;
 	  this[DATETIME] = datetimeAmend;
 	  this[INST] = instantAmend;
+
+	  // Save the original time zone, for a few reasons:
+	  // - Clearer error messages
+	  // - More clearly follows the spec for InitializeDateTimeFormat
+	  // - Because it follows the spec more closely, will make it easier to integrate
+	  //   support of offset strings and other potential changes like proposal-canonical-tz.
+	  const timeZoneOption = hasOptions ? options.timeZone : undefined;
+	  if (timeZoneOption === undefined) {
+	    this[TZ_ORIGINAL] = ro.timeZone;
+	  } else {
+	    const id = ToString$1(timeZoneOption);
+	    if (IsTimeZoneOffsetString(id)) {
+	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
+	      throw new RangeError('Intl.DateTimeFormat does not currently support offset time zones');
+	    }
+	    const record = GetAvailableNamedTimeZoneIdentifier(id);
+	    if (!record) throw new RangeError("Intl.DateTimeFormat formats built-in time zones, not ".concat(id));
+	    this[TZ_ORIGINAL] = record.identifier;
+	  }
 	}
 	DateTimeFormat.supportedLocalesOf = function () {
 	  return IntlDateTimeFormat$1.supportedLocalesOf(...arguments);
@@ -12817,7 +12920,9 @@
 	  configurable: false
 	});
 	function resolvedOptions() {
-	  return this[ORIGINAL].resolvedOptions();
+	  const resolved = this[ORIGINAL].resolvedOptions();
+	  resolved.timeZone = this[TZ_CANONICAL];
+	  return resolved;
 	}
 	function format(datetime) {
 	  let {
@@ -13029,7 +13134,7 @@
 	    const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
 	    const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
 	    return {
-	      instant: GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
+	      instant: GetInstantFor(main[TZ_CANONICAL], datetime, 'compatible'),
 	      formatter: getPropLazy(main, TIME)
 	    };
 	  }
@@ -13043,7 +13148,7 @@
 	    }
 	    const datetime = new DateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
 	    return {
-	      instant: GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
+	      instant: GetInstantFor(main[TZ_CANONICAL], datetime, 'compatible'),
 	      formatter: getPropLazy(main, YM)
 	    };
 	  }
@@ -13057,7 +13162,7 @@
 	    }
 	    const datetime = new DateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
 	    return {
-	      instant: GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
+	      instant: GetInstantFor(main[TZ_CANONICAL], datetime, 'compatible'),
 	      formatter: getPropLazy(main, MD)
 	    };
 	  }
@@ -13071,7 +13176,7 @@
 	    }
 	    const datetime = new DateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
 	    return {
-	      instant: GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
+	      instant: GetInstantFor(main[TZ_CANONICAL], datetime, 'compatible'),
 	      formatter: getPropLazy(main, DATE)
 	    };
 	  }
@@ -13094,7 +13199,7 @@
 	      datetime = new DateTime(isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
 	    }
 	    return {
-	      instant: GetInstantFor(main[TZ_RESOLVED], datetime, 'compatible'),
+	      instant: GetInstantFor(main[TZ_CANONICAL], datetime, 'compatible'),
 	      formatter: getPropLazy(main, DATETIME)
 	    };
 	  }
@@ -17498,7 +17603,9 @@
 	    if (IsTimeZoneOffsetString(stringIdentifier)) {
 	      stringIdentifier = CanonicalizeTimeZoneOffsetString(stringIdentifier);
 	    } else {
-	      stringIdentifier = GetCanonicalTimeZoneIdentifier(stringIdentifier);
+	      const record = GetAvailableNamedTimeZoneIdentifier(stringIdentifier);
+	      if (!record) throw new RangeError("Invalid time zone identifier: ".concat(stringIdentifier));
+	      stringIdentifier = record.primaryIdentifier;
 	    }
 	    CreateSlots(this);
 	    SetSlot(this, TIMEZONE_ID, stringIdentifier);
@@ -18156,13 +18263,15 @@
 	      // The rest of the defaults will be filled in by formatting the Instant
 	    }
 
-	    let timeZone = ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
-	    if (IsTimeZoneOffsetString(timeZone)) {
+	    const timeZoneIdentifier = ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
+	    if (IsTimeZoneOffsetString(timeZoneIdentifier)) {
 	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-	      throw new RangeError('toLocaleString does not support offset string time zones');
+	      throw new RangeError('toLocaleString does not currently support offset time zones');
+	    } else {
+	      const record = GetAvailableNamedTimeZoneIdentifier(timeZoneIdentifier);
+	      if (!record) throw new RangeError("toLocaleString formats built-in time zones, not ".concat(timeZoneIdentifier));
+	      optionsCopy.timeZone = record.primaryIdentifier;
 	    }
-	    timeZone = GetCanonicalTimeZoneIdentifier(timeZone);
-	    optionsCopy.timeZone = timeZone;
 	    const formatter = new DateTimeFormat(locales, optionsCopy);
 	    const localeCalendarIdentifier = Call$1(customResolvedOptions, formatter, []).calendar;
 	    const calendarIdentifier = ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
