@@ -4,6 +4,7 @@ const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
 const ArrayPrototypeSort = Array.prototype.sort;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
+const IntlSupportedValuesOf = globalThis.Intl.supportedValuesOf;
 const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const MathMax = Math.max;
@@ -368,7 +369,9 @@ export function ParseTemporalTimeZone(stringIdent) {
   const { tzName, offset, z } = ParseTemporalTimeZoneString(stringIdent);
   if (tzName) {
     if (IsTimeZoneOffsetString(tzName)) return CanonicalizeTimeZoneOffsetString(tzName);
-    return GetCanonicalTimeZoneIdentifier(tzName);
+    const record = GetAvailableNamedTimeZoneIdentifier(tzName);
+    if (!record) throw new RangeError(`Unrecognized time zone ${tzName}`);
+    return record.primaryIdentifier;
   }
   if (z) return 'UTC';
   // if !tzName && !z then offset must be present
@@ -2589,15 +2592,87 @@ export function ParseTimeZoneOffsetString(string) {
   return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
 }
 
-// In the spec, GetCanonicalTimeZoneIdentifier is infallible and is always
-// preceded by a call to IsAvailableTimeZoneName. However in the polyfill,
-// we don't (yet) have a way to check if a time zone ID is valid without
-// also canonicalizing it. So we combine both operations into one function,
-// which will return the canonical ID if the ID is valid, and will throw
-// if it's not.
-export function GetCanonicalTimeZoneIdentifier(timeZoneIdentifier) {
-  const formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier);
-  return formatter.resolvedOptions().timeZone;
+let canonicalTimeZoneIdsCache = undefined;
+
+export function GetAvailableNamedTimeZoneIdentifier(identifier) {
+  // The most common case is when the identifier is a canonical time zone ID.
+  // Fast-path that case by caching all canonical IDs. For old ECMAScript
+  // implementations lacking this API, set the cache to `null` to avoid retries.
+  if (canonicalTimeZoneIdsCache === undefined) {
+    const canonicalTimeZoneIds = IntlSupportedValuesOf?.('timeZone');
+    canonicalTimeZoneIdsCache = canonicalTimeZoneIds
+      ? new Map(canonicalTimeZoneIds.map((id) => [ASCIILowercase(id), id]))
+      : null;
+  }
+
+  const lower = ASCIILowercase(identifier);
+  let primaryIdentifier = canonicalTimeZoneIdsCache?.get(lower);
+  if (primaryIdentifier) return { identifier: primaryIdentifier, primaryIdentifier };
+
+  // It's not already a primary identifier, so get its primary identifier (or
+  // return if it's not an available named time zone ID).
+  try {
+    const formatter = getIntlDateTimeFormatEnUsForTimeZone(identifier);
+    primaryIdentifier = formatter.resolvedOptions().timeZone;
+  } catch {
+    return undefined;
+  }
+
+  // The identifier is an alias (a deprecated identifier that's a synonym for a
+  // primary identifier), so we need to case-normalize the identifier to match
+  // the IANA TZDB, e.g. america/new_york => America/New_York. There's no
+  // built-in way to do this using Intl.DateTimeFormat, but the we can normalize
+  // almost all aliases (modulo a few special cases) using the TZDB's basic
+  // capitalization pattern:
+  // 1. capitalize the first letter of the identifier
+  // 2. capitalize the letter after every slash, dash, or underscore delimiter
+  const standardCase = [...lower]
+    .map((c, i) => (i === 0 || '/-_'.includes(lower[i - 1]) ? c.toUpperCase() : c))
+    .join('');
+  const segments = standardCase.split('/');
+
+  if (segments.length === 1) {
+    // If a single-segment legacy ID is 2-3 chars or contains a number or dash, then
+    // (except for the "GB-Eire" special case) the case-normalized form is uppercase.
+    // These are: GMT+0, GMT-0, GB, NZ, PRC, ROC, ROK, UCT, GMT, GMT0, CET, CST6CDT,
+    // EET, EST, HST, MET, MST, MST7MDT, PST8PDT, WET, NZ-CHAT, and W-SU.
+    // Otherwise it's standard form: first letter capitalized, e.g. Iran, Egypt, Hongkong
+    if (lower === 'gb-eire') return { identifier: 'GB-Eire', primaryIdentifier };
+    return {
+      identifier: lower.length <= 3 || /[-0-9]/.test(lower) ? lower.toUpperCase() : segments[0],
+      primaryIdentifier
+    };
+  }
+
+  // All Etc zone names are uppercase except three exceptions.
+  if (segments[0] === 'Etc') {
+    const etcName = ['Zulu', 'Greenwich', 'Universal'].includes(segments[1]) ? segments[1] : segments[1].toUpperCase();
+    return { identifier: `Etc/${etcName}`, primaryIdentifier };
+  }
+
+  // Legacy US identifiers like US/Alaska or US/Indiana-Starke are 2 segments and use standard form.
+  if (segments[0] === 'Us') return { identifier: `US/${segments[1]}`, primaryIdentifier };
+
+  // For multi-segment IDs, there's a few special cases in the second/third segments
+  const specialCases = {
+    Act: 'ACT',
+    Lhi: 'LHI',
+    Nsw: 'NSW',
+    Dar_Es_Salaam: 'Dar_es_Salaam',
+    Port_Of_Spain: 'Port_of_Spain',
+    Isle_Of_Man: 'Isle_of_Man',
+    Comodrivadavia: 'ComodRivadavia',
+    Knox_In: 'Knox_IN',
+    Dumontdurville: 'DumontDUrville',
+    Mcmurdo: 'McMurdo',
+    Denoronha: 'DeNoronha',
+    Easterisland: 'EasterIsland',
+    Bajanorte: 'BajaNorte',
+    Bajasur: 'BajaSur'
+  };
+  segments[1] = specialCases[segments[1]] ?? segments[1];
+  if (segments.length > 2) segments[2] = specialCases[segments[2]] ?? segments[2];
+  return { identifier: segments.join('/'), primaryIdentifier };
 }
 
 export function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {

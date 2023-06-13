@@ -471,13 +471,15 @@ export class ZonedDateTime {
       // The rest of the defaults will be filled in by formatting the Instant
     }
 
-    let timeZone = ES.ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
-    if (ES.IsTimeZoneOffsetString(timeZone)) {
+    const timeZoneIdentifier = ES.ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
+    if (ES.IsTimeZoneOffsetString(timeZoneIdentifier)) {
       // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-      throw new RangeError('toLocaleString does not support offset string time zones');
+      throw new RangeError('toLocaleString does not currently support offset time zones');
+    } else {
+      const record = ES.GetAvailableNamedTimeZoneIdentifier(timeZoneIdentifier);
+      if (!record) throw new RangeError(`toLocaleString formats built-in time zones, not ${timeZoneIdentifier}`);
+      optionsCopy.timeZone = record.primaryIdentifier;
     }
-    timeZone = ES.GetCanonicalTimeZoneIdentifier(timeZone);
-    optionsCopy.timeZone = timeZone;
 
     const formatter = new DateTimeFormat(locales, optionsCopy);
 

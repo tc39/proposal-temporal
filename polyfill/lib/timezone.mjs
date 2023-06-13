@@ -26,12 +26,13 @@ export class TimeZone {
     if (arguments.length < 1) {
       throw new RangeError('missing argument: identifier is required');
     }
-
     let stringIdentifier = ES.ToString(identifier);
     if (ES.IsTimeZoneOffsetString(stringIdentifier)) {
       stringIdentifier = ES.CanonicalizeTimeZoneOffsetString(stringIdentifier);
     } else {
-      stringIdentifier = ES.GetCanonicalTimeZoneIdentifier(stringIdentifier);
+      const record = ES.GetAvailableNamedTimeZoneIdentifier(stringIdentifier);
+      if (!record) throw new RangeError(`Invalid time zone identifier: ${stringIdentifier}`);
+      stringIdentifier = record.primaryIdentifier;
     }
     CreateSlots(this);
     SetSlot(this, TIMEZONE_ID, stringIdentifier);
