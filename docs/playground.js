@@ -1556,12 +1556,12 @@
 
 	var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
 	var slice = Array.prototype.slice;
-	var toStr$4 = Object.prototype.toString;
+	var toStr$3 = Object.prototype.toString;
 	var funcType = '[object Function]';
 
 	var implementation$3 = function bind(that) {
 	    var target = this;
-	    if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
+	    if (typeof target !== 'function' || toStr$3.call(target) !== funcType) {
 	        throw new TypeError(ERROR_MESSAGE + target);
 	    }
 	    var args = slice.call(arguments, 1);
@@ -2044,10 +2044,10 @@
 	var $Array = GetIntrinsic$d('%Array%');
 
 	// eslint-disable-next-line global-require
-	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
+	var toStr$2 = !$Array.isArray && callBound$2('Object.prototype.toString');
 
 	var IsArray$3 = $Array.isArray || function IsArray(argument) {
-		return toStr$3(argument) === '[object Array]';
+		return toStr$2(argument) === '[object Array]';
 	};
 
 	// https://262.ecma-international.org/6.0/#sec-isarray
@@ -2403,105 +2403,114 @@
 		return ToBoolean;
 	}
 
-	var fnToStr = Function.prototype.toString;
-	var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
-	var badArrayLike;
-	var isCallableMarker;
-	if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
-		try {
-			badArrayLike = Object.defineProperty({}, 'length', {
-				get: function () {
-					throw isCallableMarker;
-				}
-			});
-			isCallableMarker = {};
-			// eslint-disable-next-line no-throw-literal
-			reflectApply(function () { throw 42; }, null, badArrayLike);
-		} catch (_) {
-			if (_ !== isCallableMarker) {
-				reflectApply = null;
-			}
-		}
-	} else {
-		reflectApply = null;
-	}
+	var isCallable$1;
+	var hasRequiredIsCallable$1;
 
-	var constructorRegex = /^\s*class\b/;
-	var isES6ClassFn = function isES6ClassFunction(value) {
-		try {
-			var fnStr = fnToStr.call(value);
-			return constructorRegex.test(fnStr);
-		} catch (e) {
-			return false; // not a function
-		}
-	};
+	function requireIsCallable$1 () {
+		if (hasRequiredIsCallable$1) return isCallable$1;
+		hasRequiredIsCallable$1 = 1;
 
-	var tryFunctionObject = function tryFunctionToStr(value) {
-		try {
-			if (isES6ClassFn(value)) { return false; }
-			fnToStr.call(value);
-			return true;
-		} catch (e) {
-			return false;
-		}
-	};
-	var toStr$2 = Object.prototype.toString;
-	var objectClass = '[object Object]';
-	var fnClass = '[object Function]';
-	var genClass = '[object GeneratorFunction]';
-	var ddaClass = '[object HTMLAllCollection]'; // IE 11
-	var ddaClass2 = '[object HTML document.all class]';
-	var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
-	var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
-
-	var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
-
-	var isDDA = function isDocumentDotAll() { return false; };
-	if (typeof document === 'object') {
-		// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
-		var all = document.all;
-		if (toStr$2.call(all) === toStr$2.call(document.all)) {
-			isDDA = function isDocumentDotAll(value) {
-				/* globals document: false */
-				// in IE 6-8, typeof document.all is "object" and it's truthy
-				if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
-					try {
-						var str = toStr$2.call(value);
-						return (
-							str === ddaClass
-							|| str === ddaClass2
-							|| str === ddaClass3 // opera 12.16
-							|| str === objectClass // IE 6-8
-						) && value('') == null; // eslint-disable-line eqeqeq
-					} catch (e) { /**/ }
-				}
-				return false;
-			};
-		}
-	}
-
-	var isCallable$1 = reflectApply
-		? function isCallable(value) {
-			if (isDDA(value)) { return true; }
-			if (!value) { return false; }
-			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+		var fnToStr = Function.prototype.toString;
+		var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
+		var badArrayLike;
+		var isCallableMarker;
+		if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
 			try {
-				reflectApply(value, null, badArrayLike);
-			} catch (e) {
-				if (e !== isCallableMarker) { return false; }
+				badArrayLike = Object.defineProperty({}, 'length', {
+					get: function () {
+						throw isCallableMarker;
+					}
+				});
+				isCallableMarker = {};
+				// eslint-disable-next-line no-throw-literal
+				reflectApply(function () { throw 42; }, null, badArrayLike);
+			} catch (_) {
+				if (_ !== isCallableMarker) {
+					reflectApply = null;
+				}
 			}
-			return !isES6ClassFn(value) && tryFunctionObject(value);
+		} else {
+			reflectApply = null;
 		}
-		: function isCallable(value) {
-			if (isDDA(value)) { return true; }
-			if (!value) { return false; }
-			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-			if (hasToStringTag$1) { return tryFunctionObject(value); }
-			if (isES6ClassFn(value)) { return false; }
-			var strClass = toStr$2.call(value);
-			if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
-			return tryFunctionObject(value);
+
+		var constructorRegex = /^\s*class\b/;
+		var isES6ClassFn = function isES6ClassFunction(value) {
+			try {
+				var fnStr = fnToStr.call(value);
+				return constructorRegex.test(fnStr);
+			} catch (e) {
+				return false; // not a function
+			}
 		};
+
+		var tryFunctionObject = function tryFunctionToStr(value) {
+			try {
+				if (isES6ClassFn(value)) { return false; }
+				fnToStr.call(value);
+				return true;
+			} catch (e) {
+				return false;
+			}
+		};
+		var toStr = Object.prototype.toString;
+		var objectClass = '[object Object]';
+		var fnClass = '[object Function]';
+		var genClass = '[object GeneratorFunction]';
+		var ddaClass = '[object HTMLAllCollection]'; // IE 11
+		var ddaClass2 = '[object HTML document.all class]';
+		var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
+		var hasToStringTag = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
+
+		var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
+
+		var isDDA = function isDocumentDotAll() { return false; };
+		if (typeof document === 'object') {
+			// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
+			var all = document.all;
+			if (toStr.call(all) === toStr.call(document.all)) {
+				isDDA = function isDocumentDotAll(value) {
+					/* globals document: false */
+					// in IE 6-8, typeof document.all is "object" and it's truthy
+					if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
+						try {
+							var str = toStr.call(value);
+							return (
+								str === ddaClass
+								|| str === ddaClass2
+								|| str === ddaClass3 // opera 12.16
+								|| str === objectClass // IE 6-8
+							) && value('') == null; // eslint-disable-line eqeqeq
+						} catch (e) { /**/ }
+					}
+					return false;
+				};
+			}
+		}
+
+		isCallable$1 = reflectApply
+			? function isCallable(value) {
+				if (isDDA(value)) { return true; }
+				if (!value) { return false; }
+				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+				try {
+					reflectApply(value, null, badArrayLike);
+				} catch (e) {
+					if (e !== isCallableMarker) { return false; }
+				}
+				return !isES6ClassFn(value) && tryFunctionObject(value);
+			}
+			: function isCallable(value) {
+				if (isDDA(value)) { return true; }
+				if (!value) { return false; }
+				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+				if (hasToStringTag) { return tryFunctionObject(value); }
+				if (isES6ClassFn(value)) { return false; }
+				var strClass = toStr.call(value);
+				if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
+				return tryFunctionObject(value);
+			};
+		return isCallable$1;
+	}
 
 	var IsCallable$1;
 	var hasRequiredIsCallable;
@@ -2512,7 +2521,7 @@
 
 		// http://262.ecma-international.org/5.1/#sec-9.11
 
-		IsCallable$1 = isCallable$1;
+		IsCallable$1 = requireIsCallable$1();
 		return IsCallable$1;
 	}
 
@@ -6750,7 +6759,7 @@
 	var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
 	var isPrimitive$1 = isPrimitive$2;
-	var isCallable = isCallable$1;
+	var isCallable = requireIsCallable$1();
 	var isDate = isDateObject;
 	var isSymbol = isSymbolExports;
 
@@ -13940,7 +13949,7 @@
 	        day: 'numeric',
 	        month: 'numeric',
 	        year: 'numeric',
-	        era: this.eraLength,
+	        era: 'short',
 	        timeZone: 'UTC'
 	      });
 	    }
@@ -14212,11 +14221,12 @@
 	      // If the estimate is in the same year & month as the target, then we can
 	      // calculate the result exactly and short-circuit any additional logic.
 	      // This optimization assumes that months are continuous. It would break if
-	      // a calendar skipped days, like the Julian->Gregorian switchover. But the
-	      // only ICU calendars that currently skip days (japanese/roc/buddhist) is
+	      // a calendar skipped days, like the Julian->Gregorian switchover. But
+	      // current ICU calendars only skip days (japanese/roc/buddhist) because of
 	      // a bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
-	      // that's currently detected by `checkIcuBugs()` which will throw. So
-	      // this optimization should be safe for all ICU calendars.
+	      // that's currently worked around by a custom calendarToIsoDate
+	      // implementation in those calendars. So this optimization should be safe
+	      // for all ICU calendars.
 	      let testIsoEstimate = this.addDaysIso(isoEstimate, diffDays);
 	      if (date.day > this.minimumMonthLength(date)) {
 	        // There's a chance that the calendar date is out of range. Throw or
@@ -14466,11 +14476,11 @@
 	    // Add enough days to roll over to the next month. One we're in the next
 	    // month, we can calculate the length of the current month. NOTE: This
 	    // algorithm assumes that months are continuous. It would break if a
-	    // calendar skipped days, like the Julian->Gregorian switchover. But the
-	    // only ICU calendars that currently skip days (japanese/roc/buddhist) is a
-	    // bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
-	    // that's currently detected by `checkIcuBugs()` which will throw. So this
-	    // code should be safe for all ICU calendars.
+	    // calendar skipped days, like the Julian->Gregorian switchover. But current
+	    // ICU calendars only skip days (japanese/roc/buddhist) because of a bug
+	    // (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158) that's
+	    // currently worked around by a custom calendarToIsoDate implementation in
+	    // those calendars. So this code should be safe for all ICU calendars.
 	    const {
 	      day
 	    } = calendarDate;
@@ -14541,9 +14551,6 @@
 	    const duration = DifferenceISODate(oneIso.year, oneIso.month, oneIso.day, twoIso.year, twoIso.month, twoIso.day, 'day');
 	    return duration.days;
 	  },
-	  // The short era format works for all calendars except Japanese, which will
-	  // override.
-	  eraLength: 'short',
 	  // All built-in calendars except Chinese/Dangi and Hebrew use an era
 	  hasEra: true,
 	  monthDayFromFields(fields, overflow, cache) {
@@ -15336,21 +15343,36 @@
 	      } = this;
 	      const isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
 	      return RegulateISODate(isoYearEstimate, month, day, 'constrain');
-	    },
-	    // Several calendars based on the Gregorian calendar use Julian dates (not
-	    // proleptic Gregorian dates) before the Julian switchover in Oct 1582. See
-	    // https://bugs.chromium.org/p/chromium/issues/detail?id=1173158.
-	    v8IsVulnerableToJulianBug: new Date('+001001-01-01T00:00Z').toLocaleDateString('en-US-u-ca-japanese', {
-	      timeZone: 'UTC'
-	    }).startsWith('12'),
-	    calendarIsVulnerableToJulianBug: false,
-	    checkIcuBugs(isoDate) {
-	      if (this.calendarIsVulnerableToJulianBug && this.v8IsVulnerableToJulianBug) {
-	        const beforeJulianSwitch = CompareISODate(isoDate.year, isoDate.month, isoDate.day, 1582, 10, 15) < 0;
-	        if (beforeJulianSwitch) {
-	          throw new RangeError("calendar '".concat(this.id, "' is broken for ISO dates before 1582-10-15") + ' (see https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)');
-	        }
-	      }
+	    }
+	  });
+	};
+
+	/**
+	 * Some calendars are identical to Gregorian except era and year. For these
+	 * calendars, we can avoid using Intl.DateTimeFormat and just calculate the
+	 * year, era, and eraYear. This is faster (because Intl.DateTimeFormat is slow
+	 * and uses a huge amount of RAM), and it avoids ICU bugs like
+	 * https://bugs.chromium.org/p/chromium/issues/detail?id=1173158.
+	 */
+	const makeHelperSameMonthDayAsGregorian = (id, originalEras) => {
+	  const base = makeHelperGregorian(id, originalEras);
+	  return ObjectAssign$1(base, {
+	    isoToCalendarDate(isoDate) {
+	      // Month and day are same as ISO, so bypass Intl.DateTimeFormat and
+	      // calculate the year, era, and eraYear here.
+	      const {
+	        year: isoYear,
+	        month,
+	        day
+	      } = isoDate;
+	      const monthCode = buildMonthCode(month);
+	      const year = isoYear - this.anchorEra.isoEpoch.year + 1;
+	      return this.completeEraYear({
+	        year,
+	        month,
+	        monthCode,
+	        day
+	      });
 	    }
 	  });
 	};
@@ -15435,7 +15457,7 @@
 	    year: 5501
 	  }
 	}]);
-	const helperRoc = ObjectAssign$1({}, makeHelperGregorian('roc', [{
+	const helperRoc = ObjectAssign$1({}, makeHelperSameMonthDayAsGregorian('roc', [{
 	  name: 'minguo',
 	  isoEpoch: {
 	    year: 1912,
@@ -15445,10 +15467,8 @@
 	}, {
 	  name: 'before-roc',
 	  reverseOf: 'minguo'
-	}]), {
-	  calendarIsVulnerableToJulianBug: true
-	});
-	const helperBuddhist = ObjectAssign$1({}, makeHelperGregorian('buddhist', [{
+	}]));
+	const helperBuddhist = ObjectAssign$1({}, makeHelperSameMonthDayAsGregorian('buddhist', [{
 	  name: 'be',
 	  hasYearZero: true,
 	  isoEpoch: {
@@ -15456,10 +15476,8 @@
 	    month: 1,
 	    day: 1
 	  }
-	}]), {
-	  calendarIsVulnerableToJulianBug: true
-	});
-	const helperGregory = ObjectAssign$1({}, makeHelperGregorian('gregory', [{
+	}]));
+	const helperGregory = ObjectAssign$1({}, makeHelperSameMonthDayAsGregorian('gregory', [{
 	  name: 'ce',
 	  isoEpoch: {
 	    year: 1,
@@ -15517,7 +15535,7 @@
 	// '1 1, 6 Meiji, 12:00:00 PM'
 	// > new Date('1872-12-31T12:00').toLocaleString(...args)
 	// '12 31, 5 Meiji, 12:00:00 PM'
-	makeHelperGregorian('japanese', [
+	makeHelperSameMonthDayAsGregorian('japanese', [
 	// The Japanese calendar `year` is just the ISO year, because (unlike other
 	// ICU calendars) there's no obvious "default era", we use the ISO year.
 	{
@@ -15591,11 +15609,7 @@
 	  name: 'bce',
 	  reverseOf: 'ce'
 	}]), {
-	  // The last 3 Japanese eras confusingly return only one character in the
-	  // default "short" era, so need to use the long format.
-	  eraLength: 'long',
 	  erasBeginMidYear: true,
-	  calendarIsVulnerableToJulianBug: true,
 	  reviseIntlEra(calendarDate, isoDate) {
 	    const {
 	      era,
