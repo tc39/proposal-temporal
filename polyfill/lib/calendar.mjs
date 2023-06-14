@@ -544,7 +544,7 @@ const nonIsoHelperBase = {
         day: 'numeric',
         month: 'numeric',
         year: 'numeric',
-        era: this.eraLength,
+        era: 'short',
         timeZone: 'UTC'
       });
     }
@@ -763,11 +763,12 @@ const nonIsoHelperBase = {
       // If the estimate is in the same year & month as the target, then we can
       // calculate the result exactly and short-circuit any additional logic.
       // This optimization assumes that months are continuous. It would break if
-      // a calendar skipped days, like the Julian->Gregorian switchover. But the
-      // only ICU calendars that currently skip days (japanese/roc/buddhist) is
+      // a calendar skipped days, like the Julian->Gregorian switchover. But
+      // current ICU calendars only skip days (japanese/roc/buddhist) because of
       // a bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
-      // that's currently detected by `checkIcuBugs()` which will throw. So
-      // this optimization should be safe for all ICU calendars.
+      // that's currently worked around by a custom calendarToIsoDate
+      // implementation in those calendars. So this optimization should be safe
+      // for all ICU calendars.
       let testIsoEstimate = this.addDaysIso(isoEstimate, diffDays);
       if (date.day > this.minimumMonthLength(date)) {
         // There's a chance that the calendar date is out of range. Throw or
@@ -981,11 +982,11 @@ const nonIsoHelperBase = {
     // Add enough days to roll over to the next month. One we're in the next
     // month, we can calculate the length of the current month. NOTE: This
     // algorithm assumes that months are continuous. It would break if a
-    // calendar skipped days, like the Julian->Gregorian switchover. But the
-    // only ICU calendars that currently skip days (japanese/roc/buddhist) is a
-    // bug (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)
-    // that's currently detected by `checkIcuBugs()` which will throw. So this
-    // code should be safe for all ICU calendars.
+    // calendar skipped days, like the Julian->Gregorian switchover. But current
+    // ICU calendars only skip days (japanese/roc/buddhist) because of a bug
+    // (https://bugs.chromium.org/p/chromium/issues/detail?id=1173158) that's
+    // currently worked around by a custom calendarToIsoDate implementation in
+    // those calendars. So this code should be safe for all ICU calendars.
     const { day } = calendarDate;
     const max = this.maximumMonthLength(calendarDate);
     const min = this.minimumMonthLength(calendarDate);
@@ -1043,9 +1044,6 @@ const nonIsoHelperBase = {
     );
     return duration.days;
   },
-  // The short era format works for all calendars except Japanese, which will
-  // override.
-  eraLength: 'short',
   // All built-in calendars except Chinese/Dangi and Hebrew use an era
   hasEra: true,
   monthDayFromFields(fields, overflow, cache) {
@@ -1575,24 +1573,27 @@ const makeHelperGregorian = (id, originalEras) => {
       const { anchorEra } = this;
       const isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
       return ES.RegulateISODate(isoYearEstimate, month, day, 'constrain');
-    },
-    // Several calendars based on the Gregorian calendar use Julian dates (not
-    // proleptic Gregorian dates) before the Julian switchover in Oct 1582. See
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=1173158.
-    v8IsVulnerableToJulianBug: new Date('+001001-01-01T00:00Z')
-      .toLocaleDateString('en-US-u-ca-japanese', { timeZone: 'UTC' })
-      .startsWith('12'),
-    calendarIsVulnerableToJulianBug: false,
-    checkIcuBugs(isoDate) {
-      if (this.calendarIsVulnerableToJulianBug && this.v8IsVulnerableToJulianBug) {
-        const beforeJulianSwitch = ES.CompareISODate(isoDate.year, isoDate.month, isoDate.day, 1582, 10, 15) < 0;
-        if (beforeJulianSwitch) {
-          throw new RangeError(
-            `calendar '${this.id}' is broken for ISO dates before 1582-10-15` +
-              ' (see https://bugs.chromium.org/p/chromium/issues/detail?id=1173158)'
-          );
-        }
-      }
+    }
+  });
+};
+
+/**
+ * Some calendars are identical to Gregorian except era and year. For these
+ * calendars, we can avoid using Intl.DateTimeFormat and just calculate the
+ * year, era, and eraYear. This is faster (because Intl.DateTimeFormat is slow
+ * and uses a huge amount of RAM), and it avoids ICU bugs like
+ * https://bugs.chromium.org/p/chromium/issues/detail?id=1173158.
+ */
+const makeHelperSameMonthDayAsGregorian = (id, originalEras) => {
+  const base = makeHelperGregorian(id, originalEras);
+  return ObjectAssign(base, {
+    isoToCalendarDate(isoDate) {
+      // Month and day are same as ISO, so bypass Intl.DateTimeFormat and
+      // calculate the year, era, and eraYear here.
+      const { year: isoYear, month, day } = isoDate;
+      const monthCode = buildMonthCode(month);
+      const year = isoYear - this.anchorEra.isoEpoch.year + 1;
+      return this.completeEraYear({ year, month, monthCode, day });
     }
   });
 };
@@ -1648,26 +1649,22 @@ const helperEthiopic = makeHelperOrthodox('ethiopic', [
 
 const helperRoc = ObjectAssign(
   {},
-  makeHelperGregorian('roc', [
+  makeHelperSameMonthDayAsGregorian('roc', [
     { name: 'minguo', isoEpoch: { year: 1912, month: 1, day: 1 } },
     { name: 'before-roc', reverseOf: 'minguo' }
-  ]),
-  {
-    calendarIsVulnerableToJulianBug: true
-  }
+  ])
 );
 
 const helperBuddhist = ObjectAssign(
   {},
-  makeHelperGregorian('buddhist', [{ name: 'be', hasYearZero: true, isoEpoch: { year: -543, month: 1, day: 1 } }]),
-  {
-    calendarIsVulnerableToJulianBug: true
-  }
+  makeHelperSameMonthDayAsGregorian('buddhist', [
+    { name: 'be', hasYearZero: true, isoEpoch: { year: -543, month: 1, day: 1 } }
+  ])
 );
 
 const helperGregory = ObjectAssign(
   {},
-  makeHelperGregorian('gregory', [
+  makeHelperSameMonthDayAsGregorian('gregory', [
     { name: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
     { name: 'bce', reverseOf: 'ce' }
   ]),
@@ -1716,7 +1713,7 @@ const helperJapanese = ObjectAssign(
   // '1 1, 6 Meiji, 12:00:00 PM'
   // > new Date('1872-12-31T12:00').toLocaleString(...args)
   // '12 31, 5 Meiji, 12:00:00 PM'
-  makeHelperGregorian('japanese', [
+  makeHelperSameMonthDayAsGregorian('japanese', [
     // The Japanese calendar `year` is just the ISO year, because (unlike other
     // ICU calendars) there's no obvious "default era", we use the ISO year.
     { name: 'reiwa', isoEpoch: { year: 2019, month: 5, day: 1 }, anchorEpoch: { year: 2019, month: 5, day: 1 } },
@@ -1728,11 +1725,7 @@ const helperJapanese = ObjectAssign(
     { name: 'bce', reverseOf: 'ce' }
   ]),
   {
-    // The last 3 Japanese eras confusingly return only one character in the
-    // default "short" era, so need to use the long format.
-    eraLength: 'long',
     erasBeginMidYear: true,
-    calendarIsVulnerableToJulianBug: true,
     reviseIntlEra(calendarDate, isoDate) {
       const { era, eraYear } = calendarDate;
       const { year: isoYear } = isoDate;
