@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: use node.js v19.x
+      - name: use node.js v20.x
         uses: actions/setup-node@v3
         with:
-          node-version: 19.x
+          node-version: 20.x
       - run: npm ci
       - run: npm run lint
       - run: npm run build:spec
