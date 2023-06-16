@@ -473,29 +473,7 @@
         1. If _balanceResult_ is ~negative overflow~, return *-∞*<sub>𝔽</sub>.
         1. Assert: _balanceResult_ is a Time Duration Record.
         1. Let _roundRecord_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]], 1, _unit_, *"trunc"*, _relativeTo_).
-        1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
-        1. If _unit_ is *"year"*, then
-          1. Let _whole_ be _roundResult_.[[Years]].
-        1. Else if _unit_ is *"month"*, then
-          1. Let _whole_ be _roundResult_.[[Months]].
-        1. Else if _unit_ is *"week"*, then
-          1. Let _whole_ be _roundResult_.[[Weeks]].
-        1. Else if _unit_ is *"day"*, then
-          1. Let _whole_ be _roundResult_.[[Days]].
-        1. Else if _unit_ is *"hour"*, then
-          1. Let _whole_ be _roundResult_.[[Hours]].
-        1. Else if _unit_ is *"minute"*, then
-          1. Let _whole_ be _roundResult_.[[Minutes]].
-        1. Else if _unit_ is *"second"*, then
-          1. Let _whole_ be _roundResult_.[[Seconds]].
-        1. Else if _unit_ is *"millisecond"*, then
-          1. Let _whole_ be _roundResult_.[[Milliseconds]].
-        1. Else if _unit_ is *"microsecond"*, then
-          1. Let _whole_ be _roundResult_.[[Microseconds]].
-        1. Else,
-          1. Assert: _unit_ is *"nanosecond"*.
-          1. Let _whole_ be _roundResult_.[[Nanoseconds]].
-        1. Return 𝔽(_whole_ + _roundRecord_.[[Remainder]]).
+        1. Return 𝔽(_roundRecord_.[[Total]]).
       </emu-alg>
     </emu-clause>
 
@@ -1711,7 +1689,11 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It rounds a duration (denoted by _years_ through _nanoseconds_) according to the rounding parameters _unit_, _increment_, and _roundingMode_, and returns a Record with the Duration Record result in its [[DurationRecord]] field, as well as the remainder from the rounding operation in its [[Remainder]] field. For rounding involving calendar units, the _relativeTo_ parameter is required.</dd>
+        <dd>
+          It rounds a duration (denoted by _years_ through _nanoseconds_) according to the rounding parameters _unit_, _increment_, and _roundingMode_, and returns a Record with the Duration Record result in its [[DurationRecord]] field.
+          It also returns the total of the smallest unit before the rounding operation in its [[Total]] field, for use in `Temporal.Duration.prototype.total`.
+          For rounding involving calendar units, the _relativeTo_ parameter is required.
+        </dd>
       </dl>
       <emu-alg>
         1. If _relativeTo_ is not present, set _relativeTo_ to *undefined*.
@@ -1740,7 +1722,7 @@
         1. Else,
           1. Let _fractionalSeconds_ be _nanoseconds_ &times; 10<sup>-9</sup> + _microseconds_ &times; 10<sup>-6</sup> + _milliseconds_ &times; 10<sup>-3</sup> + _seconds_.
           1. Assert: _fractionalDays_ is not used below.
-        1. Let _remainder_ be *undefined*.
+        1. Let _total_ be ~unset~.
         1. If _unit_ is *"year"*, then
           1. Let _yearsDuration_ be ! CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. If _calendar_ is an Object, then
@@ -1771,7 +1753,7 @@
           1. Let _oneYearDays_ be _moveResult_.[[Days]].
           1. Let _fractionalYears_ be _years_ + _fractionalDays_ / abs(_oneYearDays_).
           1. Set _years_ to RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalYears_ - _years_.
+          1. Set _total_ to _fractionalYears_.
           1. Set _months_ and _weeks_ to 0.
         1. Else if _unit_ is *"month"*, then
           1. Let _yearsMonths_ be ! CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
@@ -1798,7 +1780,7 @@
             1. Set _oneMonthDays_ to _moveResult_.[[Days]].
           1. Let _fractionalMonths_ be _months_ + _fractionalDays_ / abs(_oneMonthDays_).
           1. Set _months_ to RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalMonths_ - _months_.
+          1. Set _total_ to _fractionalMonths_.
           1. Set _weeks_ to 0.
         1. Else if _unit_ is *"week"*, then
           1. If _fractionalDays_ &lt; 0, let _sign_ be -1; else, let _sign_ be 1.
@@ -1818,43 +1800,42 @@
             1. Set _oneWeekDays_ to _moveResult_.[[Days]].
           1. Let _fractionalWeeks_ be _weeks_ + _fractionalDays_ / abs(_oneWeekDays_).
           1. Set _weeks_ to RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalWeeks_ - _weeks_.
+          1. Set _total_ to _fractionalWeeks_.
         1. Else if _unit_ is *"day"*, then
           1. Set _days_ to RoundNumberToIncrement(_fractionalDays_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalDays_ - _days_.
+          1. Set _total_ to _fractionalDays_.
         1. Else if _unit_ is *"hour"*, then
           1. Let _fractionalHours_ be (_fractionalSeconds_ / 60 + _minutes_) / 60 + _hours_.
           1. Set _hours_ to RoundNumberToIncrement(_fractionalHours_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalHours_ - _hours_.
+          1. Set _total_ to _fractionalHours_.
           1. Set _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"minute"*, then
           1. Let _fractionalMinutes_ be _fractionalSeconds_ / 60 + _minutes_.
           1. Set _minutes_ to RoundNumberToIncrement(_fractionalMinutes_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalMinutes_ - _minutes_.
+          1. Set _total_ to _fractionalMinutes_.
           1. Set _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"second"*, then
           1. Set _seconds_ to RoundNumberToIncrement(_fractionalSeconds_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalSeconds_ - _seconds_.
+          1. Set _total_ to _fractionalSeconds_.
           1. Set _milliseconds_, _microseconds_, and _nanoseconds_ to 0.
         1. Else if _unit_ is *"millisecond"*, then
           1. Let _fractionalMilliseconds_ be _nanoseconds_ &times; 10<sup>-6</sup> + _microseconds_ &times; 10<sup>-3</sup> + _milliseconds_.
           1. Set _milliseconds_ to RoundNumberToIncrement(_fractionalMilliseconds_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalMilliseconds_ - _milliseconds_.
+          1. Set _total_ to _fractionalMilliseconds_.
           1. Set _microseconds_ and _nanoseconds_ to 0.
         1. Else if _unit_ is *"microsecond"*, then
           1. Let _fractionalMicroseconds_ be _nanoseconds_ &times; 10<sup>-3</sup> + _microseconds_.
           1. Set _microseconds_ to RoundNumberToIncrement(_fractionalMicroseconds_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _fractionalMicroseconds_ - _microseconds_.
+          1. Set _total_ to _fractionalMicroseconds_.
           1. Set _nanoseconds_ to 0.
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
-          1. Set _remainder_ to _nanoseconds_.
+          1. Set _total_ to _nanoseconds_.
           1. Set _nanoseconds_ to RoundNumberToIncrement(_nanoseconds_, _increment_, _roundingMode_).
-          1. Set _remainder_ to _remainder_ - _nanoseconds_.
         1. Let _duration_ be ? CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Return the Record {
           [[DurationRecord]]: _duration_,
-          [[Remainder]]: _remainder_
+          [[Total]]: _total_
           }.
       </emu-alg>
     </emu-clause>
