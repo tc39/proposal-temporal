@@ -1116,12 +1116,12 @@
           _calendar_: an Object,
           _largestUnit_: a String,
           _options_: an Object,
-        )
+        ): either a normal completion containing a Duration Record, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It returns a Duration Record with the elapsed duration from a first date and time, until a second date and time, according to the reckoning of the given _calendar_.
+          The returned Duration Record contains the elapsed duration from a first date and time, until a second date and time, according to the reckoning of the given _calendar_.
           The given date and time units are all in the ISO 8601 calendar.
           The _largestUnit_ and _options_ arguments are used in _calendar_'s `dateUntil` method.
         </dd>
