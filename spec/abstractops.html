@@ -1555,11 +1555,11 @@
     <h1>
       ParseTemporalDurationString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing a Duration Record, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It parses the argument as an ISO 8601 duration string and returns a Duration Record.</dd>
+      <dd>It parses the argument as an ISO 8601 duration string.</dd>
     </dl>
     <emu-note>The value of ToIntegerWithTruncation(*""*) is 0.</emu-note>
     <emu-note>Use of mathematical values rather than approximations is important to avoid off-by-one errors with input like "PT46H66M71.50040904S".</emu-note>
