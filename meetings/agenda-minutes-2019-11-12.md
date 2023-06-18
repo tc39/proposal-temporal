@@ -37,7 +37,7 @@ Agenda:
             * PD: You can pass in the TimeZone to an Absolute.toString()
             * US: Do we need to have subtypes to DateTime, like Date or Time?
             * DE: I guess the reason why not is that you might pass just a Date or just a Time?
-            * SC: We could follow the pattern of Intl.Segmenter and return an object that has getters, so it woulld be lazy
+            * SC: We could follow the pattern of Intl.Segmenter and return an object that has getters, so it would be lazy
             * PD to comment with a resolution
         * [https://github.com/tc39/proposal-temporal/issues/198](https://github.com/tc39/proposal-temporal/issues/198)
             * RG: ISO allows alphabetic components in any case; ISO expresses a preference for a , but allows a .
