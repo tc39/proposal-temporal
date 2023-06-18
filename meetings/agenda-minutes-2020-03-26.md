@@ -49,7 +49,7 @@ Agenda:
     * MS2: We've been dropping support for strings from other methods, so this is consistent.
     * USA: ISO Duration strings aren't very readable, it makes code more readable to use property bags or Duration objects.
     * PFC: Once you understand ISO Duration strings it's convenient to use them, but I think not many people will do that. I could go either way.
-    * RGN: I also find it convenient. It doesn't seem Javascript-y to get in the way of that. Ultimately I'd regret the loss, but I'd get over it, so no strong opinion.
+    * RGN: I also find it convenient. It doesn't seem JavaScript-y to get in the way of that. Ultimately I'd regret the loss, but I'd get over it, so no strong opinion.
     * SFC: I don't remember why we dropped string support from other methods, but I agree with Richard. It can always be relaxed later if strings throw TypeError.
     * RGN: Whether it can be relaxed later depends on how it's implemented. It would have to be reading fields off an object if the argument is an object and otherwise throw.
     * MS2: That's how it's implemented.
