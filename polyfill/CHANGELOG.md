@@ -195,7 +195,7 @@ Expect this polyfill to be replaced by other, more production-ready polyfills.
   allowed, all fields of Temporal.Duration must have the same sign.
 - If `a.difference(b)` is positive, then `b.difference(a)` is the same
   duration but negative, and vice versa.
-- The 'disambiguation' option is renamed to 'overflow' in contextx where
+- The 'disambiguation' option is renamed to 'overflow' in context where
   it refers to out-of-range values. (It's still called 'disambiguation'
   in the context of time zones.)
 - Temporal.Instant.plus and Temporal.Instant.minus now do not allow
