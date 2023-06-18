@@ -159,7 +159,7 @@
 
 * [What should be the long-term name of `LocalDateTime` ?](https://github.com/tc39/proposal-temporal/issues/707) (continued)
 
-    * PDL: I wrote down 3 principles to choose from and JGT added 2 more. My conclusion is that we shouldn't have any naming advantage from prefixless DateTime. JGT believes that LocalDateTime should be DateTime, and I believe that DateTime shoud be DateTime. Given that, I think we should have a prefix on both. I propose ZonedDateTime and NaiveDateTime. NaiveDateTime has had objections due to inclusivity, and although I don't see the objection I'm not the best posed to make that call. I suggest we have a twitter poll between NaiveDateTime and PlainDateTime, and explicitly call out the inclusivity concern.
+    * PDL: I wrote down 3 principles to choose from and JGT added 2 more. My conclusion is that we shouldn't have any naming advantage from prefixless DateTime. JGT believes that LocalDateTime should be DateTime, and I believe that DateTime should be DateTime. Given that, I think we should have a prefix on both. I propose ZonedDateTime and NaiveDateTime. NaiveDateTime has had objections due to inclusivity, and although I don't see the objection I'm not the best posed to make that call. I suggest we have a twitter poll between NaiveDateTime and PlainDateTime, and explicitly call out the inclusivity concern.
 
     * SFC: I'd like to add Civil as a third choice to the poll.
 
