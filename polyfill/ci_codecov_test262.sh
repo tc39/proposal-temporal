@@ -25,7 +25,7 @@ for subdir in $subdirs; do
 done
 node runtest262.mjs "test262/test/staging/Intl402/Temporal/**/*.js" || failed=1
 node runtest262.mjs "test262/test/intl402/**/*[tT]emporal*.js" || failed=1
-# TODO: remove the line above and uncomment the three lines below to run tests for all localilzed
+# TODO: remove the line above and uncomment the three lines below to run tests for all localized
 # date formatting, because the Temporal polyfill replaces the entire DateTimeFormat object.
 # See https://github.com/tc39/proposal-temporal/issues/2471 for more info.
 # node runtest262.mjs "test262/test/intl402/DateTimeFormat/**/*.js" || failed=1
