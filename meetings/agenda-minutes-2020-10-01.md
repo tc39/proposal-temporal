@@ -33,7 +33,7 @@
 
     * USA: As editor of 262 Jordan's really good at editing spec text, so it's fine if he concentrates on that.
 
-    * JWS: What happes after mid-October?
+    * JWS: What happens after mid-October?
 
     * PFC: They asked us to announce very clearly when the materials were ready for review, so we send an email to the whole committee.
 
