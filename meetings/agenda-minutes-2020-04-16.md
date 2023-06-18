@@ -56,7 +56,7 @@
 - SFC: The registry idea wouldn’t work without frozen calendars.
 - DE: It doesn’t need to be so, not really.
 - RGN: I like the analogy to Intl, and I do like that they’re dealt with similarly. I also like the polyfillability angle. However, I cannot come up with a counter-proposal.
-- DE: What’s the angle on the polyfilability argument?
+- DE: What’s the angle on the polyfillability argument?
 - RGN: Adding a single calendar would require a mountain for work, which defeats the purpose.
 - DE: There’s nothing like this in Intl. The subclass-ability, registry approach, etc.
 - SFC, RGN: We’ve not had to deal with those problems.
