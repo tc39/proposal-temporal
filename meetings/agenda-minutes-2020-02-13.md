@@ -84,7 +84,7 @@ Agenda:
     * PDL: Another possibility is to bundle era and year, since they are related, and have '.year' return a string including the era. If you really need the separate bits then you can query the calendar.
     * DE: I feel that this is overly complicated.
     * PFC: I'm not a fan of the year getter returning a string, it seems like it would have sorting implications and possibly localization as well.
-    * SFC: If you introduce a custom calendar with a new field, you can always polyfill your field onto Temporal.PlainDate[Time].prototpe.
+    * SFC: If you introduce a custom calendar with a new field, you can always polyfill your field onto Temporal.PlainDate[Time].prototype.
     * PDL: +1
     * DE: Summarizing, the calendar-specific date and time properties are all on the prototype and return undefined if not present.
     * SFC: For any field that exists in any specced calendar, we have getters on Temporal.PlainDate[Time].prototype. When you call those getters, they access the a method on the calendar slot, and it's up to the calendar to define the behaviour. If the method doesn't exist, then the getter returns undefined.
