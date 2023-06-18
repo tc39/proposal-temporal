@@ -80,7 +80,7 @@ Agenda and notes  (please suggest your own additions/refinements):
         * RG: I'd like this to be a sequence of proposals.
         * JW: I could believe that proceeding in stages could be useful, if we're defining one bit of syntax, continuing on, we could collect in-field telemetry.
         * RG: It's also possible that we could end up in a good state where the spec says, if the input is not fully specified, then implementations are free to fall back to whatever, but it's recommended to take a certain action. When I talk about multiple proposals, I'm talking about two: the preferred syntax, and then defining it fully. I don't want to do nothing just because we can't do everything.
-        * DE: Maybe we could start towards trying to define things completely, and then 
+        * DE: Maybe we could start towards trying to define things completely, and then
     * Do we want to propose adding new features to Date, or only to Temporal?
         * DE: I thought we were going to focus on adding things to Temporal, and not add things to Date.
         * RG: I agree, this is a good default position. I don't think we need to add timezones into Date.
@@ -97,5 +97,5 @@ Agenda and notes  (please suggest your own additions/refinements):
         * RG: Yeah, that's totally fair.
         * JW: I think the extension idea is sort-of right, but really it's more of a union.
 * Next steps
-    * Should we make this a recurring (e.g., monthly) meeting?	
+    * Should we make this a recurring (e.g., monthly) meeting?
         * Yes, will repeat monthly
