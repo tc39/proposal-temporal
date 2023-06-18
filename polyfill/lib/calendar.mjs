@@ -799,7 +799,7 @@ const nonIsoHelperBase = {
         sign = this.compareCalendarDates(date, roundtripEstimate);
       }
     }
-    // If the initial guess is not in the same month, then then bisect the
+    // If the initial guess is not in the same month, then bisect the
     // distance to the target, starting with 8 days per step.
     let increment = 8;
     while (sign) {
