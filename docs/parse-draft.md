@@ -1,6 +1,6 @@
 This is a draft design document for a `Temporal.parse` API, which is not currently planned to be implemented for several reasons:
 - `Temporal`'s approach to most operations&mdash;including parsing&mdash;is to encourage strong typing, e.g. `Temporal.Instant.from` vs. `Temporal.PlainDateTime.from`. A type-spanning "parse anything" API goes against that strongly-typed model.
-- The main use case beyond type-specific parsing that was identified for a `parse` API was handling "partially correct" ISO strings, e.g. where only one unit was out of range. Most of these use cases were addressed via the `overflow` option in the `from` method of all types which which either clamps out-of-range values (`'constrain'`) to the nearest in-range value or throws (`'reject'`) in that case.
+- The main use case beyond type-specific parsing that was identified for a `parse` API was handling "partially correct" ISO strings, e.g. where only one unit was out of range. Most of these use cases were addressed via the `overflow` option in the `from` method of all types which either clamps out-of-range values (`'constrain'`) to the nearest in-range value or throws (`'reject'`) in that case.
 - The final remaining case for a `parse` API was resolving the case where a time zone and a time zone offset can be in conflict, as would happen for future `Temporal.ZonedDateTime` values stored before a country permanently abolishes DST. This use case is now handled via the `offset` option of `Temporal.ZonedDateTime.from`.
 
 # parse
