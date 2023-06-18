@@ -10,7 +10,7 @@
 ## Agenda
 
 ### TimeFractionalPart in ParseISODateTime is ambiguous ([#1794](https://github.com/tc39/proposal-temporal/issues/1794))
-- FYT: Case 2 and 3 in this issue are still ambiguous. In the string `2021-09-01T02:03:04.56789+23:12:07.987654321[+11:22:33.444445555]` there are three subtrings produced by _TimeFractionalPart_. Did I miss anything?
+- FYT: Case 2 and 3 in this issue are still ambiguous. In the string `2021-09-01T02:03:04.56789+23:12:07.987654321[+11:22:33.444445555]` there are three substrings produced by _TimeFractionalPart_. Did I miss anything?
 - PFC: I agree this is a bug.
 - FYT: Which is it referring to?
 - PFC: The first one.
