@@ -26,7 +26,7 @@ Agenda and notes  (please suggest your own additions/refinements):
         * DE: Stage 2! Hooray
         * PD: Actual management buy-in!
     * Explainer/documentation
-        * PD: I can get a start on this, and coordinate with those who want to do the heavy lifting of comparative lingistics
+        * PD: I can get a start on this, and coordinate with those who want to do the heavy lifting of comparative linguistics
         * DE: It's also important to have documentation in MDN.  The MDN folks are really interested in getting documentation for in-progress proposals so they can be a vector to get feedback.  There is a TC39 outreach group and we are working with MDN.  PD, are you interested in writing MDN documentation?
         * MP: I would expect to see API churn… we could try… maybe it would be helpful for us to write MDN documentation as an exercise that could be informative.
         * DE: Yeah, maybe the process of writing up documentation could make us realize that it is weird.
