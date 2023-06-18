@@ -143,7 +143,7 @@ The above read-only properties allow accessing each component of the date indivi
 
 - `monthCode` is a calendar-specific string that identifies the month in a year-independent way.
   For common (non-leap) months, `monthCode` should be ` ` `M${month}` ` `, where `month` is zero padded up to two digits.
-  For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with with an "L" suffix appended.
+  For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with an "L" suffix appended.
   Examples: `'M02'` => February; `'M08L'` => repeated 8th month in the Chinese calendar; `'M05L'` => Adar I in the Hebrew calendar.
 - `day` is a positive integer representing the day of the month.
 
