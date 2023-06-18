@@ -172,7 +172,7 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent local time values to `Temporal.ZonedDateTime`.
+This behavior avoids exceptions when converting nonexistent local time values to `Temporal.ZonedDateTime`.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving Ambiguity](./ambiguity.md).
 
