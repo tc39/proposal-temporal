@@ -104,7 +104,7 @@ Expect this polyfill to be replaced by other, more production-ready polyfills.
   - Temporal.Duration.plus -> Temporal.Duration.add
   - Temporal.Instant.difference -> Temporal.Instant.since
   - Temporal.Instant.getEpochMicroseconds (method) -> Temporal.Instant.epochMicroseconds (property)
-  - Temporal.Instant.getEpochMillieconds (method) -> Temporal.Instant.epochMillieconds (property)
+  - Temporal.Instant.getEpochMilliseconds (method) -> Temporal.Instant.epochMilliseconds (property)
   - Temporal.Instant.getEpochNanoseconds (method) -> Temporal.Instant.epochNanoseconds (property)
   - Temporal.Instant.getEpochSeconds (method) -> Temporal.Instant.epochSeconds (property)
   - Temporal.Instant.minus -> Temporal.Instant.subtract
