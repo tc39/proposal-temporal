@@ -83,7 +83,7 @@ Here are best practices for writing code that will work regardless of the calend
 - When using the `Temporal.PlainMonthDay` type (e.g. for birthdays or holidays), use its `monthCode` property only.
   The `month` property is not present on this type because some calendars' month indexes vary from year to year.
 - When calling `Temporal.PlainMonthDay.prototype.toPlainDate(year)`, be prepared for the resulting date to have a different day of the month and/or a different month, because leap days and leap months are not present in every year.
-- Use `toLocaleString` to fetch month names instead instead of caching an array of names.
+- Use `toLocaleString` to fetch month names instead of caching an array of names.
   Example: `date.toLocaleString('en-US', { calendar: date.calendar, month: 'long' })`.
   If you absolutely must cache month names, a string key like `${date.calendar.id}|{date.monthCode}|{date.inLeapYear}` will work for all built-in calendars.
 - Don't assume that `era` or `eraYear` properties are always present.
