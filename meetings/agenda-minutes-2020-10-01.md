@@ -273,7 +273,7 @@
 
     * SFC: Floating is long, it's 8 characters while all the others are 5. But I like the mental model behind it.
 
-    * (Discusson on which options to put on the Twitter poll)
+    * (Discussion on which options to put on the Twitter poll)
 
     * SFC: Naive is Eurocentric design as well, because it's not naive in China or India to ignore the time zone.
 

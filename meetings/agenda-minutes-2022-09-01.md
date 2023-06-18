@@ -15,7 +15,7 @@ To present: [#2377](https://github.com/tc39/proposal-temporal/issues/2377), [#23
 ### Status: the "big four" issues
 (Frozen builtins [#1808](https://github.com/tc39/proposal-temporal/issues/1808), use Temporal objects in 402 [#2005](https://github.com/tc39/proposal-temporal/issues/2005), remove calendar slot from PlainTime [#1588](https://github.com/tc39/proposal-temporal/issues/1588), Duration precision concerns [#2195](https://github.com/tc39/proposal-temporal/issues/2195).)
 
-Discusson on these issues. It seems like [#1588](https://github.com/tc39/proposal-temporal/issues/1588) could become moot if we adopt the proposal for [#1808](https://github.com/tc39/proposal-temporal/issues/1808). [#2005](https://github.com/tc39/proposal-temporal/issues/2005) doesn't need a lot of discussion, is just a bunch of work, and is gated on resolving conflicting intentions with Intl.Enumeration proposal.
+Discussion on these issues. It seems like [#1588](https://github.com/tc39/proposal-temporal/issues/1588) could become moot if we adopt the proposal for [#1808](https://github.com/tc39/proposal-temporal/issues/1808). [#2005](https://github.com/tc39/proposal-temporal/issues/2005) doesn't need a lot of discussion, is just a bunch of work, and is gated on resolving conflicting intentions with Intl.Enumeration proposal.
 
 Plan for [#2195](https://github.com/tc39/proposal-temporal/issues/2195) is to write an explainer with solutions considered until now, and invite implementors to a future champions meeting to discuss it.
 
