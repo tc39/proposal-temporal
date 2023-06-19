@@ -469,7 +469,7 @@
           1. Let _intermediate_ be ? MoveRelativeZonedDateTime(_relativeTo_, _unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], 0).
           1. Let _balanceResult_ be ? BalancePossiblyInfiniteTimeDurationRelative(_unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _unit_, _intermediate_).
         1. Else,
-          1. Let _balanceResult_ be ? BalancePossiblyInfiniteTimeDuration(_unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _unit_).
+          1. Let _balanceResult_ be BalancePossiblyInfiniteTimeDuration(_unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _unit_).
         1. If _balanceResult_ is ~positive overflow~, return *+∞*<sub>𝔽</sub>.
         1. If _balanceResult_ is ~negative overflow~, return *-∞*<sub>𝔽</sub>.
         1. Assert: _balanceResult_ is a Time Duration Record.
@@ -1187,7 +1187,7 @@
         <dd>It converts the time units of a duration into a form where lower units are converted into higher units as much as possible, up to _largestUnit_. If the Number value for any unit is infinite, it returns abruptly with a *RangeError*.</dd>
       </dl>
       <emu-alg>
-        1. Let _balanceResult_ be ? BalancePossiblyInfiniteTimeDuration(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_).
+        1. Let _balanceResult_ be BalancePossiblyInfiniteTimeDuration(_days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_, _largestUnit_).
         1. If _balanceResult_ is ~positive overflow~ or ~negative overflow~, then
           1. Throw a *RangeError* exception.
         1. Else,
@@ -1206,7 +1206,7 @@
           _microseconds_: an integer,
           _nanoseconds_: an integer,
           _largestUnit_: a String,
-          ): either a normal completion containing either Time Duration Record if there are no infinite values, ~positive overflow~, or ~negative overflow~ in case of infinite values, or an abrupt completion
+          ): a Time Duration Record if there are no infinite values, or either ~positive overflow~ or ~negative overflow~ in case of infinite values
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1273,7 +1273,7 @@
               1. Return ~positive overflow~.
             1. Else if _sign_ = -1, then
               1. Return ~negative overflow~.
-        1. Return ? CreateTimeDurationRecord(_days_ &times; _sign_, _hours_ &times; _sign_, _minutes_ &times; _sign_, _seconds_ &times; _sign_, _milliseconds_ &times; _sign_, _microseconds_ &times; _sign_, _nanoseconds_ &times; _sign_).
+        1. Return ! CreateTimeDurationRecord(_days_ &times; _sign_, _hours_ &times; _sign_, _minutes_ &times; _sign_, _seconds_ &times; _sign_, _milliseconds_ &times; _sign_, _microseconds_ &times; _sign_, _nanoseconds_ &times; _sign_).
       </emu-alg>
     </emu-clause>
 
@@ -1333,7 +1333,7 @@
           1. Set _largestUnit_ to *"hour"*.
         1. Else,
           1. Set _days_ to 0.
-        1. Let _balanceResult_ be ? BalancePossiblyInfiniteTimeDuration(0, 0, 0, 0, 0, 0, _result_.[[Nanoseconds]], _largestUnit_).
+        1. Let _balanceResult_ be BalancePossiblyInfiniteTimeDuration(0, 0, 0, 0, 0, 0, _result_.[[Nanoseconds]], _largestUnit_).
         1. If _balanceResult_ is ~positive overflow~ or ~negative overflow~, return _balanceResult_.
         1. Return ? CreateTimeDurationRecord(_days_, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
       </emu-alg>
