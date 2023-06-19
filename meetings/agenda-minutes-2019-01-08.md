@@ -26,7 +26,7 @@ Agenda and notes  (please suggest your own additions/refinements):
         * DE: Stage 2! Hooray
         * PD: Actual management buy-in!
     * Explainer/documentation
-        * PD: I can get a start on this, and coordinate with those who want to do the heavy lifting of comparative lingistics
+        * PD: I can get a start on this, and coordinate with those who want to do the heavy lifting of comparative linguistics
         * DE: It's also important to have documentation in MDN.  The MDN folks are really interested in getting documentation for in-progress proposals so they can be a vector to get feedback.  There is a TC39 outreach group and we are working with MDN.  PD, are you interested in writing MDN documentation?
         * MP: I would expect to see API churn… we could try… maybe it would be helpful for us to write MDN documentation as an exercise that could be informative.
         * DE: Yeah, maybe the process of writing up documentation could make us realize that it is weird.
@@ -35,7 +35,7 @@ Agenda and notes  (please suggest your own additions/refinements):
         * MP: This sort of blocks on the modules question
     * Strategy for modules
         * DE: Apple, Google are both pushing for built-in modules outside TC39.  There are GitHub comments I've read.  Apple doesn't really have time to write the spec.  And there are open questions about how polyfills, namespaces, etc., should work with built-in modules.  I expect to see this come up at TC39.  We could be a force on this, or we could go with the flow.
-        * PD: The questoin to me is, if we push for this / advance it as a good use case, hich I think it is, what are the chances of this getting blocked on built-in modules since there is always disagreement when we bring it up?  Because I think it's more important to get Temporal through than to hitch it to built-in modules, even though it is a perfect use case.
+        * PD: The question to me is, if we push for this / advance it as a good use case, which I think it is, what are the chances of this getting blocked on built-in modules since there is always disagreement when we bring it up?  Because I think it's more important to get Temporal through than to hitch it to built-in modules, even though it is a perfect use case.
         * DE: The points of disagreement have been shifting.  No one is really saying "no built-in modules", but people have specific concerns now.  My feeling is that, Temporal is a proposal that polyfills really well.  So one part is getting this shipped in browsers, and another step is getting API adoption.  So, it would be OK if it takes a little longer to get into browsers if it gets high ecosystem adoption first with the polyfill.  So this is an opportunity for us to be a champion of built-in modules.
         * PD: I think it makes sense.  We should re-evaluate it in March and June.
         * MP: Is built-in modules on the agenda for January?
@@ -80,7 +80,7 @@ Agenda and notes  (please suggest your own additions/refinements):
         * RG: I'd like this to be a sequence of proposals.
         * JW: I could believe that proceeding in stages could be useful, if we're defining one bit of syntax, continuing on, we could collect in-field telemetry.
         * RG: It's also possible that we could end up in a good state where the spec says, if the input is not fully specified, then implementations are free to fall back to whatever, but it's recommended to take a certain action. When I talk about multiple proposals, I'm talking about two: the preferred syntax, and then defining it fully. I don't want to do nothing just because we can't do everything.
-        * DE: Maybe we could start towards trying to define things completely, and then 
+        * DE: Maybe we could start towards trying to define things completely, and then
     * Do we want to propose adding new features to Date, or only to Temporal?
         * DE: I thought we were going to focus on adding things to Temporal, and not add things to Date.
         * RG: I agree, this is a good default position. I don't think we need to add timezones into Date.
@@ -97,5 +97,5 @@ Agenda and notes  (please suggest your own additions/refinements):
         * RG: Yeah, that's totally fair.
         * JW: I think the extension idea is sort-of right, but really it's more of a union.
 * Next steps
-    * Should we make this a recurring (e.g., monthly) meeting?	
+    * Should we make this a recurring (e.g., monthly) meeting?
         * Yes, will repeat monthly

@@ -15,7 +15,7 @@ Agenda:
 
 * [#310](https://github.com/tc39/proposal-temporal/issues/310) Symbols or strings post-TC39 follow-up
     * SFC: Discussed in last 10 minutes of TC39. Summarizing, the sentiment there was that calendars are the primary identity of the object, unlike e.g. iterators where you add Symbol.iterator to another object. Two other alternatives, Richard's suggestion of adding Temporal compatibility to an already existing object, and have a Temporal API object with string methods that is accessible by a Symbol (like Symbol.iterator has a next() method)
-    * JWS: Sounds like it's in line with precdent.
+    * JWS: Sounds like it's in line with precedent.
     * MPT: Is the value proposition of chaining it off of a Symbol, encapsulation?
     * SFC: Indeed, avoiding conflicts with other properties with conflicting names.
     * JWS: Any personal preference?

@@ -60,7 +60,7 @@ export namespace Temporal {
      * destination time zone (e.g. near "Spring Forward" DST transitions), or
      * exists more than once (e.g. near "Fall Back" DST transitions).
      *
-     * In case of ambiguous or non-existent times, this option controls what
+     * In case of ambiguous or nonexistent times, this option controls what
      * exact time to return:
      * - `'compatible'`: Equivalent to `'earlier'` for backward transitions like
      *   the start of DST in the Spring, and `'later'` for forward transitions

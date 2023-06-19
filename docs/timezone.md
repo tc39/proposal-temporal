@@ -263,7 +263,7 @@ When interoperating with existing code or services, `'compatible'` mode matches 
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like, e.g., the hour after DST starts in the spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used, or the post-transition time zone offset if `'earlier'` is used.
-This behavior avoids exceptions when converting non-existent `Temporal.PlainDateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.PlainDateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
+This behavior avoids exceptions when converting nonexistent `Temporal.PlainDateTime` values to `Temporal.Instant`, but it also means that values during these periods will result in a different `Temporal.PlainDateTime` in "round-trip" conversions to `Temporal.Instant` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
 

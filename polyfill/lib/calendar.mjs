@@ -537,7 +537,7 @@ const nonIsoHelperBase = {
     // https://bugs.chromium.org/p/v8/issues/detail?id=6528#c4, we cache one
     // DateTimeFormat instance per calendar. Caching is lazy so we only pay for
     // calendars that are used. Note that the nonIsoHelperBase object is spread
-    // into each each calendar's implementation before any cache is created, so
+    // into each calendar's implementation before any cache is created, so
     // each calendar gets its own separate cached formatter.
     if (typeof this.formatter === 'undefined') {
       this.formatter = new IntlDateTimeFormat(`en-US-u-ca-${this.id}`, {
@@ -799,7 +799,7 @@ const nonIsoHelperBase = {
         sign = this.compareCalendarDates(date, roundtripEstimate);
       }
     }
-    // If the initial guess is not in the same month, then then bisect the
+    // If the initial guess is not in the same month, then bisect the
     // distance to the target, starting with 8 days per step.
     let increment = 8;
     while (sign) {

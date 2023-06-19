@@ -175,7 +175,7 @@ The above read-only properties allow accessing each component of a date individu
   `month` values start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 - `monthCode` is a calendar-specific string that identifies the month in a year-independent way.
   For common (non-leap) months, `monthCode` should be `` `M${month}` ``, where `month` is zero padded up to two digits.
-  For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with with an "L" suffix appended.
+  For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month's code with an "L" suffix appended.
   Examples: `'M02'` => February; `'M08L'` => repeated 8th month in the Chinese calendar; `'M05L'` => Adar I in the Hebrew calendar.
   - `day` is a positive integer representing the day of the month.
 
@@ -746,7 +746,7 @@ When interoperating with existing code or services, this matches the behavior of
 This mode also matches the behavior of cross-platform standards like [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545).
 
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset.
-This behavior avoids exceptions when converting non-existent date/time values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.PlainTime` value in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
+This behavior avoids exceptions when converting nonexistent date/time values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.PlainTime` value in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
 
 For usage examples and a more complete explanation of how this disambiguation works, see [Resolving ambiguity](./ambiguity.md).
 

@@ -104,7 +104,7 @@ Expect this polyfill to be replaced by other, more production-ready polyfills.
   - Temporal.Duration.plus -> Temporal.Duration.add
   - Temporal.Instant.difference -> Temporal.Instant.since
   - Temporal.Instant.getEpochMicroseconds (method) -> Temporal.Instant.epochMicroseconds (property)
-  - Temporal.Instant.getEpochMillieconds (method) -> Temporal.Instant.epochMillieconds (property)
+  - Temporal.Instant.getEpochMilliseconds (method) -> Temporal.Instant.epochMilliseconds (property)
   - Temporal.Instant.getEpochNanoseconds (method) -> Temporal.Instant.epochNanoseconds (property)
   - Temporal.Instant.getEpochSeconds (method) -> Temporal.Instant.epochSeconds (property)
   - Temporal.Instant.minus -> Temporal.Instant.subtract
@@ -195,7 +195,7 @@ Expect this polyfill to be replaced by other, more production-ready polyfills.
   allowed, all fields of Temporal.Duration must have the same sign.
 - If `a.difference(b)` is positive, then `b.difference(a)` is the same
   duration but negative, and vice versa.
-- The 'disambiguation' option is renamed to 'overflow' in contextx where
+- The 'disambiguation' option is renamed to 'overflow' in context where
   it refers to out-of-range values. (It's still called 'disambiguation'
   in the context of time zones.)
 - Temporal.Instant.plus and Temporal.Instant.minus now do not allow

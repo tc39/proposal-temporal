@@ -18,7 +18,7 @@
 - PDL: As discussed last week, we won't ask for a stage advancement until we have polled the reviewers.
 - DE: The designated reviewers are a subset of the people in the committee who actually will be reviewing the proposal. They aren't a set of people you can poll.
 - PDL: We won't be pushing people, we'll ask if the committee is comfortable.
-- DE: We also want to say that we're open to more feedback, but we stand behind the proposal as is, and we are not iterating any more. Changes should originate from reviews.
+- DE: We also want to say that we're open to more feedback, but we stand behind the proposal as is, and we are not iterating anymore. Changes should originate from reviews.
 - DE: Do we want people to fill out the feedback survey or open new issues?
 - PFC: I think people should open issues, but we treat them differently than before. We'll be more likely to close them or move them to proposal-temporal-v2.
 - PDL: Some issues have been more noise than helpful, when they relitigate things that we have already thought about carefully.

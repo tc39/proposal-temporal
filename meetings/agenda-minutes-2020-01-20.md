@@ -45,7 +45,7 @@ Agenda:
         * DE: I’d like to understand why we’d want this exact kind of redundancy.
     * [264](https://github.com/tc39/proposal-temporal/issues/264):
         * SFC: Probably one of the most important unresolved issues. Thread has changed shape. Question posted has been the most important one. According to the model, each Object should convert back and from an ISO-equivalents. YM and MD cannot uphold this, so what does this mean?
-        * PDL: No sensible answer. 24th of Kiselev is a different day each year (you need a year field to convert).
+        * PDL: No sensible answer. 24th of Kislev is a different day each year (you need a year field to convert).
         * DE: having a different calendar to me is operating between different types. You don’t need interoperability.
         * PDL: no autoconversion, throw when dealing with objects of different calendars.
         * SFC: magic was good for more transparency. Throwing on mismatching calendars can solve a lot of problems. Still one question: the same code written by different people shouldn’t have different outcomes.

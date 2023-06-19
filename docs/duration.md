@@ -449,7 +449,7 @@ The `roundingMode` option controls how the rounding is performed.
 - `ceil`: Always round towards positive infinity.
   For negative durations this option will decrease the absolute value of the duration which may be unexpected.
   To round away from zero, use `expand`.
-- `expand`:  Always round away from from zero like `ceil` for positive durations and like `floor` for negative durations.
+- `expand`:  Always round away from zero like `ceil` for positive durations and like `floor` for negative durations.
 - `trunc`: Always round towards zero, chopping off the part after the decimal point.
 - `floor`: Always round down, towards negative infinity.
   This mode acts the same as `trunc` for positive durations but for negative durations it will increase the absolute value of the result which may be unexpected.

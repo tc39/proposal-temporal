@@ -24,8 +24,8 @@ Agenda and notes:
     * PD: There are a couple translation methods that make it integrate with Date more easily. It’s based on one BigInt, as opposed to two Numbers.
     * MPT: I’m not concerned about the Date conversions; I’m more concerned about any time we’re accessing data from the global state
     * DE: Let’s not focus on ocap concerns; SES can deal with this, as it’s analogous to the Date constructor, and extremely useful.
-    * MPT: Everyone fine with nanonseconds since epoch?
-    * AP: If you have the storage for nanonseconds since epoch, seems fine.
+    * MPT: Everyone fine with nanoseconds since epoch?
+    * AP: If you have the storage for nanoseconds since epoch, seems fine.
     * MPT: Any scenarios where we don’t have 64 bits of storage?
     * AP: BigInt is arbitrary, so if BigInt lands in the spec, we can store whatever.
     * MPT: Now, we can have the BigInt constructor.
