@@ -357,7 +357,7 @@ The last month of every year has <code>month</code> equal to the <code>monthsInY
 <code>month</code> values start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</li>
 <li><code>monthCode</code> is a calendar-specific string that identifies the month in a year-independent way.
 For common (non-leap) months, <code>monthCode</code> should be <code>`M${month}`</code>, where <code>month</code> is zero padded up to two digits.
-For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month&#39;s code with with an &quot;L&quot; suffix appended.
+For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month&#39;s code with an &quot;L&quot; suffix appended.
 Examples: <code>&#39;M02&#39;</code> =&gt; February; <code>&#39;M08L&#39;</code> =&gt; repeated 8th month in the Chinese calendar; <code>&#39;M05L&#39;</code> =&gt; Adar I in the Hebrew calendar.<ul>
 <li><code>day</code> is a positive integer representing the day of the month.</li>
 </ul>
@@ -735,7 +735,7 @@ If <code>plainTime</code> is provided, this method is equivalent to <a href="./p
 When interoperating with existing code or services, this matches the behavior of legacy <code>Date</code> as well as libraries like moment.js, Luxon, and date-fns.
 This mode also matches the behavior of cross-platform standards like <a href="https://tools.ietf.org/html/rfc5545">RFC 5545 (iCalendar)</a>.</p>
 <p>During &quot;skipped&quot; clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset.
-This behavior avoids exceptions when converting non-existent date/time values to <code>Temporal.ZonedDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.PlainTime</code> value in &quot;round-trip&quot; conversions to <code>Temporal.ZonedDateTime</code> and back again.</p>
+This behavior avoids exceptions when converting nonexistent date/time values to <code>Temporal.ZonedDateTime</code>, but it also means that values during these periods will result in a different <code>Temporal.PlainTime</code> value in &quot;round-trip&quot; conversions to <code>Temporal.ZonedDateTime</code> and back again.</p>
 <p>For usage examples and a more complete explanation of how this disambiguation works, see <a href="./ambiguity.html">Resolving ambiguity</a>.</p>
 <p>If the result is outside the range that <code>Temporal.ZonedDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then a <code>RangeError</code> will be thrown.</p>
 <p>Usage example:</p>

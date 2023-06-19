@@ -283,7 +283,7 @@ If you care about the name of the month regardless of what year it is (e.g. stor
 <li>When using the <code>Temporal.PlainMonthDay</code> type (e.g. for birthdays or holidays), use its <code>monthCode</code> property only.
 The <code>month</code> property is not present on this type because some calendars&#39; month indexes vary from year to year.</li>
 <li>When calling <code>Temporal.PlainMonthDay.prototype.toPlainDate(year)</code>, be prepared for the resulting date to have a different day of the month and/or a different month, because leap days and leap months are not present in every year.</li>
-<li>Use <code>toLocaleString</code> to fetch month names instead instead of caching an array of names.
+<li>Use <code>toLocaleString</code> to fetch month names instead of caching an array of names.
 Example: <code>date.toLocaleString(&#39;en-US&#39;, { calendar: date.calendar, month: &#39;long&#39; })</code>.
 If you absolutely must cache month names, a string key like <code>${date.calendar.id}|{date.monthCode}|{date.inLeapYear}</code> will work for all built-in calendars.</li>
 <li>Don&#39;t assume that <code>era</code> or <code>eraYear</code> properties are always present.
