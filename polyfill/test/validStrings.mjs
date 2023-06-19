@@ -361,8 +361,8 @@ const durationHoursFraction = withCode(fraction, (data, result) => {
   data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
 });
 
-const digitsNotInfinite = withSyntaxConstraints(oneOrMore(digit()), (result) => {
-  if (!Number.isFinite(+result)) throw new SyntaxError('try again on infinity');
+const uint32Digits = withSyntaxConstraints(between(1, 10, digit()), (result) => {
+  if (+result >= 2 ** 32) throw new SyntaxError('try again for an uint32');
 });
 const timeDurationDigits = (factor) =>
   withSyntaxConstraints(between(1, 16, digit()), (result) => {
@@ -387,17 +387,17 @@ const durationDays = seq(
   daysDesignator
 );
 const durationWeeks = seq(
-  withCode(digitsNotInfinite, (data, result) => (data.weeks = +result * data.factor)),
+  withCode(uint32Digits, (data, result) => (data.weeks = +result * data.factor)),
   weeksDesignator,
   [durationDays]
 );
 const durationMonths = seq(
-  withCode(digitsNotInfinite, (data, result) => (data.months = +result * data.factor)),
+  withCode(uint32Digits, (data, result) => (data.months = +result * data.factor)),
   monthsDesignator,
   [choice(durationWeeks, durationDays)]
 );
 const durationYears = seq(
-  withCode(digitsNotInfinite, (data, result) => (data.years = +result * data.factor)),
+  withCode(uint32Digits, (data, result) => (data.years = +result * data.factor)),
   yearsDesignator,
   [choice(durationMonths, durationWeeks, durationDays)]
 );
