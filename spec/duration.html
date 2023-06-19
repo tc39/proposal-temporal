@@ -1333,9 +1333,12 @@
           1. Set _largestUnit_ to *"hour"*.
         1. Else,
           1. Set _days_ to 0.
+        1. If 𝔽(_days_) is not finite, then
+          1. If _days_ &gt; 0, return ~positive overflow~.
+          1. Else, return ~negative overflow~.
         1. Let _balanceResult_ be BalancePossiblyInfiniteTimeDuration(0, 0, 0, 0, 0, 0, _result_.[[Nanoseconds]], _largestUnit_).
         1. If _balanceResult_ is ~positive overflow~ or ~negative overflow~, return _balanceResult_.
-        1. Return ? CreateTimeDurationRecord(_days_, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
+        1. Return ! CreateTimeDurationRecord(_days_, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
