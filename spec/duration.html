@@ -869,7 +869,7 @@
         <dd>It returns a Time Duration Record.</dd>
       </dl>
       <emu-alg>
-        1. If ! IsValidDuration(0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *false*, throw a *RangeError* exception.
+        1. Assert: ! IsValidDuration(0, 0, 0, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *true*.
         1. Return the Record {
             [[Days]]: ℝ(𝔽(_days_)),
             [[Hours]]: ℝ(𝔽(_hours_)),
