@@ -299,7 +299,7 @@
         1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Assert: _maximum_ is not *undefined*.
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
-        1. Let _result_ be ! RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Let _result_ be RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -397,7 +397,7 @@
         1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~time~, *undefined*).
         1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
-        1. Let _roundResult_ be ! RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Let _roundResult_ be RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Return ! TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
@@ -525,6 +525,61 @@
   <emu-clause id="sec-temporal-plaintime-abstract-ops">
     <h1>Abstract operations</h1>
 
+    <emu-clause id="sec-temporal-time-records">
+      <h1>Time Records</h1>
+      <p>
+        A <dfn variants="Time Records">Time Record</dfn> is a Record value used to represent a valid clock time, together with a number of overflow days such as might occur in BalanceTime.
+        For any Time Record _t_, IsValidTime(_t_.[[Hour]], _t_.[[Minute]], _t_.[[Second]], _t_.[[Millisecond]], _t_.[[Microsecond]], _t_.[[Nanosecond]]) must return *true*.
+      </p>
+      <p>
+        Time Records have the fields listed in <emu-xref href="#table-temporal-time-record-fields"></emu-xref>.
+      </p>
+      <emu-table id="table-temporal-time-record-fields" caption="Time Record Fields">
+        <table class="real-table">
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Days]]</td>
+            <td>an integer &ge; 0</td>
+            <td>A number of overflow days.</td>
+          </tr>
+          <tr>
+            <td>[[Hour]]</td>
+            <td>an integer in the inclusive range 0 to 23</td>
+            <td>The number of the hour.</td>
+          </tr>
+          <tr>
+            <td>[[Minute]]</td>
+            <td>an integer in the inclusive range 0 to 59</td>
+            <td>The number of the minute.</td>
+          </tr>
+          <tr>
+            <td>[[Second]]</td>
+            <td>an integer in the inclusive range 0 to 59</td>
+            <td>The number of the second.</td>
+          </tr>
+          <tr>
+            <td>[[Millisecond]]</td>
+            <td>an integer in the inclusive range 0 to 999</td>
+            <td>The number of the millisecond.</td>
+          </tr>
+          <tr>
+            <td>[[Microsecond]]</td>
+            <td>an integer in the inclusive range 0 to 999</td>
+            <td>The number of the microsecond.</td>
+          </tr>
+          <tr>
+            <td>[[Nanosecond]]</td>
+            <td>an integer in the inclusive range 0 to 999</td>
+            <td>The number of the nanosecond.</td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-differencetime" type="abstract operation">
       <h1>
         DifferenceTime (
@@ -554,7 +609,7 @@
         1. Let _microseconds_ be _mus2_ - _mus1_.
         1. Let _nanoseconds_ be _ns2_ - _ns1_.
         1. Let _sign_ be ! DurationSign(0, 0, 0, 0, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Let _bt_ be ! BalanceTime(_hours_ &times; _sign_, _minutes_ &times; _sign_, _seconds_ &times; _sign_, _milliseconds_ &times; _sign_, _microseconds_ &times; _sign_, _nanoseconds_ &times; _sign_).
+        1. Let _bt_ be BalanceTime(_hours_ &times; _sign_, _minutes_ &times; _sign_, _seconds_ &times; _sign_, _milliseconds_ &times; _sign_, _microseconds_ &times; _sign_, _nanoseconds_ &times; _sign_).
         1. Assert: _bt_.[[Days]] is 0.
         1. Return ! CreateTimeDurationRecord(0, _bt_.[[Hour]] &times; _sign_, _bt_.[[Minute]] &times; _sign_, _bt_.[[Second]] &times; _sign_, _bt_.[[Millisecond]] &times; _sign_, _bt_.[[Microsecond]] &times; _sign_, _bt_.[[Nanosecond]] &times; _sign_).
       </emu-alg>
@@ -643,10 +698,22 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balancetime" aoid="BalanceTime">
-      <h1>BalanceTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+    <emu-clause id="sec-temporal-balancetime" type="abstract operation">
+      <h1>
+        BalanceTime (
+          _hour_: an integer,
+          _minute_: an integer,
+          _second_: an integer,
+          _millisecond_: an integer,
+          _microsecond_: an integer,
+          _nanosecond_: an integer,
+        ): a Time Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Set _microsecond_ to _microsecond_ + floor(_nanosecond_ / 1000).
         1. Set _nanosecond_ to _nanosecond_ modulo 1000.
         1. Set _millisecond_ to _millisecond_ + floor(_microsecond_ / 1000).
@@ -838,29 +905,58 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addtime" aoid="AddTime">
-      <h1>AddTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ )</h1>
+    <emu-clause id="sec-temporal-addtime" type="abstract operation">
+      <h1>
+        AddTime (
+          _hour_: an integer in the inclusive range 0 to 23,
+          _minute_: an integer in the inclusive range 0 to 59,
+          _second_: an integer in the inclusive range 0 to 59,
+          _millisecond_: an integer in the inclusive range 0 to 999,
+          _microsecond_: an integer in the inclusive range 0 to 999,
+          _nanosecond_: an integer in the inclusive range 0 to 999,
+          _hours_: an integer,
+          _minutes_: an integer,
+          _seconds_: an integer,
+          _milliseconds_: an integer,
+          _microseconds_: an integer,
+          _nanoseconds_: an integer,
+        ): a Time Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are integers.
-        1. Assert: IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
-        1. Let _hour_ be _hour_ + _hours_.
-        1. Let _minute_ be _minute_ + _minutes_.
-        1. Let _second_ be _second_ + _seconds_.
-        1. Let _millisecond_ be _millisecond_ + _milliseconds_.
-        1. Let _microsecond_ be _microsecond_ + _microseconds_.
-        1. Let _nanosecond_ be _nanosecond_ + _nanoseconds_.
-        1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Set _hour_ to _hour_ + _hours_.
+        1. Set _minute_ to _minute_ + _minutes_.
+        1. Set _second_ to _second_ + _seconds_.
+        1. Set _millisecond_ to _millisecond_ + _milliseconds_.
+        1. Set _microsecond_ to _microsecond_ + _microseconds_.
+        1. Set _nanosecond_ to _nanosecond_ + _nanoseconds_.
+        1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-roundtime" aoid="RoundTime">
-      <h1>RoundTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_ [ , _dayLengthNs_ ] )</h1>
-      <p>
-        The abstract operation RoundTime rounds a time to the given increment, optionally adjusting for a non-24-hour day.
-      </p>
+    <emu-clause id="sec-temporal-roundtime" type="abstract operation">
+      <h1>
+        RoundTime (
+          _hour_: an integer in the inclusive range 0 to 23,
+          _minute_: an integer in the inclusive range 0 to 59,
+          _second_: an integer in the inclusive range 0 to 59,
+          _millisecond_: an integer in the inclusive range 0 to 999,
+          _microsecond_: an integer in the inclusive range 0 to 999,
+          _nanosecond_: an integer in the inclusive range 0 to 999,
+          _increment_: an integer,
+          _unit_: *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
+          _roundingMode_: *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*,
+          optional _dayLengthNs_: an integer,
+        ): a Time Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It rounds a time to the given increment, optionally adjusting for a non-24-hour day.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, and _increment_ are integers.
-        1. Assert: IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
         1. Let _fractionalSecond_ be _nanosecond_ &times; 10<sup>-9</sup> + _microsecond_ &times; 10<sup>-6</sup> + _millisecond_ &times; 10<sup>-3</sup> + _second_.
         1. If _unit_ is *"day"*, then
           1. If _dayLengthNs_ is not present, set _dayLengthNs_ to nsPerDay.
@@ -890,17 +986,17 @@
             [[Nanosecond]]: 0
           }.
         1. If _unit_ is *"hour"*, then
-          1. Return ! BalanceTime(_result_, 0, 0, 0, 0, 0).
+          1. Return BalanceTime(_result_, 0, 0, 0, 0, 0).
         1. If _unit_ is *"minute"*, then
-          1. Return ! BalanceTime(_hour_, _result_, 0, 0, 0, 0).
+          1. Return BalanceTime(_hour_, _result_, 0, 0, 0, 0).
         1. If _unit_ is *"second"*, then
-          1. Return ! BalanceTime(_hour_, _minute_, _result_, 0, 0, 0).
+          1. Return BalanceTime(_hour_, _minute_, _result_, 0, 0, 0).
         1. If _unit_ is *"millisecond"*, then
-          1. Return ! BalanceTime(_hour_, _minute_, _second_, _result_, 0, 0).
+          1. Return BalanceTime(_hour_, _minute_, _second_, _result_, 0, 0).
         1. If _unit_ is *"microsecond"*, then
-          1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _result_, 0).
+          1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _result_, 0).
         1. Assert: _unit_ is *"nanosecond"*.
-        1. Return ! BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _result_).
+        1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _result_).
       </emu-alg>
     </emu-clause>
     <emu-clause id="sec-temporal-differencetemporalplaintime" type="abstract operation">
@@ -943,7 +1039,7 @@
       <emu-alg>
         1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Let _result_ be ! AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
+        1. Let _result_ be AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
         1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
