@@ -50,6 +50,14 @@
     "semi": true,
     "singleQuote": true,
     "bracketSpacing": true,
-    "arrowParens": "always"
+    "arrowParens": "always",
+    "overrides": [
+      {
+        "files": "polyfill/test262/**",
+        "options": {
+          "singleQuote": false
+        }
+      }
+    ]
   }
 }
