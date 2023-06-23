@@ -92,3 +92,13 @@ overrides:
       - polyfill/test/validStrings.mjs
     rules:
       no-console: off
+  - files:
+      - polyfill/test262/**
+    rules:
+      quotes:
+        - error
+        - double
+        - avoidEscape: true
+      prettier/prettier:
+        - error
+        - singleQuote: false

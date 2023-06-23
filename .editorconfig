@@ -11,3 +11,6 @@ insert_final_newline = true
 
 [*.js]
 max_line_length = 120
+
+[polyfill/test262/]
+quote_type = double
