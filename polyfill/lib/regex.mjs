@@ -24,6 +24,7 @@ export const datesplit = new RegExp(
 const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 export const offset = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
 const offsetpart = new RegExp(`([zZ])|${offset.source}?`);
+export const offsetIdentifier = offset;
 export const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
 
 export const zoneddatetime = new RegExp(

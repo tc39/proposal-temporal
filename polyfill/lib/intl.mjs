@@ -101,7 +101,7 @@ export function DateTimeFormat(locale = undefined, options = undefined) {
     this[TZ_ORIGINAL] = ro.timeZone;
   } else {
     const id = ES.ToString(timeZoneOption);
-    if (ES.IsTimeZoneOffsetString(id)) {
+    if (ES.IsOffsetTimeZoneIdentifier(id)) {
       // Note: https://github.com/tc39/ecma402/issues/683 will remove this
       throw new RangeError('Intl.DateTimeFormat does not currently support offset time zones');
     }

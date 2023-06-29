@@ -206,7 +206,7 @@ export class ZonedDateTime {
 
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.InterpretTemporalDateTimeFields(calendar, fields, options);
-    const offsetNs = ES.ParseTimeZoneOffsetString(fields.offset);
+    const offsetNs = ES.ParseDateTimeUTCOffset(fields.offset).offsetNanoseconds;
     const timeZone = GetSlot(this, TIME_ZONE);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
@@ -472,7 +472,7 @@ export class ZonedDateTime {
     }
 
     const timeZoneIdentifier = ES.ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
-    if (ES.IsTimeZoneOffsetString(timeZoneIdentifier)) {
+    if (ES.IsOffsetTimeZoneIdentifier(timeZoneIdentifier)) {
       // Note: https://github.com/tc39/ecma402/issues/683 will remove this
       throw new RangeError('toLocaleString does not currently support offset time zones');
     } else {

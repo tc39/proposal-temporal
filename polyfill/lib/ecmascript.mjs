@@ -360,24 +360,6 @@ export function RejectTemporalLikeObject(item) {
   }
 }
 
-export function CanonicalizeTimeZoneOffsetString(offsetString) {
-  const offsetNs = ParseTimeZoneOffsetString(offsetString);
-  return FormatTimeZoneOffsetString(offsetNs);
-}
-
-export function ParseTemporalTimeZone(stringIdent) {
-  const { tzName, offset, z } = ParseTemporalTimeZoneString(stringIdent);
-  if (tzName) {
-    if (IsTimeZoneOffsetString(tzName)) return CanonicalizeTimeZoneOffsetString(tzName);
-    const record = GetAvailableNamedTimeZoneIdentifier(tzName);
-    if (!record) throw new RangeError(`Unrecognized time zone ${tzName}`);
-    return record.primaryIdentifier;
-  }
-  if (z) return 'UTC';
-  // if !tzName && !z then offset must be present
-  return CanonicalizeTimeZoneOffsetString(offset);
-}
-
 export function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
   if (showCalendar === 'never') return '';
   return FormatCalendarAnnotation(ToTemporalCalendarIdentifier(calendar), showCalendar);
@@ -570,6 +552,18 @@ export function ParseTemporalMonthDayString(isoString) {
   return { month, day, calendar, referenceISOYear };
 }
 
+const TIMEZONE_IDENTIFIER = new RegExp(`^${PARSE.timeZoneID.source}$`, 'i');
+const OFFSET_IDENTIFIER = new RegExp(`^${PARSE.offsetIdentifier.source}$`);
+
+export function ParseTimeZoneIdentifier(identifier) {
+  if (!TIMEZONE_IDENTIFIER.test(identifier)) throw new RangeError(`Invalid time zone identifier: ${identifier}`);
+  if (OFFSET_IDENTIFIER.test(identifier)) {
+    const { offsetNanoseconds } = ParseDateTimeUTCOffset(identifier);
+    return { offsetNanoseconds };
+  }
+  return { tzName: identifier };
+}
+
 export function ParseTemporalTimeZoneString(stringIdent) {
   const bareID = new RegExp(`^${PARSE.timeZoneID.source}$`, 'i');
   if (bareID.test(stringIdent)) return { tzName: stringIdent };
@@ -641,7 +635,7 @@ export function ParseTemporalInstant(isoString) {
     ParseTemporalInstantString(isoString);
 
   if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
-  const offsetNs = z ? 0 : ParseTimeZoneOffsetString(offset);
+  const offsetNs = z ? 0 : ParseDateTimeUTCOffset(offset).offsetNanoseconds;
   ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = BalanceISODateTime(
     year,
     month,
@@ -1005,7 +999,7 @@ export function ToRelativeTemporalObject(options) {
     calendar = ASCIILowercase(calendar);
   }
   if (timeZone === undefined) return CreateTemporalDate(year, month, day, calendar);
-  const offsetNs = offsetBehaviour === 'option' ? ParseTimeZoneOffsetString(offset) : 0;
+  const offsetNs = offsetBehaviour === 'option' ? ParseDateTimeUTCOffset(offset).offsetNanoseconds : 0;
   const epochNanoseconds = InterpretISODateTimeOffset(
     year,
     month,
@@ -1406,7 +1400,7 @@ export function InterpretISODateTimeOffset(
   // the user-provided offset doesn't match any instants for this time
   // zone and date/time.
   if (offsetOpt === 'reject') {
-    const offsetStr = FormatTimeZoneOffsetString(offsetNs);
+    const offsetStr = FormatOffsetTimeZoneIdentifier(offsetNs);
     const timeZoneString = IsTemporalTimeZone(timeZone) ? GetSlot(timeZone, TIMEZONE_ID) : 'time zone';
     throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZoneString}`);
   }
@@ -1469,7 +1463,7 @@ export function ToTemporalZonedDateTime(item, options) {
     ToTemporalOverflow(options); // validate and ignore
   }
   let offsetNs = 0;
-  if (offsetBehaviour === 'option') offsetNs = ParseTimeZoneOffsetString(offset);
+  if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset).offsetNanoseconds;
   const epochNanoseconds = InterpretISODateTimeOffset(
     year,
     month,
@@ -2099,7 +2093,20 @@ export function ToTemporalTimeZoneSlotValue(temporalTimeZoneLike) {
     return temporalTimeZoneLike;
   }
   const identifier = ToString(temporalTimeZoneLike);
-  return ParseTemporalTimeZone(identifier);
+  const { tzName, offset, z } = ParseTemporalTimeZoneString(identifier);
+  if (tzName) {
+    // tzName is any valid identifier string in brackets, and could be an offset identifier
+    const { offsetNanoseconds } = ParseTimeZoneIdentifier(tzName);
+    if (offsetNanoseconds !== undefined) return FormatOffsetTimeZoneIdentifier(offsetNanoseconds);
+
+    const record = GetAvailableNamedTimeZoneIdentifier(tzName);
+    if (!record) throw new RangeError(`Unrecognized time zone ${tzName}`);
+    return record.primaryIdentifier;
+  }
+  if (z) return 'UTC';
+  // if !tzName && !z then offset must be present
+  const { offsetNanoseconds } = ParseDateTimeUTCOffset(offset);
+  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds);
 }
 
 export function ToTemporalTimeZoneIdentifier(slotValue) {
@@ -2162,7 +2169,7 @@ export function GetOffsetNanosecondsFor(timeZone, instant, getOffsetNanosecondsF
 
 export function GetOffsetStringFor(timeZone, instant) {
   const offsetNs = GetOffsetNanosecondsFor(timeZone, instant);
-  return FormatTimeZoneOffsetString(offsetNs);
+  return FormatOffsetTimeZoneIdentifier(offsetNs);
 }
 
 export function GetPlainDateTimeFor(timeZone, instant, calendar) {
@@ -2384,7 +2391,7 @@ export function TemporalInstantToString(instant, timeZone, precision) {
   let timeZoneString = 'Z';
   if (timeZone !== undefined) {
     const offsetNs = GetOffsetNanosecondsFor(outputTimeZone, instant);
-    timeZoneString = FormatISOTimeZoneOffsetString(offsetNs);
+    timeZoneString = FormatDateTimeUTCOffsetRounded(offsetNs);
   }
   return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
 }
@@ -2564,7 +2571,7 @@ export function TemporalZonedDateTimeToString(
   let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
   if (showOffset !== 'never') {
     const offsetNs = GetOffsetNanosecondsFor(tz, instant);
-    result += FormatISOTimeZoneOffsetString(offsetNs);
+    result += FormatDateTimeUTCOffsetRounded(offsetNs);
   }
   if (showTimeZone !== 'never') {
     const identifier = ToTemporalTimeZoneIdentifier(tz);
@@ -2575,11 +2582,11 @@ export function TemporalZonedDateTimeToString(
   return result;
 }
 
-export function IsTimeZoneOffsetString(string) {
+export function IsOffsetTimeZoneIdentifier(string) {
   return OFFSET.test(string);
 }
 
-export function ParseTimeZoneOffsetString(string) {
+export function ParseDateTimeUTCOffset(string) {
   const match = OFFSET.exec(string);
   if (!match) {
     throw new RangeError(`invalid time zone offset: ${string}`);
@@ -2589,7 +2596,9 @@ export function ParseTimeZoneOffsetString(string) {
   const minutes = +(match[3] || 0);
   const seconds = +(match[4] || 0);
   const nanoseconds = +((match[5] || 0) + '000000000').slice(0, 9);
-  return sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
+  const offsetNanoseconds = sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
+  const hasSubMinutePrecision = match[4] !== undefined || match[5] !== undefined;
+  return { offsetNanoseconds, hasSubMinutePrecision };
 }
 
 let canonicalTimeZoneIdsCache = undefined;
@@ -2702,17 +2711,16 @@ export function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {
   return +utc.minus(epochNanoseconds);
 }
 
-export function FormatTimeZoneOffsetString(offsetNanoseconds) {
+export function FormatOffsetTimeZoneIdentifier(offsetNanoseconds) {
   const sign = offsetNanoseconds < 0 ? '-' : '+';
   offsetNanoseconds = MathAbs(offsetNanoseconds);
-  const nanoseconds = offsetNanoseconds % 1e9;
-  const seconds = MathFloor(offsetNanoseconds / 1e9) % 60;
-  const minutes = MathFloor(offsetNanoseconds / 60e9) % 60;
   const hours = MathFloor(offsetNanoseconds / 3600e9);
-
   const hourString = ISODateTimePartString(hours);
+  const minutes = MathFloor(offsetNanoseconds / 60e9) % 60;
   const minuteString = ISODateTimePartString(minutes);
+  const seconds = MathFloor(offsetNanoseconds / 1e9) % 60;
   const secondString = ISODateTimePartString(seconds);
+  const nanoseconds = offsetNanoseconds % 1e9;
   let post = '';
   if (nanoseconds) {
     let fraction = `${nanoseconds}`.padStart(9, '0');
@@ -2724,16 +2732,9 @@ export function FormatTimeZoneOffsetString(offsetNanoseconds) {
   return `${sign}${hourString}:${minuteString}${post}`;
 }
 
-export function FormatISOTimeZoneOffsetString(offsetNanoseconds) {
+export function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {
   offsetNanoseconds = RoundNumberToIncrement(bigInt(offsetNanoseconds), 60e9, 'halfExpand').toJSNumber();
-  const sign = offsetNanoseconds < 0 ? '-' : '+';
-  offsetNanoseconds = MathAbs(offsetNanoseconds);
-  const minutes = (offsetNanoseconds / 60e9) % 60;
-  const hours = MathFloor(offsetNanoseconds / 3600e9);
-
-  const hourString = ISODateTimePartString(hours);
-  const minuteString = ISODateTimePartString(minutes);
-  return `${sign}${hourString}:${minuteString}`;
+  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds);
 }
 
 export function GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
