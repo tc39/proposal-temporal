@@ -248,9 +248,9 @@ const temporalSign = withCode(
 );
 const temporalDecimalFraction = fraction;
 function saveOffset(data, result) {
-  data.offset = ES.CanonicalizeTimeZoneOffsetString(result);
+  data.offset = ES.FormatOffsetTimeZoneIdentifier(ES.ParseDateTimeUTCOffset(result).offsetNanoseconds);
 }
-const utcOffset = withCode(
+const utcOffsetSubMinutePrecision = withCode(
   seq(
     temporalSign,
     hour,
@@ -261,7 +261,7 @@ const utcOffset = withCode(
   ),
   saveOffset
 );
-const timeZoneUTCOffset = choice(utcDesignator, utcOffset);
+const dateTimeUTCOffset = choice(utcDesignator, utcOffsetSubMinutePrecision);
 const timeZoneUTCOffsetName = seq(
   sign,
   hour,
@@ -294,7 +294,7 @@ const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
-const timeSpecWithOptionalOffsetNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [timeZoneUTCOffset]), (result) => {
+const timeSpecWithOptionalOffsetNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [dateTimeUTCOffset]), (result) => {
   if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
     throw new SyntaxError('valid PlainMonthDay');
   }
@@ -312,9 +312,9 @@ const date = withSyntaxConstraints(
   choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay)),
   validateDayOfMonth
 );
-const dateTime = seq(date, [dateTimeSeparator, timeSpec, [timeZoneUTCOffset]]);
+const dateTime = seq(date, [dateTimeSeparator, timeSpec, [dateTimeUTCOffset]]);
 const annotatedTime = choice(
-  seq(timeDesignator, timeSpec, [timeZoneUTCOffset], [timeZoneAnnotation], [annotations]),
+  seq(timeDesignator, timeSpec, [dateTimeUTCOffset], [timeZoneAnnotation], [annotations]),
   seq(timeSpecWithOptionalOffsetNotAmbiguous, [timeZoneAnnotation], [annotations])
 );
 const annotatedDateTime = seq(dateTime, [timeZoneAnnotation], [annotations]);
@@ -322,7 +322,7 @@ const annotatedDateTimeTimeRequired = seq(
   date,
   dateTimeSeparator,
   timeSpec,
-  [timeZoneUTCOffset],
+  [dateTimeUTCOffset],
   [timeZoneAnnotation],
   [annotations]
 );
@@ -411,7 +411,7 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, dateTimeSeparator, timeSpec, timeZoneUTCOffset, [timeZoneAnnotation], [annotations]);
+const instant = seq(date, dateTimeSeparator, timeSpec, dateTimeUTCOffset, [timeZoneAnnotation], [annotations]);
 const zonedDateTime = seq(dateTime, timeZoneAnnotation, [annotations]);
 
 // goal elements

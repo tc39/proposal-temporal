@@ -622,8 +622,7 @@
       1. If _timeZone_ is *undefined*, then
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       1. If _offsetBehaviour_ is ~option~, then
-        1. If IsTimeZoneOffsetString(_offsetString_) is *false*, throw a *RangeError* exception.
-        1. Let _offsetNs_ be ParseTimeZoneOffsetString(_offsetString_).
+        1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).[[OffsetNanoseconds]].
       1. Else,
         1. Let _offsetNs_ be 0.
       1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*, _matchBehaviour_).
@@ -946,6 +945,7 @@
       <li>Alphabetic designators may be in lower or upper case.</li>
       <li>Period or comma may be used as the decimal separator.</li>
       <li>A time zone offset of *"-00:00"* is allowed, and means the same thing as *"+00:00"*.</li>
+      <li>UTC offsets may have seconds and up to 9 sub-second fractional digits.</li>
       <li>
         In a combined representation, combinations of date, time, and time zone offset with Basic (no `-` or `:` separators) and Extended (with `-` or `:` separators) formatting are allowed.
         (The date, time, and time zone offset must each be fully in Basic format or Extended format.)
@@ -1098,14 +1098,25 @@
       TimeFraction :
           Fraction
 
-      TimeZoneUTCOffset :
-          UTCOffset
-          UTCDesignator
-
-      TimeZoneUTCOffsetName[Extended] :
-          Sign Hour[+Padded]
-          Sign Hour[+Padded] TimeSeparator[?Extended] MinuteSecond
+      UTCOffsetWithSubMinuteComponents[Extended] :
           Sign Hour[+Padded] TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond Fraction?
+
+      UTCOffsetMinutePrecision :
+          Sign Hour[+Padded]
+          Sign Hour[+Padded] TimeSeparator[+Extended] MinuteSecond
+          Sign Hour[+Padded] TimeSeparator[~Extended] MinuteSecond
+
+      UTCOffsetSubMinutePrecision :
+          UTCOffsetMinutePrecision
+          UTCOffsetWithSubMinuteComponents[+Extended]
+          UTCOffsetWithSubMinuteComponents[~Extended]
+
+      DateTimeUTCOffset :
+          UTCDesignator
+          UTCOffsetSubMinutePrecision
+
+      TimeZoneUTCOffsetName :
+          UTCOffsetSubMinutePrecision
 
       TZLeadingChar :
           Alpha
@@ -1145,8 +1156,7 @@
 
       TimeZoneIdentifier :
           TimeZoneIANAName
-          TimeZoneUTCOffsetName[+Extended]
-          TimeZoneUTCOffsetName[~Extended]
+          TimeZoneUTCOffsetName
 
       TimeZoneAnnotation :
           `[` AnnotationCriticalFlag? TimeZoneIdentifier `]`
@@ -1186,21 +1196,21 @@
           TimeHour TimeMinute TimeSecond TimeFraction?
 
       TimeSpecWithOptionalOffsetNotAmbiguous :
-          TimeSpec TimeZoneUTCOffset? but not one of ValidMonthDay or DateSpecYearMonth
+          TimeSpec DateTimeUTCOffset? but not one of ValidMonthDay or DateSpecYearMonth
 
       DateTime :
           Date
-          Date DateTimeSeparator TimeSpec TimeZoneUTCOffset?
+          Date DateTimeSeparator TimeSpec DateTimeUTCOffset?
 
       AnnotatedTime :
-          TimeDesignator TimeSpec TimeZoneUTCOffset? TimeZoneAnnotation? Annotations?
+          TimeDesignator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
           TimeSpecWithOptionalOffsetNotAmbiguous TimeZoneAnnotation? Annotations?
 
       AnnotatedDateTime:
           DateTime TimeZoneAnnotation? Annotations?
 
       AnnotatedDateTimeTimeRequired :
-          Date DateTimeSeparator TimeSpec TimeZoneUTCOffset? TimeZoneAnnotation? Annotations?
+          Date DateTimeSeparator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
 
       AnnotatedYearMonth:
           DateSpecYearMonth TimeZoneAnnotation? Annotations?
@@ -1281,7 +1291,7 @@
           Sign? DurationDesignator DurationTime
 
       TemporalInstantString :
-          Date DateTimeSeparator TimeSpec TimeZoneUTCOffset TimeZoneAnnotation? Annotations?
+          Date DateTimeSeparator TimeSpec DateTimeUTCOffset TimeZoneAnnotation? Annotations?
 
       TemporalDateTimeString :
           AnnotatedDateTime
@@ -1408,10 +1418,9 @@
         1. Set _timeZoneResult_.[[Name]] to CodePointsToString(_name_).
       1. If _parseResult_ contains a |UTCDesignator| Parse Node, then
         1. Set _timeZoneResult_.[[Z]] to *true*.
-      1. Else,
-        1. If _parseResult_ contains a |UTCOffset| Parse Node, then
-          1. Let _offset_ be the source text matched by the |UTCOffset| Parse Node contained within _parseResult_.
-          1. Set _timeZoneResult_.[[OffsetString]] to CodePointsToString(_offset_).
+      1. Else if _parseResult_ contains a |UTCOffsetSubMinutePrecision| Parse Node, then
+        1. Let _offset_ be the source text matched by the |UTCOffsetSubMinutePrecision| Parse Node contained within _parseResult_.
+        1. Set _timeZoneResult_.[[OffsetString]] to CodePointsToString(_offset_).
       1. Let _calendar_ be *undefined*.
       1. Let _calendarWasCritical_ be *false*.
       1. For each |Annotation| Parse Node _annotation_ contained within _parseResult_, do
@@ -1682,11 +1691,21 @@
     <h1>
       ParseTemporalTimeZoneString (
         _timeZoneString_: a String,
-      )
+      ): either a normal completion containing a Record containing information about the time zone, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It parses the argument as either a time zone identifier or an ISO 8601 string and returns a Record representing information about the time zone.</dd>
+      <dd>
+        It parses the argument as either a time zone identifier or an ISO 8601 string.
+        The returned Record's fields are set as follows:
+        <ul>
+          <li>If _timeZoneString_ is either a named time zone identifier or offset time zone identifier, then [[Name]] is _timeZoneString_, while [[Z]] is *false* and [[OffsetString]] is *undefined*.</li>
+          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string with a time zone annotation containing either a named time zone identifier or offset time zone identifier, then [[Name]] is the time zone identifier contained in the annotation, while [[Z]] is *false* and [[OffsetString]] is *undefined*.</li>
+          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string using a *Z* offset designator, then [[Z]] is *true*, while [[Name]] and [[OffsetString]] are *undefined*.</li>
+          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string using a numeric UTC offset, then [[OffsetString]] is _timeZoneString_, while [[Z]] is *false* and [[Name]] is *undefined*.</li>
+          <li>Otherwise, a *RangeError* is thrown.</li>
+        </ul>
+      </dd>
     </dl>
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_timeZoneString_), |TimeZoneIdentifier|).
