@@ -194,7 +194,6 @@
       <p>
         Time zones in ECMAScript are represented by <dfn variants="time zone identifier">time zone identifiers</dfn>, which are Strings composed entirely of code units in the inclusive interval from <del>0x0000 to 0x007F</del><ins>0x0021 to 0x007E</ins>.
         Time zones supported by an ECMAScript implementation may be <dfn variants="available named time zone">available named time zones</dfn>, represented by the [[Identifier]] field of the Time Zone Identifier Records returned by AvailableNamedTimeZoneIdentifiers, or <dfn variants="offset time zone,offset time zone identifier,offset time zone identifiers">offset time zones</dfn>, represented by Strings for which <del>IsTimeZoneOffsetString</del><ins>IsOffsetTimeZoneIdentifier</ins> returns *true*.
-        <ins>Time zone identifiers are compared using ASCII-case-insensitive comparisons.</ins>
       </p>
       <p>
         A <dfn variants="primary time zone identifiers">primary time zone identifier</dfn> is the preferred identifier for an available named time zone.
@@ -203,6 +202,15 @@
         Each available named time zone identifier is associated with exactly one available named time zone.
         Each available named time zone is associated with exactly one primary time zone identifier and zero or more non-primary time zone identifiers.
       </p>
+      <ins class="block">
+      <p>
+        Time zone identifiers are compared using ASCII-case-insensitive comparisons, and are accepted as input in any variation of letter case.
+        Offset time zone identifiers are compared using the number of minutes represented (not as a String), and are accepted as input in any the formats specified by |TimeZoneUTCOffsetName|.
+        However, ECMAScript built-in objects will only output the <dfn variants="time zone identifier in normalized format,normalized time zone identifier">normalized format of a time zone identifier</dfn>.
+        The normalized format of an available named time zone identifier is the preferred letter case for that identifier.
+        The normalized format of an offset time zone identifier is specified by |NormalizedUTCOffset|.
+      </p>
+      </ins>
       <p>
         ECMAScript implementations must support an available named time zone with the identifier *"UTC"*, which must be the primary time zone identifier for the UTC time zone.
         In addition, implementations may support any number of other available named time zones.
@@ -258,7 +266,7 @@
 
       <emu-alg>
         1. If the implementation only supports the UTC time zone, return *"UTC"*.
-        1. Let _systemTimeZoneString_ be the String representing the host environment's current time zone, either: a primary time zone identifier; or an offset time zone identifier.
+        1. Let _systemTimeZoneString_ be the String representing the host environment's current time zone <ins>as a time zone identifier in normalized format</ins>, either a primary time zone identifier or an offset time zone identifier.
         1. Return _systemTimeZoneString_.
       </emu-alg>
 

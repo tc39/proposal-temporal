@@ -1143,6 +1143,9 @@
       UTCOffsetWithSubMinuteComponents[Extended] :
           Sign Hour[+Padded] TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond Fraction?
 
+      NormalizedUTCOffset :
+          ASCIISign Hour[+Padded] `:` MinuteSecond
+
       UTCOffsetMinutePrecision :
           Sign Hour[+Padded]
           Sign Hour[+Padded] TimeSeparator[+Extended] MinuteSecond
