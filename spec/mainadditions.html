@@ -218,7 +218,7 @@
 
       <p>
         Time zones in ECMAScript are represented by <dfn variants="time zone identifier">time zone identifiers</dfn>, which are Strings composed entirely of code units in the inclusive interval from <del>0x0000 to 0x007F</del><ins>0x0021 to 0x007E</ins>.
-        Time zones supported by an ECMAScript implementation may be <dfn variants="available named time zone">available named time zones</dfn>, represented by the [[Identifier]] field of the Time Zone Identifier Records returned by AvailableNamedTimeZoneIdentifiers, or <dfn variants="offset time zone">offset time zones</dfn>, represented by Strings for which <del>IsTimeZoneOffsetString</del><ins>IsOffsetTimeZoneIdentifier</ins> returns *true*.
+        Time zones supported by an ECMAScript implementation may be <dfn variants="available named time zone">available named time zones</dfn>, represented by the [[Identifier]] field of the Time Zone Identifier Records returned by AvailableNamedTimeZoneIdentifiers, or <dfn variants="offset time zone,offset time zone identifier,offset time zone identifiers">offset time zones</dfn>, represented by Strings for which <del>IsTimeZoneOffsetString</del><ins>IsOffsetTimeZoneIdentifier</ins> returns *true*.
         <ins>Time zone identifiers are compared using ASCII-case-insensitive comparisons.</ins>
       </p>
       <p>
