@@ -36,7 +36,7 @@ Several important concepts are explained elsewhere: [exact time, wall-clock time
 ### **Temporal.Now**
 
 - `Temporal.Now.instant()` - get the current system exact time
-- `Temporal.Now.timeZone()` - get the current system time zone
+- `Temporal.Now.timeZoneId()` - get the current system time zone
 - `Temporal.Now.zonedDateTime(calendar)` - get the current date and wall-clock time in the system time zone and specified calendar
 - `Temporal.Now.zonedDateTimeISO()` - get the current date and wall-clock time in the system time zone and ISO-8601 calendar
 - `Temporal.Now.plainDate(calendar)` - get the current date in the system time zone and specified calendar
