@@ -578,8 +578,7 @@
     <emu-alg>
       1. Assert: Type(_options_) is Object.
       1. Let _value_ be ? Get(_options_, *"relativeTo"*).
-      1. If _value_ is *undefined*, then
-        1. Return _value_.
+      1. If _value_ is *undefined*, return *undefined*.
       1. Let _offsetBehaviour_ be ~option~.
       1. Let _matchBehaviour_ be ~match exactly~.
       1. If Type(_value_) is Object, then
