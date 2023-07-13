@@ -1749,12 +1749,12 @@
 
   var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
   var slice = Array.prototype.slice;
-  var toStr$4 = Object.prototype.toString;
+  var toStr$3 = Object.prototype.toString;
   var funcType = '[object Function]';
 
   var implementation$3 = function bind(that) {
       var target = this;
-      if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
+      if (typeof target !== 'function' || toStr$3.call(target) !== funcType) {
           throw new TypeError(ERROR_MESSAGE + target);
       }
       var args = slice.call(arguments, 1);
@@ -2237,10 +2237,10 @@
   var $Array = GetIntrinsic$d('%Array%');
 
   // eslint-disable-next-line global-require
-  var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
+  var toStr$2 = !$Array.isArray && callBound$2('Object.prototype.toString');
 
   var IsArray$3 = $Array.isArray || function IsArray(argument) {
-  	return toStr$3(argument) === '[object Array]';
+  	return toStr$2(argument) === '[object Array]';
   };
 
   // https://262.ecma-international.org/6.0/#sec-isarray
@@ -2596,105 +2596,114 @@
   	return ToBoolean;
   }
 
-  var fnToStr = Function.prototype.toString;
-  var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
-  var badArrayLike;
-  var isCallableMarker;
-  if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
-  	try {
-  		badArrayLike = Object.defineProperty({}, 'length', {
-  			get: function () {
-  				throw isCallableMarker;
-  			}
-  		});
-  		isCallableMarker = {};
-  		// eslint-disable-next-line no-throw-literal
-  		reflectApply(function () { throw 42; }, null, badArrayLike);
-  	} catch (_) {
-  		if (_ !== isCallableMarker) {
-  			reflectApply = null;
-  		}
-  	}
-  } else {
-  	reflectApply = null;
-  }
+  var isCallable$1;
+  var hasRequiredIsCallable$1;
 
-  var constructorRegex = /^\s*class\b/;
-  var isES6ClassFn = function isES6ClassFunction(value) {
-  	try {
-  		var fnStr = fnToStr.call(value);
-  		return constructorRegex.test(fnStr);
-  	} catch (e) {
-  		return false; // not a function
-  	}
-  };
+  function requireIsCallable$1 () {
+  	if (hasRequiredIsCallable$1) return isCallable$1;
+  	hasRequiredIsCallable$1 = 1;
 
-  var tryFunctionObject = function tryFunctionToStr(value) {
-  	try {
-  		if (isES6ClassFn(value)) { return false; }
-  		fnToStr.call(value);
-  		return true;
-  	} catch (e) {
-  		return false;
-  	}
-  };
-  var toStr$2 = Object.prototype.toString;
-  var objectClass = '[object Object]';
-  var fnClass = '[object Function]';
-  var genClass = '[object GeneratorFunction]';
-  var ddaClass = '[object HTMLAllCollection]'; // IE 11
-  var ddaClass2 = '[object HTML document.all class]';
-  var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
-  var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
-
-  var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
-
-  var isDDA = function isDocumentDotAll() { return false; };
-  if (typeof document === 'object') {
-  	// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
-  	var all = document.all;
-  	if (toStr$2.call(all) === toStr$2.call(document.all)) {
-  		isDDA = function isDocumentDotAll(value) {
-  			/* globals document: false */
-  			// in IE 6-8, typeof document.all is "object" and it's truthy
-  			if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
-  				try {
-  					var str = toStr$2.call(value);
-  					return (
-  						str === ddaClass
-  						|| str === ddaClass2
-  						|| str === ddaClass3 // opera 12.16
-  						|| str === objectClass // IE 6-8
-  					) && value('') == null; // eslint-disable-line eqeqeq
-  				} catch (e) { /**/ }
-  			}
-  			return false;
-  		};
-  	}
-  }
-
-  var isCallable$1 = reflectApply
-  	? function isCallable(value) {
-  		if (isDDA(value)) { return true; }
-  		if (!value) { return false; }
-  		if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+  	var fnToStr = Function.prototype.toString;
+  	var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
+  	var badArrayLike;
+  	var isCallableMarker;
+  	if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
   		try {
-  			reflectApply(value, null, badArrayLike);
-  		} catch (e) {
-  			if (e !== isCallableMarker) { return false; }
+  			badArrayLike = Object.defineProperty({}, 'length', {
+  				get: function () {
+  					throw isCallableMarker;
+  				}
+  			});
+  			isCallableMarker = {};
+  			// eslint-disable-next-line no-throw-literal
+  			reflectApply(function () { throw 42; }, null, badArrayLike);
+  		} catch (_) {
+  			if (_ !== isCallableMarker) {
+  				reflectApply = null;
+  			}
   		}
-  		return !isES6ClassFn(value) && tryFunctionObject(value);
+  	} else {
+  		reflectApply = null;
   	}
-  	: function isCallable(value) {
-  		if (isDDA(value)) { return true; }
-  		if (!value) { return false; }
-  		if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-  		if (hasToStringTag$1) { return tryFunctionObject(value); }
-  		if (isES6ClassFn(value)) { return false; }
-  		var strClass = toStr$2.call(value);
-  		if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
-  		return tryFunctionObject(value);
+
+  	var constructorRegex = /^\s*class\b/;
+  	var isES6ClassFn = function isES6ClassFunction(value) {
+  		try {
+  			var fnStr = fnToStr.call(value);
+  			return constructorRegex.test(fnStr);
+  		} catch (e) {
+  			return false; // not a function
+  		}
   	};
+
+  	var tryFunctionObject = function tryFunctionToStr(value) {
+  		try {
+  			if (isES6ClassFn(value)) { return false; }
+  			fnToStr.call(value);
+  			return true;
+  		} catch (e) {
+  			return false;
+  		}
+  	};
+  	var toStr = Object.prototype.toString;
+  	var objectClass = '[object Object]';
+  	var fnClass = '[object Function]';
+  	var genClass = '[object GeneratorFunction]';
+  	var ddaClass = '[object HTMLAllCollection]'; // IE 11
+  	var ddaClass2 = '[object HTML document.all class]';
+  	var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
+  	var hasToStringTag = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
+
+  	var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
+
+  	var isDDA = function isDocumentDotAll() { return false; };
+  	if (typeof document === 'object') {
+  		// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
+  		var all = document.all;
+  		if (toStr.call(all) === toStr.call(document.all)) {
+  			isDDA = function isDocumentDotAll(value) {
+  				/* globals document: false */
+  				// in IE 6-8, typeof document.all is "object" and it's truthy
+  				if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
+  					try {
+  						var str = toStr.call(value);
+  						return (
+  							str === ddaClass
+  							|| str === ddaClass2
+  							|| str === ddaClass3 // opera 12.16
+  							|| str === objectClass // IE 6-8
+  						) && value('') == null; // eslint-disable-line eqeqeq
+  					} catch (e) { /**/ }
+  				}
+  				return false;
+  			};
+  		}
+  	}
+
+  	isCallable$1 = reflectApply
+  		? function isCallable(value) {
+  			if (isDDA(value)) { return true; }
+  			if (!value) { return false; }
+  			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+  			try {
+  				reflectApply(value, null, badArrayLike);
+  			} catch (e) {
+  				if (e !== isCallableMarker) { return false; }
+  			}
+  			return !isES6ClassFn(value) && tryFunctionObject(value);
+  		}
+  		: function isCallable(value) {
+  			if (isDDA(value)) { return true; }
+  			if (!value) { return false; }
+  			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+  			if (hasToStringTag) { return tryFunctionObject(value); }
+  			if (isES6ClassFn(value)) { return false; }
+  			var strClass = toStr.call(value);
+  			if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
+  			return tryFunctionObject(value);
+  		};
+  	return isCallable$1;
+  }
 
   var IsCallable$1;
   var hasRequiredIsCallable;
@@ -2705,7 +2714,7 @@
 
   	// http://262.ecma-international.org/5.1/#sec-9.11
 
-  	IsCallable$1 = isCallable$1;
+  	IsCallable$1 = requireIsCallable$1();
   	return IsCallable$1;
   }
 
@@ -6684,54 +6693,6 @@
 
   var Get$1 = /*@__PURE__*/getDefaultExportFromCjs(Get);
 
-  var CheckObjectCoercible;
-  var hasRequiredCheckObjectCoercible;
-
-  function requireCheckObjectCoercible () {
-  	if (hasRequiredCheckObjectCoercible) return CheckObjectCoercible;
-  	hasRequiredCheckObjectCoercible = 1;
-
-  	var GetIntrinsic = getIntrinsic;
-
-  	var $TypeError = GetIntrinsic('%TypeError%');
-
-  	// http://262.ecma-international.org/5.1/#sec-9.10
-
-  	CheckObjectCoercible = function CheckObjectCoercible(value, optMessage) {
-  		if (value == null) {
-  			throw new $TypeError(optMessage || ('Cannot call method on ' + value));
-  		}
-  		return value;
-  	};
-  	return CheckObjectCoercible;
-  }
-
-  var RequireObjectCoercible$1;
-  var hasRequiredRequireObjectCoercible;
-
-  function requireRequireObjectCoercible () {
-  	if (hasRequiredRequireObjectCoercible) return RequireObjectCoercible$1;
-  	hasRequiredRequireObjectCoercible = 1;
-
-  	RequireObjectCoercible$1 = requireCheckObjectCoercible();
-  	return RequireObjectCoercible$1;
-  }
-
-  var GetIntrinsic$9 = getIntrinsic;
-
-  var $Object = GetIntrinsic$9('%Object%');
-
-  var RequireObjectCoercible = requireRequireObjectCoercible();
-
-  // https://262.ecma-international.org/6.0/#sec-toobject
-
-  var ToObject = function ToObject(value) {
-  	RequireObjectCoercible(value);
-  	return $Object(value);
-  };
-
-  var ToObject$1 = /*@__PURE__*/getDefaultExportFromCjs(ToObject);
-
   var GetV$1;
   var hasRequiredGetV;
 
@@ -6743,29 +6704,31 @@
 
   	var $TypeError = GetIntrinsic('%TypeError%');
 
+  	var inspect = requireObjectInspect();
+
   	var IsPropertyKey = IsPropertyKey$4;
-  	var ToObject$1 = ToObject;
+  	// var ToObject = require('./ToObject');
 
   	// https://262.ecma-international.org/6.0/#sec-getv
 
   	GetV$1 = function GetV(V, P) {
   		// 7.3.2.1
   		if (!IsPropertyKey(P)) {
-  			throw new $TypeError('Assertion failed: IsPropertyKey(P) is not true');
+  			throw new $TypeError('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect(P));
   		}
 
   		// 7.3.2.2-3
-  		var O = ToObject$1(V);
+  		// var O = ToObject(V);
 
   		// 7.3.2.4
-  		return O[P];
+  		return V[P];
   	};
   	return GetV$1;
   }
 
-  var GetIntrinsic$8 = getIntrinsic;
+  var GetIntrinsic$9 = getIntrinsic;
 
-  var $TypeError$4 = GetIntrinsic$8('%TypeError%');
+  var $TypeError$4 = GetIntrinsic$9('%TypeError%');
 
   var GetV = requireGetV();
   var IsCallable = requireIsCallable();
@@ -6800,9 +6763,9 @@
 
   var GetMethod$2 = /*@__PURE__*/getDefaultExportFromCjs(GetMethod$1);
 
-  var GetIntrinsic$7 = getIntrinsic;
+  var GetIntrinsic$8 = getIntrinsic;
 
-  var $TypeError$3 = GetIntrinsic$7('%TypeError%');
+  var $TypeError$3 = GetIntrinsic$8('%TypeError%');
 
   var has = requireSrc();
 
@@ -6823,9 +6786,9 @@
 
   var HasOwnProperty$1 = /*@__PURE__*/getDefaultExportFromCjs(HasOwnProperty);
 
-  var GetIntrinsic$6 = getIntrinsic;
+  var GetIntrinsic$7 = getIntrinsic;
 
-  var $abs = GetIntrinsic$6('%Math.abs%');
+  var $abs = GetIntrinsic$7('%Math.abs%');
 
   // http://262.ecma-international.org/5.1/#sec-5.2
 
@@ -6943,7 +6906,7 @@
   var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
   var isPrimitive$1 = isPrimitive$2;
-  var isCallable = isCallable$1;
+  var isCallable = requireIsCallable$1();
   var isDate = isDateObject;
   var isSymbol = isSymbolExports;
 
@@ -7374,10 +7337,43 @@
   	return defineProperties_1;
   }
 
-  var GetIntrinsic$5 = getIntrinsic;
+  var CheckObjectCoercible;
+  var hasRequiredCheckObjectCoercible;
 
-  var $String$1 = GetIntrinsic$5('%String%');
-  var $TypeError$2 = GetIntrinsic$5('%TypeError%');
+  function requireCheckObjectCoercible () {
+  	if (hasRequiredCheckObjectCoercible) return CheckObjectCoercible;
+  	hasRequiredCheckObjectCoercible = 1;
+
+  	var GetIntrinsic = getIntrinsic;
+
+  	var $TypeError = GetIntrinsic('%TypeError%');
+
+  	// http://262.ecma-international.org/5.1/#sec-9.10
+
+  	CheckObjectCoercible = function CheckObjectCoercible(value, optMessage) {
+  		if (value == null) {
+  			throw new $TypeError(optMessage || ('Cannot call method on ' + value));
+  		}
+  		return value;
+  	};
+  	return CheckObjectCoercible;
+  }
+
+  var RequireObjectCoercible$1;
+  var hasRequiredRequireObjectCoercible;
+
+  function requireRequireObjectCoercible () {
+  	if (hasRequiredRequireObjectCoercible) return RequireObjectCoercible$1;
+  	hasRequiredRequireObjectCoercible = 1;
+
+  	RequireObjectCoercible$1 = requireCheckObjectCoercible();
+  	return RequireObjectCoercible$1;
+  }
+
+  var GetIntrinsic$6 = getIntrinsic;
+
+  var $String$1 = GetIntrinsic$6('%String%');
+  var $TypeError$2 = GetIntrinsic$6('%TypeError%');
 
   // https://262.ecma-international.org/6.0/#sec-tostring
 
@@ -7552,10 +7548,10 @@
   	return StringToNumber$1;
   }
 
-  var GetIntrinsic$4 = getIntrinsic;
+  var GetIntrinsic$5 = getIntrinsic;
 
-  var $TypeError$1 = GetIntrinsic$4('%TypeError%');
-  var $Number = GetIntrinsic$4('%Number%');
+  var $TypeError$1 = GetIntrinsic$5('%TypeError%');
+  var $Number = GetIntrinsic$5('%Number%');
   var isPrimitive = requireIsPrimitive();
 
   var ToPrimitive = ToPrimitive$1;
@@ -7603,6 +7599,21 @@
   };
 
   var ToIntegerOrInfinity$1 = /*@__PURE__*/getDefaultExportFromCjs(ToIntegerOrInfinity);
+
+  var GetIntrinsic$4 = getIntrinsic;
+
+  var $Object = GetIntrinsic$4('%Object%');
+
+  var RequireObjectCoercible = requireRequireObjectCoercible();
+
+  // https://262.ecma-international.org/6.0/#sec-toobject
+
+  var ToObject = function ToObject(value) {
+  	RequireObjectCoercible(value);
+  	return $Object(value);
+  };
+
+  var ToObject$1 = /*@__PURE__*/getDefaultExportFromCjs(ToObject);
 
   var maxSafeInteger;
   var hasRequiredMaxSafeInteger;
