@@ -28,7 +28,7 @@ export class TimeZone {
     } else {
       const record = ES.GetAvailableNamedTimeZoneIdentifier(stringIdentifier);
       if (!record) throw new RangeError(`Invalid time zone identifier: ${stringIdentifier}`);
-      stringIdentifier = record.primaryIdentifier;
+      stringIdentifier = record.identifier;
     }
     CreateSlots(this);
     SetSlot(this, TIMEZONE_ID, stringIdentifier);
@@ -45,6 +45,11 @@ export class TimeZone {
   get id() {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, TIMEZONE_ID);
+  }
+  equals(other) {
+    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+    const timeZoneSlotValue = ES.ToTemporalTimeZoneSlotValue(other);
+    return ES.TimeZoneEquals(this, timeZoneSlotValue);
   }
   getOffsetNanosecondsFor(instant) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');

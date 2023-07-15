@@ -2132,7 +2132,7 @@ export function ToTemporalTimeZoneSlotValue(temporalTimeZoneLike) {
 
     const record = GetAvailableNamedTimeZoneIdentifier(tzName);
     if (!record) throw new RangeError(`Unrecognized time zone ${tzName}`);
-    return record.primaryIdentifier;
+    return record.identifier;
   }
   if (z) return 'UTC';
   // if !tzName && !z then offset must be present
@@ -2160,7 +2160,23 @@ export function TimeZoneEquals(one, two) {
   if (one === two) return true;
   const tz1 = ToTemporalTimeZoneIdentifier(one);
   const tz2 = ToTemporalTimeZoneIdentifier(two);
-  return tz1 === tz2;
+  if (tz1 === tz2) return true;
+  const offsetNs1 = ParseTimeZoneIdentifier(tz1).offsetNanoseconds;
+  const offsetNs2 = ParseTimeZoneIdentifier(tz2).offsetNanoseconds;
+  if (offsetNs1 === undefined && offsetNs2 === undefined) {
+    // It's costly to call GetAvailableNamedTimeZoneIdentifier, so (unlike the
+    // spec) the polyfill will early-return if one of them isn't recognized. Try
+    // the second ID first because it's more likely to be unknown, because it
+    // can come from the argument of TimeZone.p.equals as opposed to the first
+    // ID which comes from the receiver.
+    const idRecord2 = GetAvailableNamedTimeZoneIdentifier(tz2);
+    if (!idRecord2) return false;
+    const idRecord1 = GetAvailableNamedTimeZoneIdentifier(tz1);
+    if (!idRecord1) return false;
+    return idRecord1.primaryIdentifier === idRecord2.primaryIdentifier;
+  } else {
+    return offsetNs1 === offsetNs2;
+  }
 }
 
 export function TemporalDateTimeToDate(dateTime) {

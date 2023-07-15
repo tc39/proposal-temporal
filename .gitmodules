@@ -1,3 +1,4 @@
 [submodule "polyfill/test262"]
 	path = polyfill/test262
-	url = https://github.com/tc39/test262
+	url = https://github.com/justingrant/test262
+	branch = proposal-canonical-tz-tests
