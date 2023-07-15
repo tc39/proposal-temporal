@@ -285,6 +285,8 @@
       <ins class="block">
       <p>
         ECMAScript defines string interchange formats for UTC offsets, derived from ISO 8601.
+        UTC offsets that represent offset time zone identifiers, or that are intended for interoperability with ISO 8601, use only hours and minutes and are specified by |UTCOffsetMinutePrecision|.
+        UTC offsets that represent the offset of a named or custom time zone can be more precise, and are specified by |UTCOffsetSubMinutePrecision|.
       </p>
       <p>
         These formats are described by the ISO String grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>.
