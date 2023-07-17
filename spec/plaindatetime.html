@@ -993,14 +993,13 @@
       <h1>TemporalDateTimeToString ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_, _showCalendar_ )</h1>
       <emu-alg>
         1. Assert: _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
-        1. Let _year_ be ! PadISOYear(_isoYear_).
-        1. Let _month_ be ToZeroPaddedDecimalString(_isoMonth_, 2).
-        1. Let _day_ be ToZeroPaddedDecimalString(_isoDay_, 2).
-        1. Let _hour_ be ToZeroPaddedDecimalString(_hour_, 2).
-        1. Let _minute_ be ToZeroPaddedDecimalString(_minute_, 2).
-        1. Let _seconds_ be ! FormatSecondsStringPart(_second_, _millisecond_, _microsecond_, _nanosecond_, _precision_).
+        1. Let _yearString_ be PadISOYear(_isoYear_).
+        1. Let _monthString_ be ToZeroPaddedDecimalString(_isoMonth_, 2).
+        1. Let _dayString_ be ToZeroPaddedDecimalString(_isoDay_, 2).
+        1. Let _subSecondNanoseconds_ be _millisecond_ &times; 10<sup>6</sup> + _microsecond_ &times; 10<sup>3</sup> + _nanosecond_.
+        1. Let _timeString_ be FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
         1. Let _calendarString_ be ? MaybeFormatCalendarAnnotation(_calendar_, _showCalendar_).
-        1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, 0x0054 (LATIN CAPITAL LETTER T), _hour_, the code unit 0x003A (COLON), _minute_, _seconds_, and _calendarString_.
+        1. Return the string-concatenation of _yearString_, the code unit 0x002D (HYPHEN-MINUS), _monthString_, the code unit 0x002D (HYPHEN-MINUS), _dayString_, 0x0054 (LATIN CAPITAL LETTER T), _timeString_, and _calendarString_.
       </emu-alg>
     </emu-clause>
 

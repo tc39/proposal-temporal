@@ -680,22 +680,60 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-formatsecondsstringpart" aoid="FormatSecondsStringPart">
-    <h1>FormatSecondsStringPart ( _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
+  <emu-clause id="sec-temporal-formatfractionalseconds" type="abstract operation">
+    <h1>
+      FormatFractionalSeconds (
+        _subSecondNanoseconds_: an integer,
+        _precision_: either an integer in the inclusive range 0 to 9 or *"auto"*
+      ): a String
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        If _precision_ is zero, or if _precision_ is *"auto"* and _subSecondNanoseconds_ is zero, then an empty String will be returned.
+        Otherwise, the output will be a decimal point followed by a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is *"auto"*) to the last non-zero digit.
+      </dd>
+    </dl>
     <emu-alg>
-      1. Assert: _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
-      1. If _precision_ is *"minute"*, return *""*.
-      1. Let _secondsString_ be the string-concatenation of the code unit 0x003A (COLON) and ToZeroPaddedDecimalString(_second_, 2).
-      1. Let _fraction_ be _millisecond_ &times; 10<sup>6</sup> + _microsecond_ &times; 10<sup>3</sup> + _nanosecond_.
       1. If _precision_ is *"auto"*, then
-        1. If _fraction_ is 0, return _secondsString_.
-        1. Set _fraction_ to ToZeroPaddedDecimalString(_fraction_, 9).
-        1. Set _fraction_ to the longest possible substring of _fraction_ starting at position 0 and not ending with the code unit 0x0030 (DIGIT ZERO).
+        1. If _subSecondNanoseconds_ is 0, return the empty String.
+        1. Let _fractionString_ be ToZeroPaddedDecimalString(_subSecondNanoseconds_, 9).
+        1. Set _fractionString_ to the longest prefix of _fractionString_ ending with a code unit other than 0x0030 (DIGIT ZERO).
       1. Else,
-        1. If _precision_ is 0, return _secondsString_.
-        1. Set _fraction_ to ToZeroPaddedDecimalString(_fraction_, 9).
-        1. Set _fraction_ to the substring of _fraction_ from 0 to _precision_.
-      1. Return the string-concatenation of _secondsString_, the code unit 0x002E (FULL STOP), and _fraction_.
+        1. If _precision_ is 0, return the empty String.
+        1. Let _fractionString_ be ToZeroPaddedDecimalString(_subSecondNanoseconds_, 9).
+        1. Set _fractionString_ to the substring of _fractionString_ from 0 to _precision_.
+      1. Return the string-concatenation of the code unit 0x002E (FULL STOP) and _fractionString_.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-formattimestring" type="abstract operation">
+    <h1>
+      FormatTimeString (
+        _hour_: an integer,
+        _minute_: an integer,
+        _second_: an integer,
+        _subSecondNanoseconds_: an integer,
+        _precision_: an integer in the inclusive range 0 to 9, *"minute"*, or *"auto"*
+      ): a String
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        The output will be formatted like ±HH:MM if _precision_ is *"minute"*.
+        Otherwise, the output will be formatted like ±HH:MM:SS if _precision_ is zero, or if _subSecondNanoseconds_ is zero and _precision is *"auto"*.
+        Otherwise, the output will be formatted like ±HH:MM:SS.fff where "fff" is a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is *"auto"*) to the last non-zero digit.
+      </dd>
+    </dl>
+    <emu-alg>
+      1. Let _hh_ be ToZeroPaddedDecimalString(_hour_, 2).
+      1. Let _mm_ be ToZeroPaddedDecimalString(_minute_, 2).
+      1. Let _result_ be the string-concatenation of _hh_, the code unit 0x003A (COLON), and _mm_.
+      1. If _precision_ is *"minute"*, return _result_.
+      1. Let _ss_ be ToZeroPaddedDecimalString(_second_, 2).
+      1. Let _subSecondsPart_ be FormatFractionalSeconds(_subSecondNanoseconds_, _precision_).
+      1. Set _result_ to the string-concatenation of _result_, the code unit 0x003A (COLON), _ss_, and _subSecondsPart_.
+      1. Return _result_.
     </emu-alg>
   </emu-clause>
 

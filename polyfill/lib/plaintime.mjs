@@ -47,10 +47,8 @@ function TemporalTimeToString(time, precision, options = undefined) {
     ));
   }
 
-  hour = ES.ISODateTimePartString(hour);
-  minute = ES.ISODateTimePartString(minute);
-  const seconds = ES.FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-  return `${hour}:${minute}${seconds}`;
+  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+  return ES.FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
 }
 
 export class PlainTime {

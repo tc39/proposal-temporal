@@ -22,6 +22,7 @@ const StringFromCharCode = String.fromCharCode;
 const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
 const StringPrototypeMatchAll = String.prototype.matchAll;
 const StringPrototypeReplace = String.prototype.replace;
+const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
 import callBound from 'call-bind/callBound';
@@ -2354,56 +2355,52 @@ export function ISOYearString(year) {
   if (year < 0 || year > 9999) {
     let sign = year < 0 ? '-' : '+';
     let yearNumber = MathAbs(year);
-    yearString = sign + `000000${yearNumber}`.slice(-6);
+    yearString = sign + ToZeroPaddedDecimalString(yearNumber, 6);
   } else {
-    yearString = `0000${year}`.slice(-4);
+    yearString = ToZeroPaddedDecimalString(year, 4);
   }
   return yearString;
 }
 
 export function ISODateTimePartString(part) {
-  return `00${part}`.slice(-2);
+  return ToZeroPaddedDecimalString(part, 2);
 }
 
-export function FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision) {
-  if (precision === 'minute') return '';
-
-  const secs = `:${ISODateTimePartString(second)}`;
-  let fraction = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
-
+export function FormatFractionalSeconds(subSecondNanoseconds, precision) {
+  let fraction;
   if (precision === 'auto') {
-    if (fraction === 0) return secs;
-    fraction = `${fraction}`.padStart(9, '0');
-    while (fraction[fraction.length - 1] === '0') fraction = fraction.slice(0, -1);
+    if (subSecondNanoseconds === 0) return '';
+    const fractionFullPrecision = ToZeroPaddedDecimalString(subSecondNanoseconds, 9);
+    // now remove any trailing zeroes
+    fraction = Call(StringPrototypeReplace, fractionFullPrecision, [/0+$/, '']);
   } else {
-    if (precision === 0) return secs;
-    fraction = `${fraction}`.padStart(9, '0').slice(0, precision);
+    if (precision === 0) return '';
+    const fractionFullPrecision = ToZeroPaddedDecimalString(subSecondNanoseconds, 9);
+    fraction = Call(StringPrototypeSlice, fractionFullPrecision, [0, precision]);
   }
-  return `${secs}.${fraction}`;
+  return `.${fraction}`;
+}
+
+export function FormatTimeString(hour, minute, second, subSecondNanoseconds, precision) {
+  let result = `${ISODateTimePartString(hour)}:${ISODateTimePartString(minute)}`;
+  if (precision === 'minute') return result;
+
+  result += `:${ISODateTimePartString(second)}`;
+  result += FormatFractionalSeconds(subSecondNanoseconds, precision);
+  return result;
 }
 
 export function TemporalInstantToString(instant, timeZone, precision) {
   let outputTimeZone = timeZone;
   if (outputTimeZone === undefined) outputTimeZone = 'UTC';
   const dateTime = GetPlainDateTimeFor(outputTimeZone, instant, 'iso8601');
-  const year = ISOYearString(GetSlot(dateTime, ISO_YEAR));
-  const month = ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
-  const day = ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
-  const hour = ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
-  const minute = ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
-  const seconds = FormatSecondsStringPart(
-    GetSlot(dateTime, ISO_SECOND),
-    GetSlot(dateTime, ISO_MILLISECOND),
-    GetSlot(dateTime, ISO_MICROSECOND),
-    GetSlot(dateTime, ISO_NANOSECOND),
-    precision
-  );
+  const dateTimeString = TemporalDateTimeToString(dateTime, precision, 'never');
   let timeZoneString = 'Z';
   if (timeZone !== undefined) {
     const offsetNs = GetOffsetNanosecondsFor(outputTimeZone, instant);
     timeZoneString = FormatDateTimeUTCOffsetRounded(offsetNs);
   }
-  return `${year}-${month}-${day}T${hour}:${minute}${seconds}${timeZoneString}`;
+  return `${dateTimeString}${timeZoneString}`;
 }
 
 function formatAsDecimalNumber(num) {
@@ -2449,20 +2446,11 @@ export function TemporalDurationToString(
     (years === 0 && months === 0 && weeks === 0 && days === 0 && hours === 0 && minutes === 0) ||
     precision !== 'auto'
   ) {
-    const fraction = MathAbs(ms.toJSNumber()) * 1e6 + MathAbs(µs.toJSNumber()) * 1e3 + MathAbs(ns.toJSNumber());
-    let decimalPart = ToZeroPaddedDecimalString(fraction, 9);
-    if (precision === 'auto') {
-      while (decimalPart[decimalPart.length - 1] === '0') {
-        decimalPart = decimalPart.slice(0, -1);
-      }
-    } else if (precision === 0) {
-      decimalPart = '';
-    } else {
-      decimalPart = decimalPart.slice(0, precision);
-    }
-    let secondsPart = seconds.abs().toString();
-    if (decimalPart) secondsPart += `.${decimalPart}`;
-    timePart += `${secondsPart}S`;
+    const secondsPart = formatAsDecimalNumber(seconds.abs());
+    const subSecondNanoseconds =
+      MathAbs(ms.toJSNumber()) * 1e6 + MathAbs(µs.toJSNumber()) * 1e3 + MathAbs(ns.toJSNumber());
+    const subSecondsPart = FormatFractionalSeconds(subSecondNanoseconds, precision);
+    timePart += `${secondsPart}${subSecondsPart}S`;
   }
   let result = `${sign < 0 ? '-' : ''}P${datePart}`;
   if (timePart) result = `${result}T${timePart}`;
@@ -2506,14 +2494,13 @@ export function TemporalDateTimeToString(dateTime, precision, showCalendar = 'au
     ));
   }
 
-  year = ISOYearString(year);
-  month = ISODateTimePartString(month);
-  day = ISODateTimePartString(day);
-  hour = ISODateTimePartString(hour);
-  minute = ISODateTimePartString(minute);
-  const seconds = FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
+  const yearString = ISOYearString(year);
+  const monthString = ISODateTimePartString(month);
+  const dayString = ISODateTimePartString(day);
+  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+  const timeString = FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
   const calendar = MaybeFormatCalendarAnnotation(GetSlot(dateTime, CALENDAR), showCalendar);
-  return `${year}-${month}-${day}T${hour}:${minute}${seconds}${calendar}`;
+  return `${yearString}-${monthString}-${dayString}T${timeString}${calendar}`;
 }
 
 export function TemporalMonthDayToString(monthDay, showCalendar = 'auto') {
@@ -2565,31 +2552,18 @@ export function TemporalZonedDateTimeToString(
 
   const tz = GetSlot(zdt, TIME_ZONE);
   const dateTime = GetPlainDateTimeFor(tz, instant, 'iso8601');
-
-  const year = ISOYearString(GetSlot(dateTime, ISO_YEAR));
-  const month = ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
-  const day = ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
-  const hour = ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
-  const minute = ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
-  const seconds = FormatSecondsStringPart(
-    GetSlot(dateTime, ISO_SECOND),
-    GetSlot(dateTime, ISO_MILLISECOND),
-    GetSlot(dateTime, ISO_MICROSECOND),
-    GetSlot(dateTime, ISO_NANOSECOND),
-    precision
-  );
-  let result = `${year}-${month}-${day}T${hour}:${minute}${seconds}`;
+  let dateTimeString = TemporalDateTimeToString(dateTime, precision, 'never');
   if (showOffset !== 'never') {
     const offsetNs = GetOffsetNanosecondsFor(tz, instant);
-    result += FormatDateTimeUTCOffsetRounded(offsetNs);
+    dateTimeString += FormatDateTimeUTCOffsetRounded(offsetNs);
   }
   if (showTimeZone !== 'never') {
     const identifier = ToTemporalTimeZoneIdentifier(tz);
     const flag = showTimeZone === 'critical' ? '!' : '';
-    result += `[${flag}${identifier}]`;
+    dateTimeString += `[${flag}${identifier}]`;
   }
-  result += MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
-  return result;
+  dateTimeString += MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
+  return dateTimeString;
 }
 
 export function IsOffsetTimeZoneIdentifier(string) {
