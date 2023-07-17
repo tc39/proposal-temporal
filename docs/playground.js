@@ -1797,18 +1797,9 @@
 
   var functionBind = Function.prototype.bind || implementation$2;
 
-  var src;
-  var hasRequiredSrc;
+  var bind$1 = functionBind;
 
-  function requireSrc () {
-  	if (hasRequiredSrc) return src;
-  	hasRequiredSrc = 1;
-
-  	var bind = functionBind;
-
-  	src = bind.call(Function.call, Object.prototype.hasOwnProperty);
-  	return src;
-  }
+  var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
 
   var undefined$1;
 
@@ -2024,7 +2015,7 @@
   };
 
   var bind = functionBind;
-  var hasOwn = requireSrc();
+  var hasOwn = src;
   var $concat = bind.call(Function.call, Array.prototype.concat);
   var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
   var $replace = bind.call(Function.call, String.prototype.replace);
@@ -2307,7 +2298,7 @@
 
   	var GetIntrinsic = getIntrinsic;
 
-  	var has = requireSrc();
+  	var has = src;
   	var $TypeError = GetIntrinsic('%TypeError%');
 
   	isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -2407,7 +2398,7 @@
   	if (hasRequiredIsMatchRecord) return isMatchRecord;
   	hasRequiredIsMatchRecord = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -2436,7 +2427,7 @@
   	var $TypeError = GetIntrinsic('%TypeError%');
   	var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-  	var has = requireSrc();
+  	var has = src;
   	var isInteger = isInteger$2;
 
   	var isMatchRecord = requireIsMatchRecord();
@@ -2526,7 +2517,7 @@
   	if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
   	hasRequiredIsAccessorDescriptor = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	var Type = Type$4;
 
@@ -2557,7 +2548,7 @@
   	if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
   	hasRequiredIsDataDescriptor = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	var Type = Type$4;
 
@@ -2762,7 +2753,7 @@
   	if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
   	hasRequiredToPropertyDescriptor = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	var GetIntrinsic = getIntrinsic;
 
@@ -6800,7 +6791,7 @@
 
   var $TypeError$3 = GetIntrinsic$8('%TypeError%');
 
-  var has = requireSrc();
+  var has = src;
 
   var IsPropertyKey = IsPropertyKey$4;
   var Type$1 = Type$4;
@@ -7993,6 +7984,7 @@
   var StringPrototypeCharCodeAt = String.prototype.charCodeAt;
   var StringPrototypeMatchAll = String.prototype.matchAll;
   var StringPrototypeReplace = String.prototype.replace;
+  var StringPrototypeSlice = String.prototype.slice;
   var $TypeError = GetIntrinsic('%TypeError%');
   var $isEnumerable = callBound$3('Object.prototype.propertyIsEnumerable');
   var DAY_SECONDS = 86400;
@@ -10085,45 +10077,47 @@
     if (year < 0 || year > 9999) {
       var sign = year < 0 ? '-' : '+';
       var yearNumber = MathAbs$1(year);
-      yearString = sign + "000000".concat(yearNumber).slice(-6);
+      yearString = sign + ToZeroPaddedDecimalString$1(yearNumber, 6);
     } else {
-      yearString = "0000".concat(year).slice(-4);
+      yearString = ToZeroPaddedDecimalString$1(year, 4);
     }
     return yearString;
   }
   function ISODateTimePartString(part) {
-    return "00".concat(part).slice(-2);
+    return ToZeroPaddedDecimalString$1(part, 2);
   }
-  function FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision) {
-    if (precision === 'minute') return '';
-    var secs = ":".concat(ISODateTimePartString(second));
-    var fraction = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+  function FormatFractionalSeconds(subSecondNanoseconds, precision) {
+    var fraction;
     if (precision === 'auto') {
-      if (fraction === 0) return secs;
-      fraction = "".concat(fraction).padStart(9, '0');
-      while (fraction[fraction.length - 1] === '0') fraction = fraction.slice(0, -1);
+      if (subSecondNanoseconds === 0) return '';
+      var fractionFullPrecision = ToZeroPaddedDecimalString$1(subSecondNanoseconds, 9);
+      // now remove any trailing zeroes
+      fraction = Call$1(StringPrototypeReplace, fractionFullPrecision, [/0+$/, '']);
     } else {
-      if (precision === 0) return secs;
-      fraction = "".concat(fraction).padStart(9, '0').slice(0, precision);
+      if (precision === 0) return '';
+      var _fractionFullPrecision = ToZeroPaddedDecimalString$1(subSecondNanoseconds, 9);
+      fraction = Call$1(StringPrototypeSlice, _fractionFullPrecision, [0, precision]);
     }
-    return "".concat(secs, ".").concat(fraction);
+    return ".".concat(fraction);
+  }
+  function FormatTimeString(hour, minute, second, subSecondNanoseconds, precision) {
+    var result = "".concat(ISODateTimePartString(hour), ":").concat(ISODateTimePartString(minute));
+    if (precision === 'minute') return result;
+    result += ":".concat(ISODateTimePartString(second));
+    result += FormatFractionalSeconds(subSecondNanoseconds, precision);
+    return result;
   }
   function TemporalInstantToString(instant, timeZone, precision) {
     var outputTimeZone = timeZone;
     if (outputTimeZone === undefined) outputTimeZone = 'UTC';
     var dateTime = GetPlainDateTimeFor(outputTimeZone, instant, 'iso8601');
-    var year = ISOYearString(GetSlot(dateTime, ISO_YEAR));
-    var month = ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
-    var day = ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
-    var hour = ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
-    var minute = ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
-    var seconds = FormatSecondsStringPart(GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND), precision);
+    var dateTimeString = TemporalDateTimeToString(dateTime, precision, 'never');
     var timeZoneString = 'Z';
     if (timeZone !== undefined) {
       var offsetNs = GetOffsetNanosecondsFor(outputTimeZone, instant);
       timeZoneString = FormatDateTimeUTCOffsetRounded(offsetNs);
     }
-    return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(timeZoneString);
+    return "".concat(dateTimeString).concat(timeZoneString);
   }
   function formatAsDecimalNumber(num) {
     if (num <= NumberMaxSafeInteger) return num.toString(10);
@@ -10151,20 +10145,10 @@
     if (hours !== 0) timePart += "".concat(formatAsDecimalNumber(MathAbs$1(hours)), "H");
     if (minutes !== 0) timePart += "".concat(formatAsDecimalNumber(MathAbs$1(minutes)), "M");
     if (!seconds.isZero() || !ms.isZero() || !µs.isZero() || !ns.isZero() || years === 0 && months === 0 && weeks === 0 && days === 0 && hours === 0 && minutes === 0 || precision !== 'auto') {
-      var fraction = MathAbs$1(ms.toJSNumber()) * 1e6 + MathAbs$1(µs.toJSNumber()) * 1e3 + MathAbs$1(ns.toJSNumber());
-      var decimalPart = ToZeroPaddedDecimalString$1(fraction, 9);
-      if (precision === 'auto') {
-        while (decimalPart[decimalPart.length - 1] === '0') {
-          decimalPart = decimalPart.slice(0, -1);
-        }
-      } else if (precision === 0) {
-        decimalPart = '';
-      } else {
-        decimalPart = decimalPart.slice(0, precision);
-      }
-      var secondsPart = seconds.abs().toString();
-      if (decimalPart) secondsPart += ".".concat(decimalPart);
-      timePart += "".concat(secondsPart, "S");
+      var secondsPart = formatAsDecimalNumber(seconds.abs());
+      var subSecondNanoseconds = MathAbs$1(ms.toJSNumber()) * 1e6 + MathAbs$1(µs.toJSNumber()) * 1e3 + MathAbs$1(ns.toJSNumber());
+      var subSecondsPart = FormatFractionalSeconds(subSecondNanoseconds, precision);
+      timePart += "".concat(secondsPart).concat(subSecondsPart, "S");
     }
     var result = "".concat(sign < 0 ? '-' : '', "P").concat(datePart);
     if (timePart) result = "".concat(result, "T").concat(timePart);
@@ -10205,14 +10189,13 @@
       microsecond = _RoundISODateTime.microsecond;
       nanosecond = _RoundISODateTime.nanosecond;
     }
-    year = ISOYearString(year);
-    month = ISODateTimePartString(month);
-    day = ISODateTimePartString(day);
-    hour = ISODateTimePartString(hour);
-    minute = ISODateTimePartString(minute);
-    var seconds = FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
+    var yearString = ISOYearString(year);
+    var monthString = ISODateTimePartString(month);
+    var dayString = ISODateTimePartString(day);
+    var subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+    var timeString = FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
     var calendar = MaybeFormatCalendarAnnotation(GetSlot(dateTime, CALENDAR), showCalendar);
-    return "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds).concat(calendar);
+    return "".concat(yearString, "-").concat(monthString, "-").concat(dayString, "T").concat(timeString).concat(calendar);
   }
   function TemporalMonthDayToString(monthDay) {
     var showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
@@ -10260,24 +10243,18 @@
     }
     var tz = GetSlot(zdt, TIME_ZONE);
     var dateTime = GetPlainDateTimeFor(tz, instant, 'iso8601');
-    var year = ISOYearString(GetSlot(dateTime, ISO_YEAR));
-    var month = ISODateTimePartString(GetSlot(dateTime, ISO_MONTH));
-    var day = ISODateTimePartString(GetSlot(dateTime, ISO_DAY));
-    var hour = ISODateTimePartString(GetSlot(dateTime, ISO_HOUR));
-    var minute = ISODateTimePartString(GetSlot(dateTime, ISO_MINUTE));
-    var seconds = FormatSecondsStringPart(GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND), precision);
-    var result = "".concat(year, "-").concat(month, "-").concat(day, "T").concat(hour, ":").concat(minute).concat(seconds);
+    var dateTimeString = TemporalDateTimeToString(dateTime, precision, 'never');
     if (showOffset !== 'never') {
       var offsetNs = GetOffsetNanosecondsFor(tz, instant);
-      result += FormatDateTimeUTCOffsetRounded(offsetNs);
+      dateTimeString += FormatDateTimeUTCOffsetRounded(offsetNs);
     }
     if (showTimeZone !== 'never') {
       var identifier = ToTemporalTimeZoneIdentifier(tz);
       var flag = showTimeZone === 'critical' ? '!' : '';
-      result += "[".concat(flag).concat(identifier, "]");
+      dateTimeString += "[".concat(flag).concat(identifier, "]");
     }
-    result += MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
-    return result;
+    dateTimeString += MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
+    return dateTimeString;
   }
   function IsOffsetTimeZoneIdentifier(string) {
     return OFFSET.test(string);
@@ -17753,10 +17730,8 @@
       microsecond = _ES$RoundTime.microsecond;
       nanosecond = _ES$RoundTime.nanosecond;
     }
-    hour = ISODateTimePartString(hour);
-    minute = ISODateTimePartString(minute);
-    var seconds = FormatSecondsStringPart(second, millisecond, microsecond, nanosecond, precision);
-    return "".concat(hour, ":").concat(minute).concat(seconds);
+    var subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+    return FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
   }
   var PlainTime = /*#__PURE__*/function () {
     function PlainTime() {
