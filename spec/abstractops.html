@@ -567,16 +567,21 @@
     </emu-table>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-torelativetemporalobject" aoid="ToRelativeTemporalObject">
-    <h1>ToRelativeTemporalObject ( _options_ )</h1>
-    <p>
-      The abstract operation ToRelativeTemporalObject examines the value of the `relativeTo` property of its _options_ argument.
-      If this is not present, it returns *undefined*.
-      Otherwise, it attempts to return a Temporal.ZonedDateTime instance or Temporal.PlainDate instance, in order of preference, by converting the value.
-      If neither of those are possible, the operation throws a *RangeError*.
-    </p>
+  <emu-clause id="sec-temporal-torelativetemporalobject" type="abstract operation">
+    <h1>ToRelativeTemporalObject (
+      _options_: an Object
+    ): either a normal completion containing either a Temporal.ZonedDateTime object or a Temporal.PlainDate object, or a throw completion</h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It examines the value of the `relativeTo` property of its _options_ argument.
+        If the value is *undefined*, it returns *undefined*.
+        If the value is not a String or an Object, it throws a *TypeError*.
+        Otherwise, it attempts to return a Temporal.ZonedDateTime instance or Temporal.PlainDate instance, in order of preference, by converting the value.
+        If neither of those are possible, it throws a *RangeError*.
+      </dd>
+    </dl>
     <emu-alg>
-      1. Assert: Type(_options_) is Object.
       1. Let _value_ be ? Get(_options_, *"relativeTo"*).
       1. If _value_ is *undefined*, return *undefined*.
       1. Let _offsetBehaviour_ be ~option~.
@@ -601,8 +606,8 @@
         1. If _offsetString_ is *undefined*, then
           1. Set _offsetBehaviour_ to ~wall~.
       1. Else,
-        1. Let _string_ be ? ToString(_value_).
-        1. Let _result_ be ? ParseTemporalRelativeToString(_string_).
+        1. If _value_ is not a String, throw a *TypeError* exception.
+        1. Let _result_ be ? ParseTemporalRelativeToString(_value_).
         1. Let _offsetString_ be _result_.[[TimeZone]].[[OffsetString]].
         1. Let _timeZoneName_ be _result_.[[TimeZone]].[[Name]].
         1. If _timeZoneName_ is *undefined*, then
@@ -1869,8 +1874,10 @@
                 1. Set _value_ to ? ToPositiveIntegerWithTruncation(_value_).
                 1. Set _value_ to 𝔽(_value_).
               1. Else,
-                1. Assert: _Conversion_ is ~ToString~.
-                1. Set _value_ to ? ToString(_value_).
+                1. Assert: _Conversion_ is ~ToPrimitiveAndRequireString~.
+                1. NOTE: Non-primitive values are supported here for consistency with other fields, but such values must coerce to Strings.
+                1. Set _value_ to ? ToPrimitive(_value_, ~string~).
+                1. If _value_ is not a String, throw a *TypeError* exception.
             1. Perform ! CreateDataPropertyOrThrow(_result_, _property_, _value_).
           1. Else if _requiredFields_ is a List, then
             1. If _requiredFields_ contains _property_, then
@@ -1908,7 +1915,7 @@
           </tr>
           <tr>
             <td>*"monthCode"*</td>
-            <td>~ToString~</td>
+            <td>~ToPrimitiveAndRequireString~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
@@ -1948,12 +1955,12 @@
           </tr>
           <tr>
             <td>*"offset"*</td>
-            <td>~ToString~</td>
+            <td>~ToPrimitiveAndRequireString~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"era"*</td>
-            <td>~ToString~</td>
+            <td>~ToPrimitiveAndRequireString~</td>
             <td>*undefined*</td>
           </tr>
           <tr>

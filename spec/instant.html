@@ -518,8 +518,10 @@
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
-        1. Let _string_ be ? ToString(_item_).
-        1. Let _epochNanoseconds_ be ? ParseTemporalInstant(_string_).
+          1. NOTE: This use of ToPrimitive allows Instant-like objects to be converted.
+          1. Set _item_ to ? ToPrimitive(_item_, ~string~).
+        1. If _item_ is not a String, throw a *TypeError* exception.
+        1. Let _epochNanoseconds_ be ? ParseTemporalInstant(_item_).
         1. Return ! CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
     </emu-clause>

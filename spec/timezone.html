@@ -31,7 +31,7 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Set _identifier_ to ? ToString(_identifier_).
+        1. If _identifier_ is not a String, throw a *TypeError* exception.
         1. Let _parseResult_ be ? ParseTimeZoneIdentifier(_identifier_).
         1. If _parseResult_.[[OffsetNanoseconds]] is not ~empty~, then
           1. Set _identifier_ to FormatOffsetTimeZoneIdentifier(_parseResult_.[[OffsetNanoseconds]], ~separated~).
@@ -564,8 +564,8 @@
             1. Return _temporalTimeZoneLike_.[[TimeZone]].
           1. If ? ObjectImplementsTemporalTimeZoneProtocol(_temporalTimeZoneLike_) is *false*, throw a *TypeError* exception.
           1. Return _temporalTimeZoneLike_.
-        1. Let _identifier_ be ? ToString(_temporalTimeZoneLike_).
-        1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_identifier_).
+        1. If _temporalTimeZoneLike_ is not a String, throw a *TypeError* exception.
+        1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_temporalTimeZoneLike_).
         1. If _parseResult_.[[Name]] is not *undefined*, then
           1. Let _name_ be _parseResult_.[[Name]].
           1. Let _offsetNanoseconds_ be ? ParseTimeZoneIdentifier(_name_).[[OffsetNanoseconds]].
