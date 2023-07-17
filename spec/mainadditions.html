@@ -415,6 +415,25 @@
 
     <p>[...]</p>
 
+    <emu-clause id="sec-timestring" type="abstract operation">
+      <h1>
+        TimeString (
+          _tv_: a Number, but not *NaN*,
+        ): a String
+      </h1>
+      <dl class="header">
+      </dl>
+      <emu-alg>
+        1. <del>Let _hour_ be ToZeroPaddedDecimalString(ℝ(HourFromTime(_tv_)), 2).</del>
+        1. <del>Let _minute_ be ToZeroPaddedDecimalString(ℝ(MinFromTime(_tv_)), 2).</del>
+        1. <del>Let _second_ be ToZeroPaddedDecimalString(ℝ(SecFromTime(_tv_)), 2).</del>
+        1. <ins>Let _timeString_ be FormatTimeString(ℝ(HourFromTime(_tv_)), ℝ(MinFromTime(_tv_)), ℝ(SecFromTime(_tv_)), 0, 0).</ins>
+        1. Return the string-concatenation of _timeString_, the code unit 0x0020 (SPACE), and *"GMT"*.
+      </emu-alg>
+    </emu-clause>
+
+    <p>[...]</p>
+
     <emu-clause id="sec-timezoneestring" type="abstract operation">
       <h1>
         TimeZoneString (
