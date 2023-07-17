@@ -18,6 +18,7 @@ const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
 const ObjectEntries = Object.entries;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+const StringCtor = String;
 const StringFromCharCode = String.fromCharCode;
 const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
 const StringPrototypeMatchAll = String.prototype.matchAll;
@@ -147,10 +148,27 @@ export function ToIntegerIfIntegral(value) {
   return number;
 }
 
+// This convenience function isn't in the spec, but is useful in the polyfill
+// for DRY and better error messages.
+export function RequireString(value) {
+  if (Type(value) !== 'String') {
+    // Use String() to ensure that Symbols won't throw
+    throw new TypeError(`expected a string, not ${StringCtor(value)}`);
+  }
+  return value;
+}
+
+// This function is an enum in the spec, but it's helpful to make it a
+// function in the polyfill.
+function ToPrimitiveAndRequireString(value) {
+  value = ToPrimitive(value, StringCtor);
+  return RequireString(value);
+}
+
 const BUILTIN_CASTS = new Map([
   ['year', ToIntegerWithTruncation],
   ['month', ToPositiveIntegerWithTruncation],
-  ['monthCode', ToString],
+  ['monthCode', ToPrimitiveAndRequireString],
   ['day', ToPositiveIntegerWithTruncation],
   ['hour', ToIntegerWithTruncation],
   ['minute', ToIntegerWithTruncation],
@@ -168,9 +186,9 @@ const BUILTIN_CASTS = new Map([
   ['milliseconds', ToIntegerIfIntegral],
   ['microseconds', ToIntegerIfIntegral],
   ['nanoseconds', ToIntegerIfIntegral],
-  ['era', ToString],
+  ['era', ToPrimitiveAndRequireString],
   ['eraYear', ToIntegerOrInfinity],
-  ['offset', ToString]
+  ['offset', ToPrimitiveAndRequireString]
 ]);
 
 const BUILTIN_DEFAULTS = new Map([
@@ -699,7 +717,7 @@ export function RegulateISOYearMonth(year, month, overflow) {
 
 export function ToTemporalDurationRecord(item) {
   if (Type(item) !== 'Object') {
-    return ParseTemporalDurationString(ToString(item));
+    return ParseTemporalDurationString(RequireString(item));
   }
   if (IsTemporalDuration(item)) {
     return {
@@ -981,7 +999,7 @@ export function ToRelativeTemporalObject(options) {
   } else {
     let tzName, z;
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, tzName, offset, z } =
-      ParseISODateTime(ToString(relativeTo)));
+      ParseISODateTime(RequireString(relativeTo)));
     if (tzName) {
       timeZone = ToTemporalTimeZoneSlotValue(tzName);
       if (z) {
@@ -1139,7 +1157,7 @@ export function ToTemporalDate(item, options) {
     return CalendarDateFromFields(calendar, fields, options);
   }
   ToTemporalOverflow(options); // validate and ignore
-  let { year, month, day, calendar, z } = ParseTemporalDateString(ToString(item));
+  let { year, month, day, calendar, z } = ParseTemporalDateString(RequireString(item));
   if (z) throw new RangeError('Z designator not supported for PlainDate');
   if (!calendar) calendar = 'iso8601';
   if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
@@ -1213,7 +1231,7 @@ export function ToTemporalDateTime(item, options) {
     ToTemporalOverflow(options); // validate and ignore
     let z;
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } =
-      ParseTemporalDateTimeString(ToString(item)));
+      ParseTemporalDateTimeString(RequireString(item)));
     if (z) throw new RangeError('Z designator not supported for PlainDateTime');
     RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     if (!calendar) calendar = 'iso8601';
@@ -1248,7 +1266,8 @@ export function ToTemporalInstant(item) {
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     return new TemporalInstant(GetSlot(item, EPOCHNANOSECONDS));
   }
-  const ns = ParseTemporalInstant(ToString(item));
+  item = ToPrimitive(item, StringCtor);
+  const ns = ParseTemporalInstant(RequireString(item));
   const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
   return new TemporalInstant(ns);
 }
@@ -1278,7 +1297,7 @@ export function ToTemporalMonthDay(item, options) {
   }
 
   ToTemporalOverflow(options); // validate and ignore
-  let { month, day, referenceISOYear, calendar } = ParseTemporalMonthDayString(ToString(item));
+  let { month, day, referenceISOYear, calendar } = ParseTemporalMonthDayString(RequireString(item));
   if (calendar === undefined) calendar = 'iso8601';
   if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
   calendar = ASCIILowercase(calendar);
@@ -1320,7 +1339,7 @@ export function ToTemporalTime(item, overflow = 'constrain') {
       overflow
     ));
   } else {
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ParseTemporalTimeString(ToString(item)));
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ParseTemporalTimeString(RequireString(item)));
     RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
   const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
@@ -1337,7 +1356,7 @@ export function ToTemporalYearMonth(item, options) {
   }
 
   ToTemporalOverflow(options); // validate and ignore
-  let { year, month, referenceISODay, calendar } = ParseTemporalYearMonthString(ToString(item));
+  let { year, month, referenceISODay, calendar } = ParseTemporalYearMonthString(RequireString(item));
   if (calendar === undefined) calendar = 'iso8601';
   if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
   calendar = ASCIILowercase(calendar);
@@ -1458,7 +1477,7 @@ export function ToTemporalZonedDateTime(item, options) {
   } else {
     let tzName, z;
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, tzName, offset, z, calendar } =
-      ParseTemporalZonedDateTimeString(ToString(item)));
+      ParseTemporalZonedDateTimeString(RequireString(item)));
     timeZone = ToTemporalTimeZoneSlotValue(tzName);
     if (z) {
       offsetBehaviour = 'exact';
@@ -1984,7 +2003,7 @@ export function ToTemporalCalendarSlotValue(calendarLike) {
     }
     return calendarLike;
   }
-  const identifier = ToString(calendarLike);
+  const identifier = RequireString(calendarLike);
   if (IsBuiltinCalendar(identifier)) return ASCIILowercase(identifier);
   let calendar;
   try {
@@ -2103,7 +2122,7 @@ export function ToTemporalTimeZoneSlotValue(temporalTimeZoneLike) {
     }
     return temporalTimeZoneLike;
   }
-  const identifier = ToString(temporalTimeZoneLike);
+  const identifier = RequireString(temporalTimeZoneLike);
   const { tzName, offset, z } = ParseTemporalTimeZoneString(identifier);
   if (tzName) {
     // tzName is any valid identifier string in brackets, and could be an offset identifier

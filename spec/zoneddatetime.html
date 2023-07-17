@@ -1168,8 +1168,8 @@
           1. Let _offsetOption_ be ? ToTemporalOffset(_options_, *"reject"*).
           1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _options_).
         1. Else,
-          1. Let _string_ be ? ToString(_item_).
-          1. Let _result_ be ? ParseTemporalZonedDateTimeString(_string_).
+          1. If _item_ is not a String, throw a *TypeError* exception.
+          1. Let _result_ be ? ParseTemporalZonedDateTimeString(_item_).
           1. Let _timeZoneName_ be _result_.[[TimeZone]].[[Name]].
           1. Assert: _timeZoneName_ is not *undefined*.
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_timeZoneName_).

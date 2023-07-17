@@ -525,8 +525,8 @@
             1. Return _temporalCalendarLike_.[[Calendar]].
           1. If ? ObjectImplementsTemporalCalendarProtocol(_temporalCalendarLike_) is *false*, throw a *TypeError* exception.
           1. Return _temporalCalendarLike_.
-        1. Let _identifier_ be ? ToString(_temporalCalendarLike_).
-        1. Set _identifier_ to ? ParseTemporalCalendarString(_identifier_).
+        1. If _temporalCalendarLike_ is not a String, throw a *TypeError* exception.
+        1. Let _identifier_ be ? ParseTemporalCalendarString(_temporalCalendarLike_).
         1. If IsBuiltinCalendar(_identifier_) is *false*, throw a *RangeError* exception.
         1. Return the ASCII-lowercase of _identifier_.
       </emu-alg>
@@ -1020,7 +1020,7 @@
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. Set _id_ to ? ToString(_id_).
+        1. If _id_ is not a String, throw a *TypeError* exception.
         1. If IsBuiltinCalendar(_id_) is *false*, then
           1. Throw a *RangeError* exception.
         1. Return ? CreateTemporalCalendar(_id_, NewTarget).

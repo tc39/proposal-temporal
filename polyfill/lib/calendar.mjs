@@ -41,20 +41,14 @@ const impl = {};
 
 export class Calendar {
   constructor(id) {
-    // Note: if the argument is not passed, IsBuiltinCalendar("undefined") will fail. This check
-    //       exists only to improve the error message.
-    if (arguments.length < 1) {
-      throw new RangeError('missing argument: id is required');
-    }
-
-    id = ES.ToString(id);
-    if (!ES.IsBuiltinCalendar(id)) throw new RangeError(`invalid calendar identifier ${id}`);
+    const stringId = ES.RequireString(id);
+    if (!ES.IsBuiltinCalendar(stringId)) throw new RangeError(`invalid calendar identifier ${stringId}`);
     CreateSlots(this);
-    SetSlot(this, CALENDAR_ID, ES.ASCIILowercase(id));
+    SetSlot(this, CALENDAR_ID, ES.ASCIILowercase(stringId));
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${id}>`,
+        value: `${this[Symbol.toStringTag]} <${stringId}>`,
         writable: false,
         enumerable: false,
         configurable: false

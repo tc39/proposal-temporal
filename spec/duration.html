@@ -912,8 +912,8 @@
       </dl>
       <emu-alg>
         1. If Type(_temporalDurationLike_) is not Object, then
-          1. Let _string_ be ? ToString(_temporalDurationLike_).
-          1. Return ? ParseTemporalDurationString(_string_).
+          1. If _temporalDurationLike_ is not a String, throw a *TypeError* exception.
+          1. Return ? ParseTemporalDurationString(_temporalDurationLike_).
         1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return ! CreateDurationRecord(_temporalDurationLike_.[[Years]], _temporalDurationLike_.[[Months]], _temporalDurationLike_.[[Weeks]], _temporalDurationLike_.[[Days]], _temporalDurationLike_.[[Hours]], _temporalDurationLike_.[[Minutes]], _temporalDurationLike_.[[Seconds]], _temporalDurationLike_.[[Milliseconds]], _temporalDurationLike_.[[Microseconds]], _temporalDurationLike_.[[Nanoseconds]]).
         1. Let _result_ be a new Duration Record with each field set to 0.
