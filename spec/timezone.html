@@ -488,13 +488,10 @@
       <emu-alg>
         1. If _offsetMinutes_ &ge; 0, let _sign_ be the code unit 0x002B (PLUS SIGN); otherwise, let _sign_ be the code unit 0x002D (HYPHEN-MINUS).
         1. Let _absoluteMinutes_ be abs(_offsetMinutes_).
-        1. Let _intHours_ be floor(_absoluteMinutes_ / 60).
-        1. Let _hh_ be ToZeroPaddedDecimalString(_intHours_, 2).
-        1. Let _intMinutes_ be _absoluteMinutes_ modulo 60.
-        1. Let _mm_ be ToZeroPaddedDecimalString(_intMinutes_, 2).
-        1. If _style_ is ~unseparated~, then
-          1. Return the string-concatenation of _sign_, _hh_, and _mm_.
-        1. Return the string-concatenation of _sign_, _hh_, the code unit 0x003A (COLON), and _mm_.
+        1. Let _hour_ be floor(_absoluteMinutes_ / 60).
+        1. Let _minute_ be _absoluteMinutes_ modulo 60.
+        1. Let _timeString_ be FormatTimeString(_hour_, _minute_, 0, 0, *"minute"*, _style_).
+        1. Return the string-concatenation of _sign_ and _timeString_.
       </emu-alg>
     </emu-clause>
 
@@ -653,20 +650,15 @@
       </dl>
       <emu-alg>
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
-        1. Let _offsetMinutes_ be truncate(_offsetNanoseconds_ / (60 × 10<sup>9</sup>)).
-        1. Let _offsetString_ be FormatOffsetTimeZoneIdentifier(_offsetMinutes_, ~separate~).
-        1. Let _subMinuteNanoseconds_ be abs(_offsetNanoseconds_) modulo (60 × 10<sup>9</sup>).
-        1. If _subMinuteNanoseconds_ = 0, then
-          1. Return _offsetString_.
-        1. If _offsetMinutes_ = 0 and _offsetNanoseconds_ &lt; 0, set _offsetString_ to *"-00:00"*.
-        1. Let _seconds_ be floor(_subMinuteNanoseconds_ / 10<sup>9</sup>) modulo 60.
-        1. Let _ss_ be ToZeroPaddedDecimalString(_seconds_, 2).
-        1. Let _nanoseconds_ be _subMinuteNanoseconds_ modulo 10<sup>9</sup>.
-        1. If _nanoseconds_ = 0, then
-          1. Return the string-concatenation of _offsetString_, the code unit 0x003A (COLON), and _ss_.
-        1. Let _fractionString_ be ToZeroPaddedDecimalString(_nanoseconds_, 9).
-        1. Set _fractionString_ to the longest prefix of _fractionString_ ending with a code unit other than 0x0030 (DIGIT ZERO).
-        1. Return the string-concatenation of _offsetString_, the code unit 0x003A (COLON), _ss_, the code unit 0x002E (FULL STOP), and _fractionString_.
+        1. If _offsetNanoseconds_ &ge; 0, let _sign_ be the code unit 0x002B (PLUS SIGN); otherwise, let _sign_ be the code unit 0x002D (HYPHEN-MINUS).
+        1. Let _absoluteNanoseconds_ be abs(_offsetNanoseconds_).
+        1. Let _hour_ be floor(_absoluteNanoseconds_ / (3600 × 10<sup>9</sup>)).
+        1. Let _minute_ be floor(_absoluteNanoseconds_ / (60 × 10<sup>9</sup>)) modulo 60.
+        1. Let _second_ be floor(_absoluteNanoseconds_ / 10<sup>9</sup>) modulo 60.
+        1. Let _subSecondNanoseconds_ be _absoluteNanoseconds_ modulo 10<sup>9</sup>.
+        1. If _second_ = 0 and _subSecondNanoseconds_ = 0, let _precision_ be *"minute"*; otherwise, let _precision_ be *"auto"*.
+        1. Let _timeString_ be FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
+        1. Return the string-concatenation of _sign_ and _timeString_.
       </emu-alg>
     </emu-clause>
 
