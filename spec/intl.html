@@ -66,6 +66,24 @@
       ECMAScript implementations are recommended to include updates to the IANA Time Zone Database as soon as possible.
       Such prompt action ensures that ECMAScript programs can accurately perform time-zone-sensitive calculations and can use newly-added available named time zone identifiers supplied by external input or the host environment.
     </p>
+
+    <emu-note>
+      <p>
+        Although the IANA Time Zone Database maintainers strive for stability, in rare cases (averaging less than once per year) a Zone may be replaced by a new Zone.
+        For example, in 2022 "*Europe/Kiev*" was deprecated to a Link resolving to a new "*Europe/Kyiv*" Zone.
+      </p>
+      <p>
+        To reduce disruption from renaming changes, ECMAScript implementations are encouraged to initially add the new Zone as a non-primary time zone identifier that resolves to the current primary identifier.
+        Then, after a waiting period, implementations are recommended to promote the new Zone to a primary time zone identifier while simultaneously demoting the deprecated name to non-primary.
+        The recommended waiting period is two years after the IANA Time Zone Database release containing the changes.
+        This delay allows other systems, that ECMAScript programs may interact with, to be updated to recognize the new Zone.
+      </p>
+      <p>
+        A waiting period should only apply when a new Zone is added to replace an existing Zone.
+        If an existing Zone and Link are swapped, then no waiting period is necessary.
+      </p>
+    </emu-note>
+
     <p>
       If implementations revise time zone information during the lifetime of an agent, then which identifiers are supported, the primary time zone identifier associated with any identifier, and the UTC offsets and transitions associated with any Zone, must be consistent with results previously observed by that agent.
       Due to the complexity of supporting this requirement, it is recommended that implementations maintain a fully consistent copy of the IANA Time Zone Database for the lifetime of each agent.
@@ -327,7 +345,7 @@
           1. <ins>Let _timeZoneIdentifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_timeZone_).</ins>
           1. If <del>the result of IsValidTimeZoneName(_timeZone_) is *false*</del><ins>_timeZoneIdentifierRecord_ is ~empty~</ins>, then
             1. Throw a *RangeError* exception.
-          1. Set _timeZone_ to <del>CanonicalizeTimeZoneName(_timeZone_)</del><ins>_timeZoneIdentifierRecord_.[[PrimaryIdentifier]]</ins>.
+          1. Set _timeZone_ to <del>CanonicalizeTimeZoneName(_timeZone_)</del><ins>_timeZoneIdentifierRecord_.[[Identifier]]</ins>.
         1. Set _dateTimeFormat_.[[TimeZone]] to _timeZone_.
         1. Let _formatOptions_ be a new Record.
         1. Set _formatOptions_.[[hourCycle]] to _hc_.
@@ -2546,7 +2564,7 @@
             1. If _timeZoneParseResult_.[[OffsetMinutes]] is not ~empty~, throw a *RangeError* exception.
             1. Let _timeZoneIdentifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_timeZone_).
             1. If _timeZoneIdentifierRecord_ is ~empty~, throw a *RangeError* exception.
-            1. Set _timeZone_ to _timeZoneIdentifierRecord_.[[PrimaryIdentifier]].
+            1. Set _timeZone_ to _timeZoneIdentifierRecord_.[[Identifier]].
             1. Perform ? InitializeDateTimeFormat(_dateTimeFormat_, _locales_, _options_, _timeZone_).
             1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_zonedDateTime_.[[Calendar]]).
             1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then

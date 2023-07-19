@@ -38,7 +38,7 @@
         1. Else,
           1. Let _timeZoneIdentifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_identifier_).
           1. If _timeZoneIdentifierRecord_ is ~empty~, throw a *RangeError* exception.
-          1. Set _identifier_ to _timeZoneIdentifierRecord_.[[PrimaryIdentifier]].
+          1. Set _identifier_ to _timeZoneIdentifierRecord_.[[Identifier]].
         1. Return ? CreateTemporalTimeZone(_identifier_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -103,6 +103,18 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return FormatOffsetTimeZoneIdentifier(_timeZone_.[[OffsetMinutes]]).
         1. Return _timeZone_.[[Identifier]].
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.timezone.prototype.equals">
+      <h1>Temporal.TimeZone.prototype.equals ( _other_ )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _timeZone_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
+        1. Return ? TimeZoneEquals(_timeZone_, _other_).
       </emu-alg>
     </emu-clause>
 
@@ -329,7 +341,7 @@
           1. Set _object_.[[OffsetMinutes]] to _parseResult_.[[OffsetMinutes]].
         1. Else,
           1. Assert: _parseResult_.[[Name]] is not ~empty~.
-          1. Assert: GetAvailableNamedTimeZoneIdentifier(_identifier_).[[PrimaryIdentifier]] is _identifier_.
+          1. Assert: GetAvailableNamedTimeZoneIdentifier(_identifier_).[[Identifier]] is _identifier_.
           1. Set _object_.[[Identifier]] to _identifier_.
           1. Set _object_.[[OffsetMinutes]] to ~empty~.
         1. Return _object_.
@@ -559,7 +571,7 @@
           1. If _offsetMinutes_ is not ~empty~, return FormatOffsetTimeZoneIdentifier(_offsetMinutes_).
           1. Let _timeZoneIdentifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_name_).
           1. If _timeZoneIdentifierRecord_ is ~empty~, throw a *RangeError* exception.
-          1. Return _timeZoneIdentifierRecord_.[[PrimaryIdentifier]].
+          1. Return _timeZoneIdentifierRecord_.[[Identifier]].
         1. If _parseResult_.[[Z]] is *true*, return *"UTC"*.
         1. Let _offsetParseResult_ be ! ParseDateTimeUTCOffset(_parseResult_.[[OffsetString]]).
         1. If _offsetParseResult_.[[HasSubMinutePrecision]] is *true*, throw a *RangeError* exception.
@@ -809,6 +821,14 @@
         1. Let _timeZoneOne_ be ? ToTemporalTimeZoneIdentifier(_one_).
         1. Let _timeZoneTwo_ be ? ToTemporalTimeZoneIdentifier(_two_).
         1. If _timeZoneOne_ is _timeZoneTwo_, return *true*.
+        1. Let _offsetMinutesOne_ be ? ParseTimeZoneIdentifier(_timeZoneOne_).[[OffsetMinutes]].
+        1. Let _offsetMinutesTwo_ be ? ParseTimeZoneIdentifier(_timeZoneTwo_).[[OffsetMinutes]].
+        1. If _offsetMinutesOne_ is ~empty~ and _offsetMinutesTwo_ is ~empty~, then
+          1. Let _recordOne_ be GetAvailableNamedTimeZoneIdentifier(_timeZoneOne_).
+          1. Let _recordTwo_ be GetAvailableNamedTimeZoneIdentifier(_timeZoneTwo_).
+          1. If _recordOne_ is not ~empty~ and _recordTwo_ is not ~empty~ and _recordOne_.[[PrimaryIdentifier]] is _recordTwo_.[[PrimaryIdentifier]], return *true*.
+        1. Else,
+          1. If _offsetMinutesOne_ is not ~empty~ and _offsetMinutesTwo_ is not ~empty~ and _offsetMinutesOne_ = _offsetMinutesTwo_, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
