@@ -139,7 +139,7 @@ Object.defineProperty(DateTimeFormat, 'prototype', {
 
 function resolvedOptions() {
   const resolved = this[ORIGINAL].resolvedOptions();
-  resolved.timeZone = this[TZ_CANONICAL];
+  resolved.timeZone = this[TZ_ORIGINAL];
   return resolved;
 }
 
