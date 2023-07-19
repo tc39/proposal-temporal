@@ -325,8 +325,8 @@
       <emu-alg>
         1. Let _systemTimeZoneIdentifier_ be SystemTimeZoneIdentifier().
         1. <ins>Let _parseResult_ be ! ParseTimeZoneIdentifier(_systemTimeZoneIdentifier_).</ins>
-        1. If <del>IsTimeZoneOffsetString(_systemTimeZoneIdentifier_) is *true*</del><ins>_parseResult_.[[OffsetNanoseconds]] is not ~empty~</ins>, then
-          1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString(_systemTimeZoneIdentifier_)</del><ins>_parseResult_.[[OffsetNanoseconds]]</ins>.
+        1. If <del>IsTimeZoneOffsetString(_systemTimeZoneIdentifier_) is *true*</del><ins>_parseResult_.[[OffsetMinutes]] is not ~empty~</ins>, then
+          1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString(_systemTimeZoneIdentifier_)</del><ins>_parseResult_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>)</ins>.
         1. Else,
           1. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_systemTimeZoneIdentifier_, ℤ(ℝ(_t_) × 10<sup>6</sup>)).
         1. Let _offsetMs_ be truncate(_offsetNs_ / 10<sup>6</sup>).
@@ -360,8 +360,8 @@
       <emu-alg>
         1. Let _systemTimeZoneIdentifier_ be SystemTimeZoneIdentifier().
         1. <ins>Let _parseResult_ be ! ParseTimeZoneIdentifier(_systemTimeZoneIdentifier_).</ins>
-        1. If <del>IsTimeZoneOffsetString(_systemTimeZoneIdentifier_) is *true*</del><ins>_parseResult_.[[OffsetNanoseconds]] is not ~empty~</ins>, then
-          1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString(_systemTimeZoneIdentifier_)</del><ins>_parseResult_.[[OffsetNanoseconds]]</ins>.
+        1. If <del>IsTimeZoneOffsetString(_systemTimeZoneIdentifier_) is *true*</del><ins>_parseResult_.[[OffsetMinutes]] is not ~empty~</ins>, then
+          1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString(_systemTimeZoneIdentifier_)</del><ins>_parseResult_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>)</ins>.
         1. Else,
           1. Let _possibleInstants_ be GetNamedTimeZoneEpochNanoseconds(_systemTimeZoneIdentifier_, ℝ(YearFromTime(_t_)), ℝ(MonthFromTime(_t_)) + 1, ℝ(DateFromTime(_t_)), ℝ(HourFromTime(_t_)), ℝ(MinFromTime(_t_)), ℝ(SecFromTime(_t_)), ℝ(msFromTime(_t_)), 0, 0).
           1. NOTE: The following steps ensure that when _t_ represents local time repeating multiple times at a negative time zone transition (e.g. when the daylight saving time ends or the time zone offset is decreased due to a time zone rule change) or skipped local time at a positive time zone transition (e.g. when the daylight saving time starts or the time zone offset is increased due to a time zone rule change), _t_ is interpreted using the time zone offset before the transition.
@@ -429,11 +429,13 @@
       </dl>
       <emu-alg>
         1. Let _systemTimeZoneIdentifier_ be SystemTimeZoneIdentifier().
-        1. <ins>Let _parseResult_ be ! ParseTimeZoneIdentifier(_systemTimeZoneIdentifier_).</ins>
-        1. If <del>IsTimeZoneOffsetString(_systemTimeZoneIdentifier_) is *true*</del><ins>_parseResult_.[[OffsetNanoseconds]] is not ~empty~</ins>, then
-          1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString(_systemTimeZoneIdentifier_)</del><ins>_parseResult_.[[OffsetNanoseconds]]</ins>.
-        1. Else,
+        1. <del>If IsTimeZoneOffsetString(_systemTimeZoneIdentifier_) is *true*, then</del>
+          1. <del>Let _offsetNs_ be ParseTimeZoneOffsetString(_systemTimeZoneIdentifier_).</del>
+        1. <del>Else,</del>
+        1. <ins>Let _offsetMinutes_ be ! ParseTimeZoneIdentifier(_systemTimeZoneIdentifier_).[[OffsetMinutes]].</ins>
+        1. <ins>If _offsetMinutes_ is ~empty~, then</ins>
           1. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_systemTimeZoneIdentifier_, ℤ(ℝ(_tv_) × 10<sup>6</sup>)).
+          1. <ins>Set _offsetMinutes_ to truncate(_offsetNs_ / (60 × 10<sup>9</sup>)).</ins>
         1. <del>Let _offset_ be 𝔽(truncate(_offsetNs_ / 10<sup>6</sup>)).</del>
         1. <del>If _offset_ is *+0*<sub>𝔽</sub> or _offset_ > *+0*<sub>𝔽</sub>, then</del>
           1. <del>Let _offsetSign_ be *"+"*.</del>
@@ -443,7 +445,7 @@
           1. <del>Let _absOffset_ be -_offset_.</del>
         1. <del>Let _offsetMin_ be ToZeroPaddedDecimalString(ℝ(MinFromTime(_absOffset_)), 2).</del>
         1. <del>Let _offsetHour_ be ToZeroPaddedDecimalString(ℝ(HourFromTime(_absOffset_)), 2).</del>
-        1. <ins>Let _offsetString_ be FormatOffsetTimeZoneIdentifier(_offsetNs_, ~legacy~).</ins>
+        1. <ins>Let _offsetString_ be FormatOffsetTimeZoneIdentifier(_offsetMinutes_, ~unseparated~).</ins>
         1. Let _tzName_ be an implementation-defined string that is either the empty String or the string-concatenation of the code unit 0x0020 (SPACE), the code unit 0x0028 (LEFT PARENTHESIS), an implementation-defined timezone name, and the code unit 0x0029 (RIGHT PARENTHESIS).
         1. <del>Return the string-concatenation of _offsetSign_, _offsetHour_, _offsetMin_, and _tzName_.</del>
         1. <ins>Return the string-concatenation of _offsetString_ and _tzName_.</ins>
