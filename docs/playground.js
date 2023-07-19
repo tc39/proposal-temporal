@@ -9991,20 +9991,15 @@
   // In the spec, the code below only exists as part of GetOffsetStringFor.
   // But in the polyfill, we re-use it to provide clearer error messages.
   function formatOffsetStringNanoseconds(offsetNs) {
-    var offsetMinutes = MathTrunc(offsetNs / 60e9);
-    var offsetStringMinutes = FormatOffsetTimeZoneIdentifier(offsetMinutes);
-    var subMinuteNanoseconds = MathAbs$1(offsetNs) % 60e9;
-    if (!subMinuteNanoseconds) return offsetStringMinutes;
-
-    // For offsets between -1s and 0, exclusive, FormatOffsetTimeZoneIdentifier's
-    // return value of "+00:00" is incorrect if there are sub-minute units.
-    if (!offsetMinutes && offsetNs < 0) offsetStringMinutes = '-00:00';
-    var seconds = MathFloor$1(subMinuteNanoseconds / 1e9) % 60;
-    var secondString = ISODateTimePartString(seconds);
-    var nanoseconds = subMinuteNanoseconds % 1e9;
-    if (!nanoseconds) return "".concat(offsetStringMinutes, ":").concat(secondString);
-    var fractionString = "".concat(nanoseconds).padStart(9, '0').replace(/0+$/, '');
-    return "".concat(offsetStringMinutes, ":").concat(secondString, ".").concat(fractionString);
+    var sign = offsetNs < 0 ? '-' : '+';
+    var absoluteNs = MathAbs$1(offsetNs);
+    var hour = MathFloor$1(absoluteNs / 3600e9);
+    var minute = MathFloor$1(absoluteNs / 60e9) % 60;
+    var second = MathFloor$1(absoluteNs / 1e9) % 60;
+    var subSecondNs = absoluteNs % 1e9;
+    var precision = second === 0 && subSecondNs === 0 ? 'minute' : 'auto';
+    var timeString = FormatTimeString(hour, minute, second, subSecondNs, precision);
+    return "".concat(sign).concat(timeString);
   }
   function GetPlainDateTimeFor(timeZone, instant, calendar) {
     var ns = GetSlot(instant, EPOCHNANOSECONDS);
@@ -10449,11 +10444,10 @@
   function FormatOffsetTimeZoneIdentifier(offsetMinutes) {
     var sign = offsetMinutes < 0 ? '-' : '+';
     var absoluteMinutes = MathAbs$1(offsetMinutes);
-    var intHours = MathFloor$1(absoluteMinutes / 60);
-    var hh = ISODateTimePartString(intHours);
-    var intMinutes = absoluteMinutes % 60;
-    var mm = ISODateTimePartString(intMinutes);
-    return "".concat(sign).concat(hh, ":").concat(mm);
+    var hour = MathFloor$1(absoluteMinutes / 60);
+    var minute = absoluteMinutes % 60;
+    var timeString = FormatTimeString(hour, minute, 0, 0, 'minute');
+    return "".concat(sign).concat(timeString);
   }
   function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {
     offsetNanoseconds = RoundNumberToIncrement(bigInt(offsetNanoseconds), 60e9, 'halfExpand').toJSNumber();
