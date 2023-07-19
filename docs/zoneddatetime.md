@@ -421,13 +421,15 @@ If `zonedDateTime` was created with a custom time zone object, this gives the `i
 
 By storing its time zone, `Temporal.ZonedDateTime` is able to use that time zone when deriving other values, e.g. to automatically perform DST adjustment when adding or subtracting time.
 
-If a non-canonical time zone ID is used, it will be normalized by `Temporal` into its canonical name listed in the [IANA time zone database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-
 Usually, the time zone ID will be an IANA time zone ID.
 However, in unusual cases, a time zone can also be created from a time zone offset string like `+05:30`.
 Offset time zones function just like IANA time zones except that their offset can never change due to DST or political changes.
 This can be problematic for many use cases because by using an offset time zone you lose the ability to safely derive past or future dates because, even in time zones without DST, offsets sometimes change for political reasons (e.g. countries change their time zone).
 Therefore, using an IANA time zone is recommended wherever possible.
+
+Time zone identifiers are normalized before being used to determine the time zone.
+For example, capitalization will be corrected to match the [IANA time zone database](https://www.iana.org/time-zones), and offsets like `+01` or `+0100` will be converted to `+01:00`.
+Link names in the IANA Time Zone Database are not resolved to Zone names.
 
 In very rare cases, you may choose to use `UTC` as your time zone ID.
 This is generally not advised because no humans actually live in the UTC time zone; it's just for computers.
@@ -447,22 +449,20 @@ Usage example:
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24-08:00[America/Los_Angeles]');
 `Time zone is: ${zdt.timeZoneId}`;
   // => 'Time zone is: America/Los_Angeles'
-zdt.withTimeZone('Asia/Singapore').timeZoneId;
-  // => Asia/Singapore
-zdt.withTimeZone('Asia/Chongqing').timeZoneId;
-  // => Asia/Shanghai
-  // (time zone IDs are normalized, e.g. Asia/Chongqing -> Asia/Shanghai)
+zdt.withTimeZone('Asia/Kolkata').timeZoneId;
+  // => Asia/Kolkata
+zdt.withTimeZone('Asia/Calcutta').timeZoneId;
+  // => Asia/Calcutta (does not follow links in the IANA Time Zone Database)
+
+zdt.withTimeZone('europe/paris').timeZoneId;
+  // => Europe/Paris (normalized to match IANA Time Zone Database capitalization)
+
 zdt.withTimeZone('+05:00').timeZoneId;
   // => +05:00
 zdt.withTimeZone('+05').timeZoneId;
-  // => +05:00
-  // (normalized to canonical form)
-zdt.withTimeZone('utc').timeZoneId;
-  // => UTC
-  // (normalized to canonical form which is uppercase)
-zdt.withTimeZone('GMT').timeZoneId;
-  // => UTC
-  // (normalized to canonical form)
+  // => +05:00  (normalized to ±HH:MM)
+zdt.withTimeZone('+0500').timeZoneId;
+  // => +05:00  (normalized to ±HH:MM)
 ```
 <!-- prettier-ignore-end -->
 
@@ -1072,8 +1072,8 @@ To calculate the difference between calendar dates only, use `.toPlainDate().unt
 To calculate the difference between clock times only, use `.toPlainTime().until(other.toPlainTime())`.
 
 If the other `Temporal.ZonedDateTime` is in a different time zone, then the same days can be different lengths in each time zone, e.g. if only one of them observes DST.
-Therefore, a `RangeError` will be thrown if `largestUnit` is `'day'` or larger and the two instances' time zones have different `id` fields.
-To work around this limitation, transform one of the instances to the other's time zone using `.withTimeZone(other.timeZone)` and then calculate the same-timezone difference.
+Therefore, a `RangeError` will be thrown if `largestUnit` is `'day'` or larger and the two instances' time zones are not equal, using the same equality algorithm as `Temporal.TimeZone.prototype.equals`.
+To work around this same-time-zone requirement, transform one of the instances to the other's time zone using `.withTimeZone(other.timeZone)` and then calculate the same-timezone difference.
 Because of the complexity and ambiguity involved in cross-timezone calculations involving days or larger units, `'hour'` is the default for `largestUnit`.
 
 Take care when using milliseconds, microseconds, or nanoseconds as the largest unit.
@@ -1380,8 +1380,8 @@ console.log(str);
 // {
 //   "id": 311,
 //   "name": "FictionalConf 2018",
-//   "openingZonedDateTime": "2018-07-06T10:00+05:30[Asia/Calcutta]",
-//   "closingZonedDateTime": "2018-07-08T18:15+05:30[Asia/Calcutta]"
+//   "openingZonedDateTime": "2018-07-06T10:00+05:30[Asia/Kolkata]",
+//   "closingZonedDateTime": "2018-07-08T18:15+05:30[Asia/Kolkata]"
 // }
 
 // To rebuild from the string:

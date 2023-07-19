@@ -28,7 +28,7 @@ The other, more difficult, way to create a custom time zone is to create a plain
 The object must have at least `getOffsetNanosecondsFor()` and `getPossibleInstantsFor()` methods, and an `id` property.
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in `Temporal.TimeZone` objects.
-To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `toString()`, `toJSON()`, `getOffsetStringFor()`, `getPlainDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`, and `toJSON()`.
+To interoperate with libraries or other code that you didn't write, then you should implement all the other `Temporal.TimeZone` members as well: `toString()`, `toJSON()`, `equals()`, `getOffsetStringFor()`, `getPlainDateTimeFor()`, `getInstantFor()`, `getNextTransition()`, `getPreviousTransition()`.
 
 The identifier of a custom time zone must consist of one or more components separated by slashes (`/`), as described in the [tzdata documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming).
 Each component must consist of between one and 14 characters.
@@ -48,8 +48,8 @@ Valid characters are ASCII letters, `.`, `-`, and `_`.
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
-The string `timeZoneIdentifier` is canonicalized before being used to determine the time zone.
-For example, values like `+01` will be understood to mean `+01:00`, and capitalization will be corrected.
+The string `timeZoneIdentifier` is normalized before being used to determine the time zone.
+For example, capitalization will be corrected to match the IANA Time Zone Database, and offsets like `+01` or `+0100` will be converted to normal form like `+01:00`.
 If no time zone can be determined from `timeZoneIdentifier`, then a `RangeError` is thrown.
 
 Use this constructor directly if you have a string that is known to be a correct time zone identifier.
@@ -57,15 +57,23 @@ If you have an ISO 8601 date-time string, `Temporal.TimeZone.from()` is probably
 
 Example usage:
 
+<!-- prettier-ignore-start -->
 ```javascript
-tz = new Temporal.TimeZone('UTC');
-tz = new Temporal.TimeZone('Africa/Cairo');
-tz = new Temporal.TimeZone('america/VANCOUVER');
-tz = new Temporal.TimeZone('Asia/Katmandu'); // alias of Asia/Kathmandu
-tz = new Temporal.TimeZone('-04:00');
-tz = new Temporal.TimeZone('+0645');
-/* WRONG */ tz = new Temporal.TimeZone('local'); // => throws, not a time zone
+new Temporal.TimeZone('UTC');            // => UTC
+new Temporal.TimeZone('Etc/UTC');        // => Etc/UTC (Links are not followed)
+new Temporal.TimeZone('Africa/Cairo');   // => Africa/Cairo
+new Temporal.TimeZone('aSiA/TOKYO');     // => Asia/Tokyo (capitalization is normalized)
+new Temporal.TimeZone('Asia/Kolkata');   // => Asia/Kolkata
+new Temporal.TimeZone('Asia/Calcutta');  // => Asia/Calcutta (Links are not followed)
+new Temporal.TimeZone('-04:00');         // => -04:00
+new Temporal.TimeZone('-0400');          // => -04:00 (offset formats are normalized)
+new Temporal.TimeZone('-04');            // => -04:00 (offset formats are normalized)
+
+/* WRONG */ new Temporal.TimeZone('hi'); // => throws, not a time zone identifier
+/* WRONG */ new Temporal.TimeZone('2020-01-13T16:31:00.06-08:00[America/Vancouver]');
+   // => throws, use from() to parse time zones from ISO 8601 strings
 ```
+<!-- prettier-ignore-end -->
 
 #### Difference between IANA time zones and numeric UTC offsets
 
@@ -95,49 +103,133 @@ This static method creates a new time zone from another value.
 If the value is another `Temporal.TimeZone` object, or object implementing the time zone protocol, the same object is returned.
 If the value is another Temporal object that carries a time zone or an object with a `timeZone` property, such as `Temporal.ZonedDateTime`, the object's time zone is returned.
 
-Any other value is converted to a string, which is expected to be either:
+Any other value is required to be a string in one of the following formats:
 
-- a string that is accepted by `new Temporal.TimeZone()`; or
-- a string in the ISO 8601 format including a time zone offset part.
-
-Note that the ISO 8601 string can optionally be extended with an IANA time zone name in square brackets appended to it.
+- A time zone identifier accepted by `new Temporal.TimeZone()`.
+- A string like `2020-01-01[Asia/Tokyo]` or `2020-01-01T00:00+09:00[Asia/Tokyo]` in ISO 8601 format with a time zone identifier suffix in square brackets.
+  When a time zone identifier suffix is present, any UTC offset outside the brackets will be ignored.
+- An ISO 8601 string like `2020-01-01T00:00+09:00` that includes a numeric time zone offset.
+- An ISO 8601 string like `2020-01-01T00:00Z` that uses the Z offset designator.
+  Such strings will result in a `Temporal.TimeZone` object with the identifier `"UTC"`.
 
 This function is often more convenient to use than `new Temporal.TimeZone()` because it handles a wider range of input.
 
 Usage examples:
 
+<!-- prettier-ignore-start -->
 ```javascript
 // IANA time zone names and UTC offsets
-tz = Temporal.TimeZone.from('UTC');
-tz = Temporal.TimeZone.from('Africa/Cairo');
-tz = Temporal.TimeZone.from('america/VANCOUVER');
-tz = Temporal.TimeZone.from('Asia/Katmandu'); // alias of Asia/Kathmandu
-tz = Temporal.TimeZone.from('-04:00');
-tz = Temporal.TimeZone.from('+0645');
+Temporal.TimeZone.from('UTC');           // => UTC
+Temporal.TimeZone.from('Etc/UTC');       // => Etc/UTC (Links are not followed)
+Temporal.TimeZone.from('Africa/Cairo');  // => Africa/Cairo
+Temporal.TimeZone.from('aSiA/TOKYO');    // => Asia/Tokyo (capitalization is normalized)
+Temporal.TimeZone.from('Asia/Kolkata');  // => Asia/Kolkata
+Temporal.TimeZone.from('Asia/Calcutta'); // => Asia/Calcutta (Links are not followed)
+Temporal.TimeZone.from('-04:00');        // => -04:00
+Temporal.TimeZone.from('-0400');         // => -04:00 (offset formats are normalized)
+Temporal.TimeZone.from('-04');           // => -04:00 (offset formats are normalized)
 
-// ISO 8601 string with time zone offset part
-tz = Temporal.TimeZone.from('2020-01-14T00:31:00.065858086Z');
-tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00');
-tz = Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouver]');
+// ISO 8601 string with bracketed time zone identifier
+Temporal.TimeZone.from('2020-01-13T16:31:00.06+09:00[Asia/Tokyo]'); // => Asia/Tokyo
+Temporal.TimeZone.from('2020-01-14T00:31:00.06Z[Asia/Tokyo]');      // => Asia/Tokyo
+Temporal.TimeZone.from('2020-01-13T16:31:00.06+09:00[+09:00]');     // => +09:00
+
+// ISO 8601 string with only a time zone offset part
+Temporal.TimeZone.from('2020-01-14T00:31:00.065858086Z');           // => UTC
+Temporal.TimeZone.from('2020-01-13T16:31:00.065858086-08:00');      // => -08:00
 
 // Existing TimeZone object
-tz2 = Temporal.TimeZone.from(tz);
+Temporal.TimeZone.from(Temporal.TimeZone.from('Asia/Tokyo'));       // => Asia/Tokyo
 
-/* WRONG */ tz = Temporal.TimeZone.from('local'); // => throws, not a time zone
-/* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31:00'); // => throws, ISO 8601 string without time zone offset part
-/* WRONG */ tz = Temporal.TimeZone.from('-08:00[America/Vancouver]'); // => throws, ISO 8601 string without date-time part
+/* WRONG */ tz = Temporal.TimeZone.from('local');             // => throws, not a time zone
+/* WRONG */ tz = Temporal.TimeZone.from('2020-01-14T00:31');  // => throws, no time zone
+/* WRONG */ tz = Temporal.TimeZone.from('-08:00[Asia/Aden]'); // => throws, no date/time
 ```
+<!-- prettier-ignore-end -->
 
 ## Properties
 
 ### timeZone.**id** : string
 
 The `id` property gives an unambiguous identifier for the time zone.
-Effectively, this is the canonicalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
+This is the normalized version of whatever `timeZoneIdentifier` was passed as a parameter to the constructor.
 
 When subclassing `Temporal.TimeZone`, this property must be overridden to provide an identifier for the custom time zone.
 
 ## Methods
+
+### timeZone.**equals**(_other_: Temporal.TimeZone | object | string) : boolean
+
+**Parameters:**
+
+- `other` (`Temporal.TimeZone` object, object implementing the `Temporal.TimeZone` protocol, or a string time zone identifier): Another time zone to compare.
+
+**Returns:** `true` if `timeZone` and `other` are equal, or `false` if not.
+
+Compares two time zones for equality.
+Equality is determined by the following algorithm:
+
+- If `timeZone === other`, then the time zones are equal.
+- Otherwise, `timeZone.id` is compared to `other` (or `other.id` if `other` is an object).
+  If any of the following conditions are true, then the time zones are equal:
+  - Both string identifiers are Zone or Link names in the [IANA Time Zone Database](https://www.iana.org/time-zones), and they resolve to the same Zone name.
+    This resolution is case-insensitive.
+  - Both string identifiers are custom time zone identifiers that are equal according to `===`.
+    This comparison is case-sensitive and does not normalize Unicode characters.
+  - Both identifiers are numeric offset time zone identifiers like "+05:30", and they represent the same offset.
+- Otherwise, the time zones are not equal.
+
+Time zones that resolve to different Zones in the IANA Time Zone Database are not equal, even if those Zones use the same offsets.
+Similarly, a numeric-offset identifier is never equal to a named time zone in the IANA Time Zone Database, even if they represent the same offsets.
+
+Although there may be slight variation between implementations, ECMAScript implementations generally build the IANA Time Zone Database using build options that guarantee at least one Zone for every <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha-2</a> country code.
+This behavior differs from the default build options of the IANA Time Zone Database where a Zone may span multiple countries that have shared the same UTC offsets and transitions since 1970, for example Europe/Oslo, Europe/Stockholm, Europe/Copenhagen, and Europe/Berlin.
+To avoid conflating different countries' time zones that may vary in the future, these default build options are discouraged, and in practice ECMAScript implementations do not use them.
+
+Example usage:
+
+```javascript
+kolkata = Temporal.TimeZone.from('Asia/Kolkata');
+kolkata.id; // => "Asia/Kolkata"
+calcutta = Temporal.TimeZone.from('Asia/Calcutta');
+calcutta.id; // => "Asia/Calcutta"
+kolkata.equals(calcutta); // => true
+kolkata.equals('Asia/Calcutta'); // => true
+kolkata.equals('Asia/Colombo'); // => false
+
+// IANA Time Zone Database identifiers are case insensitive
+kolkata.equals('asia/calcutta'); // => true
+
+// Offset time zones are never equal to named time zones
+kolkata.equals('+05:30'); // => false
+zeroOffset = Temporal.TimeZone.from('+00:00');
+zeroOffset.equals('UTC'); // false
+
+// For offset time zones, any valid format is accepted
+zeroOffset.equals('+00:00'); // => true
+zeroOffset.equals('+0000'); // => true
+zeroOffset.equals('+00'); // => true
+
+// Custom time zone identifiers are compared case-sensitively
+class Custom1 extends Temporal.TimeZone {
+  constructor() {
+    super('UTC');
+  }
+  get id() {
+    return 'Moon/Cheese';
+  }
+}
+class Custom2 extends Temporal.TimeZone {
+  constructor() {
+    super('UTC');
+  }
+  get id() {
+    return 'Moon/CHEESE';
+  }
+}
+new Custom1().equals(new Custom1()); // => true
+new Custom1().equals(new Custom2()); // => false
+```
 
 ### timeZone.**getOffsetNanosecondsFor**(_instant_: Temporal.Instant | string) : number
 

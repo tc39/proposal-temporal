@@ -44,7 +44,7 @@ Temporal uses the [**IANA Time Zone Database**](https://en.wikipedia.org/wiki/Tz
   In some time zones, temporary offset changes happen twice each year due to **Daylight Saving Time (DST)** starting in the Spring and ending each Fall.
   Offsets can also change permanently due to political changes, e.g. a country switching time zones.
 
-The TZ database is updated several times per year in response to political changes around the world.
+The IANA Time Zone Database is updated several times per year in response to political changes around the world.
 Each update contains changes to time zone definitions.
 These changes usually affect only future date/time values, but occasionally fixes are made to past ranges too, for example when new historical sources are discovered about early-20th century timekeeping.
 

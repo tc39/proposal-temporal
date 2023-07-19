@@ -234,8 +234,8 @@ To determine the `Temporal` class that should be used to parse a string, it's im
   Other than the few use cases detailed in the [`Temporal.PlainDateTime` documentation](plaindatetime.html), most of the time it's better to use a different type.
 - `Temporal.Duration` represents a period of time.
   Its data model is a number of years, months, days, hours, minutes, seconds, milliseconds, microseconds, and nanoseconds.
-- `Temporal.TimeZone` represents an IANA time zone like `Asia/Tokyo` or (rarely) an offset time zone like `+06:00`.
-  Its data model is the canonical ID of the time zone, e.g. `"Asia/Tokyo"` or `"+06:00"`.
+- `Temporal.TimeZone` represents a time zone in the [IANA time zone database](https://www.iana.org/time-zones), or (rarely) a numeric offset time zone.
+  Its data model is the identifier of the time zone, like `"Asia/Tokyo"` or `"+06:00"`.
 - `Temporal.Calendar` represents a calendar like Hebrew, Chinese, or the default ISO 8601 calendar.
   Its data model is the ID of the calendar, e.g. `"iso8601"` or `"hebrew"`.
 
