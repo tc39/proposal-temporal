@@ -2209,22 +2209,15 @@ export function GetOffsetStringFor(timeZone, instant) {
 // In the spec, the code below only exists as part of GetOffsetStringFor.
 // But in the polyfill, we re-use it to provide clearer error messages.
 function formatOffsetStringNanoseconds(offsetNs) {
-  const offsetMinutes = MathTrunc(offsetNs / 60e9);
-  let offsetStringMinutes = FormatOffsetTimeZoneIdentifier(offsetMinutes);
-  const subMinuteNanoseconds = MathAbs(offsetNs) % 60e9;
-  if (!subMinuteNanoseconds) return offsetStringMinutes;
-
-  // For offsets between -1s and 0, exclusive, FormatOffsetTimeZoneIdentifier's
-  // return value of "+00:00" is incorrect if there are sub-minute units.
-  if (!offsetMinutes && offsetNs < 0) offsetStringMinutes = '-00:00';
-
-  const seconds = MathFloor(subMinuteNanoseconds / 1e9) % 60;
-  const secondString = ISODateTimePartString(seconds);
-  const nanoseconds = subMinuteNanoseconds % 1e9;
-  if (!nanoseconds) return `${offsetStringMinutes}:${secondString}`;
-
-  let fractionString = `${nanoseconds}`.padStart(9, '0').replace(/0+$/, '');
-  return `${offsetStringMinutes}:${secondString}.${fractionString}`;
+  const sign = offsetNs < 0 ? '-' : '+';
+  const absoluteNs = MathAbs(offsetNs);
+  const hour = MathFloor(absoluteNs / 3600e9);
+  const minute = MathFloor(absoluteNs / 60e9) % 60;
+  const second = MathFloor(absoluteNs / 1e9) % 60;
+  const subSecondNs = absoluteNs % 1e9;
+  const precision = second === 0 && subSecondNs === 0 ? 'minute' : 'auto';
+  const timeString = FormatTimeString(hour, minute, second, subSecondNs, precision);
+  return `${sign}${timeString}`;
 }
 
 export function GetPlainDateTimeFor(timeZone, instant, calendar) {
@@ -2742,11 +2735,10 @@ export function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {
 export function FormatOffsetTimeZoneIdentifier(offsetMinutes) {
   const sign = offsetMinutes < 0 ? '-' : '+';
   const absoluteMinutes = MathAbs(offsetMinutes);
-  const intHours = MathFloor(absoluteMinutes / 60);
-  const hh = ISODateTimePartString(intHours);
-  const intMinutes = absoluteMinutes % 60;
-  const mm = ISODateTimePartString(intMinutes);
-  return `${sign}${hh}:${mm}`;
+  const hour = MathFloor(absoluteMinutes / 60);
+  const minute = absoluteMinutes % 60;
+  const timeString = FormatTimeString(hour, minute, 0, 0, 'minute');
+  return `${sign}${timeString}`;
 }
 
 export function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {

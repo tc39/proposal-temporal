@@ -715,30 +715,31 @@
   <emu-clause id="sec-temporal-formattimestring" type="abstract operation">
     <h1>
       FormatTimeString (
-        _hour_: an integer,
-        _minute_: an integer,
-        _second_: an integer,
-        _subSecondNanoseconds_: an integer,
-        _precision_: an integer in the inclusive range 0 to 9, *"minute"*, or *"auto"*
+        _hour_: a non-negative integer,
+        _minute_: a non-negative integer,
+        _second_: a non-negative integer,
+        _subSecondNanoseconds_: a non-negative integer,
+        _precision_: an integer in the inclusive range 0 to 9, *"minute"*, or *"auto"*,
+        optional _style_: ~separated~ or ~unseparated~,
       ): a String
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>
-        The output will be formatted like HH:MM if _precision_ is *"minute"*.
-        Otherwise, the output will be formatted like HH:MM:SS if _precision_ is zero, or if _subSecondNanoseconds_ is zero and _precision is *"auto"*.
-        Otherwise, the output will be formatted like HH:MM:SS.fff where "fff" is a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is *"auto"*) to the last non-zero digit.
+        It formats a collection of unsigned time components into a string, truncating units as necessary, and separating hours, minutes, and seconds with colons unless _style_ is ~unseparated~.
+        The output will be formatted like HH:MM or HHMM if _precision_ is *"minute"*.
+        Otherwise, the output will be formatted like HH:MM:SS or HHMMSS if _precision_ is zero, or if _subSecondNanoseconds_ is zero and _precision is *"auto"*.
+        Otherwise, the output will be formatted like HH:MM:SS.fff or HHMMSS.fff where "fff" is a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is *"auto"*) to the last non-zero digit.
       </dd>
     </dl>
     <emu-alg>
+      1. If _style_ is present and _style_ is ~unseparated~, let _separator_ be the empty String; otherwise, let _separator_ be *":"*.
       1. Let _hh_ be ToZeroPaddedDecimalString(_hour_, 2).
       1. Let _mm_ be ToZeroPaddedDecimalString(_minute_, 2).
-      1. Let _result_ be the string-concatenation of _hh_, the code unit 0x003A (COLON), and _mm_.
-      1. If _precision_ is *"minute"*, return _result_.
+      1. If _precision_ is *"minute"*, return the string-concatenation of _hh_, _separator_, and _mm_.
       1. Let _ss_ be ToZeroPaddedDecimalString(_second_, 2).
       1. Let _subSecondsPart_ be FormatFractionalSeconds(_subSecondNanoseconds_, _precision_).
-      1. Set _result_ to the string-concatenation of _result_, the code unit 0x003A (COLON), _ss_, and _subSecondsPart_.
-      1. Return _result_.
+      1. Return the string-concatenation of _hh_, _separator_, _mm_, _separator_, _ss_, and _subSecondsPart_.
     </emu-alg>
   </emu-clause>
 
