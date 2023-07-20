@@ -175,7 +175,7 @@ For a list of calendar identifiers, see the documentation for [Intl.DateTimeForm
 If `calendarIdentifier` is not a built-in calendar, then a `RangeError` is thrown.
 
 Use this constructor directly if you have a string that is known to be a correct built-in calendar identifier.
-If you have an ISO 8601 date-time string with a `[u-ca=identifier]` annotation, then `Temporal.Calendar.from()` is more convenient than parsing the identifier out of the string, and also the only way to parse strings annotated with a non-built-in calendar.
+If you have an ISO 8601 date-time string with a `[u-ca=identifier]` annotation, then `Temporal.Calendar.from()` is more convenient than parsing the identifier out of the string.
 
 Example usage:
 
@@ -199,9 +199,9 @@ This static method creates a new calendar from another value.
 If the value is another `Temporal.Calendar` object, or object implementing the calendar protocol, the same object is returned.
 If the value is another Temporal object that carries a calendar or an object with a `calendar` property, such as a `Temporal.ZonedDateTime`, the object's calendar is returned.
 
-Any other value is converted to a string, which is expected to be either:
+Any other value is required to be a string that is either:
 
-- a string that is accepted by `new Temporal.Calendar()`; or
+- a calendar idenfier accepted by `new Temporal.Calendar()`; or
 - a string in the ISO 8601 format.
 
 Note that the ISO 8601 string can be extended with a `[u-ca=identifier]` annotation in square brackets appended to it.
@@ -219,13 +219,13 @@ cal = Temporal.Calendar.from('gregory');
 // ISO 8601 string with or without calendar annotation
 cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086');
 cal = Temporal.Calendar.from('2020-01-13T16:31:00.065858086-08:00[America/Vancouver][u-ca=iso8601]');
+/* WRONG */ cal = Temporal.Calendar.from('[u-ca-iso8601]'); // => throws, lone annotation not a valid ISO 8601 string
 
 // Existing calendar object
 cal2 = Temporal.Calendar.from(cal);
 
-// Custom calendar that is a plain object (this calendar does not do much)
+// Custom calendar names cannot be parsed from strings
 /* WRONG */ cal = Temporal.Calendar.from('discordian'); // => throws, not a built-in calendar
-/* WRONG */ cal = Temporal.Calendar.from('[u-ca-iso8601]'); // => throws, lone annotation not a valid ISO 8601 string
 ```
 
 ## Properties
