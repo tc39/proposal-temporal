@@ -6,7 +6,6 @@
 
 import assert from 'assert';
 import * as ES from '../lib/ecmascript.mjs';
-import { Instant } from '../lib/instant.mjs';
 
 const timezoneNames = Intl.supportedValuesOf('timeZone');
 const calendarNames = Intl.supportedValuesOf('calendar');
@@ -249,12 +248,7 @@ const temporalSign = withCode(
 );
 const temporalDecimalFraction = fraction;
 function saveOffset(data, result) {
-  // To canonicalize an offset string that may include nanoseconds, we use GetOffsetStringFor
-  const instant = new Instant(0n);
-  const fakeTimeZone = {
-    getOffsetNanosecondsFor: () => ES.ParseDateTimeUTCOffset(result).offsetNanoseconds
-  };
-  data.offset = ES.GetOffsetStringFor(fakeTimeZone, instant);
+  data.offset = ES.ParseDateTimeUTCOffset(result);
 }
 const utcOffsetSubMinutePrecision = withCode(
   seq(
@@ -468,7 +462,13 @@ function fuzzMode(mode) {
       for (let prop of comparisonItems[mode]) {
         let expected = generatedData[prop];
         if (prop !== 'tzName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
-        assert.equal(parsed[prop], expected, prop);
+        if (prop === 'offset' && expected) {
+          const parsedResult = ES.ParseDateTimeUTCOffset(parsed[prop]);
+          assert.equal(parsedResult.offsetNanoseconds, expected.offsetNanoseconds);
+          assert.equal(parsedResult.hasSubMinutePrecision, expected.hasSubMinutePrecision);
+        } else {
+          assert.equal(parsed[prop], expected, prop);
+        }
       }
       console.log(`${fuzzed} => ok`);
     } catch (e) {
