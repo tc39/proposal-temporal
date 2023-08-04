@@ -1745,10 +1745,10 @@
         It parses the argument as either a time zone identifier or an ISO 8601 string.
         The returned Record's fields are set as follows:
         <ul>
-          <li>If _timeZoneString_ is either a named time zone identifier or offset time zone identifier, then [[Name]] is _timeZoneString_, while [[Z]] is *false* and [[OffsetString]] is *undefined*.</li>
-          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string with a time zone annotation containing either a named time zone identifier or offset time zone identifier, then [[Name]] is the time zone identifier contained in the annotation, while [[Z]] is *false* and [[OffsetString]] is *undefined*.</li>
-          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string using a *Z* offset designator, then [[Z]] is *true*, while [[Name]] and [[OffsetString]] are *undefined*.</li>
-          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string using a numeric UTC offset, then [[OffsetString]] is _timeZoneString_, while [[Z]] is *false* and [[Name]] is *undefined*.</li>
+          <li>If _timeZoneString_ is either a named time zone identifier or offset time zone identifier, then [[Name]] is _timeZoneString_ and [[OffsetString]] is *undefined*.</li>
+          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string with a time zone annotation containing either a named time zone identifier or offset time zone identifier, then [[Name]] is the time zone identifier contained in the annotation and [[OffsetString]] is *undefined*.</li>
+          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string using a *Z* offset designator, then [[Name]] is *"UTC"* and [[OffsetString]] is *undefined*.</li>
+          <li>Otherwise, if _timeZoneString_ is an ISO 8601 string using a numeric UTC offset, then [[OffsetString]] is _timeZoneString_ and [[Name]] is *undefined*.</li>
           <li>Otherwise, a *RangeError* is thrown.</li>
         </ul>
       </dd>
@@ -1756,11 +1756,16 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_timeZoneString_), |TimeZoneIdentifier|).
       1. If _parseResult_ is a Parse Node, then
-        1. Return the Record { [[Z]]: *false*, [[OffsetString]]: *undefined*, [[Name]]: _timeZoneString_ }.
+        1. Return the Record { [[OffsetString]]: *undefined*, [[Name]]: _timeZoneString_ }.
       1. Let _result_ be ? ParseISODateTime(_timeZoneString_).
       1. Let _timeZoneResult_ be _result_.[[TimeZone]].
-      1. If _timeZoneResult_.[[Z]] is *false*, _timeZoneResult_.[[OffsetString]] is *undefined*, and _timeZoneResult_.[[Name]] is *undefined*, throw a *RangeError* exception.
-      1. Return _timeZoneResult_.
+      1. If _timeZoneResult_.[[Name]] is not *undefined*, then
+        1. Return the Record { [[OffsetString]]: *undefined*, [[Name]]: _timeZoneResult_.[[Name]] }.
+      1. If _timeZoneResult_.[[Z]] is *true*, then
+        1. Return the Record { [[OffsetString]]: *undefined*, [[Name]]: *"UTC"* }.
+      1. If _timeZoneResult_.[[OffsetString]] is not *undefined*, then
+        1. Return the Record { [[OffsetString]]: _timeZoneResult_.[[OffsetString]], [[Name]]: *undefined* }.
+      1. Throw a *RangeError* exception.
     </emu-alg>
   </emu-clause>
 
