@@ -599,8 +599,7 @@
           1. If _timeZoneIdentifierRecord_ is ~empty~, throw a *RangeError* exception.
           1. Return _timeZoneIdentifierRecord_.[[Identifier]].
         1. If _parseResult_.[[Z]] is *true*, return *"UTC"*.
-        1. Let _offsetParseResult_ be ! ParseDateTimeUTCOffset(_parseResult_.[[OffsetString]]).
-        1. If _offsetParseResult_.[[HasSubMinutePrecision]] is *true*, throw a *RangeError* exception.
+        1. Let _offsetParseResult_ be ? ParseTimeZoneIdentifier(_parseResult_.[[OffsetString]]).
         1. Return FormatOffsetTimeZoneIdentifier(_offsetParseResult_.[[OffsetMinutes]]).
       </emu-alg>
     </emu-clause>

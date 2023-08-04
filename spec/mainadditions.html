@@ -498,7 +498,6 @@
         <dd>
           <del>The return value is the UTC offset, as a number of nanoseconds, that corresponds to the String _offsetString_.</del>
           <ins>[[OffsetNanoseconds]] is the UTC offset, as a number of nanoseconds, that corresponds to _offsetString_.</ins>
-          <ins>[[HasSubMinutePrecision]] is *true* if _offsetString_ includes seconds or sub-second units, and *false* otherwise.</ins>
           <ins>If _offsetString_ is invalid, a *RangeError* is thrown.</ins>
         </dd>
       </dl>
@@ -506,7 +505,6 @@
         1. Let _parseResult_ be ParseText(StringToCodePoints(_offsetString_), <del>|UTCOffset|</del><ins>|UTCOffsetSubMinutePrecision|</ins>).
         1. <del>Assert: _parseResult_ is not a List of errors.</del>
         1. <ins>If _parseResult_ is a List of errors, throw a *RangeError* exception.</ins>
-        1. <ins>Let _hasSubMinutePrecision_ be *false*.</ins>
         1. Assert: _parseResult_ contains a |TemporalSign| Parse Node.
         1. Let _parsedSign_ be the source text matched by the |TemporalSign| Parse Node contained within _parseResult_.
         1. If _parsedSign_ is the single code point U+002D (HYPHEN-MINUS) or U+2212 (MINUS SIGN), then
@@ -526,7 +524,6 @@
           1. Let _seconds_ be 0.
           1. <ins>Let _nanoseconds_ be 0.</ins>
         1. Else,
-          1. <ins>Set _hasSubMinutePrecision_ to *true*.</ins>
           1. Let _parsedSeconds_ be the source text matched by the second |MinuteSecond| Parse Node contained within _parseResult_.
           1. Let _seconds_ be ℝ(StringToNumber(CodePointsToString(_parsedSeconds_))).
           1. <ins>If _parseResult_ contains a |TemporalDecimalFraction| Parse Node, then</ins>
@@ -543,7 +540,7 @@
           1. <del>Let _nanoseconds_ be ℝ(StringToNumber(_nanosecondsString_)).</del>
         1. <del>Return _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).</del>
         1. <ins>Let _offsetNanoseconds_ be _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).</ins>
-        1. <ins>Return the Record { [[OffsetNanoseconds]]: _offsetNanoseconds_, [[HasSubMinutePrecision]]: _hasSubMinutePrecision_ }.</ins>
+        1. <ins>Return the Record { [[OffsetNanoseconds]]: _offsetNanoseconds_ }.</ins>
       </emu-alg>
     </emu-clause>
   </emu-clause>
