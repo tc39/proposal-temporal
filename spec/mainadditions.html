@@ -482,22 +482,21 @@
       <del class="block">
       <h1>
         ParseTimeZoneOffsetString (
-          _offsetString_: a String
-        ): either a normal completion containing a Record, or a throw completion
+          _offsetString_: a String,
+        ): an integer
       </h1>
       </del>
       <ins class="block">
       <h1>
         ParseDateTimeUTCOffset (
           _offsetString_: a String
-        ): either a normal completion containing a Record, or a throw completion
+        ): either a normal completion containing an integer, or a throw completion
       </h1>
       </ins>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          <del>The return value is the UTC offset, as a number of nanoseconds, that corresponds to the String _offsetString_.</del>
-          <ins>[[OffsetNanoseconds]] is the UTC offset, as a number of nanoseconds, that corresponds to _offsetString_.</ins>
+          The return value is the UTC offset, as a number of nanoseconds, that corresponds to the String _offsetString_.
           <ins>If _offsetString_ is invalid, a *RangeError* is thrown.</ins>
         </dd>
       </dl>
@@ -522,25 +521,17 @@
           1. Let _minutes_ be ℝ(StringToNumber(CodePointsToString(_parsedMinutes_))).
         1. If _parseResult_ does not contain two |MinuteSecond| Parse Nodes, then
           1. Let _seconds_ be 0.
-          1. <ins>Let _nanoseconds_ be 0.</ins>
         1. Else,
           1. Let _parsedSeconds_ be the source text matched by the second |MinuteSecond| Parse Node contained within _parseResult_.
           1. Let _seconds_ be ℝ(StringToNumber(CodePointsToString(_parsedSeconds_))).
-          1. <ins>If _parseResult_ contains a |TemporalDecimalFraction| Parse Node, then</ins>
-            1. <ins>Let _parsedFraction_ be the source text matched by the |TemporalDecimalFraction| Parse Node contained within _parseResult_.</ins>
-            1. <ins>Let _fraction_ be the string-concatenation of CodePointsToString(_parsedFraction_) and *"000000000"*.</ins>
-            1. <ins>Let _nanosecondsString_ be the substring of _fraction_ from 1 to 10.</ins>
-            1. <ins>Let _nanoseconds_ be ℝ(StringToNumber(_nanosecondsString_)).</ins>
-        1. <del>If _parseResult_ does not contain a |TemporalDecimalFraction| Parse Node, then</del>
-          1. <del>Let _nanoseconds_ be 0.</del>
-        1. <del>Else,</del>
-          1. <del>Let _parsedFraction_ be the source text matched by the |TemporalDecimalFraction| Parse Node contained within _parseResult_.</del>
-          1. <del>Let _fraction_ be the string-concatenation of CodePointsToString(_parsedFraction_) and *"000000000"*.</del>
-          1. <del>Let _nanosecondsString_ be the substring of _fraction_ from 1 to 10.</del>
-          1. <del>Let _nanoseconds_ be ℝ(StringToNumber(_nanosecondsString_)).</del>
-        1. <del>Return _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).</del>
-        1. <ins>Let _offsetNanoseconds_ be _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).</ins>
-        1. <ins>Return the Record { [[OffsetNanoseconds]]: _offsetNanoseconds_ }.</ins>
+        1. If _parseResult_ does not contain a |TemporalDecimalFraction| Parse Node, then
+          1. Let _nanoseconds_ be 0.
+        1. Else,
+          1. Let _parsedFraction_ be the source text matched by the |TemporalDecimalFraction| Parse Node contained within _parseResult_.
+          1. Let _fraction_ be the string-concatenation of CodePointsToString(_parsedFraction_) and *"000000000"*.
+          1. Let _nanosecondsString_ be the substring of _fraction_ from 1 to 10.
+          1. Let _nanoseconds_ be ℝ(StringToNumber(_nanosecondsString_)).
+        1. Return _sign_ × (((_hours_ × 60 + _minutes_) × 60 + _seconds_) × 10<sup>9</sup> + _nanoseconds_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

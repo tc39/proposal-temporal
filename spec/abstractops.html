@@ -626,7 +626,7 @@
       1. If _timeZone_ is *undefined*, then
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       1. If _offsetBehaviour_ is ~option~, then
-        1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).[[OffsetNanoseconds]].
+        1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
       1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*, _matchBehaviour_).
