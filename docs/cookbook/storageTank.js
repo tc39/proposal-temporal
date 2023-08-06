@@ -8,7 +8,7 @@ const labelFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   hour: 'numeric',
   minute: 'numeric',
-  timeZone: Temporal.Now.timeZone()
+  timeZone: Temporal.Now.timeZoneId()
 });
 const browserCalendar = labelFormatter.resolvedOptions().calendar;
 const tankMidnight = Temporal.Now.zonedDateTime(browserCalendar).withTimeZone(tankTimeZone).startOfDay().toInstant();
