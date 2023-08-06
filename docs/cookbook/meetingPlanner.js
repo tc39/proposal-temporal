@@ -2,7 +2,7 @@
 const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
 const now = Temporal.Now.zonedDateTime(browserCalendar);
 const timeZones = [
-  { name: 'Here', tz: now.timeZone },
+  { name: 'Here', tz: now.timeZoneId },
   { name: 'New York', tz: 'America/New_York' },
   { name: 'London', tz: 'Europe/London' },
   { name: 'Tokyo', tz: 'Asia/Tokyo' }
