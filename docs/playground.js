@@ -1797,18 +1797,9 @@
 
   var functionBind = Function.prototype.bind || implementation$2;
 
-  var src;
-  var hasRequiredSrc;
+  var bind$1 = functionBind;
 
-  function requireSrc () {
-  	if (hasRequiredSrc) return src;
-  	hasRequiredSrc = 1;
-
-  	var bind = functionBind;
-
-  	src = bind.call(Function.call, Object.prototype.hasOwnProperty);
-  	return src;
-  }
+  var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
 
   var undefined$1;
 
@@ -2024,7 +2015,7 @@
   };
 
   var bind = functionBind;
-  var hasOwn = requireSrc();
+  var hasOwn = src;
   var $concat = bind.call(Function.call, Array.prototype.concat);
   var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
   var $replace = bind.call(Function.call, String.prototype.replace);
@@ -2307,7 +2298,7 @@
 
   	var GetIntrinsic = getIntrinsic;
 
-  	var has = requireSrc();
+  	var has = src;
   	var $TypeError = GetIntrinsic('%TypeError%');
 
   	isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -2407,7 +2398,7 @@
   	if (hasRequiredIsMatchRecord) return isMatchRecord;
   	hasRequiredIsMatchRecord = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -2436,7 +2427,7 @@
   	var $TypeError = GetIntrinsic('%TypeError%');
   	var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-  	var has = requireSrc();
+  	var has = src;
   	var isInteger = isInteger$2;
 
   	var isMatchRecord = requireIsMatchRecord();
@@ -2526,7 +2517,7 @@
   	if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
   	hasRequiredIsAccessorDescriptor = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	var Type = Type$4;
 
@@ -2557,7 +2548,7 @@
   	if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
   	hasRequiredIsDataDescriptor = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	var Type = Type$4;
 
@@ -2753,7 +2744,7 @@
   	if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
   	hasRequiredToPropertyDescriptor = 1;
 
-  	var has = requireSrc();
+  	var has = src;
 
   	var GetIntrinsic = getIntrinsic;
 
@@ -6791,7 +6782,7 @@
 
   var $TypeError$3 = GetIntrinsic$8('%TypeError%');
 
-  var has = requireSrc();
+  var has = src;
 
   var IsPropertyKey = IsPropertyKey$4;
   var Type$1 = Type$4;
@@ -9921,7 +9912,7 @@
       if (offsetMinutes !== undefined) return FormatOffsetTimeZoneIdentifier(offsetMinutes);
       var record = GetAvailableNamedTimeZoneIdentifier(tzName);
       if (!record) throw new RangeError("Unrecognized time zone ".concat(tzName));
-      return record.primaryIdentifier;
+      return record.identifier;
     }
     if (z) return 'UTC';
     // if !tzName && !z then offset must be present
@@ -9948,7 +9939,23 @@
     if (one === two) return true;
     var tz1 = ToTemporalTimeZoneIdentifier(one);
     var tz2 = ToTemporalTimeZoneIdentifier(two);
-    return tz1 === tz2;
+    if (tz1 === tz2) return true;
+    var offsetMinutes1 = ParseTimeZoneIdentifier(tz1).offsetMinutes;
+    var offsetMinutes2 = ParseTimeZoneIdentifier(tz2).offsetMinutes;
+    if (offsetMinutes1 === undefined && offsetMinutes2 === undefined) {
+      // Calling GetAvailableNamedTimeZoneIdentifier is costly, so (unlike the
+      // spec) the polyfill will early-return if one of them isn't recognized. Try
+      // the second ID first because it's more likely to be unknown, because it
+      // can come from the argument of TimeZone.p.equals as opposed to the first
+      // ID which comes from the receiver.
+      var idRecord2 = GetAvailableNamedTimeZoneIdentifier(tz2);
+      if (!idRecord2) return false;
+      var idRecord1 = GetAvailableNamedTimeZoneIdentifier(tz1);
+      if (!idRecord1) return false;
+      return idRecord1.primaryIdentifier === idRecord2.primaryIdentifier;
+    } else {
+      return offsetMinutes1 === offsetMinutes2;
+    }
   }
   function TemporalDateTimeToDate(dateTime) {
     return CreateTemporalDate(GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, CALENDAR));
@@ -13077,7 +13084,7 @@
   });
   function resolvedOptions() {
     var resolved = this[ORIGINAL].resolvedOptions();
-    resolved.timeZone = this[TZ_CANONICAL];
+    resolved.timeZone = this[TZ_ORIGINAL];
     return resolved;
   }
   function format(datetime) {
@@ -18069,7 +18076,7 @@
       } else {
         var record = GetAvailableNamedTimeZoneIdentifier(stringIdentifier);
         if (!record) throw new RangeError("Invalid time zone identifier: ".concat(stringIdentifier));
-        stringIdentifier = record.primaryIdentifier;
+        stringIdentifier = record.identifier;
       }
       CreateSlots(this);
       SetSlot(this, TIMEZONE_ID, stringIdentifier);
@@ -18087,6 +18094,13 @@
       get: function get() {
         if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
         return GetSlot(this, TIMEZONE_ID);
+      }
+    }, {
+      key: "equals",
+      value: function equals(other) {
+        if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
+        var timeZoneSlotValue = ToTemporalTimeZoneSlotValue(other);
+        return TimeZoneEquals(this, timeZoneSlotValue);
       }
     }, {
       key: "getOffsetNanosecondsFor",
@@ -18882,7 +18896,7 @@
         } else {
           var record = GetAvailableNamedTimeZoneIdentifier(timeZoneIdentifier);
           if (!record) throw new RangeError("toLocaleString formats built-in time zones, not ".concat(timeZoneIdentifier));
-          optionsCopy.timeZone = record.primaryIdentifier;
+          optionsCopy.timeZone = record.identifier;
         }
         var formatter = new DateTimeFormat(locales, optionsCopy);
         var localeCalendarIdentifier = Call$1(customResolvedOptions, formatter, []).calendar;

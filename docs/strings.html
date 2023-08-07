@@ -364,8 +364,8 @@ If you care about the exact time and the time zone, then use <code>Temporal.Zone
 Other than the few use cases detailed in the <a href="plaindatetime.html"><code>Temporal.PlainDateTime</code> documentation</a>, most of the time it&#39;s better to use a different type.</li>
 <li><code>Temporal.Duration</code> represents a period of time.
 Its data model is a number of years, months, days, hours, minutes, seconds, milliseconds, microseconds, and nanoseconds.</li>
-<li><code>Temporal.TimeZone</code> represents an IANA time zone like <code>Asia/Tokyo</code> or (rarely) an offset time zone like <code>+06:00</code>.
-Its data model is the canonical ID of the time zone, e.g. <code>&quot;Asia/Tokyo&quot;</code> or <code>&quot;+06:00&quot;</code>.</li>
+<li><code>Temporal.TimeZone</code> represents a time zone in the <a href="https://www.iana.org/time-zones">IANA time zone database</a>, or (rarely) a numeric offset time zone.
+Its data model is the identifier of the time zone, like <code>&quot;Asia/Tokyo&quot;</code> or <code>&quot;+06:00&quot;</code>.</li>
 <li><code>Temporal.Calendar</code> represents a calendar like Hebrew, Chinese, or the default ISO 8601 calendar.
 Its data model is the ID of the calendar, e.g. <code>&quot;iso8601&quot;</code> or <code>&quot;hebrew&quot;</code>.</li>
 </ul>
