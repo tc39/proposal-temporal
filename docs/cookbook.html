@@ -748,7 +748,7 @@ const labelFormatter = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   hour: 'numeric',
   minute: 'numeric',
-  timeZone: Temporal.Now.timeZone()
+  timeZone: Temporal.Now.timeZoneId()
 });
 const browserCalendar = labelFormatter.resolvedOptions().calendar;
 const tankMidnight = Temporal.Now.zonedDateTime(browserCalendar).withTimeZone(tankTimeZone).startOfDay().toInstant();
@@ -800,7 +800,7 @@ new Chart(ctx, {
   <span class="token literal-property property">weekday</span><span class="token operator">:</span> <span class="token string">'short'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">hour</span><span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">minute</span><span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">timeZone</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">timeZone</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token literal-property property">timeZone</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">timeZoneId</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> browserCalendar <span class="token operator">=</span> labelFormatter<span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
 <span class="token keyword">const</span> tankMidnight <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">zonedDateTime</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withTimeZone</span><span class="token punctuation">(</span>tankTimeZone<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">startOfDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toInstant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -900,7 +900,7 @@ new Chart(ctx, {
 const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
 const now = Temporal.Now.zonedDateTime(browserCalendar);
 const timeZones = [
-  { name: 'Here', tz: now.timeZone },
+  { name: 'Here', tz: now.timeZoneId },
   { name: 'New York', tz: 'America/New_York' },
   { name: 'London', tz: 'Europe/London' },
   { name: 'Tokyo', tz: 'Asia/Tokyo' }
@@ -949,7 +949,7 @@ timeZones.forEach(({ name, tz }) => {
 <span class="token keyword">const</span> browserCalendar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
 <span class="token keyword">const</span> now <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">zonedDateTime</span><span class="token punctuation">(</span>browserCalendar<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> timeZones <span class="token operator">=</span> <span class="token punctuation">[</span>
-  <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Here'</span><span class="token punctuation">,</span> <span class="token literal-property property">tz</span><span class="token operator">:</span> now<span class="token punctuation">.</span>timeZone <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Here'</span><span class="token punctuation">,</span> <span class="token literal-property property">tz</span><span class="token operator">:</span> now<span class="token punctuation">.</span>timeZoneId <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'New York'</span><span class="token punctuation">,</span> <span class="token literal-property property">tz</span><span class="token operator">:</span> <span class="token string">'America/New_York'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'London'</span><span class="token punctuation">,</span> <span class="token literal-property property">tz</span><span class="token operator">:</span> <span class="token string">'Europe/London'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Tokyo'</span><span class="token punctuation">,</span> <span class="token literal-property property">tz</span><span class="token operator">:</span> <span class="token string">'Asia/Tokyo'</span> <span class="token punctuation">}</span>
