@@ -266,7 +266,7 @@ const timeZoneUTCOffsetName = seq(sign, hour, choice([minuteSecond], seq(':', mi
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
-  (data, result) => (data.tzName = result)
+  (data, result) => (data.tzAnnotation = result)
 );
 const timeZoneAnnotation = seq('[', [annotationCriticalFlag], timeZoneIdentifier, ']');
 const aKeyLeadingChar = choice(lcalpha(), character('_'));
@@ -443,9 +443,9 @@ const comparisonItems = {
   ],
   MonthDay: ['month', 'day', 'calendar'],
   Time: [...timeItems],
-  TimeZone: ['offset', 'tzName'],
+  TimeZone: ['offset', 'tzAnnotation'],
   YearMonth: ['year', 'month', 'calendar'],
-  ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'tzName', 'calendar']
+  ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'tzAnnotation', 'calendar']
 };
 const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];
 
@@ -458,14 +458,14 @@ function fuzzMode(mode) {
       fuzzed = goals[mode].generate(generatedData);
     } while (plainModes.includes(mode) && /[0-9][zZ]/.test(fuzzed));
     try {
-      const parsed = ES[`ParseTemporal${mode}String`](fuzzed);
+      const parsingMethod = ES[`ParseTemporal${mode}StringRaw`] ?? ES[`ParseTemporal${mode}String`];
+      const parsed = parsingMethod(fuzzed);
       for (let prop of comparisonItems[mode]) {
         let expected = generatedData[prop];
-        if (prop !== 'tzName' && prop !== 'offset' && prop !== 'calendar') expected = expected || 0;
-        if (prop === 'offset' && expected) {
-          const parsedResult = ES.ParseDateTimeUTCOffset(parsed[prop]);
-          assert.equal(parsedResult.offsetNanoseconds, expected.offsetNanoseconds);
-          assert.equal(parsedResult.hasSubMinutePrecision, expected.hasSubMinutePrecision);
+        if (!['tzAnnotation', 'offset', 'calendar'].includes(prop)) expected ??= 0;
+        if (prop === 'offset') {
+          const parsedResult = parsed[prop] === undefined ? undefined : ES.ParseDateTimeUTCOffset(parsed[prop]);
+          assert.equal(parsedResult, expected, prop);
         } else {
           assert.equal(parsed[prop], expected, prop);
         }
