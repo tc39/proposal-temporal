@@ -206,7 +206,7 @@ export class ZonedDateTime {
 
     let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
       ES.InterpretTemporalDateTimeFields(calendar, fields, options);
-    const offsetNs = ES.ParseDateTimeUTCOffset(fields.offset).offsetNanoseconds;
+    const offsetNs = ES.ParseDateTimeUTCOffset(fields.offset);
     const timeZone = GetSlot(this, TIME_ZONE);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
       year,
