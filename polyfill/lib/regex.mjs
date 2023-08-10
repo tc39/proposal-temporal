@@ -1,5 +1,5 @@
 const tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
-const offsetNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\d{1,9})?)?)?)/;
+const offsetIdentifierNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9])?)/;
 export const timeZoneID = new RegExp(
   '(?:' +
     [
@@ -10,7 +10,7 @@ export const timeZoneID = new RegExp(
       'CST6CDT',
       'MST7MDT',
       'PST8PDT',
-      offsetNoCapture.source
+      offsetIdentifierNoCapture.source
     ].join('|') +
     ')'
 );
