@@ -1419,7 +1419,7 @@ export function InterpretISODateTimeOffset(
   // the user-provided offset doesn't match any instants for this time
   // zone and date/time.
   if (offsetOpt === 'reject') {
-    const offsetStr = formatOffsetStringNanoseconds(offsetNs);
+    const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
     const timeZoneString = IsTemporalTimeZone(timeZone) ? GetSlot(timeZone, TIMEZONE_ID) : 'time zone';
     throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZoneString}`);
   }
@@ -2207,12 +2207,10 @@ export function GetOffsetNanosecondsFor(timeZone, instant, getOffsetNanosecondsF
 
 export function GetOffsetStringFor(timeZone, instant) {
   const offsetNs = GetOffsetNanosecondsFor(timeZone, instant);
-  return formatOffsetStringNanoseconds(offsetNs);
+  return FormatUTCOffsetNanoseconds(offsetNs);
 }
 
-// In the spec, the code below only exists as part of GetOffsetStringFor.
-// But in the polyfill, we re-use it to provide clearer error messages.
-function formatOffsetStringNanoseconds(offsetNs) {
+export function FormatUTCOffsetNanoseconds(offsetNs) {
   const sign = offsetNs < 0 ? '-' : '+';
   const absoluteNs = MathAbs(offsetNs);
   const hour = MathFloor(absoluteNs / 3600e9);
