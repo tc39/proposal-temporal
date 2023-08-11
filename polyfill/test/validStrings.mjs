@@ -203,7 +203,7 @@ const timeDesignator = character('Tt');
 const weeksDesignator = character('Ww');
 const yearsDesignator = character('Yy');
 const utcDesignator = withCode(character('Zz'), (data) => {
-  data.z = 'Z';
+  data.z = true;
 });
 const annotationCriticalFlag = character('!');
 const fraction = seq(decimalSeparator, between(1, 9, digit()));
@@ -426,7 +426,7 @@ const goals = {
 const dateItems = ['year', 'month', 'day'];
 const timeItems = ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'];
 const comparisonItems = {
-  Instant: [...dateItems, ...timeItems, 'offset'],
+  Instant: [...dateItems, ...timeItems, 'offset', 'z'],
   Date: [...dateItems, 'calendar'],
   DateTime: [...dateItems, ...timeItems, 'calendar'],
   Duration: [
@@ -443,9 +443,9 @@ const comparisonItems = {
   ],
   MonthDay: ['month', 'day', 'calendar'],
   Time: [...timeItems],
-  TimeZone: ['offset', 'tzAnnotation'],
+  TimeZone: ['offset', 'tzAnnotation', 'z'],
   YearMonth: ['year', 'month', 'calendar'],
-  ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'tzAnnotation', 'calendar']
+  ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'z', 'tzAnnotation', 'calendar']
 };
 const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];
 
@@ -462,7 +462,7 @@ function fuzzMode(mode) {
       const parsed = parsingMethod(fuzzed);
       for (let prop of comparisonItems[mode]) {
         let expected = generatedData[prop];
-        if (!['tzAnnotation', 'offset', 'calendar'].includes(prop)) expected ??= 0;
+        if (!['tzAnnotation', 'offset', 'calendar'].includes(prop)) expected ??= prop === 'z' ? false : 0;
         if (prop === 'offset') {
           const parsedResult = parsed[prop] === undefined ? undefined : ES.ParseDateTimeUTCOffset(parsed[prop]);
           assert.equal(parsedResult, expected, prop);
