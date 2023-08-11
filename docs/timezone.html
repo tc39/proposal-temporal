@@ -143,7 +143,19 @@
 <h1 id="temporaltimezone"><a class="heading-link" href="#temporaltimezone"></a>Temporal.TimeZone</h3><details>
   <summary><strong>Table of Contents</strong></summary>
 <ul>
+<li><a href="#time-zone-identifiers">Time zone identifiers</a>
+<ul>
+<li><a href="#handling-changes-to-the-iana-time-zone-database">Handling changes to the IANA Time Zone Database</a>
+</li>
+<li><a href="#variation-between-ecmascript-and-other-consumers-of-the-iana-time-zone-database">Variation between ECMAScript and other consumers of the IANA Time Zone Database</a>
+</li>
+</ul>
+</li>
 <li><a href="#custom-time-zones">Custom time zones</a>
+<ul>
+<li><a href="#custom-time-zone-identifiers">Custom time zone identifiers</a>
+</li>
+</ul>
 </li>
 <li><a href="#constructor">Constructor</a>
 <ul>
@@ -196,11 +208,40 @@
 
 <p>A <code>Temporal.TimeZone</code> is a representation of a time zone:</p>
 <ul>
-<li>either an <a href="https://www.iana.org/time-zones">IANA time zone</a>, including information about the time zone, such as the offset between the local time and UTC at a particular time, daylight saving time (DST) and other political UTC offset changes like a country having permanently changed its offset;</li>
-<li>or simply a particular UTC offset with no offset transitions.</li>
+<li>either an <a href="https://www.iana.org/time-zones">IANA time zone</a> that defines the offset between local time and UTC and how that offset changes in response to daylight saving time (DST) and/or other political changes;</li>
+<li>or an &quot;offset time zone&quot;: a fixed UTC offset.</li>
 </ul>
-<p>Since <code>Temporal.Instant</code> and <code>Temporal.PlainDateTime</code> do not contain any time zone information, a <code>Temporal.TimeZone</code> object is required to convert between the two.</p>
-<h2 id="custom-time-zones"><a class="heading-link" href="#custom-time-zones"></a>Custom time zones</h3><p>For specialized applications where you need to do calculations in a time zone that is not built in, you can implement a custom time zone.
+<p>To combine a time zone with a date/time value, and to perform DST-safe operations like &quot;add one day&quot;, use <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code></a>.</p>
+<h2 id="time-zone-identifiers"><a class="heading-link" href="#time-zone-identifiers"></a>Time zone identifiers</h3><p>Time zones in <code>Temporal</code> are represented by string identifiers from the IANA Time Zone Database (like <code>Asia/Tokyo</code>, <code>America/Los_Angeles</code>, or <code>UTC</code>) or by a fixed UTC offset like <code>+05:30</code>.</p>
+<p>A string identifier can be used in place of a <code>Temporal.TimeZone</code> object when passing parameters to ECMAScript methods.
+Furthermore, string identifiers allow ECMAScript implementations to perform optimizations that are not possible when passing time zone objects.
+Therefore, it&#39;s recommended to always pass string identifiers instead of time zone objects whenever this is convenient.
+For example:</p>
+<pre class="language-javascript"><code class="language-javascript">inBerlin <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2022-01-28T19:53+01:00[Europe/Berlin]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+inTokyo <span class="token operator">=</span> inBerlin<span class="token punctuation">.</span><span class="token function">withTimeZone</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// May be faster and/or use less RAM</span>
+inTokyo <span class="token operator">=</span> inBerlin<span class="token punctuation">.</span><span class="token function">withTimeZone</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// OK, but not optimal</span></code></pre><h3 id="handling-changes-to-the-iana-time-zone-database"><a class="heading-link" href="#handling-changes-to-the-iana-time-zone-database"></a>Handling changes to the IANA Time Zone Database</h3><p>Time zone identifiers are occasionally renamed or merged in the IANA Time Zone Database.
+For example, <code>Asia/Calcutta</code> was renamed to <code>Asia/Kolkata</code>, and <code>America/Montreal</code> was merged into <code>America/Toronto</code> because both identifiers are in the same country and share the same time zone rules since 1970.</p>
+<p>Identifiers that have been renamed or merged are considered equivalent by ECMAScript.
+Both identifiers will continue to be accepted by ECMAScript methods and will behave identically, except for <code>toString()</code>, <code>id</code>, and other code that returns the identifier string.
+Equivalence can be tested using <code>Temporal.TimeZone.prototype.equals</code>.</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">areTimeZoneIdentifiersEquivalent</span><span class="token punctuation">(</span><span class="token parameter">id1<span class="token punctuation">,</span> id2</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>id1<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>id2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// DON'T DO THIS: return id1 === id2;</span>
+<span class="token punctuation">}</span>
+<span class="token function">areTimeZoneIdentifiersEquivalent</span><span class="token punctuation">(</span><span class="token string">'Asia/Calcutta'</span><span class="token punctuation">,</span> <span class="token string">'ASIA/KOLKATA'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
+<span class="token function">areTimeZoneIdentifiersEquivalent</span><span class="token punctuation">(</span><span class="token string">'Asia/Calcutta'</span><span class="token punctuation">,</span> <span class="token string">'+05:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span>
+<span class="token function">areTimeZoneIdentifiersEquivalent</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">,</span> <span class="token string">'+00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><p>Time zones that resolve to different Zones in the IANA Time Zone Database are not equivalent, even if those Zones use the same offsets.
+Similarly, a numeric-offset identifier is never equivalent to an IANA time zone identifier, even if they always represent the same offset.</p>
+<p>In any set of equivalent identifiers, only one identifier will be considered canonical.
+To avoid redundancy, only canonical identifiers are returned by <code>Intl.supportedValuesOf(&#39;timeZone&#39;)</code>.
+Furthermore, only canonical identifiers are output methods that returns the system&#39;s current time zone, such as <code>Temporal.Now.timeZoneId()</code>.
+Other than those few cases, canonicalization is not observable in ECMAScript code, which ensures that changes to the IANA Time Zone Database will have minimal impact on the behavior of existing applications.</p>
+<h3 id="variation-between-ecmascript-and-other-consumers-of-the-iana-time-zone-database"><a class="heading-link" href="#variation-between-ecmascript-and-other-consumers-of-the-iana-time-zone-database"></a>Variation between ECMAScript and other consumers of the IANA Time Zone Database</h3><p>The IANA Time Zone Database can be built with different options that can change which time zones are equivalent.
+ECMAScript implementations generally use build options that guarantee at least one canonical identifier for every <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha-2</a> country code, and that ensure that identifiers for different country codes are never equivalent.
+This behavior avoids the risk that future political changes in one country can affect the behavior of ECMAScript code using a different country&#39;s time zones.</p>
+<p>For example, the default build options consider Europe/Oslo, Europe/Stockholm, Europe/Copenhagen, and Europe/Berlin to be equivalent.
+However, ECMAScript implementations generally do not treat those as equivalent.</p>
+<h2 id="custom-time-zones"><a class="heading-link" href="#custom-time-zones"></a>Custom time zones</h3><p>To enable specialized applications to perform calculations in a time zone that is not built-in, a custom time zone can be implemented.
 There are two ways to do this.</p>
 <p>The recommended way is to create a class inheriting from <code>Temporal.TimeZone</code>.
 You must use one of the built-in time zones as the &quot;base time zone&quot;.
@@ -213,10 +254,16 @@ The object must have at least <code>getOffsetNanosecondsFor()</code> and <code>g
 Any object with those three methods will return the correct output from any Temporal property or method.
 However, most other code will assume that custom time zones act like built-in <code>Temporal.TimeZone</code> objects.
 To interoperate with libraries or other code that you didn&#39;t write, then you should implement all the other <code>Temporal.TimeZone</code> members as well: <code>toString()</code>, <code>toJSON()</code>, <code>equals()</code>, <code>getOffsetStringFor()</code>, <code>getPlainDateTimeFor()</code>, <code>getInstantFor()</code>, <code>getNextTransition()</code>, <code>getPreviousTransition()</code>.</p>
-<p>The identifier of a custom time zone must consist of one or more components separated by slashes (<code>/</code>), as described in the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html#naming">tzdata documentation</a>.
-Each component must consist of between one and 14 characters.
-Valid characters are ASCII letters, <code>.</code>, <code>-</code>, and <code>_</code>.
-<code>-</code> may not appear as the first character of a component, and a component may not be a single dot <code>.</code> or two dots <code>..</code>.</p>
+<h3 id="custom-time-zone-identifiers"><a class="heading-link" href="#custom-time-zone-identifiers"></a>Custom time zone identifiers</h3><p>Identifiers of custom time zones are returned from the time zone&#39;s <code>id</code> getter (as well as <code>toString()</code> and <code>toJSON()</code>) and must follow the rules described in the <a href="https://data.iana.org/time-zones/tzdb/theory.html#naming">tzdata documentation</a>:</p>
+<ul>
+<li>A valid identifier has one or more components separated by slashes (<code>/</code>)</li>
+<li>Each component must consist of between one and 14 characters.</li>
+<li>Valid characters are ASCII letters, <code>.</code>, <code>-</code>, and <code>_</code>.</li>
+<li><code>-</code> may not appear as the first character of a component, and a component may not be a single dot <code>.</code> nor two dots <code>..</code>.</li>
+</ul>
+<p>If a custom time zone is not intended to be equivalent to any built-in time zone, then its <code>id</code> must not case-insensitively match the identifier of any IANA time zone.
+A list of all IANA time zone identifiers is available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">here</a>.</p>
+<p>However, a custom time zone that is intended to be equivalent to a built-in time zone must return the same <code>id</code> as the corresponding built-in time zone.</p>
 <h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-TimeZone"><a class="heading-link" href="#new-Temporal-TimeZone"></a><strong>new Temporal.TimeZone</strong>(<em>timeZoneIdentifier</em>: string) : Temporal.TimeZone</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZoneIdentifier</code> (string): A description of the time zone; either its IANA name, or a UTC offset.</li>
@@ -225,7 +272,7 @@ Valid characters are ASCII letters, <code>.</code>, <code>-</code>, and <code>_<
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>The string <code>timeZoneIdentifier</code> is normalized before being used to determine the time zone.
-For example, capitalization will be corrected to match the IANA Time Zone Database, and offsets like <code>+01</code> or <code>+0100</code> will be converted to normal form like <code>+01:00</code>.
+For example, capitalization will be corrected to match the IANA Time Zone Database, and offsets like <code>+01</code> or <code>+0100</code> will be converted to ±HH:MM format like<code>+01:00</code>.
 If no time zone can be determined from <code>timeZoneIdentifier</code>, then a <code>RangeError</code> is thrown.</p>
 <p>Use this constructor directly if you have a string that is known to be a correct time zone identifier.
 If you have an ISO 8601 date-time string, <code>Temporal.TimeZone.from()</code> is probably more convenient.</p>
@@ -265,9 +312,8 @@ If the value is another Temporal object that carries a time zone or an object wi
 <li>A time zone identifier accepted by <code>new Temporal.TimeZone()</code>.</li>
 <li>A string like <code>2020-01-01[Asia/Tokyo]</code> or <code>2020-01-01T00:00+09:00[Asia/Tokyo]</code> in ISO 8601 format with a time zone identifier suffix in square brackets.
 When a time zone identifier suffix is present, any UTC offset outside the brackets will be ignored.</li>
-<li>An ISO 8601 string like <code>2020-01-01T00:00+09:00</code> that includes a numeric time zone offset.</li>
-<li>An ISO 8601 string like <code>2020-01-01T00:00Z</code> that uses the Z offset designator.
-Such strings will result in a <code>Temporal.TimeZone</code> object with the identifier <code>&quot;UTC&quot;</code>.</li>
+<li>An ISO 8601 string like <code>2020-01-01T00:00+09:00</code> that includes a numeric time zone offset, which results in a <code>Temporal.TimeZone</code> object with an identifier that is the normalized ±HH:MM form of the offset.</li>
+<li>An ISO 8601 string like <code>2020-01-01T00:00Z</code> that uses the Z offset designator, which results in a <code>Temporal.TimeZone</code> object with the identifier <code>&quot;UTC&quot;</code>.</li>
 </ul>
 <p>This function is often more convenient to use than <code>new Temporal.TimeZone()</code> because it handles a wider range of input.</p>
 <p>Usage examples:</p>
@@ -301,33 +347,36 @@ Temporal<span class="token punctuation">.</span>TimeZone<span class="token punct
 
 <h2 id="properties"><a class="heading-link" href="#properties"></a>Properties</h3><h3 id="id"><a class="heading-link" href="#id"></a>timeZone.<strong>id</strong> : string</h3><p>The <code>id</code> property gives an unambiguous identifier for the time zone.
 This is the normalized version of whatever <code>timeZoneIdentifier</code> was passed as a parameter to the constructor.</p>
-<p>When subclassing <code>Temporal.TimeZone</code>, this property must be overridden to provide an identifier for the custom time zone.</p>
+<p>When subclassing <code>Temporal.TimeZone</code>, this property must be overridden to provide an identifier for the custom time zone.
+When overriding <code>id</code>, <code>toString()</code> and <code>toJSON()</code> should also be overridden.</p>
 <h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="equals"><a class="heading-link" href="#equals"></a>timeZone.<strong>equals</strong>(<em>other</em>: Temporal.TimeZone | object | string) : boolean</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>other</code> (<code>Temporal.TimeZone</code> object, object implementing the <code>Temporal.TimeZone</code> protocol, or a string time zone identifier): Another time zone to compare.</li>
 </ul>
-<p><strong>Returns:</strong> <code>true</code> if <code>timeZone</code> and <code>other</code> are equal, or <code>false</code> if not.</p>
-<p>Compares two time zones for equality.
+<p><strong>Returns:</strong> <code>true</code> if <code>timeZone</code> and <code>other</code> are equivalent, or <code>false</code> if not.</p>
+<p>Compares two time zones for equivalence.
 Equality is determined by the following algorithm:</p>
 <ul>
-<li>If <code>timeZone === other</code>, then the time zones are equal.</li>
+<li>If <code>timeZone === other</code>, then the time zones are equivalent.</li>
 <li>Otherwise, <code>timeZone.id</code> is compared to <code>other</code> (or <code>other.id</code> if <code>other</code> is an object).
-If any of the following conditions are true, then the time zones are equal:<ul>
+If any of the following conditions are true, then the time zones are equivalent:<ul>
 <li>Both string identifiers are Zone or Link names in the <a href="https://www.iana.org/time-zones">IANA Time Zone Database</a>, and they resolve to the same Zone name.
 This resolution is case-insensitive.</li>
 <li>Both string identifiers are custom time zone identifiers that are equal according to <code>===</code>.
-This comparison is case-sensitive and does not normalize Unicode characters.</li>
+This comparison is case-sensitive and does not normalize different Unicode characters.</li>
 <li>Both identifiers are numeric offset time zone identifiers like &quot;+05:30&quot;, and they represent the same offset.</li>
 </ul>
 </li>
-<li>Otherwise, the time zones are not equal.</li>
+<li>Otherwise, the time zones are not equivalent.</li>
 </ul>
-<p>Time zones that resolve to different Zones in the IANA Time Zone Database are not equal, even if those Zones use the same offsets.
-Similarly, a numeric-offset identifier is never equal to a named time zone in the IANA Time Zone Database, even if they represent the same offsets.</p>
-<p>Although there may be slight variation between implementations, ECMAScript implementations generally build the IANA Time Zone Database using build options that guarantee at least one Zone for every <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha-2</a> country code.
-This behavior differs from the default build options of the IANA Time Zone Database where a Zone may span multiple countries that have shared the same UTC offsets and transitions since 1970, for example Europe/Oslo, Europe/Stockholm, Europe/Copenhagen, and Europe/Berlin.
-To avoid conflating different countries&#39; time zones that may vary in the future, these default build options are discouraged, and in practice ECMAScript implementations do not use them.</p>
+<p>Note that &quot;resolve to the same Zone name&quot; noted above is behavior that can vary between ECMAScript and other consumers of the IANA Time Zone Database.
+ECMAScript implementations generally do not allow identifiers to be equivalent if they represent different <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha-2</a> country codes.
+However, non-ECMAScript platforms may merge Zone names across country boundaries.
+See <a href="#variation-between-ecmascript-and-other-consumers-of-the-iana-time-zone-database">above</a> to learn more about this variation.</p>
+<p>Time zones that resolve to different Zones in the IANA Time Zone Database are not equivalent, even if those Zones always use the same offsets.
+Offset time zones and IANA time zones are also never equivalent.</p>
 <p>Example usage:</p>
+<!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">kolkata <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Kolkata'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 kolkata<span class="token punctuation">.</span>id<span class="token punctuation">;</span> <span class="token comment">// => "Asia/Kolkata"</span>
 calcutta <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Asia/Calcutta'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -339,7 +388,7 @@ kolkata<span class="token punctuation">.</span><span class="token function">equa
 <span class="token comment">// IANA Time Zone Database identifiers are case insensitive</span>
 kolkata<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">'asia/calcutta'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
 
-<span class="token comment">// Offset time zones are never equal to named time zones</span>
+<span class="token comment">// Offset time zones are never equivalent to named time zones</span>
 kolkata<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">'+05:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span>
 zeroOffset <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'+00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 zeroOffset<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// false</span>
@@ -351,23 +400,17 @@ zeroOffset<span class="token punctuation">.</span><span class="token function">e
 
 <span class="token comment">// Custom time zone identifiers are compared case-sensitively</span>
 <span class="token keyword">class</span> <span class="token class-name">Custom1</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span> <span class="token punctuation">{</span>
-  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">get</span> <span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token string">'Moon/Cheese'</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+  <span class="token keyword">get</span> <span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token string">'Moon/Cheese'</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 <span class="token keyword">class</span> <span class="token class-name">Custom2</span> <span class="token keyword">extends</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>TimeZone</span> <span class="token punctuation">{</span>
-  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">get</span> <span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token string">'Moon/CHEESE'</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+  <span class="token keyword">get</span> <span class="token function">id</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token string">'Moon/CHEESE'</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 <span class="token keyword">new</span> <span class="token class-name">Custom1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Custom1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => true</span>
-<span class="token keyword">new</span> <span class="token class-name">Custom1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Custom2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h3 id="getOffsetNanosecondsFor"><a class="heading-link" href="#getOffsetNanosecondsFor"></a>timeZone.<strong>getOffsetNanosecondsFor</strong>(<em>instant</em>: Temporal.Instant | string) : number</h3><p><strong>Parameters:</strong></p>
+<span class="token keyword">new</span> <span class="token class-name">Custom1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Custom2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><!-- prettier-ignore-end -->
+
+<h3 id="getOffsetNanosecondsFor"><a class="heading-link" href="#getOffsetNanosecondsFor"></a>timeZone.<strong>getOffsetNanosecondsFor</strong>(<em>instant</em>: Temporal.Instant | string) : number</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>instant</code> (<code>Temporal.Instant</code> or value convertible to one): The time for which to compute the time zone&#39;s UTC offset.</li>
 </ul>
@@ -398,7 +441,7 @@ tz<span class="token punctuation">.</span><span class="token function">getOffset
 </ul>
 <p><strong>Returns</strong>: a string indicating the UTC offset at the given time.</p>
 <p>This method is similar to <code>timeZone.getOffsetNanosecondsFor()</code>, but returns the offset formatted as a string, with sign, hours, and minutes.</p>
-<p>If <code>timeZone</code> is a time zone constructed from a numeric UTC offset, the return value of this method is effectively the same as <code>timeZone.id</code>.</p>
+<p>If <code>timeZone</code> is a time zone constructed from a numeric UTC offset, this method returns the same value as <code>timeZone.id</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates an offset string using the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
 <p>Example usage:</p>
@@ -409,7 +452,8 @@ tz<span class="token punctuation">.</span><span class="token function">getOffset
 
 <span class="token comment">// TimeZone with a fixed UTC offset</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '-08:00'</span></code></pre><h3 id="getPlainDateTimeFor"><a class="heading-link" href="#getPlainDateTimeFor"></a>timeZone.<strong>getPlainDateTimeFor</strong>(<em>instant</em>: Temporal.Instant | string, <em>calendar</em>?: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '-08:00'</span>
+tz<span class="token punctuation">.</span>id<span class="token punctuation">;</span> <span class="token comment">// => '-08:00'</span></code></pre><h3 id="getPlainDateTimeFor"><a class="heading-link" href="#getPlainDateTimeFor"></a>timeZone.<strong>getPlainDateTimeFor</strong>(<em>instant</em>: Temporal.Instant | string, <em>calendar</em>?: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>instant</code> (<code>Temporal.Instant</code> or value convertible to one): An exact time to convert.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.
@@ -466,8 +510,8 @@ This behavior avoids exceptions when converting nonexistent <code>Temporal.Plain
 <p>If <code>dateTime</code> is not a <code>Temporal.PlainDateTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDateTime.from()</code>.</p>
 <p>Normally there is only one possible exact time corresponding to a wall-clock time, but around a daylight saving or other offset change, a wall-clock time may not exist, or the same wall-clock time may exist twice.
 See <a href="./ambiguity.html">Resolving ambiguity</a> for usage examples and a more complete explanation.</p>
-<p>Although this method is useful for implementing a custom time zone or custom disambiguation behavior, usually you won&#39;t have to use this method; <code>Temporal.TimeZone.prototype.getInstantFor()</code> will be more convenient for most use cases.
-During &quot;skipped&quot; clock time like the hour after DST starts in the spring or certain political changes, <code>Temporal.TimeZone.prototype.getInstantFor()</code> returns a <code>Temporal.Instant</code> (by default interpreting the <code>Temporal.PlainDateTime</code> using the pre-transition time zone offset), while this method returns zero results during those skipped periods.</p>
+<p>Although this method is useful for implementing a custom time zone or custom disambiguation behavior, but otherwise <code>getInstantFor()</code> should be used instead, because it is more convenient, because it&#39;s compatible with the behavior of other methods and libraries, and because it always returns a single value.
+For example, during &quot;skipped&quot; clock time like the hour after DST starts in the spring, <code>getPossibleInstantsFor()</code> returns an empty array while <code>getInstantFor()</code> returns a <code>Temporal.Instant</code>.</p>
 <h3 id="getNextTransition"><a class="heading-link" href="#getNextTransition"></a>timeZone.<strong>getNextTransition</strong>(<em>startingPoint</em>: Temporal.Instant | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>startingPoint</code> (<code>Temporal.Instant</code> or value convertible to one): Time after which to find the next UTC offset transition.</li>
@@ -477,9 +521,8 @@ During &quot;skipped&quot; clock time like the hour after DST starts in the spri
 A &quot;transition&quot; is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
 Transitions can also be caused by other political changes like a country permanently changing the UTC offset of its time zone.</p>
 <p>The returned <code>Temporal.Instant</code> will represent the first nanosecond where the new UTC offset is used, not the last nanosecond where the previous UTC offset is used.</p>
-<p>Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
-Also note that some IANA time zones (e.g., <code>Etc/GMT+5</code>) have no offset transitions either.
-In that case, this method will return <code>null</code>.</p>
+<p>When no more transitions are expected, this method will return <code>null</code>.
+Some time zones (e.g., <code>Etc/GMT+5</code> or <code>-05:00</code>) have no offset transitions and will return <code>null</code> for all values of <code>startingPoint</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method should be overridden if the time zone changes offsets.
 Single-offset time zones can use the default implementation which returns <code>null</code>.</p>
@@ -498,9 +541,8 @@ duration<span class="token punctuation">.</span><span class="token function">toL
 A &quot;transition&quot; is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
 Transitions can also be caused by other political changes like a country permanently changing the UTC offset of its time zone.</p>
 <p>The returned <code>Temporal.Instant</code> will represent the first nanosecond where the new UTC offset is used, not the last nanosecond where the previous UTC offset is used.</p>
-<p>Note that if the time zone was constructed from a numeric UTC offset, there will be no offset transitions.
-Also note that some IANA time zones (e.g., <code>Etc/GMT+5</code>) have no offset transitions either.
-In that case, this method will return <code>null</code>.</p>
+<p>When no previous transitions exist, this method will return <code>null</code>.
+Some time zones (e.g., <code>Etc/GMT+5</code> or <code>-05:00</code>) have no offset transitions and will return <code>null</code> for all values of <code>startingPoint</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method should be overridden if the time zone changes offsets.
 Single-offset time zones can use the default implementation which returns <code>null</code>.</p>
@@ -511,8 +553,12 @@ now <span class="token operator">=</span> Temporal<span class="token punctuation
 previousTransition <span class="token operator">=</span> tz<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
 duration <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>previousTransition<span class="token punctuation">)</span><span class="token punctuation">;</span>
 duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// output will vary</span></code></pre><h3 id="toString"><a class="heading-link" href="#toString"></a>timeZone.<strong>toString</strong>() : string</h3><p><strong>Returns:</strong> The string given by <code>timeZone.id</code>.</p>
-<p>This method overrides <code>Object.prototype.toString()</code> and provides the time zone&#39;s <code>id</code> property as a human-readable description.</p>
-<h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>timeZone.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> the string given by <code>timeZone.id</code>.</p>
+<p>By overriding <code>Object.prototype.toString()</code>, this method ensures that coercing a <code>Temporal.TimeZone</code> to a string will yield its identifier.</p>
+<p>This capability allows allows <code>Temporal.TimeZone</code> instances to be used in contexts where a time zone identifier string is expected, like the <code>timeZone</code> option of the <code>Intl.DateTimeFormat</code> constructor.</p>
+<pre class="language-javascript"><code class="language-javascript">ins <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-06-10T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+timeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Chicago'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">timeZone</span><span class="token operator">:</span> timeZone<span class="token punctuation">.</span>id <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>ins<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '6/9/2020, 7:00:00 PM'</span>
+<span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token string">'en'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> timeZone <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>ins<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '6/9/2020, 7:00:00 PM'</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>timeZone.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> the string given by <code>timeZone.id</code>.</p>
 <p>This method is the same as <code>timeZone.toString()</code>.
 It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
 <p>The reverse operation, recovering a <code>Temporal.TimeZone</code> object from a string, is <code>Temporal.TimeZone.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.
