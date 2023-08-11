@@ -242,10 +242,7 @@ const timeFraction = withCode(fraction, (data, result) => {
   data.microsecond = +fraction.slice(3, 6);
   data.nanosecond = +fraction.slice(6, 9);
 });
-const temporalSign = withCode(
-  sign,
-  (data, result) => (data.offsetSign = result === '-' || result === '\u2212' ? '-' : '+')
-);
+const temporalSign = sign;
 const temporalDecimalFraction = fraction;
 function saveOffset(data, result) {
   data.offset = ES.ParseDateTimeUTCOffset(result);
