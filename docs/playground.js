@@ -7938,8 +7938,8 @@
   }
 
   var tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
-  var offsetNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\d{1,9})?)?)?)/;
-  var timeZoneID = new RegExp('(?:' + ["(?:".concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*"), 'Etc/GMT(?:0|[-+]\\d{1,2})', 'GMT[-+]?0', 'EST5EDT', 'CST6CDT', 'MST7MDT', 'PST8PDT', offsetNoCapture.source].join('|') + ')');
+  var offsetIdentifierNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9])?)/;
+  var timeZoneID = new RegExp('(?:' + ["(?:".concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*"), 'Etc/GMT(?:0|[-+]\\d{1,2})', 'GMT[-+]?0', 'EST5EDT', 'CST6CDT', 'MST7MDT', 'PST8PDT', offsetIdentifierNoCapture.source].join('|') + ')');
   var yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
   var monthpart = /(?:0[1-9]|1[0-2])/;
   var daypart = /(?:0[1-9]|[12]\d|3[01])/;
@@ -8241,7 +8241,7 @@
     } else if (match[14]) {
       offset = match[14];
     }
-    var tzName = match[15];
+    var tzAnnotation = match[15];
     var calendar = processAnnotations(match[16]);
     RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
     return {
@@ -8255,7 +8255,7 @@
       millisecond: millisecond,
       microsecond: microsecond,
       nanosecond: nanosecond,
-      tzName: tzName,
+      tzAnnotation: tzAnnotation,
       offset: offset,
       z: z,
       calendar: calendar
@@ -8268,7 +8268,7 @@
   }
   function ParseTemporalZonedDateTimeString(isoString) {
     var result = ParseISODateTime(isoString);
-    if (!result.tzName) throw new RangeError('Temporal.ZonedDateTime requires a time zone ID in brackets');
+    if (!result.tzAnnotation) throw new RangeError('Temporal.ZonedDateTime requires a time zone ID in brackets');
     return result;
   }
   function ParseTemporalDateTimeString(isoString) {
@@ -8400,12 +8400,22 @@
   }
   var TIMEZONE_IDENTIFIER = new RegExp("^".concat(timeZoneID.source, "$"), 'i');
   var OFFSET_IDENTIFIER = new RegExp("^".concat(offsetIdentifier.source, "$"));
+  function throwBadTimeZoneStringError(timeZoneString) {
+    // Offset identifiers only support minute precision, but offsets in ISO
+    // strings support nanosecond precision. If the identifier is invalid but
+    // it's a valid ISO offset, then it has sub-minute precision. Show a clearer
+    // error message in that case.
+    var msg = OFFSET.test(timeZoneString) ? 'Seconds not allowed in offset time zone' : 'Invalid time zone';
+    throw new RangeError("".concat(msg, ": ").concat(timeZoneString));
+  }
   function ParseTimeZoneIdentifier(identifier) {
-    if (!TIMEZONE_IDENTIFIER.test(identifier)) throw new RangeError("Invalid time zone identifier: ".concat(identifier));
+    if (!TIMEZONE_IDENTIFIER.test(identifier)) {
+      throwBadTimeZoneStringError(identifier);
+    }
     if (OFFSET_IDENTIFIER.test(identifier)) {
-      // The regex limits the input to minutes precision
-      var _ParseDateTimeUTCOffs = ParseDateTimeUTCOffset(identifier),
-        offsetNanoseconds = _ParseDateTimeUTCOffs.offsetNanoseconds;
+      var offsetNanoseconds = ParseDateTimeUTCOffset(identifier);
+      // The regex limits the input to minutes precision, so we know that the
+      // division below will result in an integer.
       return {
         offsetMinutes: offsetNanoseconds / 60e9
       };
@@ -8414,21 +8424,45 @@
       tzName: identifier
     };
   }
-  function ParseTemporalTimeZoneString(stringIdent) {
-    var bareID = new RegExp("^".concat(timeZoneID.source, "$"), 'i');
-    if (bareID.test(stringIdent)) return {
-      tzName: stringIdent
-    };
+
+  // This operation doesn't exist in the spec, but in the polyfill it's split from
+  // ParseTemporalTimeZoneString so that parsing can be tested separately from the
+  // logic of converting parsed values into a named or offset identifier.
+  function ParseTemporalTimeZoneStringRaw(timeZoneString) {
+    if (TIMEZONE_IDENTIFIER.test(timeZoneString)) {
+      return {
+        tzAnnotation: timeZoneString,
+        offset: undefined,
+        z: false
+      };
+    }
     try {
       // Try parsing ISO string instead
-      var result = ParseISODateTime(stringIdent);
-      if (result.z || result.offset || result.tzName) {
-        return result;
+      var _ParseISODateTime4 = ParseISODateTime(timeZoneString),
+        tzAnnotation = _ParseISODateTime4.tzAnnotation,
+        offset = _ParseISODateTime4.offset,
+        z = _ParseISODateTime4.z;
+      if (z || tzAnnotation || offset) {
+        return {
+          tzAnnotation: tzAnnotation,
+          offset: offset,
+          z: z
+        };
       }
     } catch (_unused3) {
       // fall through
     }
-    throw new RangeError("Invalid time zone: ".concat(stringIdent));
+    throwBadTimeZoneStringError(timeZoneString);
+  }
+  function ParseTemporalTimeZoneString(stringIdent) {
+    var _ParseTemporalTimeZon = ParseTemporalTimeZoneStringRaw(stringIdent),
+      tzAnnotation = _ParseTemporalTimeZon.tzAnnotation,
+      offset = _ParseTemporalTimeZon.offset,
+      z = _ParseTemporalTimeZon.z;
+    if (tzAnnotation) return ParseTimeZoneIdentifier(tzAnnotation);
+    if (z) return ParseTimeZoneIdentifier('UTC');
+    if (offset) return ParseTimeZoneIdentifier(offset);
+    throw new Error('this line should not be reached');
   }
   function ParseTemporalDurationString(isoString) {
     var match = duration.exec(isoString);
@@ -8506,7 +8540,7 @@
       offset = _ParseTemporalInstant.offset,
       z = _ParseTemporalInstant.z;
     if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
-    var offsetNs = z ? 0 : ParseDateTimeUTCOffset(offset).offsetNanoseconds;
+    var offsetNs = z ? 0 : ParseDateTimeUTCOffset(offset);
     var _BalanceISODateTime = BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond - offsetNs);
     year = _BalanceISODateTime.year;
     month = _BalanceISODateTime.month;
@@ -8890,23 +8924,23 @@
       timeZone = fields.timeZone;
       if (timeZone !== undefined) timeZone = ToTemporalTimeZoneSlotValue(timeZone);
     } else {
-      var tzName, z;
-      var _ParseISODateTime4 = ParseISODateTime(RequireString(relativeTo));
-      year = _ParseISODateTime4.year;
-      month = _ParseISODateTime4.month;
-      day = _ParseISODateTime4.day;
-      hour = _ParseISODateTime4.hour;
-      minute = _ParseISODateTime4.minute;
-      second = _ParseISODateTime4.second;
-      millisecond = _ParseISODateTime4.millisecond;
-      microsecond = _ParseISODateTime4.microsecond;
-      nanosecond = _ParseISODateTime4.nanosecond;
-      calendar = _ParseISODateTime4.calendar;
-      tzName = _ParseISODateTime4.tzName;
-      offset = _ParseISODateTime4.offset;
-      z = _ParseISODateTime4.z;
-      if (tzName) {
-        timeZone = ToTemporalTimeZoneSlotValue(tzName);
+      var tzAnnotation, z;
+      var _ParseISODateTime5 = ParseISODateTime(RequireString(relativeTo));
+      year = _ParseISODateTime5.year;
+      month = _ParseISODateTime5.month;
+      day = _ParseISODateTime5.day;
+      hour = _ParseISODateTime5.hour;
+      minute = _ParseISODateTime5.minute;
+      second = _ParseISODateTime5.second;
+      millisecond = _ParseISODateTime5.millisecond;
+      microsecond = _ParseISODateTime5.microsecond;
+      nanosecond = _ParseISODateTime5.nanosecond;
+      calendar = _ParseISODateTime5.calendar;
+      tzAnnotation = _ParseISODateTime5.tzAnnotation;
+      offset = _ParseISODateTime5.offset;
+      z = _ParseISODateTime5.z;
+      if (tzAnnotation) {
+        timeZone = ToTemporalTimeZoneSlotValue(tzAnnotation);
         if (z) {
           offsetBehaviour = 'exact';
         } else if (!offset) {
@@ -8921,7 +8955,7 @@
       calendar = ASCIILowercase(calendar);
     }
     if (timeZone === undefined) return CreateTemporalDate(year, month, day, calendar);
-    var offsetNs = offsetBehaviour === 'option' ? ParseDateTimeUTCOffset(offset).offsetNanoseconds : 0;
+    var offsetNs = offsetBehaviour === 'option' ? ParseDateTimeUTCOffset(offset) : 0;
     var epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
     return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
   }
@@ -9317,7 +9351,7 @@
       microsecond = _InterpretTemporalDat3.microsecond;
       nanosecond = _InterpretTemporalDat3.nanosecond;
     } else {
-      var tzName, z;
+      var tzAnnotation, z;
       var _ParseTemporalZonedDa = ParseTemporalZonedDateTimeString(RequireString(item));
       year = _ParseTemporalZonedDa.year;
       month = _ParseTemporalZonedDa.month;
@@ -9328,11 +9362,11 @@
       millisecond = _ParseTemporalZonedDa.millisecond;
       microsecond = _ParseTemporalZonedDa.microsecond;
       nanosecond = _ParseTemporalZonedDa.nanosecond;
-      tzName = _ParseTemporalZonedDa.tzName;
+      tzAnnotation = _ParseTemporalZonedDa.tzAnnotation;
       offset = _ParseTemporalZonedDa.offset;
       z = _ParseTemporalZonedDa.z;
       calendar = _ParseTemporalZonedDa.calendar;
-      timeZone = ToTemporalTimeZoneSlotValue(tzName);
+      timeZone = ToTemporalTimeZoneSlotValue(tzAnnotation);
       if (z) {
         offsetBehaviour = 'exact';
       } else if (!offset) {
@@ -9348,7 +9382,7 @@
     }
 
     var offsetNs = 0;
-    if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset).offsetNanoseconds;
+    if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
     var epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute);
     return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
   }
@@ -9798,8 +9832,8 @@
     if (IsBuiltinCalendar(identifier)) return ASCIILowercase(identifier);
     var calendar;
     try {
-      var _ParseISODateTime5 = ParseISODateTime(identifier);
-      calendar = _ParseISODateTime5.calendar;
+      var _ParseISODateTime6 = ParseISODateTime(identifier);
+      calendar = _ParseISODateTime6.calendar;
     } catch (_unused4) {
       try {
         var _ParseTemporalYearMon3 = ParseTemporalYearMonthString(identifier);
@@ -9907,29 +9941,17 @@
       }
       return temporalTimeZoneLike;
     }
-    var identifier = RequireString(temporalTimeZoneLike);
-    var _ParseTemporalTimeZon = ParseTemporalTimeZoneString(identifier),
-      tzName = _ParseTemporalTimeZon.tzName,
-      offset = _ParseTemporalTimeZon.offset,
-      z = _ParseTemporalTimeZon.z;
-    if (tzName) {
-      // tzName is any valid identifier string in brackets, and could be an offset identifier
-      var _ParseTimeZoneIdentif = ParseTimeZoneIdentifier(tzName),
-        offsetMinutes = _ParseTimeZoneIdentif.offsetMinutes;
-      if (offsetMinutes !== undefined) return FormatOffsetTimeZoneIdentifier(offsetMinutes);
-      var record = GetAvailableNamedTimeZoneIdentifier(tzName);
-      if (!record) throw new RangeError("Unrecognized time zone ".concat(tzName));
-      return record.identifier;
+    var timeZoneString = RequireString(temporalTimeZoneLike);
+    var _ParseTemporalTimeZon2 = ParseTemporalTimeZoneString(timeZoneString),
+      tzName = _ParseTemporalTimeZon2.tzName,
+      offsetMinutes = _ParseTemporalTimeZon2.offsetMinutes;
+    if (offsetMinutes !== undefined) {
+      return FormatOffsetTimeZoneIdentifier(offsetMinutes);
     }
-    if (z) return 'UTC';
-    // if !tzName && !z then offset must be present
-    var _ParseDateTimeUTCOffs2 = ParseDateTimeUTCOffset(offset),
-      offsetNanoseconds = _ParseDateTimeUTCOffs2.offsetNanoseconds,
-      hasSubMinutePrecision = _ParseDateTimeUTCOffs2.hasSubMinutePrecision;
-    if (hasSubMinutePrecision) {
-      throw new RangeError("Seconds not allowed in offset time zone: ".concat(offset));
-    }
-    return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
+    // if offsetMinutes is undefined, then tzName must be present
+    var record = GetAvailableNamedTimeZoneIdentifier(tzName);
+    if (!record) throw new RangeError("Unrecognized time zone ".concat(tzName));
+    return record.identifier;
   }
   function ToTemporalTimeZoneIdentifier(slotValue) {
     if (typeof slotValue === 'string') return slotValue;
@@ -10319,11 +10341,7 @@
     var seconds = +(match[4] || 0);
     var nanoseconds = +((match[5] || 0) + '000000000').slice(0, 9);
     var offsetNanoseconds = sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
-    var hasSubMinutePrecision = match[4] !== undefined || match[5] !== undefined;
-    return {
-      offsetNanoseconds: offsetNanoseconds,
-      hasSubMinutePrecision: hasSubMinutePrecision
-    };
+    return offsetNanoseconds;
   }
   var canonicalTimeZoneIdsCache = undefined;
   function GetAvailableNamedTimeZoneIdentifier(identifier) {
@@ -18677,7 +18695,7 @@
           millisecond = _ES$InterpretTemporal.millisecond,
           microsecond = _ES$InterpretTemporal.microsecond,
           nanosecond = _ES$InterpretTemporal.nanosecond;
-        var offsetNs = ParseDateTimeUTCOffset(fields.offset).offsetNanoseconds;
+        var offsetNs = ParseDateTimeUTCOffset(fields.offset);
         var timeZone = GetSlot(this, TIME_ZONE);
         var epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, disambiguation, offset, /* matchMinute = */false);
         return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
