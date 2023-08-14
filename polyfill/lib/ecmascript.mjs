@@ -666,7 +666,7 @@ export function ParseTemporalInstant(isoString) {
   let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offset, z } =
     ParseTemporalInstantString(isoString);
 
-  if (!z && !offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+  // ParseTemporalInstantString ensures that either `z` or `offset` are non-undefined
   const offsetNs = z ? 0 : ParseDateTimeUTCOffset(offset);
   ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = BalanceISODateTime(
     year,
