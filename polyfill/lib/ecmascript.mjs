@@ -5316,7 +5316,7 @@ export function RoundDuration(
       zonedRelativeTo = relativeTo;
       relativeTo = ToTemporalDate(relativeTo);
     } else if (!IsTemporalDate(relativeTo)) {
-      throw new TypeError('starting point must be PlainDate or ZonedDateTime');
+      throw new Error('assertion failure in RoundDuration: _relativeTo_ must be PlainDate');
     }
     calendar = GetSlot(relativeTo, CALENDAR);
   }
