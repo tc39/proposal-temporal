@@ -29,13 +29,18 @@ const StringPrototypeSlice = String.prototype.slice;
 import bigInt from 'big-integer';
 import callBound from 'call-bind/callBound';
 import Call from 'es-abstract/2022/Call.js';
+import CompletionRecord from 'es-abstract/2022/CompletionRecord.js';
 import CreateDataPropertyOrThrow from 'es-abstract/2022/CreateDataPropertyOrThrow.js';
 import Get from 'es-abstract/2022/Get.js';
+import GetIterator from 'es-abstract/2022/GetIterator.js';
 import GetMethod from 'es-abstract/2022/GetMethod.js';
 import HasOwnProperty from 'es-abstract/2022/HasOwnProperty.js';
 import IsArray from 'es-abstract/2022/IsArray.js';
 import IsIntegralNumber from 'es-abstract/2022/IsIntegralNumber.js';
 import IsPropertyKey from 'es-abstract/2022/IsPropertyKey.js';
+import IteratorClose from 'es-abstract/2022/IteratorClose.js';
+import IteratorStep from 'es-abstract/2022/IteratorStep.js';
+import IteratorValue from 'es-abstract/2022/IteratorValue.js';
 import SameValue from 'es-abstract/2022/SameValue.js';
 import ToIntegerOrInfinity from 'es-abstract/2022/ToIntegerOrInfinity.js';
 import ToNumber from 'es-abstract/2022/ToNumber.js';
@@ -233,9 +238,14 @@ import * as PARSE from './regex.mjs';
 
 export {
   Call,
+  CompletionRecord,
+  GetIterator,
   GetMethod,
   HasOwnProperty,
   IsIntegralNumber,
+  IteratorClose,
+  IteratorStep,
+  IteratorValue,
   ToIntegerOrInfinity,
   ToNumber,
   ToObject,
@@ -1162,7 +1172,9 @@ export function PrepareTemporalFields(
 
 export function ToTemporalTimeRecord(bag, completeness = 'complete') {
   const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
-  const partial = PrepareTemporalFields(bag, fields, 'partial', undefined, undefined, { emptySourceErrorMessage: 'invalid time-like' });
+  const partial = PrepareTemporalFields(bag, fields, 'partial', undefined, undefined, {
+    emptySourceErrorMessage: 'invalid time-like'
+  });
   const result = {};
   for (let index = 0; index < fields.length; index++) {
     const field = fields[index];

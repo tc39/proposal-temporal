@@ -41,6 +41,8 @@ const MapPrototypeEntries = Map.prototype.entries;
 const MapPrototypeGet = Map.prototype.get;
 const MapPrototypeSet = Map.prototype.set;
 const SetPrototypeAdd = Set.prototype.add;
+const SetPrototypeDelete = Set.prototype.delete;
+const SetPrototypeHas = Set.prototype.has;
 const SetPrototypeValues = Set.prototype.values;
 const SymbolIterator = Symbol.iterator;
 const WeakMapPrototypeGet = WeakMap.prototype.get;
@@ -109,12 +111,24 @@ export class Calendar {
   fields(fields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const fieldsArray = [];
-    const allowed = new Set(['year', 'month', 'monthCode', 'day']);
-    for (const name of fields) {
-      if (ES.Type(name) !== 'String') throw new TypeError('invalid fields');
-      if (!allowed.has(name)) throw new RangeError(`invalid field name ${name}`);
-      allowed.delete(name);
-      ES.Call(ArrayPrototypePush, fieldsArray, [name]);
+    const allowed = new OriginalSet(['year', 'month', 'monthCode', 'day']);
+    const iteratorRecord = ES.GetIterator(fields, 'sync');
+    const abort = (err) => {
+      const completion = new ES.CompletionRecord('throw', err);
+      return ES.IteratorClose(iteratorRecord, completion)['?']();
+    };
+    let next = true;
+    while (next !== false) {
+      next = ES.IteratorStep(iteratorRecord);
+      if (next !== false) {
+        let name = ES.IteratorValue(next);
+        if (ES.Type(name) !== 'String') return abort(new TypeError('invalid fields'));
+        if (!ES.Call(SetPrototypeHas, allowed, [name])) {
+          return abort(new RangeError(`invalid or duplicate field name ${name}`));
+        }
+        ES.Call(SetPrototypeDelete, allowed, [name]);
+        ES.Call(ArrayPrototypePush, fieldsArray, [name]);
+      }
     }
     return impl[GetSlot(this, CALENDAR_ID)].fields(fieldsArray);
   }
