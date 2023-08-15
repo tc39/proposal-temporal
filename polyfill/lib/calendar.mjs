@@ -23,19 +23,45 @@ import {
   SetSlot
 } from './slots.mjs';
 
+const ArrayFrom = Array.from;
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypePush = Array.prototype.push;
+const ArrayPrototypeSort = Array.prototype.sort;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
-const ArraySort = Array.prototype.sort;
 const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 const ObjectEntries = Object.entries;
+const OriginalMap = Map;
 const OriginalSet = Set;
+const OriginalWeakMap = WeakMap;
 const ReflectOwnKeys = Reflect.ownKeys;
+const MapPrototypeEntries = Map.prototype.entries;
+const MapPrototypeGet = Map.prototype.get;
+const MapPrototypeSet = Map.prototype.set;
 const SetPrototypeAdd = Set.prototype.add;
 const SetPrototypeValues = Set.prototype.values;
+const SymbolIterator = Symbol.iterator;
+const WeakMapPrototypeGet = WeakMap.prototype.get;
+const WeakMapPrototypeSet = WeakMap.prototype.set;
+
+const MapIterator = ES.Call(MapPrototypeEntries, new Map(), []);
+const MapIteratorPrototypeNext = MapIterator.next;
+const SetIterator = ES.Call(SetPrototypeValues, new Set(), []);
+const SetIteratorPrototypeNext = SetIterator.next;
+
+function arrayFromSet(src) {
+  const valuesIterator = ES.Call(SetPrototypeValues, src, []);
+  return ArrayFrom({
+    [SymbolIterator]() {
+      return this;
+    },
+    next() {
+      return ES.Call(SetIteratorPrototypeNext, valuesIterator, []);
+    }
+  });
+}
 
 const impl = {};
 
@@ -317,7 +343,7 @@ impl['iso8601'] = {
         ES.Call(SetPrototypeAdd, result, ['month']);
       }
     }
-    return [...ES.Call(SetPrototypeValues, result, [])];
+    return arrayFromSet(result);
   },
   dateAdd(date, years, months, weeks, days, overflow, calendarSlotValue) {
     let year = GetSlot(date, ISO_YEAR);
@@ -448,21 +474,24 @@ function resolveNonLunisolarMonth(calendarDate, overflow = undefined, monthsPerY
  */
 class OneObjectCache {
   constructor(cacheToClone = undefined) {
-    this.map = new Map();
+    this.map = new OriginalMap();
     this.calls = 0;
     this.now = globalThis.performance ? globalThis.performance.now() : Date.now();
     this.hits = 0;
     this.misses = 0;
     if (cacheToClone !== undefined) {
       let i = 0;
-      for (const entry of cacheToClone.map.entries()) {
+      const entriesIterator = ES.Call(MapPrototypeEntries, cacheToClone.map, []);
+      for (;;) {
+        const iterResult = ES.Call(MapIteratorPrototypeNext, entriesIterator, []);
+        if (iterResult.done) break;
         if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
-        this.map.set(...entry);
+        ES.Call(MapPrototypeSet, this.map, iterResult.value);
       }
     }
   }
   get(key) {
-    const result = this.map.get(key);
+    const result = ES.Call(MapPrototypeGet, this.map, [key]);
     if (result) {
       this.hits++;
       this.report();
@@ -471,7 +500,7 @@ class OneObjectCache {
     return result;
   }
   set(key, value) {
-    this.map.set(key, value);
+    ES.Call(MapPrototypeSet, this.map, [key, value]);
     this.misses++;
     this.report();
   }
@@ -484,12 +513,12 @@ class OneObjectCache {
     */
   }
   setObject(obj) {
-    if (OneObjectCache.objectMap.get(obj)) throw new RangeError('object already cached');
-    OneObjectCache.objectMap.set(obj, this);
+    if (ES.Call(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError('object already cached');
+    ES.Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
     this.report();
   }
 }
-OneObjectCache.objectMap = new WeakMap();
+OneObjectCache.objectMap = new OriginalWeakMap();
 OneObjectCache.MAX_CACHE_ENTRIES = 1000;
 /**
  * Returns a WeakMap-backed cache that's used to store expensive results
@@ -498,10 +527,10 @@ OneObjectCache.MAX_CACHE_ENTRIES = 1000;
  * @param obj - object to associate with the cache
  */
 OneObjectCache.getCacheForObject = function (obj) {
-  let cache = OneObjectCache.objectMap.get(obj);
+  let cache = ES.Call(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj]);
   if (!cache) {
     cache = new OneObjectCache();
-    OneObjectCache.objectMap.set(obj, cache);
+    ES.Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, cache]);
   }
   return cache;
 };
@@ -1435,7 +1464,7 @@ function adjustEras(eras) {
   // Ensure that the latest epoch is first in the array. This lets us try to
   // match eras in index order, with the last era getting the remaining older
   // years. Any reverse-signed era must be at the end.
-  ES.Call(ArraySort, eras, [
+  ES.Call(ArrayPrototypeSort, eras, [
     (e1, e2) => {
       if (e1.reverseOf) return 1;
       if (e2.reverseOf) return -1;
@@ -1938,7 +1967,9 @@ const nonIsoGeneralImpl = {
     return result;
   },
   fields(fields) {
-    if (ES.Call(ArrayIncludes, fields, ['year'])) fields = [...fields, 'era', 'eraYear'];
+    if (ES.Call(ArrayIncludes, fields, ['year'])) {
+      ES.Call(ArrayPrototypePush, fields, ['era', 'eraYear']);
+    }
     return fields;
   },
   fieldKeysToIgnore(keys) {
@@ -1982,7 +2013,7 @@ const nonIsoGeneralImpl = {
           break;
       }
     }
-    return [...ES.Call(SetPrototypeValues, result, [])];
+    return arrayFromSet(result);
   },
   dateAdd(date, years, months, weeks, days, overflow, calendarSlotValue) {
     const cache = OneObjectCache.getCacheForObject(date);
