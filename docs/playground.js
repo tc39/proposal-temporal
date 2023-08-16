@@ -7764,7 +7764,7 @@
 
 	const ArrayIncludes$1 = Array.prototype.includes;
 	const ArrayPrototypePush$3 = Array.prototype.push;
-	const ArrayPrototypeSort = Array.prototype.sort;
+	const ArrayPrototypeSort$1 = Array.prototype.sort;
 	const IntlDateTimeFormat$2 = globalThis.Intl.DateTimeFormat;
 	const IntlSupportedValuesOf = globalThis.Intl.supportedValuesOf;
 	const MathAbs$1 = Math.abs;
@@ -8772,7 +8772,7 @@
 	  } = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 	  const result = ObjectCreate$8(null);
 	  let any = false;
-	  Call$1(ArrayPrototypeSort, fields, []);
+	  Call$1(ArrayPrototypeSort$1, fields, []);
 	  let previousProperty = undefined;
 	  for (let index = 0; index < fields.length; index++) {
 	    const property = fields[index];
@@ -13514,19 +13514,43 @@
 
 	/* global true */
 
+	const ArrayFrom = Array.from;
 	const ArrayIncludes = Array.prototype.includes;
 	const ArrayPrototypePush$2 = Array.prototype.push;
+	const ArrayPrototypeSort = Array.prototype.sort;
 	const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
-	const ArraySort = Array.prototype.sort;
 	const MathAbs = Math.abs;
 	const MathFloor = Math.floor;
 	const ObjectAssign$1 = Object.assign;
 	const ObjectCreate$6 = Object.create;
 	const ObjectEntries = Object.entries;
+	const OriginalMap = Map;
 	const OriginalSet = Set;
+	const OriginalWeakMap = WeakMap;
 	const ReflectOwnKeys = Reflect.ownKeys;
+	const MapPrototypeEntries = Map.prototype.entries;
+	const MapPrototypeGet = Map.prototype.get;
+	const MapPrototypeSet = Map.prototype.set;
 	const SetPrototypeAdd = Set.prototype.add;
 	const SetPrototypeValues = Set.prototype.values;
+	const SymbolIterator = Symbol.iterator;
+	const WeakMapPrototypeGet = WeakMap.prototype.get;
+	const WeakMapPrototypeSet = WeakMap.prototype.set;
+	const MapIterator = Call$1(MapPrototypeEntries, new Map(), []);
+	const MapIteratorPrototypeNext = MapIterator.next;
+	const SetIterator = Call$1(SetPrototypeValues, new Set(), []);
+	const SetIteratorPrototypeNext = SetIterator.next;
+	function arrayFromSet(src) {
+	  const valuesIterator = Call$1(SetPrototypeValues, src, []);
+	  return ArrayFrom({
+	    [SymbolIterator]() {
+	      return this;
+	    },
+	    next() {
+	      return Call$1(SetIteratorPrototypeNext, valuesIterator, []);
+	    }
+	  });
+	}
 	const impl = {};
 	class Calendar {
 	  constructor(id) {
@@ -13807,7 +13831,7 @@
 	        Call$1(SetPrototypeAdd, result, ['month']);
 	      }
 	    }
-	    return [...Call$1(SetPrototypeValues, result, [])];
+	    return arrayFromSet(result);
 	  },
 	  dateAdd(date, years, months, weeks, days, overflow, calendarSlotValue) {
 	    let year = GetSlot(date, ISO_YEAR);
@@ -13944,21 +13968,24 @@
 	class OneObjectCache {
 	  constructor() {
 	    let cacheToClone = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    this.map = new Map();
+	    this.map = new OriginalMap();
 	    this.calls = 0;
 	    this.now = globalThis.performance ? globalThis.performance.now() : Date.now();
 	    this.hits = 0;
 	    this.misses = 0;
 	    if (cacheToClone !== undefined) {
 	      let i = 0;
-	      for (const entry of cacheToClone.map.entries()) {
+	      const entriesIterator = Call$1(MapPrototypeEntries, cacheToClone.map, []);
+	      for (;;) {
+	        const iterResult = Call$1(MapIteratorPrototypeNext, entriesIterator, []);
+	        if (iterResult.done) break;
 	        if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
-	        this.map.set(...entry);
+	        Call$1(MapPrototypeSet, this.map, iterResult.value);
 	      }
 	    }
 	  }
 	  get(key) {
-	    const result = this.map.get(key);
+	    const result = Call$1(MapPrototypeGet, this.map, [key]);
 	    if (result) {
 	      this.hits++;
 	      this.report();
@@ -13967,7 +13994,7 @@
 	    return result;
 	  }
 	  set(key, value) {
-	    this.map.set(key, value);
+	    Call$1(MapPrototypeSet, this.map, [key, value]);
 	    this.misses++;
 	    this.report();
 	  }
@@ -13980,12 +14007,12 @@
 	    */
 	  }
 	  setObject(obj) {
-	    if (OneObjectCache.objectMap.get(obj)) throw new RangeError('object already cached');
-	    OneObjectCache.objectMap.set(obj, this);
+	    if (Call$1(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError('object already cached');
+	    Call$1(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
 	    this.report();
 	  }
 	}
-	OneObjectCache.objectMap = new WeakMap();
+	OneObjectCache.objectMap = new OriginalWeakMap();
 	OneObjectCache.MAX_CACHE_ENTRIES = 1000;
 	/**
 	 * Returns a WeakMap-backed cache that's used to store expensive results
@@ -13994,10 +14021,10 @@
 	 * @param obj - object to associate with the cache
 	 */
 	OneObjectCache.getCacheForObject = function (obj) {
-	  let cache = OneObjectCache.objectMap.get(obj);
+	  let cache = Call$1(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj]);
 	  if (!cache) {
 	    cache = new OneObjectCache();
-	    OneObjectCache.objectMap.set(obj, cache);
+	    Call$1(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, cache]);
 	  }
 	  return cache;
 	};
@@ -15261,7 +15288,7 @@
 	  // Ensure that the latest epoch is first in the array. This lets us try to
 	  // match eras in index order, with the last era getting the remaining older
 	  // years. Any reverse-signed era must be at the end.
-	  Call$1(ArraySort, eras, [(e1, e2) => {
+	  Call$1(ArrayPrototypeSort, eras, [(e1, e2) => {
 	    if (e1.reverseOf) return 1;
 	    if (e2.reverseOf) return -1;
 	    if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
@@ -15998,7 +16025,9 @@
 	    return result;
 	  },
 	  fields(fields) {
-	    if (Call$1(ArrayIncludes, fields, ['year'])) fields = [...fields, 'era', 'eraYear'];
+	    if (Call$1(ArrayIncludes, fields, ['year'])) {
+	      Call$1(ArrayPrototypePush$2, fields, ['era', 'eraYear']);
+	    }
 	    return fields;
 	  },
 	  fieldKeysToIgnore(keys) {
@@ -16042,7 +16071,7 @@
 	          break;
 	      }
 	    }
-	    return [...Call$1(SetPrototypeValues, result, [])];
+	    return arrayFromSet(result);
 	  },
 	  dateAdd(date, years, months, weeks, days, overflow, calendarSlotValue) {
 	    const cache = OneObjectCache.getCacheForObject(date);
