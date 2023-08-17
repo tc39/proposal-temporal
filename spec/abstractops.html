@@ -978,22 +978,22 @@
       <li>Fractional parts may have 1 through 9 decimal places.</li>
       <li>In time representations, only seconds are allowed to have a fractional part.</li>
       <li>In duration representations, only hours, minutes, and seconds are allowed to have a fractional part.</li>
-      <li>Any number of conforming <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended#section-3.1">suffixes in square brackets</a> are allowed.</li>
       <li>
-        Time zone and <a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP 47 calendar</a> suffixes are the only recognized ones.
-        Others are ignored, unless they are marked with a *!*, in which case they are rejected.
+        Any number of conforming <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended#section-3.1">suffixes in square brackets</a> are allowed.
+        However, the only recognized suffixes are time zone and <a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP 47 calendar</a>.
+        Others are ignored, unless they are prefixed with `!`, in which case they are rejected.
       </li>
       <li>A space may be used to separate the date and time in a combined date / time representation, but not in a duration.</li>
       <li>Alphabetic designators may be in lower or upper case.</li>
       <li>Period or comma may be used as the decimal separator.</li>
-      <li>A time zone offset of *"-00:00"* is allowed, and means the same thing as *"+00:00"*.</li>
+      <li>UTC offsets of *"-00:00"* and *"-0000"* and *"-00"* are allowed, and all mean the same thing as *"+00:00"*.</li>
       <li>UTC offsets may have seconds and up to 9 sub-second fractional digits.</li>
       <li>The constituent date, time, and UTC offset parts of a combined representation may each independently use basic format (with no separator symbols) or extended format (with mandatory `-` or `:` separators), as long as each such part is itself in either basic format or extended format (e.g., *"1970-01-01T012345"* and *"19700101T01:23:45"* are valid but *"1970-0101T012345"* and *"1970-01-01T0123:45"* are not).</li>
       <li>
         When parsing a date representation for a Temporal.PlainMonthDay, the year may be omitted.
-        The year may optionally be replaced by *"--"* as in RFC 3339.
+        The year may optionally be replaced by `--` as in <a href="https://www.rfc-editor.org/rfc/rfc3339#appendix-A">RFC 3339 Appendix A</a>.
       </li>
-      <li>When parsing a date representation without a day for a Temporal.PlainYearMonth, the expression is allowed to be in Basic format.</li>
+      <li>When parsing a date representation without a day for a Temporal.PlainYearMonth, the expression is allowed to be in basic format (with no separator symbols).</li>
       <li>A duration specifier of *"W"* (weeks) can be combined with any of the other specifiers.</li>
       <li>Anything else described by the standard as requiring mutual agreement between communicating parties, is disallowed.</li>
     </ul>
