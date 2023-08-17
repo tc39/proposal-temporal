@@ -988,10 +988,7 @@
       <li>Period or comma may be used as the decimal separator.</li>
       <li>A time zone offset of *"-00:00"* is allowed, and means the same thing as *"+00:00"*.</li>
       <li>UTC offsets may have seconds and up to 9 sub-second fractional digits.</li>
-      <li>
-        In a combined representation, combinations of date, time, and time zone offset with Basic (no `-` or `:` separators) and Extended (with `-` or `:` separators) formatting are allowed.
-        (The date, time, and time zone offset must each be fully in Basic format or Extended format.)
-      </li>
+      <li>The constituent date, time, and UTC offset parts of a combined representation may each independently use basic format (with no separator symbols) or extended format (with mandatory `-` or `:` separators), as long as each such part is itself in either basic format or extended format (e.g., *"1970-01-01T012345"* and *"19700101T01:23:45"* are valid but *"1970-0101T012345"* and *"1970-01-01T0123:45"* are not).</li>
       <li>
         When parsing a date representation for a Temporal.PlainMonthDay, the year may be omitted.
         The year may optionally be replaced by *"--"* as in RFC 3339.
