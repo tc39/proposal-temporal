@@ -1,18 +1,7 @@
-const tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
-const offsetIdentifierNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9])?)/;
+const offsetIdentifierNoCapture = /(?:[+\u2212-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
+const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
 export const timeZoneID = new RegExp(
-  '(?:' +
-    [
-      `(?:${tzComponent.source})(?:\\/(?:${tzComponent.source}))*`,
-      'Etc/GMT(?:0|[-+]\\d{1,2})',
-      'GMT[-+]?0',
-      'EST5EDT',
-      'CST6CDT',
-      'MST7MDT',
-      'PST8PDT',
-      offsetIdentifierNoCapture.source
-    ].join('|') +
-    ')'
+  `(?:${offsetIdentifierNoCapture.source}|(?:${tzComponent.source})(?:\\/(?:${tzComponent.source}))*)`
 );
 
 const yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
