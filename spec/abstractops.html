@@ -1168,40 +1168,23 @@
           `.`
           `_`
 
-      TZChar[Legacy] :
+      TZChar :
           TZLeadingChar
+          DecimalDigit
           `-`
-          [+Legacy] `+`
-          [+Legacy] DecimalDigit
+          `+`
 
-      TimeZoneIANANameComponent[Legacy] :
-          > Readability note: This production matches 1 to 14 characters.
-          TZLeadingChar but not `.`
-          TZLeadingChar TZChar[?Legacy] but not `..`
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-          TZLeadingChar TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy] TZChar[?Legacy]
-
-      TimeZoneIANANameTail[Legacy] :
-          TimeZoneIANANameComponent[?Legacy]
-          TimeZoneIANANameComponent[?Legacy] `/` TimeZoneIANANameTail[?Legacy]
+      TimeZoneIANANameComponent :
+          TZLeadingChar
+          TimeZoneIANANameComponent TZChar
 
       TimeZoneIANAName :
-          TimeZoneIANANameTail[~Legacy]
-          TimeZoneIANANameTail[+Legacy] [> but only if IsLegacyIANATimeZoneName of |TimeZoneIANANameTail| is *true*]
+          TimeZoneIANANameComponent
+          TimeZoneIANAName `/` TimeZoneIANANameComponent
 
       TimeZoneIdentifier :
-          TimeZoneIANAName
           TimeZoneUTCOffsetName
+          TimeZoneIANAName
 
       TimeZoneAnnotation :
           `[` AnnotationCriticalFlag? TimeZoneIdentifier `]`
@@ -1371,31 +1354,6 @@
           It is a Syntax Error if |DateYear| is *"-000000"* or *"−000000"* (U+2212 MINUS SIGN followed by `000000`).
         </li>
       </ul>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-iso8601grammar-static-semantics-islegacyianatimezonename" type="sdo">
-      <h1>Static Semantics: IsLegacyIANATimeZoneName ( ): a Boolean</h1>
-      <dl class="header">
-      </dl>
-      <emu-note>
-        <p>The IANA Time Zone Database naming guidelines do not allow digits in new named time zone identifiers, but legacy exceptions remain as described at <a href="https://data.iana.org/time-zones/theory.html">Theory and pragmatics of the tz code and data</a>. In addition to specific names mentioned there, this specification also recognizes all time zone identifiers consisting of *"Etc/GMT-"* or *"Etc/GMT+"* followed by an unpadded count of hours less than 24 as syntactically valid, even those that are not currently included in the IANA Time Zone Database (but does not require any such identifier to be an available named time zone identifier).</p>
-      </emu-note>
-      <emu-grammar>
-        TimeZoneIANANameTail[Legacy] :
-            TimeZoneIANANameComponent[?Legacy]
-            TimeZoneIANANameComponent[?Legacy] `/` TimeZoneIANANameTail[?Legacy]
-      </emu-grammar>
-      <emu-alg>
-        1. Let _name_ be the source text matched by |TimeZoneIANANameTail|.
-        1. Let _nameStr_ be CodePointsToString(_name_).
-        1. For each String _legacyName_ of « *"Etc/GMT0"*, *"GMT0"*, *"GMT-0"*, *"GMT+0"*, *"EST5EDT"*, *"CST6CDT"*, *"MST7MDT"*, *"PST8PDT"* », do
-          1. If _nameStr_ is an ASCII-case-insensitive match for _legacyName_, return *true*.
-        1. If the length of _nameStr_ &lt; 9, return *false*.
-        1. If the substring of _nameStr_ from 0 to 8 is not an ASCII-case-insensitive match for *"Etc/GMT-"* or *"Etc/GMT+"*, return *false*.
-        1. Let _hour_ be the substring of _nameStr_ from 8.
-        1. If ParseText(_hour_, |Hour[~Padded]|) is a List of errors, return *false*.
-        1. Return *true*.
-      </emu-alg>
     </emu-clause>
   </emu-clause>
 
