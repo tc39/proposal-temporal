@@ -1195,6 +1195,12 @@ export function ToTemporalDate(item, options) {
     if (IsTemporalZonedDateTime(item)) {
       ToTemporalOverflow(options); // validate and ignore
       item = GetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
+      return CreateTemporalDate(
+        GetSlot(item, ISO_YEAR),
+        GetSlot(item, ISO_MONTH),
+        GetSlot(item, ISO_DAY),
+        GetSlot(item, CALENDAR)
+      );
     }
     if (IsTemporalDateTime(item)) {
       ToTemporalOverflow(options); // validate and ignore
