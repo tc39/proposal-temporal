@@ -8960,26 +8960,23 @@ li.menu-search-result-term:before {
       <li>Fractional parts may have 1 through 9 decimal places.</li>
       <li>In time representations, only seconds are allowed to have a fractional part.</li>
       <li>In duration representations, only hours, minutes, and seconds are allowed to have a fractional part.</li>
-      <li>Any number of conforming <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended#section-3.1">suffixes in square brackets</a> are allowed.</li>
       <li>
-        Time zone and <a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP 47 calendar</a> suffixes are the only recognized ones.
-        Others are ignored, unless they are marked with a <emu-val>!</emu-val>, in which case they are rejected.
+        Any number of conforming <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended#section-3.1">suffixes in square brackets</a> are allowed.
+        However, the only recognized suffixes are time zone and <a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP 47 calendar</a>.
+        Others are ignored, unless they are prefixed with <code>!</code>, in which case they are rejected.
       </li>
-      <li>A space may be used to separate the date and time in a combined date / time representation, but not in a duration.</li>
-      <li>Alphabetic designators may be in lower or upper case.</li>
-      <li>Period or comma may be used as the decimal separator.</li>
-      <li>A time zone offset of <emu-val>"-00:00"</emu-val> is allowed, and means the same thing as <emu-val>"+00:00"</emu-val>.</li>
-      <li>UTC offsets may have seconds and up to 9 sub-second fractional digits.</li>
-      <li>
-        In a combined representation, combinations of date, time, and time zone offset with Basic (no <code>-</code> or <code>:</code> separators) and Extended (with <code>-</code> or <code>:</code> separators) formatting are allowed.
-        (The date, time, and time zone offset must each be fully in Basic format or Extended format.)
-      </li>
+      <li>A space may be used to separate the date and time in a combined date / time representation, but not in a duration (e.g., <emu-val>"1970-01-01 00:00Z"</emu-val> is valid but <emu-val>"P1D 1H"</emu-val> is not).</li>
+      <li>Alphabetic designators may be in lower or upper case (e.g., <emu-val>"1970-01-01t00:00Z"</emu-val> and <emu-val>"1970-01-01T00:00z"</emu-val> and <emu-val>"pT1m"</emu-val> are valid).</li>
+      <li>Period or comma may be used as the decimal separator (e.g., <emu-val>"PT1,00H"</emu-val> is a valid representation of a 1-hour duration).</li>
+      <li>UTC offsets of <emu-val>"-00:00"</emu-val> and <emu-val>"-0000"</emu-val> and <emu-val>"-00"</emu-val> are allowed, and all mean the same thing as <emu-val>"+00:00"</emu-val>.</li>
+      <li>UTC offsets may have seconds and up to 9 sub-second fractional digits (e.g., <emu-val>"1970-01-01T00:00:00+00:00:00.123456789"</emu-val> is valid).</li>
+      <li>The constituent date, time, and UTC offset parts of a combined representation may each independently use basic format (with no separator symbols) or extended format (with mandatory <code>-</code> or <code>:</code> separators), as long as each such part is itself in either basic format or extended format (e.g., <emu-val>"1970-01-01T012345"</emu-val> and <emu-val>"19700101T01:23:45"</emu-val> are valid but <emu-val>"1970-0101T012345"</emu-val> and <emu-val>"1970-01-01T0123:45"</emu-val> are not).</li>
       <li>
         When parsing a date representation for a Temporal.PlainMonthDay, the year may be omitted.
-        The year may optionally be replaced by <emu-val>"--"</emu-val> as in RFC 3339.
+        The year may optionally be replaced by <code>--</code> as in <a href="https://www.rfc-editor.org/rfc/rfc3339#appendix-A">RFC 3339 Appendix A</a>.
       </li>
-      <li>When parsing a date representation without a day for a Temporal.PlainYearMonth, the expression is allowed to be in Basic format.</li>
-      <li>A duration specifier of <emu-val>"W"</emu-val> (weeks) can be combined with any of the other specifiers.</li>
+      <li>When parsing a date representation without a day for a Temporal.PlainYearMonth, the expression is allowed to be in basic format (with no separator symbols).</li>
+      <li>A duration specifier of <emu-val>"W"</emu-val> (weeks) can be combined with any of the other specifiers (e.g., <emu-val>"P1M1W1D"</emu-val> is valid).</li>
       <li>Anything else described by the standard as requiring mutual agreement between communicating parties, is disallowed.</li>
     </ul>
 
