@@ -1251,8 +1251,9 @@
           TimeDesignator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
           TimeSpecWithOptionalOffsetNotAmbiguous TimeZoneAnnotation? Annotations?
 
-      AnnotatedDateTime :
-          DateTime TimeZoneAnnotation? Annotations?
+      AnnotatedDateTime[Zoned] :
+          [~Zoned] DateTime TimeZoneAnnotation? Annotations?
+          [+Zoned] DateTime TimeZoneAnnotation Annotations?
 
       AnnotatedDateTimeTimeRequired :
           Date DateTimeSeparator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
@@ -1338,15 +1339,15 @@
       TemporalInstantString :
           Date DateTimeSeparator TimeSpec DateTimeUTCOffset TimeZoneAnnotation? Annotations?
 
-      TemporalDateTimeString :
-          AnnotatedDateTime
+      TemporalDateTimeString[Zoned] :
+          AnnotatedDateTime[?Zoned]
 
       TemporalDurationString :
           Duration
 
       TemporalMonthDayString :
           AnnotatedMonthDay
-          AnnotatedDateTime
+          AnnotatedDateTime[~Zoned]
 
       TemporalTimeString :
           AnnotatedTime
@@ -1354,10 +1355,7 @@
 
       TemporalYearMonthString :
           AnnotatedYearMonth
-          AnnotatedDateTime
-
-      TemporalZonedDateTimeString :
-          DateTime TimeZoneAnnotation Annotations?
+          AnnotatedDateTime[~Zoned]
     </emu-grammar>
 
     <emu-clause id="sec-temporal-iso8601grammar-static-semantics-early-errors">
@@ -1412,7 +1410,7 @@
     <emu-note>The value of ! ToIntegerOrInfinity(*undefined*) is 0.</emu-note>
     <emu-alg>
       1. Let _parseResult_ be ~empty~.
-      1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalTimeString|, |TemporalZonedDateTimeString| &raquo;, do
+      1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalTimeString| &raquo;, do
         1. If _parseResult_ is not a Parse Node, set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
       1. For each nonterminal _goal_ of &laquo; |TemporalMonthDayString|, |TemporalYearMonthString| &raquo;, do
         1. If _parseResult_ is not a Parse Node, then
@@ -1538,7 +1536,7 @@
       <dd>It parses the argument as an ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.ZonedDateTime instance as a distinct field.</dd>
     </dl>
     <emu-alg>
-      1. If ParseText(StringToCodePoints(_isoString_), |TemporalZonedDateTimeString|) is a List of errors, throw a *RangeError* exception.
+      1. If ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString[+Zoned]|) is a List of errors, throw a *RangeError* exception.
       1. Return ? ParseISODateTime(_isoString_).
     </emu-alg>
   </emu-clause>
