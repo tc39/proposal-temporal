@@ -140,7 +140,8 @@ export class Calendar {
     const overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
     const merged = ObjectCreate(null);
     const fieldsKeys = ReflectOwnKeys(fieldsCopy);
-    for (const key of fieldsKeys) {
+    for (let ix = 0; ix < fieldsKeys.length; ix++) {
+      const key = fieldsKeys[ix];
       let propValue = undefined;
       if (ES.Call(ArrayIncludes, overriddenKeys, [key])) propValue = additionalFieldsCopy[key];
       else propValue = fieldsCopy[key];

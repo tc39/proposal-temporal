@@ -2701,9 +2701,15 @@ export function GetAvailableNamedTimeZoneIdentifier(identifier) {
   // implementations lacking this API, set the cache to `null` to avoid retries.
   if (canonicalTimeZoneIdsCache === undefined) {
     const canonicalTimeZoneIds = IntlSupportedValuesOf?.('timeZone');
-    canonicalTimeZoneIdsCache = canonicalTimeZoneIds
-      ? new Map(canonicalTimeZoneIds.map((id) => [ASCIILowercase(id), id]))
-      : null;
+    if (canonicalTimeZoneIds) {
+      canonicalTimeZoneIdsCache = new Map();
+      for (let ix = 0; ix < canonicalTimeZoneIds.length; ix++) {
+        const id = canonicalTimeZoneIds[ix];
+        canonicalTimeZoneIdsCache.set(ASCIILowercase(id), id);
+      }
+    } else {
+      canonicalTimeZoneIdsCache = null;
+    }
   }
 
   const lower = ASCIILowercase(identifier);
