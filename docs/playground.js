@@ -7727,9 +7727,9 @@
 	  GetSlots(container)[id] = value;
 	}
 
-	const tzComponent = /\.[-A-Za-z_]|\.\.[-A-Za-z._]{1,12}|\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}/;
-	const offsetIdentifierNoCapture = /(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9])?)/;
-	const timeZoneID = new RegExp('(?:' + ["(?:".concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*"), 'Etc/GMT(?:0|[-+]\\d{1,2})', 'GMT[-+]?0', 'EST5EDT', 'CST6CDT', 'MST7MDT', 'PST8PDT', offsetIdentifierNoCapture.source].join('|') + ')');
+	const offsetIdentifierNoCapture = /(?:[+\u2212-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
+	const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
+	const timeZoneID = new RegExp("(?:".concat(offsetIdentifierNoCapture.source, "|(?:").concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*)"));
 	const yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
 	const monthpart = /(?:0[1-9]|1[0-2])/;
 	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
