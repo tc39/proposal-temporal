@@ -2859,7 +2859,13 @@ export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
   if (epochNanoseconds.lesser(BEFORE_FIRST_DST)) {
     return GetNamedTimeZoneNextTransition(id, BEFORE_FIRST_DST);
   }
-  const uppercap = SystemUTCEpochNanoSeconds().plus(DAY_NANOS.multiply(366));
+  // Optimization: the farthest that we'll look for a next transition is 3 years
+  // after the later of epochNanoseconds or the current time. If there are no
+  // transitions found before then, we'll assume that there will not be any more
+  // transitions after that.
+  const now = SystemUTCEpochNanoSeconds();
+  const base = epochNanoseconds.greater(now) ? epochNanoseconds : now;
+  const uppercap = base.plus(DAY_NANOS.multiply(366 * 3));
   let leftNanos = epochNanoseconds;
   let leftOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
   let rightNanos = leftNanos;
@@ -2884,15 +2890,15 @@ export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
 }
 
 export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
-  // Optimization: if the instant is more than a year in the future and there
-  // are no transitions between the present day and a year from now, assume
-  // there are none after
+  // Optimization: if the instant is more than 3 years in the future and there
+  // are no transitions between the present day and 3 years from now, assume
+  // there are none after.
   const now = SystemUTCEpochNanoSeconds();
-  const yearLater = now.plus(DAY_NANOS.multiply(366));
-  if (epochNanoseconds.gt(yearLater)) {
-    const prevBeforeNextYear = GetNamedTimeZonePreviousTransition(id, yearLater);
-    if (prevBeforeNextYear === null || prevBeforeNextYear.lt(now)) {
-      return prevBeforeNextYear;
+  const lookahead = now.plus(DAY_NANOS.multiply(366 * 3));
+  if (epochNanoseconds.gt(lookahead)) {
+    const prevBeforeLookahead = GetNamedTimeZonePreviousTransition(id, lookahead);
+    if (prevBeforeLookahead === null || prevBeforeLookahead.lt(now)) {
+      return prevBeforeLookahead;
     }
   }
 
