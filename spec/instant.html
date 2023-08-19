@@ -521,24 +521,11 @@
           1. NOTE: This use of ToPrimitive allows Instant-like objects to be converted.
           1. Set _item_ to ? ToPrimitive(_item_, ~string~).
         1. If _item_ is not a String, throw a *TypeError* exception.
-        1. Let _epochNanoseconds_ be ? ParseTemporalInstant(_item_).
+        1. Let _parsed_ be ? ParseTemporalInstantString(_item_).
+        1. If _parsed_.[[Z]] is *true*, let _offsetNanoseconds_ be 0; otherwise, let _offsetNanoseconds_ be ! ParseDateTimeUTCOffset(_parsed_.[[OffsetString]]).
+        1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_parsed_.[[Year]], _parsed_.[[Month]], _parsed_.[[Day]], _parsed_.[[Hour]], _parsed_.[[Minute]], _parsed_.[[Second]], _parsed_.[[Millisecond]], _parsed_.[[Microsecond]], _parsed_.[[Nanosecond]], _offsetNanoseconds_).
+        1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalInstant(_epochNanoseconds_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-parsetemporalinstant" aoid="ParseTemporalInstant">
-      <h1>ParseTemporalInstant ( _isoString_ )</h1>
-      <emu-alg>
-        1. Assert: Type(_isoString_) is String.
-        1. Let _result_ be ? ParseTemporalInstantString(_isoString_).
-        1. Let _offsetString_ be _result_.[[TimeZoneOffsetString]].
-        1. Assert: _offsetString_ is not *undefined*.
-        1. Let _utc_ be GetUTCEpochNanoseconds(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
-        1. Let _offsetNanoseconds_ be ? ParseDateTimeUTCOffset(_offsetString_).
-        1. Let _result_ be _utc_ - ℤ(_offsetNanoseconds_).
-        1. If ! IsValidEpochNanoseconds(_result_) is *false*, then
-          1. Throw a *RangeError* exception.
-        1. Return _result_.
       </emu-alg>
     </emu-clause>
 

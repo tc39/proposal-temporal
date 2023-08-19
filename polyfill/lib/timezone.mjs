@@ -96,10 +96,10 @@ export class TimeZone {
         GetSlot(dateTime, ISO_SECOND),
         GetSlot(dateTime, ISO_MILLISECOND),
         GetSlot(dateTime, ISO_MICROSECOND),
-        GetSlot(dateTime, ISO_NANOSECOND)
+        GetSlot(dateTime, ISO_NANOSECOND),
+        offsetMinutes * 60e9
       );
-      if (epochNs === null) throw new RangeError('DateTime outside of supported range');
-      return [new Instant(epochNs.minus(offsetMinutes * 60e9))];
+      return [new Instant(epochNs)];
     }
 
     const possibleEpochNs = ES.GetNamedTimeZoneEpochNanoseconds(

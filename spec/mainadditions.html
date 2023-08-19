@@ -188,6 +188,40 @@
 
     <p>[...]</p>
 
+    <emu-clause id="sec-temporal-getutcepochnanoseconds" type="abstract operation">
+      <h1>
+        GetUTCEpochNanoseconds (
+          _year_: an integer,
+          _month_: an integer in the inclusive interval from 1 to 12,
+          _day_: an integer in the inclusive interval from 1 to 31,
+          _hour_: an integer in the inclusive interval from 0 to 23,
+          _minute_: an integer in the inclusive interval from 0 to 59,
+          _second_: an integer in the inclusive interval from 0 to 59,
+          _millisecond_: an integer in the inclusive interval from 0 to 999,
+          _microsecond_: an integer in the inclusive interval from 0 to 999,
+          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+          <ins>optional _offsetNanoseconds_: an integer in the interval from -nsPerDay (exclusive) to nsPerDay (exclusive),</ins>
+        ): a BigInt
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          The returned value represents a number of nanoseconds since the epoch that corresponds to the given ISO 8601 calendar date and wall-clock time in UTC.
+          <ins>If a UTC offset is provided, the returned value will be adjusted by that offset.</ins>
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Let _date_ be MakeDay(𝔽(_year_), 𝔽(_month_ - 1), 𝔽(_day_)).
+        1. Let _time_ be MakeTime(𝔽(_hour_), 𝔽(_minute_), 𝔽(_second_), 𝔽(_millisecond_)).
+        1. Let _ms_ be MakeDate(_date_, _time_).
+        1. Assert: _ms_ is an integral Number.
+        1. <del>Return ℤ(ℝ(_ms_) × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_).</del>
+        1. <ins>Let _epochNanoseconds_ be ℝ(_ms_) × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.</ins>
+        1. <ins>If _offsetNanoseconds_ is present and _offsetNanoseconds_ ≠ 0, set _epochNanoseconds_ to _epochNanoseconds_ - _offsetNanoseconds_.</ins>
+        1. <ins>Return ℤ(_epochNanoseconds_).</ins>
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-time-zone-identifiers">
       <h1>Time Zone Identifiers</h1>
 
