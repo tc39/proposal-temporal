@@ -444,7 +444,7 @@
               [[Nanoseconds]]
             </td>
             <td>
-              A BigInt value representing the number of nanoseconds since the Unix epoch.
+              A BigInt value representing the number of nanoseconds since the epoch.
             </td>
           </tr>
         </tbody>
@@ -477,7 +477,7 @@
     <emu-clause id="sec-temporal-isvalidepochnanoseconds" aoid="IsValidEpochNanoseconds">
       <h1>IsValidEpochNanoseconds ( _epochNanoseconds_ )</h1>
       <p>
-        The abstract operation IsValidEpochNanoseconds returns *true* if its argument _epochNanoseconds_ is within the allowed range of nanoseconds since the Unix epoch for a Temporal.Instant and Temporal.ZonedDateTime, and *false* otherwise.
+        The abstract operation IsValidEpochNanoseconds returns *true* if its argument _epochNanoseconds_ is within the allowed range of nanoseconds since the epoch for a Temporal.Instant and Temporal.ZonedDateTime, and *false* otherwise.
       </p>
       <emu-alg>
         1. Assert: Type(_epochNanoseconds_) is BigInt.
@@ -574,7 +574,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It adds a duration in various time units to a number of nanoseconds since the Unix epoch, and returns the result as a BigInt value.</dd>
+        <dd>It adds a duration in various time units to a number of nanoseconds since the epoch, and returns the result as a BigInt value.</dd>
       </dl>
       <emu-alg>
         1. Let _result_ be _epochNanoseconds_ + ℤ(_nanoseconds_) +

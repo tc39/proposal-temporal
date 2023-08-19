@@ -39,7 +39,7 @@
         1. Let _ref_ be ? ToIntegerWithTruncation(_referenceISOYear_).
         1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _ref_, NewTarget).
       </emu-alg>
-      <emu-note>1972 is the first leap year after the Unix epoch.</emu-note>
+      <emu-note>1972 is the first leap year after the epoch.</emu-note>
     </emu-clause>
   </emu-clause>
 
@@ -361,7 +361,7 @@
         1. If _options_ is not present, set _options_ to *undefined*.
         1. Assert: Type(_options_) is Object or Undefined.
         1. If _options_ is not *undefined*, set _options_ to ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
-        1. Let _referenceISOYear_ be 1972 (the first leap year after the Unix epoch).
+        1. Let _referenceISOYear_ be 1972 (the first leap year after the epoch).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Return _item_.
