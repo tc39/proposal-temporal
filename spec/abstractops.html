@@ -1452,7 +1452,7 @@
     <h1>
       ParseTemporalInstantString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing a Record, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1461,21 +1461,19 @@
     <emu-alg>
       1. If ParseText(StringToCodePoints(_isoString_), |TemporalInstantString|) is a List of errors, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
-      1. Let _offsetString_ be _result_.[[TimeZone]].[[OffsetString]].
-      1. If _result_.[[TimeZone]].[[Z]] is *true*, then
-        1. Set _offsetString_ to *"+00:00"*.
-      1. Assert: _offsetString_ is not *undefined*.
+      1. Assert: Either _result_.[[TimeZone]].[[OffsetString]] is a String or _result_.[[TimeZone]].[[Z]] is *true*, but not both.
       1. Return the Record {
-        [[Year]]: _result_.[[Year]],
-        [[Month]]: _result_.[[Month]],
-        [[Day]]: _result_.[[Day]],
-        [[Hour]]: _result_.[[Hour]],
-        [[Minute]]: _result_.[[Minute]],
-        [[Second]]: _result_.[[Second]],
-        [[Millisecond]]: _result_.[[Millisecond]],
-        [[Microsecond]]: _result_.[[Microsecond]],
-        [[Nanosecond]]: _result_.[[Nanosecond]],
-        [[TimeZoneOffsetString]]: _offsetString_
+          [[Year]]: _result_.[[Year]],
+          [[Month]]: _result_.[[Month]],
+          [[Day]]: _result_.[[Day]],
+          [[Hour]]: _result_.[[Hour]],
+          [[Minute]]: _result_.[[Minute]],
+          [[Second]]: _result_.[[Second]],
+          [[Millisecond]]: _result_.[[Millisecond]],
+          [[Microsecond]]: _result_.[[Microsecond]],
+          [[Nanosecond]]: _result_.[[Nanosecond]],
+          [[OffsetString]]: _result_.[[TimeZone]].[[OffsetString]],
+          [[Z]]: _result_.[[TimeZone]].[[Z]]
         }.
     </emu-alg>
   </emu-clause>

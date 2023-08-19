@@ -62,8 +62,10 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use `Temporal.PlainDateTime.from()` instead.
 
-The range of allowed values for this type is exactly enough that calling `timeZone.getPlainDateTimeFor(instant)` will succeed when `timeZone` is any built-in `Temporal.TimeZone` and `instant` is any valid `Temporal.Instant`.
-If the parameters passed in to this constructor form a date outside of this range, then this function will throw a `RangeError`.
+The range of allowed values for this type is wider (by one nanosecond smaller than one day) on each end than the range of `Temporal.Instant`.
+Because the magnitude of built-in time zones' UTC offset will always be less than 24 hours, this extra range ensures that a valid `Temporal.Instant` can always be converted to a valid `Temporal.PlainDateTime` using any built-in time zone.
+Note that the reverse conversion is not guaranteed to succeed; a valid `Temporal.PlainDateTime` at the edge of its range may, for some built-in time zones, be out of range of `Temporal.Instant`.
+If the parameters passed in to this constructor are out of range, then this function will throw a `RangeError`.
 
 Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
 Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
