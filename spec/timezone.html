@@ -394,7 +394,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns the components of a date corresponding to the given number of nanoseconds since the Unix epoch in UTC.</dd>
+        <dd>It returns the components of a date in UTC corresponding to the given number of nanoseconds since the epoch.</dd>
       </dl>
       <emu-alg>
         1. Assert: ! IsValidEpochNanoseconds(ℤ(_epochNanoseconds_)) is *true*.
@@ -434,7 +434,7 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value _t_ represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the first time zone transition after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the first time zone transition after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
         The operation returns *null* if no such transition exists for which _t_ &le; ℤ(nsMaxInstant).
       </p>
       <p>
@@ -463,7 +463,7 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value _t_ represents the number of nanoseconds since the Unix epoch in UTC that corresponds to the last time zone transition before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the last time zone transition before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
         The operation returns *null* if no such transition exists for which _t_ &ge; ℤ(nsMinInstant).
       </p>
       <p>

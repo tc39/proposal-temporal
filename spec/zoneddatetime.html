@@ -1054,7 +1054,7 @@
               [[Nanoseconds]]
             </td>
             <td>
-              A BigInt value representing the number of nanoseconds since the Unix epoch.
+              A BigInt value representing the number of nanoseconds since the epoch.
             </td>
           </tr>
           <tr>
@@ -1295,7 +1295,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the Unix epoch, subject to the rules of _timeZone_ and _calendar_, and returns the result as a BigInt value.
+          It adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the epoch, subject to the rules of _timeZone_ and _calendar_, and returns the result as a BigInt value.
           As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
         </dd>
       </dl>
@@ -1329,7 +1329,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It computes the difference between two exact times expressed in nanoseconds since the Unix epoch, and balances the result so that there is no non-zero unit larger than _largestUnit_ in the result, taking calendar reckoning and time zone offset changes into account.
+          It computes the difference between two exact times expressed in nanoseconds since the epoch, and balances the result so that there is no non-zero unit larger than _largestUnit_ in the result, taking calendar reckoning and time zone offset changes into account.
         </dd>
       </dl>
       <emu-alg>
