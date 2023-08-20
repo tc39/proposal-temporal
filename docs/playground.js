@@ -1553,12 +1553,12 @@
 
 	var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
 	var slice = Array.prototype.slice;
-	var toStr$3 = Object.prototype.toString;
+	var toStr$4 = Object.prototype.toString;
 	var funcType = '[object Function]';
 
 	var implementation$3 = function bind(that) {
 	    var target = this;
-	    if (typeof target !== 'function' || toStr$3.call(target) !== funcType) {
+	    if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
 	        throw new TypeError(ERROR_MESSAGE + target);
 	    }
 	    var args = slice.call(arguments, 1);
@@ -1604,9 +1604,18 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var bind$1 = functionBind;
+	var src;
+	var hasRequiredSrc;
 
-	var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
+	function requireSrc () {
+		if (hasRequiredSrc) return src;
+		hasRequiredSrc = 1;
+
+		var bind = functionBind;
+
+		src = bind.call(Function.call, Object.prototype.hasOwnProperty);
+		return src;
+	}
 
 	var undefined$1;
 
@@ -1822,7 +1831,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn = src;
+	var hasOwn = requireSrc();
 	var $concat = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace = bind.call(Function.call, String.prototype.replace);
@@ -2032,10 +2041,10 @@
 	var $Array = GetIntrinsic$e('%Array%');
 
 	// eslint-disable-next-line global-require
-	var toStr$2 = !$Array.isArray && callBound$2('Object.prototype.toString');
+	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
 
 	var IsArray$3 = $Array.isArray || function IsArray(argument) {
-		return toStr$2(argument) === '[object Array]';
+		return toStr$3(argument) === '[object Array]';
 	};
 
 	// https://262.ecma-international.org/6.0/#sec-isarray
@@ -2105,7 +2114,7 @@
 
 		var GetIntrinsic = getIntrinsic;
 
-		var has = src;
+		var has = requireSrc();
 		var $TypeError = GetIntrinsic('%TypeError%');
 
 		isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -2205,7 +2214,7 @@
 		if (hasRequiredIsMatchRecord) return isMatchRecord;
 		hasRequiredIsMatchRecord = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -2234,7 +2243,7 @@
 		var $TypeError = GetIntrinsic('%TypeError%');
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-		var has = src;
+		var has = requireSrc();
 		var isInteger = isInteger$2;
 
 		var isMatchRecord = requireIsMatchRecord();
@@ -2324,7 +2333,7 @@
 		if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
 		hasRequiredIsAccessorDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var Type = Type$4;
 
@@ -2355,7 +2364,7 @@
 		if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
 		hasRequiredIsDataDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var Type = Type$4;
 
@@ -2431,114 +2440,105 @@
 		return ToBoolean;
 	}
 
-	var isCallable$1;
-	var hasRequiredIsCallable$1;
-
-	function requireIsCallable$1 () {
-		if (hasRequiredIsCallable$1) return isCallable$1;
-		hasRequiredIsCallable$1 = 1;
-
-		var fnToStr = Function.prototype.toString;
-		var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
-		var badArrayLike;
-		var isCallableMarker;
-		if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
-			try {
-				badArrayLike = Object.defineProperty({}, 'length', {
-					get: function () {
-						throw isCallableMarker;
-					}
-				});
-				isCallableMarker = {};
-				// eslint-disable-next-line no-throw-literal
-				reflectApply(function () { throw 42; }, null, badArrayLike);
-			} catch (_) {
-				if (_ !== isCallableMarker) {
-					reflectApply = null;
+	var fnToStr = Function.prototype.toString;
+	var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
+	var badArrayLike;
+	var isCallableMarker;
+	if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
+		try {
+			badArrayLike = Object.defineProperty({}, 'length', {
+				get: function () {
+					throw isCallableMarker;
 				}
-			}
-		} else {
-			reflectApply = null;
-		}
-
-		var constructorRegex = /^\s*class\b/;
-		var isES6ClassFn = function isES6ClassFunction(value) {
-			try {
-				var fnStr = fnToStr.call(value);
-				return constructorRegex.test(fnStr);
-			} catch (e) {
-				return false; // not a function
-			}
-		};
-
-		var tryFunctionObject = function tryFunctionToStr(value) {
-			try {
-				if (isES6ClassFn(value)) { return false; }
-				fnToStr.call(value);
-				return true;
-			} catch (e) {
-				return false;
-			}
-		};
-		var toStr = Object.prototype.toString;
-		var objectClass = '[object Object]';
-		var fnClass = '[object Function]';
-		var genClass = '[object GeneratorFunction]';
-		var ddaClass = '[object HTMLAllCollection]'; // IE 11
-		var ddaClass2 = '[object HTML document.all class]';
-		var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
-		var hasToStringTag = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
-
-		var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
-
-		var isDDA = function isDocumentDotAll() { return false; };
-		if (typeof document === 'object') {
-			// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
-			var all = document.all;
-			if (toStr.call(all) === toStr.call(document.all)) {
-				isDDA = function isDocumentDotAll(value) {
-					/* globals document: false */
-					// in IE 6-8, typeof document.all is "object" and it's truthy
-					if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
-						try {
-							var str = toStr.call(value);
-							return (
-								str === ddaClass
-								|| str === ddaClass2
-								|| str === ddaClass3 // opera 12.16
-								|| str === objectClass // IE 6-8
-							) && value('') == null; // eslint-disable-line eqeqeq
-						} catch (e) { /**/ }
-					}
-					return false;
-				};
+			});
+			isCallableMarker = {};
+			// eslint-disable-next-line no-throw-literal
+			reflectApply(function () { throw 42; }, null, badArrayLike);
+		} catch (_) {
+			if (_ !== isCallableMarker) {
+				reflectApply = null;
 			}
 		}
-
-		isCallable$1 = reflectApply
-			? function isCallable(value) {
-				if (isDDA(value)) { return true; }
-				if (!value) { return false; }
-				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-				try {
-					reflectApply(value, null, badArrayLike);
-				} catch (e) {
-					if (e !== isCallableMarker) { return false; }
-				}
-				return !isES6ClassFn(value) && tryFunctionObject(value);
-			}
-			: function isCallable(value) {
-				if (isDDA(value)) { return true; }
-				if (!value) { return false; }
-				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-				if (hasToStringTag) { return tryFunctionObject(value); }
-				if (isES6ClassFn(value)) { return false; }
-				var strClass = toStr.call(value);
-				if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
-				return tryFunctionObject(value);
-			};
-		return isCallable$1;
+	} else {
+		reflectApply = null;
 	}
+
+	var constructorRegex = /^\s*class\b/;
+	var isES6ClassFn = function isES6ClassFunction(value) {
+		try {
+			var fnStr = fnToStr.call(value);
+			return constructorRegex.test(fnStr);
+		} catch (e) {
+			return false; // not a function
+		}
+	};
+
+	var tryFunctionObject = function tryFunctionToStr(value) {
+		try {
+			if (isES6ClassFn(value)) { return false; }
+			fnToStr.call(value);
+			return true;
+		} catch (e) {
+			return false;
+		}
+	};
+	var toStr$2 = Object.prototype.toString;
+	var objectClass = '[object Object]';
+	var fnClass = '[object Function]';
+	var genClass = '[object GeneratorFunction]';
+	var ddaClass = '[object HTMLAllCollection]'; // IE 11
+	var ddaClass2 = '[object HTML document.all class]';
+	var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
+	var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
+
+	var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
+
+	var isDDA = function isDocumentDotAll() { return false; };
+	if (typeof document === 'object') {
+		// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
+		var all = document.all;
+		if (toStr$2.call(all) === toStr$2.call(document.all)) {
+			isDDA = function isDocumentDotAll(value) {
+				/* globals document: false */
+				// in IE 6-8, typeof document.all is "object" and it's truthy
+				if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
+					try {
+						var str = toStr$2.call(value);
+						return (
+							str === ddaClass
+							|| str === ddaClass2
+							|| str === ddaClass3 // opera 12.16
+							|| str === objectClass // IE 6-8
+						) && value('') == null; // eslint-disable-line eqeqeq
+					} catch (e) { /**/ }
+				}
+				return false;
+			};
+		}
+	}
+
+	var isCallable$1 = reflectApply
+		? function isCallable(value) {
+			if (isDDA(value)) { return true; }
+			if (!value) { return false; }
+			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+			try {
+				reflectApply(value, null, badArrayLike);
+			} catch (e) {
+				if (e !== isCallableMarker) { return false; }
+			}
+			return !isES6ClassFn(value) && tryFunctionObject(value);
+		}
+		: function isCallable(value) {
+			if (isDDA(value)) { return true; }
+			if (!value) { return false; }
+			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+			if (hasToStringTag$1) { return tryFunctionObject(value); }
+			if (isES6ClassFn(value)) { return false; }
+			var strClass = toStr$2.call(value);
+			if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
+			return tryFunctionObject(value);
+		};
 
 	var IsCallable$1;
 	var hasRequiredIsCallable;
@@ -2549,7 +2549,7 @@
 
 		// http://262.ecma-international.org/5.1/#sec-9.11
 
-		IsCallable$1 = requireIsCallable$1();
+		IsCallable$1 = isCallable$1;
 		return IsCallable$1;
 	}
 
@@ -2560,7 +2560,7 @@
 		if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
 		hasRequiredToPropertyDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var GetIntrinsic = getIntrinsic;
 
@@ -6598,7 +6598,7 @@
 
 	var $TypeError$3 = GetIntrinsic$8('%TypeError%');
 
-	var has = src;
+	var has = requireSrc();
 
 	var IsPropertyKey = IsPropertyKey$4;
 	var Type$1 = Type$4;
@@ -6724,7 +6724,7 @@
 	var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
 	var isPrimitive$1 = isPrimitive$2;
-	var isCallable = requireIsCallable$1();
+	var isCallable = isCallable$1;
 	var isDate = isDateObject;
 	var isSymbol = isSymbolExports;
 
