@@ -3812,10 +3812,6 @@ export function DifferenceISODate(y1, m1, d1, y2, m2, d2, largestUnit = 'days') 
         // The end date is later in the month than mid date (or earlier for
         // negative durations). Back up one month.
         months -= sign;
-        if (months === -sign) {
-          years -= sign;
-          months = 11 * sign;
-        }
         mid = AddISODate(y1, m1, d1, years, months, 0, 0, 'constrain');
       }
 
