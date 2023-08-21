@@ -1345,13 +1345,11 @@ export function ToTemporalMonthDay(item, options) {
   if (options !== undefined) options = SnapshotOwnProperties(GetOptionsObject(options), null);
   if (Type(item) === 'Object') {
     if (IsTemporalMonthDay(item)) return item;
-    let calendar, calendarAbsent;
+    let calendar;
     if (HasSlot(item, CALENDAR)) {
       calendar = GetSlot(item, CALENDAR);
-      calendarAbsent = false;
     } else {
       calendar = item.calendar;
-      calendarAbsent = calendar === undefined;
       if (calendar === undefined) calendar = 'iso8601';
       calendar = ToTemporalCalendarSlotValue(calendar);
     }
@@ -1360,9 +1358,6 @@ export function ToTemporalMonthDay(item, options) {
     // Callers who omit the calendar are not writing calendar-independent
     // code. In that case, `monthCode`/`year` can be omitted; `month` and
     // `day` are sufficient. Add a `year` to satisfy calendar validation.
-    if (calendarAbsent && fields.month !== undefined && fields.monthCode === undefined && fields.year === undefined) {
-      fields.year = 1972;
-    }
     return CalendarMonthDayFromFields(calendar, fields, options);
   }
 
@@ -1373,6 +1368,9 @@ export function ToTemporalMonthDay(item, options) {
   ToTemporalOverflow(options); // validate and ignore
 
   if (referenceISOYear === undefined) {
+    if (calendar !== 'iso8601') {
+      throw new Error(`assertion failed: missing year with non-"iso8601" calendar identifier ${calendar}`);
+    }
     RejectISODate(1972, month, day);
     return CreateTemporalMonthDay(month, day, calendar);
   }
