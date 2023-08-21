@@ -366,27 +366,16 @@
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. If _options_ is not *undefined*, set _options_ to ? SnapshotOwnProperties(! GetOptionsObject(_options_), *null*).
-        1. Let _referenceISOYear_ be 1972 (the first leap year after the epoch).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Let _calendar_ be _item_.[[Calendar]].
-            1. Let _calendarAbsent_ be *false*.
           1. Else,
             1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
-            1. If _calendarLike_ is *undefined*, then
-              1. Let _calendarAbsent_ be *true*.
-            1. Else,
-              1. Let _calendarAbsent_ be *false*.
             1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
           1. Let _fieldNames_ be ? CalendarFields(_calendar_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
-          1. Let _month_ be ! Get(_fields_, *"month"*).
-          1. Let _monthCode_ be ! Get(_fields_, *"monthCode"*).
-          1. Let _year_ be ! Get(_fields_, *"year"*).
-          1. If _calendarAbsent_ is *true*, and _month_ is not *undefined*, and _monthCode_ is *undefined* and _year_ is *undefined*, then
-            1. Perform ! CreateDataPropertyOrThrow(_fields_, *"year"*, 𝔽(_referenceISOYear_)).
           1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_, _options_).
         1. If _item_ is not a String, throw a *TypeError* exception.
         1. Let _result_ be ? ParseTemporalMonthDayString(_item_).
@@ -396,6 +385,8 @@
         1. Set _calendar_ to the ASCII-lowercase of _calendar_.
         1. Perform ? ToTemporalOverflow(_options_).
         1. If _result_.[[Year]] is *undefined*, then
+          1. Assert: _calendar_ is *"iso8601"*.
+          1. Let _referenceISOYear_ be 1972 (the first leap year after the epoch).
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[Year]]).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
