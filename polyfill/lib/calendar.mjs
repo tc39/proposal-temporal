@@ -324,9 +324,6 @@ impl['iso8601'] = {
   monthDayFromFields(fields, options, calendarSlotValue) {
     fields = ES.PrepareTemporalFields(fields, ['day', 'month', 'monthCode', 'year'], ['day']);
     const overflow = ES.ToTemporalOverflow(options);
-    if (fields.month !== undefined && fields.year === undefined && fields.monthCode === undefined) {
-      throw new TypeError('either year or monthCode required with month');
-    }
     const referenceISOYear = 1972;
     fields = resolveNonLunisolarMonth(fields);
     let { month, day, year } = fields;
