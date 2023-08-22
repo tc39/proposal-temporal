@@ -6,6 +6,8 @@ const ArrayPrototypeSort = Array.prototype.sort;
 const ArrayPrototypeFind = Array.prototype.find;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const IntlSupportedValuesOf = globalThis.Intl.supportedValuesOf;
+const MapCtor = Map;
+const MapPrototypeSet = Map.prototype.set;
 const MathAbs = Math.abs;
 const MathFloor = Math.floor;
 const MathMax = Math.max;
@@ -2702,10 +2704,10 @@ export function GetAvailableNamedTimeZoneIdentifier(identifier) {
   if (canonicalTimeZoneIdsCache === undefined) {
     const canonicalTimeZoneIds = IntlSupportedValuesOf?.('timeZone');
     if (canonicalTimeZoneIds) {
-      canonicalTimeZoneIdsCache = new Map();
+      canonicalTimeZoneIdsCache = new MapCtor();
       for (let ix = 0; ix < canonicalTimeZoneIds.length; ix++) {
         const id = canonicalTimeZoneIds[ix];
-        canonicalTimeZoneIdsCache.set(ASCIILowercase(id), id);
+        Call(MapPrototypeSet, canonicalTimeZoneIdsCache, [ASCIILowercase(id), id]);
       }
     } else {
       canonicalTimeZoneIdsCache = null;
