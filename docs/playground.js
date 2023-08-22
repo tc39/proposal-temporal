@@ -1487,11 +1487,11 @@
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
 	var shams$1;
-	var hasRequiredShams$1;
+	var hasRequiredShams;
 
-	function requireShams$1 () {
-		if (hasRequiredShams$1) return shams$1;
-		hasRequiredShams$1 = 1;
+	function requireShams () {
+		if (hasRequiredShams) return shams$1;
+		hasRequiredShams = 1;
 
 		/* eslint complexity: [2, 18], max-statements: [2, 33] */
 		shams$1 = function hasSymbols() {
@@ -1536,17 +1536,17 @@
 		return shams$1;
 	}
 
-	var hasSymbols$4;
+	var hasSymbols$5;
 	var hasRequiredHasSymbols;
 
 	function requireHasSymbols () {
-		if (hasRequiredHasSymbols) return hasSymbols$4;
+		if (hasRequiredHasSymbols) return hasSymbols$5;
 		hasRequiredHasSymbols = 1;
 
 		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-		var hasSymbolSham = requireShams$1();
+		var hasSymbolSham = requireShams();
 
-		hasSymbols$4 = function hasNativeSymbols() {
+		hasSymbols$5 = function hasNativeSymbols() {
 			if (typeof origSymbol !== 'function') { return false; }
 			if (typeof Symbol !== 'function') { return false; }
 			if (typeof origSymbol('foo') !== 'symbol') { return false; }
@@ -1554,7 +1554,7 @@
 
 			return hasSymbolSham();
 		};
-		return hasSymbols$4;
+		return hasSymbols$5;
 	}
 
 	var test = {
@@ -1622,18 +1622,9 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var src;
-	var hasRequiredSrc;
+	var bind$1 = functionBind;
 
-	function requireSrc () {
-		if (hasRequiredSrc) return src;
-		hasRequiredSrc = 1;
-
-		var bind = functionBind;
-
-		src = bind.call(Function.call, Object.prototype.hasOwnProperty);
-		return src;
-	}
+	var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
 
 	var undefined$1;
 
@@ -1677,7 +1668,7 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$3 = requireHasSymbols()();
+	var hasSymbols$4 = requireHasSymbols()();
 	var hasProto = hasProto$1();
 
 	var getProto = Object.getPrototypeOf || (
@@ -1694,7 +1685,7 @@
 		'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
 		'%Array%': Array,
 		'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-		'%ArrayIteratorPrototype%': hasSymbols$3 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
+		'%ArrayIteratorPrototype%': hasSymbols$4 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
 		'%AsyncFromSyncIteratorPrototype%': undefined$1,
 		'%AsyncFunction%': needsEval,
 		'%AsyncGenerator%': needsEval,
@@ -1724,10 +1715,10 @@
 		'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
 		'%isFinite%': isFinite,
 		'%isNaN%': isNaN,
-		'%IteratorPrototype%': hasSymbols$3 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+		'%IteratorPrototype%': hasSymbols$4 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
 		'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
 		'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
 		'%Math%': Math,
 		'%Number%': Number,
 		'%Object%': Object,
@@ -1740,11 +1731,11 @@
 		'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
 		'%RegExp%': RegExp,
 		'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
 		'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
 		'%String%': String,
-		'%StringIteratorPrototype%': hasSymbols$3 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
-		'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
+		'%StringIteratorPrototype%': hasSymbols$4 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
+		'%Symbol%': hasSymbols$4 ? Symbol : undefined$1,
 		'%SyntaxError%': $SyntaxError$2,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
@@ -1849,7 +1840,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn = requireSrc();
+	var hasOwn = src;
 	var $concat = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace = bind.call(Function.call, String.prototype.replace);
@@ -5576,7 +5567,7 @@
 		hasRequiredInternalSlot = 1;
 
 		var GetIntrinsic = getIntrinsic;
-		var has = requireSrc();
+		var has = src;
 		var channel = requireSideChannel()();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -5733,7 +5724,7 @@
 
 		var GetIntrinsic = getIntrinsic;
 
-		var has = requireSrc();
+		var has = src;
 		var $TypeError = GetIntrinsic('%TypeError%');
 
 		isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -5833,7 +5824,7 @@
 		if (hasRequiredIsMatchRecord) return isMatchRecord;
 		hasRequiredIsMatchRecord = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -5862,7 +5853,7 @@
 		var $TypeError = GetIntrinsic('%TypeError%');
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-		var has = requireSrc();
+		var has = src;
 		var isInteger = isInteger$2;
 
 		var isMatchRecord = requireIsMatchRecord();
@@ -5952,7 +5943,7 @@
 		if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
 		hasRequiredIsAccessorDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -5983,7 +5974,7 @@
 		if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
 		hasRequiredIsDataDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -6179,7 +6170,7 @@
 		if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
 		hasRequiredToPropertyDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var GetIntrinsic = getIntrinsic;
 
@@ -6798,20 +6789,11 @@
 
 	var Get$3 = /*@__PURE__*/getDefaultExportFromCjs(Get$2);
 
-	var shams;
-	var hasRequiredShams;
+	var hasSymbols$3 = requireShams();
 
-	function requireShams () {
-		if (hasRequiredShams) return shams;
-		hasRequiredShams = 1;
-
-		var hasSymbols = requireShams$1();
-
-		shams = function hasToStringTagShams() {
-			return hasSymbols() && !!Symbol.toStringTag;
-		};
-		return shams;
-	}
+	var shams = function hasToStringTagShams() {
+		return hasSymbols$3() && !!Symbol.toStringTag;
+	};
 
 	var isString;
 	var hasRequiredIsString;
@@ -6831,7 +6813,7 @@
 		};
 		var toStr = Object.prototype.toString;
 		var strClass = '[object String]';
-		var hasToStringTag = requireShams()();
+		var hasToStringTag = shams();
 
 		isString = function isString(value) {
 			if (typeof value === 'string') {
@@ -7218,7 +7200,7 @@
 
 	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
 
-	var has = requireSrc();
+	var has = src;
 
 	var IsPropertyKey = IsPropertyKey$4;
 	var Type$5 = Type$9;
@@ -7437,7 +7419,7 @@
 
 	var toStr$1 = Object.prototype.toString;
 	var dateClass = '[object Date]';
-	var hasToStringTag = requireShams()();
+	var hasToStringTag = shams();
 
 	var isDateObject = function isDateObject(value) {
 		if (typeof value !== 'object' || value === null) {
@@ -7579,7 +7561,7 @@
 		hasRequiredIsRegex = 1;
 
 		var callBound = callBound$2;
-		var hasToStringTag = requireShams()();
+		var hasToStringTag = shams();
 		var has;
 		var $exec;
 		var isRegexMarker;
@@ -8506,6 +8488,8 @@
 	const ArrayPrototypeFind = Array.prototype.find;
 	const IntlDateTimeFormat$2 = globalThis.Intl.DateTimeFormat;
 	const IntlSupportedValuesOf = globalThis.Intl.supportedValuesOf;
+	const MapCtor = Map;
+	const MapPrototypeSet$1 = Map.prototype.set;
 	const MathAbs$1 = Math.abs;
 	const MathFloor$1 = Math.floor;
 	const MathMax = Math.max;
@@ -9584,6 +9568,7 @@
 	    if (IsTemporalZonedDateTime(item)) {
 	      ToTemporalOverflow(options); // validate and ignore
 	      item = GetPlainDateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
+	      return CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
 	    }
 	    if (IsTemporalDateTime(item)) {
 	      ToTemporalOverflow(options); // validate and ignore
@@ -10909,7 +10894,15 @@
 	  // implementations lacking this API, set the cache to `null` to avoid retries.
 	  if (canonicalTimeZoneIdsCache === undefined) {
 	    const canonicalTimeZoneIds = IntlSupportedValuesOf === null || IntlSupportedValuesOf === void 0 ? void 0 : IntlSupportedValuesOf('timeZone');
-	    canonicalTimeZoneIdsCache = canonicalTimeZoneIds ? new Map(canonicalTimeZoneIds.map(id => [ASCIILowercase(id), id])) : null;
+	    if (canonicalTimeZoneIds) {
+	      canonicalTimeZoneIdsCache = new MapCtor();
+	      for (let ix = 0; ix < canonicalTimeZoneIds.length; ix++) {
+	        const id = canonicalTimeZoneIds[ix];
+	        Call$3(MapPrototypeSet$1, canonicalTimeZoneIdsCache, [ASCIILowercase(id), id]);
+	      }
+	    } else {
+	      canonicalTimeZoneIdsCache = null;
+	    }
 	  }
 	  const lower = ASCIILowercase(identifier);
 	  let primaryIdentifier = (_canonicalTimeZoneIds = canonicalTimeZoneIdsCache) === null || _canonicalTimeZoneIds === void 0 ? void 0 : _canonicalTimeZoneIds.get(lower);
@@ -14386,7 +14379,8 @@
 	    const overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
 	    const merged = ObjectCreate$6(null);
 	    const fieldsKeys = ReflectOwnKeys(fieldsCopy);
-	    for (const key of fieldsKeys) {
+	    for (let ix = 0; ix < fieldsKeys.length; ix++) {
+	      const key = fieldsKeys[ix];
 	      let propValue = undefined;
 	      if (Call$3(ArrayIncludes, overriddenKeys, [key])) propValue = additionalFieldsCopy[key];else propValue = fieldsCopy[key];
 	      if (propValue !== undefined) merged[key] = propValue;
