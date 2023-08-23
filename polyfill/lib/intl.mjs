@@ -355,7 +355,7 @@ function extractOverrides(temporalObj, main) {
     const millisecond = GetSlot(temporalObj, ISO_MILLISECOND);
     const microsecond = GetSlot(temporalObj, ISO_MICROSECOND);
     const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
-    const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, main[CAL_ID]);
+    const datetime = new DateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, 'iso8601');
     return {
       instant: ES.GetInstantFor(main[TZ_CANONICAL], datetime, 'compatible'),
       formatter: getPropLazy(main, TIME)
