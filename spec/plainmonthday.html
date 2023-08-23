@@ -32,14 +32,13 @@
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
         1. If _referenceISOYear_ is *undefined*, then
-          1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub>.
+          1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub> (the first ISO 8601 leap year after the epoch).
         1. Let _m_ be ? ToIntegerWithTruncation(_isoMonth_).
         1. Let _d_ be ? ToIntegerWithTruncation(_isoDay_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
-        1. Let _ref_ be ? ToIntegerWithTruncation(_referenceISOYear_).
-        1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _ref_, NewTarget).
+        1. Let _y_ be ? ToIntegerWithTruncation(_referenceISOYear_).
+        1. Return ? CreateTemporalMonthDay(_m_, _d_, _calendar_, _y_, NewTarget).
       </emu-alg>
-      <emu-note>1972 is the first leap year after the epoch.</emu-note>
     </emu-clause>
   </emu-clause>
 
@@ -386,7 +385,7 @@
         1. Perform ? ToTemporalOverflow(_options_).
         1. If _result_.[[Year]] is *undefined*, then
           1. Assert: _calendar_ is *"iso8601"*.
-          1. Let _referenceISOYear_ be 1972 (the first leap year after the epoch).
+          1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[Year]]).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
