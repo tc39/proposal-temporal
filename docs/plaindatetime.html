@@ -302,8 +302,10 @@ Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> m
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
 This value will cause the constructor will throw, so if you have to interoperate with times that may contain leap seconds, use <code>Temporal.PlainDateTime.from()</code> instead.</p>
 </blockquote>
-<p>The range of allowed values for this type is exactly enough that calling <code>timeZone.getPlainDateTimeFor(instant)</code> will succeed when <code>timeZone</code> is any built-in <code>Temporal.TimeZone</code> and <code>instant</code> is any valid <code>Temporal.Instant</code>.
-If the parameters passed in to this constructor form a date outside of this range, then this function will throw a <code>RangeError</code>.</p>
+<p>The range of allowed values for this type is wider (by one nanosecond smaller than one day) on each end than the range of <code>Temporal.Instant</code>.
+Because the magnitude of built-in time zones&#39; UTC offset will always be less than 24 hours, this extra range ensures that a valid <code>Temporal.Instant</code> can always be converted to a valid <code>Temporal.PlainDateTime</code> using any built-in time zone.
+Note that the reverse conversion is not guaranteed to succeed; a valid <code>Temporal.PlainDateTime</code> at the edge of its range may, for some built-in time zones, be out of range of <code>Temporal.Instant</code>.
+If the parameters passed in to this constructor are out of range, then this function will throw a <code>RangeError</code>.</p>
 <p>Usually <code>calendar</code> will be a string containing the identifier of a built-in calendar, such as <code>&#39;islamic&#39;</code> or <code>&#39;gregory&#39;</code>.
 Use an object if you need to supply <a href="./calendar.html#custom-calendars">custom calendar behaviour</a>.</p>
 <blockquote>
