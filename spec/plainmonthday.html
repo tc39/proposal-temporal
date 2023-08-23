@@ -392,7 +392,7 @@
         1. Perform ? ToTemporalOverflow(_options_).
         1. If _result_.[[Year]] is *undefined*, then
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
-        1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, result.[[year]]).
+        1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[Year]]).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
         1. Return ? CalendarMonthDayFromFields(_calendar_, _result_).
       </emu-alg>
