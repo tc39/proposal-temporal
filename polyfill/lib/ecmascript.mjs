@@ -2345,6 +2345,7 @@ export function DisambiguatePossibleInstants(possibleInstants, timeZone, dateTim
     }
   }
 
+  if (disambiguation === 'reject') throw new RangeError('multiple instants found');
   const year = GetSlot(dateTime, ISO_YEAR);
   const month = GetSlot(dateTime, ISO_MONTH);
   const day = GetSlot(dateTime, ISO_DAY);
@@ -2449,7 +2450,7 @@ export function DisambiguatePossibleInstants(possibleInstants, timeZone, dateTim
       return possible[possible.length - 1];
     }
     case 'reject': {
-      throw new RangeError('no such instant found');
+      throw new Error('should not be reached: reject handled earlier');
     }
   }
   throw new Error(`assertion failed: invalid disambiguation value ${disambiguation}`);
