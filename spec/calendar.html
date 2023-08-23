@@ -917,7 +917,7 @@
         1. Let _day_ be ! Get(_fields_, *"day"*).
         1. Assert: _month_ and _day_ are Numbers.
         1. Let _year_ be ! Get(_fields_, *"year"*).
-        1. Let _referenceISOYear_ be 1972 (the first leap year after the epoch).
+        1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
         1. If _year_ is *undefined*, then
           1. Let _result_ be ? RegulateISODate(_referenceISOYear_, ℝ(_month_), ℝ(_day_), _overflow_).
         1. Else,
