@@ -412,38 +412,14 @@ function extractOverrides(temporalObj, main) {
   }
 
   if (ES.IsTemporalDateTime(temporalObj)) {
-    const isoYear = GetSlot(temporalObj, ISO_YEAR);
-    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
-    const isoDay = GetSlot(temporalObj, ISO_DAY);
-    const hour = GetSlot(temporalObj, ISO_HOUR);
-    const minute = GetSlot(temporalObj, ISO_MINUTE);
-    const second = GetSlot(temporalObj, ISO_SECOND);
-    const millisecond = GetSlot(temporalObj, ISO_MILLISECOND);
-    const microsecond = GetSlot(temporalObj, ISO_MICROSECOND);
-    const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
     const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
     if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
       throw new RangeError(
         `cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
       );
     }
-    let datetime = temporalObj;
-    if (calendar === 'iso8601') {
-      datetime = new DateTime(
-        isoYear,
-        isoMonth,
-        isoDay,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
-        main[CAL_ID]
-      );
-    }
     return {
-      instant: ES.GetInstantFor(main[TZ_CANONICAL], datetime, 'compatible'),
+      instant: ES.GetInstantFor(main[TZ_CANONICAL], temporalObj, 'compatible'),
       formatter: getPropLazy(main, DATETIME)
     };
   }
