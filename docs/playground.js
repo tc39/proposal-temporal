@@ -1486,76 +1486,58 @@
 	var BigIntegerExports = BigInteger.exports;
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
-	var shams$1;
-	var hasRequiredShams;
+	/* eslint complexity: [2, 18], max-statements: [2, 33] */
+	var shams$1 = function hasSymbols() {
+		if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
+		if (typeof Symbol.iterator === 'symbol') { return true; }
 
-	function requireShams () {
-		if (hasRequiredShams) return shams$1;
-		hasRequiredShams = 1;
+		var obj = {};
+		var sym = Symbol('test');
+		var symObj = Object(sym);
+		if (typeof sym === 'string') { return false; }
 
-		/* eslint complexity: [2, 18], max-statements: [2, 33] */
-		shams$1 = function hasSymbols() {
-			if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
-			if (typeof Symbol.iterator === 'symbol') { return true; }
+		if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
+		if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
 
-			var obj = {};
-			var sym = Symbol('test');
-			var symObj = Object(sym);
-			if (typeof sym === 'string') { return false; }
+		// temp disabled per https://github.com/ljharb/object.assign/issues/17
+		// if (sym instanceof Symbol) { return false; }
+		// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+		// if (!(symObj instanceof Symbol)) { return false; }
 
-			if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
-			if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
+		// if (typeof Symbol.prototype.toString !== 'function') { return false; }
+		// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
 
-			// temp disabled per https://github.com/ljharb/object.assign/issues/17
-			// if (sym instanceof Symbol) { return false; }
-			// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
-			// if (!(symObj instanceof Symbol)) { return false; }
+		var symVal = 42;
+		obj[sym] = symVal;
+		for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
+		if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
 
-			// if (typeof Symbol.prototype.toString !== 'function') { return false; }
-			// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+		if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
 
-			var symVal = 42;
-			obj[sym] = symVal;
-			for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
-			if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
+		var syms = Object.getOwnPropertySymbols(obj);
+		if (syms.length !== 1 || syms[0] !== sym) { return false; }
 
-			if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
+		if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
 
-			var syms = Object.getOwnPropertySymbols(obj);
-			if (syms.length !== 1 || syms[0] !== sym) { return false; }
+		if (typeof Object.getOwnPropertyDescriptor === 'function') {
+			var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+			if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
+		}
 
-			if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
+		return true;
+	};
 
-			if (typeof Object.getOwnPropertyDescriptor === 'function') {
-				var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
-				if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
-			}
+	var origSymbol = typeof Symbol !== 'undefined' && Symbol;
+	var hasSymbolSham = shams$1;
 
-			return true;
-		};
-		return shams$1;
-	}
+	var hasSymbols$5 = function hasNativeSymbols() {
+		if (typeof origSymbol !== 'function') { return false; }
+		if (typeof Symbol !== 'function') { return false; }
+		if (typeof origSymbol('foo') !== 'symbol') { return false; }
+		if (typeof Symbol('bar') !== 'symbol') { return false; }
 
-	var hasSymbols$5;
-	var hasRequiredHasSymbols;
-
-	function requireHasSymbols () {
-		if (hasRequiredHasSymbols) return hasSymbols$5;
-		hasRequiredHasSymbols = 1;
-
-		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-		var hasSymbolSham = requireShams();
-
-		hasSymbols$5 = function hasNativeSymbols() {
-			if (typeof origSymbol !== 'function') { return false; }
-			if (typeof Symbol !== 'function') { return false; }
-			if (typeof origSymbol('foo') !== 'symbol') { return false; }
-			if (typeof Symbol('bar') !== 'symbol') { return false; }
-
-			return hasSymbolSham();
-		};
-		return hasSymbols$5;
-	}
+		return hasSymbolSham();
+	};
 
 	var test = {
 		foo: {}
@@ -1622,18 +1604,9 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var src;
-	var hasRequiredSrc;
+	var bind$1 = functionBind;
 
-	function requireSrc () {
-		if (hasRequiredSrc) return src;
-		hasRequiredSrc = 1;
-
-		var bind = functionBind;
-
-		src = bind.call(Function.call, Object.prototype.hasOwnProperty);
-		return src;
-	}
+	var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
 
 	var undefined$1;
 
@@ -1677,7 +1650,7 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$4 = requireHasSymbols()();
+	var hasSymbols$4 = hasSymbols$5();
 	var hasProto = hasProto$1();
 
 	var getProto = Object.getPrototypeOf || (
@@ -1849,7 +1822,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn = requireSrc();
+	var hasOwn = src;
 	var $concat = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace = bind.call(Function.call, String.prototype.replace);
@@ -2038,14 +2011,14 @@
 
 	var callBindExports = callBind$2.exports;
 
-	var GetIntrinsic$l = getIntrinsic;
+	var GetIntrinsic$k = getIntrinsic;
 
 	var callBind$1 = callBindExports;
 
-	var $indexOf = callBind$1(GetIntrinsic$l('String.prototype.indexOf'));
+	var $indexOf = callBind$1(GetIntrinsic$k('String.prototype.indexOf'));
 
 	var callBound$2 = function callBoundIntrinsic(name, allowMissing) {
-		var intrinsic = GetIntrinsic$l(name, !!allowMissing);
+		var intrinsic = GetIntrinsic$k(name, !!allowMissing);
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
 			return callBind$1(intrinsic);
 		}
@@ -2054,9 +2027,9 @@
 
 	var callBound$3 = /*@__PURE__*/getDefaultExportFromCjs(callBound$2);
 
-	var GetIntrinsic$k = getIntrinsic;
+	var GetIntrinsic$j = getIntrinsic;
 
-	var $Array = GetIntrinsic$k('%Array%');
+	var $Array = GetIntrinsic$j('%Array%');
 
 	// eslint-disable-next-line global-require
 	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
@@ -2070,14 +2043,14 @@
 
 	var IsArray$3 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$2);
 
-	var GetIntrinsic$j = getIntrinsic;
+	var GetIntrinsic$i = getIntrinsic;
 	var callBound$1 = callBound$2;
 
-	var $TypeError$c = GetIntrinsic$j('%TypeError%');
+	var $TypeError$c = GetIntrinsic$i('%TypeError%');
 
 	var IsArray$1 = IsArray$2;
 
-	var $apply = GetIntrinsic$j('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
+	var $apply = GetIntrinsic$i('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
@@ -5576,7 +5549,7 @@
 		hasRequiredInternalSlot = 1;
 
 		var GetIntrinsic = getIntrinsic;
-		var has = requireSrc();
+		var has = src;
 		var channel = requireSideChannel()();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -5638,9 +5611,9 @@
 		return internalSlot;
 	}
 
-	var GetIntrinsic$i = getIntrinsic;
+	var GetIntrinsic$h = getIntrinsic;
 
-	var $SyntaxError$1 = GetIntrinsic$i('%SyntaxError%');
+	var $SyntaxError$1 = GetIntrinsic$h('%SyntaxError%');
 
 	var SLOT = requireInternalSlot();
 
@@ -5733,7 +5706,7 @@
 
 		var GetIntrinsic = getIntrinsic;
 
-		var has = requireSrc();
+		var has = src;
 		var $TypeError = GetIntrinsic('%TypeError%');
 
 		isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -5806,25 +5779,43 @@
 		return a !== a;
 	};
 
-	var $isNaN$3 = _isNaN;
+	var _isFinite;
+	var hasRequired_isFinite;
 
-	var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN$3(x) && x !== Infinity && x !== -Infinity; };
+	function require_isFinite () {
+		if (hasRequired_isFinite) return _isFinite;
+		hasRequired_isFinite = 1;
 
-	var GetIntrinsic$h = getIntrinsic;
+		var $isNaN = _isNaN;
 
-	var $abs$1 = GetIntrinsic$h('%Math.abs%');
-	var $floor$1 = GetIntrinsic$h('%Math.floor%');
+		_isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
+		return _isFinite;
+	}
 
-	var $isNaN$2 = _isNaN;
-	var $isFinite$1 = _isFinite;
+	var isInteger$2;
+	var hasRequiredIsInteger;
 
-	var isInteger$2 = function isInteger(argument) {
-		if (typeof argument !== 'number' || $isNaN$2(argument) || !$isFinite$1(argument)) {
-			return false;
-		}
-		var absValue = $abs$1(argument);
-		return $floor$1(absValue) === absValue;
-	};
+	function requireIsInteger () {
+		if (hasRequiredIsInteger) return isInteger$2;
+		hasRequiredIsInteger = 1;
+
+		var GetIntrinsic = getIntrinsic;
+
+		var $abs = GetIntrinsic('%Math.abs%');
+		var $floor = GetIntrinsic('%Math.floor%');
+
+		var $isNaN = _isNaN;
+		var $isFinite = require_isFinite();
+
+		isInteger$2 = function isInteger(argument) {
+			if (typeof argument !== 'number' || $isNaN(argument) || !$isFinite(argument)) {
+				return false;
+			}
+			var absValue = $abs(argument);
+			return $floor(absValue) === absValue;
+		};
+		return isInteger$2;
+	}
 
 	var isMatchRecord;
 	var hasRequiredIsMatchRecord;
@@ -5833,7 +5824,7 @@
 		if (hasRequiredIsMatchRecord) return isMatchRecord;
 		hasRequiredIsMatchRecord = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -5862,8 +5853,8 @@
 		var $TypeError = GetIntrinsic('%TypeError%');
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-		var has = requireSrc();
-		var isInteger = isInteger$2;
+		var has = src;
+		var isInteger = requireIsInteger();
 
 		var isMatchRecord = requireIsMatchRecord();
 
@@ -5952,7 +5943,7 @@
 		if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
 		hasRequiredIsAccessorDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -5983,7 +5974,7 @@
 		if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
 		hasRequiredIsDataDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -6179,7 +6170,7 @@
 		if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
 		hasRequiredToPropertyDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var GetIntrinsic = getIntrinsic;
 
@@ -6798,7 +6789,7 @@
 
 	var Get$3 = /*@__PURE__*/getDefaultExportFromCjs(Get$2);
 
-	var hasSymbols$3 = requireShams();
+	var hasSymbols$3 = shams$1;
 
 	var shams = function hasToStringTagShams() {
 		return hasSymbols$3() && !!Symbol.toStringTag;
@@ -6843,7 +6834,7 @@
 		if (hasRequiredGetIteratorMethod) return getIteratorMethod$1;
 		hasRequiredGetIteratorMethod = 1;
 
-		var hasSymbols = requireHasSymbols()();
+		var hasSymbols = hasSymbols$5();
 		var GetIntrinsic = getIntrinsic;
 		var callBound = callBound$2;
 		var isString = requireIsString();
@@ -7038,7 +7029,7 @@
 		var CodePointAt = requireCodePointAt();
 		var Type = Type$9;
 
-		var isInteger = isInteger$2;
+		var isInteger = requireIsInteger();
 		var MAX_SAFE_INTEGER = requireMaxSafeInteger();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -7145,7 +7136,7 @@
 	var $asyncIterator = GetIntrinsic$d('%Symbol.asyncIterator%', true);
 
 	var inspect = requireObjectInspect();
-	var hasSymbols$2 = requireHasSymbols()();
+	var hasSymbols$2 = hasSymbols$5();
 
 	var getIteratorMethod = requireGetIteratorMethod();
 	var AdvanceStringIndex = requireAdvanceStringIndex();
@@ -7209,7 +7200,7 @@
 
 	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
 
-	var has = requireSrc();
+	var has = src;
 
 	var IsPropertyKey = IsPropertyKey$4;
 	var Type$5 = Type$9;
@@ -7228,7 +7219,7 @@
 
 	var HasOwnProperty$1 = /*@__PURE__*/getDefaultExportFromCjs(HasOwnProperty);
 
-	var isInteger$1 = isInteger$2;
+	var isInteger$1 = requireIsInteger();
 
 	// https://262.ecma-international.org/12.0/#sec-isinteger
 
@@ -7440,7 +7431,7 @@
 	var isSymbol$1 = {exports: {}};
 
 	var toStr = Object.prototype.toString;
-	var hasSymbols$1 = requireHasSymbols()();
+	var hasSymbols$1 = hasSymbols$5();
 
 	if (hasSymbols$1) {
 		var symToStr = Symbol.prototype.toString;
@@ -8156,7 +8147,7 @@
 	var ToNumber = ToNumber$1;
 
 	var $isNaN = _isNaN;
-	var $isFinite = _isFinite;
+	var $isFinite = require_isFinite();
 	var $sign = sign;
 
 	// https://262.ecma-international.org/12.0/#sec-tointegerorinfinity
@@ -8265,7 +8256,7 @@
 
 	var StringPad = requireStringPad();
 
-	var isInteger = isInteger$2;
+	var isInteger = requireIsInteger();
 
 	// https://262.ecma-international.org/13.0/#sec-tozeropaddeddecimalstring
 
