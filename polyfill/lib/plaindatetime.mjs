@@ -246,7 +246,7 @@ export class PlainDateTime {
   withCalendar(calendar) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     calendar = ES.ToTemporalCalendarSlotValue(calendar);
-    return new PlainDateTime(
+    return ES.CreateTemporalDateTime(
       GetSlot(this, ISO_YEAR),
       GetSlot(this, ISO_MONTH),
       GetSlot(this, ISO_DAY),

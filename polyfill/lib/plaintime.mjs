@@ -2,7 +2,7 @@
 
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
   ISO_YEAR,
@@ -279,8 +279,7 @@ export class PlainTime {
     const microsecond = GetSlot(this, ISO_MICROSECOND);
     const nanosecond = GetSlot(this, ISO_NANOSECOND);
 
-    const PlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-    const dt = new PlainDateTime(
+    const dt = ES.CreateTemporalDateTime(
       year,
       month,
       day,
