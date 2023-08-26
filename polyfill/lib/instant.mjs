@@ -126,7 +126,7 @@ export class Instant {
     return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
-    throw new TypeError('use compare() or equals() to compare Temporal.Instant');
+    ES.ValueOfThrows('Instant');
   }
   toZonedDateTime(item) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');

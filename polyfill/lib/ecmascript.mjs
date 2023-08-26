@@ -5726,6 +5726,23 @@ export function ASCIILowercase(str) {
   ]);
 }
 
+// This function isn't in the spec, but we put it in the polyfill to avoid
+// repeating the same (long) error message in many files.
+export function ValueOfThrows(constructorName) {
+  const compareCode =
+    constructorName === 'PlainMonthDay'
+      ? 'Temporal.PlainDate.compare(obj1.toPlainDate(year), obj2.toPlainDate(year))'
+      : `Temporal.${constructorName}.compare(obj1, obj2)`;
+
+  throw new TypeError(
+    'Do not use built-in arithmetic operators with Temporal objects. ' +
+      `When comparing, use ${compareCode}, not obj1 > obj2. ` +
+      "When coercing to strings, use obj.toString() or String(obj), not +obj nor '' + obj. " +
+      'When concatenating with strings, use str.concat(obj) or `${str}${obj}`, not str + obj. ' +
+      'In React, call obj.toString() before rendering a Temporal object.'
+  );
+}
+
 const OFFSET = new RegExp(`^${PARSE.offset.source}$`);
 const OFFSET_WITH_PARTS = new RegExp(`^${PARSE.offsetWithParts.source}$`);
 

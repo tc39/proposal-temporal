@@ -69,7 +69,7 @@ export class PlainMonthDay {
     return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
-    throw new TypeError('use equals() to compare Temporal.PlainMonthDay');
+    ES.ValueOfThrows('PlainMonthDay');
   }
   toPlainDate(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
