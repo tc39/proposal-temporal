@@ -509,7 +509,7 @@ export class Duration {
     );
   }
   valueOf() {
-    throw new TypeError('use compare() to compare Temporal.Duration');
+    ES.ValueOfThrows('Duration');
   }
   static from(item) {
     if (ES.IsTemporalDuration(item)) {

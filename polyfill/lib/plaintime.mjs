@@ -217,7 +217,7 @@ export class PlainTime {
     return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
-    throw new TypeError('use compare() or equals() to compare Temporal.PlainTime');
+    ES.ValueOfThrows('PlainTime');
   }
 
   toPlainDateTime(temporalDate) {

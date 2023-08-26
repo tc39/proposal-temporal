@@ -527,7 +527,7 @@ export class ZonedDateTime {
     return ES.TemporalZonedDateTimeToString(this, 'auto');
   }
   valueOf() {
-    throw new TypeError('use compare() or equals() to compare Temporal.ZonedDateTime');
+    ES.ValueOfThrows('ZonedDateTime');
   }
   startOfDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

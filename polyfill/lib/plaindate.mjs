@@ -158,7 +158,7 @@ export class PlainDate {
     return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
-    throw new TypeError('use compare() or equals() to compare Temporal.PlainDate');
+    ES.ValueOfThrows('PlainDate');
   }
   toPlainDateTime(temporalTime = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
