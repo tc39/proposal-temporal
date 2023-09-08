@@ -6,7 +6,7 @@ const INTRINSICS = {};
 
 const customUtilInspectFormatters = {
   ['Temporal.Duration'](depth, options) {
-    const descr = options.stylize(`${this[Symbol.toStringTag]} <${this}>`, 'special');
+    const descr = options.stylize(this._repr_, 'special');
     if (depth < 1) return descr;
     const entries = [];
     for (const prop of [
@@ -28,7 +28,7 @@ const customUtilInspectFormatters = {
 };
 
 function defaultUtilInspectFormatter(depth, options) {
-  return options.stylize(`${this[Symbol.toStringTag]} <${this}>`, 'special');
+  return options.stylize(this._repr_, 'special');
 }
 
 export function MakeIntrinsicClass(Class, name) {

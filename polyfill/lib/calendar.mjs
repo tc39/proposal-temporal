@@ -69,14 +69,15 @@ const impl = {};
 
 export class Calendar {
   constructor(id) {
-    const stringId = ES.RequireString(id);
+    let stringId = ES.RequireString(id);
     if (!ES.IsBuiltinCalendar(stringId)) throw new RangeError(`invalid calendar identifier ${stringId}`);
     CreateSlots(this);
-    SetSlot(this, CALENDAR_ID, ES.ASCIILowercase(stringId));
+    stringId = ES.ASCIILowercase(stringId);
+    SetSlot(this, CALENDAR_ID, stringId);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${stringId}>`,
+        value: `Temporal.Calendar <${stringId}>`,
         writable: false,
         enumerable: false,
         configurable: false

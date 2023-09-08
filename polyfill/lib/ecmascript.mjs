@@ -1614,8 +1614,14 @@ export function CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calen
   SetSlot(result, DATE_BRAND, true);
 
   if (typeof __debug__ !== 'undefined' && __debug__) {
+    let repr = TemporalDateToString(result, 'never');
+    if (typeof calendar === 'string') {
+      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+    } else {
+      repr += '[u-ca=<calendar object>]';
+    }
     ObjectDefineProperty(result, '_repr_', {
-      value: `${result[Symbol.toStringTag]} <${TemporalDateToString(result)}>`,
+      value: `Temporal.PlainDate <${repr}>`,
       writable: false,
       enumerable: false,
       configurable: false
@@ -1647,8 +1653,14 @@ export function CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h
   SetSlot(result, CALENDAR, calendar);
 
   if (typeof __debug__ !== 'undefined' && __debug__) {
+    let repr = TemporalDateTimeToString(result, 'auto', 'never');
+    if (typeof calendar === 'string') {
+      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+    } else {
+      repr += '[u-ca=<calendar object>]';
+    }
     Object.defineProperty(result, '_repr_', {
-      value: `${result[Symbol.toStringTag]} <${TemporalDateTimeToString(result, 'auto')}>`,
+      value: `Temporal.PlainDateTime <${repr}>`,
       writable: false,
       enumerable: false,
       configurable: false
@@ -1675,8 +1687,14 @@ export function CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, 
   SetSlot(result, MONTH_DAY_BRAND, true);
 
   if (typeof __debug__ !== 'undefined' && __debug__) {
+    let repr = TemporalMonthDayToString(result, 'never');
+    if (typeof calendar === 'string') {
+      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+    } else {
+      repr += '[u-ca=<calendar object>]';
+    }
     Object.defineProperty(result, '_repr_', {
-      value: `${result[Symbol.toStringTag]} <${TemporalMonthDayToString(result)}>`,
+      value: `Temporal.PlainMonthDay <${repr}>`,
       writable: false,
       enumerable: false,
       configurable: false
@@ -1703,8 +1721,14 @@ export function CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar
   SetSlot(result, YEAR_MONTH_BRAND, true);
 
   if (typeof __debug__ !== 'undefined' && __debug__) {
+    let repr = TemporalYearMonthToString(result, 'never');
+    if (typeof calendar === 'string') {
+      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+    } else {
+      repr += '[u-ca=<calendar object>]';
+    }
     Object.defineProperty(result, '_repr_', {
-      value: `${result[Symbol.toStringTag]} <${TemporalYearMonthToString(result)}>`,
+      value: `Temporal.PlainYearMonth <${repr}>`,
       writable: false,
       enumerable: false,
       configurable: false
@@ -1732,8 +1756,31 @@ export function CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZ
   SetSlot(result, INSTANT, instant);
 
   if (typeof __debug__ !== 'undefined' && __debug__) {
+    let repr;
+    if (typeof timeZone === 'string') {
+      let offsetNs;
+      const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
+      if (offsetMinutes !== undefined) {
+        offsetNs = offsetMinutes * 60e9;
+      } else {
+        offsetNs = GetNamedTimeZoneOffsetNanoseconds(timeZone, epochNanoseconds);
+      }
+      const dateTime = GetPlainDateTimeFor(undefined, instant, 'iso8601', offsetNs);
+      repr = TemporalDateTimeToString(dateTime, 'auto', 'never');
+      repr += FormatDateTimeUTCOffsetRounded(offsetNs);
+      repr += `[${timeZone}]`;
+    } else {
+      const dateTime = GetPlainDateTimeFor(undefined, instant, 'iso8601', 0);
+      repr = TemporalDateTimeToString(dateTime, 'auto', 'never') + 'Z[<time zone object>]';
+    }
+    if (typeof calendar === 'string') {
+      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+    } else {
+      repr += '[u-ca=<calendar object>]';
+    }
+
     Object.defineProperty(result, '_repr_', {
-      value: `${result[Symbol.toStringTag]} <${TemporalZonedDateTimeToString(result, 'auto')}>`,
+      value: `Temporal.ZonedDateTime <${repr}>`,
       writable: false,
       enumerable: false,
       configurable: false
