@@ -35,7 +35,7 @@ export class TimeZone {
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${stringIdentifier}>`,
+        value: `Temporal.TimeZone <${stringIdentifier}>`,
         writable: false,
         enumerable: false,
         configurable: false

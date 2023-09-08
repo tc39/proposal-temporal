@@ -23,7 +23,8 @@ export class Instant {
     SetSlot(this, EPOCHNANOSECONDS, ns);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
-      const repr = ES.TemporalInstantToString(this, undefined, 'auto');
+      const dateTime = ES.GetPlainDateTimeFor(undefined, this, 'iso8601', 0);
+      const repr = ES.TemporalDateTimeToString(dateTime, 'auto', 'never') + 'Z';
       Object.defineProperty(this, '_repr_', {
         value: `${this[Symbol.toStringTag]} <${repr}>`,
         writable: false,
