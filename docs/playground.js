@@ -1487,11 +1487,11 @@
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
 	var shams$1;
-	var hasRequiredShams$1;
+	var hasRequiredShams;
 
-	function requireShams$1 () {
-		if (hasRequiredShams$1) return shams$1;
-		hasRequiredShams$1 = 1;
+	function requireShams () {
+		if (hasRequiredShams) return shams$1;
+		hasRequiredShams = 1;
 
 		/* eslint complexity: [2, 18], max-statements: [2, 33] */
 		shams$1 = function hasSymbols() {
@@ -1536,17 +1536,17 @@
 		return shams$1;
 	}
 
-	var hasSymbols$4;
+	var hasSymbols$5;
 	var hasRequiredHasSymbols;
 
 	function requireHasSymbols () {
-		if (hasRequiredHasSymbols) return hasSymbols$4;
+		if (hasRequiredHasSymbols) return hasSymbols$5;
 		hasRequiredHasSymbols = 1;
 
 		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-		var hasSymbolSham = requireShams$1();
+		var hasSymbolSham = requireShams();
 
-		hasSymbols$4 = function hasNativeSymbols() {
+		hasSymbols$5 = function hasNativeSymbols() {
 			if (typeof origSymbol !== 'function') { return false; }
 			if (typeof Symbol !== 'function') { return false; }
 			if (typeof origSymbol('foo') !== 'symbol') { return false; }
@@ -1554,7 +1554,7 @@
 
 			return hasSymbolSham();
 		};
-		return hasSymbols$4;
+		return hasSymbols$5;
 	}
 
 	var test = {
@@ -1622,9 +1622,18 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var bind$1 = functionBind;
+	var src;
+	var hasRequiredSrc;
 
-	var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
+	function requireSrc () {
+		if (hasRequiredSrc) return src;
+		hasRequiredSrc = 1;
+
+		var bind = functionBind;
+
+		src = bind.call(Function.call, Object.prototype.hasOwnProperty);
+		return src;
+	}
 
 	var undefined$1;
 
@@ -1668,7 +1677,7 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$3 = requireHasSymbols()();
+	var hasSymbols$4 = requireHasSymbols()();
 	var hasProto = hasProto$1();
 
 	var getProto = Object.getPrototypeOf || (
@@ -1685,7 +1694,7 @@
 		'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
 		'%Array%': Array,
 		'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-		'%ArrayIteratorPrototype%': hasSymbols$3 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
+		'%ArrayIteratorPrototype%': hasSymbols$4 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
 		'%AsyncFromSyncIteratorPrototype%': undefined$1,
 		'%AsyncFunction%': needsEval,
 		'%AsyncGenerator%': needsEval,
@@ -1715,10 +1724,10 @@
 		'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
 		'%isFinite%': isFinite,
 		'%isNaN%': isNaN,
-		'%IteratorPrototype%': hasSymbols$3 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+		'%IteratorPrototype%': hasSymbols$4 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
 		'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
 		'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
 		'%Math%': Math,
 		'%Number%': Number,
 		'%Object%': Object,
@@ -1731,11 +1740,11 @@
 		'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
 		'%RegExp%': RegExp,
 		'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
 		'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
 		'%String%': String,
-		'%StringIteratorPrototype%': hasSymbols$3 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
-		'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
+		'%StringIteratorPrototype%': hasSymbols$4 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
+		'%Symbol%': hasSymbols$4 ? Symbol : undefined$1,
 		'%SyntaxError%': $SyntaxError$2,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
@@ -1840,7 +1849,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn = src;
+	var hasOwn = requireSrc();
 	var $concat = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace = bind.call(Function.call, String.prototype.replace);
@@ -2029,14 +2038,14 @@
 
 	var callBindExports = callBind$2.exports;
 
-	var GetIntrinsic$k = getIntrinsic;
+	var GetIntrinsic$l = getIntrinsic;
 
 	var callBind$1 = callBindExports;
 
-	var $indexOf = callBind$1(GetIntrinsic$k('String.prototype.indexOf'));
+	var $indexOf = callBind$1(GetIntrinsic$l('String.prototype.indexOf'));
 
 	var callBound$2 = function callBoundIntrinsic(name, allowMissing) {
-		var intrinsic = GetIntrinsic$k(name, !!allowMissing);
+		var intrinsic = GetIntrinsic$l(name, !!allowMissing);
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
 			return callBind$1(intrinsic);
 		}
@@ -2045,9 +2054,9 @@
 
 	var callBound$3 = /*@__PURE__*/getDefaultExportFromCjs(callBound$2);
 
-	var GetIntrinsic$j = getIntrinsic;
+	var GetIntrinsic$k = getIntrinsic;
 
-	var $Array = GetIntrinsic$j('%Array%');
+	var $Array = GetIntrinsic$k('%Array%');
 
 	// eslint-disable-next-line global-require
 	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
@@ -2061,14 +2070,14 @@
 
 	var IsArray$3 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$2);
 
-	var GetIntrinsic$i = getIntrinsic;
+	var GetIntrinsic$j = getIntrinsic;
 	var callBound$1 = callBound$2;
 
-	var $TypeError$c = GetIntrinsic$i('%TypeError%');
+	var $TypeError$c = GetIntrinsic$j('%TypeError%');
 
 	var IsArray$1 = IsArray$2;
 
-	var $apply = GetIntrinsic$i('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
+	var $apply = GetIntrinsic$j('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
@@ -5567,7 +5576,7 @@
 		hasRequiredInternalSlot = 1;
 
 		var GetIntrinsic = getIntrinsic;
-		var has = src;
+		var has = requireSrc();
 		var channel = requireSideChannel()();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -5629,9 +5638,9 @@
 		return internalSlot;
 	}
 
-	var GetIntrinsic$h = getIntrinsic;
+	var GetIntrinsic$i = getIntrinsic;
 
-	var $SyntaxError$1 = GetIntrinsic$h('%SyntaxError%');
+	var $SyntaxError$1 = GetIntrinsic$i('%SyntaxError%');
 
 	var SLOT = requireInternalSlot();
 
@@ -5724,7 +5733,7 @@
 
 		var GetIntrinsic = getIntrinsic;
 
-		var has = src;
+		var has = requireSrc();
 		var $TypeError = GetIntrinsic('%TypeError%');
 
 		isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -5797,34 +5806,25 @@
 		return a !== a;
 	};
 
+	var $isNaN$3 = _isNaN;
+
+	var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN$3(x) && x !== Infinity && x !== -Infinity; };
+
+	var GetIntrinsic$h = getIntrinsic;
+
+	var $abs$1 = GetIntrinsic$h('%Math.abs%');
+	var $floor$1 = GetIntrinsic$h('%Math.floor%');
+
 	var $isNaN$2 = _isNaN;
+	var $isFinite$1 = _isFinite;
 
-	var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN$2(x) && x !== Infinity && x !== -Infinity; };
-
-	var isInteger$2;
-	var hasRequiredIsInteger;
-
-	function requireIsInteger () {
-		if (hasRequiredIsInteger) return isInteger$2;
-		hasRequiredIsInteger = 1;
-
-		var GetIntrinsic = getIntrinsic;
-
-		var $abs = GetIntrinsic('%Math.abs%');
-		var $floor = GetIntrinsic('%Math.floor%');
-
-		var $isNaN = _isNaN;
-		var $isFinite = _isFinite;
-
-		isInteger$2 = function isInteger(argument) {
-			if (typeof argument !== 'number' || $isNaN(argument) || !$isFinite(argument)) {
-				return false;
-			}
-			var absValue = $abs(argument);
-			return $floor(absValue) === absValue;
-		};
-		return isInteger$2;
-	}
+	var isInteger$2 = function isInteger(argument) {
+		if (typeof argument !== 'number' || $isNaN$2(argument) || !$isFinite$1(argument)) {
+			return false;
+		}
+		var absValue = $abs$1(argument);
+		return $floor$1(absValue) === absValue;
+	};
 
 	var isMatchRecord;
 	var hasRequiredIsMatchRecord;
@@ -5833,7 +5833,7 @@
 		if (hasRequiredIsMatchRecord) return isMatchRecord;
 		hasRequiredIsMatchRecord = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -5862,8 +5862,8 @@
 		var $TypeError = GetIntrinsic('%TypeError%');
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-		var has = src;
-		var isInteger = requireIsInteger();
+		var has = requireSrc();
+		var isInteger = isInteger$2;
 
 		var isMatchRecord = requireIsMatchRecord();
 
@@ -5952,7 +5952,7 @@
 		if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
 		hasRequiredIsAccessorDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var Type = Type$9;
 
@@ -5983,7 +5983,7 @@
 		if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
 		hasRequiredIsDataDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var Type = Type$9;
 
@@ -6179,7 +6179,7 @@
 		if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
 		hasRequiredToPropertyDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var GetIntrinsic = getIntrinsic;
 
@@ -6798,20 +6798,11 @@
 
 	var Get$3 = /*@__PURE__*/getDefaultExportFromCjs(Get$2);
 
-	var shams;
-	var hasRequiredShams;
+	var hasSymbols$3 = requireShams();
 
-	function requireShams () {
-		if (hasRequiredShams) return shams;
-		hasRequiredShams = 1;
-
-		var hasSymbols = requireShams$1();
-
-		shams = function hasToStringTagShams() {
-			return hasSymbols() && !!Symbol.toStringTag;
-		};
-		return shams;
-	}
+	var shams = function hasToStringTagShams() {
+		return hasSymbols$3() && !!Symbol.toStringTag;
+	};
 
 	var isString;
 	var hasRequiredIsString;
@@ -6831,7 +6822,7 @@
 		};
 		var toStr = Object.prototype.toString;
 		var strClass = '[object String]';
-		var hasToStringTag = requireShams()();
+		var hasToStringTag = shams();
 
 		isString = function isString(value) {
 			if (typeof value === 'string') {
@@ -7047,7 +7038,7 @@
 		var CodePointAt = requireCodePointAt();
 		var Type = Type$9;
 
-		var isInteger = requireIsInteger();
+		var isInteger = isInteger$2;
 		var MAX_SAFE_INTEGER = requireMaxSafeInteger();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -7218,7 +7209,7 @@
 
 	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
 
-	var has = src;
+	var has = requireSrc();
 
 	var IsPropertyKey = IsPropertyKey$4;
 	var Type$5 = Type$9;
@@ -7237,7 +7228,7 @@
 
 	var HasOwnProperty$1 = /*@__PURE__*/getDefaultExportFromCjs(HasOwnProperty);
 
-	var isInteger$1 = requireIsInteger();
+	var isInteger$1 = isInteger$2;
 
 	// https://262.ecma-international.org/12.0/#sec-isinteger
 
@@ -7437,7 +7428,7 @@
 
 	var toStr$1 = Object.prototype.toString;
 	var dateClass = '[object Date]';
-	var hasToStringTag = requireShams()();
+	var hasToStringTag = shams();
 
 	var isDateObject = function isDateObject(value) {
 		if (typeof value !== 'object' || value === null) {
@@ -7579,7 +7570,7 @@
 		hasRequiredIsRegex = 1;
 
 		var callBound = callBound$2;
-		var hasToStringTag = requireShams()();
+		var hasToStringTag = shams();
 		var has;
 		var $exec;
 		var isRegexMarker;
@@ -7940,32 +7931,39 @@
 		return CheckObjectCoercible;
 	}
 
-	var RequireObjectCoercible$1;
-	var hasRequiredRequireObjectCoercible;
+	var RequireObjectCoercible$2;
+	var hasRequiredRequireObjectCoercible$1;
 
-	function requireRequireObjectCoercible () {
-		if (hasRequiredRequireObjectCoercible) return RequireObjectCoercible$1;
-		hasRequiredRequireObjectCoercible = 1;
+	function requireRequireObjectCoercible$1 () {
+		if (hasRequiredRequireObjectCoercible$1) return RequireObjectCoercible$2;
+		hasRequiredRequireObjectCoercible$1 = 1;
 
-		RequireObjectCoercible$1 = requireCheckObjectCoercible();
-		return RequireObjectCoercible$1;
+		RequireObjectCoercible$2 = requireCheckObjectCoercible();
+		return RequireObjectCoercible$2;
 	}
 
-	var GetIntrinsic$6 = getIntrinsic;
+	var ToString$2;
+	var hasRequiredToString;
 
-	var $String$1 = GetIntrinsic$6('%String%');
-	var $TypeError$2 = GetIntrinsic$6('%TypeError%');
+	function requireToString () {
+		if (hasRequiredToString) return ToString$2;
+		hasRequiredToString = 1;
 
-	// https://262.ecma-international.org/6.0/#sec-tostring
+		var GetIntrinsic = getIntrinsic;
 
-	var ToString = function ToString(argument) {
-		if (typeof argument === 'symbol') {
-			throw new $TypeError$2('Cannot convert a Symbol value to a string');
-		}
-		return $String$1(argument);
-	};
+		var $String = GetIntrinsic('%String%');
+		var $TypeError = GetIntrinsic('%TypeError%');
 
-	var ToString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToString);
+		// https://262.ecma-international.org/6.0/#sec-tostring
+
+		ToString$2 = function ToString(argument) {
+			if (typeof argument === 'symbol') {
+				throw new $TypeError('Cannot convert a Symbol value to a string');
+			}
+			return $String(argument);
+		};
+		return ToString$2;
+	}
 
 	var implementation;
 	var hasRequiredImplementation;
@@ -7974,8 +7972,8 @@
 		if (hasRequiredImplementation) return implementation;
 		hasRequiredImplementation = 1;
 
-		var RequireObjectCoercible = requireRequireObjectCoercible();
-		var ToString$1 = ToString;
+		var RequireObjectCoercible = requireRequireObjectCoercible$1();
+		var ToString = requireToString();
 		var callBound = callBound$2;
 		var $replace = callBound('String.prototype.replace');
 
@@ -7990,7 +7988,7 @@
 		/* eslint-enable no-control-regex */
 
 		implementation = function trim() {
-			var S = ToString$1(RequireObjectCoercible(this));
+			var S = ToString(RequireObjectCoercible(this));
 			return $replace($replace(S, leftWhitespace, ''), rightWhitespace, '');
 		};
 		return implementation;
@@ -8054,7 +8052,7 @@
 
 		var callBind = callBindExports;
 		var define = requireDefineProperties();
-		var RequireObjectCoercible = requireRequireObjectCoercible();
+		var RequireObjectCoercible = requireRequireObjectCoercible$1();
 
 		var implementation = requireImplementation();
 		var getPolyfill = requirePolyfill();
@@ -8129,10 +8127,10 @@
 		return StringToNumber$1;
 	}
 
-	var GetIntrinsic$5 = getIntrinsic;
+	var GetIntrinsic$6 = getIntrinsic;
 
-	var $TypeError$1 = GetIntrinsic$5('%TypeError%');
-	var $Number = GetIntrinsic$5('%Number%');
+	var $TypeError$2 = GetIntrinsic$6('%TypeError%');
+	var $Number = GetIntrinsic$6('%Number%');
 	var isPrimitive = requireIsPrimitive();
 
 	var ToPrimitive = ToPrimitive$1;
@@ -8143,10 +8141,10 @@
 	var ToNumber$1 = function ToNumber(argument) {
 		var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number);
 		if (typeof value === 'symbol') {
-			throw new $TypeError$1('Cannot convert a Symbol value to a number');
+			throw new $TypeError$2('Cannot convert a Symbol value to a number');
 		}
 		if (typeof value === 'bigint') {
-			throw new $TypeError$1('Conversion from \'BigInt\' to \'number\' is not allowed.');
+			throw new $TypeError$2('Conversion from \'BigInt\' to \'number\' is not allowed.');
 		}
 		if (typeof value === 'string') {
 			return StringToNumber(value);
@@ -8181,9 +8179,20 @@
 
 	var ToIntegerOrInfinity$1 = /*@__PURE__*/getDefaultExportFromCjs(ToIntegerOrInfinity);
 
-	var GetIntrinsic$4 = getIntrinsic;
+	var RequireObjectCoercible$1;
+	var hasRequiredRequireObjectCoercible;
 
-	var $Object = GetIntrinsic$4('%Object%');
+	function requireRequireObjectCoercible () {
+		if (hasRequiredRequireObjectCoercible) return RequireObjectCoercible$1;
+		hasRequiredRequireObjectCoercible = 1;
+
+		RequireObjectCoercible$1 = requireCheckObjectCoercible();
+		return RequireObjectCoercible$1;
+	}
+
+	var GetIntrinsic$5 = getIntrinsic;
+
+	var $Object = GetIntrinsic$5('%Object%');
 
 	var RequireObjectCoercible = requireRequireObjectCoercible();
 
@@ -8195,6 +8204,22 @@
 	};
 
 	var ToObject$1 = /*@__PURE__*/getDefaultExportFromCjs(ToObject);
+
+	var GetIntrinsic$4 = getIntrinsic;
+
+	var $String$1 = GetIntrinsic$4('%String%');
+	var $TypeError$1 = GetIntrinsic$4('%TypeError%');
+
+	// https://262.ecma-international.org/6.0/#sec-tostring
+
+	var ToString = function ToString(argument) {
+		if (typeof argument === 'symbol') {
+			throw new $TypeError$1('Cannot convert a Symbol value to a string');
+		}
+		return $String$1(argument);
+	};
+
+	var ToString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToString);
 
 	var ToLength;
 	var hasRequiredToLength;
@@ -8274,7 +8299,7 @@
 
 	var StringPad = requireStringPad();
 
-	var isInteger = requireIsInteger();
+	var isInteger = isInteger$2;
 
 	// https://262.ecma-international.org/13.0/#sec-tozeropaddeddecimalstring
 
@@ -8352,7 +8377,7 @@
 	const INTRINSICS = {};
 	const customUtilInspectFormatters = {
 	  ['Temporal.Duration'](depth, options) {
-	    const descr = options.stylize("".concat(this[Symbol.toStringTag], " <").concat(this, ">"), 'special');
+	    const descr = options.stylize(this._repr_, 'special');
 	    if (depth < 1) return descr;
 	    const entries = [];
 	    for (const prop of ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']) {
@@ -8362,7 +8387,7 @@
 	  }
 	};
 	function defaultUtilInspectFormatter(depth, options) {
-	  return options.stylize("".concat(this[Symbol.toStringTag], " <").concat(this, ">"), 'special');
+	  return options.stylize(this._repr_, 'special');
 	}
 	function MakeIntrinsicClass(Class, name) {
 	  Object.defineProperty(Class.prototype, Symbol.toStringTag, {
@@ -9954,8 +9979,14 @@
 	  SetSlot(result, CALENDAR, calendar);
 	  SetSlot(result, DATE_BRAND, true);
 	  {
+	    let repr = TemporalDateToString(result, 'never');
+	    if (typeof calendar === 'string') {
+	      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+	    } else {
+	      repr += '[u-ca=<calendar object>]';
+	    }
 	    ObjectDefineProperty(result, '_repr_', {
-	      value: "".concat(result[Symbol.toStringTag], " <").concat(TemporalDateToString(result), ">"),
+	      value: "Temporal.PlainDate <".concat(repr, ">"),
 	      writable: false,
 	      enumerable: false,
 	      configurable: false
@@ -9984,8 +10015,14 @@
 	  SetSlot(result, ISO_NANOSECOND, ns);
 	  SetSlot(result, CALENDAR, calendar);
 	  {
+	    let repr = TemporalDateTimeToString(result, 'auto', 'never');
+	    if (typeof calendar === 'string') {
+	      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+	    } else {
+	      repr += '[u-ca=<calendar object>]';
+	    }
 	    Object.defineProperty(result, '_repr_', {
-	      value: "".concat(result[Symbol.toStringTag], " <").concat(TemporalDateTimeToString(result, 'auto'), ">"),
+	      value: "Temporal.PlainDateTime <".concat(repr, ">"),
 	      writable: false,
 	      enumerable: false,
 	      configurable: false
@@ -10009,8 +10046,14 @@
 	  SetSlot(result, CALENDAR, calendar);
 	  SetSlot(result, MONTH_DAY_BRAND, true);
 	  {
+	    let repr = TemporalMonthDayToString(result, 'never');
+	    if (typeof calendar === 'string') {
+	      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+	    } else {
+	      repr += '[u-ca=<calendar object>]';
+	    }
 	    Object.defineProperty(result, '_repr_', {
-	      value: "".concat(result[Symbol.toStringTag], " <").concat(TemporalMonthDayToString(result), ">"),
+	      value: "Temporal.PlainMonthDay <".concat(repr, ">"),
 	      writable: false,
 	      enumerable: false,
 	      configurable: false
@@ -10035,8 +10078,14 @@
 	  SetSlot(result, CALENDAR, calendar);
 	  SetSlot(result, YEAR_MONTH_BRAND, true);
 	  {
+	    let repr = TemporalYearMonthToString(result, 'never');
+	    if (typeof calendar === 'string') {
+	      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+	    } else {
+	      repr += '[u-ca=<calendar object>]';
+	    }
 	    Object.defineProperty(result, '_repr_', {
-	      value: "".concat(result[Symbol.toStringTag], " <").concat(TemporalYearMonthToString(result), ">"),
+	      value: "Temporal.PlainYearMonth <".concat(repr, ">"),
 	      writable: false,
 	      enumerable: false,
 	      configurable: false
@@ -10061,8 +10110,30 @@
 	  const instant = new TemporalInstant(GetSlot(result, EPOCHNANOSECONDS));
 	  SetSlot(result, INSTANT, instant);
 	  {
+	    let repr;
+	    if (typeof timeZone === 'string') {
+	      let offsetNs;
+	      const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
+	      if (offsetMinutes !== undefined) {
+	        offsetNs = offsetMinutes * 60e9;
+	      } else {
+	        offsetNs = GetNamedTimeZoneOffsetNanoseconds(timeZone, epochNanoseconds);
+	      }
+	      const dateTime = GetPlainDateTimeFor(undefined, instant, 'iso8601', offsetNs);
+	      repr = TemporalDateTimeToString(dateTime, 'auto', 'never');
+	      repr += FormatDateTimeUTCOffsetRounded(offsetNs);
+	      repr += "[".concat(timeZone, "]");
+	    } else {
+	      const dateTime = GetPlainDateTimeFor(undefined, instant, 'iso8601', 0);
+	      repr = TemporalDateTimeToString(dateTime, 'auto', 'never') + 'Z[<time zone object>]';
+	    }
+	    if (typeof calendar === 'string') {
+	      repr += MaybeFormatCalendarAnnotation(calendar, 'auto');
+	    } else {
+	      repr += '[u-ca=<calendar object>]';
+	    }
 	    Object.defineProperty(result, '_repr_', {
-	      value: "".concat(result[Symbol.toStringTag], " <").concat(TemporalZonedDateTimeToString(result, 'auto'), ">"),
+	      value: "Temporal.ZonedDateTime <".concat(repr, ">"),
 	      writable: false,
 	      enumerable: false,
 	      configurable: false
@@ -12992,11 +13063,10 @@
 	  ({
 	    days
 	  } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
-	  options = GetOptionsObject(options);
 	  const calendar = GetSlot(yearMonth, CALENDAR);
 	  const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
 	  const fields = PrepareTemporalFields(yearMonth, fieldNames, []);
-	  const fieldsCopy = SnapshotOwnProperties(GetOptionsObject(fields), null);
+	  const fieldsCopy = SnapshotOwnProperties(fields, null);
 	  fields.day = 1;
 	  let startDate = CalendarDateFromFields(calendar, fields);
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
@@ -13011,7 +13081,8 @@
 	    startDate = CalendarDateFromFields(calendar, fieldsCopy);
 	  }
 	  const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-	  const optionsCopy = SnapshotOwnProperties(GetOptionsObject(options), null);
+	  options = GetOptionsObject(options);
+	  const optionsCopy = SnapshotOwnProperties(options, null);
 	  const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, options, dateAdd);
 	  const addedDateFields = PrepareTemporalFields(addedDate, fieldNames, []);
 	  return CalendarYearMonthFromFields(calendar, addedDateFields, optionsCopy);
@@ -14113,7 +14184,8 @@
 	    CreateSlots(this);
 	    SetSlot(this, EPOCHNANOSECONDS, ns);
 	    {
-	      const repr = TemporalInstantToString(this, undefined, 'auto');
+	      const dateTime = GetPlainDateTimeFor(undefined, this, 'iso8601', 0);
+	      const repr = TemporalDateTimeToString(dateTime, 'auto', 'never') + 'Z';
 	      Object.defineProperty(this, '_repr_', {
 	        value: "".concat(this[Symbol.toStringTag], " <").concat(repr, ">"),
 	        writable: false,
@@ -14332,13 +14404,14 @@
 	const impl = {};
 	class Calendar {
 	  constructor(id) {
-	    const stringId = RequireString(id);
+	    let stringId = RequireString(id);
 	    if (!IsBuiltinCalendar(stringId)) throw new RangeError("invalid calendar identifier ".concat(stringId));
 	    CreateSlots(this);
-	    SetSlot(this, CALENDAR_ID, ASCIILowercase(stringId));
+	    stringId = ASCIILowercase(stringId);
+	    SetSlot(this, CALENDAR_ID, stringId);
 	    {
 	      Object.defineProperty(this, '_repr_', {
-	        value: "".concat(this[Symbol.toStringTag], " <").concat(stringId, ">"),
+	        value: "Temporal.Calendar <".concat(stringId, ">"),
 	        writable: false,
 	        enumerable: false,
 	        configurable: false
@@ -17709,7 +17782,7 @@
 	    SetSlot(this, NANOSECONDS, nanoseconds);
 	    {
 	      Object.defineProperty(this, '_repr_', {
-	        value: "".concat(this[Symbol.toStringTag], " <").concat(TemporalDurationToString(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds), ">"),
+	        value: "Temporal.Duration <".concat(TemporalDurationToString(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds), ">"),
 	        writable: false,
 	        enumerable: false,
 	        configurable: false
@@ -18533,7 +18606,7 @@
 	    SetSlot(this, TIMEZONE_ID, stringIdentifier);
 	    {
 	      Object.defineProperty(this, '_repr_', {
-	        value: "".concat(this[Symbol.toStringTag], " <").concat(stringIdentifier, ">"),
+	        value: "Temporal.TimeZone <".concat(stringIdentifier, ">"),
 	        writable: false,
 	        enumerable: false,
 	        configurable: false
