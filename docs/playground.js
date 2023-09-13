@@ -1486,76 +1486,58 @@
 	var BigIntegerExports = BigInteger.exports;
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
-	var shams$1;
-	var hasRequiredShams;
+	/* eslint complexity: [2, 18], max-statements: [2, 33] */
+	var shams$1 = function hasSymbols() {
+		if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
+		if (typeof Symbol.iterator === 'symbol') { return true; }
 
-	function requireShams () {
-		if (hasRequiredShams) return shams$1;
-		hasRequiredShams = 1;
+		var obj = {};
+		var sym = Symbol('test');
+		var symObj = Object(sym);
+		if (typeof sym === 'string') { return false; }
 
-		/* eslint complexity: [2, 18], max-statements: [2, 33] */
-		shams$1 = function hasSymbols() {
-			if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
-			if (typeof Symbol.iterator === 'symbol') { return true; }
+		if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
+		if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
 
-			var obj = {};
-			var sym = Symbol('test');
-			var symObj = Object(sym);
-			if (typeof sym === 'string') { return false; }
+		// temp disabled per https://github.com/ljharb/object.assign/issues/17
+		// if (sym instanceof Symbol) { return false; }
+		// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+		// if (!(symObj instanceof Symbol)) { return false; }
 
-			if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
-			if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
+		// if (typeof Symbol.prototype.toString !== 'function') { return false; }
+		// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
 
-			// temp disabled per https://github.com/ljharb/object.assign/issues/17
-			// if (sym instanceof Symbol) { return false; }
-			// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
-			// if (!(symObj instanceof Symbol)) { return false; }
+		var symVal = 42;
+		obj[sym] = symVal;
+		for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
+		if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
 
-			// if (typeof Symbol.prototype.toString !== 'function') { return false; }
-			// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+		if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
 
-			var symVal = 42;
-			obj[sym] = symVal;
-			for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
-			if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
+		var syms = Object.getOwnPropertySymbols(obj);
+		if (syms.length !== 1 || syms[0] !== sym) { return false; }
 
-			if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
+		if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
 
-			var syms = Object.getOwnPropertySymbols(obj);
-			if (syms.length !== 1 || syms[0] !== sym) { return false; }
+		if (typeof Object.getOwnPropertyDescriptor === 'function') {
+			var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+			if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
+		}
 
-			if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
+		return true;
+	};
 
-			if (typeof Object.getOwnPropertyDescriptor === 'function') {
-				var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
-				if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
-			}
+	var origSymbol = typeof Symbol !== 'undefined' && Symbol;
+	var hasSymbolSham = shams$1;
 
-			return true;
-		};
-		return shams$1;
-	}
+	var hasSymbols$4 = function hasNativeSymbols() {
+		if (typeof origSymbol !== 'function') { return false; }
+		if (typeof Symbol !== 'function') { return false; }
+		if (typeof origSymbol('foo') !== 'symbol') { return false; }
+		if (typeof Symbol('bar') !== 'symbol') { return false; }
 
-	var hasSymbols$5;
-	var hasRequiredHasSymbols;
-
-	function requireHasSymbols () {
-		if (hasRequiredHasSymbols) return hasSymbols$5;
-		hasRequiredHasSymbols = 1;
-
-		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-		var hasSymbolSham = requireShams();
-
-		hasSymbols$5 = function hasNativeSymbols() {
-			if (typeof origSymbol !== 'function') { return false; }
-			if (typeof Symbol !== 'function') { return false; }
-			if (typeof origSymbol('foo') !== 'symbol') { return false; }
-			if (typeof Symbol('bar') !== 'symbol') { return false; }
-
-			return hasSymbolSham();
-		};
-		return hasSymbols$5;
-	}
+		return hasSymbolSham();
+	};
 
 	var test = {
 		foo: {}
@@ -1571,12 +1553,12 @@
 
 	var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
 	var slice = Array.prototype.slice;
-	var toStr$4 = Object.prototype.toString;
+	var toStr$3 = Object.prototype.toString;
 	var funcType = '[object Function]';
 
 	var implementation$3 = function bind(that) {
 	    var target = this;
-	    if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
+	    if (typeof target !== 'function' || toStr$3.call(target) !== funcType) {
 	        throw new TypeError(ERROR_MESSAGE + target);
 	    }
 	    var args = slice.call(arguments, 1);
@@ -1622,18 +1604,9 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var src;
-	var hasRequiredSrc;
+	var bind$1 = functionBind;
 
-	function requireSrc () {
-		if (hasRequiredSrc) return src;
-		hasRequiredSrc = 1;
-
-		var bind = functionBind;
-
-		src = bind.call(Function.call, Object.prototype.hasOwnProperty);
-		return src;
-	}
+	var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
 
 	var undefined$1;
 
@@ -1677,7 +1650,7 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$4 = requireHasSymbols()();
+	var hasSymbols$3 = hasSymbols$4();
 	var hasProto = hasProto$1();
 
 	var getProto = Object.getPrototypeOf || (
@@ -1694,7 +1667,7 @@
 		'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
 		'%Array%': Array,
 		'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-		'%ArrayIteratorPrototype%': hasSymbols$4 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
+		'%ArrayIteratorPrototype%': hasSymbols$3 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
 		'%AsyncFromSyncIteratorPrototype%': undefined$1,
 		'%AsyncFunction%': needsEval,
 		'%AsyncGenerator%': needsEval,
@@ -1724,10 +1697,10 @@
 		'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
 		'%isFinite%': isFinite,
 		'%isNaN%': isNaN,
-		'%IteratorPrototype%': hasSymbols$4 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+		'%IteratorPrototype%': hasSymbols$3 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
 		'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
 		'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
 		'%Math%': Math,
 		'%Number%': Number,
 		'%Object%': Object,
@@ -1740,11 +1713,11 @@
 		'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
 		'%RegExp%': RegExp,
 		'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
 		'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
 		'%String%': String,
-		'%StringIteratorPrototype%': hasSymbols$4 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
-		'%Symbol%': hasSymbols$4 ? Symbol : undefined$1,
+		'%StringIteratorPrototype%': hasSymbols$3 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
+		'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
 		'%SyntaxError%': $SyntaxError$2,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
@@ -1849,7 +1822,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn = requireSrc();
+	var hasOwn = src;
 	var $concat = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace = bind.call(Function.call, String.prototype.replace);
@@ -2059,10 +2032,10 @@
 	var $Array = GetIntrinsic$k('%Array%');
 
 	// eslint-disable-next-line global-require
-	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
+	var toStr$2 = !$Array.isArray && callBound$2('Object.prototype.toString');
 
 	var IsArray$4 = $Array.isArray || function IsArray(argument) {
-		return toStr$3(argument) === '[object Array]';
+		return toStr$2(argument) === '[object Array]';
 	};
 
 	// https://262.ecma-international.org/6.0/#sec-isarray
@@ -5576,7 +5549,7 @@
 		hasRequiredInternalSlot = 1;
 
 		var GetIntrinsic = getIntrinsic;
-		var has = requireSrc();
+		var has = src;
 		var channel = requireSideChannel()();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -5733,7 +5706,7 @@
 
 		var GetIntrinsic = getIntrinsic;
 
-		var has = requireSrc();
+		var has = src;
 		var $TypeError = GetIntrinsic('%TypeError%');
 
 		isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -5833,7 +5806,7 @@
 		if (hasRequiredIsMatchRecord) return isMatchRecord;
 		hasRequiredIsMatchRecord = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -5862,7 +5835,7 @@
 		var $TypeError = GetIntrinsic('%TypeError%');
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-		var has = requireSrc();
+		var has = src;
 		var isInteger = isInteger$2;
 
 		var isMatchRecord = requireIsMatchRecord();
@@ -5952,7 +5925,7 @@
 		if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
 		hasRequiredIsAccessorDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -5983,7 +5956,7 @@
 		if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
 		hasRequiredIsDataDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -6059,105 +6032,114 @@
 		return ToBoolean$1;
 	}
 
-	var fnToStr = Function.prototype.toString;
-	var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
-	var badArrayLike;
-	var isCallableMarker;
-	if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
-		try {
-			badArrayLike = Object.defineProperty({}, 'length', {
-				get: function () {
-					throw isCallableMarker;
-				}
-			});
-			isCallableMarker = {};
-			// eslint-disable-next-line no-throw-literal
-			reflectApply(function () { throw 42; }, null, badArrayLike);
-		} catch (_) {
-			if (_ !== isCallableMarker) {
-				reflectApply = null;
-			}
-		}
-	} else {
-		reflectApply = null;
-	}
+	var isCallable$1;
+	var hasRequiredIsCallable$1;
 
-	var constructorRegex = /^\s*class\b/;
-	var isES6ClassFn = function isES6ClassFunction(value) {
-		try {
-			var fnStr = fnToStr.call(value);
-			return constructorRegex.test(fnStr);
-		} catch (e) {
-			return false; // not a function
-		}
-	};
+	function requireIsCallable$1 () {
+		if (hasRequiredIsCallable$1) return isCallable$1;
+		hasRequiredIsCallable$1 = 1;
 
-	var tryFunctionObject = function tryFunctionToStr(value) {
-		try {
-			if (isES6ClassFn(value)) { return false; }
-			fnToStr.call(value);
-			return true;
-		} catch (e) {
-			return false;
-		}
-	};
-	var toStr$2 = Object.prototype.toString;
-	var objectClass = '[object Object]';
-	var fnClass = '[object Function]';
-	var genClass = '[object GeneratorFunction]';
-	var ddaClass = '[object HTMLAllCollection]'; // IE 11
-	var ddaClass2 = '[object HTML document.all class]';
-	var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
-	var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
-
-	var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
-
-	var isDDA = function isDocumentDotAll() { return false; };
-	if (typeof document === 'object') {
-		// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
-		var all = document.all;
-		if (toStr$2.call(all) === toStr$2.call(document.all)) {
-			isDDA = function isDocumentDotAll(value) {
-				/* globals document: false */
-				// in IE 6-8, typeof document.all is "object" and it's truthy
-				if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
-					try {
-						var str = toStr$2.call(value);
-						return (
-							str === ddaClass
-							|| str === ddaClass2
-							|| str === ddaClass3 // opera 12.16
-							|| str === objectClass // IE 6-8
-						) && value('') == null; // eslint-disable-line eqeqeq
-					} catch (e) { /**/ }
-				}
-				return false;
-			};
-		}
-	}
-
-	var isCallable$1 = reflectApply
-		? function isCallable(value) {
-			if (isDDA(value)) { return true; }
-			if (!value) { return false; }
-			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+		var fnToStr = Function.prototype.toString;
+		var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
+		var badArrayLike;
+		var isCallableMarker;
+		if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
 			try {
-				reflectApply(value, null, badArrayLike);
-			} catch (e) {
-				if (e !== isCallableMarker) { return false; }
+				badArrayLike = Object.defineProperty({}, 'length', {
+					get: function () {
+						throw isCallableMarker;
+					}
+				});
+				isCallableMarker = {};
+				// eslint-disable-next-line no-throw-literal
+				reflectApply(function () { throw 42; }, null, badArrayLike);
+			} catch (_) {
+				if (_ !== isCallableMarker) {
+					reflectApply = null;
+				}
 			}
-			return !isES6ClassFn(value) && tryFunctionObject(value);
+		} else {
+			reflectApply = null;
 		}
-		: function isCallable(value) {
-			if (isDDA(value)) { return true; }
-			if (!value) { return false; }
-			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-			if (hasToStringTag$1) { return tryFunctionObject(value); }
-			if (isES6ClassFn(value)) { return false; }
-			var strClass = toStr$2.call(value);
-			if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
-			return tryFunctionObject(value);
+
+		var constructorRegex = /^\s*class\b/;
+		var isES6ClassFn = function isES6ClassFunction(value) {
+			try {
+				var fnStr = fnToStr.call(value);
+				return constructorRegex.test(fnStr);
+			} catch (e) {
+				return false; // not a function
+			}
 		};
+
+		var tryFunctionObject = function tryFunctionToStr(value) {
+			try {
+				if (isES6ClassFn(value)) { return false; }
+				fnToStr.call(value);
+				return true;
+			} catch (e) {
+				return false;
+			}
+		};
+		var toStr = Object.prototype.toString;
+		var objectClass = '[object Object]';
+		var fnClass = '[object Function]';
+		var genClass = '[object GeneratorFunction]';
+		var ddaClass = '[object HTMLAllCollection]'; // IE 11
+		var ddaClass2 = '[object HTML document.all class]';
+		var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
+		var hasToStringTag = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
+
+		var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
+
+		var isDDA = function isDocumentDotAll() { return false; };
+		if (typeof document === 'object') {
+			// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
+			var all = document.all;
+			if (toStr.call(all) === toStr.call(document.all)) {
+				isDDA = function isDocumentDotAll(value) {
+					/* globals document: false */
+					// in IE 6-8, typeof document.all is "object" and it's truthy
+					if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
+						try {
+							var str = toStr.call(value);
+							return (
+								str === ddaClass
+								|| str === ddaClass2
+								|| str === ddaClass3 // opera 12.16
+								|| str === objectClass // IE 6-8
+							) && value('') == null; // eslint-disable-line eqeqeq
+						} catch (e) { /**/ }
+					}
+					return false;
+				};
+			}
+		}
+
+		isCallable$1 = reflectApply
+			? function isCallable(value) {
+				if (isDDA(value)) { return true; }
+				if (!value) { return false; }
+				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+				try {
+					reflectApply(value, null, badArrayLike);
+				} catch (e) {
+					if (e !== isCallableMarker) { return false; }
+				}
+				return !isES6ClassFn(value) && tryFunctionObject(value);
+			}
+			: function isCallable(value) {
+				if (isDDA(value)) { return true; }
+				if (!value) { return false; }
+				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+				if (hasToStringTag) { return tryFunctionObject(value); }
+				if (isES6ClassFn(value)) { return false; }
+				var strClass = toStr.call(value);
+				if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
+				return tryFunctionObject(value);
+			};
+		return isCallable$1;
+	}
 
 	var IsCallable$2;
 	var hasRequiredIsCallable;
@@ -6168,7 +6150,7 @@
 
 		// http://262.ecma-international.org/5.1/#sec-9.11
 
-		IsCallable$2 = isCallable$1;
+		IsCallable$2 = requireIsCallable$1();
 		return IsCallable$2;
 	}
 
@@ -6179,7 +6161,7 @@
 		if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
 		hasRequiredToPropertyDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var GetIntrinsic = getIntrinsic;
 
@@ -6798,11 +6780,20 @@
 
 	var Get$3 = /*@__PURE__*/getDefaultExportFromCjs(Get$2);
 
-	var hasSymbols$3 = requireShams();
+	var shams;
+	var hasRequiredShams;
 
-	var shams = function hasToStringTagShams() {
-		return hasSymbols$3() && !!Symbol.toStringTag;
-	};
+	function requireShams () {
+		if (hasRequiredShams) return shams;
+		hasRequiredShams = 1;
+
+		var hasSymbols = shams$1;
+
+		shams = function hasToStringTagShams() {
+			return hasSymbols() && !!Symbol.toStringTag;
+		};
+		return shams;
+	}
 
 	var isString;
 	var hasRequiredIsString;
@@ -6822,7 +6813,7 @@
 		};
 		var toStr = Object.prototype.toString;
 		var strClass = '[object String]';
-		var hasToStringTag = shams();
+		var hasToStringTag = requireShams()();
 
 		isString = function isString(value) {
 			if (typeof value === 'string') {
@@ -6843,7 +6834,7 @@
 		if (hasRequiredGetIteratorMethod) return getIteratorMethod$1;
 		hasRequiredGetIteratorMethod = 1;
 
-		var hasSymbols = requireHasSymbols()();
+		var hasSymbols = hasSymbols$4();
 		var GetIntrinsic = getIntrinsic;
 		var callBound = callBound$2;
 		var isString = requireIsString();
@@ -7145,7 +7136,7 @@
 	var $asyncIterator = GetIntrinsic$d('%Symbol.asyncIterator%', true);
 
 	var inspect = requireObjectInspect();
-	var hasSymbols$2 = requireHasSymbols()();
+	var hasSymbols$2 = hasSymbols$4();
 
 	var getIteratorMethod = requireGetIteratorMethod();
 	var AdvanceStringIndex = requireAdvanceStringIndex();
@@ -7209,7 +7200,7 @@
 
 	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
 
-	var has = requireSrc();
+	var has = src;
 
 	var IsPropertyKey = IsPropertyKey$4;
 	var Type$5 = Type$9;
@@ -7428,7 +7419,7 @@
 
 	var toStr$1 = Object.prototype.toString;
 	var dateClass = '[object Date]';
-	var hasToStringTag = shams();
+	var hasToStringTag = requireShams()();
 
 	var isDateObject = function isDateObject(value) {
 		if (typeof value !== 'object' || value === null) {
@@ -7440,7 +7431,7 @@
 	var isSymbol$1 = {exports: {}};
 
 	var toStr = Object.prototype.toString;
-	var hasSymbols$1 = requireHasSymbols()();
+	var hasSymbols$1 = hasSymbols$4();
 
 	if (hasSymbols$1) {
 		var symToStr = Symbol.prototype.toString;
@@ -7478,7 +7469,7 @@
 	var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
 	var isPrimitive$1 = isPrimitive$2;
-	var isCallable = isCallable$1;
+	var isCallable = requireIsCallable$1();
 	var isDate = isDateObject;
 	var isSymbol = isSymbolExports;
 
@@ -7570,7 +7561,7 @@
 		hasRequiredIsRegex = 1;
 
 		var callBound = callBound$2;
-		var hasToStringTag = shams();
+		var hasToStringTag = requireShams()();
 		var has;
 		var $exec;
 		var isRegexMarker;
@@ -7848,6 +7839,74 @@
 		return objectKeys;
 	}
 
+	var defineDataProperty;
+	var hasRequiredDefineDataProperty;
+
+	function requireDefineDataProperty () {
+		if (hasRequiredDefineDataProperty) return defineDataProperty;
+		hasRequiredDefineDataProperty = 1;
+
+		var hasPropertyDescriptors = requireHasPropertyDescriptors()();
+
+		var GetIntrinsic = getIntrinsic;
+
+		var $defineProperty = hasPropertyDescriptors && GetIntrinsic('%Object.defineProperty%', true);
+
+		var $SyntaxError = GetIntrinsic('%SyntaxError%');
+		var $TypeError = GetIntrinsic('%TypeError%');
+
+		var gopd = requireGopd();
+
+		/** @type {(obj: Record<PropertyKey, unknown>, property: PropertyKey, value: unknown, nonEnumerable?: boolean | null, nonWritable?: boolean | null, nonConfigurable?: boolean | null, loose?: boolean) => void} */
+		defineDataProperty = function defineDataProperty(
+			obj,
+			property,
+			value
+		) {
+			if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) {
+				throw new $TypeError('`obj` must be an object or a function`');
+			}
+			if (typeof property !== 'string' && typeof property !== 'symbol') {
+				throw new $TypeError('`property` must be a string or a symbol`');
+			}
+			if (arguments.length > 3 && typeof arguments[3] !== 'boolean' && arguments[3] !== null) {
+				throw new $TypeError('`nonEnumerable`, if provided, must be a boolean or null');
+			}
+			if (arguments.length > 4 && typeof arguments[4] !== 'boolean' && arguments[4] !== null) {
+				throw new $TypeError('`nonWritable`, if provided, must be a boolean or null');
+			}
+			if (arguments.length > 5 && typeof arguments[5] !== 'boolean' && arguments[5] !== null) {
+				throw new $TypeError('`nonConfigurable`, if provided, must be a boolean or null');
+			}
+			if (arguments.length > 6 && typeof arguments[6] !== 'boolean') {
+				throw new $TypeError('`loose`, if provided, must be a boolean');
+			}
+
+			var nonEnumerable = arguments.length > 3 ? arguments[3] : null;
+			var nonWritable = arguments.length > 4 ? arguments[4] : null;
+			var nonConfigurable = arguments.length > 5 ? arguments[5] : null;
+			var loose = arguments.length > 6 ? arguments[6] : false;
+
+			/* @type {false | TypedPropertyDescriptor<unknown>} */
+			var desc = !!gopd && gopd(obj, property);
+
+			if ($defineProperty) {
+				$defineProperty(obj, property, {
+					configurable: nonConfigurable === null && desc ? desc.configurable : !nonConfigurable,
+					enumerable: nonEnumerable === null && desc ? desc.enumerable : !nonEnumerable,
+					value: value,
+					writable: nonWritable === null && desc ? desc.writable : !nonWritable
+				});
+			} else if (loose || (!nonEnumerable && !nonWritable && !nonConfigurable)) {
+				// must fall back to [[Set]], and was not explicitly asked to make non-enumerable, non-writable, or non-configurable
+				obj[property] = value; // eslint-disable-line no-param-reassign
+			} else {
+				throw new $SyntaxError('This environment does not support defining a property as non-configurable, non-writable, or non-enumerable.');
+			}
+		};
+		return defineDataProperty;
+	}
+
 	var defineProperties_1;
 	var hasRequiredDefineProperties;
 
@@ -7860,15 +7919,13 @@
 
 		var toStr = Object.prototype.toString;
 		var concat = Array.prototype.concat;
-		var origDefineProperty = Object.defineProperty;
+		var defineDataProperty = requireDefineDataProperty();
 
 		var isFunction = function (fn) {
 			return typeof fn === 'function' && toStr.call(fn) === '[object Function]';
 		};
 
-		var hasPropertyDescriptors = requireHasPropertyDescriptors()();
-
-		var supportsDescriptors = origDefineProperty && hasPropertyDescriptors;
+		var supportsDescriptors = requireHasPropertyDescriptors()();
 
 		var defineProperty = function (object, name, value, predicate) {
 			if (name in object) {
@@ -7880,15 +7937,11 @@
 					return;
 				}
 			}
+
 			if (supportsDescriptors) {
-				origDefineProperty(object, name, {
-					configurable: true,
-					enumerable: false,
-					value: value,
-					writable: true
-				});
+				defineDataProperty(object, name, value, true);
 			} else {
-				object[name] = value; // eslint-disable-line no-param-reassign
+				defineDataProperty(object, name, value);
 			}
 		};
 
@@ -9418,14 +9471,26 @@
 	  return retval;
 	}
 	function ToRelativeTemporalObject(options) {
+	  // returns: {
+	  //   plainRelativeTo: Temporal.PlainDate | undefined
+	  //   zonedRelativeTo: Temporal.ZonedDateTime | undefined
+	  // }
+	  // plainRelativeTo and zonedRelativeTo are mutually exclusive.
 	  const relativeTo = options.relativeTo;
-	  if (relativeTo === undefined) return relativeTo;
+	  if (relativeTo === undefined) return {};
 	  let offsetBehaviour = 'option';
 	  let matchMinutes = false;
 	  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
 	  if (Type$a(relativeTo) === 'Object') {
-	    if (IsTemporalZonedDateTime(relativeTo) || IsTemporalDate(relativeTo)) return relativeTo;
-	    if (IsTemporalDateTime(relativeTo)) return TemporalDateTimeToDate(relativeTo);
+	    if (IsTemporalZonedDateTime(relativeTo)) return {
+	      zonedRelativeTo: relativeTo
+	    };
+	    if (IsTemporalDate(relativeTo)) return {
+	      plainRelativeTo: relativeTo
+	    };
+	    if (IsTemporalDateTime(relativeTo)) return {
+	      plainRelativeTo: TemporalDateTimeToDate(relativeTo)
+	    };
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(relativeTo);
 	    const fieldNames = CalendarFields(calendar, ['day', 'month', 'monthCode', 'year']);
 	    Call$3(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
@@ -9479,10 +9544,14 @@
 	    if (!IsBuiltinCalendar(calendar)) throw new RangeError("invalid calendar identifier ".concat(calendar));
 	    calendar = ASCIILowercase(calendar);
 	  }
-	  if (timeZone === undefined) return CreateTemporalDate(year, month, day, calendar);
+	  if (timeZone === undefined) return {
+	    plainRelativeTo: CreateTemporalDate(year, month, day, calendar)
+	  };
 	  const offsetNs = offsetBehaviour === 'option' ? ParseDateTimeUTCOffset(offset) : 0;
 	  const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
-	  return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+	  return {
+	    zonedRelativeTo: CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar)
+	  };
 	}
 	function DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
 	  const entries = ObjectEntries$1({
@@ -10149,9 +10218,8 @@
 	}
 	function CalendarFields(calendar, fieldNames) {
 	  if (typeof calendar === 'string') {
-	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
-	    calendar = new TemporalCalendar(calendar);
-	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.fields%'), calendar, [fieldNames]);
+	    if (calendar === 'iso8601') return fieldNames;
+	    return GetIntrinsic('%calendarFieldsImpl%')(calendar, fieldNames);
 	  }
 	  const fields = GetMethod$4(calendar, 'fields');
 	  fieldNames = Call$3(fields, calendar, [fieldNames]);
@@ -10818,7 +10886,7 @@
 	function TemporalDurationToString(years, months, weeks, days, hours, minutes, seconds, ms, µs, ns) {
 	  let precision = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : 'auto';
 	  const sign = DurationSign(years, months, weeks, days, hours, minutes, seconds, ms, µs, ns);
-	  let total = TotalDurationNanoseconds(0, 0, 0, seconds, ms, µs, ns, 0);
+	  let total = TotalDurationNanoseconds(0, 0, seconds, ms, µs, ns);
 	  ({
 	    quotient: total,
 	    remainder: ns
@@ -11505,10 +11573,8 @@
 	    nanosecond: nanosecond.toJSNumber()
 	  };
 	}
-	function TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, offsetShift) {
-	  if (days !== 0) nanoseconds = bigInt(nanoseconds).subtract(offsetShift);
-	  hours = bigInt(hours).add(bigInt(days).multiply(24));
-	  minutes = bigInt(minutes).add(hours.multiply(60));
+	function TotalDurationNanoseconds(hours, minutes, seconds, milliseconds, microseconds, nanoseconds) {
+	  minutes = bigInt(minutes).add(bigInt(hours).multiply(60));
 	  seconds = bigInt(seconds).add(minutes.multiply(60));
 	  milliseconds = bigInt(milliseconds).add(seconds.multiply(1000));
 	  microseconds = bigInt(microseconds).add(milliseconds.multiply(1000));
@@ -11536,7 +11602,7 @@
 	  let {
 	    days
 	  } = DifferenceISODateTime(GetSlot(dtStart, ISO_YEAR), GetSlot(dtStart, ISO_MONTH), GetSlot(dtStart, ISO_DAY), GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), GetSlot(dtEnd, ISO_YEAR), GetSlot(dtEnd, ISO_MONTH), GetSlot(dtEnd, ISO_DAY), GetSlot(dtEnd, ISO_HOUR), GetSlot(dtEnd, ISO_MINUTE), GetSlot(dtEnd, ISO_SECOND), GetSlot(dtEnd, ISO_MILLISECOND), GetSlot(dtEnd, ISO_MICROSECOND), GetSlot(dtEnd, ISO_NANOSECOND), calendar, 'day', ObjectCreate$8(null));
-	  let intermediateNs = AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0);
+	  let intermediateNs = AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days, 0, 0, 0, 0, 0, 0, dtStart);
 	  // may disambiguate
 
 	  // If clock time after addition was in the middle of a skipped period, the
@@ -11551,7 +11617,7 @@
 	  if (sign === 1) {
 	    while (days.greater(0) && intermediateNs.greater(endNs)) {
 	      days = days.prev();
-	      intermediateNs = AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days.toJSNumber(), 0, 0, 0, 0, 0, 0);
+	      intermediateNs = AddZonedDateTime(start, timeZone, calendar, 0, 0, 0, days.toJSNumber(), 0, 0, 0, 0, 0, 0, dtStart);
 	      // may do disambiguation
 	    }
 	  }
@@ -11599,7 +11665,8 @@
 	  }
 	}
 	function BalancePossiblyInfiniteTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit) {
-	  nanoseconds = TotalDurationNanoseconds(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
+	  hours = bigInt(hours).add(bigInt(days).multiply(24));
+	  nanoseconds = TotalDurationNanoseconds(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	  const sign = nanoseconds.lesser(0) ? -1 : 1;
 	  nanoseconds = nanoseconds.abs();
 	  microseconds = milliseconds = seconds = minutes = hours = days = bigInt.zero;
@@ -11770,7 +11837,7 @@
 	    nanoseconds
 	  };
 	}
-	function UnbalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+	function UnbalanceDateDurationRelative(years, months, weeks, days, largestUnit, plainRelativeTo) {
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  if (sign === 0) return {
@@ -11779,11 +11846,7 @@
 	    weeks,
 	    days
 	  };
-	  let calendar;
-	  if (relativeTo) {
-	    relativeTo = ToTemporalDate(relativeTo);
-	    calendar = GetSlot(relativeTo, CALENDAR);
-	  }
+	  const calendar = plainRelativeTo ? GetSlot(plainRelativeTo, CALENDAR) : undefined;
 	  const oneYear = new TemporalDuration(sign);
 	  const oneMonth = new TemporalDuration(0, sign);
 	  const oneWeek = new TemporalDuration(0, 0, sign);
@@ -11799,6 +11862,7 @@
 	      break;
 	    case 'month':
 	      {
+	        if (years.isZero()) break;
 	        if (!calendar) throw new RangeError('a starting point is required for months balancing');
 	        // balance years down to months
 	        let dateAdd, dateUntil;
@@ -11807,12 +11871,12 @@
 	          dateUntil = GetMethod$4(calendar, 'dateUntil');
 	        }
 	        while (!years.isZero()) {
-	          const newRelativeTo = CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
+	          const newRelativeTo = CalendarDateAdd(calendar, plainRelativeTo, oneYear, undefined, dateAdd);
 	          const untilOptions = ObjectCreate$8(null);
 	          untilOptions.largestUnit = 'month';
-	          const untilResult = CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+	          const untilResult = CalendarDateUntil(calendar, plainRelativeTo, newRelativeTo, untilOptions, dateUntil);
 	          const oneYearMonths = GetSlot(untilResult, MONTHS);
-	          relativeTo = newRelativeTo;
+	          plainRelativeTo = newRelativeTo;
 	          months = months.add(oneYearMonths);
 	          years = years.subtract(sign);
 	        }
@@ -11820,15 +11884,16 @@
 	      break;
 	    case 'week':
 	      {
+	        if (years.isZero() && months.isZero()) break;
 	        if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
 	        // balance years down to days
 	        while (!years.isZero()) {
 	          let oneYearDays;
 	          ({
-	            relativeTo,
+	            relativeTo: plainRelativeTo,
 	            days: oneYearDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneYear, dateAdd));
 	          days = days.add(oneYearDays);
 	          years = years.subtract(sign);
 	        }
@@ -11837,9 +11902,9 @@
 	        while (!months.isZero()) {
 	          let oneMonthDays;
 	          ({
-	            relativeTo,
+	            relativeTo: plainRelativeTo,
 	            days: oneMonthDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	          days = days.add(oneMonthDays);
 	          months = months.subtract(sign);
 	        }
@@ -11854,9 +11919,9 @@
 	        while (!years.isZero()) {
 	          let oneYearDays;
 	          ({
-	            relativeTo,
+	            relativeTo: plainRelativeTo,
 	            days: oneYearDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneYear, dateAdd));
 	          days = days.add(oneYearDays);
 	          years = years.subtract(sign);
 	        }
@@ -11865,9 +11930,9 @@
 	        while (!months.isZero()) {
 	          let oneMonthDays;
 	          ({
-	            relativeTo,
+	            relativeTo: plainRelativeTo,
 	            days: oneMonthDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	          days = days.add(oneMonthDays);
 	          months = months.subtract(sign);
 	        }
@@ -11876,9 +11941,9 @@
 	        while (!weeks.isZero()) {
 	          let oneWeekDays;
 	          ({
-	            relativeTo,
+	            relativeTo: plainRelativeTo,
 	            days: oneWeekDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneWeek, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneWeek, dateAdd));
 	          days = days.add(oneWeekDays);
 	          weeks = weeks.subtract(sign);
 	        }
@@ -11892,20 +11957,19 @@
 	    days: days.toJSNumber()
 	  };
 	}
-	function BalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo) {
+	function BalanceDateDurationRelative(years, months, weeks, days, largestUnit, plainRelativeTo) {
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-	  if (sign === 0) return {
-	    years,
-	    months,
-	    weeks,
-	    days
-	  };
-	  let calendar;
-	  if (relativeTo) {
-	    relativeTo = ToTemporalDate(relativeTo);
-	    calendar = GetSlot(relativeTo, CALENDAR);
+	  if (sign === 0 || largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week') {
+	    return {
+	      years,
+	      months,
+	      weeks,
+	      days
+	    };
 	  }
+	  if (!plainRelativeTo) throw new RangeError("a starting point is required for ".concat(largestUnit, "s balancing"));
+	  const calendar = GetSlot(plainRelativeTo, CALENDAR);
 	  const oneYear = new TemporalDuration(sign);
 	  const oneMonth = new TemporalDuration(0, sign);
 	  const oneWeek = new TemporalDuration(0, 0, sign);
@@ -11918,22 +11982,21 @@
 	  switch (largestUnit) {
 	    case 'year':
 	      {
-	        if (!calendar) throw new RangeError('a starting point is required for years balancing');
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
 	        // balance days up to years
 	        let newRelativeTo, oneYearDays;
 	        ({
 	          relativeTo: newRelativeTo,
 	          days: oneYearDays
-	        } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd));
+	        } = MoveRelativeDate(calendar, plainRelativeTo, oneYear, dateAdd));
 	        while (days.abs().geq(MathAbs$1(oneYearDays))) {
 	          days = days.subtract(oneYearDays);
 	          years = years.add(sign);
-	          relativeTo = newRelativeTo;
+	          plainRelativeTo = newRelativeTo;
 	          ({
 	            relativeTo: newRelativeTo,
 	            days: oneYearDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneYear, dateAdd));
 	        }
 
 	        // balance days up to months
@@ -11941,75 +12004,73 @@
 	        ({
 	          relativeTo: newRelativeTo,
 	          days: oneMonthDays
-	        } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	        } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	        while (days.abs().geq(MathAbs$1(oneMonthDays))) {
 	          days = days.subtract(oneMonthDays);
 	          months = months.add(sign);
-	          relativeTo = newRelativeTo;
+	          plainRelativeTo = newRelativeTo;
 	          ({
 	            relativeTo: newRelativeTo,
 	            days: oneMonthDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	        }
 
 	        // balance months up to years
-	        newRelativeTo = CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
+	        newRelativeTo = CalendarDateAdd(calendar, plainRelativeTo, oneYear, undefined, dateAdd);
 	        const dateUntil = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateUntil') : undefined;
 	        const untilOptions = ObjectCreate$8(null);
 	        untilOptions.largestUnit = 'month';
-	        let untilResult = CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+	        let untilResult = CalendarDateUntil(calendar, plainRelativeTo, newRelativeTo, untilOptions, dateUntil);
 	        let oneYearMonths = GetSlot(untilResult, MONTHS);
 	        while (months.abs().geq(MathAbs$1(oneYearMonths))) {
 	          months = months.subtract(oneYearMonths);
 	          years = years.add(sign);
-	          relativeTo = newRelativeTo;
-	          newRelativeTo = CalendarDateAdd(calendar, relativeTo, oneYear, undefined, dateAdd);
+	          plainRelativeTo = newRelativeTo;
+	          newRelativeTo = CalendarDateAdd(calendar, plainRelativeTo, oneYear, undefined, dateAdd);
 	          const untilOptions = ObjectCreate$8(null);
 	          untilOptions.largestUnit = 'month';
-	          untilResult = CalendarDateUntil(calendar, relativeTo, newRelativeTo, untilOptions, dateUntil);
+	          untilResult = CalendarDateUntil(calendar, plainRelativeTo, newRelativeTo, untilOptions, dateUntil);
 	          oneYearMonths = GetSlot(untilResult, MONTHS);
 	        }
 	        break;
 	      }
 	    case 'month':
 	      {
-	        if (!calendar) throw new RangeError('a starting point is required for months balancing');
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
 	        // balance days up to months
 	        let newRelativeTo, oneMonthDays;
 	        ({
 	          relativeTo: newRelativeTo,
 	          days: oneMonthDays
-	        } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	        } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	        while (days.abs().geq(MathAbs$1(oneMonthDays))) {
 	          days = days.subtract(oneMonthDays);
 	          months = months.add(sign);
-	          relativeTo = newRelativeTo;
+	          plainRelativeTo = newRelativeTo;
 	          ({
 	            relativeTo: newRelativeTo,
 	            days: oneMonthDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	        }
 	        break;
 	      }
 	    case 'week':
 	      {
-	        if (!calendar) throw new RangeError('a starting point is required for weeks balancing');
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
 	        // balance days up to weeks
 	        let newRelativeTo, oneWeekDays;
 	        ({
 	          relativeTo: newRelativeTo,
 	          days: oneWeekDays
-	        } = MoveRelativeDate(calendar, relativeTo, oneWeek, dateAdd));
+	        } = MoveRelativeDate(calendar, plainRelativeTo, oneWeek, dateAdd));
 	        while (days.abs().geq(MathAbs$1(oneWeekDays))) {
 	          days = days.subtract(oneWeekDays);
 	          weeks = weeks.add(sign);
-	          relativeTo = newRelativeTo;
+	          plainRelativeTo = newRelativeTo;
 	          ({
 	            relativeTo: newRelativeTo,
 	            days: oneWeekDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneWeek, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneWeek, dateAdd));
 	        }
 	        break;
 	      }
@@ -12020,20 +12081,6 @@
 	    weeks: weeks.toJSNumber(),
 	    days: days.toJSNumber()
 	  };
-	}
-	function CalculateOffsetShift(relativeTo, y, mon, w, d) {
-	  if (IsTemporalZonedDateTime(relativeTo)) {
-	    const instant = GetSlot(relativeTo, INSTANT);
-	    const timeZone = GetSlot(relativeTo, TIME_ZONE);
-	    const calendar = GetSlot(relativeTo, CALENDAR);
-	    const offsetBefore = GetOffsetNanosecondsFor(timeZone, instant);
-	    const after = AddZonedDateTime(instant, timeZone, calendar, y, mon, w, d, 0, 0, 0, 0, 0, 0);
-	    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-	    const instantAfter = new TemporalInstant(after);
-	    const offsetAfter = GetOffsetNanosecondsFor(timeZone, instantAfter);
-	    return offsetAfter - offsetBefore;
-	  }
-	  return 0;
 	}
 	function CreateNegatedTemporalDuration(duration) {
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
@@ -12320,14 +12367,16 @@
 	  let microseconds = diff.divide(1e3).mod(1e3).toJSNumber();
 	  let milliseconds = diff.divide(1e6).mod(1e3).toJSNumber();
 	  let seconds = diff.divide(1e9).toJSNumber();
-	  ({
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = RoundDuration(0, 0, 0, 0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, increment, smallestUnit, roundingMode));
+	  if (smallestUnit !== 'nanosecond' || increment !== 1) {
+	    ({
+	      hours,
+	      minutes,
+	      seconds,
+	      milliseconds,
+	      microseconds,
+	      nanoseconds
+	    } = RoundDuration(0, 0, 0, 0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, increment, smallestUnit, roundingMode));
+	  }
 	  return BalanceTimeDuration(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit);
 	}
 	function DifferenceISODateTime(y1, mon1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2, calendar, largestUnit, options) {
@@ -12418,7 +12467,7 @@
 	    weeks,
 	    days
 	  } = DifferenceISODateTime(GetSlot(dtStart, ISO_YEAR), GetSlot(dtStart, ISO_MONTH), GetSlot(dtStart, ISO_DAY), GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), GetSlot(dtEnd, ISO_YEAR), GetSlot(dtEnd, ISO_MONTH), GetSlot(dtEnd, ISO_DAY), GetSlot(dtEnd, ISO_HOUR), GetSlot(dtEnd, ISO_MINUTE), GetSlot(dtEnd, ISO_SECOND), GetSlot(dtEnd, ISO_MILLISECOND), GetSlot(dtEnd, ISO_MICROSECOND), GetSlot(dtEnd, ISO_NANOSECOND), calendar, largestUnit, options);
-	  let intermediateNs = AddZonedDateTime(start, timeZone, calendar, years, months, weeks, 0, 0, 0, 0, 0, 0, 0);
+	  let intermediateNs = AddZonedDateTime(start, timeZone, calendar, years, months, weeks, 0, 0, 0, 0, 0, 0, 0, dtStart);
 	  // may disambiguate
 	  let timeRemainderNs = ns2.subtract(intermediateNs);
 	  const intermediate = CreateTemporalZonedDateTime(intermediateNs, timeZone, calendar);
@@ -12555,28 +12604,30 @@
 	    microseconds,
 	    nanoseconds
 	  } = DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendar, settings.largestUnit, resolvedOptions);
-	  const relativeTo = TemporalDateTimeToDate(plainDateTime);
-	  ({
-	    years,
-	    months,
-	    weeks,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, relativeTo));
-	  ({
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit));
+	  if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
+	    const relativeTo = TemporalDateTimeToDate(plainDateTime);
+	    ({
+	      years,
+	      months,
+	      weeks,
+	      days,
+	      hours,
+	      minutes,
+	      seconds,
+	      milliseconds,
+	      microseconds,
+	      nanoseconds
+	    } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, relativeTo));
+	    ({
+	      days,
+	      hours,
+	      minutes,
+	      seconds,
+	      milliseconds,
+	      microseconds,
+	      nanoseconds
+	    } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit));
+	  }
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
 	}
@@ -12593,14 +12644,16 @@
 	    microseconds,
 	    nanoseconds
 	  } = DifferenceTime(GetSlot(plainTime, ISO_HOUR), GetSlot(plainTime, ISO_MINUTE), GetSlot(plainTime, ISO_SECOND), GetSlot(plainTime, ISO_MILLISECOND), GetSlot(plainTime, ISO_MICROSECOND), GetSlot(plainTime, ISO_NANOSECOND), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND));
-	  ({
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = RoundDuration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
+	  if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
+	    ({
+	      hours,
+	      minutes,
+	      seconds,
+	      milliseconds,
+	      microseconds,
+	      nanoseconds
+	    } = RoundDuration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
+	  }
 	  ({
 	    hours,
 	    minutes,
@@ -12684,30 +12737,34 @@
 	      microseconds,
 	      nanoseconds
 	    } = DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, resolvedOptions));
-	    ({
-	      years,
-	      months,
-	      weeks,
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, zonedDateTime));
-	    ({
-	      years,
-	      months,
-	      weeks,
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, zonedDateTime));
+	    if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
+	      const plainRelativeToWillBeUsed = settings.smallestUnit === 'year' || settings.smallestUnit === 'month' || settings.smallestUnit === 'week';
+	      const plainRelativeTo = plainRelativeToWillBeUsed ? ToTemporalDate(zonedDateTime) : undefined;
+	      ({
+	        years,
+	        months,
+	        weeks,
+	        days,
+	        hours,
+	        minutes,
+	        seconds,
+	        milliseconds,
+	        microseconds,
+	        nanoseconds
+	      } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, plainRelativeTo, zonedDateTime));
+	      ({
+	        years,
+	        months,
+	        weeks,
+	        days,
+	        hours,
+	        minutes,
+	        seconds,
+	        milliseconds,
+	        microseconds,
+	        nanoseconds
+	      } = AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, zonedDateTime));
+	    }
 	  }
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
@@ -12764,12 +12821,12 @@
 	    nanosecond
 	  };
 	}
-	function AddDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, relativeTo) {
+	function AddDuration(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, plainRelativeTo, zonedRelativeTo) {
 	  const largestUnit1 = DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
 	  const largestUnit2 = DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
 	  const largestUnit = LargerOfTwoTemporalUnits(largestUnit1, largestUnit2);
 	  let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-	  if (!relativeTo) {
+	  if (!zonedRelativeTo && !plainRelativeTo) {
 	    if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week') {
 	      throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
 	    }
@@ -12783,18 +12840,18 @@
 	      microseconds,
 	      nanoseconds
 	    } = BalanceTimeDuration(d1 + d2, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
-	  } else if (IsTemporalDate(relativeTo)) {
+	  } else if (plainRelativeTo) {
 	    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-	    const calendar = GetSlot(relativeTo, CALENDAR);
+	    const calendar = GetSlot(plainRelativeTo, CALENDAR);
 	    const dateDuration1 = new TemporalDuration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
 	    const dateDuration2 = new TemporalDuration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
 	    const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
-	    const intermediate = CalendarDateAdd(calendar, relativeTo, dateDuration1, undefined, dateAdd);
+	    const intermediate = CalendarDateAdd(calendar, plainRelativeTo, dateDuration1, undefined, dateAdd);
 	    const end = CalendarDateAdd(calendar, intermediate, dateDuration2, undefined, dateAdd);
 	    const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
 	    const differenceOptions = ObjectCreate$8(null);
 	    differenceOptions.largestUnit = dateLargestUnit;
-	    const untilResult = CalendarDateUntil(calendar, relativeTo, end, differenceOptions);
+	    const untilResult = CalendarDateUntil(calendar, plainRelativeTo, end, differenceOptions);
 	    years = GetSlot(untilResult, YEARS);
 	    months = GetSlot(untilResult, MONTHS);
 	    weeks = GetSlot(untilResult, WEEKS);
@@ -12810,11 +12867,11 @@
 	      nanoseconds
 	    } = BalanceTimeDuration(days, bigInt(h1).add(h2), bigInt(min1).add(min2), bigInt(s1).add(s2), bigInt(ms1).add(ms2), bigInt(µs1).add(µs2), bigInt(ns1).add(ns2), largestUnit));
 	  } else {
-	    // relativeTo is a ZonedDateTime
+	    // zonedRelativeTo is defined
 	    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-	    const timeZone = GetSlot(relativeTo, TIME_ZONE);
-	    const calendar = GetSlot(relativeTo, CALENDAR);
-	    const intermediateNs = AddZonedDateTime(GetSlot(relativeTo, INSTANT), timeZone, calendar, y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
+	    const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+	    const calendar = GetSlot(zonedRelativeTo, CALENDAR);
+	    const intermediateNs = AddZonedDateTime(GetSlot(zonedRelativeTo, INSTANT), timeZone, calendar, y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
 	    const endNs = AddZonedDateTime(new TemporalInstant(intermediateNs), timeZone, calendar, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
 	    if (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week' && largestUnit !== 'day') {
 	      // The user is only asking for a time difference, so return difference of instants.
@@ -12829,7 +12886,7 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = DifferenceInstant(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, 1, 'nanosecond', largestUnit, 'halfExpand'));
+	      } = DifferenceInstant(GetSlot(zonedRelativeTo, EPOCHNANOSECONDS), endNs, 1, 'nanosecond', largestUnit, 'halfExpand'));
 	    } else {
 	      ({
 	        years,
@@ -12842,7 +12899,7 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = DifferenceZonedDateTime(GetSlot(relativeTo, EPOCHNANOSECONDS), endNs, timeZone, calendar, largestUnit, ObjectCreate$8(null)));
+	      } = DifferenceZonedDateTime(GetSlot(zonedRelativeTo, EPOCHNANOSECONDS), endNs, timeZone, calendar, largestUnit, ObjectCreate$8(null)));
 	    }
 	  }
 	  RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -12902,7 +12959,9 @@
 	    nanosecond
 	  };
 	}
-	function AddZonedDateTime(instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns, options) {
+	function AddZonedDateTime(instant, timeZone, calendar, years, months, weeks, days, h, min, s, ms, µs, ns) {
+	  let precalculatedPlainDateTime = arguments.length > 13 && arguments[13] !== undefined ? arguments[13] : undefined;
+	  let options = arguments.length > 14 && arguments[14] !== undefined ? arguments[14] : undefined;
 	  // If only time is to be added, then use Instant math. It's not OK to fall
 	  // through to the date/time code below because compatible disambiguation in
 	  // the PlainDateTime=>Instant conversion will change the offset of any
@@ -12918,7 +12977,7 @@
 
 	  // RFC 5545 requires the date portion to be added in calendar days and the
 	  // time portion to be added in exact time.
-	  let dt = GetPlainDateTimeFor(timeZone, instant, calendar);
+	  const dt = precalculatedPlainDateTime !== null && precalculatedPlainDateTime !== void 0 ? precalculatedPlainDateTime : GetPlainDateTimeFor(timeZone, instant, calendar);
 	  const datePart = CreateTemporalDate(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), calendar);
 	  const dateDuration = new TemporalDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  const addedDate = CalendarDateAdd(calendar, datePart, dateDuration, options);
@@ -12944,7 +13003,10 @@
 	    nanoseconds
 	  } = ToTemporalDurationRecord(other);
 	  options = GetOptionsObject(options);
-	  const relativeTo = ToRelativeTemporalObject(options);
+	  const {
+	    plainRelativeTo,
+	    zonedRelativeTo
+	  } = ToRelativeTemporalObject(options);
 	  ({
 	    years,
 	    months,
@@ -12956,7 +13018,7 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = AddDuration(GetSlot(duration, YEARS), GetSlot(duration, MONTHS), GetSlot(duration, WEEKS), GetSlot(duration, DAYS), GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS), sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds, relativeTo));
+	  } = AddDuration(GetSlot(duration, YEARS), GetSlot(duration, MONTHS), GetSlot(duration, WEEKS), GetSlot(duration, DAYS), GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS), sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds, plainRelativeTo, zonedRelativeTo));
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	}
@@ -13104,7 +13166,7 @@
 	  options = GetOptionsObject(options);
 	  const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
 	  const calendar = GetSlot(zonedDateTime, CALENDAR);
-	  const epochNanoseconds = AddZonedDateTime(GetSlot(zonedDateTime, INSTANT), timeZone, calendar, sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds, options);
+	  const epochNanoseconds = AddZonedDateTime(GetSlot(zonedDateTime, INSTANT), timeZone, calendar, sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds, undefined, options);
 	  return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
 	}
 	function RoundNumberToIncrement(quantity, increment, mode) {
@@ -13258,8 +13320,8 @@
 	  const intermediateNs = AddZonedDateTime(GetSlot(relativeTo, INSTANT), timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  return CreateTemporalZonedDateTime(intermediateNs, timeZone, calendar);
 	}
-	function AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, increment, unit, roundingMode, relativeTo) {
-	  if (!IsTemporalZonedDateTime(relativeTo) || unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day' || unit === 'nanosecond' && increment === 1) {
+	function AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, increment, unit, roundingMode, zonedRelativeTo) {
+	  if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day' || unit === 'nanosecond' && increment === 1) {
 	    return {
 	      years,
 	      months,
@@ -13282,11 +13344,11 @@
 	  // duration, there's no way for another full day to come from the next
 	  // round of rounding. And if it were possible (e.g. contrived calendar
 	  // with 30-minute-long "days") then it'd risk an infinite loop.
-	  let timeRemainderNs = TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
+	  let timeRemainderNs = TotalDurationNanoseconds(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	  const direction = MathSign(timeRemainderNs.toJSNumber());
-	  const timeZone = GetSlot(relativeTo, TIME_ZONE);
-	  const calendar = GetSlot(relativeTo, CALENDAR);
-	  const dayStart = AddZonedDateTime(GetSlot(relativeTo, INSTANT), timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+	  const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+	  const calendar = GetSlot(zonedRelativeTo, CALENDAR);
+	  const dayStart = AddZonedDateTime(GetSlot(zonedRelativeTo, INSTANT), timeZone, calendar, years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	  const dayEnd = AddZonedDateTime(new TemporalInstant(dayStart), timeZone, calendar, 0, 0, 0, direction, 0, 0, 0, 0, 0, 0);
 	  const dayLengthNs = dayEnd.subtract(dayStart);
@@ -13297,7 +13359,7 @@
 	      months,
 	      weeks,
 	      days
-	    } = AddDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, 0, 0, 0, direction, 0, 0, 0, 0, 0, 0, relativeTo));
+	    } = AddDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, 0, 0, 0, direction, 0, 0, 0, 0, 0, 0, /* plainRelativeTo = */undefined, zonedRelativeTo));
 	    ({
 	      hours,
 	      minutes,
@@ -13329,24 +13391,18 @@
 	  };
 	}
 	function RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, increment, unit, roundingMode) {
-	  let relativeTo = arguments.length > 13 && arguments[13] !== undefined ? arguments[13] : undefined;
+	  let plainRelativeTo = arguments.length > 13 && arguments[13] !== undefined ? arguments[13] : undefined;
+	  let zonedRelativeTo = arguments.length > 14 && arguments[14] !== undefined ? arguments[14] : undefined;
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-	  let calendar, zonedRelativeTo;
-	  if (relativeTo) {
-	    if (IsTemporalZonedDateTime(relativeTo)) {
-	      zonedRelativeTo = relativeTo;
-	      relativeTo = ToTemporalDate(relativeTo);
-	    } else if (!IsTemporalDate(relativeTo)) {
-	      throw new Error('assertion failure in RoundDuration: _relativeTo_ must be PlainDate');
-	    }
-	    calendar = GetSlot(relativeTo, CALENDAR);
+	  if ((unit === 'year' || unit === 'month' || unit === 'week') && !plainRelativeTo) {
+	    throw new RangeError("A starting point is required for ".concat(unit, "s rounding"));
 	  }
 
 	  // First convert time units up to days, if rounding to days or higher units.
 	  // If rounding relative to a ZonedDateTime, then some days may not be 24h.
 	  let dayLengthNs;
 	  if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
-	    nanoseconds = TotalDurationNanoseconds(0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 0);
+	    nanoseconds = TotalDurationNanoseconds(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	    let deltaDays;
 	    if (zonedRelativeTo) {
 	      const intermediate = MoveRelativeZonedDateTime(zonedRelativeTo, years, months, weeks, days);
@@ -13370,35 +13426,35 @@
 	  switch (unit) {
 	    case 'year':
 	      {
-	        if (!calendar) throw new RangeError('A starting point is required for years rounding');
+	        const calendar = GetSlot(plainRelativeTo, CALENDAR);
 
 	        // convert months and weeks to days by calculating difference(
 	        // relativeTo + years, relativeTo + { years, months, weeks })
 	        const yearsDuration = new TemporalDuration(years);
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
-	        const yearsLater = CalendarDateAdd(calendar, relativeTo, yearsDuration, undefined, dateAdd);
+	        const yearsLater = CalendarDateAdd(calendar, plainRelativeTo, yearsDuration, undefined, dateAdd);
 	        const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-	        const yearsMonthsWeeksLater = CalendarDateAdd(calendar, relativeTo, yearsMonthsWeeks, undefined, dateAdd);
+	        const yearsMonthsWeeksLater = CalendarDateAdd(calendar, plainRelativeTo, yearsMonthsWeeks, undefined, dateAdd);
 	        const monthsWeeksInDays = DaysUntil(yearsLater, yearsMonthsWeeksLater);
-	        relativeTo = yearsLater;
+	        plainRelativeTo = yearsLater;
 	        days += monthsWeeksInDays;
 	        const wholeDays = new TemporalDuration(0, 0, 0, days);
-	        const wholeDaysLater = CalendarDateAdd(calendar, relativeTo, wholeDays, undefined, dateAdd);
+	        const wholeDaysLater = CalendarDateAdd(calendar, plainRelativeTo, wholeDays, undefined, dateAdd);
 	        const untilOptions = ObjectCreate$8(null);
 	        untilOptions.largestUnit = 'year';
-	        const yearsPassed = GetSlot(CalendarDateUntil(calendar, relativeTo, wholeDaysLater, untilOptions), YEARS);
+	        const yearsPassed = GetSlot(CalendarDateUntil(calendar, plainRelativeTo, wholeDaysLater, untilOptions), YEARS);
 	        years += yearsPassed;
 	        const yearsPassedDuration = new TemporalDuration(yearsPassed);
 	        let daysPassed;
 	        ({
-	          relativeTo,
+	          relativeTo: plainRelativeTo,
 	          days: daysPassed
-	        } = MoveRelativeDate(calendar, relativeTo, yearsPassedDuration, dateAdd));
+	        } = MoveRelativeDate(calendar, plainRelativeTo, yearsPassedDuration, dateAdd));
 	        days -= daysPassed;
 	        const oneYear = new TemporalDuration(days < 0 ? -1 : 1);
 	        let {
 	          days: oneYearDays
-	        } = MoveRelativeDate(calendar, relativeTo, oneYear, dateAdd);
+	        } = MoveRelativeDate(calendar, plainRelativeTo, oneYear, dateAdd);
 
 	        // Note that `nanoseconds` below (here and in similar code for months,
 	        // weeks, and days further below) isn't actually nanoseconds for the
@@ -13421,17 +13477,17 @@
 	      }
 	    case 'month':
 	      {
-	        if (!calendar) throw new RangeError('A starting point is required for months rounding');
+	        const calendar = GetSlot(plainRelativeTo, CALENDAR);
 
 	        // convert weeks to days by calculating difference(relativeTo +
 	        //   { years, months }, relativeTo + { years, months, weeks })
 	        const yearsMonths = new TemporalDuration(years, months);
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
-	        const yearsMonthsLater = CalendarDateAdd(calendar, relativeTo, yearsMonths, undefined, dateAdd);
+	        const yearsMonthsLater = CalendarDateAdd(calendar, plainRelativeTo, yearsMonths, undefined, dateAdd);
 	        const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-	        const yearsMonthsWeeksLater = CalendarDateAdd(calendar, relativeTo, yearsMonthsWeeks, undefined, dateAdd);
+	        const yearsMonthsWeeksLater = CalendarDateAdd(calendar, plainRelativeTo, yearsMonthsWeeks, undefined, dateAdd);
 	        const weeksInDays = DaysUntil(yearsMonthsLater, yearsMonthsWeeksLater);
-	        relativeTo = yearsMonthsLater;
+	        plainRelativeTo = yearsMonthsLater;
 	        days += weeksInDays;
 
 	        // Months may be different lengths of days depending on the calendar,
@@ -13440,16 +13496,16 @@
 	        const oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
 	        let oneMonthDays;
 	        ({
-	          relativeTo,
+	          relativeTo: plainRelativeTo,
 	          days: oneMonthDays
-	        } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	        } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	        while (MathAbs$1(days) >= MathAbs$1(oneMonthDays)) {
 	          months += sign;
 	          days -= oneMonthDays;
 	          ({
-	            relativeTo,
+	            relativeTo: plainRelativeTo,
 	            days: oneMonthDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneMonth, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneMonth, dateAdd));
 	        }
 	        oneMonthDays = MathAbs$1(oneMonthDays);
 	        const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
@@ -13466,7 +13522,8 @@
 	      }
 	    case 'week':
 	      {
-	        if (!calendar) throw new RangeError('A starting point is required for weeks rounding');
+	        const calendar = GetSlot(plainRelativeTo, CALENDAR);
+
 	        // Weeks may be different lengths of days depending on the calendar,
 	        // convert days to weeks in a loop as described above under 'years'.
 	        const sign = MathSign(days);
@@ -13474,16 +13531,16 @@
 	        const dateAdd = typeof calendar !== 'string' ? GetMethod$4(calendar, 'dateAdd') : undefined;
 	        let oneWeekDays;
 	        ({
-	          relativeTo,
+	          relativeTo: plainRelativeTo,
 	          days: oneWeekDays
-	        } = MoveRelativeDate(calendar, relativeTo, oneWeek, dateAdd));
+	        } = MoveRelativeDate(calendar, plainRelativeTo, oneWeek, dateAdd));
 	        while (MathAbs$1(days) >= MathAbs$1(oneWeekDays)) {
 	          weeks += sign;
 	          days -= oneWeekDays;
 	          ({
-	            relativeTo,
+	            relativeTo: plainRelativeTo,
 	            days: oneWeekDays
-	          } = MoveRelativeDate(calendar, relativeTo, oneWeek, dateAdd));
+	          } = MoveRelativeDate(calendar, plainRelativeTo, oneWeek, dateAdd));
 	        }
 	        oneWeekDays = MathAbs$1(oneWeekDays);
 	        const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
@@ -17123,6 +17180,12 @@
 	impl['gregory'] = ObjectAssign$1({}, nonIsoGeneralImpl, {
 	  helper: helperGregory
 	});
+	function calendarFieldsImpl(calendar, fieldNames) {
+	  return impl[calendar].fields(fieldNames);
+	}
+	// Probably not what the intrinsics mechanism was intended for, but view this as
+	// an export of calendarFieldsImpl while avoiding circular dependencies
+	DefineIntrinsic('calendarFieldsImpl', calendarFieldsImpl);
 
 	class PlainDate {
 	  constructor(isoYear, isoMonth, isoDay) {
@@ -17609,6 +17672,9 @@
 	    let millisecond = GetSlot(this, ISO_MILLISECOND);
 	    let microsecond = GetSlot(this, ISO_MICROSECOND);
 	    let nanosecond = GetSlot(this, ISO_NANOSECOND);
+	    if (roundingIncrement === 1 && smallestUnit === 'nanosecond') {
+	      return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, GetSlot(this, CALENDAR));
+	    }
 	    ({
 	      year,
 	      month,
@@ -17885,7 +17951,7 @@
 	    let milliseconds = GetSlot(this, MILLISECONDS);
 	    let microseconds = GetSlot(this, MICROSECONDS);
 	    let nanoseconds = GetSlot(this, NANOSECONDS);
-	    let defaultLargestUnit = DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+	    const existingLargestUnit = DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	    if (Type$a(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate$4(null);
@@ -17894,7 +17960,10 @@
 	      roundTo = GetOptionsObject(roundTo);
 	    }
 	    let largestUnit = GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
-	    let relativeTo = ToRelativeTemporalObject(roundTo);
+	    let {
+	      plainRelativeTo,
+	      zonedRelativeTo
+	    } = ToRelativeTemporalObject(roundTo);
 	    const roundingIncrement = ToTemporalRoundingIncrement(roundTo);
 	    const roundingMode = ToTemporalRoundingMode(roundTo, 'halfExpand');
 	    let smallestUnit = GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
@@ -17903,7 +17972,7 @@
 	      smallestUnitPresent = false;
 	      smallestUnit = 'nanosecond';
 	    }
-	    defaultLargestUnit = LargerOfTwoTemporalUnits(defaultLargestUnit, smallestUnit);
+	    const defaultLargestUnit = LargerOfTwoTemporalUnits(existingLargestUnit, smallestUnit);
 	    let largestUnitPresent = true;
 	    if (!largestUnit) {
 	      largestUnitPresent = false;
@@ -17926,12 +17995,26 @@
 	    };
 	    const maximum = maximumIncrements[smallestUnit];
 	    if (maximum !== undefined) ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+	    const roundingGranularityIsNoop = smallestUnit === 'nanosecond' && roundingIncrement === 1;
+	    const balancingRequested = largestUnit !== existingLargestUnit;
+	    const calendarUnitsPresent = years !== 0 || months !== 0 || weeks !== 0;
+	    const timeUnitsOverflowWillOccur = minutes >= 60 || seconds >= 60 || milliseconds >= 1000 || microseconds >= 1000 || nanoseconds >= 1000;
+	    const hoursToDaysConversionMayOccur = days !== 0 && zonedRelativeTo || hours >= 24;
+	    if (roundingGranularityIsNoop && !balancingRequested && !calendarUnitsPresent && !timeUnitsOverflowWillOccur && !hoursToDaysConversionMayOccur) {
+	      return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+	    }
+	    const plainRelativeToWillBeUsed = smallestUnit === 'year' || smallestUnit === 'month' || smallestUnit === 'week' || years !== 0 || months !== 0 || weeks !== 0 || days !== 0;
+	    if (zonedRelativeTo && plainRelativeToWillBeUsed) {
+	      // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
+	      // of the operations below, because the conversion is user visible
+	      plainRelativeTo = ToTemporalDate(zonedRelativeTo);
+	    }
 	    ({
 	      years,
 	      months,
 	      weeks,
 	      days
-	    } = UnbalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
+	    } = UnbalanceDateDurationRelative(years, months, weeks, days, largestUnit, plainRelativeTo));
 	    ({
 	      years,
 	      months,
@@ -17943,8 +18026,8 @@
 	      milliseconds,
 	      microseconds,
 	      nanoseconds
-	    } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo));
-	    if (IsTemporalZonedDateTime(relativeTo)) {
+	    } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, plainRelativeTo, zonedRelativeTo));
+	    if (zonedRelativeTo) {
 	      ({
 	        years,
 	        months,
@@ -17956,7 +18039,7 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, relativeTo));
+	      } = AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, roundingIncrement, smallestUnit, roundingMode, zonedRelativeTo));
 	      ({
 	        days,
 	        hours,
@@ -17965,7 +18048,7 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = BalanceTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, relativeTo));
+	      } = BalanceTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit, zonedRelativeTo));
 	    } else {
 	      ({
 	        days,
@@ -17982,7 +18065,7 @@
 	      months,
 	      weeks,
 	      days
-	    } = BalanceDateDurationRelative(years, months, weeks, days, largestUnit, relativeTo));
+	    } = BalanceDateDurationRelative(years, months, weeks, days, largestUnit, plainRelativeTo));
 	    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	  }
 	  total(totalOf) {
@@ -18005,8 +18088,17 @@
 	    } else {
 	      totalOf = GetOptionsObject(totalOf);
 	    }
-	    const relativeTo = ToRelativeTemporalObject(totalOf);
+	    let {
+	      plainRelativeTo,
+	      zonedRelativeTo
+	    } = ToRelativeTemporalObject(totalOf);
 	    const unit = GetTemporalUnit(totalOf, 'unit', 'datetime', REQUIRED);
+	    const plainRelativeToWillBeUsed = unit === 'year' || unit === 'month' || unit === 'week' || years !== 0 || months !== 0 || weeks !== 0;
+	    if (zonedRelativeTo !== undefined && plainRelativeToWillBeUsed) {
+	      // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
+	      // of the operations below, because the conversion is user visible
+	      plainRelativeTo = ToTemporalDate(zonedRelativeTo);
+	    }
 
 	    // Convert larger units down to days
 	    ({
@@ -18014,11 +18106,11 @@
 	      months,
 	      weeks,
 	      days
-	    } = UnbalanceDateDurationRelative(years, months, weeks, days, unit, relativeTo));
+	    } = UnbalanceDateDurationRelative(years, months, weeks, days, unit, plainRelativeTo));
 	    // If the unit we're totalling is smaller than `days`, convert days down to that unit.
 	    let balanceResult;
-	    if (IsTemporalZonedDateTime(relativeTo)) {
-	      const intermediate = MoveRelativeZonedDateTime(relativeTo, years, months, weeks, 0);
+	    if (zonedRelativeTo) {
+	      const intermediate = MoveRelativeZonedDateTime(zonedRelativeTo, years, months, weeks, 0);
 	      balanceResult = BalancePossiblyInfiniteTimeDurationRelative(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit, intermediate);
 	    } else {
 	      balanceResult = BalancePossiblyInfiniteTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, unit);
@@ -18040,7 +18132,7 @@
 	    // Finally, truncate to the correct unit and calculate remainder
 	    const {
 	      total
-	    } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, unit, 'trunc', relativeTo);
+	    } = RoundDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 1, unit, 'trunc', plainRelativeTo, zonedRelativeTo);
 	    return total;
 	  }
 	  toString() {
@@ -18094,12 +18186,11 @@
 	    one = ToTemporalDuration(one);
 	    two = ToTemporalDuration(two);
 	    options = GetOptionsObject(options);
-	    const relativeTo = ToRelativeTemporalObject(options);
 	    const y1 = GetSlot(one, YEARS);
 	    const mon1 = GetSlot(one, MONTHS);
 	    const w1 = GetSlot(one, WEEKS);
 	    let d1 = GetSlot(one, DAYS);
-	    const h1 = GetSlot(one, HOURS);
+	    let h1 = GetSlot(one, HOURS);
 	    const min1 = GetSlot(one, MINUTES);
 	    const s1 = GetSlot(one, SECONDS);
 	    const ms1 = GetSlot(one, MILLISECONDS);
@@ -18109,24 +18200,42 @@
 	    const mon2 = GetSlot(two, MONTHS);
 	    const w2 = GetSlot(two, WEEKS);
 	    let d2 = GetSlot(two, DAYS);
-	    const h2 = GetSlot(two, HOURS);
+	    let h2 = GetSlot(two, HOURS);
 	    const min2 = GetSlot(two, MINUTES);
 	    const s2 = GetSlot(two, SECONDS);
 	    const ms2 = GetSlot(two, MILLISECONDS);
 	    const µs2 = GetSlot(two, MICROSECONDS);
 	    let ns2 = GetSlot(two, NANOSECONDS);
-	    const shift1 = CalculateOffsetShift(relativeTo, y1, mon1, w1, d1);
-	    const shift2 = CalculateOffsetShift(relativeTo, y2, mon2, w2, d2);
-	    if (y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0) {
+	    if (y1 === y2 && mon1 === mon2 && w1 === w2 && d1 === d2 && h1 === h2 && min1 === min2 && s1 === s2 && ms1 === ms2 && µs1 === µs2 && ns1 === ns2) {
+	      return 0;
+	    }
+	    const {
+	      plainRelativeTo,
+	      zonedRelativeTo
+	    } = ToRelativeTemporalObject(options);
+	    const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
+	    if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
+	      const instant = GetSlot(zonedRelativeTo, INSTANT);
+	      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+	      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
+	      const precalculatedPlainDateTime = GetPlainDateTimeFor(timeZone, instant, calendar);
+	      const after1 = AddZonedDateTime(instant, timeZone, calendar, y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1, precalculatedPlainDateTime);
+	      const after2 = AddZonedDateTime(instant, timeZone, calendar, y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2, precalculatedPlainDateTime);
+	      return ComparisonResult(after1.minus(after2).toJSNumber());
+	    }
+	    if (calendarUnitsPresent) {
+	      // plainRelativeTo may be undefined, and if so Unbalance will throw
 	      ({
 	        days: d1
-	      } = UnbalanceDateDurationRelative(y1, mon1, w1, d1, 'day', relativeTo));
+	      } = UnbalanceDateDurationRelative(y1, mon1, w1, d1, 'day', plainRelativeTo));
 	      ({
 	        days: d2
-	      } = UnbalanceDateDurationRelative(y2, mon2, w2, d2, 'day', relativeTo));
+	      } = UnbalanceDateDurationRelative(y2, mon2, w2, d2, 'day', plainRelativeTo));
 	    }
-	    ns1 = TotalDurationNanoseconds(d1, h1, min1, s1, ms1, µs1, ns1, shift1);
-	    ns2 = TotalDurationNanoseconds(d2, h2, min2, s2, ms2, µs2, ns2, shift2);
+	    h1 = bigInt(h1).add(bigInt(d1).multiply(24));
+	    h2 = bigInt(h2).add(bigInt(d2).multiply(24));
+	    ns1 = TotalDurationNanoseconds(h1, min1, s1, ms1, µs1, ns1);
+	    ns2 = TotalDurationNanoseconds(h2, min2, s2, ms2, µs2, ns2);
 	    return ComparisonResult(ns1.minus(ns2).toJSNumber());
 	  }
 	}
@@ -19162,6 +19271,9 @@
 	    const maximum = maximumIncrements[smallestUnit];
 	    const inclusive = maximum === 1;
 	    ValidateTemporalRoundingIncrement(roundingIncrement, maximum, inclusive);
+	    if (smallestUnit === 'nanosecond' && roundingIncrement === 1) {
+	      return CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), GetSlot(this, TIME_ZONE), GetSlot(this, CALENDAR));
+	    }
 
 	    // first, round the underlying DateTime fields
 	    const timeZone = GetSlot(this, TIME_ZONE);
@@ -19177,9 +19289,9 @@
 	    let microsecond = GetSlot(dt, ISO_MICROSECOND);
 	    let nanosecond = GetSlot(dt, ISO_NANOSECOND);
 	    const calendar = GetSlot(this, CALENDAR);
-	    const dtStart = CreateTemporalDateTime(GetSlot(dt, ISO_YEAR), GetSlot(dt, ISO_MONTH), GetSlot(dt, ISO_DAY), 0, 0, 0, 0, 0, 0, 'iso8601');
+	    const dtStart = CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, 'iso8601');
 	    const instantStart = GetInstantFor(timeZone, dtStart, 'compatible');
-	    const endNs = AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
+	    const endNs = AddZonedDateTime(instantStart, timeZone, calendar, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, dtStart);
 	    const dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
 	    if (dayLengthNs.leq(0)) {
 	      throw new RangeError('cannot round a ZonedDateTime in a calendar with zero- or negative-length days');
