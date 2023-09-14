@@ -300,18 +300,29 @@ export class Duration {
       return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     }
 
-    const plainRelativeToWillBeUsed =
+    let precalculatedPlainDateTime;
+    const plainDateTimeOrRelativeToWillBeUsed =
+      !roundingGranularityIsNoop ||
+      largestUnit === 'year' ||
+      largestUnit === 'month' ||
+      largestUnit === 'week' ||
+      largestUnit === 'day' ||
       smallestUnit === 'year' ||
       smallestUnit === 'month' ||
       smallestUnit === 'week' ||
-      years !== 0 ||
-      months !== 0 ||
-      weeks !== 0 ||
+      smallestUnit === 'day' ||
+      calendarUnitsPresent ||
       days !== 0;
-    if (zonedRelativeTo && plainRelativeToWillBeUsed) {
-      // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
-      // of the operations below, because the conversion is user visible
-      plainRelativeTo = ES.ToTemporalDate(zonedRelativeTo);
+    if (zonedRelativeTo && plainDateTimeOrRelativeToWillBeUsed) {
+      // Convert a ZonedDateTime relativeTo to PlainDateTime and PlainDate only
+      // if either is needed in one of the operations below, because the
+      // conversion is user visible
+      precalculatedPlainDateTime = ES.GetPlainDateTimeFor(
+        GetSlot(zonedRelativeTo, TIME_ZONE),
+        GetSlot(zonedRelativeTo, INSTANT),
+        GetSlot(zonedRelativeTo, CALENDAR)
+      );
+      plainRelativeTo = ES.TemporalDateTimeToDate(precalculatedPlainDateTime);
     }
 
     ({ years, months, weeks, days } = ES.UnbalanceDateDurationRelative(
@@ -338,7 +349,8 @@ export class Duration {
         smallestUnit,
         roundingMode,
         plainRelativeTo,
-        zonedRelativeTo
+        zonedRelativeTo,
+        precalculatedPlainDateTime
       ));
     if (zonedRelativeTo) {
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
@@ -356,7 +368,8 @@ export class Duration {
           roundingIncrement,
           smallestUnit,
           roundingMode,
-          zonedRelativeTo
+          zonedRelativeTo,
+          precalculatedPlainDateTime
         ));
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceTimeDurationRelative(
         days,
@@ -367,7 +380,8 @@ export class Duration {
         microseconds,
         nanoseconds,
         largestUnit,
-        zonedRelativeTo
+        zonedRelativeTo,
+        precalculatedPlainDateTime
       ));
     } else {
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceTimeDuration(
@@ -416,12 +430,25 @@ export class Duration {
     let { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject(totalOf);
     const unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
 
-    const plainRelativeToWillBeUsed =
-      unit === 'year' || unit === 'month' || unit === 'week' || years !== 0 || months !== 0 || weeks !== 0;
-    if (zonedRelativeTo !== undefined && plainRelativeToWillBeUsed) {
+    let precalculatedPlainDateTime;
+    const plainDateTimeOrRelativeToWillBeUsed =
+      unit === 'year' ||
+      unit === 'month' ||
+      unit === 'week' ||
+      unit === 'day' ||
+      years !== 0 ||
+      months !== 0 ||
+      weeks !== 0 ||
+      days !== 0;
+    if (zonedRelativeTo && plainDateTimeOrRelativeToWillBeUsed) {
       // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
       // of the operations below, because the conversion is user visible
-      plainRelativeTo = ES.ToTemporalDate(zonedRelativeTo);
+      precalculatedPlainDateTime = ES.GetPlainDateTimeFor(
+        GetSlot(zonedRelativeTo, TIME_ZONE),
+        GetSlot(zonedRelativeTo, INSTANT),
+        GetSlot(zonedRelativeTo, CALENDAR)
+      );
+      plainRelativeTo = ES.TemporalDateTimeToDate(precalculatedPlainDateTime);
     }
 
     // Convert larger units down to days
@@ -436,7 +463,14 @@ export class Duration {
     // If the unit we're totalling is smaller than `days`, convert days down to that unit.
     let balanceResult;
     if (zonedRelativeTo) {
-      const intermediate = ES.MoveRelativeZonedDateTime(zonedRelativeTo, years, months, weeks, 0);
+      const intermediate = ES.MoveRelativeZonedDateTime(
+        zonedRelativeTo,
+        years,
+        months,
+        weeks,
+        0,
+        precalculatedPlainDateTime
+      );
       balanceResult = ES.BalancePossiblyInfiniteTimeDurationRelative(
         days,
         hours,
@@ -482,7 +516,8 @@ export class Duration {
       unit,
       'trunc',
       plainRelativeTo,
-      zonedRelativeTo
+      zonedRelativeTo,
+      precalculatedPlainDateTime
     );
     return total;
   }
