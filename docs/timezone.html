@@ -440,7 +440,8 @@ tz<span class="token punctuation">.</span><span class="token function">getOffset
 <li><code>instant</code> (<code>Temporal.Instant</code> or value convertible to one): The time for which to compute the time zone&#39;s UTC offset.</li>
 </ul>
 <p><strong>Returns</strong>: a string indicating the UTC offset at the given time.</p>
-<p>This method is similar to <code>timeZone.getOffsetNanosecondsFor()</code>, but returns the offset formatted as a string, with sign, hours, and minutes.</p>
+<p>This method is similar to <code>timeZone.getOffsetNanosecondsFor()</code>, but returns the offset formatted as a string, with sign, hours, and minutes.
+In the rare case where the offset is not aligned on a minute boundary, then seconds (and fractional seconds, if present) are also included in the returned string.</p>
 <p>If <code>timeZone</code> is a time zone constructed from a numeric UTC offset, this method returns the same value as <code>timeZone.id</code>.</p>
 <p>If <code>instant</code> is not a <code>Temporal.Instant</code> object, then it will be converted to one as if it were passed to <code>Temporal.Instant.from()</code>.</p>
 <p>When subclassing <code>Temporal.TimeZone</code>, this method doesn&#39;t need to be overridden because the default implementation creates an offset string using the result of calling <code>timeZone.getOffsetNanosecondsFor()</code>.</p>
@@ -453,7 +454,11 @@ tz<span class="token punctuation">.</span><span class="token function">getOffset
 <span class="token comment">// TimeZone with a fixed UTC offset</span>
 tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'-08:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '-08:00'</span>
-tz<span class="token punctuation">.</span>id<span class="token punctuation">;</span> <span class="token comment">// => '-08:00'</span></code></pre><h3 id="getPlainDateTimeFor"><a class="heading-link" href="#getPlainDateTimeFor"></a>timeZone.<strong>getPlainDateTimeFor</strong>(<em>instant</em>: Temporal.Instant | string, <em>calendar</em>?: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
+tz<span class="token punctuation">.</span>id<span class="token punctuation">;</span> <span class="token comment">// => '-08:00'</span>
+
+<span class="token comment">// Historical offset that was not aligned on a minute boundary</span>
+tz <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Europe/Paris'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tz<span class="token punctuation">.</span><span class="token function">getOffsetStringFor</span><span class="token punctuation">(</span><span class="token string">'1900-02-01T12:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '+00:09:21'</span></code></pre><h3 id="getPlainDateTimeFor"><a class="heading-link" href="#getPlainDateTimeFor"></a>timeZone.<strong>getPlainDateTimeFor</strong>(<em>instant</em>: Temporal.Instant | string, <em>calendar</em>?: object | string) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>instant</code> (<code>Temporal.Instant</code> or value convertible to one): An exact time to convert.</li>
 <li><code>calendar</code> (optional object or string): A <code>Temporal.Calendar</code> object, or a plain object, or a calendar identifier.

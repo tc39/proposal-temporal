@@ -1486,58 +1486,76 @@
 	var BigIntegerExports = BigInteger.exports;
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
-	/* eslint complexity: [2, 18], max-statements: [2, 33] */
-	var shams$1 = function hasSymbols() {
-		if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
-		if (typeof Symbol.iterator === 'symbol') { return true; }
+	var shams$1;
+	var hasRequiredShams$1;
 
-		var obj = {};
-		var sym = Symbol('test');
-		var symObj = Object(sym);
-		if (typeof sym === 'string') { return false; }
+	function requireShams$1 () {
+		if (hasRequiredShams$1) return shams$1;
+		hasRequiredShams$1 = 1;
 
-		if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
-		if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
+		/* eslint complexity: [2, 18], max-statements: [2, 33] */
+		shams$1 = function hasSymbols() {
+			if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
+			if (typeof Symbol.iterator === 'symbol') { return true; }
 
-		// temp disabled per https://github.com/ljharb/object.assign/issues/17
-		// if (sym instanceof Symbol) { return false; }
-		// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
-		// if (!(symObj instanceof Symbol)) { return false; }
+			var obj = {};
+			var sym = Symbol('test');
+			var symObj = Object(sym);
+			if (typeof sym === 'string') { return false; }
 
-		// if (typeof Symbol.prototype.toString !== 'function') { return false; }
-		// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+			if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
+			if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
 
-		var symVal = 42;
-		obj[sym] = symVal;
-		for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
-		if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
+			// temp disabled per https://github.com/ljharb/object.assign/issues/17
+			// if (sym instanceof Symbol) { return false; }
+			// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+			// if (!(symObj instanceof Symbol)) { return false; }
 
-		if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
+			// if (typeof Symbol.prototype.toString !== 'function') { return false; }
+			// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
 
-		var syms = Object.getOwnPropertySymbols(obj);
-		if (syms.length !== 1 || syms[0] !== sym) { return false; }
+			var symVal = 42;
+			obj[sym] = symVal;
+			for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
+			if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
 
-		if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
+			if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
 
-		if (typeof Object.getOwnPropertyDescriptor === 'function') {
-			var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
-			if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
-		}
+			var syms = Object.getOwnPropertySymbols(obj);
+			if (syms.length !== 1 || syms[0] !== sym) { return false; }
 
-		return true;
-	};
+			if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
 
-	var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-	var hasSymbolSham = shams$1;
+			if (typeof Object.getOwnPropertyDescriptor === 'function') {
+				var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+				if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
+			}
 
-	var hasSymbols$4 = function hasNativeSymbols() {
-		if (typeof origSymbol !== 'function') { return false; }
-		if (typeof Symbol !== 'function') { return false; }
-		if (typeof origSymbol('foo') !== 'symbol') { return false; }
-		if (typeof Symbol('bar') !== 'symbol') { return false; }
+			return true;
+		};
+		return shams$1;
+	}
 
-		return hasSymbolSham();
-	};
+	var hasSymbols$4;
+	var hasRequiredHasSymbols;
+
+	function requireHasSymbols () {
+		if (hasRequiredHasSymbols) return hasSymbols$4;
+		hasRequiredHasSymbols = 1;
+
+		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
+		var hasSymbolSham = requireShams$1();
+
+		hasSymbols$4 = function hasNativeSymbols() {
+			if (typeof origSymbol !== 'function') { return false; }
+			if (typeof Symbol !== 'function') { return false; }
+			if (typeof origSymbol('foo') !== 'symbol') { return false; }
+			if (typeof Symbol('bar') !== 'symbol') { return false; }
+
+			return hasSymbolSham();
+		};
+		return hasSymbols$4;
+	}
 
 	var test = {
 		foo: {}
@@ -1604,9 +1622,18 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var bind$1 = functionBind;
+	var src;
+	var hasRequiredSrc;
 
-	var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
+	function requireSrc () {
+		if (hasRequiredSrc) return src;
+		hasRequiredSrc = 1;
+
+		var bind = functionBind;
+
+		src = bind.call(Function.call, Object.prototype.hasOwnProperty);
+		return src;
+	}
 
 	var undefined$1;
 
@@ -1650,7 +1677,7 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$3 = hasSymbols$4();
+	var hasSymbols$3 = requireHasSymbols()();
 	var hasProto = hasProto$1();
 
 	var getProto = Object.getPrototypeOf || (
@@ -1822,7 +1849,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn = src;
+	var hasOwn = requireSrc();
 	var $concat = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace = bind.call(Function.call, String.prototype.replace);
@@ -5549,7 +5576,7 @@
 		hasRequiredInternalSlot = 1;
 
 		var GetIntrinsic = getIntrinsic;
-		var has = src;
+		var has = requireSrc();
 		var channel = requireSideChannel()();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -5706,7 +5733,7 @@
 
 		var GetIntrinsic = getIntrinsic;
 
-		var has = src;
+		var has = requireSrc();
 		var $TypeError = GetIntrinsic('%TypeError%');
 
 		isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -5806,7 +5833,7 @@
 		if (hasRequiredIsMatchRecord) return isMatchRecord;
 		hasRequiredIsMatchRecord = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -5835,7 +5862,7 @@
 		var $TypeError = GetIntrinsic('%TypeError%');
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-		var has = src;
+		var has = requireSrc();
 		var isInteger = isInteger$2;
 
 		var isMatchRecord = requireIsMatchRecord();
@@ -5925,7 +5952,7 @@
 		if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
 		hasRequiredIsAccessorDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var Type = Type$9;
 
@@ -5956,7 +5983,7 @@
 		if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
 		hasRequiredIsDataDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var Type = Type$9;
 
@@ -6152,7 +6179,7 @@
 		if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
 		hasRequiredToPropertyDescriptor = 1;
 
-		var has = src;
+		var has = requireSrc();
 
 		var GetIntrinsic = getIntrinsic;
 
@@ -6778,7 +6805,7 @@
 		if (hasRequiredShams) return shams;
 		hasRequiredShams = 1;
 
-		var hasSymbols = shams$1;
+		var hasSymbols = requireShams$1();
 
 		shams = function hasToStringTagShams() {
 			return hasSymbols() && !!Symbol.toStringTag;
@@ -6825,7 +6852,7 @@
 		if (hasRequiredGetIteratorMethod) return getIteratorMethod$1;
 		hasRequiredGetIteratorMethod = 1;
 
-		var hasSymbols = hasSymbols$4();
+		var hasSymbols = requireHasSymbols()();
 		var GetIntrinsic = getIntrinsic;
 		var callBound = callBound$2;
 		var isString = requireIsString();
@@ -7122,7 +7149,7 @@
 	var $asyncIterator = GetIntrinsic$d('%Symbol.asyncIterator%', true);
 
 	var inspect = requireObjectInspect();
-	var hasSymbols$2 = hasSymbols$4();
+	var hasSymbols$2 = requireHasSymbols()();
 
 	var getIteratorMethod = requireGetIteratorMethod();
 	var AdvanceStringIndex = requireAdvanceStringIndex();
@@ -7186,7 +7213,7 @@
 
 	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
 
-	var has = src;
+	var has = requireSrc();
 
 	var IsPropertyKey = IsPropertyKey$4;
 	var Type$5 = Type$9;
@@ -7417,7 +7444,7 @@
 	var isSymbol$1 = {exports: {}};
 
 	var toStr = Object.prototype.toString;
-	var hasSymbols$1 = hasSymbols$4();
+	var hasSymbols$1 = requireHasSymbols()();
 
 	if (hasSymbols$1) {
 		var symToStr = Symbol.prototype.toString;
