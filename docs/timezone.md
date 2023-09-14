@@ -331,6 +331,7 @@ tz.getOffsetNanosecondsFor('2020-11-06T01:00Z'); // => 0
 **Returns**: a string indicating the UTC offset at the given time.
 
 This method is similar to `timeZone.getOffsetNanosecondsFor()`, but returns the offset formatted as a string, with sign, hours, and minutes.
+In the rare case where the offset is not aligned on a minute boundary, then seconds (and fractional seconds, if present) are also included in the returned string.
 
 If `timeZone` is a time zone constructed from a numeric UTC offset, this method returns the same value as `timeZone.id`.
 
@@ -350,6 +351,10 @@ tz.getOffsetStringFor(timestamp); // => '+01:00'
 tz = Temporal.TimeZone.from('-08:00');
 tz.getOffsetStringFor(timestamp); // => '-08:00'
 tz.id; // => '-08:00'
+
+// Historical offset that was not aligned on a minute boundary
+tz = Temporal.TimeZone.from('Europe/Paris');
+tz.getOffsetStringFor('1900-02-01T12:00Z'); // => '+00:09:21'
 ```
 
 ### timeZone.**getPlainDateTimeFor**(_instant_: Temporal.Instant | string, _calendar_?: object | string) : Temporal.PlainDateTime
