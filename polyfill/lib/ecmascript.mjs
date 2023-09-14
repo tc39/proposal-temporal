@@ -3261,7 +3261,7 @@ export function TotalDurationNanoseconds(hours, minutes, seconds, milliseconds, 
   return bigInt(nanoseconds).add(microseconds.multiply(1000));
 }
 
-export function NanosecondsToDays(nanoseconds, zonedRelativeTo) {
+export function NanosecondsToDays(nanoseconds, zonedRelativeTo, precalculatedPlainDateTime) {
   const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
   const sign = MathSign(nanoseconds);
   nanoseconds = bigInt(nanoseconds);
@@ -3276,7 +3276,7 @@ export function NanosecondsToDays(nanoseconds, zonedRelativeTo) {
 
   // Find the difference in days only. Inline DifferenceISODateTime because we
   // don't need the path that potentially calls calendar methods.
-  const dtStart = GetPlainDateTimeFor(timeZone, start, 'iso8601');
+  const dtStart = precalculatedPlainDateTime ?? GetPlainDateTimeFor(timeZone, start, 'iso8601');
   const dtEnd = GetPlainDateTimeFor(timeZone, end, 'iso8601');
   let hours, minutes, seconds, milliseconds, microseconds;
   ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = DifferenceTime(
@@ -3501,7 +3501,8 @@ export function BalanceTimeDurationRelative(
   microseconds,
   nanoseconds,
   largestUnit,
-  zonedRelativeTo
+  zonedRelativeTo,
+  precalculatedPlainDateTime
 ) {
   let result = BalancePossiblyInfiniteTimeDurationRelative(
     days,
@@ -3512,7 +3513,8 @@ export function BalanceTimeDurationRelative(
     microseconds,
     nanoseconds,
     largestUnit,
-    zonedRelativeTo
+    zonedRelativeTo,
+    precalculatedPlainDateTime
   );
   if (result === 'positive overflow' || result === 'negative overflow') {
     throw new RangeError('Duration out of range');
@@ -3529,23 +3531,32 @@ export function BalancePossiblyInfiniteTimeDurationRelative(
   microseconds,
   nanoseconds,
   largestUnit,
-  zonedRelativeTo
+  zonedRelativeTo,
+  precalculatedPlainDateTime
 ) {
   const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+  const startInstant = GetSlot(zonedRelativeTo, INSTANT);
+  const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
 
   let intermediateNs = startNs;
   if (days !== 0) {
-    const startInstant = GetSlot(zonedRelativeTo, INSTANT);
-    const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
-    const startDt = GetPlainDateTimeFor(timeZone, startInstant, 'iso8601');
-    intermediateNs = AddDaysToZonedDateTime(startInstant, startDt, timeZone, 'iso8601', days, 'constrain').epochNs;
+    precalculatedPlainDateTime ??= GetPlainDateTimeFor(timeZone, startInstant, 'iso8601');
+    intermediateNs = AddDaysToZonedDateTime(
+      startInstant,
+      precalculatedPlainDateTime,
+      timeZone,
+      'iso8601',
+      days,
+      'constrain'
+    ).epochNs;
   }
 
   const endNs = AddInstant(intermediateNs, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   nanoseconds = endNs.subtract(startNs);
 
   if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
-    ({ days, nanoseconds } = NanosecondsToDays(nanoseconds, zonedRelativeTo));
+    if (!nanoseconds.isZero()) precalculatedPlainDateTime ??= GetPlainDateTimeFor(timeZone, startInstant, 'iso8601');
+    ({ days, nanoseconds } = NanosecondsToDays(nanoseconds, zonedRelativeTo, precalculatedPlainDateTime));
     largestUnit = 'hour';
   } else {
     days = 0;
@@ -4193,7 +4204,15 @@ export function DifferenceISODateTime(
   return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
 }
 
-export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit, options) {
+export function DifferenceZonedDateTime(
+  ns1,
+  ns2,
+  timeZone,
+  calendar,
+  largestUnit,
+  options,
+  precalculatedDtStart = undefined
+) {
   const nsDiff = ns2.subtract(ns1);
   if (nsDiff.isZero()) {
     return {
@@ -4214,7 +4233,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
   const start = new TemporalInstant(ns1);
   const end = new TemporalInstant(ns2);
-  const dtStart = GetPlainDateTimeFor(timeZone, start, calendar);
+  const dtStart = precalculatedDtStart ?? GetPlainDateTimeFor(timeZone, start, calendar);
   const dtEnd = GetPlainDateTimeFor(timeZone, end, calendar);
   let { years, months, weeks, days } = DifferenceISODateTime(
     GetSlot(dtStart, ISO_YEAR),
@@ -4641,13 +4660,35 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
 
     if (ns1.equals(ns2)) return new Duration();
 
-    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-      DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, settings.largestUnit, resolvedOptions));
+    let precalculatedPlainDateTime;
+    let plainRelativeTo;
+    const roundingIsNoop = settings.smallestUnit === 'nanosecond' && settings.roundingIncrement === 1;
+    const plainDateTimeOrRelativeToWillBeUsed =
+      !roundingIsNoop ||
+      settings.smallestUnit === 'year' ||
+      settings.smallestUnit === 'month' ||
+      settings.smallestUnit === 'week';
+    if (plainDateTimeOrRelativeToWillBeUsed) {
+      precalculatedPlainDateTime = GetPlainDateTimeFor(
+        timeZone,
+        GetSlot(zonedDateTime, INSTANT),
+        GetSlot(zonedDateTime, CALENDAR)
+      );
+      plainRelativeTo = TemporalDateTimeToDate(precalculatedPlainDateTime);
+    }
 
-    if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
-      const plainRelativeToWillBeUsed =
-        settings.smallestUnit === 'year' || settings.smallestUnit === 'month' || settings.smallestUnit === 'week';
-      const plainRelativeTo = plainRelativeToWillBeUsed ? ToTemporalDate(zonedDateTime) : undefined;
+    ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+      DifferenceZonedDateTime(
+        ns1,
+        ns2,
+        timeZone,
+        calendar,
+        settings.largestUnit,
+        resolvedOptions,
+        precalculatedPlainDateTime
+      ));
+
+    if (!roundingIsNoop) {
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
         years,
         months,
@@ -4663,7 +4704,8 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
         settings.smallestUnit,
         settings.roundingMode,
         plainRelativeTo,
-        zonedDateTime
+        zonedDateTime,
+        precalculatedPlainDateTime
       ));
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         AdjustRoundedDurationDays(
@@ -4680,7 +4722,8 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
           settings.roundingIncrement,
           settings.smallestUnit,
           settings.roundingMode,
-          zonedDateTime
+          zonedDateTime,
+          precalculatedPlainDateTime
         ));
     }
   }
@@ -4791,7 +4834,8 @@ export function AddDuration(
   µs2,
   ns2,
   plainRelativeTo,
-  zonedRelativeTo
+  zonedRelativeTo,
+  precalculatedPlainDateTime
 ) {
   const largestUnit1 = DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
   const largestUnit2 = DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
@@ -4850,8 +4894,10 @@ export function AddDuration(
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
     const calendar = GetSlot(zonedRelativeTo, CALENDAR);
+    const startInstant = GetSlot(zonedRelativeTo, INSTANT);
+    const startDateTime = precalculatedPlainDateTime ?? GetPlainDateTimeFor(timeZone, startInstant, calendar);
     const intermediateNs = AddZonedDateTime(
-      GetSlot(zonedRelativeTo, INSTANT),
+      startInstant,
       timeZone,
       calendar,
       y1,
@@ -4863,7 +4909,8 @@ export function AddDuration(
       s1,
       ms1,
       µs1,
-      ns1
+      ns1,
+      startDateTime
     );
     const endNs = AddZonedDateTime(
       new TemporalInstant(intermediateNs),
@@ -4902,7 +4949,8 @@ export function AddDuration(
           timeZone,
           calendar,
           largestUnit,
-          ObjectCreate(null)
+          ObjectCreate(null),
+          startDateTime
         ));
     }
   }
@@ -5438,7 +5486,7 @@ export function MoveRelativeDate(calendar, relativeTo, duration, dateAdd) {
   return { relativeTo: later, days };
 }
 
-export function MoveRelativeZonedDateTime(relativeTo, years, months, weeks, days) {
+export function MoveRelativeZonedDateTime(relativeTo, years, months, weeks, days, precalculatedPlainDateTime) {
   const timeZone = GetSlot(relativeTo, TIME_ZONE);
   const calendar = GetSlot(relativeTo, CALENDAR);
   const intermediateNs = AddZonedDateTime(
@@ -5454,7 +5502,8 @@ export function MoveRelativeZonedDateTime(relativeTo, years, months, weeks, days
     0,
     0,
     0,
-    0
+    0,
+    precalculatedPlainDateTime
   );
   return CreateTemporalZonedDateTime(intermediateNs, timeZone, calendar);
 }
@@ -5473,7 +5522,8 @@ export function AdjustRoundedDurationDays(
   increment,
   unit,
   roundingMode,
-  zonedRelativeTo
+  zonedRelativeTo,
+  precalculatedPlainDateTime
 ) {
   if (
     unit === 'year' ||
@@ -5511,7 +5561,8 @@ export function AdjustRoundedDurationDays(
     0,
     0,
     0,
-    0
+    0,
+    precalculatedPlainDateTime
   );
   const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
   const dayStartInstant = new TemporalInstant(dayStart);
@@ -5543,7 +5594,8 @@ export function AdjustRoundedDurationDays(
       0,
       0,
       /* plainRelativeTo = */ undefined,
-      zonedRelativeTo
+      zonedRelativeTo,
+      precalculatedPlainDateTime
     ));
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
       years,
@@ -5589,7 +5641,8 @@ export function RoundDuration(
   unit,
   roundingMode,
   plainRelativeTo = undefined,
-  zonedRelativeTo = undefined
+  zonedRelativeTo = undefined,
+  precalculatedPlainDateTime = undefined
 ) {
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 
@@ -5604,7 +5657,14 @@ export function RoundDuration(
     nanoseconds = TotalDurationNanoseconds(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     let deltaDays;
     if (zonedRelativeTo) {
-      const intermediate = MoveRelativeZonedDateTime(zonedRelativeTo, years, months, weeks, days);
+      const intermediate = MoveRelativeZonedDateTime(
+        zonedRelativeTo,
+        years,
+        months,
+        weeks,
+        days,
+        precalculatedPlainDateTime
+      );
       ({ days: deltaDays, nanoseconds, dayLengthNs } = NanosecondsToDays(nanoseconds, intermediate));
     } else {
       ({ quotient: deltaDays, remainder: nanoseconds } = nanoseconds.divmod(DAY_NANOS));
