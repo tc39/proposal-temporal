@@ -949,11 +949,18 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-interprettemporaldatetimefields" aoid="InterpretTemporalDateTimeFields">
-      <h1>InterpretTemporalDateTimeFields ( _calendar_, _fields_, _options_ )</h1>
-      <p>
-        The abstract operation InterpretTemporalDateTimeFields interprets the date/time fields in the object _fields_ using the given _calendar_, and returns a Record with the fields according to the ISO 8601 calendar.
-      </p>
+    <emu-clause id="sec-temporal-interprettemporaldatetimefields" type="abstract operation">
+      <h1>
+        InterpretTemporalDateTimeFields (
+          _calendar_: a String or Object,
+          _fields_: an Object,
+          _options_: an Object,
+        ): either a normal completion containing an ISO Date-Time Record, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It interprets the date/time fields in the object _fields_ using the given calendar, and returns a Record with the fields according to the ISO 8601 calendar.</dd>
+      </dl>
       <emu-alg>
         1. Assert: _options_ is an ordinary extensible Object that is not directly observable from ECMAScript code and for which the value of the [[Prototype]] internal slot is *null* and every property is a configurable data property.
         1. Let _timeResult_ be ? ToTemporalTimeRecord(_fields_).
