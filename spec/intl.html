@@ -1855,6 +1855,7 @@
           <ul>
             <li>If _type_ is ~date~ or ~month-day~ and *"day"* in the calendar has an interpretation analogous to ISO 8601 and its corresponding value is *undefined*.</li>
             <li>If *"month"* and *"monthCode"* in the calendar have interpretations analogous to ISO 8601 and either the corresponding values for both are *undefined* or neither value is *undefined* but they do not identify the same month.</li>
+            <li>If _type_ is ~month-day~ and the value for *"monthCode"* is *undefined* and a year cannot be determined from _fields_.</li>
             <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting as represented by *"year"*, *"era"*, and *"eraYear"* (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:<ul>
               <li>The value for each of *"year"* and *"era"* and *"eraYear"* is *undefined*.</li>
               <li>The value for *"era"* is *undefined* but the value for *"eraYear"* is not.</li>
@@ -1862,6 +1863,9 @@
               <li>None of the three values are *undefined* but the values for *"era"* and *"eraYear"* do not together identify the same year as the value for *"year"*.</li>
             </ul></li>
           </ul>
+          <emu-note>
+            When _type_ is ~month-day~ and *"month"* is provided without *"monthCode"*, it is recommended that all built-in calendars other than the ISO 8601 calendar require a disambiguating year (e.g., either *"year"* or *"era"* and *"eraYear"*), including those that always use exactly the same months as the ISO 8601 calendar (which receives special handling in this specification as a default calendar that is permanently stable for automated processing).
+          </emu-note>
         </emu-clause>
       </emu-clause>
 
