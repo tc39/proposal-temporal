@@ -1486,76 +1486,58 @@
 	var BigIntegerExports = BigInteger.exports;
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
-	var shams$1;
-	var hasRequiredShams$1;
+	/* eslint complexity: [2, 18], max-statements: [2, 33] */
+	var shams$1 = function hasSymbols() {
+		if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
+		if (typeof Symbol.iterator === 'symbol') { return true; }
 
-	function requireShams$1 () {
-		if (hasRequiredShams$1) return shams$1;
-		hasRequiredShams$1 = 1;
+		var obj = {};
+		var sym = Symbol('test');
+		var symObj = Object(sym);
+		if (typeof sym === 'string') { return false; }
 
-		/* eslint complexity: [2, 18], max-statements: [2, 33] */
-		shams$1 = function hasSymbols() {
-			if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
-			if (typeof Symbol.iterator === 'symbol') { return true; }
+		if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
+		if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
 
-			var obj = {};
-			var sym = Symbol('test');
-			var symObj = Object(sym);
-			if (typeof sym === 'string') { return false; }
+		// temp disabled per https://github.com/ljharb/object.assign/issues/17
+		// if (sym instanceof Symbol) { return false; }
+		// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+		// if (!(symObj instanceof Symbol)) { return false; }
 
-			if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
-			if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
+		// if (typeof Symbol.prototype.toString !== 'function') { return false; }
+		// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
 
-			// temp disabled per https://github.com/ljharb/object.assign/issues/17
-			// if (sym instanceof Symbol) { return false; }
-			// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
-			// if (!(symObj instanceof Symbol)) { return false; }
+		var symVal = 42;
+		obj[sym] = symVal;
+		for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
+		if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
 
-			// if (typeof Symbol.prototype.toString !== 'function') { return false; }
-			// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+		if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
 
-			var symVal = 42;
-			obj[sym] = symVal;
-			for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
-			if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
+		var syms = Object.getOwnPropertySymbols(obj);
+		if (syms.length !== 1 || syms[0] !== sym) { return false; }
 
-			if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
+		if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
 
-			var syms = Object.getOwnPropertySymbols(obj);
-			if (syms.length !== 1 || syms[0] !== sym) { return false; }
+		if (typeof Object.getOwnPropertyDescriptor === 'function') {
+			var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+			if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
+		}
 
-			if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
+		return true;
+	};
 
-			if (typeof Object.getOwnPropertyDescriptor === 'function') {
-				var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
-				if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
-			}
+	var origSymbol = typeof Symbol !== 'undefined' && Symbol;
+	var hasSymbolSham = shams$1;
 
-			return true;
-		};
-		return shams$1;
-	}
+	var hasSymbols$5 = function hasNativeSymbols() {
+		if (typeof origSymbol !== 'function') { return false; }
+		if (typeof Symbol !== 'function') { return false; }
+		if (typeof origSymbol('foo') !== 'symbol') { return false; }
+		if (typeof Symbol('bar') !== 'symbol') { return false; }
 
-	var hasSymbols$4;
-	var hasRequiredHasSymbols;
-
-	function requireHasSymbols () {
-		if (hasRequiredHasSymbols) return hasSymbols$4;
-		hasRequiredHasSymbols = 1;
-
-		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-		var hasSymbolSham = requireShams$1();
-
-		hasSymbols$4 = function hasNativeSymbols() {
-			if (typeof origSymbol !== 'function') { return false; }
-			if (typeof Symbol !== 'function') { return false; }
-			if (typeof origSymbol('foo') !== 'symbol') { return false; }
-			if (typeof Symbol('bar') !== 'symbol') { return false; }
-
-			return hasSymbolSham();
-		};
-		return hasSymbols$4;
-	}
+		return hasSymbolSham();
+	};
 
 	var test = {
 		foo: {}
@@ -1622,18 +1604,9 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var src;
-	var hasRequiredSrc;
+	var bind$1 = functionBind;
 
-	function requireSrc () {
-		if (hasRequiredSrc) return src;
-		hasRequiredSrc = 1;
-
-		var bind = functionBind;
-
-		src = bind.call(Function.call, Object.prototype.hasOwnProperty);
-		return src;
-	}
+	var src = bind$1.call(Function.call, Object.prototype.hasOwnProperty);
 
 	var undefined$1;
 
@@ -1677,7 +1650,7 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$3 = requireHasSymbols()();
+	var hasSymbols$4 = hasSymbols$5();
 	var hasProto = hasProto$1();
 
 	var getProto = Object.getPrototypeOf || (
@@ -1694,7 +1667,7 @@
 		'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
 		'%Array%': Array,
 		'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-		'%ArrayIteratorPrototype%': hasSymbols$3 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
+		'%ArrayIteratorPrototype%': hasSymbols$4 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
 		'%AsyncFromSyncIteratorPrototype%': undefined$1,
 		'%AsyncFunction%': needsEval,
 		'%AsyncGenerator%': needsEval,
@@ -1724,10 +1697,10 @@
 		'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
 		'%isFinite%': isFinite,
 		'%isNaN%': isNaN,
-		'%IteratorPrototype%': hasSymbols$3 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+		'%IteratorPrototype%': hasSymbols$4 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
 		'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
 		'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
 		'%Math%': Math,
 		'%Number%': Number,
 		'%Object%': Object,
@@ -1740,11 +1713,11 @@
 		'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
 		'%RegExp%': RegExp,
 		'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
 		'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
 		'%String%': String,
-		'%StringIteratorPrototype%': hasSymbols$3 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
-		'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
+		'%StringIteratorPrototype%': hasSymbols$4 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
+		'%Symbol%': hasSymbols$4 ? Symbol : undefined$1,
 		'%SyntaxError%': $SyntaxError$2,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
@@ -1849,7 +1822,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn = requireSrc();
+	var hasOwn = src;
 	var $concat = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace = bind.call(Function.call, String.prototype.replace);
@@ -5576,7 +5549,7 @@
 		hasRequiredInternalSlot = 1;
 
 		var GetIntrinsic = getIntrinsic;
-		var has = requireSrc();
+		var has = src;
 		var channel = requireSideChannel()();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -5733,7 +5706,7 @@
 
 		var GetIntrinsic = getIntrinsic;
 
-		var has = requireSrc();
+		var has = src;
 		var $TypeError = GetIntrinsic('%TypeError%');
 
 		isPropertyDescriptor = function IsPropertyDescriptor(ES, Desc) {
@@ -5833,7 +5806,7 @@
 		if (hasRequiredIsMatchRecord) return isMatchRecord;
 		hasRequiredIsMatchRecord = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		// https://262.ecma-international.org/13.0/#sec-match-records
 
@@ -5862,7 +5835,7 @@
 		var $TypeError = GetIntrinsic('%TypeError%');
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
-		var has = requireSrc();
+		var has = src;
 		var isInteger = isInteger$2;
 
 		var isMatchRecord = requireIsMatchRecord();
@@ -5952,7 +5925,7 @@
 		if (hasRequiredIsAccessorDescriptor) return IsAccessorDescriptor;
 		hasRequiredIsAccessorDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -5983,7 +5956,7 @@
 		if (hasRequiredIsDataDescriptor) return IsDataDescriptor;
 		hasRequiredIsDataDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var Type = Type$9;
 
@@ -6179,7 +6152,7 @@
 		if (hasRequiredToPropertyDescriptor) return ToPropertyDescriptor;
 		hasRequiredToPropertyDescriptor = 1;
 
-		var has = requireSrc();
+		var has = src;
 
 		var GetIntrinsic = getIntrinsic;
 
@@ -6798,20 +6771,11 @@
 
 	var Get$3 = /*@__PURE__*/getDefaultExportFromCjs(Get$2);
 
-	var shams;
-	var hasRequiredShams;
+	var hasSymbols$3 = shams$1;
 
-	function requireShams () {
-		if (hasRequiredShams) return shams;
-		hasRequiredShams = 1;
-
-		var hasSymbols = requireShams$1();
-
-		shams = function hasToStringTagShams() {
-			return hasSymbols() && !!Symbol.toStringTag;
-		};
-		return shams;
-	}
+	var shams = function hasToStringTagShams() {
+		return hasSymbols$3() && !!Symbol.toStringTag;
+	};
 
 	var isString;
 	var hasRequiredIsString;
@@ -6831,7 +6795,7 @@
 		};
 		var toStr = Object.prototype.toString;
 		var strClass = '[object String]';
-		var hasToStringTag = requireShams()();
+		var hasToStringTag = shams();
 
 		isString = function isString(value) {
 			if (typeof value === 'string') {
@@ -6852,7 +6816,7 @@
 		if (hasRequiredGetIteratorMethod) return getIteratorMethod$1;
 		hasRequiredGetIteratorMethod = 1;
 
-		var hasSymbols = requireHasSymbols()();
+		var hasSymbols = hasSymbols$5();
 		var GetIntrinsic = getIntrinsic;
 		var callBound = callBound$2;
 		var isString = requireIsString();
@@ -7149,7 +7113,7 @@
 	var $asyncIterator = GetIntrinsic$d('%Symbol.asyncIterator%', true);
 
 	var inspect = requireObjectInspect();
-	var hasSymbols$2 = requireHasSymbols()();
+	var hasSymbols$2 = hasSymbols$5();
 
 	var getIteratorMethod = requireGetIteratorMethod();
 	var AdvanceStringIndex = requireAdvanceStringIndex();
@@ -7213,7 +7177,7 @@
 
 	var $TypeError$7 = GetIntrinsic$c('%TypeError%');
 
-	var has = requireSrc();
+	var has = src;
 
 	var IsPropertyKey = IsPropertyKey$4;
 	var Type$5 = Type$9;
@@ -7432,7 +7396,7 @@
 
 	var toStr$1 = Object.prototype.toString;
 	var dateClass = '[object Date]';
-	var hasToStringTag = requireShams()();
+	var hasToStringTag = shams();
 
 	var isDateObject = function isDateObject(value) {
 		if (typeof value !== 'object' || value === null) {
@@ -7444,7 +7408,7 @@
 	var isSymbol$1 = {exports: {}};
 
 	var toStr = Object.prototype.toString;
-	var hasSymbols$1 = requireHasSymbols()();
+	var hasSymbols$1 = hasSymbols$5();
 
 	if (hasSymbols$1) {
 		var symToStr = Symbol.prototype.toString;
@@ -7574,7 +7538,7 @@
 		hasRequiredIsRegex = 1;
 
 		var callBound = callBound$2;
-		var hasToStringTag = requireShams()();
+		var hasToStringTag = shams();
 		var has;
 		var $exec;
 		var isRegexMarker;
