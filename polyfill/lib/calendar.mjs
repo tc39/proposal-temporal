@@ -698,7 +698,7 @@ const nonIsoHelperBase = {
     }
     if (this.hasEra) {
       if ((calendarDate['era'] === undefined) !== (calendarDate['eraYear'] === undefined)) {
-        throw new RangeError("properties 'era' and 'eraYear' must be provided together");
+        throw new TypeError("properties 'era' and 'eraYear' must be provided together");
       }
     }
   },
