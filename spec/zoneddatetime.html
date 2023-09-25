@@ -1158,7 +1158,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
+        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(! GetOptionsObject(_options_), *null*).
         1. Let _offsetBehaviour_ be ~option~.
         1. Let _matchBehaviour_ be ~match exactly~.
         1. If Type(_item_) is Object, then
