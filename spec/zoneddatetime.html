@@ -1148,7 +1148,7 @@
         ToTemporalZonedDateTime (
           _item_: an ECMAScript language value,
           optional _options_: an Object,
-        ): either a normal completion containing a `Temporal.ZonedDateTime` or an abrupt completion
+        ): either a normal completion containing a Temporal.ZonedDateTime, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1158,7 +1158,6 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Assert: Type(_options_) is Object or Undefined.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _offsetBehaviour_ be ~option~.
         1. Let _matchBehaviour_ be ~match exactly~.
