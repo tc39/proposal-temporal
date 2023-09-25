@@ -23,6 +23,7 @@ import {
   SetSlot
 } from './slots.mjs';
 
+const MathAbs = Math.abs;
 const ObjectCreate = Object.create;
 
 export class Duration {
@@ -288,8 +289,12 @@ export class Duration {
     const balancingRequested = largestUnit !== existingLargestUnit;
     const calendarUnitsPresent = years !== 0 || months !== 0 || weeks !== 0;
     const timeUnitsOverflowWillOccur =
-      minutes >= 60 || seconds >= 60 || milliseconds >= 1000 || microseconds >= 1000 || nanoseconds >= 1000;
-    const hoursToDaysConversionMayOccur = (days !== 0 && zonedRelativeTo) || hours >= 24;
+      MathAbs(minutes) >= 60 ||
+      MathAbs(seconds) >= 60 ||
+      MathAbs(milliseconds) >= 1000 ||
+      MathAbs(microseconds) >= 1000 ||
+      MathAbs(nanoseconds) >= 1000;
+    const hoursToDaysConversionMayOccur = (days !== 0 && zonedRelativeTo) || MathAbs(hours) >= 24;
     if (
       roundingGranularityIsNoop &&
       !balancingRequested &&

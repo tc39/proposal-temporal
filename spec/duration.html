@@ -453,10 +453,10 @@
         1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
         1. Let _hoursToDaysConversionMayOccur_ be *false*.
         1. If _duration_.[[Days]] &ne; 0 and _zonedRelativeTo_ is not *undefined*, set _hoursToDaysConversionMayOccur_ to *true*.
-        1. Else if _duration_.[[Hours]] &ge; 24, set _hoursToDaysConversionMayOccur_ to *true*.
+        1. Else if abs(_duration_.[[Hours]]) &ge; 24, set _hoursToDaysConversionMayOccur_ to *true*.
         1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
         1. If _duration_.[[Years]] = 0 and _duration_.[[Months]] = 0 and _duration_.[[Weeks]] = 0, let _calendarUnitsPresent_ be *false*; else let _calendarUnitsPresent_ be *true*.
-        1. If _roundingGranularityIsNoop_ is *true*, and _largestUnit_ is _existingLargestUnit_, and _calendarUnitsPresent_ is *false*, and _hoursToDaysConversionMayOccur_ is *false*, and _duration_.[[Minutes]] &lt; 60, and _duration_.[[Seconds]] &lt; 60, and _duration_.[[Milliseconds]] &lt; 1000, and _duration_.[[Microseconds]] &lt; 1000, and _duration_.[[Nanoseconds]] &lt; 1000, then
+        1. If _roundingGranularityIsNoop_ is *true*, and _largestUnit_ is _existingLargestUnit_, and _calendarUnitsPresent_ is *false*, and _hoursToDaysConversionMayOccur_ is *false*, and abs(_duration_.[[Minutes]]) &lt; 60, and abs(_duration_.[[Seconds]]) &lt; 60, and abs(_duration_.[[Milliseconds]]) &lt; 1000, and abs(_duration_.[[Microseconds]]) &lt; 1000, and abs(_duration_.[[Nanoseconds]]) &lt; 1000, then
           1. NOTE: The above conditions mean that the operation will have no effect: the smallest unit and rounding increment will leave the total duration unchanged, and it can be determined without calling a calendar or time zone method that no balancing will take place.
           1. Return ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _precalculatedPlainDateTime_ be *undefined*.
