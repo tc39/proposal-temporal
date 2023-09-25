@@ -732,14 +732,19 @@
       </emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporaldate" aoid="ToTemporalDate">
-      <h1>ToTemporalDate ( _item_ [ , _options_ ] )</h1>
-      <p>
-        The abstract operation ToTemporalDate returns its argument _item_ if it is already a Temporal.PlainDate instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.
-      </p>
+    <emu-clause id="sec-temporal-totemporaldate" type="abstract operation">
+      <h1>
+        ToTemporalDate (
+          _item_: an ECMAScript language value,
+          optional _options_: an Object or *undefined*,
+        ): either a normal completion containing a Temporal.PlainDate, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns its argument _item_ if it is already a Temporal.PlainDate instance, converts _item_ to a new Temporal.PlainDate instance if possible, and throws otherwise.</dd>
+      </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Assert: Type(_options_) is Object or Undefined.
         1. If _options_ is not *undefined*, set _options_ to ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
