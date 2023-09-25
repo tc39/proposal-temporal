@@ -863,7 +863,7 @@
         1. Let _monthCodeInteger_ be ! ToIntegerOrInfinity(_monthCodeDigits_).
         1. Assert: SameValue(_monthCode_, ISOMonthCode(_monthCodeInteger_)) is *true*.
         1. If _month_ is not *undefined* and ℝ(_month_) ≠ _monthCodeInteger_, throw a *RangeError* exception.
-        1. Perform ! Set(_fields_, *"month"*, 𝔽(_monthCodeInteger_), *false*).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"month"*, 𝔽(_monthCodeInteger_)).
         1. Return ~unused~.
       </emu-alg>
     </emu-clause>
