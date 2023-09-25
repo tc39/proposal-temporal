@@ -629,7 +629,7 @@
         1. Set _calendar_ to the ASCII-lowercase of _calendar_.
       1. If _timeZone_ is *undefined*, then
         1. Let _plainDate_ be ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
-        1. Return the Record { [[PlainRelativeTo]]: _plainDate, [[ZonedRelativeTo]]: *undefined* }.
+        1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
       1. If _offsetBehaviour_ is ~option~, then
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
