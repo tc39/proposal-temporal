@@ -1487,11 +1487,11 @@
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
 	var shams$1;
-	var hasRequiredShams;
+	var hasRequiredShams$1;
 
-	function requireShams () {
-		if (hasRequiredShams) return shams$1;
-		hasRequiredShams = 1;
+	function requireShams$1 () {
+		if (hasRequiredShams$1) return shams$1;
+		hasRequiredShams$1 = 1;
 
 		/* eslint complexity: [2, 18], max-statements: [2, 33] */
 		shams$1 = function hasSymbols() {
@@ -1536,17 +1536,17 @@
 		return shams$1;
 	}
 
-	var hasSymbols$5;
+	var hasSymbols$4;
 	var hasRequiredHasSymbols;
 
 	function requireHasSymbols () {
-		if (hasRequiredHasSymbols) return hasSymbols$5;
+		if (hasRequiredHasSymbols) return hasSymbols$4;
 		hasRequiredHasSymbols = 1;
 
 		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-		var hasSymbolSham = requireShams();
+		var hasSymbolSham = requireShams$1();
 
-		hasSymbols$5 = function hasNativeSymbols() {
+		hasSymbols$4 = function hasNativeSymbols() {
 			if (typeof origSymbol !== 'function') { return false; }
 			if (typeof Symbol !== 'function') { return false; }
 			if (typeof origSymbol('foo') !== 'symbol') { return false; }
@@ -1554,7 +1554,7 @@
 
 			return hasSymbolSham();
 		};
-		return hasSymbols$5;
+		return hasSymbols$4;
 	}
 
 	var test = {
@@ -1677,7 +1677,7 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$4 = requireHasSymbols()();
+	var hasSymbols$3 = requireHasSymbols()();
 	var hasProto = hasProto$1();
 
 	var getProto = Object.getPrototypeOf || (
@@ -1694,7 +1694,7 @@
 		'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
 		'%Array%': Array,
 		'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
-		'%ArrayIteratorPrototype%': hasSymbols$4 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
+		'%ArrayIteratorPrototype%': hasSymbols$3 && getProto ? getProto([][Symbol.iterator]()) : undefined$1,
 		'%AsyncFromSyncIteratorPrototype%': undefined$1,
 		'%AsyncFunction%': needsEval,
 		'%AsyncGenerator%': needsEval,
@@ -1724,10 +1724,10 @@
 		'%Int32Array%': typeof Int32Array === 'undefined' ? undefined$1 : Int32Array,
 		'%isFinite%': isFinite,
 		'%isNaN%': isNaN,
-		'%IteratorPrototype%': hasSymbols$4 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
+		'%IteratorPrototype%': hasSymbols$3 && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined$1,
 		'%JSON%': typeof JSON === 'object' ? JSON : undefined$1,
 		'%Map%': typeof Map === 'undefined' ? undefined$1 : Map,
-		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
+		'%MapIteratorPrototype%': typeof Map === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Map()[Symbol.iterator]()),
 		'%Math%': Math,
 		'%Number%': Number,
 		'%Object%': Object,
@@ -1740,11 +1740,11 @@
 		'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
 		'%RegExp%': RegExp,
 		'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
-		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$4 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
+		'%SetIteratorPrototype%': typeof Set === 'undefined' || !hasSymbols$3 || !getProto ? undefined$1 : getProto(new Set()[Symbol.iterator]()),
 		'%SharedArrayBuffer%': typeof SharedArrayBuffer === 'undefined' ? undefined$1 : SharedArrayBuffer,
 		'%String%': String,
-		'%StringIteratorPrototype%': hasSymbols$4 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
-		'%Symbol%': hasSymbols$4 ? Symbol : undefined$1,
+		'%StringIteratorPrototype%': hasSymbols$3 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
+		'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
 		'%SyntaxError%': $SyntaxError$2,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
@@ -6798,11 +6798,20 @@
 
 	var Get$3 = /*@__PURE__*/getDefaultExportFromCjs(Get$2);
 
-	var hasSymbols$3 = requireShams();
+	var shams;
+	var hasRequiredShams;
 
-	var shams = function hasToStringTagShams() {
-		return hasSymbols$3() && !!Symbol.toStringTag;
-	};
+	function requireShams () {
+		if (hasRequiredShams) return shams;
+		hasRequiredShams = 1;
+
+		var hasSymbols = requireShams$1();
+
+		shams = function hasToStringTagShams() {
+			return hasSymbols() && !!Symbol.toStringTag;
+		};
+		return shams;
+	}
 
 	var isString;
 	var hasRequiredIsString;
@@ -6822,7 +6831,7 @@
 		};
 		var toStr = Object.prototype.toString;
 		var strClass = '[object String]';
-		var hasToStringTag = shams();
+		var hasToStringTag = requireShams()();
 
 		isString = function isString(value) {
 			if (typeof value === 'string') {
@@ -7423,7 +7432,7 @@
 
 	var toStr$1 = Object.prototype.toString;
 	var dateClass = '[object Date]';
-	var hasToStringTag = shams();
+	var hasToStringTag = requireShams()();
 
 	var isDateObject = function isDateObject(value) {
 		if (typeof value !== 'object' || value === null) {
@@ -7565,7 +7574,7 @@
 		hasRequiredIsRegex = 1;
 
 		var callBound = callBound$2;
-		var hasToStringTag = shams();
+		var hasToStringTag = requireShams()();
 		var has;
 		var $exec;
 		var isRegexMarker;
