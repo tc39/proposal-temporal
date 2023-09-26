@@ -107,13 +107,14 @@
     </emu-clause>
 
     <emu-clause id="sec-temporal.timezone.prototype.equals">
-      <h1>Temporal.TimeZone.prototype.equals ( _other_ )</h1>
+      <h1>Temporal.TimeZone.prototype.equals ( _timeZoneLike_ )</h1>
       <p>
         This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
+        1. Let _other_ be ? ToTemporalTimeZoneSlotValue(_timeZoneLike_).
         1. Return ? TimeZoneEquals(_timeZone_, _other_).
       </emu-alg>
     </emu-clause>
