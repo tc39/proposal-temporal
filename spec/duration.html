@@ -1744,10 +1744,10 @@
         1. If _effectiveLargestUnit_ is LargerOfTwoTemporalUnits(_defaultLargestUnit_, _effectiveLargestUnit_), then
           1. Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
         1. Assert: _effectiveLargestUnit_ is not *"year"*.
+        1. If _calendarRec_ is *undefined*, then
+          1. Throw a *RangeError* exception.
+        1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
         1. If _effectiveLargestUnit_ is *"month"*, then
-          1. If _calendarRec_ is *undefined*, then
-            1. Throw a *RangeError* exception.
-          1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
           1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-until~) is *true*.
           1. Let _yearsDuration_ be ! CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _later_ be ? CalendarDateAdd(_calendarRec_, _plainRelativeTo_, _yearsDuration_).
@@ -1757,17 +1757,11 @@
           1. Let _yearsInMonths_ be _untilResult_.[[Months]].
           1. Return ? CreateDateDurationRecord(0, _months_ + _yearsInMonths_, _weeks_, _days_).
         1. If _effectiveLargestUnit_ is *"week"*, then
-          1. If _calendarRec_ is *undefined*, then
-            1. Throw a *RangeError* exception.
-          1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
           1. Let _yearsMonthsDuration_ be ! CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _later_ be ? CalendarDateAdd(_calendarRec_, _plainRelativeTo_, _yearsMonthsDuration_).
           1. Let _yearsMonthsInDays_ be DaysUntil(_plainRelativeTo_, _later_).
           1. Return ? CreateDateDurationRecord(0, 0, _weeks_, _days_ + _yearsMonthsInDays_).
         1. NOTE: _largestUnit_ can be any time unit as well as *"day"*.
-        1. If _calendarRec_ is *undefined*, then
-          1. Throw a *RangeError* exception.
-        1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
         1. Let _yearsMonthsWeeksDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
         1. Let _later_ be ? CalendarDateAdd(_calendarRec_, _plainRelativeTo_, _yearsMonthsWeeksDuration_).
         1. Let _yearsMonthsWeeksInDays_ be DaysUntil(_plainRelativeTo_, _later_).
