@@ -1741,8 +1741,13 @@
         1. Assert: If _plainRelativeTo_ is not *undefined*, _calendarRec_ is not *undefined*.
         1. If _largestUnit_ is *"year"*, then
           1. Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
+        1. If _largestUnit_ is *"month"* and _years_ = 0, then
+          1. Return ! CreateDateDurationRecord(0, _months_, _weeks_, _days_).
+        1. If _largestUnit_ is *"week"* and _years_ = 0 and _months_ = 0, then
+          1. Return ! CreateDateDurationRecord(0, 0, _weeks_, _days_).
+        1. If _largestUnit_ is *"day"* and _years_ = 0 and _months_ = 0 and _weeks_ = 0, then
+          1. Return ! CreateDateDurationRecord(0, 0, 0, _days_).
         1. If _largestUnit_ is *"month"*, then
-          1. If _years_ = 0, return ! CreateDateDurationRecord(0, _months_, _weeks_, _days_).
           1. If _calendarRec_ is *undefined*, then
             1. Throw a *RangeError* exception.
           1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
@@ -1755,7 +1760,6 @@
           1. Let _yearsInMonths_ be _untilResult_.[[Months]].
           1. Return ? CreateDateDurationRecord(0, _months_ + _yearsInMonths_, _weeks_, _days_).
         1. If _largestUnit_ is *"week"*, then
-          1. If _years_ = 0 and _months_ = 0, return ! CreateDateDurationRecord(0, 0, _weeks_, _days_).
           1. If _calendarRec_ is *undefined*, then
             1. Throw a *RangeError* exception.
           1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
@@ -1764,7 +1768,6 @@
           1. Let _yearsMonthsInDays_ be DaysUntil(_plainRelativeTo_, _later_).
           1. Return ? CreateDateDurationRecord(0, 0, _weeks_, _days_ + _yearsMonthsInDays_).
         1. NOTE: _largestUnit_ can be any time unit as well as *"day"*.
-        1. If _years_ = 0, and _months_ = 0, and _weeks_ = 0, return ! CreateDateDurationRecord(0, 0, 0, _days_).
         1. If _calendarRec_ is *undefined*, then
           1. Throw a *RangeError* exception.
         1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
