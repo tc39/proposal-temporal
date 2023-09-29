@@ -5866,9 +5866,10 @@ export function ValueOfThrows(constructorName) {
   throw new TypeError(
     'Do not use built-in arithmetic operators with Temporal objects. ' +
       `When comparing, use ${compareCode}, not obj1 > obj2. ` +
-      "When coercing to strings, use obj.toString() or String(obj), not +obj nor '' + obj. " +
-      'When concatenating with strings, use str.concat(obj) or `${str}${obj}`, not str + obj. ' +
-      'In React, call obj.toString() before rendering a Temporal object.'
+      "When coercing to strings, use `${obj}` or String(obj), not '' + obj. " +
+      'When coercing to numbers, use properties or methods of the object, not `+obj`. ' +
+      'When concatenating with strings, use `${str}${obj}` or str.concat(obj), not str + obj. ' +
+      'In React, coerce to a string before rendering a Temporal object.'
   );
 }
 
