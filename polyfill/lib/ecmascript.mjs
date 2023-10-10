@@ -3546,8 +3546,7 @@ export function BalancePossiblyInfiniteTimeDurationRelative(
       precalculatedPlainDateTime,
       timeZone,
       'iso8601',
-      days,
-      'constrain'
+      days
     ).epochNs;
   }
 
