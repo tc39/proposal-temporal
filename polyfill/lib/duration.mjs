@@ -306,9 +306,7 @@ export class Duration {
     let precalculatedPlainDateTime;
     const plainDateTimeOrRelativeToWillBeUsed =
       !roundingGranularityIsNoop ||
-      largestUnit === 'year' ||
-      largestUnit === 'month' ||
-      largestUnit === 'week' ||
+      ES.IsCalendarUnit(largestUnit) ||
       largestUnit === 'day' ||
       calendarUnitsPresent ||
       days !== 0;
@@ -422,14 +420,7 @@ export class Duration {
 
     let precalculatedPlainDateTime;
     const plainDateTimeOrRelativeToWillBeUsed =
-      unit === 'year' ||
-      unit === 'month' ||
-      unit === 'week' ||
-      unit === 'day' ||
-      years !== 0 ||
-      months !== 0 ||
-      weeks !== 0 ||
-      days !== 0;
+      ES.IsCalendarUnit(unit) || unit === 'day' || years !== 0 || months !== 0 || weeks !== 0 || days !== 0;
     if (zonedRelativeTo && plainDateTimeOrRelativeToWillBeUsed) {
       // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
       // of the operations below, because the conversion is user visible
@@ -482,7 +473,7 @@ export class Duration {
       }
       const endNs = ES.AddInstant(intermediateNs, norm);
       norm = TimeDuration.fromEpochNsDiff(endNs, startNs);
-      if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
+      if (ES.IsCalendarUnit(unit) || unit === 'day') {
         if (!norm.isZero()) startDt ??= ES.GetPlainDateTimeFor(timeZoneRec, start, 'iso8601');
         ({ days, norm } = ES.NormalizedTimeDurationToDays(norm, intermediate, timeZoneRec, startDt));
       } else {
