@@ -1121,6 +1121,10 @@ export function LargerOfTwoTemporalUnits(unit1, unit2) {
   return unit1;
 }
 
+export function IsCalendarUnit(unit) {
+  return unit === 'year' || unit === 'month' || unit === 'week';
+}
+
 export function PrepareTemporalFields(
   bag,
   fields,
@@ -3426,7 +3430,7 @@ export function BalanceTimeDurationRelative(
     return { days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: 0, microseconds: 0, nanoseconds: 0 };
   }
 
-  if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
+  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
     precalculatedPlainDateTime ??= GetPlainDateTimeFor(timeZoneRec, startInstant, 'iso8601');
     ({ days, norm } = NormalizedTimeDurationToDays(norm, zonedRelativeTo, timeZoneRec, precalculatedPlainDateTime));
     largestUnit = 'hour';
@@ -4471,7 +4475,7 @@ export function AddDuration(
 
   let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
   if (!zonedRelativeTo && !plainRelativeTo) {
-    if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week') {
+    if (IsCalendarUnit(largestUnit)) {
       throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
     }
     years = months = weeks = 0;
@@ -4510,7 +4514,7 @@ export function AddDuration(
     const calendar = GetSlot(zonedRelativeTo, CALENDAR);
     const startInstant = GetSlot(zonedRelativeTo, INSTANT);
     let startDateTime = precalculatedPlainDateTime;
-    if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
+    if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
       startDateTime ??= GetPlainDateTimeFor(timeZoneRec, startInstant, calendar);
     }
     const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
@@ -5214,13 +5218,7 @@ export function AdjustRoundedDurationDays(
 ) {
   // both dateAdd and dateUntil must be looked up if unit <= hour, any rounding
   // is requested, and any of years...weeks != 0
-  if (
-    unit === 'year' ||
-    unit === 'month' ||
-    unit === 'week' ||
-    unit === 'day' ||
-    (unit === 'nanosecond' && increment === 1)
-  ) {
+  if (IsCalendarUnit(unit) || unit === 'day' || (unit === 'nanosecond' && increment === 1)) {
     return { years, months, weeks, days, norm };
   }
 
@@ -5307,14 +5305,14 @@ export function RoundDuration(
   // dateAdd and dateUntil must be looked up
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 
-  if ((unit === 'year' || unit === 'month' || unit === 'week') && !plainRelativeTo) {
+  if (IsCalendarUnit(unit) && !plainRelativeTo) {
     throw new RangeError(`A starting point is required for ${unit}s rounding`);
   }
 
   // First convert time units up to days, if rounding to days or higher units.
   // If rounding relative to a ZonedDateTime, then some days may not be 24h.
   let dayLengthNs;
-  if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
+  if (IsCalendarUnit(unit) || unit === 'day') {
     let deltaDays;
     if (zonedRelativeTo) {
       const intermediate = MoveRelativeZonedDateTime(
