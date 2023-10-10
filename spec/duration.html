@@ -1435,7 +1435,6 @@
             1. Set _days_ to _days_ + _moveResult_.[[Days]].
             1. Set _months_ to _months_ - _sign_.
           1. Return ? CreateDateDurationRecord(0, 0, _weeks_, _days_).
-        1. Assert: _largestUnit_ is *"day"*.
         1. If _years_ = 0, and _months_ = 0, and _weeks_ = 0, return ! CreateDateDurationRecord(0, 0, 0, _days_).
         1. If _calendar_ is *undefined*, then
           1. Throw a *RangeError* exception.
