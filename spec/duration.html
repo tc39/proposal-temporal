@@ -1351,8 +1351,9 @@
           1. Set _intermediateNs_ to _intermediateResult_.[[EpochNanoseconds]].
         1. Let _endNs_ be AddInstant(_intermediateNs_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _nanoseconds_ to ℝ(_endNs_ - _zonedRelativeTo_.[[Nanoseconds]]).
+        1. If _nanoseconds_ = 0, return ! CreateTimeDurationRecord(0, 0, 0, 0, 0, 0, 0).
         1. If _largestUnit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*, then
-          1. If _nanoseconds_ &ne; 0 and _precalculatedPlainDateTime_ is *undefined*, set _precalculatedPlainDateTime_ to ? GetPlainDateTimeFor(_zonedRelativeTo_.[[TimeZone]], _startInstant_, *"iso8601"*).
+          1. If _precalculatedPlainDateTime_ is *undefined*, set _precalculatedPlainDateTime_ to ? GetPlainDateTimeFor(_zonedRelativeTo_.[[TimeZone]], _startInstant_, *"iso8601"*).
           1. Let _result_ be ? NanosecondsToDays(_nanoseconds_, _zonedRelativeTo_, _precalculatedPlainDateTime_).
           1. Set _days_ to _result_.[[Days]].
           1. Set _largestUnit_ to *"hour"*.
