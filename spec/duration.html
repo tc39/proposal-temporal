@@ -1643,7 +1643,8 @@
           1. Return ! CreateDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. Assert: _zonedRelativeTo_ is not *undefined*.
         1. If _precalculatedPlainDateTime_ is not present, let _precalculatedPlainDateTime_ be *undefined*.
-        1. If _precalculatedPlainDateTime_ is *undefined*, then
+        1. If _largestUnit_ is *"year"*, or _largestUnit_ is *"month"*, or _largestUnit_ is *"week"*, or _largestUnit_ is *"day"*, let _startDateTimeNeeded_ be *true*; else let _startDateTimeNeeded_ be *false*.
+        1. If _precalculatedPlainDateTime_ is *undefined* and _startDateTimeNeeded_ is *true*, then
           1. Let _startDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _zonedRelativeTo_.[[Nanoseconds]], _calendarRec_.[[Receiver]]).
         1. Else,
           1. Let _startDateTime_ be _precalculatedPlainDateTime_.

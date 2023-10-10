@@ -4877,7 +4877,10 @@ export function AddDuration(
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     const calendar = GetSlot(zonedRelativeTo, CALENDAR);
     const startInstant = GetSlot(zonedRelativeTo, INSTANT);
-    const startDateTime = precalculatedPlainDateTime ?? GetPlainDateTimeFor(timeZoneRec, startInstant, calendar);
+    let startDateTime = precalculatedPlainDateTime;
+    if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
+      startDateTime ??= GetPlainDateTimeFor(timeZoneRec, startInstant, calendar);
+    }
     const intermediateNs = AddZonedDateTime(
       startInstant,
       timeZoneRec,
