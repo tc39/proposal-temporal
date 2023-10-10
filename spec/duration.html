@@ -1347,7 +1347,7 @@
         1. Let _startInstant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
         1. If _days_ &ne; 0, then
           1. If _precalculatedPlainDateTime_ is *undefined*, set _precalculatedPlainDateTime_ to ? GetPlainDateTimeFor(_zonedRelativeTo_.[[TimeZone]], _startInstant_, *"iso8601"*).
-          1. Let _intermediateResult_ be ? AddDaysToZonedDateTime(_startInstant_, _precalculatedPlainDateTime_, _zonedRelativeTo_.[[TimeZone]], *"iso8601"*, _days_, *"constrain"*).
+          1. Let _intermediateResult_ be ? AddDaysToZonedDateTime(_startInstant_, _precalculatedPlainDateTime_, _zonedRelativeTo_.[[TimeZone]], *"iso8601"*, _days_).
           1. Set _intermediateNs_ to _intermediateResult_.[[EpochNanoseconds]].
         1. Let _endNs_ be AddInstant(_intermediateNs_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Set _nanoseconds_ to ℝ(_endNs_ - _zonedRelativeTo_.[[Nanoseconds]]).
