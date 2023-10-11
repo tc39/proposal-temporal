@@ -1774,7 +1774,7 @@
           1. Set _plainRelativeTo_ to _yearsLater_.
           1. Set _fractionalDays_ to _fractionalDays_ + _monthsWeeksInDays_.
           1. Let _isoResult_ be ! AddISODate(_plainRelativeTo_.[[ISOYear]]. _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]], 0, 0, 0, truncate(_fractionalDays_), *"constrain"*).
-          1. Let _wholeDaysLater_ be ! CreateTemporalDate(_isoResult_.[[Year]], _isoResult_.[[Month]], _isoResult_.[[Day]], _calendar_).
+          1. Let _wholeDaysLater_ be ? CreateTemporalDate(_isoResult_.[[Year]], _isoResult_.[[Month]], _isoResult_.[[Day]], _calendar_).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"year"*).
           1. Let _timePassed_ be ? DifferenceDate(_calendar_, _plainRelativeTo_, _wholeDaysLater_, _untilOptions_).
