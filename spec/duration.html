@@ -1897,7 +1897,7 @@
           _unit_: a String,
           _roundingMode_: a String,
           _zonedRelativeTo_: a Temporal.ZonedDateTime,
-          _precalculatedPlainDateTime_: a Temporal.PlainDateTime,
+          _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
         ): either a normal completion containing a Duration Record, or a throw completion
       </h1>
       <dl class="header">
@@ -1911,6 +1911,7 @@
       <emu-alg>
         1. If _unit_ is one of *"year"*, *"month"*, *"week"*, or *"day"*; or _unit_ is *"nanosecond"* and _increment_ is 1, then
           1. Return ! CreateDurationRecord(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Assert: _precalculatedPlainDateTime_ is not *undefined*.
         1. Let _timeRemainderNs_ be TotalDurationNanoseconds(_hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. If _timeRemainderNs_ = 0, let _direction_ be 0.
         1. Else if _timeRemainderNs_ &lt; 0, let _direction_ be -1.
