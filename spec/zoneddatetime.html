@@ -1309,10 +1309,10 @@
         1. Assert: Type(_options_) is Object or Undefined.
         1. If _years_ = 0, _months_ = 0, _weeks_ = 0, and _days_ = 0, then
           1. Return ? AddInstant(_epochNanoseconds_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
         1. If _precalculatedPlainDateTime_ is not *undefined*, then
           1. Let _temporalDateTime_ be _precalculatedPlainDateTime_.
         1. Else,
-          1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
           1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. If _years_ = 0, and _months_ = 0, and _weeks_ = 0, then
           1. Let _overflow_ be ? ToTemporalOverflow(_options_).
