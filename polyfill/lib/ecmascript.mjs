@@ -5907,6 +5907,22 @@ export function CompareISODate(y1, m1, d1, y2, m2, d2) {
   return 0;
 }
 
+export function CompareTemporalTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2) {
+  if (h1 !== h2) return ComparisonResult(h1 - h2);
+  if (min1 !== min2) return ComparisonResult(min1 - min2);
+  if (s1 !== s2) return ComparisonResult(s1 - s2);
+  if (ms1 !== ms2) return ComparisonResult(ms1 - ms2);
+  if (µs1 !== µs2) return ComparisonResult(µs1 - µs2);
+  if (ns1 !== ns2) return ComparisonResult(ns1 - ns2);
+  return 0;
+}
+
+export function CompareISODateTime(y1, m1, d1, h1, min1, s1, ms1, µs1, ns1, y2, m2, d2, h2, min2, s2, ms2, µs2, ns2) {
+  const dateResult = CompareISODate(y1, m1, d1, y2, m2, d2);
+  if (dateResult !== 0) return dateResult;
+  return CompareTemporalTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2);
+}
+
 // Not abstract operations from the spec
 
 export function NonNegativeBigIntDivmod(x, y) {

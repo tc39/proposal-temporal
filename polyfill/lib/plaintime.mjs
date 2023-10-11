@@ -324,12 +324,20 @@ export class PlainTime {
   static compare(one, two) {
     one = ES.ToTemporalTime(one);
     two = ES.ToTemporalTime(two);
-    for (const slot of [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND]) {
-      const val1 = GetSlot(one, slot);
-      const val2 = GetSlot(two, slot);
-      if (val1 !== val2) return ES.ComparisonResult(val1 - val2);
-    }
-    return 0;
+    return ES.CompareTemporalTime(
+      GetSlot(one, ISO_HOUR),
+      GetSlot(one, ISO_MINUTE),
+      GetSlot(one, ISO_SECOND),
+      GetSlot(one, ISO_MILLISECOND),
+      GetSlot(one, ISO_MICROSECOND),
+      GetSlot(one, ISO_NANOSECOND),
+      GetSlot(two, ISO_HOUR),
+      GetSlot(two, ISO_MINUTE),
+      GetSlot(two, ISO_SECOND),
+      GetSlot(two, ISO_MILLISECOND),
+      GetSlot(two, ISO_MICROSECOND),
+      GetSlot(two, ISO_NANOSECOND)
+    );
   }
 }
 
