@@ -5571,10 +5571,10 @@ export function AdjustRoundedDurationDays(
       precalculatedPlainDateTime
     ));
     ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
+      0,
+      0,
+      0,
+      0,
       0,
       0,
       0,
