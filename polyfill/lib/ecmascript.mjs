@@ -3544,17 +3544,11 @@ export function BalancePossiblyInfiniteTimeDurationRelative(
     days = 0;
   }
 
-  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalancePossiblyInfiniteTimeDuration(
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    nanoseconds,
-    largestUnit
-  ));
-
+  const result = BalancePossiblyInfiniteTimeDuration(0, 0, 0, 0, 0, 0, nanoseconds, largestUnit);
+  if (result === 'positive overflow' || result === 'negative overflow') {
+    return result;
+  }
+  ({ hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = result);
   return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
 }
 
