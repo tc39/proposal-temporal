@@ -54,7 +54,7 @@ For more detailed information, see the ISO 8601 standard or the [Wikipedia page]
 **Returns:** a new `Temporal.Duration` object.
 
 All of the arguments are optional.
-Any missing or `undefined` numerical arguments are taken to be zero, and all non-integer numerical arguments are rounded to the nearest integer, towards zero.
+Any missing or `undefined` numerical arguments are taken to be zero, and all arguments must be integers.
 Any non-zero arguments must all have the same sign.
 
 Use this constructor directly if you have the correct parameters already as numerical values.
@@ -67,6 +67,8 @@ new Temporal.Duration(1, 2, 3, 4, 5, 6, 7, 987, 654, 321); // => P1Y2M3W4DT5H6M7
 new Temporal.Duration(0, 0, 0, 40); // => P40D
 new Temporal.Duration(undefined, undefined, undefined, 40); // => P40D
 new Temporal.Duration(); // => PT0S
+
+/* WRONG */ new Temporal.Duration(0, 0, 0, 1.5); // => throws
 ```
 
 ## Static methods
@@ -84,7 +86,7 @@ If the value is another `Temporal.Duration` object, a new object representing th
 If the value is any other object, a `Temporal.Duration` will be constructed from the values of any `years`, `months`, `weeks`, `days`, `hours`, `minutes`, `seconds`, `milliseconds`, `microseconds`, and `nanoseconds` properties that are present.
 Any missing ones will be assumed to be 0.
 
-All non-zero values must have the same sign, and must not be infinite.
+All non-zero values must be integers, must have the same sign, and must not be infinite.
 Otherwise, the function will throw a `RangeError`.
 
 Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
@@ -104,6 +106,11 @@ Temporal.Duration.from(d) === d; // => false
 d = Temporal.Duration.from('P1Y1D'); // => P1Y1D
 d = Temporal.Duration.from('-P2DT12H'); // => -P2DT12H
 d = Temporal.Duration.from('P0D'); // => PT0S
+
+// Non-integer numbers are never allowed, even if they are allowed in an ISO string:
+/* WRONG */ d = Temporal.Duration.from({ seconds: 1.5 }); // => throws
+d = Temporal.Duration.from("PT1.5S"); // ok
+d = Temporal.Duration.from({ seconds: 1, milliseconds: 500 }); // ok
 
 // Mixed-sign values are never allowed, even if overall positive:
 /* WRONG */ d = Temporal.Duration.from({ hours: 1, minutes: -30 }); // => throws
