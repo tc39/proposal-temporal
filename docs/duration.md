@@ -452,7 +452,7 @@ The `roundingMode` option controls how the rounding is performed.
 
 - `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
   When there is a tie, round away from zero like `ceil` for positive durations and like `floor` for negative durations.
-  This is the default, and matches the behaviour of `Math.round()`.
+  This is the default, and matches how rounding is often taught in school.
 - `ceil`: Always round towards positive infinity.
   For negative durations this option will decrease the absolute value of the duration which may be unexpected.
   To round away from zero, use `expand`.

@@ -414,7 +414,7 @@ The `roundingMode` option controls how the rounding is performed.
 
 Several pairs of modes behave the same as each other, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.
 
-As expected for a method named "round", the default rounding mode is `'halfExpand'` to match the behavior of `Math.round`.
+The default rounding mode is `'halfExpand'` to match how rounding is often taught in school.
 Note that this is different than the `'trunc'` default used by `until` and `since` options because rounding up would be an unexpected default for those operations.
 Other properties behave identically between these methods.
 
