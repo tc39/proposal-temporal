@@ -4,6 +4,8 @@
 	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.temporal = {}));
 })(this, (function (exports) { 'use strict';
 
+	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
 	function getDefaultExportFromCjs (x) {
 		return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
 	}
@@ -1570,43 +1572,75 @@
 	/* eslint no-invalid-this: 1 */
 
 	var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
-	var slice = Array.prototype.slice;
-	var toStr$4 = Object.prototype.toString;
+	var toStr$3 = Object.prototype.toString;
+	var max = Math.max;
 	var funcType = '[object Function]';
+
+	var concatty = function concatty(a, b) {
+	    var arr = [];
+
+	    for (var i = 0; i < a.length; i += 1) {
+	        arr[i] = a[i];
+	    }
+	    for (var j = 0; j < b.length; j += 1) {
+	        arr[j + a.length] = b[j];
+	    }
+
+	    return arr;
+	};
+
+	var slicy = function slicy(arrLike, offset) {
+	    var arr = [];
+	    for (var i = offset || 0, j = 0; i < arrLike.length; i += 1, j += 1) {
+	        arr[j] = arrLike[i];
+	    }
+	    return arr;
+	};
+
+	var joiny = function (arr, joiner) {
+	    var str = '';
+	    for (var i = 0; i < arr.length; i += 1) {
+	        str += arr[i];
+	        if (i + 1 < arr.length) {
+	            str += joiner;
+	        }
+	    }
+	    return str;
+	};
 
 	var implementation$3 = function bind(that) {
 	    var target = this;
-	    if (typeof target !== 'function' || toStr$4.call(target) !== funcType) {
+	    if (typeof target !== 'function' || toStr$3.apply(target) !== funcType) {
 	        throw new TypeError(ERROR_MESSAGE + target);
 	    }
-	    var args = slice.call(arguments, 1);
+	    var args = slicy(arguments, 1);
 
 	    var bound;
 	    var binder = function () {
 	        if (this instanceof bound) {
 	            var result = target.apply(
 	                this,
-	                args.concat(slice.call(arguments))
+	                concatty(args, arguments)
 	            );
 	            if (Object(result) === result) {
 	                return result;
 	            }
 	            return this;
-	        } else {
-	            return target.apply(
-	                that,
-	                args.concat(slice.call(arguments))
-	            );
 	        }
+	        return target.apply(
+	            that,
+	            concatty(args, arguments)
+	        );
+
 	    };
 
-	    var boundLength = Math.max(0, target.length - args.length);
+	    var boundLength = max(0, target.length - args.length);
 	    var boundArgs = [];
 	    for (var i = 0; i < boundLength; i++) {
-	        boundArgs.push('$' + i);
+	        boundArgs[i] = '$' + i;
 	    }
 
-	    bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
+	    bound = Function('binder', 'return function (' + joiny(boundArgs, ',') + '){ return binder.apply(this,arguments); }')(binder);
 
 	    if (target.prototype) {
 	        var Empty = function Empty() {};
@@ -2062,10 +2096,10 @@
 	var $Array = GetIntrinsic$k('%Array%');
 
 	// eslint-disable-next-line global-require
-	var toStr$3 = !$Array.isArray && callBound$2('Object.prototype.toString');
+	var toStr$2 = !$Array.isArray && callBound$2('Object.prototype.toString');
 
 	var IsArray$4 = $Array.isArray || function IsArray(argument) {
-		return toStr$3(argument) === '[object Array]';
+		return toStr$2(argument) === '[object Array]';
 	};
 
 	// https://262.ecma-international.org/6.0/#sec-isarray
@@ -5161,6 +5195,13 @@
 		    if (isString(obj)) {
 		        return markBoxed(inspect(String(obj)));
 		    }
+		    if (obj === commonjsGlobal) {
+		        /* eslint-env browser */
+		        if (typeof window !== 'undefined') {
+		            return '{ [object Window] }';
+		        }
+		        return '{ [object global] }';
+		    }
 		    if (!isDate(obj) && !isRegExp(obj)) {
 		        var ys = arrObjKeys(obj, inspect);
 		        var isPlainObject = gPO ? gPO(obj) === Object.prototype : obj instanceof Object || obj.constructor === Object;
@@ -6062,105 +6103,114 @@
 		return ToBoolean$1;
 	}
 
-	var fnToStr = Function.prototype.toString;
-	var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
-	var badArrayLike;
-	var isCallableMarker;
-	if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
-		try {
-			badArrayLike = Object.defineProperty({}, 'length', {
-				get: function () {
-					throw isCallableMarker;
-				}
-			});
-			isCallableMarker = {};
-			// eslint-disable-next-line no-throw-literal
-			reflectApply(function () { throw 42; }, null, badArrayLike);
-		} catch (_) {
-			if (_ !== isCallableMarker) {
-				reflectApply = null;
-			}
-		}
-	} else {
-		reflectApply = null;
-	}
+	var isCallable$1;
+	var hasRequiredIsCallable$1;
 
-	var constructorRegex = /^\s*class\b/;
-	var isES6ClassFn = function isES6ClassFunction(value) {
-		try {
-			var fnStr = fnToStr.call(value);
-			return constructorRegex.test(fnStr);
-		} catch (e) {
-			return false; // not a function
-		}
-	};
+	function requireIsCallable$1 () {
+		if (hasRequiredIsCallable$1) return isCallable$1;
+		hasRequiredIsCallable$1 = 1;
 
-	var tryFunctionObject = function tryFunctionToStr(value) {
-		try {
-			if (isES6ClassFn(value)) { return false; }
-			fnToStr.call(value);
-			return true;
-		} catch (e) {
-			return false;
-		}
-	};
-	var toStr$2 = Object.prototype.toString;
-	var objectClass = '[object Object]';
-	var fnClass = '[object Function]';
-	var genClass = '[object GeneratorFunction]';
-	var ddaClass = '[object HTMLAllCollection]'; // IE 11
-	var ddaClass2 = '[object HTML document.all class]';
-	var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
-	var hasToStringTag$1 = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
-
-	var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
-
-	var isDDA = function isDocumentDotAll() { return false; };
-	if (typeof document === 'object') {
-		// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
-		var all = document.all;
-		if (toStr$2.call(all) === toStr$2.call(document.all)) {
-			isDDA = function isDocumentDotAll(value) {
-				/* globals document: false */
-				// in IE 6-8, typeof document.all is "object" and it's truthy
-				if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
-					try {
-						var str = toStr$2.call(value);
-						return (
-							str === ddaClass
-							|| str === ddaClass2
-							|| str === ddaClass3 // opera 12.16
-							|| str === objectClass // IE 6-8
-						) && value('') == null; // eslint-disable-line eqeqeq
-					} catch (e) { /**/ }
-				}
-				return false;
-			};
-		}
-	}
-
-	var isCallable$1 = reflectApply
-		? function isCallable(value) {
-			if (isDDA(value)) { return true; }
-			if (!value) { return false; }
-			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+		var fnToStr = Function.prototype.toString;
+		var reflectApply = typeof Reflect === 'object' && Reflect !== null && Reflect.apply;
+		var badArrayLike;
+		var isCallableMarker;
+		if (typeof reflectApply === 'function' && typeof Object.defineProperty === 'function') {
 			try {
-				reflectApply(value, null, badArrayLike);
-			} catch (e) {
-				if (e !== isCallableMarker) { return false; }
+				badArrayLike = Object.defineProperty({}, 'length', {
+					get: function () {
+						throw isCallableMarker;
+					}
+				});
+				isCallableMarker = {};
+				// eslint-disable-next-line no-throw-literal
+				reflectApply(function () { throw 42; }, null, badArrayLike);
+			} catch (_) {
+				if (_ !== isCallableMarker) {
+					reflectApply = null;
+				}
 			}
-			return !isES6ClassFn(value) && tryFunctionObject(value);
+		} else {
+			reflectApply = null;
 		}
-		: function isCallable(value) {
-			if (isDDA(value)) { return true; }
-			if (!value) { return false; }
-			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
-			if (hasToStringTag$1) { return tryFunctionObject(value); }
-			if (isES6ClassFn(value)) { return false; }
-			var strClass = toStr$2.call(value);
-			if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
-			return tryFunctionObject(value);
+
+		var constructorRegex = /^\s*class\b/;
+		var isES6ClassFn = function isES6ClassFunction(value) {
+			try {
+				var fnStr = fnToStr.call(value);
+				return constructorRegex.test(fnStr);
+			} catch (e) {
+				return false; // not a function
+			}
 		};
+
+		var tryFunctionObject = function tryFunctionToStr(value) {
+			try {
+				if (isES6ClassFn(value)) { return false; }
+				fnToStr.call(value);
+				return true;
+			} catch (e) {
+				return false;
+			}
+		};
+		var toStr = Object.prototype.toString;
+		var objectClass = '[object Object]';
+		var fnClass = '[object Function]';
+		var genClass = '[object GeneratorFunction]';
+		var ddaClass = '[object HTMLAllCollection]'; // IE 11
+		var ddaClass2 = '[object HTML document.all class]';
+		var ddaClass3 = '[object HTMLCollection]'; // IE 9-10
+		var hasToStringTag = typeof Symbol === 'function' && !!Symbol.toStringTag; // better: use `has-tostringtag`
+
+		var isIE68 = !(0 in [,]); // eslint-disable-line no-sparse-arrays, comma-spacing
+
+		var isDDA = function isDocumentDotAll() { return false; };
+		if (typeof document === 'object') {
+			// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
+			var all = document.all;
+			if (toStr.call(all) === toStr.call(document.all)) {
+				isDDA = function isDocumentDotAll(value) {
+					/* globals document: false */
+					// in IE 6-8, typeof document.all is "object" and it's truthy
+					if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
+						try {
+							var str = toStr.call(value);
+							return (
+								str === ddaClass
+								|| str === ddaClass2
+								|| str === ddaClass3 // opera 12.16
+								|| str === objectClass // IE 6-8
+							) && value('') == null; // eslint-disable-line eqeqeq
+						} catch (e) { /**/ }
+					}
+					return false;
+				};
+			}
+		}
+
+		isCallable$1 = reflectApply
+			? function isCallable(value) {
+				if (isDDA(value)) { return true; }
+				if (!value) { return false; }
+				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+				try {
+					reflectApply(value, null, badArrayLike);
+				} catch (e) {
+					if (e !== isCallableMarker) { return false; }
+				}
+				return !isES6ClassFn(value) && tryFunctionObject(value);
+			}
+			: function isCallable(value) {
+				if (isDDA(value)) { return true; }
+				if (!value) { return false; }
+				if (typeof value !== 'function' && typeof value !== 'object') { return false; }
+				if (hasToStringTag) { return tryFunctionObject(value); }
+				if (isES6ClassFn(value)) { return false; }
+				var strClass = toStr.call(value);
+				if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
+				return tryFunctionObject(value);
+			};
+		return isCallable$1;
+	}
 
 	var IsCallable$2;
 	var hasRequiredIsCallable;
@@ -6171,7 +6221,7 @@
 
 		// http://262.ecma-international.org/5.1/#sec-9.11
 
-		IsCallable$2 = isCallable$1;
+		IsCallable$2 = requireIsCallable$1();
 		return IsCallable$2;
 	}
 
@@ -7485,7 +7535,7 @@
 	var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
 	var isPrimitive$1 = isPrimitive$2;
-	var isCallable = isCallable$1;
+	var isCallable = requireIsCallable$1();
 	var isDate = isDateObject;
 	var isSymbol = isSymbolExports;
 
@@ -7867,6 +7917,14 @@
 		var GetIntrinsic = getIntrinsic;
 
 		var $defineProperty = hasPropertyDescriptors && GetIntrinsic('%Object.defineProperty%', true);
+		if ($defineProperty) {
+			try {
+				$defineProperty({}, 'a', { value: 1 });
+			} catch (e) {
+				// IE 8 has a broken defineProperty
+				$defineProperty = false;
+			}
+		}
 
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -11857,6 +11915,10 @@
 	  } else {
 	    days = 0;
 	  }
+	  const result = BalancePossiblyInfiniteTimeDuration(0, 0, 0, 0, 0, 0, nanoseconds, largestUnit);
+	  if (result === 'positive overflow' || result === 'negative overflow') {
+	    return result;
+	  }
 	  ({
 	    hours,
 	    minutes,
@@ -11864,7 +11926,7 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = BalancePossiblyInfiniteTimeDuration(0, 0, 0, 0, 0, 0, nanoseconds, largestUnit));
+	  } = result);
 	  return {
 	    days,
 	    hours,
