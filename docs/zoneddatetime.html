@@ -1133,7 +1133,7 @@ When there is a tie, round up, like <code>&#39;ceil&#39;</code>.</li>
 For example, with a <code>roundingIncrement</code> of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).</li>
 </ul>
 <p>Several pairs of modes behave the same as each other, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.</p>
-<p>As expected for a method named &quot;round&quot;, the default rounding mode is <code>&#39;halfExpand&#39;</code> to match the behavior of <code>Math.round</code>.
+<p>The default rounding mode is <code>&#39;halfExpand&#39;</code> to match how rounding is often taught in school.
 Note that this is different than the <code>&#39;trunc&#39;</code> default used by <code>until</code> and <code>since</code> options because rounding up would be an unexpected default for those operations.
 Other properties behave identically between these methods.</p>
 <p>Example usage:</p>

@@ -12678,11 +12678,11 @@
 	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 	  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
-	  resolvedOptions.largestUnit = settings.largestUnit;
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  if (GetSlot(plainDate, ISO_YEAR) === GetSlot(other, ISO_YEAR) && GetSlot(plainDate, ISO_MONTH) === GetSlot(other, ISO_MONTH) && GetSlot(plainDate, ISO_DAY) === GetSlot(other, ISO_DAY)) {
 	    return new Duration();
 	  }
+	  resolvedOptions.largestUnit = settings.largestUnit;
 	  const untilResult = DifferenceDate(calendar, plainDate, other, resolvedOptions);
 	  let years = GetSlot(untilResult, YEARS);
 	  let months = GetSlot(untilResult, MONTHS);
@@ -12794,7 +12794,6 @@
 	  if (GetSlot(yearMonth, ISO_YEAR) === GetSlot(other, ISO_YEAR) && GetSlot(yearMonth, ISO_MONTH) === GetSlot(other, ISO_MONTH) && GetSlot(yearMonth, ISO_DAY) === GetSlot(other, ISO_DAY)) {
 	    return new Duration();
 	  }
-	  resolvedOptions.largestUnit = settings.largestUnit;
 	  const fieldNames = CalendarFields(calendar, ['monthCode', 'year']);
 	  const thisFields = PrepareTemporalFields(yearMonth, fieldNames, []);
 	  thisFields.day = 1;
@@ -12802,6 +12801,7 @@
 	  const otherFields = PrepareTemporalFields(other, fieldNames, []);
 	  otherFields.day = 1;
 	  const otherDate = CalendarDateFromFields(calendar, otherFields);
+	  resolvedOptions.largestUnit = settings.largestUnit;
 	  let {
 	    years,
 	    months
@@ -12822,7 +12822,6 @@
 	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 	  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
-	  resolvedOptions.largestUnit = settings.largestUnit;
 	  const ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
 	  const ns2 = GetSlot(other, EPOCHNANOSECONDS);
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
@@ -12849,6 +12848,7 @@
 	    if (ns1.equals(ns2)) return new Duration();
 	    const precalculatedPlainDateTime = GetPlainDateTimeFor(timeZone, GetSlot(zonedDateTime, INSTANT), GetSlot(zonedDateTime, CALENDAR));
 	    const plainRelativeTo = TemporalDateTimeToDate(precalculatedPlainDateTime);
+	    resolvedOptions.largestUnit = settings.largestUnit;
 	    ({
 	      years,
 	      months,
