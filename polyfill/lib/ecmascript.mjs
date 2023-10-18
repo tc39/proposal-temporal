@@ -101,10 +101,10 @@ const $TypeError = GetIntrinsic('%TypeError%');
 const $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
 
 const DAY_SECONDS = 86400;
-const DAY_NANOS = bigInt(DAY_SECONDS).multiply(1e9);
+const DAY_NANOS = DAY_SECONDS * 1e9;
 // Instant range is 100 million days (inclusive) before or after epoch.
-const NS_MIN = DAY_NANOS.multiply(-1e8);
-const NS_MAX = DAY_NANOS.multiply(1e8);
+const NS_MIN = bigInt(DAY_NANOS).multiply(-1e8);
+const NS_MAX = bigInt(DAY_NANOS).multiply(1e8);
 // PlainDateTime range is 24 hours wider (exclusive) than the Instant range on
 // both ends, to allow for valid Instant=>PlainDateTime conversion for all
 // built-in time zones (whose offsets must have a magnitude less than 24 hours).
@@ -2875,13 +2875,13 @@ export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
   // transitions after that.
   const now = SystemUTCEpochNanoSeconds();
   const base = epochNanoseconds.greater(now) ? epochNanoseconds : now;
-  const uppercap = base.plus(DAY_NANOS.multiply(366 * 3));
+  const uppercap = base.plus(bigInt(DAY_NANOS).multiply(366 * 3));
   let leftNanos = epochNanoseconds;
   let leftOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
   let rightNanos = leftNanos;
   let rightOffsetNs = leftOffsetNs;
   while (leftOffsetNs === rightOffsetNs && bigInt(leftNanos).compare(uppercap) === -1) {
-    rightNanos = bigInt(leftNanos).plus(DAY_NANOS.multiply(2 * 7));
+    rightNanos = bigInt(leftNanos).plus(bigInt(DAY_NANOS).multiply(2 * 7));
     if (rightNanos.greater(NS_MAX)) return null;
     rightOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, rightNanos);
     if (leftOffsetNs === rightOffsetNs) {
@@ -2904,7 +2904,7 @@ export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
   // are no transitions between the present day and 3 years from now, assume
   // there are none after.
   const now = SystemUTCEpochNanoSeconds();
-  const lookahead = now.plus(DAY_NANOS.multiply(366 * 3));
+  const lookahead = now.plus(bigInt(DAY_NANOS).multiply(366 * 3));
   if (epochNanoseconds.gt(lookahead)) {
     const prevBeforeLookahead = GetNamedTimeZonePreviousTransition(id, lookahead);
     if (prevBeforeLookahead === null || prevBeforeLookahead.lt(now)) {
@@ -2932,7 +2932,7 @@ export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
   let leftNanos = rightNanos;
   let leftOffsetNs = rightOffsetNs;
   while (rightOffsetNs === leftOffsetNs && bigInt(rightNanos).compare(BEFORE_FIRST_DST) === 1) {
-    leftNanos = bigInt(rightNanos).minus(DAY_NANOS.multiply(2 * 7));
+    leftNanos = bigInt(rightNanos).minus(bigInt(DAY_NANOS).multiply(2 * 7));
     if (leftNanos.lesser(BEFORE_FIRST_DST)) return null;
     leftOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, leftNanos);
     if (rightOffsetNs === leftOffsetNs) {
@@ -3298,7 +3298,13 @@ export function NormalizedTimeDurationToDays(norm, zonedRelativeTo, timeZoneRec,
   if (norm.abs().cmp(dayLengthNs.abs()) >= 0) {
     throw new Error('assert not reached');
   }
-  return { days, norm, dayLengthNs: dayLengthNs.abs().totalNs };
+  const daylen = dayLengthNs.abs().totalNs.toJSNumber();
+  if (!NumberIsSafeInteger(daylen)) {
+    const h = daylen / 3600e9;
+    throw new RangeError(`Time zone calculated a day length of ${h} h, longer than ~2502 h causes precision loss`);
+  }
+  if (MathAbs(days) > NumberMaxSafeInteger / 86400) throw new Error('assert not reached');
+  return { days, norm, dayLengthNs: daylen };
 }
 
 export function BalanceTimeDuration(norm, largestUnit) {

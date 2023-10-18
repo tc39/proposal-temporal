@@ -1420,7 +1420,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It converts a normalized time duration _norm_ relative to a Temporal.ZonedDateTime _zonedRelativeTo_, and converts it into a number of days and a remainder normalized time duration, taking into account any offset changes in the time zone of _zonedRelativeTo_.
+          It converts a normalized time duration _norm_ relative to a Temporal.ZonedDateTime _zonedRelativeTo_ into a number of days and a remainder normalized time duration, taking into account any offset changes in the time zone of _zonedRelativeTo_.
           It also returns the length of the last day in nanoseconds, for rounding purposes.
         </dd>
       </dl>
@@ -1467,10 +1467,13 @@
           1. Assert: _sign_ is -1.
         1. If NormalizedTimeDurationSign(_norm_) = 1 and _sign_ = -1, throw a *RangeError* exception.
         1. Assert: CompareNormalizedTimeDuration(NormalizedTimeDurationAbs(_norm_), NormalizedTimeDurationAbs(_dayLengthNs_)) = -1.
+        1. Let _dayLength_ be abs(ℝ(_dayLengthNs_.[[TotalNanoseconds]])).
+        1. If _dayLength_ &ge; 2<sup>53</sup>, throw a *RangeError* exception.
+        1. Assert: abs(_days_) &lt; 2<sup>53</sup> / (HoursPerDay &times; MinutesPerHour &times; SecondsPerMinute).
         1. Return the Record {
           [[Days]]: _days_,
           [[Remainder]]: _norm_,
-          [[DayLength]]: ℝ(NormalizedTimeDurationAbs(_dayLengthNs_).[[TotalNanoseconds]])
+          [[DayLength]]: _dayLength_
           }.
       </emu-alg>
     </emu-clause>
