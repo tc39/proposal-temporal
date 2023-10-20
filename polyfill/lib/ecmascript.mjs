@@ -5690,6 +5690,7 @@ export function RoundDuration(
       // the duration. This lets us do days-or-larger rounding using BigInt
       // math which reduces precision loss.
       oneYearDays = MathAbs(oneYearDays);
+      if (oneYearDays === 0) throw new RangeError('custom calendar reported that a year is 0 days long');
       const divisor = bigInt(oneYearDays).multiply(dayLengthNs);
       nanoseconds = divisor.multiply(years).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
       const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment).toJSNumber(), roundingMode);
@@ -5737,6 +5738,7 @@ export function RoundDuration(
       let { days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth);
 
       oneMonthDays = MathAbs(oneMonthDays);
+      if (oneMonthDays === 0) throw new RangeError('custom calendar reported that a month is 0 days long');
       const divisor = bigInt(oneMonthDays).multiply(dayLengthNs);
       nanoseconds = divisor.multiply(months).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
       const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
@@ -5774,6 +5776,7 @@ export function RoundDuration(
       let { days: oneWeekDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneWeek);
 
       oneWeekDays = MathAbs(oneWeekDays);
+      if (oneWeekDays === 0) throw new RangeError('custom calendar reported that a week is 0 days long');
       const divisor = bigInt(oneWeekDays).multiply(dayLengthNs);
       nanoseconds = divisor.multiply(weeks).plus(bigInt(days).multiply(dayLengthNs)).plus(nanoseconds);
       const rounded = RoundNumberToIncrement(nanoseconds, divisor.multiply(increment), roundingMode);
