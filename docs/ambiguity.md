@@ -199,8 +199,8 @@ This mode also matches the behavior of cross-platform standards like [RFC 5545 (
 
 Methods where this option is present include:
 
-- [`Temporal.PlainDate.prototype.toZonedDateTime`](./plaindate.md#toZonedDateTime)
-- [`Temporal.PlainTime.prototype.toZonedDateTime`](./plaintime.md#toZonedDateTime)
+- [`Temporal.ZonedDateTime.from` with object argument](./zoneddatetime.md#from)
+- [`Temporal.ZonedDateTime.prototype.with`](./zoneddatetime.md#with)
 - [`Temporal.PlainDateTime.prototype.toZonedDateTime`](./plaindatetime.md#toZonedDateTime)
 - [`Temporal.TimeZone.prototype.getInstantFor`](./timezone.md#getInstantFor).
 
