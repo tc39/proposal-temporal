@@ -1480,6 +1480,15 @@
             </dd>
           </dl>
           <p>
+            Clamping an invalid date to the correct range when _overflow_ is *"constrain"* is a behaviour specific to each built-in calendar, but all built-in calendars follow this guideline:
+          </p>
+          <ul>
+            <li>Pick the closest day in the same month. If there are two equally-close dates in that month, pick the later one.</li>
+            <li>If the month is a leap month that doesn't exist in the year, pick another date according to the cultural conventions of that calendar's users. Usually this will result in the same day in the month before or after where that month would normally fall in a leap year.</li>
+            <li>Otherwise, pick the closest date that is still in the same year. If there are two equally-close dates in that year, pick the later one.</li>
+            <li>If the entire year doesn't exist, pick the closest date in a different year. If there are two equally-close dates, pick the later one.</li>
+          </ul>
+          <p>
             Like RegulateISODate, the operation throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateTimeWithinLimits, or if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
           </p>
         </emu-clause>
@@ -1497,7 +1506,7 @@
             <dd>
               It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to processing specified by _overflow_.
               For *"reject"*, values that do not form a valid date cause an exception to be thrown.
-              For *"constrain"*, values that do not form a valid date are clamped to the correct range.
+              For *"constrain"*, values that do not form a valid date are clamped to the correct range as in CalendarDateToISO.
               It then returns a Record representing the reference ISO 8601 date.
             </dd>
           </dl>
