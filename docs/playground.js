@@ -2024,9 +2024,9 @@
 
 	var callBind$2 = {exports: {}};
 
-	var GetIntrinsic$o = getIntrinsic;
+	var GetIntrinsic$p = getIntrinsic;
 
-	var $defineProperty$1 = GetIntrinsic$o('%Object.defineProperty%', true);
+	var $defineProperty$1 = GetIntrinsic$p('%Object.defineProperty%', true);
 
 	var hasPropertyDescriptors$1 = function hasPropertyDescriptors() {
 		if ($defineProperty$1) {
@@ -2056,9 +2056,9 @@
 
 	var hasPropertyDescriptors_1 = hasPropertyDescriptors$1;
 
-	var GetIntrinsic$n = getIntrinsic;
+	var GetIntrinsic$o = getIntrinsic;
 
-	var $gOPD = GetIntrinsic$n('%Object.getOwnPropertyDescriptor%', true);
+	var $gOPD = GetIntrinsic$o('%Object.getOwnPropertyDescriptor%', true);
 
 	if ($gOPD) {
 		try {
@@ -2073,9 +2073,9 @@
 
 	var hasPropertyDescriptors = hasPropertyDescriptors_1();
 
-	var GetIntrinsic$m = getIntrinsic;
+	var GetIntrinsic$n = getIntrinsic;
 
-	var $defineProperty = hasPropertyDescriptors && GetIntrinsic$m('%Object.defineProperty%', true);
+	var $defineProperty = hasPropertyDescriptors && GetIntrinsic$n('%Object.defineProperty%', true);
 	if ($defineProperty) {
 		try {
 			$defineProperty({}, 'a', { value: 1 });
@@ -2085,8 +2085,8 @@
 		}
 	}
 
-	var $SyntaxError$2 = GetIntrinsic$m('%SyntaxError%');
-	var $TypeError$e = GetIntrinsic$m('%TypeError%');
+	var $SyntaxError$2 = GetIntrinsic$n('%SyntaxError%');
+	var $TypeError$e = GetIntrinsic$n('%TypeError%');
 
 	var gopd = gopd$1;
 
@@ -2138,19 +2138,19 @@
 		}
 	};
 
-	var GetIntrinsic$l = getIntrinsic;
+	var GetIntrinsic$m = getIntrinsic;
 	var define = defineDataProperty;
 	var hasDescriptors = hasPropertyDescriptors_1();
 	var gOPD = gopd$1;
 
-	var $TypeError$d = GetIntrinsic$l('%TypeError%');
-	var $floor$1 = GetIntrinsic$l('%Math.floor%');
+	var $TypeError$d = GetIntrinsic$m('%TypeError%');
+	var $floor$2 = GetIntrinsic$m('%Math.floor%');
 
 	var setFunctionLength = function setFunctionLength(fn, length) {
 		if (typeof fn !== 'function') {
 			throw new $TypeError$d('`fn` is not a function');
 		}
-		if (typeof length !== 'number' || length < 0 || length > 0xFFFFFFFF || $floor$1(length) !== length) {
+		if (typeof length !== 'number' || length < 0 || length > 0xFFFFFFFF || $floor$2(length) !== length) {
 			throw new $TypeError$d('`length` must be a positive 32-bit integer');
 		}
 
@@ -2226,14 +2226,14 @@
 
 	var callBindExports = callBind$2.exports;
 
-	var GetIntrinsic$k = getIntrinsic;
+	var GetIntrinsic$l = getIntrinsic;
 
 	var callBind$1 = callBindExports;
 
-	var $indexOf = callBind$1(GetIntrinsic$k('String.prototype.indexOf'));
+	var $indexOf = callBind$1(GetIntrinsic$l('String.prototype.indexOf'));
 
 	var callBound$2 = function callBoundIntrinsic(name, allowMissing) {
-		var intrinsic = GetIntrinsic$k(name, !!allowMissing);
+		var intrinsic = GetIntrinsic$l(name, !!allowMissing);
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
 			return callBind$1(intrinsic);
 		}
@@ -2242,9 +2242,9 @@
 
 	var callBound$3 = /*@__PURE__*/getDefaultExportFromCjs(callBound$2);
 
-	var GetIntrinsic$j = getIntrinsic;
+	var GetIntrinsic$k = getIntrinsic;
 
-	var $Array = GetIntrinsic$j('%Array%');
+	var $Array = GetIntrinsic$k('%Array%');
 
 	// eslint-disable-next-line global-require
 	var toStr$2 = !$Array.isArray && callBound$2('Object.prototype.toString');
@@ -2258,14 +2258,14 @@
 
 	var IsArray$3 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$2);
 
-	var GetIntrinsic$i = getIntrinsic;
+	var GetIntrinsic$j = getIntrinsic;
 	var callBound$1 = callBound$2;
 
-	var $TypeError$c = GetIntrinsic$i('%TypeError%');
+	var $TypeError$c = GetIntrinsic$j('%TypeError%');
 
 	var IsArray$1 = IsArray$2;
 
-	var $apply = GetIntrinsic$i('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
+	var $apply = GetIntrinsic$j('%Reflect.apply%', true) || callBound$1('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
@@ -5834,9 +5834,9 @@
 		return internalSlot;
 	}
 
-	var GetIntrinsic$h = getIntrinsic;
+	var GetIntrinsic$i = getIntrinsic;
 
-	var $SyntaxError$1 = GetIntrinsic$h('%SyntaxError%');
+	var $SyntaxError$1 = GetIntrinsic$i('%SyntaxError%');
 
 	var SLOT = requireInternalSlot();
 
@@ -5978,43 +5978,25 @@
 		return a !== a;
 	};
 
-	var _isFinite;
-	var hasRequired_isFinite;
+	var $isNaN$3 = _isNaN;
 
-	function require_isFinite () {
-		if (hasRequired_isFinite) return _isFinite;
-		hasRequired_isFinite = 1;
+	var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN$3(x) && x !== Infinity && x !== -Infinity; };
 
-		var $isNaN = _isNaN;
+	var GetIntrinsic$h = getIntrinsic;
 
-		_isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
-		return _isFinite;
-	}
+	var $abs$1 = GetIntrinsic$h('%Math.abs%');
+	var $floor$1 = GetIntrinsic$h('%Math.floor%');
 
-	var isInteger$2;
-	var hasRequiredIsInteger;
+	var $isNaN$2 = _isNaN;
+	var $isFinite$1 = _isFinite;
 
-	function requireIsInteger () {
-		if (hasRequiredIsInteger) return isInteger$2;
-		hasRequiredIsInteger = 1;
-
-		var GetIntrinsic = getIntrinsic;
-
-		var $abs = GetIntrinsic('%Math.abs%');
-		var $floor = GetIntrinsic('%Math.floor%');
-
-		var $isNaN = _isNaN;
-		var $isFinite = require_isFinite();
-
-		isInteger$2 = function isInteger(argument) {
-			if (typeof argument !== 'number' || $isNaN(argument) || !$isFinite(argument)) {
-				return false;
-			}
-			var absValue = $abs(argument);
-			return $floor(absValue) === absValue;
-		};
-		return isInteger$2;
-	}
+	var isInteger$2 = function isInteger(argument) {
+		if (typeof argument !== 'number' || $isNaN$2(argument) || !$isFinite$1(argument)) {
+			return false;
+		}
+		var absValue = $abs$1(argument);
+		return $floor$1(absValue) === absValue;
+	};
 
 	var isMatchRecord;
 	var hasRequiredIsMatchRecord;
@@ -6053,7 +6035,7 @@
 		var $SyntaxError = GetIntrinsic('%SyntaxError%');
 
 		var hasOwn = requireHasown();
-		var isInteger = requireIsInteger();
+		var isInteger = isInteger$2;
 
 		var isMatchRecord = requireIsMatchRecord();
 
@@ -7200,7 +7182,7 @@
 		var CodePointAt = requireCodePointAt();
 		var Type = Type$9;
 
-		var isInteger = requireIsInteger();
+		var isInteger = isInteger$2;
 		var MAX_SAFE_INTEGER = requireMaxSafeInteger();
 
 		var $TypeError = GetIntrinsic('%TypeError%');
@@ -7390,7 +7372,7 @@
 
 	var HasOwnProperty$1 = /*@__PURE__*/getDefaultExportFromCjs(HasOwnProperty);
 
-	var isInteger$1 = requireIsInteger();
+	var isInteger$1 = isInteger$2;
 
 	// https://262.ecma-international.org/12.0/#sec-isinteger
 
@@ -8319,7 +8301,7 @@
 	var ToNumber = ToNumber$1;
 
 	var $isNaN = _isNaN;
-	var $isFinite = require_isFinite();
+	var $isFinite = _isFinite;
 	var $sign = sign;
 
 	// https://262.ecma-international.org/12.0/#sec-tointegerorinfinity
@@ -8455,7 +8437,7 @@
 
 	var StringPad = requireStringPad();
 
-	var isInteger = requireIsInteger();
+	var isInteger = isInteger$2;
 
 	// https://262.ecma-international.org/13.0/#sec-tozeropaddeddecimalstring
 
