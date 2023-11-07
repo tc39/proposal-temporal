@@ -208,7 +208,7 @@
             1. Set _calendarRec_.[[DateAdd]] to %Temporal.Calendar.prototype.dateAdd%.
           1. Else,
             1. Set _calendarRec_.[[DateAdd]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateAdd"*).
-            1. If _calendarRec_.[[GetOffsetNanosecondsFor]] is *undefined*, throw a *TypeError* exception.
+            1. If _calendarRec_.[[DateAdd]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~dateFromFields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
             1. Set _calendarRec_.[[DateFromFields]] to %Temporal.TimeZone.prototype.dateFromFields%.
