@@ -329,35 +329,7 @@ export class Duration {
     let calendarRec;
     if (zonedRelativeTo || plainRelativeTo) {
       const calendar = GetSlot(zonedRelativeTo ?? plainRelativeTo, CALENDAR);
-      calendarRec = new CalendarMethodRecord(calendar);
-      if (
-        years !== 0 ||
-        months !== 0 ||
-        weeks !== 0 ||
-        largestUnit === 'year' ||
-        largestUnit === 'month' ||
-        largestUnit === 'week' ||
-        smallestUnit === 'year' ||
-        smallestUnit === 'month' ||
-        smallestUnit === 'week'
-      ) {
-        calendarRec.lookup('dateAdd');
-      }
-      if (
-        largestUnit === 'year' ||
-        (largestUnit === 'month' && years !== 0) ||
-        smallestUnit === 'year' ||
-        // Edge condition in AdjustRoundedDurationDays:
-        (zonedRelativeTo &&
-          !roundingGranularityIsNoop &&
-          smallestUnit !== 'year' &&
-          smallestUnit !== 'month' &&
-          smallestUnit !== 'week' &&
-          smallestUnit !== 'day' &&
-          (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week'))
-      ) {
-        calendarRec.lookup('dateUntil');
-      }
+      calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateUntil']);
     }
 
     ({ years, months, weeks, days } = ES.UnbalanceDateDurationRelative(
@@ -500,13 +472,7 @@ export class Duration {
       calendar = GetSlot(plainRelativeTo, CALENDAR);
     }
     if (calendar) {
-      calendarRec = new CalendarMethodRecord(calendar);
-      if (years !== 0 || months !== 0 || weeks !== 0 || unit === 'year' || unit === 'month' || unit === 'week') {
-        calendarRec.lookup('dateAdd');
-      }
-      if (unit === 'year' || (unit === 'month' && years !== 0)) {
-        calendarRec.lookup('dateUntil');
-      }
+      calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateUntil']);
     }
 
     // Convert larger units down to days
@@ -760,8 +726,7 @@ export class Duration {
 
     let calendarRec;
     if (zonedRelativeTo || plainRelativeTo) {
-      calendarRec = new CalendarMethodRecord(GetSlot(zonedRelativeTo ?? plainRelativeTo, CALENDAR));
-      if (calendarUnitsPresent) calendarRec.lookup('dateAdd');
+      calendarRec = new CalendarMethodRecord(GetSlot(zonedRelativeTo ?? plainRelativeTo, CALENDAR), ['dateAdd']);
     }
 
     if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {

@@ -1543,9 +1543,7 @@
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « »).
-        1. If _duration_.[[Years]] &ne; 0, or _duration_.[[Months]] &ne; 0, or _duration_.[[Weeks]] &ne; 0, then
-          1. Perform ? CalendarMethodsRecordLookup(_calendarRec_, ~dateAdd~).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~dateAdd~ »).
         1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _sign_ &times; _duration_.[[Years]], _sign_ &times; _duration_.[[Months]], _sign_ &times; _duration_.[[Weeks]], _sign_ &times; _duration_.[[Days]], _sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]], *undefined*, _options_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZoneRec_.[[Receiver]], _calendarRec_.[[Receiver]]).
       </emu-alg>
