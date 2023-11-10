@@ -173,7 +173,7 @@
         1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getPossibleInstantsFor~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
         1. Return ? GetInstantFor(_timeZoneRec_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
@@ -887,14 +887,10 @@
           If that call returns an empty array and _disambiguation_ is not *"reject"*, it calls _timeZoneRec_'s `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` an additional time.
         </dd>
       </dl>
-      <p>
-        _timeZoneRec_ must have looked up at least the `getPossibleInstantsFor` method.
-        `getOffsetNanosecondsFor` will be looked up as needed, since this is one of the few operations that cannot determine in advance whether it will be used.
-      </p>
       <emu-alg>
+        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getOffsetNanosecondsFor~) is *true*.
+        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getPossibleInstantsFor~) is *true*.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZoneRec_, _dateTime_).
-        1. If _possibleInstants_ is empty, and _disambiguation_ is not *"reject"*, and TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getOffsetNanosecondsFor~) is *false*, then
-          1. Perform ? TimeZoneMethodsRecordLookup(_timeZoneRec_, ~getOffsetNanosecondsFor~).
         1. Return ? DisambiguatePossibleInstants(_possibleInstants_, _timeZoneRec_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
