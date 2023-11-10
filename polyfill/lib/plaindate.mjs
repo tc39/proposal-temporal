@@ -258,7 +258,7 @@ export class PlainDate {
       nanosecond,
       calendar
     );
-    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
     const instant = ES.GetInstantFor(timeZoneRec, dt, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }

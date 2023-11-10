@@ -411,7 +411,7 @@ export class PlainDateTime {
     const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
     options = ES.GetOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
     const instant = ES.GetInstantFor(timeZoneRec, this, disambiguation);
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }

@@ -80,7 +80,7 @@ export class TimeZone {
     dateTime = ES.ToTemporalDateTime(dateTime);
     options = ES.GetOptionsObject(options);
     const disambiguation = ES.ToTemporalDisambiguation(options);
-    const timeZoneRec = new TimeZoneMethodRecord(this, ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(this, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
     return ES.GetInstantFor(timeZoneRec, dateTime, disambiguation);
   }
   getPossibleInstantsFor(dateTime) {

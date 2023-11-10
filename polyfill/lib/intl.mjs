@@ -365,7 +365,10 @@ function extractOverrides(temporalObj, main) {
       nanosecond,
       'iso8601'
     );
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+      'getOffsetNanosecondsFor',
+      'getPossibleInstantsFor'
+    ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
       formatter: getPropLazy(main, TIME)
@@ -383,7 +386,10 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const datetime = ES.CreateTemporalDateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+      'getOffsetNanosecondsFor',
+      'getPossibleInstantsFor'
+    ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
       formatter: getPropLazy(main, YM)
@@ -401,7 +407,10 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const datetime = ES.CreateTemporalDateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+      'getOffsetNanosecondsFor',
+      'getPossibleInstantsFor'
+    ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
       formatter: getPropLazy(main, MD)
@@ -417,7 +426,10 @@ function extractOverrides(temporalObj, main) {
       throw new RangeError(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`);
     }
     const datetime = ES.CreateTemporalDateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+      'getOffsetNanosecondsFor',
+      'getPossibleInstantsFor'
+    ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
       formatter: getPropLazy(main, DATE)
@@ -431,7 +443,10 @@ function extractOverrides(temporalObj, main) {
         `cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
       );
     }
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getPossibleInstantsFor']);
+    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+      'getOffsetNanosecondsFor',
+      'getPossibleInstantsFor'
+    ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, temporalObj, 'compatible'),
       formatter: getPropLazy(main, DATETIME)

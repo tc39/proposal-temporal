@@ -632,7 +632,7 @@
         1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getPossibleInstantsFor~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
         1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _dateTime_, _disambiguation_).
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _dateTime_.[[Calendar]]).
       </emu-alg>
