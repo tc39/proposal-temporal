@@ -326,11 +326,10 @@ export class Duration {
       plainRelativeTo = ES.TemporalDateTimeToDate(precalculatedPlainDateTime);
     }
 
-    let calendarRec;
-    if (zonedRelativeTo || plainRelativeTo) {
-      const calendar = GetSlot(zonedRelativeTo ?? plainRelativeTo, CALENDAR);
-      calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateUntil']);
-    }
+    const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, [
+      'dateAdd',
+      'dateUntil'
+    ]);
 
     ({ years, months, weeks, days } = ES.UnbalanceDateDurationRelative(
       years,
@@ -465,15 +464,10 @@ export class Duration {
       plainRelativeTo = ES.TemporalDateTimeToDate(precalculatedPlainDateTime);
     }
 
-    let calendar, calendarRec;
-    if (zonedRelativeTo) {
-      calendar = GetSlot(zonedRelativeTo, CALENDAR);
-    } else if (plainRelativeTo) {
-      calendar = GetSlot(plainRelativeTo, CALENDAR);
-    }
-    if (calendar) {
-      calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateUntil']);
-    }
+    const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, [
+      'dateAdd',
+      'dateUntil'
+    ]);
 
     // Convert larger units down to days
     ({ years, months, weeks, days } = ES.UnbalanceDateDurationRelative(
@@ -724,10 +718,7 @@ export class Duration {
 
     const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
 
-    let calendarRec;
-    if (zonedRelativeTo || plainRelativeTo) {
-      calendarRec = new CalendarMethodRecord(GetSlot(zonedRelativeTo ?? plainRelativeTo, CALENDAR), ['dateAdd']);
-    }
+    const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, ['dateAdd']);
 
     if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
       const instant = GetSlot(zonedRelativeTo, INSTANT);

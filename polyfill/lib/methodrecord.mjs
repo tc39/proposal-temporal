@@ -1,6 +1,7 @@
 import GetMethod from 'es-abstract/2022/GetMethod.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
+import { CALENDAR, GetSlot } from './slots.mjs';
 
 class MethodRecord {
   constructor(recordType, receiver, methodNames) {
@@ -67,6 +68,12 @@ export class TimeZoneMethodRecord extends MethodRecord {
 export class CalendarMethodRecord extends MethodRecord {
   constructor(calendar, methodNames = []) {
     super('Calendar', calendar, methodNames);
+  }
+
+  static CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, methodNames = []) {
+    const relativeTo = zonedRelativeTo ?? plainRelativeTo;
+    if (!relativeTo) return undefined;
+    return new this(GetSlot(relativeTo, CALENDAR), methodNames);
   }
 
   dateAdd(date, duration, options) {

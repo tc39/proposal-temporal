@@ -186,6 +186,25 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-createcalendarmethodsrecordfromrelativeto" type="abstract operation">
+      <h1>
+        CreateCalendarMethodsRecordFromRelativeTo (
+          _plainRelativeTo_: a `Temporal.PlainDate` or *undefined*,
+          _zonedRelativeTo_: a `Temporal.ZonedDateTime` or *undefined*,
+          _methods_: a List of one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+        ): either a normal completion containing either a Calendar Methods Record or *undefined*, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates a Calendar Methods Record from the calendar of the given `relativeTo` object, looking up the methods given in _methods_. If no `relativeTo` object is given, it returns *undefined* instead of a Calendar Methods Record.</dd>
+      </dl>
+      <emu-alg>
+        1. If _zonedRelativeTo_ is not *undefined*, return ? CreateCalendarMethodsRecord(_zonedRelativeTo_.[[Calendar]], _methods_).
+        1. If _plainRelativeTo_ is not *undefined*, return ? CreateCalendarMethodsRecord(_plainRelativeTo_.[[Calendar]], _methods_).
+        1. Return *undefined*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calendarmethodsrecordlookup" type="abstract operation">
       <h1>
         CalendarMethodsRecordLookup (

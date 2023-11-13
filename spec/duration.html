@@ -102,10 +102,7 @@
         1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
         1. Let _calendarUnitsPresent_ be *false*.
         1. If _one_.[[Years]] &ne; 0, or _two_.[[Years]] &ne; 0, or _one_.[[Months]] &ne; 0, or _two_.[[Months]] &ne; 0, or _one_.[[Weeks]] &ne; 0, or _two_.[[Weeks]] &ne; 0, set _calendarUnitsPresent_ to *true*.
-        1. Let _calendarRec_ be *undefined*.
-        1. If _zonedRelativeTo_ is not *undefined* or _plainRelativeTo_ is not *undefined*, then
-          1. If _zonedRelativeTo_ is not *undefined*, let _calendar_ be _zonedRelativeTo_.[[Calendar]]; else let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Set _calendarRec_ to ? CreateCalendarMethodsRecord(_calendar_, « ~dateAdd~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecordFromRelativeTo(_plainRelativeTo_, _zonedRelativeTo_, « ~dateAdd~ »).
         1. If _zonedRelativeTo_ is not *undefined*, and either _calendarUnitsPresent_ is *true*, or _one_.[[Days]] &ne; 0, or _two_.[[Days]] &ne; 0, then
           1. Let _instant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
           1. Let _precalculatedPlainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
@@ -470,10 +467,7 @@
           1. Let _instant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
           1. Set _precalculatedPlainDateTime_ to ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _zonedRelativeTo_.[[Calendar]]).
           1. Set _plainRelativeTo_ to ! CreateTemporalDate(_precalculatedPlainDateTime_.[[ISOYear]], _precalculatedPlainDateTime_.[[ISOMonth]], _precalculatedPlainDateTime_.[[ISODay]], _zonedRelativeTo_.[[Calendar]]).
-        1. Let _calendarRec_ be *undefined*.
-        1. If _zonedRelativeTo_ is not *undefined* or _plainRelativeTo_ is not *undefined*, then
-          1. If _zonedRelativeTo_ is not *undefined*, let _calendar_ be _zonedRelativeTo_.[[Calendar]]; else let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Set _calendarRec_ to ? CreateCalendarMethodsRecord(_calendar_, « ~dateAdd~, ~dateUntil~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecordFromRelativeTo(_plainRelativeTo_, _zonedRelativeTo_, « ~dateAdd~, ~dateUntil~ »).
         1. Let _unbalanceResult_ be ? UnbalanceDateDurationRelative(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _largestUnit_, _plainRelativeTo_, _calendarRec_).
         1. Let _roundRecord_ be ? RoundDuration(_unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], _unbalanceResult_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _plainRelativeTo_, _calendarRec_, _zonedRelativeTo_, _timeZoneRec_, _precalculatedPlainDateTime_).
         1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
@@ -515,10 +509,7 @@
           1. Let _instant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
           1. Set _precalculatedPlainDateTime_ to ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _zonedRelativeTo_.[[Calendar]]).
           1. Set _plainRelativeTo_ to ! CreateTemporalDate(_precalculatedPlainDateTime_.[[ISOYear]], _precalculatedPlainDateTime_.[[ISOMonth]], _precalculatedPlainDateTime_.[[ISODay]], _zonedRelativeTo_.[[Calendar]]).
-        1. Let _calendarRec_ be *undefined*.
-        1. If _zonedRelativeTo_ is not *undefined* and _plainRelativeTo_ is not *undefined*, then
-          1. If _zonedRelativeTo_ is not *undefined*, let _calendar_ be _zonedRelativeTo_.[[Calendar]]; else let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Set _calendarRec_ to ? CreateCalendarMethodsRecord(_calendar_, « ~dateAdd~, ~dateUntil~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecordFromRelativeTo(_plainRelativeTo_, _zonedRelativeTo_, « ~dateAdd~, ~dateUntil~ »).
         1. Let _unbalanceResult_ be ? UnbalanceDateDurationRelative(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _unit_, _plainRelativeTo_, _calendarRec_).
         1. If _zonedRelativeTo_ is not *undefined*, then
           1. Let _intermediate_ be ? MoveRelativeZonedDateTime(_zonedRelativeTo_, _calendarRec_, _timeZoneRec_, _unbalanceResult_.[[Years]], _unbalanceResult_.[[Months]], _unbalanceResult_.[[Weeks]], 0, _precalculatedPlainDateTime_).
@@ -2005,10 +1996,7 @@
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
-        1. Let _calendarRec_ be *undefined*.
-        1. If _zonedRelativeTo_ is not *undefined* and _plainRelativeTo_ is not *undefined*, then
-          1. If _zonedRelativeTo_ is not *undefined*, let _calendar_ be _zonedRelativeTo_.[[Calendar]]; else let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Set _calendarRec_ to ? CreateCalendarMethodsRecord(_calendar_, « ~dateAdd~, ~dateUntil~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecordFromRelativeTo(_plainRelativeTo_, _zonedRelativeTo_, « ~dateAdd~, ~dateUntil~ »).
         1. Let _result_ be ? AddDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], _sign_ &times; _other_.[[Years]], _sign_ &times; _other_.[[Months]], _sign_ &times; _other_.[[Weeks]], _sign_ &times; _other_.[[Days]], _sign_ &times; _other_.[[Hours]], _sign_ &times; _other_.[[Minutes]], _sign_ &times; _other_.[[Seconds]], _sign_ &times; _other_.[[Milliseconds]], _sign_ &times; _other_.[[Microseconds]], _sign_ &times; _other_.[[Nanoseconds]], _plainRelativeTo_, _calendarRec_, _zonedRelativeTo_, _timeZoneRec_).
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
