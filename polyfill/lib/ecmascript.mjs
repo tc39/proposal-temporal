@@ -5132,13 +5132,10 @@ export function AddDurationToOrSubtractDurationFromDuration(operation, duration,
   options = GetOptionsObject(options);
   const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ToRelativeTemporalObject(options);
 
-  let calendarRec;
-  if (plainRelativeTo || zonedRelativeTo) {
-    calendarRec = new CalendarMethodRecord(GetSlot(zonedRelativeTo ?? plainRelativeTo, CALENDAR), [
-      'dateAdd',
-      'dateUntil'
-    ]);
-  }
+  const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, [
+    'dateAdd',
+    'dateUntil'
+  ]);
 
   ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = AddDuration(
     GetSlot(duration, YEARS),
