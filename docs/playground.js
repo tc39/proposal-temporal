@@ -12760,7 +12760,8 @@
 	    return new Duration();
 	  }
 	  const calendarRec = new CalendarMethodRecord(calendar);
-	  if (settings.smallestUnit === 'year' || settings.smallestUnit === 'month' || settings.smallestUnit === 'week') {
+	  const roundingIsNoop = settings.smallestUnit === 'day' && settings.roundingIncrement === 1;
+	  if (settings.smallestUnit === 'year' || settings.smallestUnit === 'month' || settings.smallestUnit === 'week' || !roundingIsNoop && (settings.largestUnit === 'year' || settings.largestUnit === 'month' || settings.largestUnit === 'week')) {
 	    calendarRec.lookup('dateAdd');
 	  }
 	  if (settings.largestUnit === 'year' || settings.largestUnit === 'month' || settings.largestUnit === 'week' || settings.smallestUnit === 'year') {
@@ -12772,13 +12773,19 @@
 	  let months = GetSlot(untilResult, MONTHS);
 	  let weeks = GetSlot(untilResult, WEEKS);
 	  let days = GetSlot(untilResult, DAYS);
-	  if (settings.smallestUnit !== 'day' || settings.roundingIncrement !== 1) {
+	  if (!roundingIsNoop) {
 	    ({
 	      years,
 	      months,
 	      weeks,
 	      days
 	    } = RoundDuration(years, months, weeks, days, 0, 0, 0, 0, 0, 0, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, plainDate, calendarRec));
+	    ({
+	      years,
+	      months,
+	      weeks,
+	      days
+	    } = BalanceDateDurationRelative(years, months, weeks, days, settings.largestUnit, plainDate, calendarRec));
 	  }
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, 0, 0, 0, 0, 0, 0);
 	}
@@ -12796,7 +12803,8 @@
 	    return new Duration();
 	  }
 	  const calendarRec = new CalendarMethodRecord(calendar);
-	  if (settings.smallestUnit === 'year' || settings.smallestUnit === 'month' || settings.smallestUnit === 'week') {
+	  const roundingIsNoop = settings.smallestUnit === 'nanosecond' && settings.roundingIncrement === 1;
+	  if (settings.smallestUnit === 'year' || settings.smallestUnit === 'month' || settings.smallestUnit === 'week' || !datePartsIdentical && !roundingIsNoop && (settings.largestUnit === 'year' || settings.largestUnit === 'month' || settings.largestUnit === 'week')) {
 	    calendarRec.lookup('dateAdd');
 	  }
 	  if (!datePartsIdentical && (settings.largestUnit === 'year' || settings.largestUnit === 'month' || settings.largestUnit === 'week') || settings.smallestUnit === 'year') {
@@ -12814,7 +12822,7 @@
 	    microseconds,
 	    nanoseconds
 	  } = DifferenceISODateTime(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendarRec, settings.largestUnit, resolvedOptions);
-	  if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
+	  if (!roundingIsNoop) {
 	    const relativeTo = TemporalDateTimeToDate(plainDateTime);
 	    ({
 	      years,
@@ -12837,6 +12845,12 @@
 	      microseconds,
 	      nanoseconds
 	    } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.largestUnit));
+	    ({
+	      years,
+	      months,
+	      weeks,
+	      days
+	    } = BalanceDateDurationRelative(years, months, weeks, days, settings.largestUnit, relativeTo, calendarRec));
 	  }
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
 	}
@@ -12911,6 +12925,10 @@
 	      years,
 	      months
 	    } = RoundDuration(years, months, 0, 0, 0, 0, 0, 0, 0, 0, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, thisDate, calendarRec));
+	    ({
+	      years,
+	      months
+	    } = BalanceDateDurationRelative(years, months, 0, 0, settings.largestUnit, thisDate, calendarRec));
 	  }
 	  return new Duration(sign * years, sign * months, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
@@ -12992,6 +13010,13 @@
 	        microseconds,
 	        nanoseconds
 	      } = AdjustRoundedDurationDays(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, zonedDateTime, calendarRec, timeZoneRec, precalculatedPlainDateTime));
+	      // BalanceTimeDuration already performed in AdjustRoundedDurationDays
+	      ({
+	        years,
+	        months,
+	        weeks,
+	        days
+	      } = BalanceDateDurationRelative(years, months, weeks, days, settings.largestUnit, plainRelativeTo, calendarRec));
 	    }
 	  }
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
@@ -18525,13 +18550,35 @@
 	      unit,
 	      increment
 	    } = ToSecondsStringPrecisionRecord(smallestUnit, digits);
-	    const {
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = RoundDuration(0, 0, 0, 0, 0, 0, GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS), increment, unit, roundingMode);
-	    return TemporalDurationToString(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), seconds, milliseconds, microseconds, nanoseconds, precision);
+	    let years = GetSlot(this, YEARS);
+	    let months = GetSlot(this, MONTHS);
+	    let weeks = GetSlot(this, WEEKS);
+	    let days = GetSlot(this, DAYS);
+	    let hours = GetSlot(this, HOURS);
+	    let minutes = GetSlot(this, MINUTES);
+	    let seconds = GetSlot(this, SECONDS);
+	    let milliseconds = GetSlot(this, MILLISECONDS);
+	    let microseconds = GetSlot(this, MICROSECONDS);
+	    let nanoseconds = GetSlot(this, NANOSECONDS);
+	    if (unit !== 'nanosecond' || increment !== 1) {
+	      const largestUnit = DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+	      ({
+	        seconds,
+	        milliseconds,
+	        microseconds,
+	        nanoseconds
+	      } = RoundDuration(0, 0, 0, 0, 0, 0, seconds, milliseconds, microseconds, nanoseconds, increment, unit, roundingMode));
+	      ({
+	        days,
+	        hours,
+	        minutes,
+	        seconds,
+	        milliseconds,
+	        microseconds,
+	        nanoseconds
+	      } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, largestUnit));
+	    }
+	    return TemporalDurationToString(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, precision);
 	  }
 	  toJSON() {
 	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
