@@ -6,8 +6,6 @@ Provides standard objects and functions for working with dates and times.
 
 This proposal is currently [Stage 3](https://github.com/tc39/proposals#stage-3) and was reviewed for Stage 3 by Richard Gibson, Bradley Farias, and Daniel Ehrenberg.
 
-**NOTE: Although this proposal's API is not expected to change, implementers of this proposal MUST NOT ship unflagged Temporal implementations until IETF standardizes timezone/calendar string serialization formats. See [#1450](https://github.com/tc39/proposal-temporal/issues/1450) for updates.**
-
 This proposal is now in the hands of ECMAScript engine implementers, so the bar for making API changes is extremely high.
 Nonetheless, changes may occur as the result of feedback from implementation in JS engines.
 Editorial changes to the spec and bug fixes to the spec, tests, and docs are also ongoing, as is customary for Stage 3 proposals.
