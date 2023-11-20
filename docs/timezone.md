@@ -322,6 +322,9 @@ tz.getOffsetNanosecondsFor('2020-08-06T15:00Z'); // => 3600000000000
 tz.getOffsetNanosecondsFor('2020-11-06T01:00Z'); // => 0
 ```
 
+When implementing this method in a custom time zone, note that the absolute value of the returned UTC offset must be smaller than 24 hours (86,400,000,000,000 nanoseconds).
+Any time this method is called as part of another Temporal operation, this will be checked, so if your custom time zone returns a longer offset, most built-in time zone operations will not work.
+
 ### timeZone.**getOffsetStringFor**(_instant_: Temporal.Instant | string) : string
 
 **Parameters:**
