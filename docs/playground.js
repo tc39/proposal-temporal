@@ -1358,7 +1358,7 @@
 
 		    BigInteger.prototype.toString = function (radix, alphabet) {
 		        if (radix === undefined$1) radix = 10;
-		        if (radix !== 10) return toBaseString(this, radix, alphabet);
+		        if (radix !== 10 || alphabet) return toBaseString(this, radix, alphabet);
 		        var v = this.value, l = v.length, str = String(v[--l]), zeros = "0000000", digit;
 		        while (--l >= 0) {
 		            digit = String(v[l]);
@@ -1370,7 +1370,7 @@
 
 		    SmallInteger.prototype.toString = function (radix, alphabet) {
 		        if (radix === undefined$1) radix = 10;
-		        if (radix != 10) return toBaseString(this, radix, alphabet);
+		        if (radix != 10 || alphabet) return toBaseString(this, radix, alphabet);
 		        return String(this.value);
 		    };
 
@@ -9571,7 +9571,6 @@
 	        increment: 1
 	      };
 	  }
-
 	  switch (precision) {
 	    case 'auto':
 	      return {
@@ -9955,7 +9954,6 @@
 	    calendar = ASCIILowercase(calendar);
 	    ToTemporalOverflow(resolvedOptions); // validate and ignore
 	  }
-
 	  return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 	}
 	function ToTemporalDuration(item) {
@@ -10223,7 +10221,6 @@
 	    offsetOpt = ToTemporalOffset(resolvedOptions, 'reject');
 	    ToTemporalOverflow(resolvedOptions); // validate and ignore
 	  }
-
 	  let offsetNs = 0;
 	  if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
 	  const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
@@ -11773,7 +11770,6 @@
 	      // may do disambiguation
 	    }
 	  }
-
 	  nanoseconds = endNs.subtract(relativeResult.epochNs);
 	  let isOverflow = false;
 	  let dayLengthNs;
@@ -12167,7 +12163,6 @@
 	    // not reached
 	  }
 	}
-
 	function CreateNegatedTemporalDuration(duration) {
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	  return new TemporalDuration(-GetSlot(duration, YEARS), -GetSlot(duration, MONTHS), -GetSlot(duration, WEEKS), -GetSlot(duration, DAYS), -GetSlot(duration, HOURS), -GetSlot(duration, MINUTES), -GetSlot(duration, SECONDS), -GetSlot(duration, MILLISECONDS), -GetSlot(duration, MICROSECONDS), -GetSlot(duration, NANOSECONDS));
@@ -18587,7 +18582,7 @@
 	    const concatenatedFieldNames = Call$3(ArrayPrototypeConcat$1, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
 	    const options = ObjectCreate$3(null);
-	    options.overflow = 'reject';
+	    options.overflow = 'constrain';
 	    return CalendarDateFromFields(calendarRec, mergedFields, options);
 	  }
 	  getISOFields() {
@@ -19212,7 +19207,7 @@
 	    const concatenatedFieldNames = Call$3(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
 	    const options = ObjectCreate$1(null);
-	    options.overflow = 'reject';
+	    options.overflow = 'constrain';
 	    return CalendarDateFromFields(calendarRec, mergedFields, options);
 	  }
 	  getISOFields() {
@@ -19635,7 +19630,6 @@
 	      optionsCopy.timeZoneName = 'short';
 	      // The rest of the defaults will be filled in by formatting the Instant
 	    }
-
 	    const timeZoneIdentifier = ToTemporalTimeZoneIdentifier(GetSlot(this, TIME_ZONE));
 	    if (IsOffsetTimeZoneIdentifier(timeZoneIdentifier)) {
 	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
