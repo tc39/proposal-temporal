@@ -1131,7 +1131,6 @@
           1. Return _epochNanoseconds_.
         1. Assert: _offsetBehaviour_ is ~option~.
         1. Assert: _offsetOption_ is *"prefer"* or *"reject"*.
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getPossibleInstantsFor~) is *true*.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZoneRec_, _dateTime_).
         1. If _possibleInstants_ is not empty, then
           1. For each element _candidate_ of _possibleInstants_, do
