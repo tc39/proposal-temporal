@@ -588,7 +588,7 @@
     </p>
     <emu-alg>
       1. Let _value_ be ? Get(_options_, *"relativeTo"*).
-      1. If _value_ is *undefined*, return the Record { [[ZonedRelativeTo]]: *undefined*, [[PlainRelativeTo]]: *undefined* }.
+      1. If _value_ is *undefined*, return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
       1. Let _offsetBehaviour_ be ~option~.
       1. Let _matchBehaviour_ be ~match exactly~.
       1. If Type(_value_) is Object, then
