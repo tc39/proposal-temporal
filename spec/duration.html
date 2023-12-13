@@ -1528,7 +1528,7 @@
         <dd>It adds the components of a second duration represented by _y2_ through _ns2_ to those of a first duration represented by _y1_ through _ns1_, and balances the duration relative to the given date _zonedRelativeTo_ or _plainRelativeTo_, to ensure that no mixed signs remain in the result.</dd>
       </dl>
       <emu-alg>
-        1. Assert: If _zonedRelativeTo_ is not *undefined*, _calendarRec_ is not *undefined*.
+        1. Assert: If _zonedRelativeTo_ is not *undefined*, or _plainRelativeTo_ is not *undefined*, _calendarRec_ is not *undefined*.
         1. Assert: If _zonedRelativeTo_ is not *undefined*, _timeZoneRec_ is not *undefined*.
         1. Let _largestUnit1_ be ! DefaultTemporalLargestUnit(_y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_).
         1. Let _largestUnit2_ be ! DefaultTemporalLargestUnit(_y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_).
