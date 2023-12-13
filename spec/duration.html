@@ -1542,8 +1542,6 @@
           1. Assert: _zonedRelativeTo_ is *undefined*.
           1. Let _dateDuration1_ be ! CreateTemporalDuration(_y1_, _mon1_, _w1_, _d1_, 0, 0, 0, 0, 0, 0).
           1. Let _dateDuration2_ be ! CreateTemporalDuration(_y2_, _mon2_, _w2_, _d2_, 0, 0, 0, 0, 0, 0).
-          1. Let _calendarUnitsPresent_ be *true*.
-          1. If _y1_ = 0 and _mon1_ = 0 and _w1_ = 0 and _y2_ = 0 and _mon2_ = 0 and _w2_ = 0, set _calendarUnitsPresent_ to *false*.
           1. Let _intermediate_ be ? AddDate(_calendarRec_, _plainRelativeTo_, _dateDuration1_).
           1. Let _end_ be ? AddDate(_calendarRec_, _intermediate_, _dateDuration2_).
           1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
