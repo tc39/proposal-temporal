@@ -389,6 +389,7 @@
           1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
           1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Set _result_ to ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _result_.[[Year]]).
+        1. Let _calendarRec_ be ! CreateCalendarMethodsRecord(_calendar_, « ~monthDayFromFields~ »).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
         1. Return ? CalendarMonthDayFromFields(_calendarRec_, _result_).
       </emu-alg>
