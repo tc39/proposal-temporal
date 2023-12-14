@@ -1238,7 +1238,7 @@
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _epochDays_ be ISODateToEpochDays(year, _month_ - 1, day).
+        1. Let _epochDays_ be ISODateToEpochDays(_year_, _month_ - 1, _day_).
         1. Return EpochTimeToDayInYear(EpochDaysToEpochMs(_epochDays_, 0)) + 1.
       </emu-alg>
     </emu-clause>
@@ -1257,7 +1257,7 @@
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _epochDays_ be ISODateToEpochDays(year, _month_ - 1, day).
+        1. Let _epochDays_ be ISODateToEpochDays(_year_, _month_ - 1, _day_).
         1. Let _dayOfWeek_ be EpochTimeToWeekDay(EpochDaysToEpochMs(_epochDays_, 0)).
         1. If _dayOfWeek_ = 0, return 7.
         1. Return _dayOfWeek_.
