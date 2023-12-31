@@ -643,7 +643,7 @@
         1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
         1. Let _outputTimeZone_ be _timeZone_.
         1. If _outputTimeZone_ is *undefined*, set _outputTimeZone_ to *"UTC"*.
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_outputTimeZone_, « ~getOffsetNanosecondsFor~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_outputTimeZone_, « ~get-offset-nanoseconds-for~ »).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
         1. Let _dateTime_ be ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, *"iso8601"*, _offsetNanoseconds_).
         1. Let _dateTimeString_ be ! TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], *"iso8601"*, _precision_, *"never"*).

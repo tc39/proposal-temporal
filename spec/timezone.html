@@ -141,7 +141,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-ffset-nanoseconds-for~ »).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. Return ? GetOffsetStringFor(_timeZoneRec_, _instant_).
       </emu-alg>
@@ -157,7 +157,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
         1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -173,7 +173,7 @@
         1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
         1. Return ? GetInstantFor(_timeZoneRec_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
@@ -371,7 +371,7 @@
       <h1>
         CreateTimeZoneMethodsRecord (
           _timeZone_: a String or Object,
-          _methods_: a List of either ~getOffsetNanosecondsFor~ or ~getPossibleInstantsFor~,
+          _methods_: a List of either ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
         ): either a normal completion containing a Time Zone Methods Record, or a throw completion
       </h1>
       <dl class="header">
@@ -394,7 +394,7 @@
       <h1>
         TimeZoneMethodsRecordLookup (
           _timeZoneRec_: a Time Zone Methods Record,
-          _methodName_: ~getOffsetNanosecondsFor~ or ~getPossibleInstantsFor~,
+          _methodName_: ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
         ): either a normal completion containing ~unused~, or a throw completion
       </h1>
       <dl class="header">
@@ -407,13 +407,13 @@
       </dl>
       <emu-alg>
         1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, _methodName_) is *false*.
-        1. If _methodName_ is ~getOffsetNanosecondsFor~, then
+        1. If _methodName_ is ~get-offset-nanoseconds-for~, then
           1. If _timeZoneRec_.[[Receiver]] is a String, then
             1. Set _timeZoneRec_.[[GetOffsetNanosecondsFor]] to %Temporal.TimeZone.prototype.getOffsetNanosecondsFor%.
           1. Else,
             1. Set _timeZoneRec_.[[GetOffsetNanosecondsFor]] to ? GetMethod(_timeZoneRec_.[[Receiver]], *"getOffsetNanosecondsFor"*).
             1. If _timeZoneRec_.[[GetOffsetNanosecondsFor]] is *undefined*, throw a *TypeError* exception.
-        1. Else if _methodName_ is ~getPossibleInstantsFor~, then
+        1. Else if _methodName_ is ~get-possible-instants-for~, then
           1. If _timeZoneRec_.[[Receiver]] is a String, then
             1. Set _timeZoneRec_.[[GetPossibleInstantsFor]] to %Temporal.TimeZone.prototype.getPossibleInstantsFor%.
           1. Else,
@@ -427,7 +427,7 @@
       <h1>
         TimeZoneMethodsRecordHasLookedUp (
           _timeZoneRec_: a Time Zone Methods Record,
-          _methodName_: ~getOffsetNanosecondsFor~ or ~getPossibleInstantsFor~,
+          _methodName_: ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
         ): *true* or *false*
       </h1>
       <dl class="header">
@@ -435,9 +435,9 @@
         <dd>It determines whether the given Time Zone Methods Record has already looked up the given method.</dd>
       </dl>
       <emu-alg>
-        1. If _methodName_ is ~getOffsetNanosecondsFor~, then
+        1. If _methodName_ is ~get-offset-nanoseconds-for~, then
           1. Let _method_ be _timeZoneRec_.[[GetOffsetNanosecondsFor]].
-        1. Else if _methodName_ is ~getPossibleInstantsFor~, then
+        1. Else if _methodName_ is ~get-possible-instants-for~, then
           1. Let _method_ be _timeZoneRec_.[[GetPossibleInstantsFor]].
         1. If _method_ is *undefined*, return *false*.
         1. Return *true*.
@@ -464,7 +464,7 @@
       <h1>
         TimeZoneMethodsRecordCall (
           _timeZoneRec_: a Time Zone Methods Record,
-          _methodName_: ~getOffsetNanosecondsFor~ or ~getPossibleInstantsFor~,
+          _methodName_: ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
           _arguments_: a List of ECMAScript language values,
         ): either a normal completion containing an ECMAScript language value, or a throw completion
       </h1>
@@ -477,9 +477,9 @@
         1. Let _receiver_ be _timeZoneRec_.[[Receiver]].
         1. If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_) is *true*, then
           1. Set _receiver_ to ! CreateTemporalTimeZone(_timeZoneRec_.[[Receiver]]).
-        1. If _methodName_ is ~getOffsetNanosecondsFor~, then
+        1. If _methodName_ is ~get-offset-nanoseconds-for~, then
           1. Return ? Call(_timeZoneRec_.[[GetOffsetNanosecondsFor]], _receiver_, _arguments_).
-        1. If _methodName_ is ~getPossibleInstantsFor~, then
+        1. If _methodName_ is ~get-possible-instants-for~, then
           1. Return ? Call(_timeZoneRec_.[[GetPossibleInstantsFor]], _receiver_, _arguments_).
       </emu-alg>
     </emu-clause>
@@ -567,10 +567,10 @@
         1. Let _year_ be EpochTimeToEpochYear(_epochMilliseconds_).
         1. Let _month_ be EpochTimeToMonthInYear(_epochMilliseconds_) + 1.
         1. Let _day_ be EpochTimeToDate(_epochMilliseconds_).
-        1. Let _hour_ be ℝ(! HourFromTime(_epochMilliseconds_)).
-        1. Let _minute_ be ℝ(! MinFromTime(_epochMilliseconds_)).
-        1. Let _second_ be ℝ(! SecFromTime(_epochMilliseconds_)).
-        1. Let _millisecond_ be ℝ(! msFromTime(_epochMilliseconds_)).
+        1. Let _hour_ be ℝ(HourFromTime(_epochMilliseconds_)).
+        1. Let _minute_ be ℝ(MinFromTime(_epochMilliseconds_)).
+        1. Let _second_ be ℝ(SecFromTime(_epochMilliseconds_)).
+        1. Let _millisecond_ be ℝ(msFromTime(_epochMilliseconds_)).
         1. Let _microsecond_ be floor(_remainderNs_ / 1000).
         1. Assert: _microsecond_ &lt; 1000.
         1. Let _nanosecond_ be _remainderNs_ modulo 1000.
@@ -814,7 +814,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _offsetNanoseconds_ be ? TimeZoneMethodsRecordCall(_timeZoneRec_, ~getOffsetNanosecondsFor~, « _instant_ »).
+        1. Let _offsetNanoseconds_ be ? TimeZoneMethodsRecordCall(_timeZoneRec_, ~get-offset-nanoseconds-for~, « _instant_ »).
         1. If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_), return ℝ(_offsetNanoseconds_).
         1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_offsetNanoseconds_) is *false*, throw a *RangeError* exception.
@@ -861,7 +861,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: If _precalculatedOffsetNanoseconds_ is not present, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getOffsetNanosecondsFor~) is *true*.
+        1. Assert: If _precalculatedOffsetNanoseconds_ is not present, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
         1. If _precalculatedOffsetNanoseconds_ is present, let _offsetNanoseconds_ be _precalculatedOffsetNanoseconds_.
         1. Else, let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
         1. Assert: abs(_offsetNanoseconds_) &lt; nsPerDay.
@@ -888,8 +888,8 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getOffsetNanosecondsFor~) is *true*.
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getPossibleInstantsFor~) is *true*.
+        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
+        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-possible-instants-for~) is *true*.
         1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZoneRec_, _dateTime_).
         1. Return ? DisambiguatePossibleInstants(_possibleInstants_, _timeZoneRec_, _dateTime_, _disambiguation_).
       </emu-alg>
@@ -912,8 +912,8 @@
         The _possibleInstants_ List may be empty, in which case it calls the time zone's `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` once, if _disambiguation_ is not *"reject"*.
       </p>
       <emu-alg>
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getPossibleInstantsFor~) is *true*.
-        1. Assert: If _possibleInstants_ is empty, and _disambiguation_ is not *"reject"*, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~getOffsetNanosecondsFor~) is *true*.
+        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-possible-instants-for~) is *true*.
+        1. Assert: If _possibleInstants_ is empty, and _disambiguation_ is not *"reject"*, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
         1. Let _n_ be _possibleInstants_'s length.
         1. If _n_ = 1, then
           1. Return _possibleInstants_[0].
@@ -969,7 +969,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _possibleInstants_ be ? TimeZoneMethodsRecordCall(_timeZoneRec_, ~getPossibleInstantsFor~, « _dateTime_ »).
+        1. Let _possibleInstants_ be ? TimeZoneMethodsRecordCall(_timeZoneRec_, ~get-possible-instants-for~, « _dateTime_ »).
         1. If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_), return ! CreateListFromArrayLike(_possibleInstants_, « Object »).
         1. Let _iteratorRecord_ be ? GetIterator(_possibleInstants_, ~sync~).
         1. Let _list_ be a new empty List.

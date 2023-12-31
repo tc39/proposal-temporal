@@ -156,7 +156,7 @@
       <h1>
         CreateCalendarMethodsRecord (
           _calendar_: a String or Object,
-          _methods_: a List of one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+          _methods_: a List of one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
         ): either a normal completion containing a Calendar Methods Record, or a throw completion
       </h1>
       <dl class="header">
@@ -186,7 +186,7 @@
         CreateCalendarMethodsRecordFromRelativeTo (
           _plainRelativeTo_: a `Temporal.PlainDate` or *undefined*,
           _zonedRelativeTo_: a `Temporal.ZonedDateTime` or *undefined*,
-          _methods_: a List of one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+          _methods_: a List of one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
         ): either a normal completion containing either a Calendar Methods Record or *undefined*, or a throw completion
       </h1>
       <dl class="header">
@@ -204,7 +204,7 @@
       <h1>
         CalendarMethodsRecordLookup (
           _calendarRec_: a Calendar Methods Record,
-          _methodName_: one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+          _methodName_: one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
         ): either a normal completion containing ~unused~, or a throw completion
       </h1>
       <dl class="header">
@@ -217,19 +217,19 @@
       </dl>
       <emu-alg>
         1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, _methodName_) is *false*.
-        1. If _methodName_ is ~dateAdd~, then
+        1. If _methodName_ is ~date-add~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
             1. Set _calendarRec_.[[DateAdd]] to %Temporal.Calendar.prototype.dateAdd%.
           1. Else,
             1. Set _calendarRec_.[[DateAdd]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateAdd"*).
             1. If _calendarRec_.[[DateAdd]] is *undefined*, throw a *TypeError* exception.
-        1. Else if _methodName_ is ~dateFromFields~, then
+        1. Else if _methodName_ is ~date-from-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
             1. Set _calendarRec_.[[DateFromFields]] to %Temporal.TimeZone.prototype.dateFromFields%.
           1. Else,
             1. Set _calendarRec_.[[DateFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateFromFields"*).
             1. If _calendarRec_.[[DateFromFields]] is *undefined*, throw a *TypeError* exception.
-        1. Else if _methodName_ is ~dateUntil~, then
+        1. Else if _methodName_ is ~date-until~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
             1. Set _calendarRec_.[[DateUntil]] to %Temporal.TimeZone.prototype.dateUntil%.
           1. Else,
@@ -247,19 +247,19 @@
           1. Else,
             1. Set _calendarRec_.[[Fields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"fields"*).
             1. If _calendarRec_.[[Fields]] is *undefined*, throw a *TypeError* exception.
-        1. Else if _methodName_ is ~mergeFields~, then
+        1. Else if _methodName_ is ~merge-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
             1. Set _calendarRec_.[[MergeFields]] to %Temporal.TimeZone.prototype.mergeFields%.
           1. Else,
             1. Set _calendarRec_.[[MergeFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"mergeFields"*).
             1. If _calendarRec_.[[MergeFields]] is *undefined*, throw a *TypeError* exception.
-        1. Else if _methodName_ is ~monthDayFromFields~, then
+        1. Else if _methodName_ is ~month-day-from-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
             1. Set _calendarRec_.[[MonthDayFromFields]] to %Temporal.TimeZone.prototype.monthDayFromFields%.
           1. Else,
             1. Set _calendarRec_.[[MonthDayFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"monthDayFromFields"*).
             1. If _calendarRec_.[[MonthDayFromFields]] is *undefined*, throw a *TypeError* exception.
-        1. Else if _methodName_ is ~yearMonthFromFields~, then
+        1. Else if _methodName_ is ~year-month-from-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
             1. Set _calendarRec_.[[YearMonthFromFields]] to %Temporal.TimeZone.prototype.yearMonthFromFields%.
           1. Else,
@@ -273,7 +273,7 @@
       <h1>
         CalendarMethodsRecordHasLookedUp (
           _calendarRec_: a Calendar Methods Record,
-          _methodName_: one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+          _methodName_: one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
         ): *true* or *false*
       </h1>
       <dl class="header">
@@ -281,21 +281,21 @@
         <dd>It determines whether the given Calendar Methods Record has already looked up the given method.</dd>
       </dl>
       <emu-alg>
-        1. If _methodName_ is ~dateAdd~, then
+        1. If _methodName_ is ~date-add~, then
           1. Let _method_ be _calendarRec_.[[DateAdd]].
-        1. Else if _methodName_ is ~dateFromFields~, then
+        1. Else if _methodName_ is ~date-from-fields~, then
           1. Let _method_ be _calendarRec_.[[DateFromFields]].
-        1. Else if _methodName_ is ~dateUntil~, then
+        1. Else if _methodName_ is ~date-until~, then
           1. Let _method_ be _calendarRec_.[[DateUntil]].
         1. Else if _methodName_ is ~day~, then
           1. Let _method_ be _calendarRec_.[[Day]].
         1. Else if _methodName_ is ~fields~, then
           1. Let _method_ be _calendarRec_.[[Fields]].
-        1. Else if _methodName_ is ~mergeFields~, then
+        1. Else if _methodName_ is ~merge-fields~, then
           1. Let _method_ be _calendarRec_.[[MergeFields]].
-        1. Else if _methodName_ is ~monthDayFromFields~, then
+        1. Else if _methodName_ is ~month-day-from-fields~, then
           1. Let _method_ be _calendarRec_.[[MonthDayFromFields]].
-        1. Else if _methodName_ is ~yearMonthFromFields~, then
+        1. Else if _methodName_ is ~year-month-from-fields~, then
           1. Let _method_ be _calendarRec_.[[YearMonthFromFields]].
         1. If _method_ is *undefined*, return *false*.
         1. Return *true*.
@@ -322,7 +322,7 @@
       <h1>
         CalendarMethodsRecordCall (
           _calendarRec_: a Calendar Methods Record,
-          _methodName_: one of ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~day~, ~fields~, ~mergeFields~, ~monthDayFromFields~, or ~yearMonthFromFields~,
+          _methodName_: one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
           _arguments_: a List of ECMAScript language values,
         ): either a normal completion containing an ECMAScript language value, or a throw completion
       </h1>
@@ -335,21 +335,21 @@
         1. Let _receiver_ be _calendarRec_.[[Receiver]].
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, then
           1. Set _receiver_ to ! CreateTemporalTimeZone(_calendarRec_.[[Receiver]]).
-        1. If _methodName_ is ~dateAdd~, then
+        1. If _methodName_ is ~date-add~, then
           1. Return ? Call(_calendarRec_.[[DateAdd]], _receiver_, _arguments_).
-        1. If _methodName_ is ~dateFromFields~, then
+        1. If _methodName_ is ~date-from-fields~, then
           1. Return ? Call(_calendarRec_.[[DateFromFields]], _receiver_, _arguments_).
-        1. If _methodName_ is ~dateUntil~, then
+        1. If _methodName_ is ~date-until~, then
           1. Return ? Call(_calendarRec_.[[DateUntil]], _receiver_, _arguments_).
         1. If _methodName_ is ~day~, then
           1. Return ? Call(_calendarRec_.[[Day]], _receiver_, _arguments_).
         1. If _methodName_ is ~fields~, then
           1. Return ? Call(_calendarRec_.[[Fields]], _receiver_, _arguments_).
-        1. If _methodName_ is ~mergeFields~, then
+        1. If _methodName_ is ~merge-fields~, then
           1. Return ? Call(_calendarRec_.[[MergeFields]], _receiver_, _arguments_).
-        1. If _methodName_ is ~monthDayFromFields~, then
+        1. If _methodName_ is ~month-day-from-fields~, then
           1. Return ? Call(_calendarRec_.[[MonthDayFromFields]], _receiver_, _arguments_).
-        1. If _methodName_ is ~yearMonthFromFields~, then
+        1. If _methodName_ is ~year-month-from-fields~, then
           1. Return ? Call(_calendarRec_.[[YearMonthFromFields]], _receiver_, _arguments_).
       </emu-alg>
     </emu-clause>
@@ -413,7 +413,7 @@
         <dd>It merges the properties of _fields_ and _additionalFields_ by calling the `mergeFields` method of the given calendar.</dd>
       </dl>
       <emu-alg>
-        1. Let _result_ be ? CalendarMethodsRecordCall(_calendarRec_, ~mergeFields~, « _fields_, _additionalFields_ »).
+        1. Let _result_ be ? CalendarMethodsRecordCall(_calendarRec_, ~merge-fields~, « _fields_, _additionalFields_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _result_.
         1. If Type(_result_) is not Object, throw a *TypeError* exception.
         1. Return _result_.
@@ -437,7 +437,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Let _addedDate_ be ? CalendarMethodsRecordCall(_calendarRec_, ~dateAdd~, « _date_, _duration_, _options_ »).
+        1. Let _addedDate_ be ? CalendarMethodsRecordCall(_calendarRec_, ~date-add~, « _date_, _duration_, _options_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _addedDate_.
         1. Perform ? RequireInternalSlot(_addedDate_, [[InitializedTemporalDate]]).
         1. Return _addedDate_.
@@ -460,7 +460,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _duration_ be ? CalendarMethodsRecordCall(_calendarRec_, ~dateUntil~, « _one_, _two_, _options_ »).
+        1. Let _duration_ be ? CalendarMethodsRecordCall(_calendarRec_, ~date-until~, « _one_, _two_, _options_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _duration_.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Return _duration_.
@@ -883,7 +883,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Let _date_ be ? CalendarMethodsRecordCall(_calendarRec_, ~dateFromFields~, « _fields_, _options_ »).
+        1. Let _date_ be ? CalendarMethodsRecordCall(_calendarRec_, ~date-from-fields~, « _fields_, _options_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _date_.
         1. Perform ? RequireInternalSlot(_date_, [[InitializedTemporalDate]]).
         1. Return _date_.
@@ -904,7 +904,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Let _yearMonth_ be ? CalendarMethodsRecordCall(_calendarRec_, ~yearMonthFromFields~, « _fields_, _options_ »).
+        1. Let _yearMonth_ be ? CalendarMethodsRecordCall(_calendarRec_, ~year-month-from-fields~, « _fields_, _options_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _yearMonth_.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Return _yearMonth_.
@@ -925,7 +925,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Let _monthDay_ be ? CalendarMethodsRecordCall(_calendarRec_, ~monthDayFromFields~, « _fields_, _options_ »).
+        1. Let _monthDay_ be ? CalendarMethodsRecordCall(_calendarRec_, ~month-day-from-fields~, « _fields_, _options_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _monthDay_.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Return _monthDay_.

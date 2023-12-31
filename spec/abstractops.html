@@ -131,7 +131,7 @@
     <p>The weekday for a particular time _t_ is defined as:</p>
     <emu-eqn id="eqn-epochtimetoweekday" aoid="EpochTimeToWeekDay">EpochTimeToWeekDay(_t_) =(EpochTimeToDayNumber(_t_) + 4) modulo 7</emu-eqn>
     <p>A weekday value of 0 specifies Sunday; 1 specifies Monday; 2 specifies Tuesday; 3 specifies Wednesday; 4 specifies Thursday; 5 specifies Friday; and 6 specifies Saturday. Note that <emu-eqn>EpochTimeToWeekDay(0) = 4</emu-eqn>, corresponding to Thursday, 1 January 1970.</p>
-    <emu-note type="editor"> These equations correspond to ECMA-262 equations defined in <emu-xref href="#sec-year-number">Year Number</emu-xref>, <emu-xref href="#sec-month-number">Month Number</emu-xref>, <emu-xref href="#sec-date-number">Date Number</emu-xref>, <emu-xref href="#sec-week-day">Week Day</emu-xref> respectively. These calculate the result in mathematical values instead of Number values. These equations would be unified when https://github.com/tc39/ecma262/issues/1087 is fixed.</emu-note>
+    <emu-note type="editor"> These equations correspond to ECMA-262 equations defined in <emu-xref href="#sec-daysinyear">Days in Year</emu-xref>, <emu-xref href="#sec-monthfromtime">Month from Time</emu-xref>, <emu-xref href="#sec-datefromtime">Date from Time</emu-xref>, <emu-xref href="#sec-weekday">Week Day</emu-xref> respectively. These calculate the result in mathematical values instead of Number values. These equations would be unified when https://github.com/tc39/ecma262/issues/1087 is fixed.</emu-note>
     <emu-note type="editor"> Note that the operation EpochTimeToMonthInYear(_t_) uses 0-based months unlike rest of Temporal since it's intended to be unified with MonthFromTime(_t_) when the above mentioned issue is fixed.</emu-note>
   </emu-clause>
   <!-- Copied from ECMA-402 GetOptionsObject -->
@@ -730,10 +730,10 @@
       1. Let _value_ be ? Get(_options_, *"relativeTo"*).
       1. If _value_ is *undefined*, return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
       1. Let _offsetBehaviour_ be ~option~.
-      1. Let _matchBehaviour_ be ~match exactly~.
+      1. Let _matchBehaviour_ be ~match-exactly~.
       1. If Type(_value_) is Object, then
         1. If _value_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_value_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+          1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_value_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
           1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _value_, [[TimeZoneRec]]: _timeZoneRec_ }.
         1. If _value_ has an [[InitializedTemporalDate]] internal slot, then
           1. Return the Record { [[PlainRelativeTo]]: _value_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
@@ -741,7 +741,7 @@
           1. Let _plainDate_ be ! CreateTemporalDate(_value_.[[ISOYear]], _value_.[[ISOMonth]], _value_.[[ISODay]], _value_.[[Calendar]]).
           1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
         1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_value_).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~dateFromFields~, ~fields~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-from-fields~, ~fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"* to _fieldNames_.
         1. Let _fields_ be ? PrepareTemporalFields(_value_, _fieldNames_, «»).
@@ -767,7 +767,7 @@
             1. Set _offsetBehaviour_ to ~exact~.
           1. Else if _offsetString_ is *undefined*, then
             1. Set _offsetBehaviour_ to ~wall~.
-          1. Set _matchBehaviour_ to ~match minutes~.
+          1. Set _matchBehaviour_ to ~match-minutes~.
         1. Let _calendar_ be _result_.[[Calendar]].
         1. If _calendar_ is *undefined*, set _calendar_ to *"iso8601"*.
         1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
@@ -779,7 +779,7 @@
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZoneRec_, *"compatible"*, *"reject"*, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_, [[TimeZoneRec]]: _timeZoneRec_ }.
@@ -1572,7 +1572,7 @@
         1. If CodePointsToString(_key_) is *"u-ca"*, then
           1. If _calendar_ is *undefined*, then
             1. Let _value_ be the source text matched by the |AnnotationValue| Parse Node contained within _annotation_.
-            1. Let _calendar_ be CodePointsToString(_value_).
+            1. Set _calendar_ to CodePointsToString(_value_).
             1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, set _calendarWasCritical_ to *true*.
           1. Else,
             1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, or _calendarWasCritical_ is *true*, throw a *RangeError* exception.
@@ -1982,14 +1982,14 @@
             1. Set _any_ to *true*.
             1. If _property_ is in the Property column of <emu-xref href="#table-temporal-field-requirements"></emu-xref> and there is a Conversion value in the same row, then
               1. Let _Conversion_ be the Conversion value of the same row.
-              1. If _Conversion_ is ~ToIntegerWithTruncation~, then
+              1. If _Conversion_ is ~to-integer-with-truncation~, then
                 1. Set _value_ to ? ToIntegerWithTruncation(_value_).
                 1. Set _value_ to 𝔽(_value_).
-              1. Else if _Conversion_ is ~ToPositiveIntegerWithTruncation~, then
+              1. Else if _Conversion_ is ~to-positive-integer-with-truncation~, then
                 1. Set _value_ to ? ToPositiveIntegerWithTruncation(_value_).
                 1. Set _value_ to 𝔽(_value_).
               1. Else,
-                1. Assert: _Conversion_ is ~ToPrimitiveAndRequireString~.
+                1. Assert: _Conversion_ is ~to-primitive-and-require-string~.
                 1. NOTE: Non-primitive values are supported here for consistency with other fields, but such values must coerce to Strings.
                 1. Set _value_ to ? ToPrimitive(_value_, ~string~).
                 1. If _value_ is not a String, throw a *TypeError* exception.
@@ -2023,57 +2023,57 @@
         <tbody>
           <tr>
             <td>*"year"*</td>
-            <td>~ToIntegerWithTruncation~</td>
+            <td>~to-integer-with-truncation~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"month"*</td>
-            <td>~ToPositiveIntegerWithTruncation~</td>
+            <td>~to-positive-integer-with-truncation~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"monthCode"*</td>
-            <td>~ToPrimitiveAndRequireString~</td>
+            <td>~to-primitive-and-require-string~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"day"*</td>
-            <td>~ToPositiveIntegerWithTruncation~</td>
+            <td>~to-positive-integer-with-truncation~</td>
             <td>*undefined*</td>
           </tr>
           <tr>
             <td>*"hour"*</td>
-            <td>~ToIntegerWithTruncation~</td>
+            <td>~to-integer-with-truncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"minute"*</td>
-            <td>~ToIntegerWithTruncation~</td>
+            <td>~to-integer-with-truncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"second"*</td>
-            <td>~ToIntegerWithTruncation~</td>
+            <td>~to-integer-with-truncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"millisecond"*</td>
-            <td>~ToIntegerWithTruncation~</td>
+            <td>~to-integer-with-truncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"microsecond"*</td>
-            <td>~ToIntegerWithTruncation~</td>
+            <td>~to-integer-with-truncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"nanosecond"*</td>
-            <td>~ToIntegerWithTruncation~</td>
+            <td>~to-integer-with-truncation~</td>
             <td>*+0*<sub>𝔽</sub></td>
           </tr>
           <tr>
             <td>*"offset"*</td>
-            <td>~ToPrimitiveAndRequireString~</td>
+            <td>~to-primitive-and-require-string~</td>
             <td>*undefined*</td>
           </tr>
           <tr>

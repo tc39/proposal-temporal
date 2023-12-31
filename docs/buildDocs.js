@@ -146,9 +146,7 @@ async function go() {
     );
     // copy /docs/assets/* to /out/docs/assets/
     await Promise.all(
-      (
-        await fs.readdir('assets')
-      ).map((file) => {
+      (await fs.readdir('assets')).map((file) => {
         return fs.copyFile(path.resolve('assets', file), path.resolve('../out/docs/assets', file));
       })
     );

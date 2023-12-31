@@ -232,7 +232,7 @@
           1. Throw a *TypeError* exception.
         1. Perform ? RejectTemporalLikeObject(_temporalYearMonthLike_).
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~fields~, ~mergeFields~, ~yearMonthFromFields~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~fields~, ~merge-fields~, ~year-month-from-fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"month"*, *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
         1. Let _partialYearMonth_ be ? PrepareTemporalFields(_temporalYearMonthLike_, _fieldNames_, ~partial~).
@@ -371,7 +371,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. If Type(_item_) is not Object, then
           1. Throw a *TypeError* exception.
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~dateFromFields~, ~fields~, ~mergeFields~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~date-from-fields~, ~fields~, ~merge-fields~ »).
         1. Let _receiverFieldNames_ be ? CalendarFields(_calendarRec_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _receiverFieldNames_, «»).
         1. Let _inputFieldNames_ be ? CalendarFields(_calendarRec_, « *"day"* »).
@@ -499,7 +499,7 @@
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
-          1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~fields~, ~yearMonthFromFields~ »).
+          1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~fields~, ~year-month-from-fields~ »).
           1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"month"*, *"monthCode"*, *"year"* »).
           1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, «»).
           1. Return ? CalendarYearMonthFromFields(_calendarRec_, _fields_, _options_).
@@ -512,7 +512,7 @@
         1. Perform ? ToTemporalOverflow(_options_).
         1. Set _result_ to ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[Day]]).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~yearMonthFromFields~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~year-month-from-fields~ »).
         1. Return ? CalendarYearMonthFromFields(_calendarRec_, _result_).
       </emu-alg>
     </emu-clause>
@@ -641,7 +641,7 @@
         1. If _yearMonth_.[[ISOYear]] = _other_.[[ISOYear]] and _yearMonth_.[[ISOMonth]] = _other_.[[ISOMonth]] and _yearMonth_.[[ISODay]] = _other_.[[ISODay]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~dateAdd~, ~dateFromFields~, ~dateUntil~, ~fields~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-add~, ~date-from-fields~, ~date-until~, ~fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"monthCode"*, *"year"* »).
         1. Let _thisFields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
         1. Perform ! CreateDataPropertyOrThrow(_thisFields_, *"day"*, *1*<sub>𝔽</sub>).
@@ -678,7 +678,7 @@
         1. Let _balanceResult_ be ? BalanceTimeDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~dateAdd~, ~dateFromFields~, ~day~, ~fields~, ~yearMonthFromFields~ »).
+        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~date-add~, ~date-from-fields~, ~day~, ~fields~, ~year-month-from-fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
         1. Let _fieldsCopy_ be ! SnapshotOwnProperties(_fields_, *null*).
