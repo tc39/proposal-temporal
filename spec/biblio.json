@@ -1,34 +1,5 @@
 [
   {
-    "location": "https://tc39.es/ecma262",
-    "comment": "Temporary. See https://github.com/tc39/proposal-temporal/pull/2746",
-    "entries": [
-      {
-        "type": "op",
-        "aoid": "MakeFullYear",
-        "refId": "sec-makefullyear",
-        "kind": "abstract operation",
-        "signature": {
-          "parameters": [
-            {
-              "name": "_year_",
-              "type": {
-                "kind": "opaque",
-                "type": "a Number"
-              }
-            }
-          ],
-          "optionalParameters": [],
-          "return": {
-            "kind": "opaque",
-            "type": "an integral Number or *NaN*"
-          }
-        },
-        "effects": []
-      }
-    ]
-  },
-  {
     "location": "https://tc39.es/ecma402/",
     "entries": [
       {

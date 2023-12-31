@@ -184,7 +184,7 @@
       </dl>
       <emu-alg>
         1. Let _ianaTimeZone_ be the String value of the Zone or Link name of the IANA Time Zone Database that is an ASCII-case-insensitive match of _timeZone_.
-        1. If _ianaTimeZone_ is a Link name, let _ianaTimeZone_ be the String value of the corresponding Zone name as specified in the file <code>backward</code> of the IANA Time Zone Database.
+        1. If _ianaTimeZone_ is a Link name, set _ianaTimeZone_ to the String value of the corresponding Zone name as specified in the file <code>backward</code> of the IANA Time Zone Database.
         1. If _ianaTimeZone_ is *"Etc/UTC"* or *"Etc/GMT"*, or *"GMT"*, return *"UTC"*.
         1. Return _ianaTimeZone_.
       </emu-alg>
@@ -735,7 +735,7 @@
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
           1. <ins>If _dateStyle_ is *undefined* and _timeStyle_ is *undefined*, then</ins>
-            1. <ins>Let _needDefaults_ be *true*.</ins>
+            1. <ins>Set _needDefaults_ to *true*.</ins>
             1. <ins>Let _fields_ be the list of fields in the Supported fields column of the row.</ins>
             1. <ins>For each property name _prop_ of _formatOptions_, do</ins>
               1. <ins>If _prop_ is in _fields_, then</ins>
@@ -750,7 +750,7 @@
                 1. <ins>Else,</ins>
                   1. <ins>Let _defaultValue_ be *"numeric"*.</ins>
                 1. <ins>Set _limitedOptions_.[[&lt;_prop_&gt;]] to _defaultValue_.</ins>
-          1. <ins>Let _bestFormat_ be ! GetDateTimeFormatPattern(~any~, _dateStyle_, _timeStyle_, _matcher_, _limitedOptions_, _dataLocaleData_, _resolvedCalendar_, _hasExplicitFormatComponents_).</ins>
+          1. <ins>Set _bestFormat_ to ! GetDateTimeFormatPattern(~any~, _dateStyle_, _timeStyle_, _matcher_, _limitedOptions_, _dataLocaleData_, _resolvedCalendar_, _hasExplicitFormatComponents_).</ins>
           1. <ins>If _bestFormat_ does not have any fields that are in _fields_, then</ins>
             1. <ins>Set _bestFormat_ to *null*.</ins>
           1. <ins>Set _dateTimeFormat_'s internal slot whose name is the Pattern column of the row to _bestFormat_.</ins>
@@ -1255,7 +1255,7 @@
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_temporalDate_.[[Calendar]]).
       1. If _calendar_ is not _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], 12, 0, 0, 0, 0, 0, _dateTimeFormat_.[[Calendar]]).
-      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
@@ -1281,7 +1281,7 @@
       1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
         1. Throw a *RangeError* exception.
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalYearMonth_.[[ISOYear]], _temporalYearMonth_.[[ISOMonth]], _temporalYearMonth_.[[ISODay]], 12, 0, 0, 0, 0, 0, _dateTimeFormat_.[[Calendar]]).
-      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
@@ -1307,7 +1307,7 @@
       1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
         1. Throw a *RangeError* exception.
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(_temporalMonthDay_.[[ISOYear]], _temporalMonthDay_.[[ISOMonth]], _temporalMonthDay_.[[ISODay]], 12, 0, 0, 0, 0, 0, _dateTimeFormat_.[[Calendar]]).
-      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
@@ -1330,7 +1330,7 @@
       <emu-alg>
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"iso8601"*).
-      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
@@ -1355,7 +1355,7 @@
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_dateTime_.[[Calendar]]).
       1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
         1. Throw a *RangeError* exception.
-      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _dateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
@@ -2933,7 +2933,7 @@
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
             1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~getOffsetNanosecondsFor~ »).
+            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
             1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
             1. Return ? CalendarEra(_calendar_, _plainDateTime_).
           </emu-alg>
@@ -2950,7 +2950,7 @@
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
             1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
             1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~getOffsetNanosecondsFor~ »).
+            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
             1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
             1. Return ? CalendarEraYear(_calendar_, _plainDateTime_).
           </emu-alg>

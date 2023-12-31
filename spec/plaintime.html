@@ -358,7 +358,7 @@
           1. Throw a *TypeError* exception.
         1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _temporalDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _temporalDate_.[[Calendar]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
         1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _temporalDateTime_, *"compatible"*).
         1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _temporalDate_.[[Calendar]]).
       </emu-alg>
@@ -629,7 +629,7 @@
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Let _instant_ be ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
-            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_item_.[[TimeZone]], « ~getOffsetNanosecondsFor~ »).
+            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_item_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
             1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _item_.[[Calendar]]).
             1. Return ! CreateTemporalTime(_plainDateTime_.[[ISOHour]], _plainDateTime_.[[ISOMinute]], _plainDateTime_.[[ISOSecond]], _plainDateTime_.[[ISOMillisecond]], _plainDateTime_.[[ISOMicrosecond]], _plainDateTime_.[[ISONanosecond]]).
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
