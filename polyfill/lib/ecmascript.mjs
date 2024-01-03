@@ -5201,6 +5201,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
   }
   let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
   ({ days } = BalanceTimeDuration(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, 'day'));
+  options = GetOptionsObject(options);
   const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 
   const calendarRec = new CalendarMethodRecord(GetSlot(yearMonth, CALENDAR), [
@@ -5240,7 +5241,6 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
     startDate = CalendarDateFromFields(calendarRec, fieldsCopy);
   }
   const durationToAdd = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
-  options = GetOptionsObject(options);
   const optionsCopy = SnapshotOwnProperties(options, null);
   const addedDate = AddDate(calendarRec, startDate, durationToAdd, options);
   const addedDateFields = PrepareTemporalFields(addedDate, fieldNames, []);

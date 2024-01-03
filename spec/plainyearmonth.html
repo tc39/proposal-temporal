@@ -676,6 +676,7 @@
         1. If _operation_ is ~subtract~, then
           1. Set _duration_ to ! CreateNegatedTemporalDuration(_duration_).
         1. Let _balanceResult_ be ? BalanceTimeDuration(_duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]], *"day"*).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~dateAdd~, ~dateFromFields~, ~day~, ~fields~, ~yearMonthFromFields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"monthCode"*, *"year"* »).
@@ -694,7 +695,6 @@
         1. Else,
           1. Let _date_ be _intermediateDate_.
         1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _balanceResult_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _optionsCopy_ be ? SnapshotOwnProperties(_options_, *null*).
         1. Let _addedDate_ be ? AddDate(_calendarRec_, _date_, _durationToAdd_, _options_).
         1. Let _addedDateFields_ be ? PrepareTemporalFields(_addedDate_, _fieldNames_, «»).
