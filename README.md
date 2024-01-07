@@ -53,10 +53,10 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 
 ## Polyfills
 
-| Polyfill                                                                         | Repo                                                                              | Status                  |
-| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------- |
-| **[@js-temporal/polyfill](https://www.npmjs.com/package/@js-temporal/polyfill)** | [js-temporal/temporal-polyfill](https://github.com/js-temporal/temporal-polyfill) | Alpha release available |
-| **[temporal-polyfill](https://www.npmjs.com/package/temporal-polyfill)**         | [fullcalendar/temporal](https://github.com/fullcalendar/temporal)                 | Alpha release available |
+| Polyfill                                                                         | Repo                                                                                | Status                  |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------- |
+| **[@js-temporal/polyfill](https://www.npmjs.com/package/@js-temporal/polyfill)** | [js-temporal/temporal-polyfill](https://github.com/js-temporal/temporal-polyfill)   | Alpha release available |
+| **[temporal-polyfill](https://www.npmjs.com/package/temporal-polyfill)**         | [fullcalendar/temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) | Beta release available  |
 
 If you're working on a polyfill, please file an issue or PR so we can add yours here.
 
