@@ -135,12 +135,19 @@
     <emu-note type="editor"> Note that the operation EpochTimeToMonthInYear(_t_) uses 0-based months unlike rest of Temporal since it's intended to be unified with MonthFromTime(_t_) when the above mentioned issue is fixed.</emu-note>
   </emu-clause>
   <!-- Copied from ECMA-402 GetOptionsObject -->
-  <emu-clause id="sec-getoptionsobject" aoid="GetOptionsObject">
-    <h1>GetOptionsObject ( _options_ )</h1>
-    <p>
-      The abstract operation GetOptionsObject returns an Object suitable for use with GetOption, either _options_ itself or a default empty Object.
-      It throws a TypeError if _options_ is not undefined and not an Object.
-    </p>
+  <emu-clause id="sec-getoptionsobject" type="abstract operation">
+    <h1>
+      GetOptionsObject (
+        _options_: an ECMAScript language value,
+      ): either a normal completion containing an Object or a throw completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It returns an Object suitable for use with GetOption, either _options_ itself or a default empty Object.
+        It throws a *TypeError* if _options_ is not *undefined* and not an Object.
+      </dd>
+    </dl>
     <emu-alg>
       1. If _options_ is *undefined*, then
         1. Return OrdinaryObjectCreate(*null*).
@@ -156,29 +163,26 @@
       GetOption (
         _options_: an Object,
         _property_: a property key,
-        _type_: *"boolean"*, *"number"*, or *"string"*,
-        _values_: *undefined* or a List of ECMAScript language values,
+        _type_: ~boolean~ or ~string~,
+        _values_: ~empty~ or a List of ECMAScript language values,
         _default_: ~required~ or an ECMAScript language value,
-      )
+      ): either a normal completion containing an ECMAScript language value or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It extracts the value of the specified property of _options_, converts it to the required _type_, checks whether it is allowed by _values_ if _values_ is not *undefined*, and substitutes _default_ if the value is *undefined*.</dd>
+      <dd>It extracts the value of the specified property of _options_, converts it to the required _type_, checks whether it is allowed by _values_ if _values_ is not ~empty~, and substitutes _default_ if the value is *undefined*.</dd>
     </dl>
     <emu-alg>
       1. Let _value_ be ? Get(_options_, _property_).
       1. If _value_ is *undefined*, then
         1. If _default_ is ~required~, throw a *RangeError* exception.
         1. Return _default_.
-      1. If _type_ is *"boolean"*, then
+      1. If _type_ is ~boolean~, then
         1. Set _value_ to ToBoolean(_value_).
-      1. Else if _type_ is *"number"*, then
-        1. Set _value_ to ? ToNumber(_value_).
-        1. If _value_ is *NaN*, throw a *RangeError* exception.
       1. Else,
-        1. Assert: _type_ is *"string"*.
+        1. Assert: _type_ is ~string~.
         1. Set _value_ to ? ToString(_value_).
-      1. If _values_ is not *undefined* and _values_ does not contain an element equal to _value_, throw a *RangeError* exception.
+      1. If _values_ is not ~empty~ and _values_ does not contain _value_, throw a *RangeError* exception.
       1. Return _value_.
     </emu-alg>
   </emu-clause>
@@ -195,7 +199,7 @@
     </dl>
     <emu-alg>
       1. If _options_ is *undefined*, return *"constrain"*.
-      1. Return ? GetOption(_options_, *"overflow"*, *"string"*, « *"constrain"*, *"reject"* », *"constrain"*).
+      1. Return ? GetOption(_options_, *"overflow"*, ~string~, « *"constrain"*, *"reject"* », *"constrain"*).
     </emu-alg>
   </emu-clause>
 
@@ -211,7 +215,7 @@
     </dl>
     <emu-alg>
       1. If _options_ is *undefined*, return *"compatible"*.
-      1. Return ? GetOption(_options_, *"disambiguation"*, *"string"*, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
+      1. Return ? GetOption(_options_, *"disambiguation"*, ~string~, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
     </emu-alg>
   </emu-clause>
 
@@ -219,8 +223,8 @@
     <h1>
       ToTemporalRoundingMode (
         _normalizedOptions_: an Object,
-        _fallback_: *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*,
-      ): either a normal completion containing either *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*, or a throw completion
+        _fallback_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
+      ): either a normal completion containing a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -229,31 +233,126 @@
         The value _fallback_ is returned if the property is not present.
       </dd>
     </dl>
-    <emu-note type="editor">
-      <p>
-        The rounding modes accepted by this abstract operation (and therefore in the Temporal API) are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
-      </p>
-    </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, *"string"*, « *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, *"halfEven"* », _fallback_).
+      1. Let _roundingModes_ be the List of Strings from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>.
+      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, ~string~, _roundingModes_, _fallback_).
     </emu-alg>
+    <!-- copied from ECMA-402 -->
+    <emu-table id="table-temporal-rounding-modes">
+      <emu-caption>Rounding modes</emu-caption>
+      <table class="real-table">
+        <thead>
+          <tr>
+            <th rowspan="2">Identifier</th>
+            <th rowspan="2">Description</th>
+            <th colspan="5">Examples: Round to 0 fraction digits</th>
+          </tr>
+          <tr>
+            <th>-1.5</th>
+            <th>0.4</th>
+            <th>0.5</th>
+            <th>0.6</th>
+            <th>1.5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>*"ceil"*</td>
+            <td>Toward positive infinity</td>
+            <td>⬆️ [-1]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [2]</td>
+          </tr>
+          <tr>
+            <td>*"floor"*</td>
+            <td>Toward negative infinity</td>
+            <td>⬇️ [-2]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [1]</td>
+          </tr>
+          <tr>
+            <td>*"expand"*</td>
+            <td>Away from zero</td>
+            <td>⬇️ [-2]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [2]</td>
+          </tr>
+          <tr>
+            <td>*"trunc"*</td>
+            <td>Toward zero</td>
+            <td>⬆️ [-1]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [1]</td>
+          </tr>
+          <tr>
+            <td>*"halfCeil"*</td>
+            <td>Ties toward positive infinity</td>
+            <td>⬆️ [-1]</td>
+            <td>⬇️ [0]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [2]</td>
+          </tr>
+          <tr>
+            <td>*"halfFloor"*</td>
+            <td>Ties toward negative infinity</td>
+            <td>⬇️ [-2]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [0]</td>
+            <td>⬆️ [1]</td>
+            <td>⬇️ [1]</td>
+          </tr>
+          <tr>
+            <td>*"halfExpand"*</td>
+            <td>Ties away from zero</td>
+            <td>⬇️ [-2]</td>
+            <td>⬇️ [0]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [2]</td>
+          </tr>
+          <tr>
+            <td>*"halfTrunc"*</td>
+            <td>Ties toward zero</td>
+            <td>⬆️ [-1]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [0]</td>
+            <td>⬆️ [1]</td>
+            <td>⬇️ [1]</td>
+          </tr>
+          <tr>
+            <td>*"halfEven"*</td>
+            <td>Ties toward an even rounding increment multiple</td>
+            <td>⬇️ [-2]</td>
+            <td>⬇️ [0]</td>
+            <td>⬇️ [0]</td>
+            <td>⬆️ [1]</td>
+            <td>⬆️ [2]</td>
+          </tr>
+        </tbody>
+      </table>
+      <emu-note>The examples are illustrative of the unique behaviour of each option. ⬆️ means "resolves toward positive infinity"; ⬇️ means "resolves toward negative infinity".</emu-note>
+    </emu-table>
   </emu-clause>
 
   <emu-clause id="sec-temporal-negatetemporalroundingmode" type="abstract operation">
     <h1>
       NegateTemporalRoundingMode (
-        _roundingMode_: *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*,
-      ): *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*
+        _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
+      ): a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>It returns the correct rounding mode to use when rounding the negative of a value that was originally given with _roundingMode_</dd>
     </dl>
-    <emu-note type="editor">
-      <p>
-        The rounding modes accepted by this abstract operation (and therefore in the Temporal API) are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
-      </p>
-    </emu-note>
     <emu-alg>
       1. If _roundingMode_ is *"ceil"*, return *"floor"*.
       1. If _roundingMode_ is *"floor"*, return *"ceil"*.
@@ -276,7 +375,7 @@
     </dl>
     <emu-alg>
       1. If _options_ is *undefined*, return _fallback_.
-      1. Return ? GetOption(_options_, *"offset"*, *"string"*, « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
+      1. Return ? GetOption(_options_, *"offset"*, ~string~, « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
     </emu-alg>
   </emu-clause>
 
@@ -294,7 +393,7 @@
       This property is used in `toString` methods in Temporal to control whether a calendar annotation should be output.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"calendarName"*, *"string"*, « *"auto"*, *"always"*, *"never"*, *"critical"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"calendarName"*, ~string~, « *"auto"*, *"always"*, *"never"*, *"critical"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
@@ -313,7 +412,7 @@
       It is different from the `timeZone` property passed to `Temporal.ZonedDateTime.from()` and from the `timeZone` property in the options passed to `Temporal.Instant.prototype.toString()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"timeZoneName"*, *"string"*, « *"auto"*, *"never"*, *"critical"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"timeZoneName"*, ~string~, « *"auto"*, *"never"*, *"critical"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
@@ -332,7 +431,7 @@
       It is different from the `offset` property passed to `Temporal.ZonedDateTime.from()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"offset"*, *"string"*, « *"auto"*, *"never"* », *"auto"*).
+      1. Return ? GetOption(_normalizedOptions_, *"offset"*, ~string~, « *"auto"*, *"never"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
@@ -349,7 +448,9 @@
       </dd>
     </dl>
     <emu-alg>
-      1. Let _increment_ be ? GetOption(_normalizedOptions_, *"roundingIncrement"*, *"number"*, *undefined*, *1*<sub>𝔽</sub>).
+      1. Let _value_ be ? Get(_normalizedOptions_, *"roundingIncrement"*).
+      1. If _value_ is *undefined*, return *1*<sub>𝔽</sub>.
+      1. Let _increment_ be ? ToNumber(_value_).
       1. If _increment_ is not finite, throw a *RangeError* exception.
       1. Let _integerIncrement_ be truncate(ℝ(_increment_)).
       1. If _integerIncrement_ &lt; 1 or _integerIncrement_ &gt; 10<sup>9</sup>, throw a *RangeError* exception.
@@ -525,7 +626,7 @@
           1. Let _pluralName_ be the value in the Plural column of the corresponding row.
           1. Append _pluralName_ to _allowedValues_.
       1. NOTE: For each singular Temporal unit name that is contained within _allowedValues_, the corresponding plural name is also contained within it.
-      1. Let _value_ be ? GetOption(_normalizedOptions_, _key_, *"string"*, _allowedValues_, _defaultValue_).
+      1. Let _value_ be ? GetOption(_normalizedOptions_, _key_, ~string~, _allowedValues_, _defaultValue_).
       1. If _value_ is *undefined* and _default_ is ~required~, throw a *RangeError* exception.
       1. If _value_ is listed in the Plural column of <emu-xref href="#table-temporal-units"></emu-xref>, then
         1. Set _value_ to the value in the Singular column of the corresponding row.
@@ -807,27 +908,22 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-getunsignedroundingmode" type="abstract operation">
+  <!-- copied from ECMA-402 GetUnsignedRoundingMode -->
+  <emu-clause id="sec-getunsignedroundingmode" type="abstract operation">
     <h1>
       GetUnsignedRoundingMode (
-        _roundingMode_: *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*,
-        _isNegative_: *true* or *false*,
-      ): ~zero~, ~infinity~, ~half-zero~, ~half-infinity~, or ~half-even~
+        _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
+        _sign_: ~negative~ or ~positive~,
+      ): a specification type from the Unsigned Rounding Mode column of <emu-xref href="#table-unsigned-rounding-modes"></emu-xref>
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>
-        The return value is the rounding mode that should be applied to the absolute value of a number to produce the same result as if _roundingMode_ were applied to the signed value of the number (negative if _isNegative_ is *true*, or positive otherwise).
-      </dd>
+      <dd>It returns the rounding mode that should be applied to the absolute value of a number to produce the same result as if _roundingMode_, one of the String values in the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>, were applied to the signed value of the number (negative if _sign_ is ~negative~, or positive otherwise).</dd>
     </dl>
     <emu-alg>
-      1. If _isNegative_ is *true*, return the specification type in the third column of <emu-xref href="#table-temporal-unsigned-rounding-modes"></emu-xref> where the first column is _roundingMode_ and the second column is "negative".
-      1. Else, return the specification type in the third column of <emu-xref href="#table-temporal-unsigned-rounding-modes"></emu-xref> where the first column is _roundingMode_ and the second column is "positive".
+      1. Return the specification type in the Unsigned Rounding Mode column of <emu-xref href="#table-unsigned-rounding-modes"></emu-xref> for the row where the value in the Identifier column is _roundingMode_ and the value in the Sign column is _sign_.
     </emu-alg>
-    <emu-note type="editor">
-      <p>This operation is intended to be the same one as in the <a href="https://tc39.es/proposal-intl-numberformat-v3/out/numberformat/diff.html#sec-getunsignedroundingmode">Intl.NumberFormat v3</a> proposal.</p>
-    </emu-note>
-    <emu-table id="table-temporal-unsigned-rounding-modes">
+    <emu-table id="table-unsigned-rounding-modes">
       <emu-caption>Conversion from rounding mode to unsigned rounding mode</emu-caption>
       <table class="real-table">
         <thead>
@@ -839,103 +935,102 @@
         </thead>
         <tr>
           <td rowspan="2">*"ceil"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~infinity~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~zero~</td>
         </tr>
         <tr>
           <td rowspan="2">*"floor"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~zero~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~infinity~</td>
         </tr>
         <tr>
           <td rowspan="2">*"expand"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~infinity~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~infinity~</td>
         </tr>
         <tr>
           <td rowspan="2">*"trunc"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~zero~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~zero~</td>
         </tr>
         <tr>
           <td rowspan="2">*"halfCeil"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~half-infinity~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~half-zero~</td>
         </tr>
         <tr>
           <td rowspan="2">*"halfFloor"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~half-zero~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~half-infinity~</td>
         </tr>
         <tr>
           <td rowspan="2">*"halfExpand"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~half-infinity~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~half-infinity~</td>
         </tr>
         <tr>
           <td rowspan="2">*"halfTrunc"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~half-zero~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~half-zero~</td>
         </tr>
         <tr>
           <td rowspan="2">*"halfEven"*</td>
-          <td>positive</td>
+          <td>~positive~</td>
           <td>~half-even~</td>
         </tr>
         <tr>
-          <td>negative</td>
+          <td>~negative~</td>
           <td>~half-even~</td>
         </tr>
       </table>
     </emu-table>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-applyunsignedroundingmode" type="abstract operation">
+  <!-- copied from ECMA-402 ApplyUnsignedRoundingMode -->
+  <emu-clause id="sec-applyunsignedroundingmode" type="abstract operation">
     <h1>
       ApplyUnsignedRoundingMode (
         _x_: a mathematical value,
         _r1_: a mathematical value,
         _r2_: a mathematical value,
-        _unsignedRoundingMode_: ~zero~, ~infinity~, ~half-zero~, ~half-infinity~, ~half-even~, or *undefined*,
+        _unsignedRoundingMode_: a specification type from the Unsigned Rounding Mode column of <emu-xref href="#table-unsigned-rounding-modes"></emu-xref>, or *undefined*,
       ): a mathematical value
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>
-        It considers _x_, bracketed below by _r1_ and above by _r2_, and returns either _r1_ or _r2_ according to _unsignedRoundingMode_.
-      </dd>
+      <dd>It considers _x_, bracketed below by _r1_ and above by _r2_, and returns either _r1_ or _r2_ according to _unsignedRoundingMode_.</dd>
     </dl>
     <emu-alg>
       1. If _x_ is equal to _r1_, return _r1_.
@@ -955,9 +1050,6 @@
       1. If _cardinality_ is 0, return _r1_.
       1. Return _r2_.
     </emu-alg>
-    <emu-note type="editor">
-      <p>This operation is intended to be the same one as in the <a href="https://tc39.es/proposal-intl-numberformat-v3/out/numberformat/diff.html#sec-applyunsignedroundingmode">Intl.NumberFormat v3</a> proposal.</p>
-    </emu-note>
   </emu-clause>
 
   <emu-clause id="sec-temporal-roundnumbertoincrement" type="abstract operation">
@@ -965,7 +1057,7 @@
       RoundNumberToIncrement (
         _x_: a mathematical value,
         _increment_: an integer,
-        _roundingMode_: *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*,
+        _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
       ): an integer
     </h1>
     <dl class="header">
@@ -986,11 +1078,6 @@
       1. If _isNegative_ is *true*, set _rounded_ to -_rounded_.
       1. Return _rounded_ &times; _increment_.
     </emu-alg>
-    <emu-note type="editor">
-      <p>
-        The rounding modes accepted by this abstract operation are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
-      </p>
-    </emu-note>
   </emu-clause>
 
   <emu-clause id="sec-temporal-roundnumbertoincrementasifpositive" type="abstract operation">
@@ -998,7 +1085,7 @@
       RoundNumberToIncrementAsIfPositive (
         _x_: a mathematical value,
         _increment_: an integer,
-        _roundingMode_: *"ceil"*, *"floor"*, *"expand"*, *"trunc"*, *"halfCeil"*, *"halfFloor"*, *"halfExpand"*, *"halfTrunc"*, or *"halfEven"*,
+        _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
       ): an integer
     </h1>
     <dl class="header">
@@ -1017,11 +1104,6 @@
       1. Let _rounded_ be ApplyUnsignedRoundingMode(_quotient_, _r1_, _r2_, _unsignedRoundingMode_).
       1. Return _rounded_ &times; _increment_.
     </emu-alg>
-    <emu-note type="editor">
-      <p>
-        The rounding modes accepted by this abstract operation are intended to be the same as whatever is eventually standardized in the <a href="https://github.com/tc39/proposal-intl-numberformat-v3">Intl.NumberFormat V3</a> proposal.
-      </p>
-    </emu-note>
   </emu-clause>
 
   <emu-clause id="sec-temporal-iso8601grammar">
