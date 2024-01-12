@@ -729,7 +729,7 @@
         1. <del>Else,</del>
           1. <del>Let _pattern_ be _bestFormat_.[[pattern]].</del>
           1. <del>Let _rangePatterns_ be _bestFormat_.[[rangePatterns]].</del>
-        1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(_required_, _dateStyle_, _timeStyle_, _formatMatcher_, _expandedOptions_, _dataLocaleData_, _resolvedCalendar_, _hasExplicitFormatComponents_).</ins>
+        1. <ins>Let _bestFormat_ be ? GetDateTimeFormatPattern(_required_, _dateStyle_, _timeStyle_, _formatMatcher_, _expandedOptions_, _dataLocaleData_, _resolvedCalendar_, _hasExplicitFormatComponents_).</ins>
         1. Set _dateTimeFormat_.[[Pattern]] to <del>_pattern_</del><ins>_bestFormat_.[[pattern]]</ins>.
         1. Set _dateTimeFormat_.[[RangePatterns]] to <del>_rangePatterns_</del><ins>_bestFormat_.[[rangePatterns]]</ins>.
         1. <ins>For each row in <emu-xref href="#table-temporal-patterns"></emu-xref>, except the header row, in table order, do</ins>
@@ -750,7 +750,7 @@
                 1. <ins>Else,</ins>
                   1. <ins>Let _defaultValue_ be *"numeric"*.</ins>
                 1. <ins>Set _limitedOptions_.[[&lt;_prop_&gt;]] to _defaultValue_.</ins>
-          1. <ins>Let _bestFormat_ be GetDateTimeFormatPattern(~any~, _dateStyle_, _timeStyle_, _matcher_, _limitedOptions_, _dataLocaleData_, _resolvedCalendar_, _hasExplicitFormatComponents_).</ins>
+          1. <ins>Let _bestFormat_ be ! GetDateTimeFormatPattern(~any~, _dateStyle_, _timeStyle_, _matcher_, _limitedOptions_, _dataLocaleData_, _resolvedCalendar_, _hasExplicitFormatComponents_).</ins>
           1. <ins>If _bestFormat_ does not have any fields that are in _fields_, then</ins>
             1. <ins>Set _bestFormat_ to *null*.</ins>
           1. <ins>Set _dateTimeFormat_'s internal slot whose name is the Pattern column of the row to _bestFormat_.</ins>
@@ -1001,8 +1001,8 @@
         1. <del>If _x_ is *NaN*, throw a *RangeError* exception.</del>
         1. <del>Let _y_ be TimeClip(_y_).</del>
         1. <del>If _y_ is *NaN*, throw a *RangeError* exception.</del>
-        1. <ins>If ! IsTemporalObject(_x_) is *true* or ! IsTemporalObject(_y_) is *true*, then</ins>
-          1. <ins>If ! SameTemporalType(_x_, _y_) is *false*, throw a *TypeError* exception.</ins>
+        1. <ins>If IsTemporalObject(_x_) is *true* or IsTemporalObject(_y_) is *true*, then</ins>
+          1. <ins>If SameTemporalType(_x_, _y_) is *false*, throw a *TypeError* exception.</ins>
         1. <ins>Let _xFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
         1. <ins>Let _yFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _y_).</ins>
         1. Let _tm1_ be ToLocalTime(<del>ℤ(ℝ(_x_) &times; 10<sup>6</sup>)</del><ins>_xFormatRecord_.[[epochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
@@ -1125,13 +1125,14 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-istemporalobject" aoid="IsTemporalObject">
-      <h1>IsTemporalObject ( _value_ )</h1>
-
-      <p>
-        The IsTemporalObject abstract operation is called with argument _value_, and performs the following steps:
-      </p>
-
+    <emu-clause id="sec-temporal-istemporalobject" type="abstract operation">
+      <h1>
+        IsTemporalObject (
+          _value_: an ECMAScript language value,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
         1. If Type(_value_) is not Object, then
           1. Return *false*.
@@ -1141,13 +1142,19 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-sametemporaltype" aoid="SameTemporalType">
-      <h1>SameTemporalType ( _x_, _y_ )</h1>
-      <p>
-        The abstract operation SameTemporalType accepts two arguments (which may be any ECMAScript values), and determines whether they are both instances of the same Temporal type.
-      </p>
+    <emu-clause id="sec-temporal-sametemporaltype" type="abstract operation">
+      <h1>
+        SameTemporalType (
+          _x_: an ECMAScript language value,
+          _y_: an ECMAScript language value,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It determines whether _x_ and _y_ are both instances of the same Temporal type.</dd>
+      </dl>
       <emu-alg>
-        1. If either of ! IsTemporalObject(_x_) or ! IsTemporalObject(_y_) is *false*, return *false*.
+        1. If either of IsTemporalObject(_x_) or IsTemporalObject(_y_) is *false*, return *false*.
         1. If _x_ has an [[InitializedTemporalDate]] internal slot and _y_ does not, return *false*.
         1. If _x_ has an [[InitializedTemporalTime]] internal slot and _y_ does not, return *false*.
         1. If _x_ has an [[InitializedTemporalDateTime]] internal slot and _y_ does not, return *false*.
@@ -1159,15 +1166,21 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-getdatetimeformatpattern" aoid="GetDateTimeFormatPattern">
-      <h1>GetDateTimeFormatPattern ( _required_, _dateStyle_, _timeStyle_, _formatMatcher_, _formatOptions_, _dataLocaleData_, _resolvedCalendar_, _hasExplicitFormatComponents_ )</h1>
-
-      <p>
-         The abstract operation GetDateTimeFormatPattern accepts the arguments _required_ (~date~, ~time~, or ~any~), _dateStyle_ (one of *"full"*, *"long"*, *"medium"*, or *"short"*), _timeStyle_ (one of the values allowed for _dateStyle_), _formatMatcher_ (which must be either *"basic"* or *"best fit"*), _formatOptions_ (a Record with fields from the Property column of <emu-xref href="#table-datetimeformat-components"></emu-xref>), _dataLocaleData_ (a Record of the same type as [[LocaleData]] as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>), _resolvedCalendar_ (a calendar value), and _hasExplicitFormatComponents_ (a Boolean).
-         It returns a Record of the type contained by the List [[LocaleData]].[[&lt;_locale_&gt;]].[[formats]].[[&lt;_calendar_&gt;]] as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>.
-         This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-getdatetimeformatpattern" type="abstract operation">
+      <h1>
+        GetDateTimeFormatPattern (
+          _required_: ~date~, ~time~, or ~any~,
+          _dateStyle_: *"full"*, *"long"*, *"medium"*, *"short"*, or *undefined*,
+          _timeStyle_: *"full"*, *"long"*, *"medium"*, *"short"*, or *undefined*,
+          _formatMatcher_: *"basic"* or *"best fit"*,
+          _formatOptions_: a Record,
+          _dataLocaleData_: a Record of the same type as %Intl.DateTimeFormat%.[[LocaleData]] as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>,
+          _resolvedCalendar_: a String,
+          _hasExplicitFormatComponents_: a Boolean,
+        ): either a normal completion containing a Record of the type contained by the List %Intl.DateTimeFormat%.[[LocaleData]].[[&lt;_locale_&gt;]].[[formats]].[[&lt;_calendar_&gt;]] as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref>, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
         1. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
           1. If _hasExplicitFormatComponents_ is *true*, then
@@ -1195,15 +1208,49 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimevaluetemporaldate" aoid="HandleDateTimeTemporalDate">
-      <h1>HandleDateTimeTemporalDate ( _dateTimeFormat_, _temporalDate_ )</h1>
+    <emu-clause id="sec-datetimeformat-value-format-records">
+      <h1>Value Format Records</h1>
 
       <p>
-        The abstract operation HandleDateTimeTemporalDate accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalDate_ (which must be an ECMAScript value has an [[InitializedTemporalDate]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
+        Each <dfn id="datetimeformat-value-format-record">Value Format Record</dfn> has the fields
+ defined in <emu-xref href="#table-datetimeformat-value-format-record"></emu-xref>.
       </p>
 
+      <emu-table id="table-datetimeformat-value-format-record">
+        <emu-caption>Record returned by HandleDateTimeValue</emu-caption>
+        <table class="real-table">
+          <thead>
+            <tr>
+              <th>Field Name</th>
+              <th>Value Type</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>[[pattern]]</td>
+            <td>a String value as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[rangePatterns]]</td>
+            <td>a Record as described in <emu-xref href="#sec-intl.datetimeformat-internal-slots"></emu-xref></td>
+          </tr>
+          <tr>
+            <td>[[epochNanoseconds]]</td>
+            <td>a BigInt</td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-handledatetimetemporaldate" type="abstract operation">
+      <h1>
+        HandleDateTimeTemporalDate (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _temporalDate_: a Temporal.PlainDate,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
-      1. Assert: _temporalDate_ has an [[InitializedTemporalDate]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDatePattern]].
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_temporalDate_.[[Calendar]]).
       1. If _calendar_ is not _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
@@ -1219,15 +1266,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimevaluetemporalyearmonth" aoid="HandleDateTimeTemporalYearMonth">
-      <h1>HandleDateTimeTemporalYearMonth ( _dateTimeFormat_, _temporalYearMonth_ )</h1>
-
-      <p>
-        The abstract operation HandleDateTimeTemporalYearMonth accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalYearMonth_ (which must be an ECMAScript value has an [[InitializedTemporalYearMonth]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-handledatetimetemporalyearmonth" type="abstract operation">
+      <h1>
+        HandleDateTimeTemporalYearMonth (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _temporalYearMonth_: a Temporal.PlainYearMonth,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
-      1. Assert: _temporalYearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainYearMonthPattern]].
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_temporalYearMonth_.[[Calendar]]).
       1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
@@ -1244,15 +1292,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimevaluetemporalmonthday" aoid="HandleDateTimeTemporalMonthDay">
-      <h1>HandleDateTimeTemporalMonthDay ( _dateTimeFormat_, _temporalMonthDay_ )</h1>
-
-      <p>
-        The abstract operation HandleDateTimeTemporalMonthDay accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalMonthDay_ (which must be an ECMAScript value has an [[InitializedTemporalMonthDay]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-handledatetimetemporalmonthday" type="abstract operation">
+      <h1>
+        HandleDateTimeTemporalMonthDay (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _temporalMonthDay_: a Temporal.PlainMonthDay,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
-      1. Assert: _temporalMonthDay_ has an [[InitializedTemporalMonthDay]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainMonthDayPattern]].
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_temporalMonthDay_.[[Calendar]]).
       1. If _calendar_ is not equal to _dateTimeFormat_.[[Calendar]], then
@@ -1269,15 +1318,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimevaluetemporaltime" aoid="HandleDateTimeTemporalTime">
-      <h1>HandleDateTimeTemporalTime ( _dateTimeFormat_, _temporalTime_ )</h1>
-
-      <p>
-        The abstract operation HandleDateTimeTemporalTime accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _temporalTime_ (which must be an ECMAScript value has an [[InitializedTemporalTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-handledatetimetemporaltime" type="abstract operation">
+      <h1>
+        HandleDateTimeTemporalTime (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _temporalTime_: a Temporal.PlainTime,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
-      1. Assert: _temporalTime_ has an [[InitializedTemporalTime]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainTimePattern]].
       1. Let _plainDateTime_ be ? CreateTemporalDateTime(1970, 1, 1, _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"iso8601"*).
       1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~getOffsetNanosecondsFor~, ~getPossibleInstantsFor~ »).
@@ -1291,15 +1341,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimevaluetemporaldatetime" aoid="HandleDateTimeTemporalDateTime">
-      <h1>HandleDateTimeTemporalDateTime ( _dateTimeFormat_, _dateTime_ )</h1>
-
-      <p>
-        The abstract operation HandleDateTimeTemporalDateTime accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _dateTime_ (which must be an ECMAScript value has an [[InitializedTemporalDateTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-handledatetimetemporaldatetime" type="abstract operation">
+      <h1>
+        HandleDateTimeTemporalDateTime (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _dateTime_: a Temporal.PlainDateTime,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
-      1. Assert: _dateTime_ has an [[InitializedTemporalDateTime]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalPlainDateTimePattern]].
       1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_dateTime_.[[Calendar]]).
       1. If _calendar_ is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
@@ -1315,15 +1366,16 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimevaluetemporalinstant" aoid="HandleDateTimeTemporalInstant">
-      <h1>HandleDateTimeTemporalInstant ( _dateTimeFormat_, _instant_ )</h1>
-
-      <p>
-        The abstract operation HandleDateTimeTemporalInstant accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _instant_ (which must be an ECMAScript value has an [[InitializedTemporalDateTime]] internal slot). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-handledatetimetemporalinstant" type="abstract operation">
+      <h1>
+        HandleDateTimeTemporalInstant (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _instant_: a Temporal.Instant,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
-      1. Assert: _instant_ has an [[InitializedTemporalInstant]] internal slot.
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].
       1. If _pattern_ is *null*, throw a *TypeError* exception.
       1. Return the Record {
@@ -1334,13 +1386,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimeothers" aoid="HandleDateTimeOthers">
-      <h1>HandleDateTimeOthers ( _dateTimeFormat_, _x_ )</h1>
-
-      <p>
-        The abstract operation HandleDateTimeOthers accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be a Number). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-handledatetimeothers" type="abstract operation">
+      <h1>
+        HandleDateTimeOthers (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
       1. Let _pattern_ be _dateTimeFormat_.[[Pattern]].
       1. Let _rangePatterns_ be _dateTimeFormat_.[[RangePatterns]].
@@ -1355,13 +1409,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-handledatetimevalue" aoid="HandleDateTimeValue">
-      <h1>HandleDateTimeValue ( _dateTimeFormat_, _x_ )</h1>
-
-      <p>
-        The abstract operation HandleDateTimeValue accepts the arguments _dateTimeFormat_ (which must be an object initialized as a DateTimeFormat) and _x_ (which must be a Number, or an Object for which IsTemporalObject returns *true*). It returns a record which contains the appropriate pattern and epochNanoseconds values for the input. This abstract operation functions as follows:
-      </p>
-
+    <emu-clause id="sec-temporal-handledatetimevalue" type="abstract operation">
+      <h1>
+        HandleDateTimeValue (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _x_: a Number, or an Object for which IsTemporalObject returns *true*,
+        ): either a normal completion containing a Value Format Record, or a throw completion
+      </h1>
+      <dl class="header">
+      </dl>
       <emu-alg>
       1. If _x_ is an Object, then
         1. If _x_ has an [[InitializedTemporalDate]] internal slot, then
