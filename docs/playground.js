@@ -16159,13 +16159,20 @@
 	  id: 'islamic',
 	  calendarType: 'lunar',
 	  inLeapYear(calendarDate, cache) {
-	    // In leap years, the 12th month has 30 days. In non-leap years: 29.
-	    const days = this.daysInMonth({
+	    const startOfYearCalendar = {
 	      year: calendarDate.year,
-	      month: 12,
+	      month: 1,
+	      monthCode: 'M01',
 	      day: 1
-	    }, cache);
-	    return days === 30;
+	    };
+	    const startOfNextYearCalendar = {
+	      year: calendarDate.year + 1,
+	      month: 1,
+	      monthCode: 'M01',
+	      day: 1
+	    };
+	    const result = this.calendarDaysUntil(startOfYearCalendar, startOfNextYearCalendar, cache);
+	    return result === 355;
 	  },
 	  monthsInYear( /* calendarYear, cache */
 	  ) {
@@ -16191,9 +16198,12 @@
 	  id: 'persian',
 	  calendarType: 'solar',
 	  inLeapYear(calendarDate, cache) {
-	    // Same logic (count days in the last month) for Persian as for Islamic,
-	    // even though Persian is solar and Islamic is lunar.
-	    return helperIslamic.inLeapYear(calendarDate, cache);
+	    // If the last month has 30 days, it's a leap year.
+	    return this.daysInMonth({
+	      year: calendarDate.year,
+	      month: 12,
+	      day: 1
+	    }, cache) === 30;
 	  },
 	  monthsInYear( /* calendarYear, cache */
 	  ) {
@@ -17318,7 +17328,7 @@
 	  },
 	  dayOfYear(date) {
 	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
+	    const calendarDate = this.helper.temporalToCalendarDate(date, cache);
 	    const startOfYear = this.helper.startOfCalendarYear(calendarDate);
 	    const diffDays = this.helper.calendarDaysUntil(startOfYear, calendarDate, cache);
 	    return diffDays + 1;
