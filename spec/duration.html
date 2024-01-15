@@ -1473,7 +1473,7 @@
           1. Let _yearsMonthsWeeksDaysDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
           1. Let _later_ be ? AddDate(_calendarRec_, _plainRelativeTo_, _yearsMonthsWeeksDaysDuration_).
           1. Let _untilResult_ be ? CalendarDateUntil(_calendarRec_, _plainRelativeTo_, _later_, _untilOptions_).
-          1. Return ? CreateDateDurationRecord(_untilResult_.[[Years]], _untilResult_.[[Months]], _untilResult_.[[Weeks]], _untilResult_.[[Days]]).
+          1. Return ! CreateDateDurationRecord(_untilResult_.[[Years]], _untilResult_.[[Months]], _untilResult_.[[Weeks]], _untilResult_.[[Days]]).
         1. If _largestUnit_ is *"month"*, then
           1. Assert: _years_ = 0.
           1. If _smallestUnit_ is *"week"*, then
@@ -1482,14 +1482,14 @@
           1. Let _monthsWeeksDaysDuration_ be ! CreateTemporalDuration(0, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
           1. Let _later_ be ? AddDate(_calendarRec_, _plainRelativeTo_, _monthsWeeksDaysDuration_).
           1. Let _untilResult_ be ? CalendarDateUntil(_calendarRec_, _plainRelativeTo_, _later_, _untilOptions_).
-          1. Return ? CreateDateDurationRecord(0, _untilResult_.[[Months]], _untilResult_.[[Weeks]], _untilResult_.[[Days]]).
+          1. Return ! CreateDateDurationRecord(0, _untilResult_.[[Months]], _untilResult_.[[Weeks]], _untilResult_.[[Days]]).
         1. Assert: _largestUnit_ is *"week"*.
         1. Assert: _years_ = 0.
         1. Assert: _months_ = 0.
         1. Let _weeksDaysDuration_ be ! CreateTemporalDuration(0, 0, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
         1. Let _later_ be ? AddDate(_calendarRec_, _plainRelativeTo_, _weeksDaysDuration_).
         1. Let _untilResult_ be ? CalendarDateUntil(_calendarRec_, _plainRelativeTo_, _later_, _untilOptions_).
-        1. Return ? CreateDateDurationRecord(0, 0, _untilResult_.[[Weeks]], _untilResult_.[[Days]]).
+        1. Return ! CreateDateDurationRecord(0, 0, _untilResult_.[[Weeks]], _untilResult_.[[Days]]).
       </emu-alg>
     </emu-clause>
 
