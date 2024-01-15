@@ -7,6 +7,10 @@
 
 The `Temporal.Now` object has several methods which give information about the current time and date.
 
+> **NOTE:** Because these methods return the current time, the return value will likely be different every time they are called. If you need to use the same value in more than one place, save the return value in a variable.
+
+> **NOTE**: These methods allow for up to nanosecond accuracy, but browsers and other environments may limit the accuracy for security reasons.
+
 ## Methods
 
 ### Temporal.Now.**zonedDateTimeISO**(_timeZone_: object | string = Temporal.Now.timeZone()) : Temporal.ZonedDateTime
