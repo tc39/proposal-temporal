@@ -118,7 +118,7 @@ date.monthCode; // => 'M05L'
 date.month; // => 6
 date.day; // => 23
 date.inLeapYear; // => true
-date.calendar.id; // => 'hebrew'
+date.calendarId; // => 'hebrew'
 inFourMonths = date.add({ months: 4 });
 inFourMonths.toLocaleString('en-US', { calendar: 'hebrew' }); // => '23 Sivan 5779'
 inFourMonths.withCalendar('iso8601'); // => 2019-06-26
@@ -192,7 +192,7 @@ For example:
   Userland code can completely avoid the use of calendar-specific constants (e.g. 12 months per year) by using these properties.
 - There is never an implicit default calendar system.
   Developers must explicitly decide whether they're using the ISO calendar or another calendar.
-  For example, shortcut methods on the `Temporal.Now` object are named with an ISO prefix to avoid ambiguity, such as `Temporal.Now.zonedDateTimeISO()`.
+  For example, shortcut methods on the `Temporal.Now` object are named with an ISO suffix to avoid ambiguity, such as `Temporal.Now.zonedDateTimeISO()`.
 - Temporal never infers a calendar from the user's environment.
   Introducing a calendar system into a program requires a conscious, opt-in decision on the part of the developer of the app, library, or input source.
 
@@ -216,7 +216,7 @@ date = date.withCalendar('iso8601');
 To validate:
 
 ```javascript
-if (date.calendar.id !== 'iso8601') throw new Error('invalid calendar');
+if (date.calendarId !== 'iso8601') throw new Error('invalid calendar');
 ```
 
 Note that "inputs" are not only external data. Inputs could include values returned from library dependencies, e.g. date pickers.
