@@ -2146,6 +2146,9 @@
 	var $TypeError$d = GetIntrinsic$m('%TypeError%');
 	var $floor$2 = GetIntrinsic$m('%Math.floor%');
 
+	/** @typedef {(...args: unknown[]) => unknown} Func */
+
+	/** @type {<T extends Func = Func>(fn: T, length: number, loose?: boolean) => T} */
 	var setFunctionLength = function setFunctionLength(fn, length) {
 		if (typeof fn !== 'function') {
 			throw new $TypeError$d('`fn` is not a function');
@@ -2170,9 +2173,9 @@
 
 		if (functionLengthIsConfigurable || functionLengthIsWritable || !loose) {
 			if (hasDescriptors) {
-				define(fn, 'length', length, true, true);
+				define(/** @type {Parameters<define>[0]} */ (fn), 'length', length, true, true);
 			} else {
-				define(fn, 'length', length);
+				define(/** @type {Parameters<define>[0]} */ (fn), 'length', length);
 			}
 		}
 		return fn;
