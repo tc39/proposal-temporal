@@ -169,6 +169,12 @@
 </details>
 
 <p>The <code>Temporal.Now</code> object has several methods which give information about the current time and date.</p>
+<blockquote>
+<p><strong>NOTE:</strong> Because these methods return the current time, the return value will likely be different every time they are called. If you need to use the same value in more than one place, save the return value in a variable.</p>
+</blockquote>
+<blockquote>
+<p><strong>NOTE</strong>: These methods allow for up to nanosecond accuracy, but browsers and other environments may limit the accuracy for security reasons.</p>
+</blockquote>
 <h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="zonedDateTimeISO"><a class="heading-link" href="#zonedDateTimeISO"></a>Temporal.Now.<strong>zonedDateTimeISO</strong>(<em>timeZone</em>: object | string = Temporal.Now.timeZone()) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
