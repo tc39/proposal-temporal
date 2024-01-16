@@ -131,6 +131,7 @@ Example usage:
 <!-- prettier-ignore-start -->
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30');
+dt = Temporal.PlainDateTime.from('19951207T032430');
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30+01:00[Europe/Brussels]');
   // => 1995-12-07T03:24:30
   // same as above; time zone is ignored
