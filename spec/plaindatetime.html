@@ -533,7 +533,7 @@
           1. Let _maximum_ be 1.
           1. Let _inclusive_ be *true*.
         1. Else,
-          1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+          1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
           1. Assert: _maximum_ is not *undefined*.
           1. Let _inclusive_ be *false*.
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, _inclusive_).
@@ -1272,7 +1272,7 @@
           1. Set _timeDifference_ to ! BalanceTimeDuration(-_timeSign_, _timeDifference_.[[Hours]], _timeDifference_.[[Minutes]], _timeDifference_.[[Seconds]], _timeDifference_.[[Milliseconds]], _timeDifference_.[[Microseconds]], _timeDifference_.[[Nanoseconds]], _largestUnit_).
         1. Let _date1_ be ! CreateTemporalDate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]], _calendarRec_.[[Receiver]]).
         1. Let _date2_ be ! CreateTemporalDate(_y2_, _mon2_, _d2_, _calendarRec_.[[Receiver]]).
-        1. Let _dateLargestUnit_ be ! LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
+        1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
         1. Let _untilOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, _dateLargestUnit_).
         1. Let _dateDifference_ be ? DifferenceDate(_calendarRec_, _date1_, _date2_, _untilOptions_).

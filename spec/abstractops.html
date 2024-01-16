@@ -685,13 +685,18 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-largeroftwotemporalunits" aoid="LargerOfTwoTemporalUnits">
-    <h1>LargerOfTwoTemporalUnits ( _u1_, _u2_ )</h1>
-    <p>
-      The abstract operation LargerOfTwoTemporalUnits, given two strings representing Temporal units, returns the string representing the larger of the two units.
-    </p>
+  <emu-clause id="sec-temporal-largeroftwotemporalunits" type="abstract operation">
+    <h1>
+      LargerOfTwoTemporalUnits (
+        _u1_: a String from the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>,
+        _u2_: a String from the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>,
+      ): a String from the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>Given two strings representing Temporal units, it returns the string representing the larger of the two units.</dd>
+    </dl>
     <emu-alg>
-      1. Assert: Both _u1_ and _u2_ are listed in the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>.
       1. For each row of <emu-xref href="#table-temporal-units"></emu-xref>, except the header row, in table order, do
         1. Let _unit_ be the value in the Singular column of the row.
         1. If SameValue(_u1_, _unit_) is *true*, return _unit_.
@@ -699,8 +704,16 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-maximumtemporaldurationroundingincrement" aoid="MaximumTemporalDurationRoundingIncrement">
-    <h1>MaximumTemporalDurationRoundingIncrement ( _unit_ )</h1>
+  <emu-clause id="sec-temporal-maximumtemporaldurationroundingincrement" type="abstract operation">
+    <h1>
+      MaximumTemporalDurationRoundingIncrement (
+        _unit_: a String from the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>,
+      ): 24, 60, 1000, or *undefined*
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>Given a string representing a Temporal.Duration unit, it returns the maximum rounding increment for that unit, or *undefined* if there is no maximum.</dd>
+    </dl>
     <emu-alg>
       1. If _unit_ is *"year"*, *"month"*, *"week"*, or *"day"*, then
         1. Return *undefined*.
@@ -708,7 +721,7 @@
         1. Return 24.
       1. If _unit_ is *"minute"* or *"second"*, then
         1. Return 60.
-      1. Assert: _unit_ is one of *"millisecond"*, *"microsecond"*, or *"nanosecond"*.
+      1. Assert: _unit_ is *"millisecond"*, *"microsecond"*, or *"nanosecond"*.
       1. Return 1000.
     </emu-alg>
   </emu-clause>
@@ -2047,10 +2060,10 @@
         1. Set _roundingMode_ to NegateTemporalRoundingMode(_roundingMode_).
       1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, _unitGroup_, _fallbackSmallestUnit_).
       1. If _disallowedUnits_ contains _smallestUnit_, throw a *RangeError* exception.
-      1. Let _defaultLargestUnit_ be ! LargerOfTwoTemporalUnits(_smallestLargestDefaultUnit_, _smallestUnit_).
+      1. Let _defaultLargestUnit_ be LargerOfTwoTemporalUnits(_smallestLargestDefaultUnit_, _smallestUnit_).
       1. If _largestUnit_ is *"auto"*, set _largestUnit_ to _defaultLargestUnit_.
       1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
-      1. Let _maximum_ be ! MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
+      1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
       1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
       1. Return the Record {
             [[SmallestUnit]]: _smallestUnit_,
