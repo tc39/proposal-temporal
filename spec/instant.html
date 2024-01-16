@@ -558,11 +558,11 @@
           _milliseconds_: an integer,
           _microseconds_: an integer,
           _nanoseconds_: an integer,
-        )
+        ): either a normal completion containing a BigInt, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It adds a duration in various time units to a number of nanoseconds since the epoch, and returns the result as a BigInt value.</dd>
+        <dd>It adds a duration in various time units to a number of nanoseconds since the epoch.</dd>
       </dl>
       <emu-alg>
         1. Let _result_ be _epochNanoseconds_ + ℤ(_nanoseconds_) +
