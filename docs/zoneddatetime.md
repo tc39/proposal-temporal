@@ -187,6 +187,7 @@ Example usage:
 ```javascript
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Cairo]');
 zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Cairo][u-ca=islamic]');
+zdt = Temporal.ZonedDateTime.from('19951207T032430+0200[Africa/Cairo]');
 /* WRONG */ zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30');  // => throws RangeError: time zone ID required
 /* WRONG */ zdt = Temporal.ZonedDateTime.from('1995-12-07T01:24:30Z');  // => throws RangeError: time zone ID required
 /* WRONG */ zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00');  // => throws RangeError: time zone ID required

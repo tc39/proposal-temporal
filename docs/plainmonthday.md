@@ -96,6 +96,7 @@ Example usage:
 
 ```javascript
 md = Temporal.PlainMonthDay.from('08-24'); // => 08-24
+md = Temporal.PlainMonthDay.from('0824'); // => 08-24
 md = Temporal.PlainMonthDay.from('2006-08-24'); // => 08-24
 md = Temporal.PlainMonthDay.from('2006-08-24T15:43:27'); // => 08-24
 md = Temporal.PlainMonthDay.from('2006-08-24T15:43:27+01:00[Europe/Brussels]');

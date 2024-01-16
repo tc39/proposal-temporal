@@ -191,6 +191,7 @@ Temporal.TimeZone.from('-04');           // => -04:00 (offset formats are normal
 // ISO 8601 string with bracketed time zone identifier
 Temporal.TimeZone.from('2020-01-13T16:31:00.06+09:00[Asia/Tokyo]'); // => Asia/Tokyo
 Temporal.TimeZone.from('2020-01-14T00:31:00.06Z[Asia/Tokyo]');      // => Asia/Tokyo
+Temporal.TimeZone.from('20200114T003100.06Z[Asia/Tokyo]');          // => Asia/Tokyo
 Temporal.TimeZone.from('2020-01-13T16:31:00.06+09:00[+09:00]');     // => +09:00
 
 // ISO 8601 string with only a time zone offset part
