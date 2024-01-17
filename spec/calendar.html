@@ -616,6 +616,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ? Call(%Temporal.Calendar.prototype.weekOfYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
+        1. If _result_ is *undefined*, return *undefined*.
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
@@ -639,6 +640,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ? Call(%Temporal.Calendar.prototype.yearOfWeek%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"yearOfWeek"*, « _dateLike_ »).
+        1. If _result_ is *undefined*, return *undefined*.
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. Return ℝ(_result_).
