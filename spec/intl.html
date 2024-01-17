@@ -2021,6 +2021,15 @@
             Usually the [[Year]] field will contain the same value given by CalendarDateYear, but may contain the previous or next year if the week number in the [[Week]] field overlaps two different years.
             See also ToISOWeekOfYear.
           </p>
+          <p>
+            It returns *undefined* in [[Week]] and [[Year]] field for calendars that do not have a well-defined week calendar system.
+          </p>
+          <emu-note type="editor">
+            <p>
+              More details about this function will be specified in
+              <a href="https://tc39.es/proposal-intl-era-monthcode/">the Intl era and monthCode proposal</a>.
+            </p>
+          </emu-note>
         </emu-clause>
 
         <emu-clause id="sec-temporal-calendardatedaysinweek" type="abstract operation">
