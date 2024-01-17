@@ -85,30 +85,6 @@
     </emu-clause>
   </ins>
 
-  <emu-clause id="sec-literals-numeric-literals">
-    <h1><a href="https://tc39.es/ecma262/#sec-literals-numeric-literals">Numeric Literals</a></h1>
-    <emu-note type="editor">
-      <p>
-        No changes, but these productions must be present for symbol references because biblio.json contents are not propagated to grammarkdown.
-      </p>
-    </emu-note>
-    <emu-grammar type="definition">
-      NumericLiteralSeparator ::
-        `_`
-
-      DecimalDigits[Sep] ::
-        DecimalDigit
-        DecimalDigits[?Sep] DecimalDigit
-        [+Sep] DecimalDigits[+Sep] NumericLiteralSeparator DecimalDigit
-
-      DecimalDigit :: one of
-        `0` `1` `2` `3` `4` `5` `6` `7` `8` `9`
-
-      NonZeroDigit :: one of
-        `1` `2` `3` `4` `5` `6` `7` `8` `9`
-    </emu-grammar>
-  </emu-clause>
-
   <emu-clause id="sec-mathematical-operations">
     <h1>Mathematical Operations</h1>
     <p>[...]</p>
