@@ -1064,24 +1064,24 @@
     </ul>
 
     <emu-grammar type="definition">
-      Alpha : one of
+      Alpha ::: one of
           `A` `B` `C` `D` `E` `F` `G` `H` `I` `J` `K` `L` `M`
           `N` `O` `P` `Q` `R` `S` `T` `U` `V` `W` `X` `Y` `Z`
           `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m`
           `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z`
 
-      LowercaseAlpha : one of
+      LowercaseAlpha ::: one of
           `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m`
           `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z`
 
-      ASCIISign : one of
+      ASCIISign ::: one of
           `+` `-`
 
-      Sign :
+      Sign :::
           ASCIISign
           U+2212
 
-      Hour[Padded] :
+      Hour[Padded] :::
           [~Padded] DecimalDigit
           [+Padded] `0` DecimalDigit
           `1` DecimalDigit
@@ -1090,7 +1090,7 @@
           `22`
           `23`
 
-      MinuteSecond :
+      MinuteSecond :::
           `0` DecimalDigit
           `1` DecimalDigit
           `2` DecimalDigit
@@ -1098,96 +1098,96 @@
           `4` DecimalDigit
           `5` DecimalDigit
 
-      DecimalSeparator : one of
+      DecimalSeparator ::: one of
           `.` `,`
 
-      DaysDesignator : one of
+      DaysDesignator ::: one of
           `D` `d`
 
-      HoursDesignator : one of
+      HoursDesignator ::: one of
           `H` `h`
 
-      MinutesDesignator : one of
+      MinutesDesignator ::: one of
           `M` `m`
 
-      MonthsDesignator : one of
+      MonthsDesignator ::: one of
           `M` `m`
 
-      DurationDesignator : one of
+      DurationDesignator ::: one of
           `P` `p`
 
-      SecondsDesignator : one of
+      SecondsDesignator ::: one of
           `S` `s`
 
-      DateTimeSeparator :
+      DateTimeSeparator :::
           &lt;SP&gt;
           `T`
           `t`
 
-      TimeDesignator : one of
+      TimeDesignator ::: one of
           `T` `t`
 
-      WeeksDesignator : one of
+      WeeksDesignator ::: one of
           `W` `w`
 
-      YearsDesignator : one of
+      YearsDesignator ::: one of
           `Y` `y`
 
-      UTCDesignator : one of
+      UTCDesignator ::: one of
           `Z` `z`
 
-      AnnotationCriticalFlag :
+      AnnotationCriticalFlag :::
           `!`
 
-      DateYear :
+      DateYear :::
           DecimalDigit DecimalDigit DecimalDigit DecimalDigit
           Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
-      DateMonth :
+      DateMonth :::
           `0` NonZeroDigit
           `10`
           `11`
           `12`
 
-      DateMonthWithThirtyOneDays : one of
+      DateMonthWithThirtyOneDays ::: one of
           `01` `03` `05` `07` `08` `10` `12`
 
-      DateDay :
+      DateDay :::
           `0` NonZeroDigit
           `1` DecimalDigit
           `2` DecimalDigit
           `30`
           `31`
 
-      DateSpecYearMonth :
+      DateSpecYearMonth :::
           DateYear `-`? DateMonth
 
-      DateSpecMonthDay :
+      DateSpecMonthDay :::
           `--` DateMonth `-`? DateDay
           DateMonth `-`? DateDay
 
-      ValidMonthDay :
+      ValidMonthDay :::
           DateMonth `-`? `0` NonZeroDigit
           DateMonth `-`? `1` DecimalDigit
           DateMonth `-`? `2` DecimalDigit
           DateMonth `-`? `30` but not one of `0230` or `02-30`
           DateMonthWithThirtyOneDays `-`? `31`
 
-      Date :
+      Date :::
           DateYear `-` DateMonth `-` DateDay
           DateYear DateMonth DateDay
 
-      TimeHour :
+      TimeHour :::
           Hour[+Padded]
 
-      TimeMinute :
+      TimeMinute :::
           MinuteSecond
 
-      TimeSecond :
+      TimeSecond :::
           MinuteSecond
           `60`
 
-      Fraction :
+      Fraction :::
           > Readability note: This production matches a decimal separator followed by 1 to 9 digits
           DecimalSeparator DecimalDigit
           DecimalSeparator DecimalDigit DecimalDigit
@@ -1199,206 +1199,206 @@
           DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
           DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
-      TimeFraction :
+      TimeFraction :::
           Fraction
 
-      UTCOffsetWithSubMinuteComponents[Extended] :
+      UTCOffsetWithSubMinuteComponents[Extended] :::
           Sign Hour[+Padded] TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond Fraction?
 
-      NormalizedUTCOffset :
+      NormalizedUTCOffset :::
           ASCIISign Hour[+Padded] `:` MinuteSecond
 
-      UTCOffsetMinutePrecision :
+      UTCOffsetMinutePrecision :::
           Sign Hour[+Padded]
           Sign Hour[+Padded] TimeSeparator[+Extended] MinuteSecond
           Sign Hour[+Padded] TimeSeparator[~Extended] MinuteSecond
 
-      UTCOffsetSubMinutePrecision :
+      UTCOffsetSubMinutePrecision :::
           UTCOffsetMinutePrecision
           UTCOffsetWithSubMinuteComponents[+Extended]
           UTCOffsetWithSubMinuteComponents[~Extended]
 
-      DateTimeUTCOffset :
+      DateTimeUTCOffset :::
           UTCDesignator
           UTCOffsetSubMinutePrecision
 
-      TimeZoneUTCOffsetName :
+      TimeZoneUTCOffsetName :::
           UTCOffsetMinutePrecision
 
-      TZLeadingChar :
+      TZLeadingChar :::
           Alpha
           `.`
           `_`
 
-      TZChar :
+      TZChar :::
           TZLeadingChar
           DecimalDigit
           `-`
           `+`
 
-      TimeZoneIANANameComponent :
+      TimeZoneIANANameComponent :::
           TZLeadingChar
           TimeZoneIANANameComponent TZChar
 
-      TimeZoneIANAName :
+      TimeZoneIANAName :::
           TimeZoneIANANameComponent
           TimeZoneIANAName `/` TimeZoneIANANameComponent
 
-      TimeZoneIdentifier :
+      TimeZoneIdentifier :::
           TimeZoneUTCOffsetName
           TimeZoneIANAName
 
-      TimeZoneAnnotation :
+      TimeZoneAnnotation :::
           `[` AnnotationCriticalFlag? TimeZoneIdentifier `]`
 
-      AKeyLeadingChar :
+      AKeyLeadingChar :::
           LowercaseAlpha
           `_`
 
-      AKeyChar :
+      AKeyChar :::
           AKeyLeadingChar
           DecimalDigit
           `-`
 
-      AnnotationKey :
+      AnnotationKey :::
           AKeyLeadingChar
           AnnotationKey AKeyChar
 
-      AnnotationValueComponent :
+      AnnotationValueComponent :::
           Alpha AnnotationValueComponent?
           DecimalDigit AnnotationValueComponent?
 
-      AnnotationValue :
+      AnnotationValue :::
           AnnotationValueComponent
           AnnotationValueComponent `-` AnnotationValue
 
-      Annotation :
+      Annotation :::
           `[` AnnotationCriticalFlag? AnnotationKey `=` AnnotationValue `]`
 
-      Annotations :
+      Annotations :::
           Annotation Annotations?
 
-      TimeSpec :
+      TimeSpec :::
           TimeHour
           TimeHour `:` TimeMinute
           TimeHour TimeMinute
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
 
-      TimeSpecWithOptionalOffsetNotAmbiguous :
+      TimeSpecWithOptionalOffsetNotAmbiguous :::
           TimeSpec DateTimeUTCOffset? but not one of ValidMonthDay or DateSpecYearMonth
 
-      DateTime :
+      DateTime :::
           Date
           Date DateTimeSeparator TimeSpec DateTimeUTCOffset?
 
-      AnnotatedTime :
+      AnnotatedTime :::
           TimeDesignator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
           TimeSpecWithOptionalOffsetNotAmbiguous TimeZoneAnnotation? Annotations?
 
-      AnnotatedDateTime[Zoned] :
+      AnnotatedDateTime[Zoned] :::
           [~Zoned] DateTime TimeZoneAnnotation? Annotations?
           [+Zoned] DateTime TimeZoneAnnotation Annotations?
 
-      AnnotatedDateTimeTimeRequired :
+      AnnotatedDateTimeTimeRequired :::
           Date DateTimeSeparator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
 
-      AnnotatedYearMonth :
+      AnnotatedYearMonth :::
           DateSpecYearMonth TimeZoneAnnotation? Annotations?
 
-      AnnotatedMonthDay :
+      AnnotatedMonthDay :::
           DateSpecMonthDay TimeZoneAnnotation? Annotations?
 
-      DurationWholeSeconds :
+      DurationWholeSeconds :::
           DecimalDigits[~Sep]
 
-      DurationSecondsFraction :
+      DurationSecondsFraction :::
           TimeFraction
 
-      DurationSecondsPart :
+      DurationSecondsPart :::
           DurationWholeSeconds DurationSecondsFraction? SecondsDesignator
 
-      DurationWholeMinutes :
+      DurationWholeMinutes :::
           DecimalDigits[~Sep]
 
-      DurationMinutesFraction :
+      DurationMinutesFraction :::
           TimeFraction
 
-      DurationMinutesPart :
+      DurationMinutesPart :::
           DurationWholeMinutes DurationMinutesFraction MinutesDesignator
           DurationWholeMinutes MinutesDesignator DurationSecondsPart?
 
-      DurationWholeHours :
+      DurationWholeHours :::
           DecimalDigits[~Sep]
 
-      DurationHoursFraction :
+      DurationHoursFraction :::
           TimeFraction
 
-      DurationHoursPart :
+      DurationHoursPart :::
           DurationWholeHours DurationHoursFraction HoursDesignator
           DurationWholeHours HoursDesignator DurationMinutesPart
           DurationWholeHours HoursDesignator DurationSecondsPart?
 
-      DurationTime :
+      DurationTime :::
           TimeDesignator DurationHoursPart
           TimeDesignator DurationMinutesPart
           TimeDesignator DurationSecondsPart
 
-      DurationDays :
+      DurationDays :::
           DecimalDigits[~Sep]
 
-      DurationDaysPart :
+      DurationDaysPart :::
           DurationDays DaysDesignator
 
-      DurationWeeks :
+      DurationWeeks :::
           DecimalDigits[~Sep]
 
-      DurationWeeksPart :
+      DurationWeeksPart :::
           DurationWeeks WeeksDesignator DurationDaysPart?
 
-      DurationMonths :
+      DurationMonths :::
           DecimalDigits[~Sep]
 
-      DurationMonthsPart :
+      DurationMonthsPart :::
           DurationMonths MonthsDesignator DurationWeeksPart
           DurationMonths MonthsDesignator DurationDaysPart?
 
-      DurationYears :
+      DurationYears :::
           DecimalDigits[~Sep]
 
-      DurationYearsPart :
+      DurationYearsPart :::
           DurationYears YearsDesignator DurationMonthsPart
           DurationYears YearsDesignator DurationWeeksPart
           DurationYears YearsDesignator DurationDaysPart?
 
-      DurationDate :
+      DurationDate :::
           DurationYearsPart DurationTime?
           DurationMonthsPart DurationTime?
           DurationWeeksPart DurationTime?
           DurationDaysPart DurationTime?
 
-      Duration :
+      Duration :::
           Sign? DurationDesignator DurationDate
           Sign? DurationDesignator DurationTime
 
-      TemporalInstantString :
+      TemporalInstantString :::
           Date DateTimeSeparator TimeSpec DateTimeUTCOffset TimeZoneAnnotation? Annotations?
 
-      TemporalDateTimeString[Zoned] :
+      TemporalDateTimeString[Zoned] :::
           AnnotatedDateTime[?Zoned]
 
-      TemporalDurationString :
+      TemporalDurationString :::
           Duration
 
-      TemporalMonthDayString :
+      TemporalMonthDayString :::
           AnnotatedMonthDay
           AnnotatedDateTime[~Zoned]
 
-      TemporalTimeString :
+      TemporalTimeString :::
           AnnotatedTime
           AnnotatedDateTimeTimeRequired
 
-      TemporalYearMonthString :
+      TemporalYearMonthString :::
           AnnotatedYearMonth
           AnnotatedDateTime[~Zoned]
     </emu-grammar>
@@ -1406,7 +1406,7 @@
     <emu-clause id="sec-temporal-iso8601grammar-static-semantics-early-errors">
       <h1>Static Semantics: Early Errors</h1>
       <emu-grammar>
-        DateYear :
+        DateYear :::
           Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
       </emu-grammar>
       <ul>
