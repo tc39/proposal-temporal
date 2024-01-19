@@ -474,7 +474,8 @@
         1. Let _roundResult_ be _roundRecord_.[[NormalizedDuration]].
         1. If _zonedRelativeTo_ is not *undefined*, then
           1. Set _roundResult_ to ? AdjustRoundedDurationDays(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _roundResult_.[[Days]], _roundResult_.[[NormalizedTime]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _zonedRelativeTo_, _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_).
-          1. Let _balanceResult_ be ? BalanceTimeDurationRelative(_roundResult_.[[Days]], _roundResult_.[[NormalizedTime]], _largestUnit_, _zonedRelativeTo_, _timeZoneRec_, _precalculatedPlainDateTime_).
+          1. Let _intermediate_ be ? MoveRelativeZonedDateTime(_zonedRelativeTo_, _calendarRec_, _timeZoneRec_, _roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], 0, _precalculatedPlainDateTime_).
+          1. Let _balanceResult_ be ? BalanceTimeDurationRelative(_roundResult_.[[Days]], _roundResult_.[[NormalizedTime]], _largestUnit_, _intermediate_, _timeZoneRec_, _precalculatedPlainDateTime_).
         1. Else,
           1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_roundResult_.[[NormalizedTime]], _roundResult_.[[Days]]).
           1. Let _balanceResult_ be BalanceTimeDuration(_normWithDays_, _largestUnit_).
