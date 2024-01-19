@@ -1081,9 +1081,8 @@
           ASCIISign
           U+2212
 
-      Hour[Padded] :::
-          [~Padded] DecimalDigit
-          [+Padded] `0` DecimalDigit
+      Hour :::
+          `0` DecimalDigit
           `1` DecimalDigit
           `20`
           `21`
@@ -1178,7 +1177,7 @@
           DateYear DateMonth DateDay
 
       TimeHour :::
-          Hour[+Padded]
+          Hour
 
       TimeMinute :::
           MinuteSecond
@@ -1203,15 +1202,15 @@
           Fraction
 
       UTCOffsetWithSubMinuteComponents[Extended] :::
-          Sign Hour[+Padded] TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond Fraction?
+          Sign Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond Fraction?
 
       NormalizedUTCOffset :::
-          ASCIISign Hour[+Padded] `:` MinuteSecond
+          ASCIISign Hour `:` MinuteSecond
 
       UTCOffsetMinutePrecision :::
-          Sign Hour[+Padded]
-          Sign Hour[+Padded] TimeSeparator[+Extended] MinuteSecond
-          Sign Hour[+Padded] TimeSeparator[~Extended] MinuteSecond
+          Sign Hour
+          Sign Hour TimeSeparator[+Extended] MinuteSecond
+          Sign Hour TimeSeparator[~Extended] MinuteSecond
 
       UTCOffsetSubMinutePrecision :::
           UTCOffsetMinutePrecision
