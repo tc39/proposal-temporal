@@ -1172,32 +1172,6 @@
           `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m`
           `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z`
 
-      ASCIISign ::: one of
-          `+` `-`
-
-      Sign :::
-          ASCIISign
-          U+2212
-
-      Hour :::
-          `0` DecimalDigit
-          `1` DecimalDigit
-          `20`
-          `21`
-          `22`
-          `23`
-
-      MinuteSecond :::
-          `0` DecimalDigit
-          `1` DecimalDigit
-          `2` DecimalDigit
-          `3` DecimalDigit
-          `4` DecimalDigit
-          `5` DecimalDigit
-
-      DecimalSeparator ::: one of
-          `.` `,`
-
       DaysDesignator ::: one of
           `D` `d`
 
@@ -1238,7 +1212,7 @@
 
       DateYear :::
           DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          TemporalSign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
       DateMonth :::
           `0` NonZeroDigit
@@ -1284,31 +1258,19 @@
           MinuteSecond
           `60`
 
-      Fraction :::
-          > Readability note: This production matches a decimal separator followed by 1 to 9 digits
-          DecimalSeparator DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          DecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-
       TimeFraction :::
-          Fraction
+          TemporalDecimalFraction
 
       UTCOffsetWithSubMinuteComponents[Extended] :::
-          Sign Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond Fraction?
+          TemporalSign Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond TemporalDecimalFraction?
 
       NormalizedUTCOffset :::
           ASCIISign Hour `:` MinuteSecond
 
       UTCOffsetMinutePrecision :::
-          Sign Hour
-          Sign Hour TimeSeparator[+Extended] MinuteSecond
-          Sign Hour TimeSeparator[~Extended] MinuteSecond
+          TemporalSign Hour
+          TemporalSign Hour TimeSeparator[+Extended] MinuteSecond
+          TemporalSign Hour TimeSeparator[~Extended] MinuteSecond
 
       UTCOffsetSubMinutePrecision :::
           UTCOffsetMinutePrecision
@@ -1475,8 +1437,8 @@
           DurationDaysPart DurationTime?
 
       Duration :::
-          Sign? DurationDesignator DurationDate
-          Sign? DurationDesignator DurationTime
+          TemporalSign? DurationDesignator DurationDate
+          TemporalSign? DurationDesignator DurationTime
 
       TemporalInstantString :::
           Date DateTimeSeparator TimeSpec DateTimeUTCOffset TimeZoneAnnotation? Annotations?
@@ -1504,7 +1466,7 @@
       <h1>Static Semantics: Early Errors</h1>
       <emu-grammar>
         DateYear :::
-          Sign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          TemporalSign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
       </emu-grammar>
       <ul>
         <li>
@@ -1733,7 +1695,7 @@
     <emu-alg>
       1. Let _duration_ be ParseText(StringToCodePoints(_isoString_), |TemporalDurationString|).
       1. If _duration_ is a List of errors, throw a *RangeError* exception.
-      1. Let each of _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fSeconds_ be the source text matched by the respective |Sign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationWholeHours|, |DurationHoursFraction|, |DurationWholeMinutes|, |DurationMinutesFraction|, |DurationWholeSeconds|, and |DurationSecondsFraction| Parse Node contained within _duration_, or an empty sequence of code points if not present.
+      1. Let each of _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fSeconds_ be the source text matched by the respective |TemporalSign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationWholeHours|, |DurationHoursFraction|, |DurationWholeMinutes|, |DurationMinutesFraction|, |DurationWholeSeconds|, and |DurationSecondsFraction| Parse Node contained within _duration_, or an empty sequence of code points if not present.
       1. Let _yearsMV_ be ? ToIntegerWithTruncation(CodePointsToString(_years_)).
       1. Let _monthsMV_ be ? ToIntegerWithTruncation(CodePointsToString(_months_)).
       1. Let _weeksMV_ be ? ToIntegerWithTruncation(CodePointsToString(_weeks_)).

@@ -188,10 +188,10 @@ function seq(...productions) {
 // Grammar productions, based on the grammar in RFC 3339
 
 // characters
-const sign = character('+-−');
+const temporalSign = character('+-−');
 const hour = zeroPaddedInclusive(0, 23, 2);
 const minuteSecond = zeroPaddedInclusive(0, 59, 2);
-const decimalSeparator = character('.,');
+const temporalDecimalSeparator = character('.,');
 const daysDesignator = character('Dd');
 const hoursDesignator = character('Hh');
 const minutesDesignator = character('Mm');
@@ -206,11 +206,11 @@ const utcDesignator = withCode(character('Zz'), (data) => {
   data.z = true;
 });
 const annotationCriticalFlag = character('!');
-const fraction = seq(decimalSeparator, between(1, 9, digit()));
+const temporalDecimalFraction = seq(temporalDecimalSeparator, between(1, 9, digit()));
 
 const dateFourDigitYear = repeat(4, digit());
 
-const dateExtendedYear = withSyntaxConstraints(seq(sign, repeat(6, digit())), (result) => {
+const dateExtendedYear = withSyntaxConstraints(seq(temporalSign, repeat(6, digit())), (result) => {
   if (result === '-000000' || result === '−000000') {
     throw new SyntaxError('Negative zero extended year');
   }
@@ -235,15 +235,13 @@ function saveSecond(data, result) {
 const timeHour = withCode(hour, saveHour);
 const timeMinute = withCode(minuteSecond, saveMinute);
 const timeSecond = withCode(choice(minuteSecond, '60'), saveSecond);
-const timeFraction = withCode(fraction, (data, result) => {
+const timeFraction = withCode(temporalDecimalFraction, (data, result) => {
   result = result.slice(1);
   const fraction = result.padEnd(9, '0');
   data.millisecond = +fraction.slice(0, 3);
   data.microsecond = +fraction.slice(3, 6);
   data.nanosecond = +fraction.slice(6, 9);
 });
-const temporalSign = sign;
-const temporalDecimalFraction = fraction;
 function saveOffset(data, result) {
   data.offset = ES.ParseDateTimeUTCOffset(result);
 }
@@ -259,7 +257,7 @@ const utcOffsetSubMinutePrecision = withCode(
   saveOffset
 );
 const dateTimeUTCOffset = choice(utcDesignator, utcOffsetSubMinutePrecision);
-const timeZoneUTCOffsetName = seq(sign, hour, choice([minuteSecond], seq(':', minuteSecond)));
+const timeZoneUTCOffsetName = seq(temporalSign, hour, choice([minuteSecond], seq(':', minuteSecond)));
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
@@ -336,14 +334,14 @@ const annotatedMonthDay = withSyntaxConstraints(
   }
 );
 
-const durationSecondsFraction = withCode(fraction, (data, result) => {
+const durationSecondsFraction = withCode(temporalDecimalFraction, (data, result) => {
   result = result.slice(1);
   const fraction = result.padEnd(9, '0');
   data.milliseconds = +fraction.slice(0, 3) * data.factor;
   data.microseconds = +fraction.slice(3, 6) * data.factor;
   data.nanoseconds = +fraction.slice(6, 9) * data.factor;
 });
-const durationMinutesFraction = withCode(fraction, (data, result) => {
+const durationMinutesFraction = withCode(temporalDecimalFraction, (data, result) => {
   result = result.slice(1);
   const ns = +result.padEnd(9, '0') * 60;
   data.seconds = Math.trunc(ns / 1e9) * data.factor;
@@ -351,7 +349,7 @@ const durationMinutesFraction = withCode(fraction, (data, result) => {
   data.microseconds = Math.trunc((ns % 1e6) / 1e3) * data.factor;
   data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
 });
-const durationHoursFraction = withCode(fraction, (data, result) => {
+const durationHoursFraction = withCode(temporalDecimalFraction, (data, result) => {
   result = result.slice(1);
   const ns = +result.padEnd(9, '0') * 3600;
   data.minutes = Math.trunc(ns / 6e10) * data.factor;
@@ -403,7 +401,7 @@ const durationYears = seq(
 );
 const durationDate = seq(choice(durationYears, durationMonths, durationWeeks, durationDays), [durationTime]);
 const duration = seq(
-  withCode([sign], (data, result) => (data.factor = result === '-' || result === '\u2212' ? -1 : 1)),
+  withCode([temporalSign], (data, result) => (data.factor = result === '-' || result === '\u2212' ? -1 : 1)),
   durationDesignator,
   choice(durationDate, durationTime)
 );
