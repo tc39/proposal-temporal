@@ -1481,8 +1481,63 @@
           AnnotatedDateTime[~Zoned]
     </emu-grammar>
 
+    <emu-clause id="sec-temporal-iso8601grammar-static-semantics-isvalidmonthday" type="sdo">
+      <h1>Static Semantics: IsValidMonthDay ( ): a Boolean</h1>
+      <dl class="header"></dl>
+      <emu-grammar>
+        Date :::
+          DateYear `-` DateMonth `-` DateDay
+          DateYear DateMonth DateDay
+
+        DateSpecMonthDay :::
+          `--` DateMonth `-`? DateDay
+          DateMonth `-`? DateDay
+      </emu-grammar>
+      <emu-alg>
+        1. If |DateDay| is *"31"* and |DateMonth| is *"02"*, *"04"*, *"06"*, *"09"*, *"11"*, return *false*.
+        1. If |DateMonth| is *"02"* and |DateDay| is *"30"*, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-iso8601grammar-static-semantics-isvaliddate" type="sdo">
+      <h1>Static Semantics: IsValidDate ( ): a Boolean</h1>
+      <dl class="header"></dl>
+      <emu-grammar>
+        Date :::
+          DateYear `-` DateMonth `-` DateDay
+          DateYear DateMonth DateDay
+      </emu-grammar>
+      <emu-alg>
+        1. If IsValidMonthDay of |Date| is *false*, return *false*.
+        1. Let _year_ be ℝ(StringToNumber(CodePointsToString(|DateYear|))).
+        1. If |DateMonth| is *"02"* and |DateDay| is *"29"* and MathematicalInLeapYear(EpochTimeForYear(_year_)) = 0, return *false*.
+        1. Return *true*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-iso8601grammar-static-semantics-early-errors">
       <h1>Static Semantics: Early Errors</h1>
+      <emu-grammar>
+        Date :::
+          DateYear `-` DateMonth `-` DateDay
+          DateYear DateMonth DateDay
+      </emu-grammar>
+      <ul>
+        <li>
+          It is a Syntax Error if IsValidDate of |Date| is *false*.
+        </li>
+      </ul>
+      <emu-grammar>
+        DateSpecMonthDay :::
+          `--` DateMonth `-`? DateDay
+          DateMonth `-`? DateDay
+      </emu-grammar>
+      <ul>
+        <li>
+          It is a Syntax Error if IsValidMonthDay of |DateSpecMonthDay| is *false*.
+        </li>
+      </ul>
       <emu-grammar>
         DateYear :::
           TemporalSign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
@@ -1565,8 +1620,8 @@
         1. Let _millisecondMV_ be 0.
         1. Let _microsecondMV_ be 0.
         1. Let _nanosecondMV_ be 0.
-      1. If IsValidISODate(_yearMV_, _monthMV_, _dayMV_) is *false*, throw a *RangeError* exception.
-      1. If IsValidTime(_hourMV_, _minuteMV_, _secondMV_, _millisecondMV_, _microsecondMV_, _nanosecondMV_) is *false*, throw a *RangeError* exception.
+      1. Assert: IsValidISODate(_yearMV_, _monthMV_, _dayMV_) is *true*.
+      1. Assert: IsValidTime(_hourMV_, _minuteMV_, _secondMV_, _millisecondMV_, _microsecondMV_, _nanosecondMV_) is *true*.
       1. Let _timeZoneResult_ be the Record { [[Z]]: *false*, [[OffsetString]]: *undefined*, [[TimeZoneAnnotation]]: *undefined* }.
       1. If _parseResult_ contains a |TimeZoneIdentifier| Parse Node, then
         1. Let _identifier_ be the source text matched by the |TimeZoneIdentifier| Parse Node contained within _parseResult_.
