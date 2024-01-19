@@ -285,14 +285,6 @@ const timeSpec = seq(
   timeHour,
   choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
 );
-const timeSpecWithOptionalOffsetNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [dateTimeUTCOffset]), (result) => {
-  if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
-    throw new SyntaxError('valid PlainMonthDay');
-  }
-  if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
-    throw new SyntaxError('valid PlainYearMonth');
-  }
-});
 
 function validateDayOfMonth(result, { year, month, day }) {
   if (day > ES.ISODaysInMonth(year, month)) throw SyntaxError('retry if bad day of month');
@@ -306,7 +298,18 @@ const date = withSyntaxConstraints(
 const dateTime = seq(date, [dateTimeSeparator, timeSpec, [dateTimeUTCOffset]]);
 const annotatedTime = choice(
   seq(timeDesignator, timeSpec, [dateTimeUTCOffset], [timeZoneAnnotation], [annotations]),
-  seq(timeSpecWithOptionalOffsetNotAmbiguous, [timeZoneAnnotation], [annotations])
+  seq(
+    withSyntaxConstraints(seq(timeSpec, [dateTimeUTCOffset]), (result) => {
+      if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
+        throw new SyntaxError('valid PlainMonthDay');
+      }
+      if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
+        throw new SyntaxError('valid PlainYearMonth');
+      }
+    }),
+    [timeZoneAnnotation],
+    [annotations]
+  )
 );
 const annotatedDateTime = seq(dateTime, [timeZoneAnnotation], [annotations]);
 const annotatedDateTimeTimeRequired = seq(

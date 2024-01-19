@@ -1239,9 +1239,6 @@
           `11`
           `12`
 
-      DateMonthWithThirtyOneDays ::: one of
-          `01` `03` `05` `07` `08` `10` `12`
-
       DateDay :::
           `0` NonZeroDigit
           `1` DecimalDigit
@@ -1255,13 +1252,6 @@
       DateSpecMonthDay :::
           `--` DateMonth `-`? DateDay
           DateMonth `-`? DateDay
-
-      ValidMonthDay :::
-          DateMonth `-`? `0` NonZeroDigit
-          DateMonth `-`? `1` DecimalDigit
-          DateMonth `-`? `2` DecimalDigit
-          DateMonth `-`? `30` but not one of `0230` or `02-30`
-          DateMonthWithThirtyOneDays `-`? `31`
 
       Date :::
           DateYear `-` DateMonth `-` DateDay
@@ -1363,16 +1353,13 @@
           TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
           TimeHour TimeMinute TimeSecond TimeFraction?
 
-      TimeSpecWithOptionalOffsetNotAmbiguous :::
-          TimeSpec DateTimeUTCOffset? but not one of ValidMonthDay or DateSpecYearMonth
-
       DateTime :::
           Date
           Date DateTimeSeparator TimeSpec DateTimeUTCOffset?
 
       AnnotatedTime :::
           TimeDesignator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
-          TimeSpecWithOptionalOffsetNotAmbiguous TimeZoneAnnotation? Annotations?
+          TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
 
       AnnotatedDateTime[Zoned] :::
           [~Zoned] DateTime TimeZoneAnnotation? Annotations?
@@ -1518,6 +1505,18 @@
 
     <emu-clause id="sec-temporal-iso8601grammar-static-semantics-early-errors">
       <h1>Static Semantics: Early Errors</h1>
+      <emu-grammar>
+        AnnotatedTime :::
+          TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+      </emu-grammar>
+      <ul>
+        <li>
+          It is a Syntax Error if IsValidMonthDay of ParseText(|TimeSpec| |DateTimeUTCOffset|, |DateSpecMonthDay|) is *true*.
+        </li>
+        <li>
+          It is a Syntax Error if ParseText(|TimeSpec| |DateTimeUTCOffset|, |DateSpecYearMonth|) is a Parse Node.
+        </li>
+      </ul>
       <emu-grammar>
         Date :::
           DateYear `-` DateMonth `-` DateDay
