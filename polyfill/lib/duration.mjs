@@ -367,13 +367,22 @@ export class Duration {
         timeZoneRec,
         precalculatedPlainDateTime
       ));
+      const intermediate = ES.MoveRelativeZonedDateTime(
+        zonedRelativeTo,
+        calendarRec,
+        timeZoneRec,
+        years,
+        months,
+        weeks,
+        0,
+        precalculatedPlainDateTime
+      );
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceTimeDurationRelative(
         days,
         norm,
         largestUnit,
-        zonedRelativeTo,
-        timeZoneRec,
-        precalculatedPlainDateTime
+        intermediate,
+        timeZoneRec
       ));
     } else {
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceTimeDuration(
