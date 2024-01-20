@@ -76,6 +76,7 @@ class Literal {
     return this.str;
   }
 }
+const empty = new Literal('');
 
 class Optional {
   constructor(productionLike) {
@@ -189,6 +190,7 @@ function seq(...productions) {
 
 // characters
 const temporalSign = character('+-−');
+const timeSeparator = (extended) => (extended ? character(':') : empty);
 const hour = zeroPaddedInclusive(0, 23, 2);
 const minuteSecond = zeroPaddedInclusive(0, 59, 2);
 const temporalDecimalSeparator = character('.,');
@@ -245,19 +247,20 @@ const timeFraction = withCode(temporalDecimalFraction, (data, result) => {
 function saveOffset(data, result) {
   data.offset = ES.ParseDateTimeUTCOffset(result);
 }
+
+const utcOffsetWithSubMinuteComponents = (extended) =>
+  seq(temporalSign, hour, timeSeparator(extended), minuteSecond, timeSeparator(extended), minuteSecond, [
+    temporalDecimalFraction
+  ]);
+const utcOffsetMinutePrecision = seq(temporalSign, hour, [
+  choice(seq(timeSeparator(true), minuteSecond), seq(timeSeparator(false), minuteSecond))
+]);
 const utcOffsetSubMinutePrecision = withCode(
-  seq(
-    temporalSign,
-    hour,
-    choice(
-      [minuteSecond, [minuteSecond, [temporalDecimalFraction]]],
-      seq(':', minuteSecond, [':', minuteSecond, [temporalDecimalFraction]])
-    )
-  ),
+  choice(utcOffsetMinutePrecision, utcOffsetWithSubMinuteComponents(true), utcOffsetWithSubMinuteComponents(false)),
   saveOffset
 );
 const dateTimeUTCOffset = choice(utcDesignator, utcOffsetSubMinutePrecision);
-const timeZoneUTCOffsetName = seq(temporalSign, hour, choice([minuteSecond], seq(':', minuteSecond)));
+const timeZoneUTCOffsetName = utcOffsetMinutePrecision;
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
@@ -281,10 +284,9 @@ const annotations = withSyntaxConstraints(oneOrMore(choice(calendarAnnotation, a
     throw new SyntaxError('more than one calendar annotation and at least one critical');
   }
 });
-const timeSpec = seq(
-  timeHour,
-  choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
-);
+const timeSpec = (extended) =>
+  seq(timeHour, [timeSeparator(extended), timeMinute, [timeSeparator(extended), timeSecond, [timeFraction]]]);
+const time = choice(timeSpec(true), timeSpec(false));
 
 function validateDayOfMonth(result, { year, month, day }) {
   if (day > ES.ISODaysInMonth(year, month)) throw SyntaxError('retry if bad day of month');
@@ -295,11 +297,11 @@ const date = withSyntaxConstraints(
   choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay)),
   validateDayOfMonth
 );
-const dateTime = seq(date, [dateTimeSeparator, timeSpec, [dateTimeUTCOffset]]);
+const dateTime = seq(date, [dateTimeSeparator, time, [dateTimeUTCOffset]]);
 const annotatedTime = choice(
-  seq(timeDesignator, timeSpec, [dateTimeUTCOffset], [timeZoneAnnotation], [annotations]),
+  seq(timeDesignator, time, [dateTimeUTCOffset], [timeZoneAnnotation], [annotations]),
   seq(
-    withSyntaxConstraints(seq(timeSpec, [dateTimeUTCOffset]), (result) => {
+    withSyntaxConstraints(seq(time, [dateTimeUTCOffset]), (result) => {
       if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
         throw new SyntaxError('valid PlainMonthDay');
       }
@@ -315,7 +317,7 @@ const annotatedDateTime = seq(dateTime, [timeZoneAnnotation], [annotations]);
 const annotatedDateTimeTimeRequired = seq(
   date,
   dateTimeSeparator,
-  timeSpec,
+  time,
   [dateTimeUTCOffset],
   [timeZoneAnnotation],
   [annotations]
@@ -430,7 +432,7 @@ const duration = withSyntaxConstraints(
   }
 );
 
-const instant = seq(date, dateTimeSeparator, timeSpec, dateTimeUTCOffset, [timeZoneAnnotation], [annotations]);
+const instant = seq(date, dateTimeSeparator, time, dateTimeUTCOffset, [timeZoneAnnotation], [annotations]);
 const zonedDateTime = seq(dateTime, timeZoneAnnotation, [annotations]);
 
 // goal elements
