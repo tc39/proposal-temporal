@@ -1191,6 +1191,10 @@
           `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m`
           `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z`
 
+      DateSeparator[Extended] :::
+          [+Extended] `-`
+          [~Extended] [empty]
+
       DaysDesignator ::: one of
           `D` `d`
 
@@ -1247,15 +1251,19 @@
           `31`
 
       DateSpecYearMonth :::
-          DateYear `-`? DateMonth
+          DateYear DateSeparator[+Extended] DateMonth
+          DateYear DateSeparator[~Extended] DateMonth
 
       DateSpecMonthDay :::
-          `--` DateMonth `-`? DateDay
-          DateMonth `-`? DateDay
+          `--`? DateMonth DateSeparator[+Extended] DateDay
+          `--`? DateMonth DateSeparator[~Extended] DateDay
+
+      DateSpec[Extended] :::
+          DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
 
       Date :::
-          DateYear `-` DateMonth `-` DateDay
-          DateYear DateMonth DateDay
+          DateSpec[+Extended]
+          DateSpec[~Extended]
 
       TimeHour :::
           Hour
@@ -1474,13 +1482,12 @@
       <h1>Static Semantics: IsValidMonthDay ( ): a Boolean</h1>
       <dl class="header"></dl>
       <emu-grammar>
-        Date :::
-          DateYear `-` DateMonth `-` DateDay
-          DateYear DateMonth DateDay
+        DateSpec[Extended] :::
+          DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
 
         DateSpecMonthDay :::
-          `--` DateMonth `-`? DateDay
-          DateMonth `-`? DateDay
+          `--`? DateMonth DateSeparator[+Extended] DateDay
+          `--`? DateMonth DateSeparator[~Extended] DateDay
       </emu-grammar>
       <emu-alg>
         1. If |DateDay| is *"31"* and |DateMonth| is *"02"*, *"04"*, *"06"*, *"09"*, *"11"*, return *false*.
@@ -1493,12 +1500,11 @@
       <h1>Static Semantics: IsValidDate ( ): a Boolean</h1>
       <dl class="header"></dl>
       <emu-grammar>
-        Date :::
-          DateYear `-` DateMonth `-` DateDay
-          DateYear DateMonth DateDay
+        DateSpec[Extended] :::
+          DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
       </emu-grammar>
       <emu-alg>
-        1. If IsValidMonthDay of |Date| is *false*, return *false*.
+        1. If IsValidMonthDay of |DateSpec| is *false*, return *false*.
         1. Let _year_ be ℝ(StringToNumber(CodePointsToString(|DateYear|))).
         1. If |DateMonth| is *"02"* and |DateDay| is *"29"* and MathematicalInLeapYear(EpochTimeForYear(_year_)) = 0, return *false*.
         1. Return *true*.
@@ -1520,19 +1526,18 @@
         </li>
       </ul>
       <emu-grammar>
-        Date :::
-          DateYear `-` DateMonth `-` DateDay
-          DateYear DateMonth DateDay
+        DateSpec[Extended] :::
+          DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
       </emu-grammar>
       <ul>
         <li>
-          It is a Syntax Error if IsValidDate of |Date| is *false*.
+          It is a Syntax Error if IsValidDate of |DateSpec| is *false*.
         </li>
       </ul>
       <emu-grammar>
         DateSpecMonthDay :::
-          `--` DateMonth `-`? DateDay
-          DateMonth `-`? DateDay
+          `--`? DateMonth DateSeparator[+Extended] DateDay
+          `--`? DateMonth DateSeparator[~Extended] DateDay
       </emu-grammar>
       <ul>
         <li>
