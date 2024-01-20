@@ -776,17 +776,17 @@
         1. Let _result_ be ? ParseTemporalRelativeToString(_value_).
         1. Let _offsetString_ be _result_.[[TimeZone]].[[OffsetString]].
         1. Let _annotation_ be _result_.[[TimeZone]].[[TimeZoneAnnotation]].
-        1. If _annotation_ is *undefined*, then
+        1. If _annotation_ is ~empty~, then
           1. Let _timeZone_ be *undefined*.
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_annotation_).
           1. If _result_.[[TimeZone]].[[Z]] is *true*, then
             1. Set _offsetBehaviour_ to ~exact~.
-          1. Else if _offsetString_ is *undefined*, then
+          1. Else if _offsetString_ is ~empty~, then
             1. Set _offsetBehaviour_ to ~wall~.
           1. Set _matchBehaviour_ to ~match-minutes~.
         1. Let _calendar_ be _result_.[[Calendar]].
-        1. If _calendar_ is *undefined*, set _calendar_ to *"iso8601"*.
+        1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
         1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
         1. Set _calendar_ to the ASCII-lowercase of _calendar_.
       1. If _timeZone_ is *undefined*, then
@@ -1505,11 +1505,84 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-iso-string-time-zone-parse-records">
+    <h1>ISO String Time Zone Parse Records</h1>
+    <p>
+      A <dfn variants="ISO String Time Zone Parse Records">ISO String Time Zone Parse Record</dfn> is a Record value used to represent the result of parsing the representation of the time zone in an ISO 8601 string.
+    </p>
+    <p>
+      ISO String Time Zone Parse Records have the fields listed in <emu-xref href="#table-temporal-iso-string-time-zone-parse-record-fields"></emu-xref>.
+    </p>
+    <emu-table id="table-temporal-iso-string-time-zone-parse-record-fields" caption="ISO String Time Zone Parse Record Fields">
+      <table class="real-table">
+        <tr>
+          <th>Field Name</th>
+          <th>Value</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>[[Z]]</td>
+          <td>a Boolean</td>
+          <td>
+            Whether the ISO 8601 string contained the `Z` UTC designator.
+          </td>
+        </tr>
+        <tr>
+          <td>[[OffsetString]]</td>
+          <td>a String or ~empty~</td>
+          <td>
+            The UTC offset from the ISO 8601 string, or ~empty~ if none was present.
+          </td>
+        </tr>
+        <tr>
+          <td>[[TimeZoneAnnotation]]</td>
+          <td>a String or ~empty~</td>
+          <td>
+            The time zone annotation from the ISO 8601 string, or ~empty~ if none was present.
+          </td>
+        </tr>
+      </table>
+    </emu-table>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-iso-date-time-parse-records">
+    <h1>ISO Date-Time Parse Records</h1>
+    <p>
+      An <dfn variants="ISO Date-Time Parse Records">ISO Date-Time Parse Record</dfn> is a Record value used to represent the result of parsing an ISO 8601 string.
+    </p>
+    <p>
+      ISO Date-Time Parse Records have all the fields of ISO Date-Time Records, in addition to those listed in <emu-xref href="#table-temporal-iso-date-time-parse-record-fields"></emu-xref>.
+    </p>
+    <emu-table id="table-temporal-iso-date-time-parse-record-fields" caption="ISO Date-Time Parse Record Fields">
+      <table class="real-table">
+        <tr>
+          <th>Field Name</th>
+          <th>Value</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>[[TimeZone]]</td>
+          <td>an ISO String Time Zone Parse Record</td>
+          <td>
+            A representation of how the time zone was expressed in the ISO 8601 string.
+          </td>
+        </tr>
+        <tr>
+          <td>[[Calendar]]</td>
+          <td>a String or ~empty~</td>
+          <td>
+            The calendar type from the ISO 8601 string, or ~empty~ if none was present.
+          </td>
+        </tr>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-parseisodatetime" type="abstract operation">
     <h1>
       ParseISODateTime (
         _isoString_: a String,
-      )
+      ): either a normal completion containing an ISO Date-Time Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1577,7 +1650,7 @@
         1. Let _nanosecondMV_ be 0.
       1. Assert: IsValidISODate(_yearMV_, _monthMV_, _dayMV_) is *true*.
       1. Assert: IsValidTime(_hourMV_, _minuteMV_, _secondMV_, _millisecondMV_, _microsecondMV_, _nanosecondMV_) is *true*.
-      1. Let _timeZoneResult_ be the Record { [[Z]]: *false*, [[OffsetString]]: *undefined*, [[TimeZoneAnnotation]]: *undefined* }.
+      1. Let _timeZoneResult_ be ISO String Time Zone Parse Record { [[Z]]: *false*, [[OffsetString]]: ~empty~, [[TimeZoneAnnotation]]: ~empty~ }.
       1. If _parseResult_ contains a |TimeZoneIdentifier| Parse Node, then
         1. Let _identifier_ be the source text matched by the |TimeZoneIdentifier| Parse Node contained within _parseResult_.
         1. Set _timeZoneResult_.[[TimeZoneAnnotation]] to CodePointsToString(_identifier_).
@@ -1586,7 +1659,7 @@
       1. Else if _parseResult_ contains a |UTCOffset[+SubMinutePrecision]| Parse Node, then
         1. Let _offset_ be the source text matched by the |UTCOffset[+SubMinutePrecision]| Parse Node contained within _parseResult_.
         1. Set _timeZoneResult_.[[OffsetString]] to CodePointsToString(_offset_).
-      1. Return the Record {
+      1. Return ISO Date-Time Parse Record {
           [[Year]]: _yearMV_,
           [[Month]]: _monthMV_,
           [[Day]]: _dayMV_,
@@ -1606,7 +1679,7 @@
     <h1>
       ParseTemporalInstantString (
         _isoString_: a String,
-      ): either a normal completion containing a Record, or a throw completion
+      ): either a normal completion containing an ISO Date-Time Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1615,20 +1688,8 @@
     <emu-alg>
       1. If ParseText(StringToCodePoints(_isoString_), |TemporalInstantString|) is a List of errors, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
-      1. Assert: Either _result_.[[TimeZone]].[[OffsetString]] is a String or _result_.[[TimeZone]].[[Z]] is *true*, but not both.
-      1. Return the Record {
-          [[Year]]: _result_.[[Year]],
-          [[Month]]: _result_.[[Month]],
-          [[Day]]: _result_.[[Day]],
-          [[Hour]]: _result_.[[Hour]],
-          [[Minute]]: _result_.[[Minute]],
-          [[Second]]: _result_.[[Second]],
-          [[Millisecond]]: _result_.[[Millisecond]],
-          [[Microsecond]]: _result_.[[Microsecond]],
-          [[Nanosecond]]: _result_.[[Nanosecond]],
-          [[OffsetString]]: _result_.[[TimeZone]].[[OffsetString]],
-          [[Z]]: _result_.[[TimeZone]].[[Z]]
-        }.
+      1. Assert: Either _result_.[[TimeZone]].[[OffsetString]] is not ~empty~ or _result_.[[TimeZone]].[[Z]] is *true*, but not both.
+      1. Return _result_.
     </emu-alg>
   </emu-clause>
 
@@ -1636,7 +1697,7 @@
     <h1>
       ParseTemporalZonedDateTimeString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing an ISO Date-Time Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1651,44 +1712,26 @@
   <emu-clause id="sec-temporal-parsetemporalcalendarstring" type="abstract operation">
     <h1>
       ParseTemporalCalendarString (
-        _isoString_: a String,
-      )
+        _string_: a String,
+      ): either a normal completion containing a String or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It parses the argument as an ISO 8601 string and returns the calendar identifier, or *undefined* if there is none.</dd>
+      <dd>
+        It parses the argument either as an ISO 8601 string or bare calendar type, and returns the calendar type.
+        The returned string is syntactically a valid calendar type, but not necessarily an existing one.
+      </dd>
     </dl>
     <emu-alg>
-      1. Let _parseResult_ be Completion(ParseISODateTime(_isoString_)).
+      1. Let _parseResult_ be Completion(ParseISODateTime(_string_)).
       1. If _parseResult_ is a normal completion, then
         1. Let _calendar_ be _parseResult_.[[Value]].[[Calendar]].
-        1. If _calendar_ is *undefined*, return *"iso8601"*.
+        1. If _calendar_ is ~empty~, return *"iso8601"*.
         1. Else, return _calendar_.
       1. Else,
-        1. Set _parseResult_ to ParseText(StringToCodePoints(_isoString_), |AnnotationValue|).
+        1. Set _parseResult_ to ParseText(StringToCodePoints(_string_), |AnnotationValue|).
         1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-        1. Else, return _isoString_.
-    </emu-alg>
-  </emu-clause>
-
-  <emu-clause id="sec-temporal-parsetemporaldatestring" type="abstract operation">
-    <h1>
-      ParseTemporalDateString (
-        _isoString_: a String,
-      )
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd>It parses the argument as a full or partial ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.PlainDate instance as a distinct field.</dd>
-    </dl>
-    <emu-alg>
-      1. Let _parts_ be ? ParseTemporalDateTimeString(_isoString_).
-      1. Return the Record {
-        [[Year]]: _parts_.[[Year]],
-        [[Month]]: _parts_.[[Month]],
-        [[Day]]: _parts_.[[Day]],
-        [[Calendar]]: _parts_.[[Calendar]]
-        }.
+        1. Else, return _string_.
     </emu-alg>
   </emu-clause>
 
@@ -1696,7 +1739,7 @@
     <h1>
       ParseTemporalDateTimeString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing an ISO Date-Time Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1814,11 +1857,60 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-iso-month-day-parse-records">
+    <h1>ISO Month-Day Parse Records</h1>
+    <p>
+      An <dfn variants="ISO Month-Day Parse Records">ISO Month-Day Parse Record</dfn> is a Record value used to represent the ISO 8601 equivalent of a valid month and day in an arbitrary year in an arbitrary calendar.
+      For any ISO Month-Day Parse Record _r_, IsValidISODate(_r_.[[Year]], _r_.[[Month]], _r_.[[Day]]) must return *true*, or, if _r_.[[Year]] is ~empty~, IsValidISODate(1972, _r_.[[Month]], _r_.[[Day]]) must return *true*.
+      It is not necessary for ISODateTimeWithinLimits(_r_.[[Year]], _r_.[[Month]], _r_.[[Day]], 0, 0, 0, 0, 0, 0) to return *true*.
+    </p>
+    <p>
+      ISO Month-Day Parse Records have the fields listed in <emu-xref href="#table-temporal-iso-month-day-parse-record-fields"></emu-xref>.
+    </p>
+    <emu-table id="table-temporal-iso-month-day-parse-record-fields" caption="ISO Month-Day Parse Record Fields">
+      <table class="real-table">
+        <tr>
+          <th>Field Name</th>
+          <th>Value</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>[[Year]]</td>
+          <td>an integer or ~empty~</td>
+          <td>
+            The year in the ISO 8601 calendar, or ~empty~ if none was present in the ISO 8601 string.
+          </td>
+        </tr>
+        <tr>
+          <td>[[Month]]</td>
+          <td>an integer between 1 and 12, inclusive</td>
+          <td>
+            The number of the month in the ISO 8601 calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>[[Day]]</td>
+          <td>an integer between 1 and 31, inclusive</td>
+          <td>
+            The number of the day of the month in the ISO 8601 calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>[[Calendar]]</td>
+          <td>a String or ~empty~</td>
+          <td>
+            The calendar type from the ISO 8601 string, or ~empty~ if none was present.
+          </td>
+        </tr>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-parsetemporalmonthdaystring" type="abstract operation">
     <h1>
       ParseTemporalMonthDayString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing an ISO Month-Day Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1830,8 +1922,8 @@
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Let _year_ be _result_.[[Year]].
       1. If _parseResult_ does not contain a |DateYear| Parse Node, then
-        1. Set _year_ to *undefined*.
-      1. Return the Record {
+        1. Set _year_ to ~empty~.
+      1. Return ISO Month-Day Parse Record {
         [[Year]]: _year_,
         [[Month]]: _result_.[[Month]],
         [[Day]]: _result_.[[Day]],
@@ -1844,7 +1936,7 @@
     <h1>
       ParseTemporalRelativeToString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing an ISO Date-Time Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1861,7 +1953,7 @@
     <h1>
       ParseTemporalTimeString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing an ISO Date-Time Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1870,15 +1962,7 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalTimeString|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. Let _result_ be ? ParseISODateTime(_isoString_).
-      1. Return the Record {
-        [[Hour]]: _result_.[[Hour]],
-        [[Minute]]: _result_.[[Minute]],
-        [[Second]]: _result_.[[Second]],
-        [[Millisecond]]: _result_.[[Millisecond]],
-        [[Microsecond]]: _result_.[[Microsecond]],
-        [[Nanosecond]]: _result_.[[Nanosecond]],
-        }.
+      1. Return ? ParseISODateTime(_isoString_).
     </emu-alg>
     <emu-note>
       <p>A successful parse using |TemporalTimeString| guarantees absence of ambiguity with respect to any ISO 8601 date-only, year-month, or month-day representation.</p>
@@ -1913,11 +1997,11 @@
         1. Return ! ParseTimeZoneIdentifier(_timeZoneString_).
       1. Let _result_ be ? ParseISODateTime(_timeZoneString_).
       1. Let _timeZoneResult_ be _result_.[[TimeZone]].
-      1. If _timeZoneResult_.[[TimeZoneAnnotation]] is not *undefined*, then
+      1. If _timeZoneResult_.[[TimeZoneAnnotation]] is not ~empty~, then
         1. Return ! ParseTimeZoneIdentifier(_timeZoneResult_.[[TimeZoneAnnotation]]).
       1. If _timeZoneResult_.[[Z]] is *true*, then
         1. Return ! ParseTimeZoneIdentifier(*"UTC"*).
-      1. If _timeZoneResult_.[[OffsetString]] is not *undefined*, then
+      1. If _timeZoneResult_.[[OffsetString]] is not ~empty~, then
         1. Return ? ParseTimeZoneIdentifier(_timeZoneResult_.[[OffsetString]]).
       1. Throw a *RangeError* exception.
     </emu-alg>
@@ -1927,7 +2011,7 @@
     <h1>
       ParseTemporalYearMonthString (
         _isoString_: a String,
-      )
+      ): either a normal completion containing an ISO Date-Time Parse Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1936,13 +2020,7 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalYearMonthString|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. Let _result_ be ? ParseISODateTime(_isoString_).
-      1. Return the Record {
-        [[Year]]: _result_.[[Year]],
-        [[Month]]: _result_.[[Month]],
-        [[Day]]: _result_.[[Day]],
-        [[Calendar]]: _result_.[[Calendar]]
-        }.
+      1. Return ? ParseISODateTime(_isoString_).
     </emu-alg>
   </emu-clause>
 
