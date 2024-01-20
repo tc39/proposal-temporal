@@ -1274,7 +1274,7 @@
           TemporalSign Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond TemporalDecimalFraction?
 
       NormalizedUTCOffset :::
-          ASCIISign Hour `:` MinuteSecond
+          ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
 
       UTCOffsetMinutePrecision :::
           TemporalSign Hour
@@ -1346,27 +1346,29 @@
       Annotations :::
           Annotation Annotations?
 
-      TimeSpec :::
+      TimeSpec[Extended] :::
           TimeHour
-          TimeHour `:` TimeMinute
-          TimeHour TimeMinute
-          TimeHour `:` TimeMinute `:` TimeSecond TimeFraction?
-          TimeHour TimeMinute TimeSecond TimeFraction?
+          TimeHour TimeSeparator[?Extended] TimeMinute
+          TimeHour TimeSeparator[?Extended] TimeMinute TimeSeparator[?Extended] TimeSecond TimeFraction?
+
+      Time :::
+          TimeSpec[+Extended]
+          TimeSpec[~Extended]
 
       DateTime :::
           Date
-          Date DateTimeSeparator TimeSpec DateTimeUTCOffset?
+          Date DateTimeSeparator Time DateTimeUTCOffset?
 
       AnnotatedTime :::
-          TimeDesignator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
-          TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+          TimeDesignator Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+          Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
 
       AnnotatedDateTime[Zoned] :::
           [~Zoned] DateTime TimeZoneAnnotation? Annotations?
           [+Zoned] DateTime TimeZoneAnnotation Annotations?
 
       AnnotatedDateTimeTimeRequired :::
-          Date DateTimeSeparator TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+          Date DateTimeSeparator Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
 
       AnnotatedYearMonth :::
           DateSpecYearMonth TimeZoneAnnotation? Annotations?
@@ -1447,7 +1449,7 @@
           TemporalSign? DurationDesignator DurationTime
 
       TemporalInstantString :::
-          Date DateTimeSeparator TimeSpec DateTimeUTCOffset TimeZoneAnnotation? Annotations?
+          Date DateTimeSeparator Time DateTimeUTCOffset TimeZoneAnnotation? Annotations?
 
       TemporalDateTimeString[Zoned] :::
           AnnotatedDateTime[?Zoned]
@@ -1507,14 +1509,14 @@
       <h1>Static Semantics: Early Errors</h1>
       <emu-grammar>
         AnnotatedTime :::
-          TimeSpec DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+          Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
       </emu-grammar>
       <ul>
         <li>
-          It is a Syntax Error if IsValidMonthDay of ParseText(|TimeSpec| |DateTimeUTCOffset|, |DateSpecMonthDay|) is *true*.
+          It is a Syntax Error if IsValidMonthDay of ParseText(|Time| |DateTimeUTCOffset|, |DateSpecMonthDay|) is *true*.
         </li>
         <li>
-          It is a Syntax Error if ParseText(|TimeSpec| |DateTimeUTCOffset|, |DateSpecYearMonth|) is a Parse Node.
+          It is a Syntax Error if ParseText(|Time| |DateTimeUTCOffset|, |DateSpecYearMonth|) is a Parse Node.
         </li>
       </ul>
       <emu-grammar>
