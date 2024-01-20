@@ -190,6 +190,7 @@ function seq(...productions) {
 
 // characters
 const temporalSign = character('+-−');
+const dateSeparator = (extended) => (extended ? character('-') : empty);
 const timeSeparator = (extended) => (extended ? character(':') : empty);
 const hour = zeroPaddedInclusive(0, 23, 2);
 const minuteSecond = zeroPaddedInclusive(0, 59, 2);
@@ -291,12 +292,17 @@ const time = choice(timeSpec(true), timeSpec(false));
 function validateDayOfMonth(result, { year, month, day }) {
   if (day > ES.ISODaysInMonth(year, month)) throw SyntaxError('retry if bad day of month');
 }
-const dateSpecMonthDay = withSyntaxConstraints(seq(['--'], dateMonth, ['-'], dateDay), validateDayOfMonth);
-const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
-const date = withSyntaxConstraints(
-  choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay)),
+const dateSpecMonthDay = withSyntaxConstraints(
+  seq(['--'], dateMonth, choice(dateSeparator(true), dateSeparator(false)), dateDay),
   validateDayOfMonth
 );
+const dateSpecYearMonth = seq(dateYear, choice(dateSeparator(true), dateSeparator(false)), dateMonth);
+const dateSpec = (extended) =>
+  withSyntaxConstraints(
+    seq(dateYear, dateSeparator(extended), dateMonth, dateSeparator(extended), dateDay),
+    validateDayOfMonth
+  );
+const date = choice(dateSpec(true), dateSpec(false));
 const dateTime = seq(date, [dateTimeSeparator, time, [dateTimeUTCOffset]]);
 const annotatedTime = choice(
   seq(timeDesignator, time, [dateTimeUTCOffset], [timeZoneAnnotation], [annotations]),
