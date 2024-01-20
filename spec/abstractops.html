@@ -1294,8 +1294,8 @@
           UTCOffsetWithSubMinuteComponents[+Extended]
           UTCOffsetWithSubMinuteComponents[~Extended]
 
-      DateTimeUTCOffset :::
-          UTCDesignator
+      DateTimeUTCOffset[Z] :::
+          [+Z] UTCDesignator
           UTCOffsetSubMinutePrecision
 
       TimeZoneUTCOffsetName :::
@@ -1363,20 +1363,20 @@
           TimeSpec[+Extended]
           TimeSpec[~Extended]
 
-      DateTime :::
+      DateTime[Z] :::
           Date
-          Date DateTimeSeparator Time DateTimeUTCOffset?
+          Date DateTimeSeparator Time DateTimeUTCOffset[?Z]?
 
       AnnotatedTime :::
-          TimeDesignator Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
-          Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+          TimeDesignator Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
+          Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
 
       AnnotatedDateTime[Zoned] :::
-          [~Zoned] DateTime TimeZoneAnnotation? Annotations?
-          [+Zoned] DateTime TimeZoneAnnotation Annotations?
+          [~Zoned] DateTime[~Z] TimeZoneAnnotation? Annotations?
+          [+Zoned] DateTime[+Z] TimeZoneAnnotation Annotations?
 
       AnnotatedDateTimeTimeRequired :::
-          Date DateTimeSeparator Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+          Date DateTimeSeparator Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
 
       AnnotatedYearMonth :::
           DateSpecYearMonth TimeZoneAnnotation? Annotations?
@@ -1457,7 +1457,7 @@
           TemporalSign? DurationDesignator DurationTime
 
       TemporalInstantString :::
-          Date DateTimeSeparator Time DateTimeUTCOffset TimeZoneAnnotation? Annotations?
+          Date DateTimeSeparator Time DateTimeUTCOffset[+Z] TimeZoneAnnotation? Annotations?
 
       TemporalDateTimeString[Zoned] :::
           AnnotatedDateTime[?Zoned]
@@ -1515,14 +1515,14 @@
       <h1>Static Semantics: Early Errors</h1>
       <emu-grammar>
         AnnotatedTime :::
-          Time DateTimeUTCOffset? TimeZoneAnnotation? Annotations?
+          Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
       </emu-grammar>
       <ul>
         <li>
-          It is a Syntax Error if IsValidMonthDay of ParseText(|Time| |DateTimeUTCOffset|, |DateSpecMonthDay|) is *true*.
+          It is a Syntax Error if IsValidMonthDay of ParseText(|Time| |DateTimeUTCOffset[~Z]|, |DateSpecMonthDay|) is *true*.
         </li>
         <li>
-          It is a Syntax Error if ParseText(|Time| |DateTimeUTCOffset|, |DateSpecYearMonth|) is a Parse Node.
+          It is a Syntax Error if ParseText(|Time| |DateTimeUTCOffset[~Z]|, |DateSpecYearMonth|) is a Parse Node.
         </li>
       </ul>
       <emu-grammar>
@@ -1754,9 +1754,8 @@
       <dd>It parses the argument as an ISO 8601 string and returns a Record representing each date and time component needed to construct a Temporal.PlainDateTime instance as a distinct field.</dd>
     </dl>
     <emu-alg>
-      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString|).
+      1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString[~Zoned]|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Return ? ParseISODateTime(_isoString_).
     </emu-alg>
   </emu-clause>
@@ -1838,7 +1837,6 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalMonthDayString|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Let _year_ be _result_.[[Year]].
       1. If _parseResult_ does not contain a |DateYear| Parse Node, then
@@ -1865,7 +1863,6 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalDateTimeString|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. If _parseResult_ contains a |UTCDesignator| ParseNode but no |TimeZoneAnnotation| Parse Node, throw a *RangeError* exception.
       1. Return ? ParseISODateTime(_isoString_).
     </emu-alg>
   </emu-clause>
@@ -1883,7 +1880,6 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalTimeString|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the Record {
         [[Hour]]: _result_.[[Hour]],
@@ -1950,7 +1946,6 @@
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_isoString_), |TemporalYearMonthString|).
       1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-      1. If _parseResult_ contains a |UTCDesignator| Parse Node, throw a *RangeError* exception.
       1. Let _result_ be ? ParseISODateTime(_isoString_).
       1. Return the Record {
         [[Year]]: _result_.[[Year]],
