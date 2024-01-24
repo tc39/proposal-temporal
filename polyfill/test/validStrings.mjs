@@ -245,24 +245,28 @@ const timeFraction = withCode(temporalDecimalFraction, (data, result) => {
   data.microsecond = +fraction.slice(3, 6);
   data.nanosecond = +fraction.slice(6, 9);
 });
+
 function saveOffset(data, result) {
   data.offset = ES.ParseDateTimeUTCOffset(result);
 }
-
-const utcOffsetWithSubMinuteComponents = (extended) =>
-  seq(temporalSign, hour, timeSeparator(extended), minuteSecond, timeSeparator(extended), minuteSecond, [
-    temporalDecimalFraction
+const utcOffset = (subMinutePrecision) =>
+  seq(temporalSign, hour, [
+    choice(
+      seq(
+        timeSeparator(true),
+        minuteSecond,
+        subMinutePrecision ? [timeSeparator(true), minuteSecond, [temporalDecimalFraction]] : empty
+      ),
+      seq(
+        timeSeparator(false),
+        minuteSecond,
+        subMinutePrecision ? [timeSeparator(false), minuteSecond, [temporalDecimalFraction]] : empty
+      )
+    )
   ]);
-const utcOffsetMinutePrecision = seq(temporalSign, hour, [
-  choice(seq(timeSeparator(true), minuteSecond), seq(timeSeparator(false), minuteSecond))
-]);
-const utcOffsetSubMinutePrecision = withCode(
-  choice(utcOffsetMinutePrecision, utcOffsetWithSubMinuteComponents(true), utcOffsetWithSubMinuteComponents(false)),
-  saveOffset
-);
 const dateTimeUTCOffset = (plain) =>
-  plain ? utcOffsetSubMinutePrecision : choice(utcDesignator, utcOffsetSubMinutePrecision);
-const timeZoneUTCOffsetName = utcOffsetMinutePrecision;
+  plain ? withCode(utcOffset(true), saveOffset) : choice(utcDesignator, withCode(utcOffset(true), saveOffset));
+const timeZoneUTCOffsetName = utcOffset(false);
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
