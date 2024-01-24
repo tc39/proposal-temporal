@@ -303,7 +303,13 @@ const dateSpec = (extended) =>
     validateDayOfMonth
   );
 const date = choice(dateSpec(true), dateSpec(false));
-const dateTime = (z) => seq(date, [dateTimeSeparator, time, [dateTimeUTCOffset(z)]]);
+const dateTime = (z, timeRequired) =>
+  seq(
+    date,
+    timeRequired
+      ? seq(dateTimeSeparator, time, [dateTimeUTCOffset(z)])
+      : [dateTimeSeparator, time, [dateTimeUTCOffset(z)]]
+  );
 const annotatedTime = choice(
   seq(timeDesignator, time, [dateTimeUTCOffset(false)], [timeZoneAnnotation], [annotations]),
   seq(
@@ -319,16 +325,8 @@ const annotatedTime = choice(
     [annotations]
   )
 );
-const annotatedDateTime = (zoned) =>
-  seq(dateTime(zoned), zoned ? timeZoneAnnotation : [timeZoneAnnotation], [annotations]);
-const annotatedDateTimeTimeRequired = seq(
-  date,
-  dateTimeSeparator,
-  time,
-  [dateTimeUTCOffset(false)],
-  [timeZoneAnnotation],
-  [annotations]
-);
+const annotatedDateTime = (zoned, timeRequired) =>
+  seq(dateTime(zoned, timeRequired), zoned ? timeZoneAnnotation : [timeZoneAnnotation], [annotations]);
 const annotatedYearMonth = withSyntaxConstraints(
   seq(dateSpecYearMonth, [timeZoneAnnotation], [annotations]),
   (result, data) => {
@@ -440,18 +438,18 @@ const duration = withSyntaxConstraints(
 );
 
 const instant = seq(date, dateTimeSeparator, time, dateTimeUTCOffset(true), [timeZoneAnnotation], [annotations]);
-const zonedDateTime = annotatedDateTime(true);
+const zonedDateTime = annotatedDateTime(true, false);
 
 // goal elements
 const goals = {
   Instant: instant,
-  Date: annotatedDateTime(false),
-  DateTime: annotatedDateTime(false),
+  Date: annotatedDateTime(false, false),
+  DateTime: annotatedDateTime(false, false),
   Duration: duration,
-  MonthDay: choice(annotatedMonthDay, annotatedDateTime(false)),
-  Time: choice(annotatedTime, annotatedDateTimeTimeRequired),
+  MonthDay: choice(annotatedMonthDay, annotatedDateTime(false, false)),
+  Time: choice(annotatedTime, annotatedDateTime(false, true)),
   TimeZone: choice(timeZoneIdentifier, zonedDateTime, instant),
-  YearMonth: choice(annotatedYearMonth, annotatedDateTime(false)),
+  YearMonth: choice(annotatedYearMonth, annotatedDateTime(false, false)),
   ZonedDateTime: zonedDateTime
 };
 
