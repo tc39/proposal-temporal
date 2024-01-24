@@ -1278,28 +1278,22 @@
       TimeFraction :::
           TemporalDecimalFraction
 
-      UTCOffsetWithSubMinuteComponents[Extended] :::
-          TemporalSign Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] MinuteSecond TemporalDecimalFraction?
-
       NormalizedUTCOffset :::
           ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
 
-      UTCOffsetMinutePrecision :::
+      UTCOffset[SubMinutePrecision] :::
           TemporalSign Hour
           TemporalSign Hour TimeSeparator[+Extended] MinuteSecond
           TemporalSign Hour TimeSeparator[~Extended] MinuteSecond
-
-      UTCOffsetSubMinutePrecision :::
-          UTCOffsetMinutePrecision
-          UTCOffsetWithSubMinuteComponents[+Extended]
-          UTCOffsetWithSubMinuteComponents[~Extended]
+          [+SubMinutePrecision] TemporalSign Hour TimeSeparator[+Extended] MinuteSecond TimeSeparator[+Extended] MinuteSecond TemporalDecimalFraction?
+          [+SubMinutePrecision] TemporalSign Hour TimeSeparator[~Extended] MinuteSecond TimeSeparator[~Extended] MinuteSecond TemporalDecimalFraction?
 
       DateTimeUTCOffset[Z] :::
           [+Z] UTCDesignator
-          UTCOffsetSubMinutePrecision
+          UTCOffset[+SubMinutePrecision]
 
       TimeZoneUTCOffsetName :::
-          UTCOffsetMinutePrecision
+          UTCOffset[~SubMinutePrecision]
 
       TZLeadingChar :::
           Alpha
@@ -1631,8 +1625,8 @@
         1. Set _timeZoneResult_.[[TimeZoneAnnotation]] to CodePointsToString(_identifier_).
       1. If _parseResult_ contains a |UTCDesignator| Parse Node, then
         1. Set _timeZoneResult_.[[Z]] to *true*.
-      1. Else if _parseResult_ contains a |UTCOffsetSubMinutePrecision| Parse Node, then
-        1. Let _offset_ be the source text matched by the |UTCOffsetSubMinutePrecision| Parse Node contained within _parseResult_.
+      1. Else if _parseResult_ contains a |UTCOffset[+SubMinutePrecision]| Parse Node, then
+        1. Let _offset_ be the source text matched by the |UTCOffset[+SubMinutePrecision]| Parse Node contained within _parseResult_.
         1. Set _timeZoneResult_.[[OffsetString]] to CodePointsToString(_offset_).
       1. Return the Record {
           [[Year]]: _yearMV_,
