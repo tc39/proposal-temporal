@@ -252,8 +252,8 @@
       <ins class="block">
       <p>
         ECMAScript defines string interchange formats for UTC offsets, derived from ISO 8601.
-        UTC offsets that represent offset time zone identifiers, or that are intended for interoperability with ISO 8601, use only hours and minutes and are specified by |UTCOffsetMinutePrecision|.
-        UTC offsets that represent the offset of a named or custom time zone can be more precise, and are specified by |UTCOffsetSubMinutePrecision|.
+        UTC offsets that represent offset time zone identifiers, or that are intended for interoperability with ISO 8601, use only hours and minutes and are specified by |UTCOffset[~SubMinutePrecision]|.
+        UTC offsets that represent the offset of a named or custom time zone can be more precise, and are specified by |UTCOffset[+SubMinutePrecision]|.
       </p>
       <p>
         These formats are described by the ISO String grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>.
@@ -461,7 +461,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _parseResult_ be ParseText(StringToCodePoints(_offsetString_), <del>|UTCOffset|</del><ins>|UTCOffsetSubMinutePrecision|</ins>).
+        1. Let _parseResult_ be ParseText(StringToCodePoints(_offsetString_), <del>|UTCOffset|</del><ins>|UTCOffset[+SubMinutePrecision]|</ins>).
         1. <del>Assert: _parseResult_ is not a List of errors.</del>
         1. <ins>If _parseResult_ is a List of errors, throw a *RangeError* exception.</ins>
         1. Assert: _parseResult_ contains a |TemporalSign| Parse Node.
