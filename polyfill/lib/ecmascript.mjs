@@ -2041,10 +2041,10 @@ export function CalendarWeekOfYear(calendar, dateLike) {
   }
   const weekOfYear = GetMethod(calendar, 'weekOfYear');
   const result = Call(weekOfYear, calendar, [dateLike]);
-  if (typeof result !== 'number') {
+  if (typeof result !== 'number' && result !== undefined) {
     throw new TypeError('calendar weekOfYear result must be a positive integer');
   }
-  if (!IsIntegralNumber(result) || result < 1) {
+  if ((!IsIntegralNumber(result) || result < 1) && result !== undefined) {
     throw new RangeError('calendar weekOfYear result must be a positive integer');
   }
   return result;
@@ -2058,10 +2058,10 @@ export function CalendarYearOfWeek(calendar, dateLike) {
   }
   const yearOfWeek = GetMethod(calendar, 'yearOfWeek');
   const result = Call(yearOfWeek, calendar, [dateLike]);
-  if (typeof result !== 'number') {
+  if (typeof result !== 'number' && result !== undefined) {
     throw new TypeError('calendar yearOfWeek result must be an integer');
   }
-  if (!IsIntegralNumber(result)) {
+  if (!IsIntegralNumber(result) && result !== undefined) {
     throw new RangeError('calendar yearOfWeek result must be an integer');
   }
   return result;
@@ -3123,29 +3123,6 @@ export function DayOfYear(year, month, day) {
     days += ISODaysInMonth(year, m);
   }
   return days;
-}
-
-export function WeekOfYear(year, month, day) {
-  let doy = DayOfYear(year, month, day);
-  let dow = DayOfWeek(year, month, day) || 7;
-  let doj = DayOfWeek(year, 1, 1);
-
-  const week = MathFloor((doy - dow + 10) / 7);
-
-  if (week < 1) {
-    if (doj === 5 || (doj === 6 && LeapYear(year - 1))) {
-      return { week: 53, year: year - 1 };
-    } else {
-      return { week: 52, year: year - 1 };
-    }
-  }
-  if (week === 53) {
-    if ((LeapYear(year) ? 366 : 365) - doy < 4 - dow) {
-      return { week: 1, year: year + 1 };
-    }
-  }
-
-  return { week, year };
 }
 
 export function DurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
