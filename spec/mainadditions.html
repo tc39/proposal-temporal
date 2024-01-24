@@ -196,7 +196,7 @@
       <ins class="block">
       <p>
         Time zone identifiers are compared using ASCII-case-insensitive comparisons, and are accepted as input in any variation of letter case.
-        Offset time zone identifiers are compared using the number of minutes represented (not as a String), and are accepted as input in any the formats specified by |TimeZoneUTCOffsetName|.
+        Offset time zone identifiers are compared using the number of minutes represented (not as a String), and are accepted as input in any the formats specified by |UTCOffset[~SubMinutePrecision]|.
         However, ECMAScript built-in objects will only output the <dfn variants="time zone identifier in normalized format,normalized time zone identifier">normalized format of a time zone identifier</dfn>.
         The normalized format of an available named time zone identifier is the preferred letter case for that identifier.
         The normalized format of an offset time zone identifier is specified by |NormalizedUTCOffset| and produced by FormatOffsetTimeZoneIdentifier with _style_ either not present or set to ~separated~.
@@ -429,10 +429,10 @@
       </ins>
       <dl class="header">
         <dt>description</dt>
-        <dd>The return value indicates whether _offsetString_ conforms to the grammar given by <del>|UTCOffset|</del><ins>|TimeZoneUTCOffsetName|</ins>.</dd>
+        <dd>The return value indicates whether _offsetString_ conforms to the grammar given by <del>|UTCOffset|</del><ins>|UTCOffset[~SubMinutePrecision]|</ins>.</dd>
       </dl>
       <emu-alg>
-        1. Let _parseResult_ be ParseText(StringToCodePoints(_offsetString_), <del>|UTCOffset|</del><ins>|TimeZoneUTCOffsetName|</ins>).
+        1. Let _parseResult_ be ParseText(StringToCodePoints(_offsetString_), <del>|UTCOffset|</del><ins>|UTCOffset[~SubMinutePrecision]|</ins>).
         1. If _parseResult_ is a List of errors, return *false*.
         1. Return *true*.
       </emu-alg>

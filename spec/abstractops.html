@@ -1265,18 +1265,9 @@
           DateSpec[+Extended]
           DateSpec[~Extended]
 
-      TimeHour :::
-          Hour
-
-      TimeMinute :::
-          MinuteSecond
-
       TimeSecond :::
           MinuteSecond
           `60`
-
-      TimeFraction :::
-          TemporalDecimalFraction
 
       NormalizedUTCOffset :::
           ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
@@ -1291,9 +1282,6 @@
       DateTimeUTCOffset[Z] :::
           [+Z] UTCDesignator
           UTCOffset[+SubMinutePrecision]
-
-      TimeZoneUTCOffsetName :::
-          UTCOffset[~SubMinutePrecision]
 
       TZLeadingChar :::
           Alpha
@@ -1315,7 +1303,7 @@
           TimeZoneIANAName `/` TimeZoneIANANameComponent
 
       TimeZoneIdentifier :::
-          TimeZoneUTCOffsetName
+          UTCOffset[~SubMinutePrecision]
           TimeZoneIANAName
 
       TimeZoneAnnotation :::
@@ -1349,9 +1337,9 @@
           Annotation Annotations?
 
       TimeSpec[Extended] :::
-          TimeHour
-          TimeHour TimeSeparator[?Extended] TimeMinute
-          TimeHour TimeSeparator[?Extended] TimeMinute TimeSeparator[?Extended] TimeSecond TimeFraction?
+          Hour
+          Hour TimeSeparator[?Extended] MinuteSecond
+          Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] TimeSecond TemporalDecimalFraction?
 
       Time :::
           TimeSpec[+Extended]
@@ -1375,67 +1363,37 @@
       AnnotatedMonthDay :::
           DateSpecMonthDay TimeZoneAnnotation? Annotations?
 
-      DurationWholeSeconds :::
-          DecimalDigits[~Sep]
-
-      DurationSecondsFraction :::
-          TimeFraction
-
       DurationSecondsPart :::
-          DurationWholeSeconds DurationSecondsFraction? SecondsDesignator
-
-      DurationWholeMinutes :::
-          DecimalDigits[~Sep]
-
-      DurationMinutesFraction :::
-          TimeFraction
+          DecimalDigits[~Sep] TemporalDecimalFraction? SecondsDesignator
 
       DurationMinutesPart :::
-          DurationWholeMinutes DurationMinutesFraction MinutesDesignator
-          DurationWholeMinutes MinutesDesignator DurationSecondsPart?
-
-      DurationWholeHours :::
-          DecimalDigits[~Sep]
-
-      DurationHoursFraction :::
-          TimeFraction
+          DecimalDigits[~Sep] TemporalDecimalFraction MinutesDesignator
+          DecimalDigits[~Sep] MinutesDesignator DurationSecondsPart?
 
       DurationHoursPart :::
-          DurationWholeHours DurationHoursFraction HoursDesignator
-          DurationWholeHours HoursDesignator DurationMinutesPart
-          DurationWholeHours HoursDesignator DurationSecondsPart?
+          DecimalDigits[~Sep] TemporalDecimalFraction HoursDesignator
+          DecimalDigits[~Sep] HoursDesignator DurationMinutesPart
+          DecimalDigits[~Sep] HoursDesignator DurationSecondsPart?
 
       DurationTime :::
           TimeDesignator DurationHoursPart
           TimeDesignator DurationMinutesPart
           TimeDesignator DurationSecondsPart
 
-      DurationDays :::
-          DecimalDigits[~Sep]
-
       DurationDaysPart :::
-          DurationDays DaysDesignator
-
-      DurationWeeks :::
-          DecimalDigits[~Sep]
+          DecimalDigits[~Sep] DaysDesignator
 
       DurationWeeksPart :::
-          DurationWeeks WeeksDesignator DurationDaysPart?
-
-      DurationMonths :::
-          DecimalDigits[~Sep]
+          DecimalDigits[~Sep] WeeksDesignator DurationDaysPart?
 
       DurationMonthsPart :::
-          DurationMonths MonthsDesignator DurationWeeksPart
-          DurationMonths MonthsDesignator DurationDaysPart?
-
-      DurationYears :::
-          DecimalDigits[~Sep]
+          DecimalDigits[~Sep] MonthsDesignator DurationWeeksPart
+          DecimalDigits[~Sep] MonthsDesignator DurationDaysPart?
 
       DurationYearsPart :::
-          DurationYears YearsDesignator DurationMonthsPart
-          DurationYears YearsDesignator DurationWeeksPart
-          DurationYears YearsDesignator DurationDaysPart?
+          DecimalDigits[~Sep] YearsDesignator DurationMonthsPart
+          DecimalDigits[~Sep] YearsDesignator DurationWeeksPart
+          DecimalDigits[~Sep] YearsDesignator DurationDaysPart?
 
       DurationDate :::
           DurationYearsPart DurationTime?
@@ -1579,7 +1537,7 @@
             1. If _goal_ is |TemporalMonthDayString| or |TemporalYearMonthString|, _calendar_ is not ~empty~, and the ASCII-lowercase of _calendar_ is not *"iso8601"*, throw a *RangeError* exception.
       1. If _parseResult_ is not a Parse Node, throw a *RangeError* exception.
       1. NOTE: Applications of StringToNumber below do not lose precision, since each of the parsed values is guaranteed to be a sufficiently short string of decimal digits.
-      1. Let each of _year_, _month_, _day_, _hour_, _minute_, _second_, and _fSeconds_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, and |TimeFraction| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
+      1. Let each of _year_, _month_, _day_, _hour_, _minute_, _second_, and _fSeconds_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, the first |Hour|, the first |MinuteSecond|, |TimeSecond|, and the first |TemporalDecimalFraction| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
       1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace the first code point with U+002D (HYPHEN-MINUS).
       1. Let _yearMV_ be ℝ(StringToNumber(CodePointsToString(_year_))).
       1. If _month_ is empty, then
@@ -1766,7 +1724,48 @@
     <emu-alg>
       1. Let _duration_ be ParseText(StringToCodePoints(_isoString_), |TemporalDurationString|).
       1. If _duration_ is a List of errors, throw a *RangeError* exception.
-      1. Let each of _sign_, _years_, _months_, _weeks_, _days_, _hours_, _fHours_, _minutes_, _fMinutes_, _seconds_, and _fSeconds_ be the source text matched by the respective |TemporalSign|, |DurationYears|, |DurationMonths|, |DurationWeeks|, |DurationDays|, |DurationWholeHours|, |DurationHoursFraction|, |DurationWholeMinutes|, |DurationMinutesFraction|, |DurationWholeSeconds|, and |DurationSecondsFraction| Parse Node contained within _duration_, or an empty sequence of code points if not present.
+      1. Let _sign_ be the source text matched by the |TemporalSign| Parse Node contained within _duration_, or an empty sequence of code points if not present.
+      1. If _duration_ contains a |DurationYearsPart| Parse Node, then
+        1. Let _yearsNode_ be that |DurationYearsPart| Parse Node contained within _duration_.
+        1. Let _years_ be the source text matched by the |DecimalDigits| Parse Node contained within _yearsNode_.
+      1. Else,
+        1. Let _years_ be an empty sequence of code points.
+      1. If _duration_ contains a |DurationMonthsPart| Parse Node, then
+        1. Let _monthsNode_ be the |DurationMonthsPart| Parse Node contained within _duration_.
+        1. Let _months_ be the source text matched by the |DecimalDigits| Parse Node contained within _monthsNode_.
+      1. Else,
+        1. Let _months_ be an empty sequence of code points.
+      1. If _duration_ contains a |DurationWeeksPart| Parse Node, then
+        1. Let _weeksNode_ be the |DurationWeeksPart| Parse Node contained within _duration_.
+        1. Let _weeks_ be the source text matched by the |DecimalDigits| Parse Node contained within _weeksNode_.
+      1. Else,
+        1. Let _weeks_ be an empty sequence of code points.
+      1. If _duration_ contains a |DurationDaysPart| Parse Node, then
+        1. Let _daysNode_ be the |DurationDaysPart| Parse Node contained within _duration_.
+        1. Let _days_ be the source text matched by the |DecimalDigits| Parse Node contained within _daysNode_.
+      1. Else,
+        1. Let _days_ be an empty sequence of code points.
+      1. If _duration_ contains a |DurationHoursPart| Parse Node, then
+        1. Let _hoursNode_ be the |DurationHoursPart| Parse Node contained within _duration_.
+        1. Let _hours_ be the source text matched by the |DecimalDigits| Parse Node contained within _hoursNode_.
+        1. Let _fHours_ be the source text matched by the |TemporalDecimalFraction| Parse Node contained within _hoursNode_, or an empty sequence of code points if not present.
+      1. Else,
+        1. Let _hours_ be an empty sequence of code points.
+        1. Let _fHours_ be an empty sequence of code points.
+      1. If _duration_ contains a |DurationMinutesPart| Parse Node, then
+        1. Let _minutesNode_ be the |DurationMinutesPart| Parse Node contained within _duration_.
+        1. Let _minutes_ be the source text matched by the |DecimalDigits| Parse Node contained within _minutesNode_.
+        1. Let _fMinutes_ be the source text matched by the |TemporalDecimalFraction| Parse Node contained within _minutesNode_, or an empty sequence of code points if not present.
+      1. Else,
+        1. Let _minutes_ be an empty sequence of code points.
+        1. Let _fMinutes_ be an empty sequence of code points.
+      1. If _duration_ contains a |DurationSecondsPart| Parse Node, then
+        1. Let _secondsNode_ be the |DurationSecondsPart| Parse Node contained within _duration_.
+        1. Let _seconds_ be the source text matched by the |DecimalDigits| Parse Node contained within _secondsNode_.
+        1. Let _fSeconds_ be the source text matched by the |TemporalDecimalFraction| Parse Node contained within _secondsNode_, or an empty sequence of code points if not present.
+      1. Else,
+        1. Let _seconds_ be an empty sequence of code points.
+        1. Let _fSeconds_ be an empty sequence of code points.
       1. Let _yearsMV_ be ? ToIntegerWithTruncation(CodePointsToString(_years_)).
       1. Let _monthsMV_ be ? ToIntegerWithTruncation(CodePointsToString(_months_)).
       1. Let _weeksMV_ be ? ToIntegerWithTruncation(CodePointsToString(_weeks_)).
