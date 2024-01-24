@@ -1346,20 +1346,17 @@
           TimeSpec[+Extended]
           TimeSpec[~Extended]
 
-      DateTime[Plain] :::
-          Date
+      DateTime[Plain, TimeRequired] :::
+          [~TimeRequired] Date
           Date DateTimeSeparator Time DateTimeUTCOffset[?Plain]?
 
       AnnotatedTime :::
           TimeDesignator Time DateTimeUTCOffset[+Plain]? TimeZoneAnnotation? Annotations?
           Time DateTimeUTCOffset[+Plain]? TimeZoneAnnotation? Annotations?
 
-      AnnotatedDateTime[Zoned] :::
-          [~Zoned] DateTime[+Plain] TimeZoneAnnotation? Annotations?
-          [+Zoned] DateTime[~Plain] TimeZoneAnnotation Annotations?
-
-      AnnotatedDateTimeTimeRequired :::
-          Date DateTimeSeparator Time DateTimeUTCOffset[+Plain]? TimeZoneAnnotation? Annotations?
+      AnnotatedDateTime[Zoned, TimeRequired] :::
+          [~Zoned] DateTime[+Plain, ?TimeRequired] TimeZoneAnnotation? Annotations?
+          [+Zoned] DateTime[~Plain, ?TimeRequired] TimeZoneAnnotation Annotations?
 
       AnnotatedYearMonth :::
           DateSpecYearMonth TimeZoneAnnotation? Annotations?
@@ -1443,22 +1440,22 @@
           Date DateTimeSeparator Time DateTimeUTCOffset[~Plain] TimeZoneAnnotation? Annotations?
 
       TemporalDateTimeString[Zoned] :::
-          AnnotatedDateTime[?Zoned]
+          AnnotatedDateTime[?Zoned, ~TimeRequired]
 
       TemporalDurationString :::
           Duration
 
       TemporalMonthDayString :::
           AnnotatedMonthDay
-          AnnotatedDateTime[~Zoned]
+          AnnotatedDateTime[~Zoned, ~TimeRequired]
 
       TemporalTimeString :::
           AnnotatedTime
-          AnnotatedDateTimeTimeRequired
+          AnnotatedDateTime[~Zoned, +TimeRequired]
 
       TemporalYearMonthString :::
           AnnotatedYearMonth
-          AnnotatedDateTime[~Zoned]
+          AnnotatedDateTime[~Zoned, ~TimeRequired]
     </emu-grammar>
 
     <emu-clause id="sec-temporal-iso8601grammar-static-semantics-isvalidmonthday" type="sdo">
