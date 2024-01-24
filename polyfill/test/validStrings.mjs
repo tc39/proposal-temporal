@@ -225,26 +225,11 @@ const dateYear = withCode(
 const dateMonth = withCode(zeroPaddedInclusive(1, 12, 2), (data, result) => (data.month = +result));
 const dateDay = withCode(zeroPaddedInclusive(1, 31, 2), (data, result) => (data.day = +result));
 
-function saveHour(data, result) {
-  data.hour = +result;
-}
-function saveMinute(data, result) {
-  data.minute = +result;
-}
 function saveSecond(data, result) {
   data.second = +result;
   if (data.second === 60) data.second = 59;
 }
-const timeHour = withCode(hour, saveHour);
-const timeMinute = withCode(minuteSecond, saveMinute);
 const timeSecond = withCode(choice(minuteSecond, '60'), saveSecond);
-const timeFraction = withCode(temporalDecimalFraction, (data, result) => {
-  result = result.slice(1);
-  const fraction = result.padEnd(9, '0');
-  data.millisecond = +fraction.slice(0, 3);
-  data.microsecond = +fraction.slice(3, 6);
-  data.nanosecond = +fraction.slice(6, 9);
-});
 
 function saveOffset(data, result) {
   data.offset = ES.ParseDateTimeUTCOffset(result);
@@ -266,10 +251,9 @@ const utcOffset = (subMinutePrecision) =>
   ]);
 const dateTimeUTCOffset = (z) =>
   z ? choice(utcDesignator, withCode(utcOffset(true), saveOffset)) : withCode(utcOffset(true), saveOffset);
-const timeZoneUTCOffsetName = utcOffset(false);
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
-  choice(timeZoneUTCOffsetName, timeZoneIANAName),
+  choice(utcOffset(false), timeZoneIANAName),
   (data, result) => (data.tzAnnotation = result)
 );
 const timeZoneAnnotation = seq('[', [annotationCriticalFlag], timeZoneIdentifier, ']');
@@ -291,7 +275,26 @@ const annotations = withSyntaxConstraints(oneOrMore(choice(calendarAnnotation, a
   }
 });
 const timeSpec = (extended) =>
-  seq(timeHour, [timeSeparator(extended), timeMinute, [timeSeparator(extended), timeSecond, [timeFraction]]]);
+  seq(
+    withCode(hour, (data, result) => (data.hour = +result)),
+    [
+      timeSeparator(extended),
+      withCode(minuteSecond, (data, result) => (data.minute = +result)),
+      [
+        timeSeparator(extended),
+        timeSecond,
+        [
+          withCode(temporalDecimalFraction, (data, result) => {
+            result = result.slice(1);
+            const fraction = result.padEnd(9, '0');
+            data.millisecond = +fraction.slice(0, 3);
+            data.microsecond = +fraction.slice(3, 6);
+            data.nanosecond = +fraction.slice(6, 9);
+          })
+        ]
+      ]
+    ]
+  );
 const time = choice(timeSpec(true), timeSpec(false));
 
 function validateDayOfMonth(result, { year, month, day }) {
@@ -349,31 +352,6 @@ const annotatedMonthDay = withSyntaxConstraints(
   }
 );
 
-const durationSecondsFraction = withCode(temporalDecimalFraction, (data, result) => {
-  result = result.slice(1);
-  const fraction = result.padEnd(9, '0');
-  data.milliseconds = +fraction.slice(0, 3) * data.factor;
-  data.microseconds = +fraction.slice(3, 6) * data.factor;
-  data.nanoseconds = +fraction.slice(6, 9) * data.factor;
-});
-const durationMinutesFraction = withCode(temporalDecimalFraction, (data, result) => {
-  result = result.slice(1);
-  const ns = +result.padEnd(9, '0') * 60;
-  data.seconds = Math.trunc(ns / 1e9) * data.factor;
-  data.milliseconds = Math.trunc((ns % 1e9) / 1e6) * data.factor;
-  data.microseconds = Math.trunc((ns % 1e6) / 1e3) * data.factor;
-  data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
-});
-const durationHoursFraction = withCode(temporalDecimalFraction, (data, result) => {
-  result = result.slice(1);
-  const ns = +result.padEnd(9, '0') * 3600;
-  data.minutes = Math.trunc(ns / 6e10) * data.factor;
-  data.seconds = Math.trunc((ns % 6e10) / 1e9) * data.factor;
-  data.milliseconds = Math.trunc((ns % 1e9) / 1e6) * data.factor;
-  data.microseconds = Math.trunc((ns % 1e6) / 1e3) * data.factor;
-  data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
-});
-
 const uint32Digits = withSyntaxConstraints(between(1, 10, digit()), (result) => {
   if (+result >= 2 ** 32) throw new SyntaxError('try again for an uint32');
 });
@@ -381,40 +359,77 @@ const timeDurationDigits = (factor) =>
   withSyntaxConstraints(between(1, 16, digit()), (result) => {
     if (!Number.isSafeInteger(+result * factor)) throw new SyntaxError('try again on unsafe integer');
   });
-const durationSeconds = seq(
+const durationSecondsPart = seq(
   withCode(timeDurationDigits(1), (data, result) => (data.seconds = +result * data.factor)),
-  [durationSecondsFraction],
+  [
+    withCode(temporalDecimalFraction, (data, result) => {
+      result = result.slice(1);
+      const fraction = result.padEnd(9, '0');
+      data.milliseconds = +fraction.slice(0, 3) * data.factor;
+      data.microseconds = +fraction.slice(3, 6) * data.factor;
+      data.nanoseconds = +fraction.slice(6, 9) * data.factor;
+    })
+  ],
   secondsDesignator
 );
-const durationMinutes = seq(
+const durationMinutesPart = seq(
   withCode(timeDurationDigits(60), (data, result) => (data.minutes = +result * data.factor)),
-  choice(seq(minutesDesignator, [durationSeconds]), seq(durationMinutesFraction, minutesDesignator))
+  choice(
+    seq(minutesDesignator, [durationSecondsPart]),
+    seq(
+      withCode(temporalDecimalFraction, (data, result) => {
+        result = result.slice(1);
+        const ns = +result.padEnd(9, '0') * 60;
+        data.seconds = Math.trunc(ns / 1e9) * data.factor;
+        data.milliseconds = Math.trunc((ns % 1e9) / 1e6) * data.factor;
+        data.microseconds = Math.trunc((ns % 1e6) / 1e3) * data.factor;
+        data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
+      }),
+      minutesDesignator
+    )
+  )
 );
-const durationHours = seq(
+const durationHoursPart = seq(
   withCode(timeDurationDigits(3600), (data, result) => (data.hours = +result * data.factor)),
-  choice(seq(hoursDesignator, [choice(durationMinutes, durationSeconds)]), seq(durationHoursFraction, hoursDesignator))
+  choice(
+    seq(hoursDesignator, [choice(durationMinutesPart, durationSecondsPart)]),
+    seq(
+      withCode(temporalDecimalFraction, (data, result) => {
+        result = result.slice(1);
+        const ns = +result.padEnd(9, '0') * 3600;
+        data.minutes = Math.trunc(ns / 6e10) * data.factor;
+        data.seconds = Math.trunc((ns % 6e10) / 1e9) * data.factor;
+        data.milliseconds = Math.trunc((ns % 1e9) / 1e6) * data.factor;
+        data.microseconds = Math.trunc((ns % 1e6) / 1e3) * data.factor;
+        data.nanoseconds = Math.trunc(ns % 1e3) * data.factor;
+      }),
+      hoursDesignator
+    )
+  )
 );
-const durationTime = seq(timeDesignator, choice(durationHours, durationMinutes, durationSeconds));
-const durationDays = seq(
+const durationTime = seq(timeDesignator, choice(durationHoursPart, durationMinutesPart, durationSecondsPart));
+const durationDaysPart = seq(
   withCode(timeDurationDigits(86400), (data, result) => (data.days = +result * data.factor)),
   daysDesignator
 );
-const durationWeeks = seq(
+const durationWeeksPart = seq(
   withCode(uint32Digits, (data, result) => (data.weeks = +result * data.factor)),
   weeksDesignator,
-  [durationDays]
+  [durationDaysPart]
 );
-const durationMonths = seq(
+const durationMonthsPart = seq(
   withCode(uint32Digits, (data, result) => (data.months = +result * data.factor)),
   monthsDesignator,
-  [choice(durationWeeks, durationDays)]
+  [choice(durationWeeksPart, durationDaysPart)]
 );
-const durationYears = seq(
+const durationYearsPart = seq(
   withCode(uint32Digits, (data, result) => (data.years = +result * data.factor)),
   yearsDesignator,
-  [choice(durationMonths, durationWeeks, durationDays)]
+  [choice(durationMonthsPart, durationWeeksPart, durationDaysPart)]
 );
-const durationDate = seq(choice(durationYears, durationMonths, durationWeeks, durationDays), [durationTime]);
+const durationDate = seq(choice(durationYearsPart, durationMonthsPart, durationWeeksPart, durationDaysPart), [
+  durationTime
+]);
 const duration = withSyntaxConstraints(
   seq(
     withCode([temporalSign], (data, result) => (data.factor = result === '-' || result === '\u2212' ? -1 : 1)),
