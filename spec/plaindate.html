@@ -778,6 +778,34 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-isodatesurpasses" type="abstract operation">
+      <h1>
+        ISODateSurpasses (
+          _sign_: -1 or 1,
+          _y1_: an integer,
+          _m1_: an integer,
+          _d1_: an integer,
+          _y2_: an integer,
+          _m2_: an integer in the inclusive interval from 1 to 12,
+          _d2_: an integer in the inclusive interval from 1 to ISODaysInMonth(_m2_),
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          The return value indicates whether the date denoted by _y1_, _m1_, _d1_ surpasses that denoted by _y2_, _m2_, _d2_ in the direction denoted by _sign_.
+          The former date does not have to exist.
+          Note that this operation is specific to date difference calculations and is not the same as CompareISODate.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Let _constrained_ be ! RegulateISODate(_y1_, _m1_, _d1_, *"constrain"*).
+        1. Let _comparison_ be CompareISODate(_constrained_.[[Year]], _constrained_.[[Month]], _constrained_.[[Day]], _y2_, _m2_, _d2_).
+        1. If _sign_ &times; _comparison_ is 1, return *true*.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-differenceisodate" type="abstract operation">
       <h1>
         DifferenceISODate (
@@ -798,51 +826,42 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(y1, m1, d1) is true.
-        1. Assert: IsValidISODate(y2, m2, d2) is true.
-        1. If _largestUnit_ is *"year"* or *"month"*, then
-          1. Let _sign_ be -(! CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_)).
-          1. If _sign_ is 0, return ! CreateDateDurationRecord(0, 0, 0, 0).
-          1. Let _start_ be the Record { [[Year]]: _y1_, [[Month]]: _m1_, [[Day]]: _d1_ }.
-          1. Let _end_ be the Record { [[Year]]: _y2_, [[Month]]: _m2_, [[Day]]: _d2_ }.
-          1. Let _years_ be _end_.[[Year]] - _start_.[[Year]].
-          1. Let _mid_ be ! AddISODate(_y1_, _m1_, _d1_, _years_, 0, 0, 0, *"constrain"*).
-          1. Let _midSign_ be -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
-          1. If _midSign_ is 0, then
-            1. If _largestUnit_ is *"year"*, return ! CreateDateDurationRecord(_years_, 0, 0, 0).
-            1. Return ! CreateDateDurationRecord(0, _years_ &times; 12, 0, 0).
-          1. Let _months_ be _end_.[[Month]] - _start_.[[Month]].
-          1. If _midSign_ is not equal to _sign_, then
-            1. Set _years_ to _years_ - _sign_.
-            1. Set _months_ to _months_ + _sign_ &times; 12.
-          1. Set _mid_ to ! AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, 0, *"constrain"*).
-          1. Set _midSign_ to -(! CompareISODate(_mid_.[[Year]], _mid_.[[Month]], _mid_.[[Day]], _y2_, _m2_, _d2_)).
-          1. If _midSign_ is 0, then
-            1. If _largestUnit_ is *"year"*, return ! CreateDateDurationRecord(_years_, _months_, 0, 0).
-            1. Return ! CreateDateDurationRecord(0, _months_ + _years_ &times; 12, 0, 0).
-          1. If _midSign_ is not equal to _sign_, then
-            1. Set _months_ to _months_ - _sign_.
-            1. Set _mid_ to ! AddISODate(_y1_, _m1_, _d1_, _years_, _months_, 0, 0, *"constrain"*).
-          1. If _mid_.[[Month]] = _end_.[[Month]], then
-            1. Assert: _mid_.[[Year]] = _end_.[[Year]].
-            1. Let _days_ be _end_.[[Day]] - _mid_.[[Day]].
-          1. Else,
-            1. If _sign_ &lt; 0, let _days_ be -_mid_.[[Day]] - (ISODaysInMonth(_end_.[[Year]], _end_.[[Month]]) - _end_.[[Day]]).
-          1. Else, let _days_ be _end_.[[Day]] + (ISODaysInMonth(_mid_.[[Year]], _mid_.[[Month]]) - _mid_.[[Day]]).
-          1. If _largestUnit_ is *"month"*, then
-            1. Set _months_ to _months_ + _years_ &times; 12.
-            1. Set _years_ to 0.
-          1. Return ! CreateDateDurationRecord(_years_, _months_, 0, _days_).
-        1. Else,
-          1. Assert: _largestUnit_ is *"day"* or *"week"*.
-          1. Let _epochDays1_ be ISODateToEpochDays(_y1_, _m1_ - 1, _d1_).
-          1. Let _epochDays2_ be ISODateToEpochDays(_y2_, _m2_ - 1, _d2_).
-          1. Let _days_ be _epochDays2_ - _epochDays1_.
-          1. Let _weeks_ be 0.
-          1. If _largestUnit_ is *"week"*, then
-            1. Set _weeks_ to truncate(_days_ / 7).
-            1. Set _days_ to remainder(_days_, 7).
-          1. Return ! CreateDateDurationRecord(0, 0, _weeks_, _days_).
+        1. Assert: IsValidISODate(_y1_, _m1_, _d1_) is *true*.
+        1. Assert: IsValidISODate(_y2_, _m2_, _d2_) is *true*.
+        1. Let _sign_ be -CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
+        1. If _sign_ = 0, return ! CreateDateDurationRecord(0, 0, 0, 0).
+        1. Let _years_ be 0.
+        1. If _largestUnit_ is *"year"*, then
+          1. Let _candidateYears_ be _sign_.
+          1. Repeat, while ISODateSurpasses(_sign_, _y1_ + _candidateYears_, _m1_, _d1_, _y2_, _m2_, _d2_) is *false*,
+            1. Set _years_ to _candidateYears_.
+            1. Set _candidateYears_ to _candidateYears_ + _sign_.
+        1. Let _months_ be 0.
+        1. If _largestUnit_ is *"year"* or _largestUnit_ is *"month"*, then
+          1. Let _candidateMonths_ be _sign_.
+          1. Let _intermediate_ be BalanceISOYearMonth(_y1_ + _years_, _m1_ + _candidateMonths_).
+          1. Repeat, while ISODateSurpasses(_sign_, _intermediate_.[[Year]], _intermediate_.[[Month]], _d1_, _y2_, _m2_, _d2_) is *false*,
+            1. Set _months_ to _candidateMonths_.
+            1. Set _candidateMonths_ to _candidateMonths_ + _sign_.
+            1. Set _intermediate_ to BalanceISOYearMonth(_intermediate_.[[Year]], _intermediate_.[[Month]] + _sign_).
+        1. Set _intermediate_ to BalanceISOYearMonth(_y1_ + _years_, _m1_ + _months_).
+        1. Let _constrained_ be ! RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d1_, *"constrain"*).
+        1. Let _weeks_ be 0.
+        1. If _largestUnit_ is *"week"*, then
+          1. Let _candidateWeeks_ be _sign_.
+          1. Set _intermediate_ to BalanceISODate(_constrained_.[[Year]], _constrained_.[[Month]], _constrained_.[[Day]] + 7 &times; _candidateWeeks_).
+          1. Repeat, while ISODateSurpasses(_sign_, _intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _y2_, _m2_, _d2_) is *false*,
+            1. Set _weeks_ to _candidateWeeks_.
+            1. Set _candidateWeeks_ to _candidateWeeks_ + sign.
+            1. Set _intermediate_ to BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]] + 7 &times; _sign_).
+        1. Let _days_ be 0.
+        1. Let _candidateDays_ be _sign_.
+        1. Set _intermediate_ to BalanceISODate(_constrained_.[[Year]], _constrained_.[[Month]], _constrained_.[[Day]] + 7 &times; _weeks_ + _candidateDays_).
+        1. Repeat, while ISODateSurpasses(_sign_, _intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _y2_, _m2_, _d2_) is *false*,
+          1. Set _days_ to _candidateDays_.
+          1. Set _candidateDays_ to _candidateDays_ + _sign_.
+          1. Set _intermediate_ to BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]] + _sign_).
+        1. Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
       </emu-alg>
     </emu-clause>
 
