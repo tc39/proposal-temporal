@@ -799,8 +799,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _constrained_ be ! RegulateISODate(_y1_, _m1_, _d1_, *"constrain"*).
-        1. Let _comparison_ be CompareISODate(_constrained_.[[Year]], _constrained_.[[Month]], _constrained_.[[Day]], _y2_, _m2_, _d2_).
+        1. Let _comparison_ be CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
         1. If _sign_ &times; _comparison_ is 1, return *true*.
         1. Return *false*.
       </emu-alg>
