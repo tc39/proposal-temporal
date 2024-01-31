@@ -803,6 +803,24 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-iscalendarunit" type="abstract operation">
+    <h1>
+      IsCalendarUnit (
+        _unit_: a String from the Singular column of <emu-xref href="#table-temporal-units"></emu-xref>,
+      ): a Boolean
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It returns whether _unit_ is a Temporal unit for which rounding would require calendar calculations.</dd>
+    </dl>
+    <emu-alg>
+      1. If _unit_ is *"year"*, return *true*.
+      1. If _unit_ is *"month"*, return *true*.
+      1. If _unit_ is *"week"*, return *true*.
+      1. Return *false*.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-maximumtemporaldurationroundingincrement" type="abstract operation">
     <h1>
       MaximumTemporalDurationRoundingIncrement (
