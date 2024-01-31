@@ -10010,6 +10010,9 @@
 	  if (UNITS_DESCENDING.indexOf(unit1) > UNITS_DESCENDING.indexOf(unit2)) return unit2;
 	  return unit1;
 	}
+	function IsCalendarUnit(unit) {
+	  return unit === 'year' || unit === 'month' || unit === 'week';
+	}
 	function PrepareTemporalFields(bag, fields, requiredFields) {
 	  let extraFieldDescriptors = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 	  let duplicateBehaviour = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'throw';
@@ -12155,7 +12158,7 @@
 	      nanoseconds: 0
 	    };
 	  }
-	  if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
+	  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
 	    var _precalculatedPlainDa2;
 	    (_precalculatedPlainDa2 = precalculatedPlainDateTime) !== null && _precalculatedPlainDa2 !== void 0 ? _precalculatedPlainDa2 : precalculatedPlainDateTime = GetPlainDateTimeFor(timeZoneRec, startInstant, 'iso8601');
 	    ({
@@ -12989,7 +12992,7 @@
 	  const largestUnit = LargerOfTwoTemporalUnits(largestUnit1, largestUnit2);
 	  let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
 	  if (!zonedRelativeTo && !plainRelativeTo) {
-	    if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week') {
+	    if (IsCalendarUnit(largestUnit)) {
 	      throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
 	    }
 	    years = months = weeks = 0;
@@ -13036,7 +13039,7 @@
 	    const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 	    const startInstant = GetSlot(zonedRelativeTo, INSTANT);
 	    let startDateTime = precalculatedPlainDateTime;
-	    if (largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day') {
+	    if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
 	      var _startDateTime;
 	      (_startDateTime = startDateTime) !== null && _startDateTime !== void 0 ? _startDateTime : startDateTime = GetPlainDateTimeFor(timeZoneRec, startInstant, calendar);
 	    }
@@ -13578,7 +13581,7 @@
 	function AdjustRoundedDurationDays(years, months, weeks, days, norm, increment, unit, roundingMode, zonedRelativeTo, calendarRec, timeZoneRec, precalculatedPlainDateTime) {
 	  // both dateAdd and dateUntil must be looked up if unit <= hour, any rounding
 	  // is requested, and any of years...weeks != 0
-	  if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day' || unit === 'nanosecond' && increment === 1) {
+	  if (IsCalendarUnit(unit) || unit === 'day' || unit === 'nanosecond' && increment === 1) {
 	    return {
 	      years,
 	      months,
@@ -13635,14 +13638,14 @@
 	  let precalculatedPlainDateTime = arguments.length > 12 && arguments[12] !== undefined ? arguments[12] : undefined;
 	  // dateAdd and dateUntil must be looked up
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-	  if ((unit === 'year' || unit === 'month' || unit === 'week') && !plainRelativeTo) {
+	  if (IsCalendarUnit(unit) && !plainRelativeTo) {
 	    throw new RangeError("A starting point is required for ".concat(unit, "s rounding"));
 	  }
 
 	  // First convert time units up to days, if rounding to days or higher units.
 	  // If rounding relative to a ZonedDateTime, then some days may not be 24h.
 	  let dayLengthNs;
-	  if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
+	  if (IsCalendarUnit(unit) || unit === 'day') {
 	    let deltaDays;
 	    if (zonedRelativeTo) {
 	      const intermediate = MoveRelativeZonedDateTime(zonedRelativeTo, calendarRec, timeZoneRec, years, months, weeks, days, precalculatedPlainDateTime);
@@ -18185,7 +18188,7 @@
 	      return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	    }
 	    let precalculatedPlainDateTime;
-	    const plainDateTimeOrRelativeToWillBeUsed = !roundingGranularityIsNoop || largestUnit === 'year' || largestUnit === 'month' || largestUnit === 'week' || largestUnit === 'day' || calendarUnitsPresent || days !== 0;
+	    const plainDateTimeOrRelativeToWillBeUsed = !roundingGranularityIsNoop || IsCalendarUnit(largestUnit) || largestUnit === 'day' || calendarUnitsPresent || days !== 0;
 	    if (zonedRelativeTo && plainDateTimeOrRelativeToWillBeUsed) {
 	      // Convert a ZonedDateTime relativeTo to PlainDateTime and PlainDate only
 	      // if either is needed in one of the operations below, because the
@@ -18271,7 +18274,7 @@
 	    } = ToRelativeTemporalObject(totalOf);
 	    const unit = GetTemporalUnit(totalOf, 'unit', 'datetime', REQUIRED);
 	    let precalculatedPlainDateTime;
-	    const plainDateTimeOrRelativeToWillBeUsed = unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day' || years !== 0 || months !== 0 || weeks !== 0 || days !== 0;
+	    const plainDateTimeOrRelativeToWillBeUsed = IsCalendarUnit(unit) || unit === 'day' || years !== 0 || months !== 0 || weeks !== 0 || days !== 0;
 	    if (zonedRelativeTo && plainDateTimeOrRelativeToWillBeUsed) {
 	      // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
 	      // of the operations below, because the conversion is user visible
@@ -18304,7 +18307,7 @@
 	      }
 	      const endNs = AddInstant(intermediateNs, norm);
 	      norm = TimeDuration.fromEpochNsDiff(endNs, startNs);
-	      if (unit === 'year' || unit === 'month' || unit === 'week' || unit === 'day') {
+	      if (IsCalendarUnit(unit) || unit === 'day') {
 	        var _startDt;
 	        if (!norm.isZero()) (_startDt = startDt) !== null && _startDt !== void 0 ? _startDt : startDt = GetPlainDateTimeFor(timeZoneRec, start, 'iso8601');
 	        ({
