@@ -8,7 +8,7 @@
   },
   "main": "polyfill/lib/index.mjs",
   "devDependencies": {
-    "@tc39/ecma262-biblio": "=2.1.2663",
+    "@tc39/ecma262-biblio": "=2.1.2678",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "ecmarkup": "^18.1.2",
