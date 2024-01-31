@@ -141,7 +141,7 @@
       <emu-alg>
         1. Let _timeZone_ be the *this* value.
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-ffset-nanoseconds-for~ »).
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
         1. Set _instant_ to ? ToTemporalInstant(_instant_).
         1. Return ? GetOffsetStringFor(_timeZoneRec_, _instant_).
       </emu-alg>
