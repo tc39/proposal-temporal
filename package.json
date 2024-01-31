@@ -11,7 +11,7 @@
     "@tc39/ecma262-biblio": "=2.1.2663",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
-    "ecmarkup": "^18.1.1",
+    "ecmarkup": "^18.1.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.2",
