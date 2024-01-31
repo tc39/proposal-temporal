@@ -1098,7 +1098,7 @@
     </dl>
     <emu-alg>
       1. Let _quotient_ be _x_ / _increment_.
-      1. Let _unsignedRoundingMode_ be GetUnsignedRoundingMode(_roundingMode_, *false*).
+      1. Let _unsignedRoundingMode_ be GetUnsignedRoundingMode(_roundingMode_, ~positive~).
       1. Let _r1_ be the largest integer such that _r1_ &leq; _quotient_.
       1. Let _r2_ be the smallest integer such that _r2_ &gt; _quotient_.
       1. Let _rounded_ be ApplyUnsignedRoundingMode(_quotient_, _r1_, _r2_, _unsignedRoundingMode_).
