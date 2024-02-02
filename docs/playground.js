@@ -6950,6 +6950,7 @@
 
 		var hasSymbols = requireShams$1();
 
+		/** @type {import('.')} */
 		shams = function hasToStringTagShams() {
 			return hasSymbols() && !!Symbol.toStringTag;
 		};
