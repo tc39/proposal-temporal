@@ -735,6 +735,10 @@
           1. If ? HasProperty(_object_, _key_) is *false*, return *false*.
         1. Return *true*.
       </emu-alg>
+      <emu-note>
+        This operation is a convenience which makes it easier to catch bugs in custom time zones.
+        For web compatibility reasons, the list of required property keys will not be extended in future editions, even if the Temporal.TimeZone protocol gains more methods.
+      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-totemporaltimezoneslotvalue" type="abstract operation">
