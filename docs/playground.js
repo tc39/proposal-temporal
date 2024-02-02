@@ -9002,6 +9002,7 @@
 	/* global true */
 
 	const ArrayIncludes$1 = Array.prototype.includes;
+	const ArrayPrototypeMap = Array.prototype.map;
 	const ArrayPrototypePush$3 = Array.prototype.push;
 	const ArrayPrototypeSort$1 = Array.prototype.sort;
 	const ArrayPrototypeFind = Array.prototype.find;
@@ -11189,6 +11190,9 @@
 	  const offsetBefore = GetOffsetNanosecondsFor(timeZoneRec, dayBefore);
 	  const offsetAfter = GetOffsetNanosecondsFor(timeZoneRec, dayAfter);
 	  const nanoseconds = offsetAfter - offsetBefore;
+	  if (MathAbs$2(nanoseconds) > DAY_NANOS) {
+	    throw new RangeError('bad return from getOffsetNanosecondsFor: UTC offset shift longer than 24 hours');
+	  }
 	  switch (disambiguation) {
 	    case 'earlier':
 	      {
@@ -11226,6 +11230,15 @@
 	      throw new TypeError('bad return from getPossibleInstantsFor');
 	    }
 	    Call$3(ArrayPrototypePush$3, result, [instant]);
+	  }
+	  const numResults = result.length;
+	  if (numResults > 1) {
+	    const mapped = Call$3(ArrayPrototypeMap, result, [i => GetSlot(i, EPOCHNANOSECONDS)]);
+	    const min = bigInt.min(...mapped);
+	    const max = bigInt.max(...mapped);
+	    if (bigInt(max).subtract(min).abs().greater(DAY_NANOS)) {
+	      throw new RangeError('bad return from getPossibleInstantsFor: UTC offset shift longer than 24 hours');
+	    }
 	  }
 	  return result;
 	}
@@ -11997,28 +12010,32 @@
 	  // back inside the period where it belongs. Note that this case only can
 	  // happen for positive durations because the only direction that
 	  // `disambiguation: 'compatible'` can change clock time is forwards.
-	  if (sign === 1) {
-	    while (days > 0 && relativeResult.epochNs.greater(endNs)) {
-	      days--;
-	      relativeResult = AddDaysToZonedDateTime(start, dtStart, timeZoneRec, calendar, days);
-	      // may do disambiguation
+	  if (sign === 1 && days > 0 && relativeResult.epochNs.greater(endNs)) {
+	    days--;
+	    relativeResult = AddDaysToZonedDateTime(start, dtStart, timeZoneRec, calendar, days);
+	    // may do disambiguation
+	    if (days > 0 && relativeResult.epochNs.greater(endNs)) {
+	      throw new RangeError('inconsistent result from custom time zone getInstantFor()');
 	    }
 	  }
 	  norm = TimeDuration.fromEpochNsDiff(endNs, relativeResult.epochNs);
-	  let isOverflow = false;
-	  let dayLengthNs;
-	  do {
-	    // calculate length of the next day (day that contains the time remainder)
-	    const oneDayFarther = AddDaysToZonedDateTime(relativeResult.instant, relativeResult.dateTime, timeZoneRec, calendar, sign);
+
+	  // calculate length of the next day (day that contains the time remainder)
+	  let oneDayFarther = AddDaysToZonedDateTime(relativeResult.instant, relativeResult.dateTime, timeZoneRec, calendar, sign);
+	  let dayLengthNs = TimeDuration.fromEpochNsDiff(oneDayFarther.epochNs, relativeResult.epochNs);
+	  const oneDayLess = norm.subtract(dayLengthNs);
+	  let isOverflow = oneDayLess.sign() * sign >= 0;
+	  if (isOverflow) {
+	    norm = oneDayLess;
+	    relativeResult = oneDayFarther;
+	    days += sign;
+
+	    // ensure there was no more overflow
+	    oneDayFarther = AddDaysToZonedDateTime(relativeResult.instant, relativeResult.dateTime, timeZoneRec, calendar, sign);
 	    dayLengthNs = TimeDuration.fromEpochNsDiff(oneDayFarther.epochNs, relativeResult.epochNs);
-	    const oneDayLess = norm.subtract(dayLengthNs);
-	    isOverflow = oneDayLess.sign() * sign >= 0;
-	    if (isOverflow) {
-	      norm = oneDayLess;
-	      relativeResult = oneDayFarther;
-	      days += sign;
-	    }
-	  } while (isOverflow);
+	    isOverflow = norm.subtract(dayLengthNs).sign() * sign >= 0;
+	    if (isOverflow) throw new RangeError('inconsistent result from custom time zone getPossibleInstantsFor()');
+	  }
 	  if (days !== 0 && MathSign(days) != sign) {
 	    throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
 	  }
