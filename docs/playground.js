@@ -1488,6 +1488,27 @@
 	var BigIntegerExports = BigInteger.exports;
 	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
+	/** @type {import('.')} */
+	var esErrors = Error;
+
+	/** @type {import('./eval')} */
+	var _eval = EvalError;
+
+	/** @type {import('./range')} */
+	var range = RangeError;
+
+	/** @type {import('./ref')} */
+	var ref = ReferenceError;
+
+	/** @type {import('./syntax')} */
+	var syntax = SyntaxError;
+
+	/** @type {import('./type')} */
+	var type = TypeError;
+
+	/** @type {import('./uri')} */
+	var uri = URIError;
+
 	var shams$1;
 	var hasRequiredShams$1;
 
@@ -1674,9 +1695,15 @@
 
 	var undefined$1;
 
-	var $SyntaxError$3 = SyntaxError;
+	var $Error = esErrors;
+	var $EvalError = _eval;
+	var $RangeError$1 = range;
+	var $ReferenceError = ref;
+	var $SyntaxError$3 = syntax;
+	var $TypeError$f = type;
+	var $URIError = uri;
+
 	var $Function = Function;
-	var $TypeError$f = TypeError;
 
 	// eslint-disable-next-line consistent-return
 	var getEvalledConstructor = function (expressionSyntax) {
@@ -1728,6 +1755,7 @@
 	var TypedArray = typeof Uint8Array === 'undefined' || !getProto ? undefined$1 : getProto(Uint8Array);
 
 	var INTRINSICS$1 = {
+		__proto__: null,
 		'%AggregateError%': typeof AggregateError === 'undefined' ? undefined$1 : AggregateError,
 		'%Array%': Array,
 		'%ArrayBuffer%': typeof ArrayBuffer === 'undefined' ? undefined$1 : ArrayBuffer,
@@ -1748,9 +1776,9 @@
 		'%decodeURIComponent%': decodeURIComponent,
 		'%encodeURI%': encodeURI,
 		'%encodeURIComponent%': encodeURIComponent,
-		'%Error%': Error,
+		'%Error%': $Error,
 		'%eval%': eval, // eslint-disable-line no-eval
-		'%EvalError%': EvalError,
+		'%EvalError%': $EvalError,
 		'%Float32Array%': typeof Float32Array === 'undefined' ? undefined$1 : Float32Array,
 		'%Float64Array%': typeof Float64Array === 'undefined' ? undefined$1 : Float64Array,
 		'%FinalizationRegistry%': typeof FinalizationRegistry === 'undefined' ? undefined$1 : FinalizationRegistry,
@@ -1772,8 +1800,8 @@
 		'%parseInt%': parseInt,
 		'%Promise%': typeof Promise === 'undefined' ? undefined$1 : Promise,
 		'%Proxy%': typeof Proxy === 'undefined' ? undefined$1 : Proxy,
-		'%RangeError%': RangeError,
-		'%ReferenceError%': ReferenceError,
+		'%RangeError%': $RangeError$1,
+		'%ReferenceError%': $ReferenceError,
 		'%Reflect%': typeof Reflect === 'undefined' ? undefined$1 : Reflect,
 		'%RegExp%': RegExp,
 		'%Set%': typeof Set === 'undefined' ? undefined$1 : Set,
@@ -1790,7 +1818,7 @@
 		'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
 		'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
 		'%Uint32Array%': typeof Uint32Array === 'undefined' ? undefined$1 : Uint32Array,
-		'%URIError%': URIError,
+		'%URIError%': $URIError,
 		'%WeakMap%': typeof WeakMap === 'undefined' ? undefined$1 : WeakMap,
 		'%WeakRef%': typeof WeakRef === 'undefined' ? undefined$1 : WeakRef,
 		'%WeakSet%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet
@@ -1832,6 +1860,7 @@
 	};
 
 	var LEGACY_ALIASES = {
+		__proto__: null,
 		'%ArrayBufferPrototype%': ['ArrayBuffer', 'prototype'],
 		'%ArrayPrototype%': ['Array', 'prototype'],
 		'%ArrayProto_entries%': ['Array', 'prototype', 'entries'],
@@ -2085,8 +2114,8 @@
 		}
 	}
 
-	var $SyntaxError$2 = GetIntrinsic$n('%SyntaxError%');
-	var $TypeError$e = GetIntrinsic$n('%TypeError%');
+	var $SyntaxError$2 = syntax;
+	var $TypeError$e = type;
 
 	var gopd = gopd$1;
 
@@ -2143,7 +2172,7 @@
 	var hasDescriptors = hasPropertyDescriptors_1();
 	var gOPD = gopd$1;
 
-	var $TypeError$d = GetIntrinsic$m('%TypeError%');
+	var $TypeError$d = type;
 	var $floor$2 = GetIntrinsic$m('%Math.floor%');
 
 	/** @typedef {(...args: unknown[]) => unknown} Func */
@@ -2187,7 +2216,7 @@
 		var GetIntrinsic = getIntrinsic;
 		var setFunctionLength$1 = setFunctionLength;
 
-		var $TypeError = GetIntrinsic('%TypeError%');
+		var $TypeError = type;
 		var $apply = GetIntrinsic('%Function.prototype.apply%');
 		var $call = GetIntrinsic('%Function.prototype.call%');
 		var $reflectApply = GetIntrinsic('%Reflect.apply%', true) || bind.call($call, $apply);
@@ -5646,7 +5675,7 @@
 		var callBound = callBound$2;
 		var inspect = requireObjectInspect();
 
-		var $TypeError = GetIntrinsic('%TypeError%');
+		var $TypeError = type;
 		var $WeakMap = GetIntrinsic('%WeakMap%', true);
 		var $Map = GetIntrinsic('%Map%', true);
 
@@ -5658,13 +5687,10 @@
 		var $mapHas = callBound('Map.prototype.has', true);
 
 		/*
-		 * This function traverses the list returning the node corresponding to the
-		 * given key.
-		 *
-		 * That node is also moved to the head of the list, so that if it's accessed
-		 * again we don't need to traverse the whole list. By doing so, all the recently
-		 * used nodes can be accessed relatively quickly.
-		 */
+		* This function traverses the list returning the node corresponding to the given key.
+		*
+		* That node is also moved to the head of the list, so that if it's accessed again we don't need to traverse the whole list. By doing so, all the recently used nodes can be accessed relatively quickly.
+		*/
 		var listGetNode = function (list, key) { // eslint-disable-line consistent-return
 			for (var prev = list, curr; (curr = prev.next) !== null; prev = curr) {
 				if (curr.key === key) {
@@ -5751,11 +5777,7 @@
 						$mapSet($m, key, value);
 					} else {
 						if (!$o) {
-							/*
-							 * Initialize the linked list as an empty node, so that we don't have
-							 * to special-case handling of the first node: we can always refer to
-							 * it as (previous node).next, instead of something like (list).head
-							 */
+							// Initialize the linked list as an empty node, so that we don't have to special-case handling of the first node: we can always refer to it as (previous node).next, instead of something like (list).head
 							$o = { key: {}, next: null };
 						}
 						listSet($o, key, value);
@@ -5774,11 +5796,10 @@
 		if (hasRequiredInternalSlot) return internalSlot;
 		hasRequiredInternalSlot = 1;
 
-		var GetIntrinsic = getIntrinsic;
 		var hasOwn = requireHasown();
 		var channel = requireSideChannel()();
 
-		var $TypeError = GetIntrinsic('%TypeError%');
+		var $TypeError = type;
 
 		var SLOT = {
 			assert: function (O, slot) {
@@ -7784,11 +7805,10 @@
 		hasRequiredSafeRegexTest = 1;
 
 		var callBound = callBound$2;
-		var GetIntrinsic = getIntrinsic;
 		var isRegex = requireIsRegex();
 
 		var $exec = callBound('RegExp.prototype.exec');
-		var $TypeError = GetIntrinsic('%TypeError%');
+		var $TypeError = type;
 
 		safeRegexTest = function regexTester(regex) {
 			if (!isRegex(regex)) {
@@ -12451,8 +12471,7 @@
 	  }
 	}
 	function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
-	  const constrained = ConstrainISODate(y1, m1, d1);
-	  const cmp = CompareISODate(constrained.year, constrained.month, constrained.day, y2, m2, d2);
+	  const cmp = CompareISODate(y1, m1, d1, y2, m2, d2);
 	  return sign * cmp === 1;
 	}
 	function CombineDateAndNormalizedTimeDuration(y, m, w, d, norm) {
