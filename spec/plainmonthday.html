@@ -146,9 +146,7 @@
       <emu-alg>
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
-        1. If Type(_temporalMonthDayLike_) is not Object, then
-          1. Throw a *TypeError* exception.
-        1. Perform ? RejectTemporalLikeObject(_temporalMonthDayLike_).
+        1. If ? IsPartialTemporalObject(_temporalMonthDayLike_) is *false*, throw a *TypeError* exception.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_monthDay_.[[Calendar]], « ~fields~, ~merge-fields~, ~month-day-from-fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
