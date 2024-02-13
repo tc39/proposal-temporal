@@ -1460,9 +1460,10 @@
             1. Throw a *RangeError* exception.
         1. If _days_ &lt; 0 and _sign_ = 1, throw a *RangeError* exception.
         1. If _days_ &gt; 0 and _sign_ = -1, throw a *RangeError* exception.
-        1. If NormalizedTimeDurationSign(_norm_) = -1, then
-          1. Assert: _sign_ is -1.
-        1. If NormalizedTimeDurationSign(_norm_) = 1 and _sign_ = -1, throw a *RangeError* exception.
+        1. If _sign_ = -1, then
+          1. If NormalizedTimeDurationSign(_norm_) = 1, throw a *RangeError* exception.
+        1. Else,
+          1. Assert: NormalizedTimeDurationSign(_norm_) &geq; 0.
         1. Assert: CompareNormalizedTimeDuration(NormalizedTimeDurationAbs(_norm_), NormalizedTimeDurationAbs(_dayLengthNs_)) = -1.
         1. Let _dayLength_ be abs(ℝ(_dayLengthNs_.[[TotalNanoseconds]])).
         1. If _dayLength_ &ge; 2<sup>53</sup>, throw a *RangeError* exception.
