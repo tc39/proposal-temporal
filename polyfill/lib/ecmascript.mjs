@@ -23,6 +23,7 @@ const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
 const ObjectEntries = Object.entries;
 const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+const SetPrototypeHas = Set.prototype.has;
 const StringCtor = String;
 const StringFromCharCode = String.fromCharCode;
 const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
@@ -140,6 +141,34 @@ const BUILTIN_CALENDAR_IDS = [
   'japanese',
   'gregory'
 ];
+
+const ICU_LEGACY_TIME_ZONE_IDS = new Set([
+  'ACT',
+  'AET',
+  'AGT',
+  'ART',
+  'AST',
+  'BET',
+  'BST',
+  'CAT',
+  'CNT',
+  'CST',
+  'CTT',
+  'EAT',
+  'ECT',
+  'IET',
+  'IST',
+  'JST',
+  'MIT',
+  'NET',
+  'NST',
+  'PLT',
+  'PNT',
+  'PRT',
+  'PST',
+  'SST',
+  'VST'
+]);
 
 export function ToIntegerWithTruncation(value) {
   const number = ToNumber(value);
@@ -2742,6 +2771,13 @@ export function GetAvailableNamedTimeZoneIdentifier(identifier) {
     primaryIdentifier = formatter.resolvedOptions().timeZone;
   } catch {
     return undefined;
+  }
+
+  // Some legacy identifiers are aliases in ICU but not legal IANA identifiers.
+  // Reject them even if the implementation's Intl supports them, as they are
+  // not present in the IANA time zone database.
+  if (Call(SetPrototypeHas, ICU_LEGACY_TIME_ZONE_IDS, [identifier])) {
+    throw new RangeError(`${identifier} is a legacy time zone identifier from ICU. Use ${primaryIdentifier} instead`);
   }
 
   // The identifier is an alias (a deprecated identifier that's a synonym for a
