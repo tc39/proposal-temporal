@@ -3354,11 +3354,12 @@ export function NormalizedTimeDurationToDays(norm, zonedRelativeTo, timeZoneRec,
   if (days !== 0 && MathSign(days) != sign) {
     throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
   }
-  if (!norm.isZero() && norm.sign() !== sign) {
-    if (norm.sign() === -1 && sign === 1) {
-      throw new Error('assert not reached');
+  if (sign === -1) {
+    if (norm.sign() === 1) {
+      throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
     }
-    throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
+  } else if (norm.sign() === -1) {
+    throw new Error('assert not reached');
   }
   if (norm.abs().cmp(dayLengthNs.abs()) >= 0) {
     throw new Error('assert not reached');
