@@ -228,9 +228,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. If Type(_temporalYearMonthLike_) is not Object, then
-          1. Throw a *TypeError* exception.
-        1. Perform ? RejectTemporalLikeObject(_temporalYearMonthLike_).
+        1. If ? IsPartialTemporalObject(_temporalYearMonthLike_) is *false*, throw a *TypeError* exception.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~fields~, ~merge-fields~, ~year-month-from-fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"month"*, *"monthCode"*, *"year"* »).
