@@ -1760,12 +1760,12 @@
           1. Let _yearsMonthsDuration_ be ! CreateTemporalDuration(_years_, _months_, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _later_ be ? CalendarDateAdd(_calendarRec_, _plainRelativeTo_, _yearsMonthsDuration_).
           1. Let _yearsMonthsInDays_ be DaysUntil(_plainRelativeTo_, _later_).
-          1. Return ! CreateDateDurationRecord(0, 0, _weeks_, _days_ + _yearsMonthsInDays_).
+          1. Return ? CreateDateDurationRecord(0, 0, _weeks_, _days_ + _yearsMonthsInDays_).
         1. NOTE: _largestUnit_ can be any time unit as well as *"day"*.
         1. Let _yearsMonthsWeeksDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
         1. Let _later_ be ? CalendarDateAdd(_calendarRec_, _plainRelativeTo_, _yearsMonthsWeeksDuration_).
         1. Let _yearsMonthsWeeksInDays_ be DaysUntil(_plainRelativeTo_, _later_).
-        1. Return ! CreateDateDurationRecord(0, 0, 0, _days_ + _yearsMonthsWeeksInDays_).
+        1. Return ? CreateDateDurationRecord(0, 0, 0, _days_ + _yearsMonthsWeeksInDays_).
       </emu-alg>
     </emu-clause>
 
