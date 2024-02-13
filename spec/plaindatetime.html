@@ -1241,7 +1241,7 @@
           _ns2_: an integer between 0 and 999 inclusive,
           _calendarRec_: a Calendar Methods Record,
           _largestUnit_: a String,
-          _options_: an Object,
+          _options_: an ordinary Object for which the value of the [[Prototype]] internal slot is *null* and every property is a data property,
         ): either a normal completion containing a Normalized Duration Record, or a throw completion
       </h1>
       <dl class="header">
@@ -1266,7 +1266,7 @@
         1. Let _date1_ be ! CreateTemporalDate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]], _calendarRec_.[[Receiver]]).
         1. Let _date2_ be ! CreateTemporalDate(_y2_, _mon2_, _d2_, _calendarRec_.[[Receiver]]).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
-        1. Let _untilOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
+        1. Let _untilOptions_ be ! SnapshotOwnProperties(_options_, *null*).
         1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, _dateLargestUnit_).
         1. Let _dateDifference_ be ? DifferenceDate(_calendarRec_, _date1_, _date2_, _untilOptions_).
         1. Return ? CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], _timeDuration_).
