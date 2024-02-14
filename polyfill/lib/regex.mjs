@@ -21,21 +21,19 @@ export const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9
 export const zoneddatetime = new RegExp(
   [
     `^${datesplit.source}`,
-    `(?:(?:T|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`,
+    `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`,
     `(?:\\[!?(${timeZoneID.source})\\])?`,
     `((?:${annotation.source})*)$`
-  ].join(''),
-  'i'
+  ].join('')
 );
 
 export const time = new RegExp(
   [
-    `^T?${timesplit.source}`,
+    `^[tT]?${timesplit.source}`,
     `(?:${offsetpart.source})?`,
     `(?:\\[!?${timeZoneID.source}\\])?`,
     `((?:${annotation.source})*)$`
-  ].join(''),
-  'i'
+  ].join('')
 );
 
 // The short forms of YearMonth and MonthDay are only for the ISO calendar, but
