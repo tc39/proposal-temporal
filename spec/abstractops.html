@@ -1143,6 +1143,8 @@
         Any number of conforming <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended#section-3.1">suffixes in square brackets</a> are allowed.
         However, the only recognized suffixes are time zone and <a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP 47 calendar</a>.
         Others are ignored, unless they are prefixed with `!`, in which case they are rejected.
+        Note that the suffix keys, although they look similar, are not the same as keys in <a href="https://www.rfc-editor.org/rfc/rfc6067.html">RFC 6067</a>.
+        In particular, <a href="https://datatracker.ietf.org/doc/html/draft-ietf-sedate-datetime-extended#section-3.1-4">keys are lowercase-only</a>.
       </li>
       <li>A space may be used to separate the date and time in a combined date / time representation, but not in a duration (e.g., *"1970-01-01 00:00Z"* is valid but *"P1D 1H"* is not).</li>
       <li>Alphabetic designators may be in lower or upper case (e.g., *"1970-01-01t00:00Z"* and *"1970-01-01T00:00z"* and *"pT1m"* are valid).</li>
