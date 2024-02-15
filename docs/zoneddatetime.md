@@ -882,11 +882,9 @@ The `duration` argument is an object with properties denoting a duration, such a
 
 Addition and subtraction are performed according to rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545):
 
-- Add/subtract the date portion of a duration using calendar days, like (like `Temporal.PlainDateTime`).
+- Add/subtract the date portion of a duration using calendar arithmetic (like `Temporal.PlainDateTime`).
   The result will automatically adjust for Daylight Saving Time using the rules of this instance's `timeZone` field.
-- Add/subtract the time portion of a duration using real-world time, like (like `Temporal.Instant`).
-- Addition (or subtraction of a negative duration) is performed in order from largest unit to smallest unit.
-- Subtraction (or addition of a negative duration) is performed in order from smallest unit to largest unit.
+- Add/subtract the time portion of a duration using real-world time (like `Temporal.Instant`).
 - If a result is ambiguous or invalid due to a time zone offset transition, the later of the two possible instants will be used for time-skipped transitions and the earlier of the two possible instants will be used for time-repeated transitions.
   This behavior corresponds to the default `disambiguation: 'compatible'` option used in `from` and used by legacy `Date` and moment.js.
 
@@ -945,24 +943,7 @@ This method subtracts a `duration` from `zonedDateTime`.
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object. Subtracting a negative duration like `{ hours: -5, minutes: -30 }` is equivalent to adding the absolute value of that duration.
 
-Addition and subtraction are performed according to rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545):
-
-- Add/subtract the date portion of a duration using calendar days, like (like `Temporal.PlainDateTime`).
-  The result will automatically adjust for Daylight Saving Time using the rules of this instance's `timeZone` field.
-- Add/subtract the time portion of a duration using real-world time, like (like `Temporal.Instant`).
-- Addition (or subtraction of a negative duration) is performed in order from largest unit to smallest unit.
-- Subtraction (or addition of a negative duration) is performed in order from smallest unit to largest unit.
-- If a result is ambiguous or invalid due to a time zone offset transition, the later of the two possible instants will be used for time-skipped transitions and the earlier of the two possible instants will be used for time-repeated transitions.
-  This behavior corresponds to the default `disambiguation: 'compatible'` option used in `from` and used by legacy `Date` and moment.js.
-
-These rules make arithmetic with `Temporal.ZonedDateTime` "DST-safe", which means that the results most closely match the expectations of both real-world users and implementers of other standards-compliant calendar applications. These expectations include:
-
-- Adding or subtracting days should keep clock time consistent across DST transitions.
-  For example, if you have an appointment on Saturday at 1:00PM and you ask to reschedule it 1 day later, you would expect the reschedule appointment to still be at 1:00PM, even if there was a DST transition overnight.
-- Adding or subtracting the time portion of a duration should ignore DST transitions.
-  For example, a friend you've asked to meet in in 2 hours will be annoyed if you show up 1 hour or 3 hours later.
-- There should be a consistent and relatively-unsurprising order of operations.
-- If results are at or near a DST transition, ambiguities should be handled automatically (no crashing) and deterministically.
+Addition and subtraction are performed according to rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545), as described above in `add()`.
 
 Some arithmetic operations may be ambiguous, e.g. because months have different lengths.
 For example, subtracting one month from October 31 would result in September 31, which doesn't exist.
