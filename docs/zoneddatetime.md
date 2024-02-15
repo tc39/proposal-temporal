@@ -643,32 +643,6 @@ Temporal.ZonedDateTime.from('2020-11-01T12:00-08:00[America/Los_Angeles]').hours
 ```
 <!-- prettier-ignore-end -->
 
-### zonedDateTime.**startOfDay** : Temporal.ZonedDateTime
-
-The `startOfDay` read-only property returns a new `Temporal.ZonedDateTime` instance representing the earliest valid local clock time during the current calendar day and time zone of `zonedDateTime`.
-
-The local time of the result is almost always `00:00`, but in rare cases it could be a later time e.g. if DST starts at midnight in a time zone. For example:
-
-```javascript
-const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
-zdt.startOfDay(); // => 2015-10-18T01:00:00-02:00[America/Sao_Paulo]
-```
-
-Also note that some calendar systems (e.g. `ethiopic`) may not start days at `00:00`.
-
-Usage example:
-
-<!-- prettier-ignore-start -->
-```javascript
-zdt = Temporal.ZonedDateTime.from('2020-01-01T12:00-08:00[America/Los_Angeles]').startOfDay();
-  // => 2020-01-01T00:00:00-08:00[America/Los_Angeles]
-zdt = Temporal.ZonedDateTime.from('2018-11-04T12:00-02:00[America/Sao_Paulo]').startOfDay();
-  // => 2018-11-04T01:00:00-02:00[America/Sao_Paulo]
-  // Note the 1:00AM start time because the first clock hour was skipped due to DST transition
-  // that started at midnight.
-```
-<!-- prettier-ignore-end -->
-
 ### zonedDateTime.**offsetNanoseconds** : number
 
 The `offsetNanoseconds` read-only property is the offset (in nanoseconds) relative to UTC of `zonedDateTime`.
@@ -1217,6 +1191,31 @@ zdt.round({ roundingIncrement: 30, smallestUnit: 'minute' });
 // Round to the same increment but round down instead:
 zdt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor' });
   // => 1995-12-07T03:00:00-08:00[America/Los_Angeles]
+```
+<!-- prettier-ignore-end -->
+
+### zonedDateTime.**startOfDay**() : Temporal.ZonedDateTime
+
+**Returns:** A new `Temporal.ZonedDateTime` instance representing the earliest valid local clock time during the current calendar day and time zone of `zonedDateTime`.
+
+This method returns a new `Temporal.ZonedDateTime` indicating the start of the day.
+The local time of the result is almost always `00:00`, but in rare cases it could be a later time e.g. if DST starts at midnight in a time zone. For example:
+
+```javascript
+const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
+zdt.startOfDay(); // => 2015-10-18T01:00:00-02:00[America/Sao_Paulo]
+```
+
+Usage example:
+
+<!-- prettier-ignore-start -->
+```javascript
+zdt = Temporal.ZonedDateTime.from('2020-01-01T12:00-08:00[America/Los_Angeles]').startOfDay();
+  // => 2020-01-01T00:00:00-08:00[America/Los_Angeles]
+zdt = Temporal.ZonedDateTime.from('2018-11-04T12:00-02:00[America/Sao_Paulo]').startOfDay();
+  // => 2018-11-04T01:00:00-02:00[America/Sao_Paulo]
+  // Note the 1:00AM start time because the first clock hour was skipped due to DST transition
+  // that started at midnight.
 ```
 <!-- prettier-ignore-end -->
 
