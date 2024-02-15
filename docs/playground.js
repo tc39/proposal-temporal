@@ -8636,8 +8636,8 @@
 	const offsetpart = new RegExp("([zZ])|".concat(offset.source, "?"));
 	const offsetIdentifier = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
 	const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
-	const zoneddatetime = new RegExp(["^".concat(datesplit.source), "(?:(?:T|\\s+)".concat(timesplit.source, "(?:").concat(offsetpart.source, ")?)?"), "(?:\\[!?(".concat(timeZoneID.source, ")\\])?"), "((?:".concat(annotation.source, ")*)$")].join(''), 'i');
-	const time = new RegExp(["^T?".concat(timesplit.source), "(?:".concat(offsetpart.source, ")?"), "(?:\\[!?".concat(timeZoneID.source, "\\])?"), "((?:".concat(annotation.source, ")*)$")].join(''), 'i');
+	const zoneddatetime = new RegExp(["^".concat(datesplit.source), "(?:(?:[tT]|\\s+)".concat(timesplit.source, "(?:").concat(offsetpart.source, ")?)?"), "(?:\\[!?(".concat(timeZoneID.source, ")\\])?"), "((?:".concat(annotation.source, ")*)$")].join(''));
+	const time = new RegExp(["^[tT]?".concat(timesplit.source), "(?:".concat(offsetpart.source, ")?"), "(?:\\[!?".concat(timeZoneID.source, "\\])?"), "((?:".concat(annotation.source, ")*)$")].join(''));
 
 	// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
 	// annotations are still allowed, and will throw if the calendar annotation is
@@ -8681,6 +8681,7 @@
 	const ObjectDefineProperty = Object.defineProperty;
 	const ObjectEntries$1 = Object.entries;
 	const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+	const SetPrototypeHas$1 = Set.prototype.has;
 	const StringCtor = String;
 	const StringFromCharCode = String.fromCharCode;
 	const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
@@ -8708,6 +8709,7 @@
 	const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
 	const BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
+	const ICU_LEGACY_TIME_ZONE_IDS = new Set(['ACT', 'AET', 'AGT', 'ART', 'AST', 'BET', 'BST', 'CAT', 'CNT', 'CST', 'CTT', 'EAT', 'ECT', 'IET', 'IST', 'JST', 'MIT', 'NET', 'NST', 'PLT', 'PNT', 'PRT', 'PST', 'SST', 'VST']);
 	function ToIntegerWithTruncation(value) {
 	  const number = ToNumber$2(value);
 	  if (number === 0) return 0;
@@ -11129,6 +11131,13 @@
 	    return undefined;
 	  }
 
+	  // Some legacy identifiers are aliases in ICU but not legal IANA identifiers.
+	  // Reject them even if the implementation's Intl supports them, as they are
+	  // not present in the IANA time zone database.
+	  if (Call$4(SetPrototypeHas$1, ICU_LEGACY_TIME_ZONE_IDS, [identifier])) {
+	    throw new RangeError("".concat(identifier, " is a legacy time zone identifier from ICU. Use ").concat(primaryIdentifier, " instead"));
+	  }
+
 	  // The identifier is an alias (a deprecated identifier that's a synonym for a
 	  // primary identifier), so we need to case-normalize the identifier to match
 	  // the IANA TZDB, e.g. america/new_york => America/New_York. There's no
@@ -11696,11 +11705,12 @@
 	  if (days !== 0 && MathSign(days) != sign) {
 	    throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
 	  }
-	  if (!norm.isZero() && norm.sign() !== sign) {
-	    if (norm.sign() === -1 && sign === 1) {
-	      throw new Error('assert not reached');
+	  if (sign === -1) {
+	    if (norm.sign() === 1) {
+	      throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
 	    }
-	    throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
+	  } else if (norm.sign() === -1) {
+	    throw new Error('assert not reached');
 	  }
 	  if (norm.abs().cmp(dayLengthNs.abs()) >= 0) {
 	    throw new Error('assert not reached');
@@ -12216,7 +12226,7 @@
 	  const date1 = CreateTemporalDate(y1, mon1, d1, calendarRec.receiver);
 	  const date2 = CreateTemporalDate(y2, mon2, d2, calendarRec.receiver);
 	  const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-	  const untilOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
+	  const untilOptions = SnapshotOwnProperties(options, null);
 	  untilOptions.largestUnit = dateLargestUnit;
 	  const untilResult = DifferenceDate(calendarRec, date1, date2, untilOptions);
 	  const years = GetSlot(untilResult, YEARS);
