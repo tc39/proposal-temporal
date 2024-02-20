@@ -225,43 +225,43 @@
             1. If _calendarRec_.[[DateAdd]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~date-from-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
-            1. Set _calendarRec_.[[DateFromFields]] to %Temporal.TimeZone.prototype.dateFromFields%.
+            1. Set _calendarRec_.[[DateFromFields]] to %Temporal.Calendar.prototype.dateFromFields%.
           1. Else,
             1. Set _calendarRec_.[[DateFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateFromFields"*).
             1. If _calendarRec_.[[DateFromFields]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~date-until~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
-            1. Set _calendarRec_.[[DateUntil]] to %Temporal.TimeZone.prototype.dateUntil%.
+            1. Set _calendarRec_.[[DateUntil]] to %Temporal.Calendar.prototype.dateUntil%.
           1. Else,
             1. Set _calendarRec_.[[DateUntil]] to ? GetMethod(_calendarRec_.[[Receiver]], *"dateUntil"*).
             1. If _calendarRec_.[[DateUntil]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~day~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
-            1. Set _calendarRec_.[[Day]] to %Temporal.TimeZone.prototype.day%.
+            1. Set _calendarRec_.[[Day]] to %Temporal.Calendar.prototype.day%.
           1. Else,
             1. Set _calendarRec_.[[Day]] to ? GetMethod(_calendarRec_.[[Receiver]], *"day"*).
             1. If _calendarRec_.[[Day]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
-            1. Set _calendarRec_.[[Fields]] to %Temporal.TimeZone.prototype.fields%.
+            1. Set _calendarRec_.[[Fields]] to %Temporal.Calendar.prototype.fields%.
           1. Else,
             1. Set _calendarRec_.[[Fields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"fields"*).
             1. If _calendarRec_.[[Fields]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~merge-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
-            1. Set _calendarRec_.[[MergeFields]] to %Temporal.TimeZone.prototype.mergeFields%.
+            1. Set _calendarRec_.[[MergeFields]] to %Temporal.Calendar.prototype.mergeFields%.
           1. Else,
             1. Set _calendarRec_.[[MergeFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"mergeFields"*).
             1. If _calendarRec_.[[MergeFields]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~month-day-from-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
-            1. Set _calendarRec_.[[MonthDayFromFields]] to %Temporal.TimeZone.prototype.monthDayFromFields%.
+            1. Set _calendarRec_.[[MonthDayFromFields]] to %Temporal.Calendar.prototype.monthDayFromFields%.
           1. Else,
             1. Set _calendarRec_.[[MonthDayFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"monthDayFromFields"*).
             1. If _calendarRec_.[[MonthDayFromFields]] is *undefined*, throw a *TypeError* exception.
         1. Else if _methodName_ is ~year-month-from-fields~, then
           1. If _calendarRec_.[[Receiver]] is a String, then
-            1. Set _calendarRec_.[[YearMonthFromFields]] to %Temporal.TimeZone.prototype.yearMonthFromFields%.
+            1. Set _calendarRec_.[[YearMonthFromFields]] to %Temporal.Calendar.prototype.yearMonthFromFields%.
           1. Else,
             1. Set _calendarRec_.[[YearMonthFromFields]] to ? GetMethod(_calendarRec_.[[Receiver]], *"yearMonthFromFields"*).
             1. If _calendarRec_.[[YearMonthFromFields]] is *undefined*, throw a *TypeError* exception.
@@ -334,7 +334,7 @@
         1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, _methodName_) is *true*.
         1. Let _receiver_ be _calendarRec_.[[Receiver]].
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, then
-          1. Set _receiver_ to ! CreateTemporalTimeZone(_calendarRec_.[[Receiver]]).
+          1. Set _receiver_ to ! CreateTemporalCalendar(_calendarRec_.[[Receiver]]).
         1. If _methodName_ is ~date-add~, then
           1. Return ? Call(_calendarRec_.[[DateAdd]], _receiver_, _arguments_).
         1. If _methodName_ is ~date-from-fields~, then
