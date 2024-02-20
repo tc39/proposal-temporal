@@ -1061,16 +1061,7 @@
       </dl>
       <emu-alg>
         1. Let _dateDurationRecord_ be ? CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
-        1. Let _dateSign_ be DurationSign(_dateDurationRecord_.[[Years]], _dateDurationRecord_.[[Months]], _dateDurationRecord_.[[Weeks]], _dateDurationRecord_.[[Days]], 0, 0, 0, 0, 0, 0).
-        1. Let _timeSign_ be NormalizedTimeDurationSign(_norm_).
-        1. If _dateSign_ &ne; 0 and _timeSign_ &ne; 0 and _dateSign_ &ne; _timeSign_, throw a *RangeError* exception.
-        1. Return the Record {
-            [[Years]]: _dateDurationRecord_.[[Years]],
-            [[Months]]: _dateDurationRecord_.[[Months]],
-            [[Weeks]]: _dateDurationRecord_.[[Weeks]],
-            [[Days]]: _dateDurationRecord_.[[Days]],
-            [[NormalizedTime]]: _norm_
-          }.
+        1. Return ? CombineDateAndNormalizedTimeDuration(_dateDurationRecord_, _norm_).
       </emu-alg>
     </emu-clause>
 
