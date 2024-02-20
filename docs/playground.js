@@ -1590,13 +1590,17 @@
 	}
 
 	var test = {
+		__proto__: null,
 		foo: {}
 	};
 
 	var $Object$1 = Object;
 
+	/** @type {import('.')} */
 	var hasProto$1 = function hasProto() {
-		return { __proto__: test }.foo === test.foo && !({ __proto__: null } instanceof $Object$1);
+		// @ts-expect-error: TS errors on an inherited property for some reason
+		return { __proto__: test }.foo === test.foo
+			&& !(test instanceof $Object$1);
 	};
 
 	/* eslint no-invalid-this: 1 */
