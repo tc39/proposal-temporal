@@ -10487,10 +10487,10 @@
 	  }
 	  const weekOfYear = GetMethod$4(calendar, 'weekOfYear');
 	  const result = Call$4(weekOfYear, calendar, [dateLike]);
-	  if (typeof result !== 'number') {
+	  if (typeof result !== 'number' && result !== undefined) {
 	    throw new TypeError('calendar weekOfYear result must be a positive integer');
 	  }
-	  if (!IsIntegralNumber$1(result) || result < 1) {
+	  if ((!IsIntegralNumber$1(result) || result < 1) && result !== undefined) {
 	    throw new RangeError('calendar weekOfYear result must be a positive integer');
 	  }
 	  return result;
@@ -10503,10 +10503,10 @@
 	  }
 	  const yearOfWeek = GetMethod$4(calendar, 'yearOfWeek');
 	  const result = Call$4(yearOfWeek, calendar, [dateLike]);
-	  if (typeof result !== 'number') {
+	  if (typeof result !== 'number' && result !== undefined) {
 	    throw new TypeError('calendar yearOfWeek result must be an integer');
 	  }
-	  if (!IsIntegralNumber$1(result)) {
+	  if (!IsIntegralNumber$1(result) && result !== undefined) {
 	    throw new RangeError('calendar yearOfWeek result must be an integer');
 	  }
 	  return result;
@@ -11464,37 +11464,6 @@
 	    days += ISODaysInMonth(year, m);
 	  }
 	  return days;
-	}
-	function WeekOfYear(year, month, day) {
-	  let doy = DayOfYear(year, month, day);
-	  let dow = DayOfWeek(year, month, day) || 7;
-	  let doj = DayOfWeek(year, 1, 1);
-	  const week = MathFloor$1((doy - dow + 10) / 7);
-	  if (week < 1) {
-	    if (doj === 5 || doj === 6 && LeapYear(year - 1)) {
-	      return {
-	        week: 53,
-	        year: year - 1
-	      };
-	    } else {
-	      return {
-	        week: 52,
-	        year: year - 1
-	      };
-	    }
-	  }
-	  if (week === 53) {
-	    if ((LeapYear(year) ? 366 : 365) - doy < 4 - dow) {
-	      return {
-	        week: 1,
-	        year: year + 1
-	      };
-	    }
-	  }
-	  return {
-	    week,
-	    year
-	  };
 	}
 	function DurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
 	  const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
@@ -14469,15 +14438,73 @@
 	    date = ToTemporalDate(date);
 	    return impl[GetSlot(this, CALENDAR_ID)].dayOfYear(date);
 	  }
-	  weekOfYear(date) {
+	  calendarDateWeekOfYear(date) {
+	    // Supports only Gregorian and ISO8601 calendar; can be updated to add support for other calendars.
+	    // Returns undefined for calendars without a well-defined week calendar system.
+	    // eslint-disable-next-line max-len
+	    // Also see: https://github.com/unicode-org/icu/blob/ab72ab1d4a3c3f9beeb7d92b0c7817ca93dfdb04/icu4c/source/i18n/calendar.cpp#L1606
 	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
 	    date = ToTemporalDate(date);
-	    return impl[GetSlot(this, CALENDAR_ID)].weekOfYear(date);
+	    const id = GetSlot(this, CALENDAR_ID);
+	    if (id !== 'gregory' && id !== 'iso8601') {
+	      return {
+	        week: undefined,
+	        year: undefined
+	      };
+	    }
+	    const calendar = impl[id];
+	    let yow = GetSlot(date, ISO_YEAR);
+	    const dayOfWeek = this.dayOfWeek(date);
+	    const dayOfYear = this.dayOfYear(date);
+	    const fdow = id === 'iso8601' ? 1 : calendar.helper.getFirstDayOfWeek();
+	    const mdow = id === 'iso8601' ? 4 : calendar.helper.getMinimalDaysInFirstWeek();
+
+	    // For both the input date and the first day of its calendar year, calculate the day of week
+	    // relative to first day of week in the relevant calendar (e.g., in iso8601, relative to Monday).
+	    var relDow = (dayOfWeek + 7 - fdow) % 7;
+	    // Assuming the year length is less than 7000 days.
+	    var relDowJan1 = (dayOfWeek - dayOfYear + 7001 - fdow) % 7;
+	    var woy = MathFloor((dayOfYear - 1 + relDowJan1) / 7);
+	    if (7 - relDowJan1 >= mdow) {
+	      ++woy;
+	    }
+
+	    // Adjust for weeks at the year end that overlap into the previous or next calendar year.
+	    if (woy == 0) {
+	      // Check for last week of previous year; if true, handle the case for
+	      // first week of next year
+	      var prevDoy = dayOfYear + this.daysInYear(this.dateAdd(date, {
+	        years: -1
+	      }));
+	      woy = weekNumber(fdow, mdow, prevDoy, dayOfWeek);
+	      yow--;
+	    } else {
+	      // For it to be week 1 of the next year, dayOfYear must be >= lastDoy - 5
+	      //          L-5                  L
+	      // doy: 359 360 361 362 363 364 365 001
+	      // dow:      1   2   3   4   5   6   7
+	      var lastDoy = this.daysInYear(date);
+	      if (dayOfYear >= lastDoy - 5) {
+	        var lastRelDow = (relDow + lastDoy - dayOfYear) % 7;
+	        if (lastRelDow < 0) {
+	          lastRelDow += 7;
+	        }
+	        if (6 - lastRelDow >= mdow && dayOfYear + 7 - relDow > lastDoy) {
+	          woy = 1;
+	          yow++;
+	        }
+	      }
+	    }
+	    return {
+	      week: woy,
+	      year: yow
+	    };
+	  }
+	  weekOfYear(date) {
+	    return this.calendarDateWeekOfYear(date).week;
 	  }
 	  yearOfWeek(date) {
-	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-	    date = ToTemporalDate(date);
-	    return impl[GetSlot(this, CALENDAR_ID)].yearOfWeek(date);
+	    return this.calendarDateWeekOfYear(date).year;
 	  }
 	  daysInWeek(date) {
 	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
@@ -14642,12 +14669,6 @@
 	  dayOfYear(date) {
 	    return DayOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY));
 	  },
-	  weekOfYear(date) {
-	    return WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY)).week;
-	  },
-	  yearOfWeek(date) {
-	    return WeekOfYear(GetSlot(date, ISO_YEAR), GetSlot(date, ISO_MONTH), GetSlot(date, ISO_DAY)).year;
-	  },
 	  daysInWeek() {
 	    return 7;
 	  },
@@ -14720,6 +14741,15 @@
 	    month,
 	    monthCode
 	  };
+	}
+	function weekNumber(firstDayOfWeek, minimalDaysInFirstWeek, desiredDay, dayOfWeek) {
+	  var periodStartDayOfWeek = (dayOfWeek - firstDayOfWeek - desiredDay + 1) % 7;
+	  if (periodStartDayOfWeek < 0) periodStartDayOfWeek += 7;
+	  var weekNo = MathFloor((desiredDay + periodStartDayOfWeek - 1) / 7);
+	  if (7 - periodStartDayOfWeek >= minimalDaysInFirstWeek) {
+	    ++weekNo;
+	  }
+	  return weekNo;
 	}
 
 	// Note: other built-in calendars than iso8601 are not part of the Temporal
@@ -16399,6 +16429,12 @@
 	      era,
 	      eraYear
 	    };
+	  },
+	  getFirstDayOfWeek() {
+	    return 1;
+	  },
+	  getMinimalDaysInFirstWeek() {
+	    return 1;
 	  }
 	});
 	const helperJapanese = ObjectAssign$1({},
@@ -16942,12 +16978,6 @@
 	    const startOfYear = this.helper.startOfCalendarYear(calendarDate);
 	    const diffDays = this.helper.calendarDaysUntil(startOfYear, calendarDate, cache);
 	    return diffDays + 1;
-	  },
-	  weekOfYear(date) {
-	    return impl['iso8601'].weekOfYear(date);
-	  },
-	  yearOfWeek(date) {
-	    return impl['iso8601'].yearOfWeek(date);
 	  },
 	  daysInWeek(date) {
 	    return impl['iso8601'].daysInWeek(date);
