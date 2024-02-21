@@ -94,10 +94,20 @@ class CustomRenderer extends marked.Renderer {
   }
 }
 
-async function render(markdownFile, head, tail) {
+async function render(markdownFile, head, tail, basePath) {
   await mkdirp('../out/docs/assets');
   await mkdirp(path.join('../out/docs', path.dirname(markdownFile)));
   let markdownText = await fs.readFile(markdownFile, { encoding });
+
+  // replace relative path in header/footer for sub dir pages. this expects '.' is doc root
+  const replacePath = (html) => {
+    const replacingPathPart = [/(href=)"\./g, /(src=)"\./g];
+    let relativePath = path.relative(basePath, '.');
+    relativePath = relativePath === '' ? '.' : relativePath;
+    return replacingPathPart.reduce((pre, cur) => pre.replace(cur, `$1"${relativePath}`), html);
+  };
+  const _head = replacePath(head);
+  const _tail = replacePath(tail);
 
   // Resolve transcludes
   const lines = await Promise.all(
@@ -110,7 +120,7 @@ async function render(markdownFile, head, tail) {
   markdownText = lines.join('\n');
 
   const renderer = new CustomRenderer();
-  let htmlText = head + marked.parse(markdownText, { renderer }) + tail;
+  let htmlText = _head + marked.parse(markdownText, { renderer }) + _tail;
   htmlText = htmlText.replace(/^<!-- toc -->$/m, () => renderer.renderTOC());
 
   const htmlFile = path.resolve('../out/docs', markdownFile.replace(/\.md$/, '') + '.html');
@@ -122,13 +132,21 @@ async function go() {
   try {
     const head = await fs.readFile('head.html.part', { encoding });
     const tail = await fs.readFile('tail.html.part', { encoding });
+
+    // read files and return content with sub dir structure
+    const basePaths = ['.', './ja', './zh_CN'];
+    const files = await Promise.all(
+      basePaths.map(async (base) => {
+        return (await fs.readdir(base)).map((file) => ({
+          base,
+          file: `${base}/${file}`
+        }));
+      })
+    ).then((blocks) => blocks.flat());
+
     // copy or render /docs/* to /out/docs/
     await Promise.all(
-      [
-        ...(await fs.readdir('.')),
-        ...(await fs.readdir('ja')).map((x) => 'ja/' + x),
-        ...(await fs.readdir('zh_CN')).map((x) => 'zh_CN/' + x)
-      ].map((file) => {
+      files.map(({ base, file }) => {
         switch (path.extname(file)) {
           // copy files *.css, *.html, *.svg to /out/docs
           case '.css':
@@ -137,7 +155,7 @@ async function go() {
             return fs.copyFile(file, path.resolve('../out/docs/' + file));
           // convert files *.md to /out/docs/*.html
           case '.md':
-            return render(file, head, tail);
+            return render(file, head, tail, base);
           // skip remaining files
           default:
             return new Promise((resolve) => resolve());
