@@ -956,8 +956,7 @@
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
-        1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_temporalDateTime_, _fieldNames_, «»).
+        1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _temporalDateTime_, « *"monthCode"*, *"year"* », «», «»).
         1. Return ? CalendarYearMonthFromFields(_calendarRec_, _fields_).
         1. NOTE: The call to CalendarYearMonthFromFields is necessary in order to create a PlainYearMonth object with the [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots set correctly.
       </emu-alg>
@@ -975,8 +974,7 @@
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
-        1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"monthCode"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_temporalDateTime_, _fieldNames_, «»).
+        1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _temporalDateTime_, « *"day"*, *"monthCode"* », «», «»).
         1. Return ? CalendarMonthDayFromFields(_calendarRec_, _fields_).
         1. NOTE: The call to CalendarMonthDayFromFields is necessary in order to create a PlainMonthDay object with the [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots set correctly.
       </emu-alg>
@@ -1181,9 +1179,7 @@
             1. Return _item_.
           1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
           1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-from-fields~, ~fields~ »).
-          1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-          1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"* to _fieldNames_.
-          1. Let _fields_ be ? PrepareTemporalFields(_item_, _fieldNames_, « *"timeZone"* »).
+          1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _item_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, *"timeZone"* », « *"timeZone"* »).
           1. Let _timeZone_ be ! Get(_fields_, *"timeZone"*).
           1. Set _timeZone_ to ? ToTemporalTimeZoneSlotValue(_timeZone_).
           1. Let _offsetString_ be ! Get(_fields_, *"offset"*).

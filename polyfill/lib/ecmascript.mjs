@@ -3,6 +3,7 @@
 const ArrayIncludes = Array.prototype.includes;
 const ArrayPrototypeMap = Array.prototype.map;
 const ArrayPrototypePush = Array.prototype.push;
+const ArrayPrototypeSlice = Array.prototype.slice;
 const ArrayPrototypeSort = Array.prototype.sort;
 const ArrayPrototypeFind = Array.prototype.find;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
@@ -1036,18 +1037,13 @@ export function ToRelativeTemporalObject(options) {
     if (IsTemporalDateTime(relativeTo)) return { plainRelativeTo: TemporalDateTimeToDate(relativeTo) };
     calendar = GetTemporalCalendarSlotValueWithISODefault(relativeTo);
     const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
-    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    Call(ArrayPrototypePush, fieldNames, [
-      'hour',
-      'microsecond',
-      'millisecond',
-      'minute',
-      'nanosecond',
-      'offset',
-      'second',
-      'timeZone'
-    ]);
-    const fields = PrepareTemporalFields(relativeTo, fieldNames, []);
+    const fields = PrepareCalendarFields(
+      calendarRec,
+      relativeTo,
+      ['day', 'month', 'monthCode', 'year'],
+      ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'],
+      []
+    );
     const dateOptions = ObjectCreate(null);
     dateOptions.overflow = 'constrain';
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = InterpretTemporalDateTimeFields(
@@ -1218,6 +1214,27 @@ export function PrepareTemporalFields(
   return result;
 }
 
+export function PrepareCalendarFields(calendarRec, bag, calendarFieldNames, nonCalendarFieldNames, requiredFieldNames) {
+  // Special-case built-in method, because we should skip the observable array
+  // iteration in Calendar.prototype.fields
+  let fieldNames;
+  if (calendarRec.isBuiltIn()) {
+    if (calendarRec.receiver !== 'iso8601') {
+      fieldNames = GetIntrinsic('%calendarFieldsImpl%')(calendarRec.receiver, calendarFieldNames);
+    } else {
+      fieldNames = Call(ArrayPrototypeSlice, calendarFieldNames, []);
+    }
+  } else {
+    fieldNames = [];
+    for (const name of calendarRec.fields(calendarFieldNames)) {
+      if (Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
+      Call(ArrayPrototypePush, fieldNames, [name]);
+    }
+  }
+  Call(ArrayPrototypePush, fieldNames, nonCalendarFieldNames);
+  return PrepareTemporalFields(bag, fieldNames, requiredFieldNames);
+}
+
 export function ToTemporalTimeRecord(bag, completeness = 'complete') {
   const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
   const partial = PrepareTemporalFields(bag, fields, 'partial', undefined, undefined, {
@@ -1264,8 +1281,7 @@ export function ToTemporalDate(item, options) {
       'dateFromFields',
       'fields'
     ]);
-    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    const fields = PrepareTemporalFields(item, fieldNames, []);
+    const fields = PrepareCalendarFields(calendarRec, item, ['day', 'month', 'monthCode', 'year'], [], []);
     return CalendarDateFromFields(calendarRec, fields, options);
   }
   let { year, month, day, calendar, z } = ParseTemporalDateString(RequireString(item));
@@ -1327,9 +1343,13 @@ export function ToTemporalDateTime(item, options) {
 
     calendar = GetTemporalCalendarSlotValueWithISODefault(item);
     const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
-    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    Call(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
-    const fields = PrepareTemporalFields(item, fieldNames, []);
+    const fields = PrepareCalendarFields(
+      calendarRec,
+      item,
+      ['day', 'month', 'monthCode', 'year'],
+      ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'],
+      []
+    );
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = InterpretTemporalDateTimeFields(
       calendarRec,
       fields,
@@ -1413,8 +1433,7 @@ export function ToTemporalMonthDay(item, options) {
       calendar = ToTemporalCalendarSlotValue(calendar);
     }
     const calendarRec = new CalendarMethodRecord(calendar, ['fields', 'monthDayFromFields']);
-    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    const fields = PrepareTemporalFields(item, fieldNames, []);
+    const fields = PrepareCalendarFields(calendarRec, item, ['day', 'month', 'monthCode', 'year'], [], []);
     return CalendarMonthDayFromFields(calendarRec, fields, options);
   }
 
@@ -1485,8 +1504,7 @@ export function ToTemporalYearMonth(item, options) {
     if (IsTemporalYearMonth(item)) return item;
     const calendar = GetTemporalCalendarSlotValueWithISODefault(item);
     const calendarRec = new CalendarMethodRecord(calendar, ['fields', 'yearMonthFromFields']);
-    const fieldNames = CalendarFields(calendarRec, ['month', 'monthCode', 'year']);
-    const fields = PrepareTemporalFields(item, fieldNames, []);
+    const fields = PrepareCalendarFields(calendarRec, item, ['month', 'monthCode', 'year'], [], []);
     return CalendarYearMonthFromFields(calendarRec, fields, options);
   }
 
@@ -1600,18 +1618,13 @@ export function ToTemporalZonedDateTime(item, options) {
     if (IsTemporalZonedDateTime(item)) return item;
     calendar = GetTemporalCalendarSlotValueWithISODefault(item);
     const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
-    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    Call(ArrayPrototypePush, fieldNames, [
-      'hour',
-      'microsecond',
-      'millisecond',
-      'minute',
-      'nanosecond',
-      'offset',
-      'second',
-      'timeZone'
-    ]);
-    const fields = PrepareTemporalFields(item, fieldNames, ['timeZone']);
+    const fields = PrepareCalendarFields(
+      calendarRec,
+      item,
+      ['day', 'month', 'monthCode', 'year'],
+      ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'],
+      ['timeZone']
+    );
     timeZone = ToTemporalTimeZoneSlotValue(fields.timeZone);
     offset = fields.offset;
     if (offset === undefined) {

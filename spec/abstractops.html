@@ -741,9 +741,7 @@
           1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
         1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_value_).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-from-fields~, ~fields~ »).
-        1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"* to _fieldNames_.
-        1. Let _fields_ be ? PrepareTemporalFields(_value_, _fieldNames_, «»).
+        1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _value_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, *"timeZone"* », «»).
         1. Let _dateOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_dateOptions_, *"overflow"*, *"constrain"*).
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _dateOptions_).
@@ -2113,6 +2111,43 @@
         </table>
       </emu-table>
     </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-preparecalendarfields" type="abstract operation">
+    <h1>
+      PrepareCalendarFields (
+        _calendarRec_: a Calendar Methods Record,
+        _fields_: an Object,
+        _calendarFieldNames_: a List of property names,
+        _nonCalendarFieldNames_: a List of property names,
+        _requiredFieldNames_: a List of property names,
+      ): either a normal completion containing an Object, or a throw completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It returns the result of reading from _fields_ all of the property names given by _calendarFieldNames_ and _nonCalendarFieldNames_, plus any extra property names returned by the `fields` method of the given calendar when passed _calendarFieldNames_.
+        The returned Object has a null prototype, and an own data property for each property name that corresponds with a non-*undefined* property of the same name on _fields_ used as the input for relevant conversion.
+      </dd>
+    </dl>
+    <emu-alg>
+      1. Assert: _calendarFieldNames_ contains zero or one of each of the Strings *"day"*, *"month"*, *"monthCode"*, and *"year"*, in that order.
+      1. Assert: _nonCalendarFieldNames_ contains zero or one of each of the Strings *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"*, in that order.
+      1. Assert: _requiredFieldNames_ contains zero or one of each of the elements of _calendarFieldNames_ and _nonCalendarFieldNames_.
+      1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, then
+        1. NOTE: %Temporal.Calendar.prototype.fields% is not called in this clause in order to avoid an unnecessary observable Array iteration.
+        1. Let _fieldNames_ be _calendarFieldNames_.
+        1. If _calendarRec_.[[Receiver]] is not *"iso8601"*, then
+          1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendarRec_.[[Receiver]], _calendarFieldNames_).
+          1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
+            1. Append _desc_.[[Property]] to _fieldNames_.
+      1. Else,
+        1. Let _calendarFieldsArray_ be ? CalendarMethodsRecordCall(_calendarRec_, ~fields~, « CreateArrayFromList(_calendarFieldNames_) »).
+        1. Let _iteratorRecord_ be ? GetIterator(_calendarFieldsArray_, ~sync~).
+        1. Let _fieldNames_ be ? IteratorToListOfType(_iteratorRecord_, « String »).
+      1. Set _fieldNames_ to the list-concatenation of _fieldNames_ and _nonCalendarFieldNames_.
+      1. Return ? PrepareTemporalFields(_fields_, _fieldNames_, _requiredFieldNames_).
+    </emu-alg>
   </emu-clause>
 
   <emu-clause id="sec-temporal-getdifferencesettings" type="abstract operation">

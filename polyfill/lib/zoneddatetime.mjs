@@ -604,16 +604,14 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
     const dt = dateTime(this);
-    const fieldNames = ES.CalendarFields(calendarRec, ['monthCode', 'year']);
-    const fields = ES.PrepareTemporalFields(dt, fieldNames, []);
+    const fields = ES.PrepareCalendarFields(calendarRec, dt, ['monthCode', 'year'], [], []);
     return ES.CalendarYearMonthFromFields(calendarRec, fields);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
     const dt = dateTime(this);
-    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'monthCode']);
-    const fields = ES.PrepareTemporalFields(dt, fieldNames, []);
+    const fields = ES.PrepareCalendarFields(calendarRec, dt, ['day', 'monthCode'], [], []);
     return ES.CalendarMonthDayFromFields(calendarRec, fields);
   }
   getISOFields() {
