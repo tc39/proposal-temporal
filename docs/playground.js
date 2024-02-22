@@ -12206,6 +12206,7 @@
 	  const months = GetSlot(untilResult, MONTHS);
 	  const weeks = GetSlot(untilResult, WEEKS);
 	  const days = GetSlot(untilResult, DAYS);
+	  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, timeDuration);
 	  return {
 	    years,
 	    months,
