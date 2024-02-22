@@ -407,11 +407,10 @@
         1. If ? IsPartialTemporalObject(_temporalDateLike_) is *false*, throw a *TypeError* exception.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_temporalDate_.[[Calendar]], « ~date-from-fields~, ~fields~, ~merge-fields~ »).
-        1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_temporalDate_, _fieldNames_, «»).
-        1. Let _partialDate_ be ? PrepareTemporalFields(_temporalDateLike_, _fieldNames_, ~partial~).
-        1. Set _fields_ to ? CalendarMergeFields(_calendarRec_, _fields_, _partialDate_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
+        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _temporalDate_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Let _partialDate_ be ? PrepareTemporalFields(_temporalDateLike_, _fieldsResult_.[[FieldNames]], ~partial~).
+        1. Let _fields_ be ? CalendarMergeFields(_calendarRec_, _fieldsResult_.[[Fields]], _partialDate_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldsResult_.[[FieldNames]], «»).
         1. Return ? CalendarDateFromFields(_calendarRec_, _fields_, _resolvedOptions_).
       </emu-alg>
     </emu-clause>

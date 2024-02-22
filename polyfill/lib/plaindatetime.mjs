@@ -157,8 +157,12 @@ export class PlainDateTime {
 
     const resolvedOptions = ES.SnapshotOwnProperties(ES.GetOptionsObject(options), null);
     const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    let fields = ES.PrepareTemporalFields(this, fieldNames, []);
+    let { fields, fieldNames } = ES.PrepareCalendarFieldsAndFieldNames(calendarRec, this, [
+      'day',
+      'month',
+      'monthCode',
+      'year'
+    ]);
     fields.hour = GetSlot(this, ISO_HOUR);
     fields.minute = GetSlot(this, ISO_MINUTE);
     fields.second = GetSlot(this, ISO_SECOND);

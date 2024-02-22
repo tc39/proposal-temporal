@@ -149,11 +149,10 @@
         1. If ? IsPartialTemporalObject(_temporalMonthDayLike_) is *false*, throw a *TypeError* exception.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_monthDay_.[[Calendar]], « ~fields~, ~merge-fields~, ~month-day-from-fields~ »).
-        1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_monthDay_, _fieldNames_, «»).
-        1. Let _partialMonthDay_ be ? PrepareTemporalFields(_temporalMonthDayLike_, _fieldNames_, ~partial~).
-        1. Set _fields_ to ? CalendarMergeFields(_calendarRec_, _fields_, _partialMonthDay_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
+        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _monthDay_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Let _partialMonthDay_ be ? PrepareTemporalFields(_temporalMonthDayLike_, _fieldsResult_.[[FieldNames]], ~partial~).
+        1. Let _fields_ be ? CalendarMergeFields(_calendarRec_, _fieldsResult_.[[Fields]], _partialMonthDay_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldsResult_.[[FieldNames]], «»).
         1. Return ? CalendarMonthDayFromFields(_calendarRec_, _fields_, _resolvedOptions_).
       </emu-alg>
     </emu-clause>
@@ -247,12 +246,10 @@
         1. If Type(_item_) is not Object, then
           1. Throw a *TypeError* exception.
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_monthDay_.[[Calendar]], « ~date-from-fields~, ~fields~, ~merge-fields~ »).
-        1. Let _receiverFieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"monthCode"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_monthDay_, _receiverFieldNames_, «»).
-        1. Let _inputFieldNames_ be ? CalendarFields(_calendarRec_, « *"year"* »).
-        1. Let _inputFields_ be ? PrepareTemporalFields(_item_, _inputFieldNames_, «»).
-        1. Let _mergedFields_ be ? CalendarMergeFields(_calendarRec_, _fields_, _inputFields_).
-        1. Let _concatenatedFieldNames_ be the list-concatenation of _receiverFieldNames_ and _inputFieldNames_.
+        1. Let _receiverFieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _monthDay_, « *"day"*, *"monthCode"* »).
+        1. Let _inputFieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _item_, « *"year"* »).
+        1. Let _mergedFields_ be ? CalendarMergeFields(_calendarRec_, _receiverFieldsResult_.[[Fields]], _inputFieldsResult_.[[Fields]]).
+        1. Let _concatenatedFieldNames_ be the list-concatenation of _receiverFieldsResult_.[[FieldNames]] and _inputFieldsResult_.[[FieldNames]].
         1. Set _mergedFields_ to ? PrepareTemporalFields(_mergedFields_, _concatenatedFieldNames_, «», «», ~ignore~).
         1. Return ? CalendarDateFromFields(_calendarRec_, _mergedFields_).
       </emu-alg>

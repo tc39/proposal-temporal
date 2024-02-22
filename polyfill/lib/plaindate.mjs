@@ -100,8 +100,12 @@ export class PlainDate {
     const resolvedOptions = ES.SnapshotOwnProperties(ES.GetOptionsObject(options), null);
 
     const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    let fields = ES.PrepareTemporalFields(this, fieldNames, []);
+    let { fields, fieldNames } = ES.PrepareCalendarFieldsAndFieldNames(calendarRec, this, [
+      'day',
+      'month',
+      'monthCode',
+      'year'
+    ]);
     const partialDate = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
     fields = ES.CalendarMergeFields(calendarRec, fields, partialDate);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
