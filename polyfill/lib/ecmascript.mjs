@@ -1214,7 +1214,13 @@ export function PrepareTemporalFields(
   return result;
 }
 
-export function PrepareCalendarFields(calendarRec, bag, calendarFieldNames, nonCalendarFieldNames, requiredFieldNames) {
+export function PrepareCalendarFieldsAndFieldNames(
+  calendarRec,
+  bag,
+  calendarFieldNames,
+  nonCalendarFieldNames = [],
+  requiredFieldNames = []
+) {
   // Special-case built-in method, because we should skip the observable array
   // iteration in Calendar.prototype.fields
   let fieldNames;
@@ -1232,7 +1238,19 @@ export function PrepareCalendarFields(calendarRec, bag, calendarFieldNames, nonC
     }
   }
   Call(ArrayPrototypePush, fieldNames, nonCalendarFieldNames);
-  return PrepareTemporalFields(bag, fieldNames, requiredFieldNames);
+  const fields = PrepareTemporalFields(bag, fieldNames, requiredFieldNames);
+  return { fields, fieldNames };
+}
+
+export function PrepareCalendarFields(calendarRec, bag, calendarFieldNames, nonCalendarFieldNames, requiredFieldNames) {
+  const { fields } = PrepareCalendarFieldsAndFieldNames(
+    calendarRec,
+    bag,
+    calendarFieldNames,
+    nonCalendarFieldNames,
+    requiredFieldNames
+  );
+  return fields;
 }
 
 export function ToTemporalTimeRecord(bag, completeness = 'complete') {
@@ -1881,23 +1899,6 @@ export function CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar
   const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
   const result = ObjectCreate(TemporalZonedDateTime.prototype);
   CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZone, calendar);
-  return result;
-}
-
-export function CalendarFields(calendarRec, fieldNames) {
-  // Special-case built-in method, because we should skip the observable array
-  // iteration in Calendar.prototype.fields
-  if (calendarRec.isBuiltIn()) {
-    if (calendarRec.receiver === 'iso8601') return fieldNames;
-    return GetIntrinsic('%calendarFieldsImpl%')(calendarRec.receiver, fieldNames);
-  }
-
-  fieldNames = calendarRec.fields(fieldNames);
-  const result = [];
-  for (const name of fieldNames) {
-    if (Type(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
-    Call(ArrayPrototypePush, result, [name]);
-  }
   return result;
 }
 
@@ -4334,8 +4335,10 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
 
   const calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateFromFields', 'dateUntil', 'fields']);
 
-  const fieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-  const thisFields = PrepareTemporalFields(yearMonth, fieldNames, []);
+  const { fields: thisFields, fieldNames } = PrepareCalendarFieldsAndFieldNames(calendarRec, yearMonth, [
+    'monthCode',
+    'year'
+  ]);
   thisFields.day = 1;
   const thisDate = CalendarDateFromFields(calendarRec, thisFields);
   const otherFields = PrepareTemporalFields(other, fieldNames, []);
@@ -5014,8 +5017,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
     'yearMonthFromFields'
   ]);
 
-  const fieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-  const fields = PrepareTemporalFields(yearMonth, fieldNames, []);
+  const { fields, fieldNames } = PrepareCalendarFieldsAndFieldNames(calendarRec, yearMonth, ['monthCode', 'year']);
   const fieldsCopy = SnapshotOwnProperties(fields, null);
   fields.day = 1;
   let startDate = CalendarDateFromFields(calendarRec, fields);

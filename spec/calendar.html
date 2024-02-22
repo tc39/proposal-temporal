@@ -374,32 +374,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendarfields" type="abstract operation">
-      <h1>
-        CalendarFields (
-          _calendarRec_: a Calendar Methods Record,
-          _fieldNames_: a List of Strings,
-        ): either a normal completion containing a List of Strings, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It calls the `fields` method of the given calendar with an array representation of _fieldNames_, and returns a List representation of the result.</dd>
-      </dl>
-      <emu-alg>
-        1. Assert: _fieldNames_ contains zero or one of each of the Strings *"day"*, *"month"*, *"monthCode"*, and *"year"*, in that order.
-        1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, then
-          1. NOTE: %Temporal.Calendar.prototype.fields% is not called in this clause in order to avoid an unnecessary observable Array iteration.
-          1. If _calendarRec_.[[Receiver]] is *"iso8601"*, return _fieldNames_.
-          1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendarRec_.[[Receiver]], _fieldNames_).
-          1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
-            1. Append _desc_.[[Property]] to _fieldNames_.
-          1. Return _fieldNames_.
-        1. Let _fieldsArray_ be ? CalendarMethodsRecordCall(_calendarRec_, ~fields~, « CreateArrayFromList(_fieldNames_) »).
-        1. Let _iteratorRecord_ be ? GetIterator(_fieldsArray_, ~sync~).
-        1. Return ? IteratorToListOfType(_iteratorRecord_, « String »).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-calendarmergefields" type="abstract operation">
       <h1>
         CalendarMergeFields (

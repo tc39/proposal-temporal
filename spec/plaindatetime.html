@@ -398,18 +398,17 @@
         1. If ? IsPartialTemporalObject(_temporalDateTimeLike_) is *false*, throw a *TypeError* exception.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_dateTime_.[[Calendar]], « ~date-from-fields~, ~fields~, ~merge-fields~ »).
-        1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_dateTime_, _fieldNames_, «»).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[ISOHour]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[ISOMinute]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[ISOSecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"millisecond"*, _dateTime_.[[ISOMillisecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"microsecond"*, _dateTime_.[[ISOMicrosecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"nanosecond"*, _dateTime_.[[ISONanosecond]]).
-        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, and *"second"* to _fieldNames_.
-        1. Let _partialDateTime_ be ? PrepareTemporalFields(_temporalDateTimeLike_, _fieldNames_, ~partial~).
-        1. Set _fields_ to ? CalendarMergeFields(_calendarRec_, _fields_, _partialDateTime_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
+        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _dateTime_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"hour"*, _dateTime_.[[ISOHour]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"minute"*, _dateTime_.[[ISOMinute]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"second"*, _dateTime_.[[ISOSecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"millisecond"*, _dateTime_.[[ISOMillisecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"microsecond"*, _dateTime_.[[ISOMicrosecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"nanosecond"*, _dateTime_.[[ISONanosecond]]).
+        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, and *"second"* to _fieldsResult_.[[FieldNames]].
+        1. Let _partialDateTime_ be ? PrepareTemporalFields(_temporalDateTimeLike_, _fieldsResult_.[[FieldNames]], ~partial~).
+        1. Let _fields_ be ? CalendarMergeFields(_calendarRec_, _fieldsResult_.[[Fields]], _partialDateTime_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldsResult_.[[FieldNames]], «»).
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _resolvedOptions_).
         1. Assert: IsValidISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
         1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.

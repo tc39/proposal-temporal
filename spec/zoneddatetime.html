@@ -589,19 +589,18 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
         1. Let _dateTime_ be ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]], _offsetNanoseconds_).
-        1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
-        1. Let _fields_ be ? PrepareTemporalFields(_dateTime_, _fieldNames_, « »).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"hour"*, _dateTime_.[[ISOHour]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"minute"*, _dateTime_.[[ISOMinute]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"second"*, _dateTime_.[[ISOSecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"millisecond"*, _dateTime_.[[ISOMillisecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"microsecond"*, _dateTime_.[[ISOMicrosecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"nanosecond"*, _dateTime_.[[ISONanosecond]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"offset"*, FormatUTCOffsetNanoseconds(_offsetNanoseconds_)).
-        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, and *"second"* to _fieldNames_.
-        1. Let _partialZonedDateTime_ be ? PrepareTemporalFields(_temporalZonedDateTimeLike_, _fieldNames_, ~partial~).
-        1. Set _fields_ to ? CalendarMergeFields(_calendarRec_, _fields_, _partialZonedDateTime_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldNames_, « *"offset"* »).
+        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _dateTime_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"hour"*, _dateTime_.[[ISOHour]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"minute"*, _dateTime_.[[ISOMinute]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"second"*, _dateTime_.[[ISOSecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"millisecond"*, _dateTime_.[[ISOMillisecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"microsecond"*, _dateTime_.[[ISOMicrosecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"nanosecond"*, _dateTime_.[[ISONanosecond]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"offset"*, FormatUTCOffsetNanoseconds(_offsetNanoseconds_)).
+        1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, and *"second"* to _fieldsResult_.[[FieldNames]].
+        1. Let _partialZonedDateTime_ be ? PrepareTemporalFields(_temporalZonedDateTimeLike_, _fieldsResult_.[[FieldNames]], ~partial~).
+        1. Let _fields_ be ? CalendarMergeFields(_calendarRec_, _fieldsResult_.[[Fields]], _partialZonedDateTime_).
+        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldsResult_.[[FieldNames]], « *"offset"* »).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
         1. Let _disambiguation_ be ? ToTemporalDisambiguation(_resolvedOptions_).
         1. Let _offset_ be ? ToTemporalOffset(_resolvedOptions_, *"prefer"*).

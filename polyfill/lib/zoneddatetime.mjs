@@ -206,8 +206,12 @@ export class ZonedDateTime {
     ]);
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZoneRec, GetSlot(this, INSTANT));
     const dt = ES.GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), GetSlot(this, CALENDAR), offsetNs);
-    const fieldNames = ES.CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-    let fields = ES.PrepareTemporalFields(dt, fieldNames, []);
+    let { fields, fieldNames } = ES.PrepareCalendarFieldsAndFieldNames(calendarRec, dt, [
+      'day',
+      'month',
+      'monthCode',
+      'year'
+    ]);
     fields.hour = GetSlot(dt, ISO_HOUR);
     fields.minute = GetSlot(dt, ISO_MINUTE);
     fields.second = GetSlot(dt, ISO_SECOND);
