@@ -1574,7 +1574,9 @@ export function InterpretISODateTimeOffset(
     const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
     const timeZoneString = IsTemporalTimeZone(timeZoneRec.receiver)
       ? GetSlot(timeZoneRec.receiver, TIMEZONE_ID)
-      : 'time zone';
+      : typeof timeZoneRec.receiver === 'string'
+        ? timeZoneRec.receiver
+        : 'time zone';
     throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZoneString}`);
   }
   // fall through: offsetOpt === 'prefer', but the offset doesn't match
