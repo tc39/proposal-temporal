@@ -1310,7 +1310,7 @@
           1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_result_.[[NormalizedTime]], _result_.[[Days]]).
           1. Let _timeResult_ be BalanceTimeDuration(_normWithDays_, _settings_.[[LargestUnit]]).
           1. Let _balanceResult_ be ! CreateDateDurationRecord(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _timeResult_.[[Days]]).
-        1. Return ! CreateTemporalDuration(_sign_ &times; _balanceResult_.[[Years]], _sign_ &times; _balanceResult_.[[Months]], _sign_ &times; _balanceResult_.[[Weeks]], _sign_ &times; _balanceResult_.[[Days]], _sign_ &times; _timeResult_.[[Hours]], _sign_ &times; _timeResult_.[[Minutes]], _sign_ &times; _timeResult_.[[Seconds]], _sign_ &times; _timeResult_.[[Milliseconds]], _sign_ &times; _timeResult_.[[Microseconds]], _sign_ &times; _timeResult_.[[Nanoseconds]]).
+        1. Return ? CreateTemporalDuration(_sign_ &times; _balanceResult_.[[Years]], _sign_ &times; _balanceResult_.[[Months]], _sign_ &times; _balanceResult_.[[Weeks]], _sign_ &times; _balanceResult_.[[Days]], _sign_ &times; _timeResult_.[[Hours]], _sign_ &times; _timeResult_.[[Minutes]], _sign_ &times; _timeResult_.[[Seconds]], _sign_ &times; _timeResult_.[[Milliseconds]], _sign_ &times; _timeResult_.[[Microseconds]], _sign_ &times; _timeResult_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
     <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaindatetime" type="abstract operation">
