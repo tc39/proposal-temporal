@@ -479,7 +479,7 @@
           1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_roundResult_.[[NormalizedTime]], _roundResult_.[[Days]]).
           1. Let _balanceResult_ be BalanceTimeDuration(_normWithDays_, _largestUnit_).
         1. Let _result_ be ? BalanceDateDurationRelative(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _balanceResult_.[[Days]], _largestUnit_, _smallestUnit_, _plainRelativeTo_, _calendarRec_).
-        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
+        1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
