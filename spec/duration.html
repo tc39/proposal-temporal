@@ -2020,7 +2020,6 @@
           1. Set _days_ to 0.
         1. Else,
           1. Assert: _fractionalDays_ is not used below.
-        1. Let _total_ be ~unset~.
         1. If _unit_ is *"year"*, then
           1. Let _yearsDuration_ be ! CreateTemporalDuration(_years_, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _yearsLater_ be ? AddDate(_calendarRec_, _plainRelativeTo_, _yearsDuration_).
@@ -2048,7 +2047,7 @@
           1. If _oneYearDays_ = 0, throw a *RangeError* exception.
           1. Let _fractionalYears_ be _years_ + _fractionalDays_ / abs(_oneYearDays_).
           1. Set _years_ to RoundNumberToIncrement(_fractionalYears_, _increment_, _roundingMode_).
-          1. Set _total_ to _fractionalYears_.
+          1. Let _total_ be _fractionalYears_.
           1. Set _months_ and _weeks_ to 0.
           1. Set _norm_ to ZeroTimeDuration().
         1. Else if _unit_ is *"month"*, then
@@ -2078,7 +2077,7 @@
           1. If _oneMonthDays_ = 0, throw a *RangeError* exception.
           1. Let _fractionalMonths_ be _months_ + _fractionalDays_ / abs(_oneMonthDays_).
           1. Set _months_ to RoundNumberToIncrement(_fractionalMonths_, _increment_, _roundingMode_).
-          1. Set _total_ to _fractionalMonths_.
+          1. Let _total_ be _fractionalMonths_.
           1. Set _weeks_ to 0.
           1. Set _norm_ to ZeroTimeDuration().
         1. Else if _unit_ is *"week"*, then
@@ -2101,35 +2100,35 @@
           1. If _oneWeekDays_ = 0, throw a *RangeError* exception.
           1. Let _fractionalWeeks_ be _weeks_ + _fractionalDays_ / abs(_oneWeekDays_).
           1. Set _weeks_ to RoundNumberToIncrement(_fractionalWeeks_, _increment_, _roundingMode_).
-          1. Set _total_ to _fractionalWeeks_.
+          1. Let _total_ be _fractionalWeeks_.
           1. Set _norm_ to ZeroTimeDuration().
         1. Else if _unit_ is *"day"*, then
           1. Set _days_ to RoundNumberToIncrement(_fractionalDays_, _increment_, _roundingMode_).
-          1. Set _total_ to _fractionalDays_.
+          1. Let _total_ be _fractionalDays_.
           1. Set _norm_ to ZeroTimeDuration().
         1. Else if _unit_ is *"hour"*, then
           1. Let _divisor_ be 3.6 &times; 10<sup>12</sup>.
-          1. Set _total_ to DivideNormalizedTimeDuration(_norm_, _divisor_).
+          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
         1. Else if _unit_ is *"minute"*, then
           1. Let _divisor_ be 6 &times; 10<sup>10</sup>.
-          1. Set _total_ to DivideNormalizedTimeDuration(_norm_, _divisor_).
+          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
         1. Else if _unit_ is *"second"*, then
           1. Let _divisor_ be 10<sup>9</sup>.
-          1. Set _total_ to DivideNormalizedTimeDuration(_norm_, _divisor_).
+          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
         1. Else if _unit_ is *"millisecond"*, then
           1. Let _divisor_ be 10<sup>6</sup>.
-          1. Set _total_ to DivideNormalizedTimeDuration(_norm_, _divisor_).
+          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
         1. Else if _unit_ is *"microsecond"*, then
           1. Let _divisor_ be 10<sup>3</sup>.
-          1. Set _total_ to DivideNormalizedTimeDuration(_norm_, _divisor_).
+          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
-          1. Set _total_ to NormalizedTimeDurationSeconds(_norm_) &times; 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_norm_).
+          1. Let _total_ be NormalizedTimeDurationSeconds(_norm_) &times; 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_norm_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _increment_, _roundingMode_).
         1. Return the Record {
           [[NormalizedDuration]]: ? CreateNormalizedDurationRecord(_years_, _months_, _weeks_, _days_, _norm_),
