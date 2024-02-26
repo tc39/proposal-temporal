@@ -1197,7 +1197,7 @@
         1. If abs(_years_) &ge; 2<sup>32</sup>, return *false*.
         1. If abs(_months_) &ge; 2<sup>32</sup>, return *false*.
         1. If abs(_weeks_) &ge; 2<sup>32</sup>, return *false*.
-        1. Let _normalizedSeconds_ be _days_ &times; 86,400 + _hours_ &times; 3600 + _minutes_ &times; 60 + _seconds_ + _milliseconds_ &times; 10<sup>-3</sup> + _microseconds_ &times; 10<sup>-6</sup> + _nanoseconds_ &times; 10<sup>-9</sup>.
+        1. Let _normalizedSeconds_ be _days_ &times; 86,400 + _hours_ &times; 3600 + _minutes_ &times; 60 + _seconds_ + ℝ(𝔽(_milliseconds_)) &times; 10<sup>-3</sup> + ℝ(𝔽(_microseconds_)) &times; 10<sup>-6</sup> + ℝ(𝔽(_nanoseconds_)) &times; 10<sup>-9</sup>.
         1. NOTE: The above step cannot be implemented directly using floating-point arithmetic. Multiplying by 10<sup>-3</sup>, 10<sup>-6</sup>, and 10<sup>-9</sup> respectively may be imprecise when _milliseconds_, _microseconds_, or _nanoseconds_ is an unsafe integer. This multiplication can be implemented in C++ with an implementation of `std::remquo()` with sufficient bits in the quotient. String manipulation will also give an exact result, since the multiplication is by a power of 10.
         1. If abs(_normalizedSeconds_) &ge; 2<sup>53</sup>, return *false*.
         1. Return *true*.
