@@ -10069,7 +10069,7 @@
 	  // zone and date/time.
 	  if (offsetOpt === 'reject') {
 	    const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
-	    const timeZoneString = IsTemporalTimeZone(timeZoneRec.receiver) ? GetSlot(timeZoneRec.receiver, TIMEZONE_ID) : 'time zone';
+	    const timeZoneString = IsTemporalTimeZone(timeZoneRec.receiver) ? GetSlot(timeZoneRec.receiver, TIMEZONE_ID) : typeof timeZoneRec.receiver === 'string' ? timeZoneRec.receiver : 'time zone';
 	    throw new RangeError("Offset ".concat(offsetStr, " is invalid for ").concat(dt, " in ").concat(timeZoneString));
 	  }
 	  // fall through: offsetOpt === 'prefer', but the offset doesn't match
