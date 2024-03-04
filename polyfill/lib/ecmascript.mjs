@@ -2532,8 +2532,8 @@ export function GetPossibleInstantsFor(timeZoneRec, dateTime) {
 export function ISOYearString(year) {
   let yearString;
   if (year < 0 || year > 9999) {
-    let sign = year < 0 ? '-' : '+';
-    let yearNumber = MathAbs(year);
+    const sign = year < 0 ? '-' : '+';
+    const yearNumber = MathAbs(year);
     yearString = sign + ToZeroPaddedDecimalString(yearNumber, 6);
   } else {
     yearString = ToZeroPaddedDecimalString(year, 4);
