@@ -5664,42 +5664,54 @@
 	*
 	* That node is also moved to the head of the list, so that if it's accessed again we don't need to traverse the whole list. By doing so, all the recently used nodes can be accessed relatively quickly.
 	*/
+	/** @type {import('.').listGetNode} */
 	var listGetNode = function (list, key) { // eslint-disable-line consistent-return
-		for (var prev = list, curr; (curr = prev.next) !== null; prev = curr) {
+		/** @type {typeof list | NonNullable<(typeof list)['next']>} */
+		var prev = list;
+		/** @type {(typeof list)['next']} */
+		var curr;
+		for (; (curr = prev.next) !== null; prev = curr) {
 			if (curr.key === key) {
 				prev.next = curr.next;
-				curr.next = list.next;
+				// eslint-disable-next-line no-extra-parens
+				curr.next = /** @type {NonNullable<typeof list.next>} */ (list.next);
 				list.next = curr; // eslint-disable-line no-param-reassign
 				return curr;
 			}
 		}
 	};
 
+	/** @type {import('.').listGet} */
 	var listGet = function (objects, key) {
 		var node = listGetNode(objects, key);
 		return node && node.value;
 	};
+	/** @type {import('.').listSet} */
 	var listSet = function (objects, key, value) {
 		var node = listGetNode(objects, key);
 		if (node) {
 			node.value = value;
 		} else {
 			// Prepend the new node to the beginning of the list
-			objects.next = { // eslint-disable-line no-param-reassign
+			objects.next = /** @type {import('.').ListNode<typeof value>} */ ({ // eslint-disable-line no-param-reassign, no-extra-parens
 				key: key,
 				next: objects.next,
 				value: value
-			};
+			});
 		}
 	};
+	/** @type {import('.').listHas} */
 	var listHas = function (objects, key) {
 		return !!listGetNode(objects, key);
 	};
 
+	/** @type {import('.')} */
 	var sideChannel = function getSideChannel() {
-		var $wm;
-		var $m;
-		var $o;
+		/** @type {WeakMap<object, unknown>} */ var $wm;
+		/** @type {Map<object, unknown>} */ var $m;
+		/** @type {import('.').RootNode<unknown>} */ var $o;
+
+		/** @type {import('.').Channel} */
 		var channel = {
 			assert: function (key) {
 				if (!channel.has(key)) {
@@ -5901,7 +5913,7 @@
 			return false;
 		}
 
-	    for (var key in Desc) { // eslint-disable-line
+		for (var key in Desc) { // eslint-disable-line
 			if (hasOwn$4(Desc, key) && !allowed[key]) {
 				return false;
 			}
@@ -8471,15 +8483,6 @@
 	  }
 	  return obj;
 	}
-	function _classStaticPrivateMethodGet(receiver, classConstructor, method) {
-	  _classCheckPrivateStaticAccess(receiver, classConstructor);
-	  return method;
-	}
-	function _classCheckPrivateStaticAccess(receiver, classConstructor) {
-	  if (receiver !== classConstructor) {
-	    throw new TypeError("Private static access of wrong provenance");
-	  }
-	}
 
 	var _TimeDuration;
 	const MathAbs$3 = Math.abs;
@@ -8507,17 +8510,17 @@
 	  }
 	  static normalize(h, min, s, ms, µs, ns) {
 	    const totalNs = bigInt(ns).add(bigInt(µs).multiply(1e3)).add(bigInt(ms).multiply(1e6)).add(bigInt(s).multiply(1e9)).add(bigInt(min).multiply(60e9)).add(bigInt(h).multiply(3600e9));
-	    return _classStaticPrivateMethodGet(TimeDuration, TimeDuration, _validateNew).call(TimeDuration, totalNs, 'total');
+	    return _validateNew.call(TimeDuration, totalNs, 'total');
 	  }
 	  abs() {
 	    return new TimeDuration(this.totalNs.abs());
 	  }
 	  add(other) {
-	    return _classStaticPrivateMethodGet(TimeDuration, TimeDuration, _validateNew).call(TimeDuration, this.totalNs.add(other.totalNs), 'sum');
+	    return _validateNew.call(TimeDuration, this.totalNs.add(other.totalNs), 'sum');
 	  }
 	  add24HourDays(days) {
 	    if (!NumberIsInteger(days)) throw new Error('assertion failed: days is an integer');
-	    return _classStaticPrivateMethodGet(TimeDuration, TimeDuration, _validateNew).call(TimeDuration, this.totalNs.add(bigInt(days).multiply(86400e9)), 'sum');
+	    return _validateNew.call(TimeDuration, this.totalNs.add(bigInt(days).multiply(86400e9)), 'sum');
 	  }
 	  addToEpochNs(epochNs) {
 	    return bigInt(epochNs).add(this.totalNs);
@@ -8608,13 +8611,13 @@
 	          break;
 	        }
 	    }
-	    return _classStaticPrivateMethodGet(TimeDuration, TimeDuration, _validateNew).call(TimeDuration, quotient.multiply(increment), 'rounding');
+	    return _validateNew.call(TimeDuration, quotient.multiply(increment), 'rounding');
 	  }
 	  sign() {
 	    return this.cmp(new TimeDuration(0n));
 	  }
 	  subtract(other) {
-	    return _classStaticPrivateMethodGet(TimeDuration, TimeDuration, _validateNew).call(TimeDuration, this.totalNs.subtract(other.totalNs), 'difference');
+	    return _validateNew.call(TimeDuration, this.totalNs.subtract(other.totalNs), 'difference');
 	  }
 	}
 	_TimeDuration = TimeDuration;
@@ -10908,8 +10911,8 @@
 	function ISOYearString(year) {
 	  let yearString;
 	  if (year < 0 || year > 9999) {
-	    let sign = year < 0 ? '-' : '+';
-	    let yearNumber = MathAbs$2(year);
+	    const sign = year < 0 ? '-' : '+';
+	    const yearNumber = MathAbs$2(year);
 	    yearString = sign + ToZeroPaddedDecimalString$1(yearNumber, 6);
 	  } else {
 	    yearString = ToZeroPaddedDecimalString$1(year, 4);
