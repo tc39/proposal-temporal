@@ -1,0 +1,73 @@
+# March 30, 2023
+
+## Attendees
+- Chris de Almeida (CDA)
+- Richard Gibson (RGN)
+- Shane F. Carr (SFC)
+- Philip Chimento (PFC)
+
+## Agenda
+
+### New issues opened by ABL (2523..2538)
+- [#2523](https://github.com/tc39/proposal-temporal/issues/2523) - editorial, not disruptive - stage 4 milestone
+    - RGN: GetOffsetNanosecondsFor enforces a limit of nsPerDay.
+- [#2524](https://github.com/tc39/proposal-temporal/issues/2524) - editorial, not disruptive - stage 4 milestone
+    - PFC: I'm not sure if the IETF draft says anything about `u-ca` being case sensitive.
+    - RGN: UTS 35 refers to locale identifiers.
+    - PFC: Are the locale identifiers in Intl APIs allowed to be case-insensitive?
+    - RGN: Yes.
+    - SFC: If I try `[U-CA=buddist]` in the polyfill, it gets dropped as a nonrecognized annotation.
+    - RGN: I agree with this issue and it would only change if the IETF draft changes. But since the draft is explicit about it, that seems unlikely.
+    - SFC: We should try to match one of these. What does IXDTF do?
+    - RGN: In IXDTF it's case sensitive.
+- [#2525](https://github.com/tc39/proposal-temporal/issues/2525) - editorial, probably not disruptive - stage 4
+    - SFC: I remember this issue where we added the copy, it probably means that all the callers already copy now.
+    - RGN: That's correct.
+    - PFC: I'd like to verify that after PR [#2519](https://github.com/tc39/proposal-temporal/pull/2519) lands, this still holds.
+- [#2526](https://github.com/tc39/proposal-temporal/issues/2526) - editorial, not disruptive - stage 4
+    - RGN: I agree. No strong feelings.
+- [#2527](https://github.com/tc39/proposal-temporal/issues/2527)
+    - PFC: I'm not sure whether this still applies after PR [#2482](https://github.com/tc39/proposal-temporal/pull/2482), we should check.
+- [#2528](https://github.com/tc39/proposal-temporal/issues/2528) - normative - make a decision in stage 3.5
+    - PFC: I'm not sure whether this was intentional. Does it matter because the number is positive?
+    - RGN: It's not guaranteed to be non-negative here, so it does matter.
+    - PFC: Per [discussion on #2437](https://github.com/tc39/proposal-temporal/pull/2437#discussion_r1036201483) this looks intentional.
+    - RGN: I don't think it's correct though. Number.prototype.toFixed uses truncate()
+    - PFC: I don't find this important enough to make a normative change over.
+    - RGN: I do, it's important to have consistency with the rest of ECMA-262 and 402 in operations like this.
+    - PFC: Let's move on for now and take a look at the situation closer to the May plenary. If we can do this without jeopardizing our commitment to being done, then I could be convinced.
+- [#2529](https://github.com/tc39/proposal-temporal/issues/2529) - normative - stage 3.5
+    - RGN: This makes sense.
+    - PFC: Agreed. Although we should double check that it still applies after PR [#2519](https://github.com/tc39/proposal-temporal/pull/2519).
+- [#2530](https://github.com/tc39/proposal-temporal/issues/2530) - editorial, not disruptive - stage 4
+- [#2531](https://github.com/tc39/proposal-temporal/issues/2531) - editorial, not disruptive - stage 4
+    - PFC: What does the memory model refer to? (spec text)
+    - RGN: This can be implemented as is regardless.
+- [#2532](https://github.com/tc39/proposal-temporal/issues/2532) - normative - stage 3.5
+    - RGN: I'm going to assume this one is normative. It seems like an all-around good suggestion: it makes the spec simpler, it has better observable behaviour, and it allows implementations to optimize.
+    - PFC: Agreed. It's even similar to the previous suggestion since he's suggesting that lists of calendar fields should behave like sets rather than lists.
+    - RGN: Let's provisionally plan to do it.
+- [#2533](https://github.com/tc39/proposal-temporal/issues/2533) - normative - decide in stage 3.5
+    - PFC: I prefer this one the way it is, because if you don't care about the calendar units you can still perform the exact time difference and return early.
+    - RGN: True, but that also goes for the calendar check.
+    - PFC: I see, you mean move the calendar check down instead of the time zone check up. I don't find this too important to change, though.
+    - RGN: Let's put this on the agenda for next time and revisit after PR [#2519](https://github.com/tc39/proposal-temporal/pull/2519) lands.
+- [#2534](https://github.com/tc39/proposal-temporal/issues/2534) - editorial - stage 4
+    - PFC: We used to have a lot more operations called Reject. For example, IsValidISODate used to be RejectISODate.
+    - RGN: The sense is different here.
+    - PFC: We could rewrite the callers to say "If IsObjectWithCalendarOrTimeZone(...), throw a TypeError". That would be _a_ way to do it, not the easiest.
+    - RGN: I do kind of like that. It's still slightly different, but it is a kind of classification.
+    - PFC: The operation is renamed to RejectTemporalLikeObject in PR [#2482](https://github.com/tc39/proposal-temporal/pull/2482), but the point still holds.
+- [#2535](https://github.com/tc39/proposal-temporal/issues/2535) - put on agenda for next time
+- [#2536](https://github.com/tc39/proposal-temporal/issues/2536) - editorial - stage 3.5
+    - RGN: It has a test case.
+    - PFC: I trust Anba's test cases 100%. Replacing ! with ? we've usually considered editorial unless it has other consequences.
+    - RGN: I agree.
+- [#2538](https://github.com/tc39/proposal-temporal/issues/2538) - put on agenda for next time
+    - RGN: This looks like a request for a normative change. Should go on the meeting agenda for next time.
+    - PFC: We might be constrained by IXDTF here, I remember it has something to say on using the first annotation vs the last annotation.
+    - RGN: I think there is latitude for how Temporal behaves here.
+- [#2537](https://github.com/tc39/proposal-temporal/issues/2537) - polyfill bug
+    - RGN: The behaviour is clearly incorrect, but is it because the spec is broken?
+    - PFC: I assume not, because this happens inside one of the implementation-defined operations.
+    - RGN: I agree.
