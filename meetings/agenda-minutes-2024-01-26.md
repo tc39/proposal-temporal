@@ -1,0 +1,75 @@
+# January 26, 2024
+
+## Attendees
+- Shane Carr (SFC)
+- Richard Gibson (RGN)
+- Justin Grant (JGT)
+- Philip Chimento (PFC)
+- Phillip Dunkel (PDL)
+
+## Agenda
+
+### Compatibility with Java date arithmetic ([#2535](https://github.com/tc39/proposal-temporal/issues/2535))
+- JGT: Should we start with use cases? I listed some use cases in the issue. Would it be helpful for us to walk through the use cases and see which algorithm works.
+    - Relative date formatting - comparing something to now. "This happened 2 months, 3 days ago." Kids asking "How long is it until my birthday?"
+    - Businesses charge different rates depending on different lengths of time. Car rentals have monthly, weekly, and daily rates.
+    - Many use cases take the default largestUnits. For hourly workers, you calculate the number of hours between clock-in and clock-out. For AWS database usage billing, you calculate the difference between the stop event and start event.
+- SFC: The first use case is the reason I have item 3 on my list of goals, unique monotonic results. I don't want the answer to "How long until the election" to be "2 months" for 3 consecutive days.
+- JGT: It was surprisingly hard to come up with use cases for largestUnit year and month formatting. I think for the majority of use cases the default largestUnit is sufficient. Even the differentiated car rental rates is pretty niche. For a lot of businesses, you'd charge per month and then pro-rate the remainder, which is more of a use case for total().
+- RGN: (via chat): I think the cases you've identified actually call for smallestUnit rounding. e.g., comment history wouldn't want "1 month and 2 days ago", just "one month ago"
+- JGT: That's fair but "2 months and 35 days" would seem like a bug.
+- PDL: But what RGN is saying is that if you are working with a granularity of months, you are probably just going to discard days. You don't care about those extra 2 days.
+- JGT: I wonder how much that is a consequence of JavaScript only having one-unit localizable relative date formatting.
+- PFC: I would say this is maybe true for some cases but not all.
+- PDL: I might buy that for "1 month and 10 days" but after 6 months the days really become irrelevant.
+- PFC: I'm skeptical that developers will think that hard about it. I think the most common first approximation is to take the duration and stick it in DurationFormat to display it to the user, and I think most websites will never move beyond that first approximation.
+- JGT: Agree with both PFC and PDL, but I feel strongly that "2 months and 35 days" is always going to be perceived as a bug. Just as much as "1 year and 15 months".
+- JGT: SFC, how do you feel about the priority of no excess units vs unique monotonic results.
+- SFC: I'm not sure they're mutually exclusive.
+- PFC: I posted a table in the issue where I'm not sure if the hybrid algorithm has unique monotonic results.
+- PDL: Either you have the precision and uniqueness or you don't. I don't see the point of having that duration but not being exact. It's meaningless.
+- JGT: I keep coming back to lower units exceeding higher units looking like a bug.
+- PFC: I disagree that it's meaningless. I assume there are use cases for both.
+- JGT: If precision is really the priority, you'll be using the default of days or hours.
+- PDL: The car rental industry actually always counts 30 days as one month.
+- JGT: Well if displaying relative date formats is the only use case, then it's extra important what is user-visible.
+- PDL: You would round to `{ largestUnit: 'year', smallestUnit: 'month' }` in that case. Or `{ largestUnit: 'month', smallestUnit: 'day' }`. In that case you're willing to lose precision. In that case I'd be fine with that behaviour. What I'm not OK with is when the smallestUnit is unspecified.
+- JGT: If I had to guess, `{ largestUnit: 'month', smallestUnit: 'day' }` is the most common use case we'll be talking about.
+- PFC: I'm going to push back on differentiating between smallestUnit day and unspecified. For PlainDate difference, smallestUnit is already day, whether you specify it or not. I think that would be a weird 'undocumented' feature.
+- PDL: For other types, if you leave it unspecified, you signal that you care about precision.
+- PFC: If you want to query programmer intent, we should have an explicit option that selects the behaviour, not guessing it from smallestUnit. I would be in favour of that, just not in the scope of going to stage 4 in the short term. I am skeptical about guessing it from the presence or absence of smallestUnit.
+- JGT: Agreed, the option should be explicit.
+- SFC: Did we ever have an `overflow: 'roll'` option?
+- PFC: Yes, it was called 'balance'. IIRC we removed it just before going to stage 3. MAJ and MPT said the only reason people wanted it in Moment was to emulate legacy Date.
+- SFC: If we had it now, we wouldn't have this problem. We could consider bringing it back.
+- RGN: My question is about the algorithm we discussed yesterday, I think it's strictly an improvement over the status quo, at least for the forwards case. Are we in agreement on that?
+- PDL: About the backwards case, can we say that it by default produces the exact outcome? And if you want to format it for the user, use the forwards case?
+- JGT: If you want to do that, we should have an option.
+- PDL: I mean that if you choose the option, you run the difference backwards.
+- PFC: I don't think the algorithm works like that.
+- (Discussion about the difference between algorithms.)
+- RGN: I'd like to know if there is agreement on whether the hybrid algorithm is strictly better.
+- PFC: I don't agree with that. I think it's a matter of preference, and process-wise I think we should not change this in stage 3.
+- PDL: I was assuming we were all in agreement that the OP behaviour was a bug. If we don't, then there's a fundamental disagreement.
+- JGT: My red line is that we don't have days > 31 when there are months. I'd at least consider an algorithm that didn't have that.
+- PFC: I don't consider the OP behaviour a bug. I think it's surprising, but it's also congruent with Luxon and Moment. I do think there's a bug we have to fix, which Adam identified, but that's at the border between days and time.
+- (missed some notes)
+- SFC: About the invariants of PD.prototype.since
+    - Current docs: The returned `Temporal.Duration`, when subtracted from `date` using the same `options`, will yield `other`. Using default options, `date1.since(date2)` yields the same result as `date1.until(date2).negated()`, but results may differ with options like `{ largestUnit: 'month' }`.
+    - Instead, is the non-equivalence `date2.until(date1)`? Because `date1.add(duration)` is equivalent to `date1.subtract(duration.negated())`.
+- JGT: I think this is a bug in the docs.
+- JGT: I think the only two options that might get consensus are keeping the status quo, or examining an algorithm that doesn't give unbalanced durations but still overall improves things. Do we have that algorithm?
+- PDL: Yes, it's the one from the meeting notes yesterday, where we compare lexicographically. I guess we would have to agree on whether the OP behaviour is really a bug, or is it merely surprising as PFC says?
+- JGT: I see this as a gray area. There is no perfect answer. I'd be open to considering such an algorithm if there's one that doesn't bring other confusion.
+- PFC: Like I said I'm mildly negative about this one. I don't think the OP behaviour is a bug. I think the algorithm on the table introduces a problem in that we are no longer compatible with Moment and Luxon, and I'm wary of making changes at the last minute that we don't know the full implications of. I'd also be annoyed that I have to do a lot of extra work before tomorrow morning. But I'm less opposed to it than I am to the reversible algorithm.
+- JGT: I don't have a good understanding of where the differences are.
+- PFC: I can prepare this if we break for 15 minutes.
+- PFC: Experimentation results: [(gist)](https://gist.github.com/ptomato/48abca4f7d12d55a2fdab85f9347dd4f)
+- SFC: How about `Temporal.PlainDate.from("1972-03-30").until("1972-01-31")`?
+- Decision:
+    - Switch to new proposed algorithm from Adam Shaw (with small modifications based on yesterday's discussion)
+    - Changes from months to 28/29/30 days in confusing cases
+    - Invariants must stay the same from current algorithm (PFC to verify)
+        - If `A.until(B)` is `D`, then `A.add(D)` is `B`, regardless of `largestUnit`. If `A.since(B)` is `D`, then `A.subtract(D)` is `B`, regardless of `largestUnit`.
+    - `d0.until(d1)` is equivalent to `d0.since(d1).negated()`
+    - `d0.since(d1)` is equivalent to `d0.until(d1).negated()`

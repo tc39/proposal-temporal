@@ -1,0 +1,184 @@
+# January 26, 2023
+
+## Attendees
+- Richard Gibson (RGN)
+- Philip Chimento (PFC)
+- Philipp Dunkel (PDL)
+- Justin Grant (JGT)
+
+## Agenda
+
+### Who's going to Seattle 03-21 – 03-23?
+- PDL, PFC, JGT, maybe RGN
+
+### Calendar.toLocaleString, TimeZone.toLocaleString ([#2486](https://github.com/tc39/proposal-temporal/issues/2486))
+- PFC: Propose to close in favour of the ECMA-402 and temporal-v2 issues.
+- OK.
+- PFC: Also note that once we deliver the message in the upcoming plenary, opening issues like this might look inconsistent, so we should discuss issues beforehand in the Matrix channel, maybe?
+- RGN: On that note, are we happy with what happens when Calendar.p.fields() returns fewer fields?
+- PFC: IIRC SFC found it important to keep the flexibility to remove fields.
+- JGT: I don't think there are any use cases for removing fields.
+- PDL: It was not so much use cases as keeping flexibility for custom calendars.
+- RGN: Does it work if you remove fields?
+- PFC: I believe so, but it'd be good to verify that.
+- RGN: We can ask SFC directly.
+
+### Inconsistent input validation between Calendar.p.&lt;type>fromFields and Calendar.p.mergeFields ([#2466](https://github.com/tc39/proposal-temporal/issues/2466))
+- RGN: I didn't have an alternate proposal ready yet.
+- JGT: IIRC we were not planning to change anything, unless RGN's proposal was compelling.
+- PFC: Will we keep this open for March and if so should we talk about it in the presentation?
+- RGN: Wrap up before March, but no need to include in the presentation.
+- PDL: Let's put a timer that expires in March and close it at that time at the latest.
+- JGT: Can we close it now since there is no action currently?
+- RGN, PDL: Keep it open for now, as a bookmark. Closing it by March is soon enough.
+
+### Nested property bags and ISO strings in Calendar.from/TimeZone.from ([#2104](https://github.com/tc39/proposal-temporal/issues/2104)) / Get local date/time and offset from Instant string ([#2483](https://github.com/tc39/proposal-temporal/issues/2483))
+- PDL: I have strong feelings on the nested property bag, I think we should drop it. I think it was a mistake and sets a bad precedent. ISO strings I'm less bothered about, but I don't think we _need_ it. About 2483,...
+- JGT: That's the only way to parse an offset, currently, without writing your own parser.
+- PDL: That's fine for `TimeZone.from()` and `Calendar.from()`, but the same way I don't want recursive property bags, I don't want an ISO string to be a valid value for a `calendar` or `timeZone` property in a property bag, e.g. in `ZonedDateTime.from()`.
+- JGT: Essentially, there are 2 opposing principles. One is, we are consistent everywhere and accept any valid input to `Calendar.from()`/`TimeZone.from()` in any place where calendar/time zone is accepted. The other is that it's weird to put ISO strings in property bags but not `Calendar.from()`/`TimeZone.from()`.
+- PDL: ISO strings are kind of equivalent to property bags already. That would be the reason you can use it in Calendar.from, but putting that string "property bag" inside another property bag makes less sense.
+- RGN: I have a question about plain objects implementing the interface, and the overlap between that and property bags. The overlap seems troublesome.
+- PDL: That's why I don't like (7) in a property bag.
+- RGN: I don't like it in a `from()` either.
+- PDL: If I do `TimeZone.from({ object without timeZone property })` then that object can only be a time zone implementation.
+- RGN: That's such a bug factory. If I have my own TimeZone class and I give it a property called `timeZone`, it'll blow up.
+- JGT: Question for RGN, if I do `TimeZone.from(zonedDateTime)`, what would you expect?
+- RGN: I'd expect failure. A ZonedDateTime is not a TimeZone.
+- PDL: The point is to grab a time zone out of something else.
+- RGN: Then why does it support a time zone as input?
+- PDL: If I already have a TimeZone object, I don't need to create another one from it.
+- JGT: It's also helpful to have polymorphic input functions, for cases where you're not sure what input data you're working with.
+- RGN: Is the input a time zone, or a thing from which I can get a time zone?
+- PDL: I think this is strange because the sentence of (3) is wrong. It should be an object _implementing_ the time zone methods.
+- RGN: So you'd still have a unioned input type. The priority would be different.
+- PDL: The thing that's wrong here is distinguishing it from (7) by looking at the timeZone property.
+- RGN: I think we're saying the same thing. You'd prioritize (3) instead of (7), trying to interpret input as representing a time zone before trying to _extract_ a time zone from it. And you'd have to allow only a time zone object for the value of `timeZone` property, and give a time zone identifier as `timeZoneId`.
+- PDL: `timeZone` would have either one.
+- RGN: With the changes we're making, `timeZone` could only be an object.
+- PFC: There is no `timeZone` property anymore.
+- JGT: I think that might solve the problem of `toZonedDateTimeISO(Temporal.TimeZone.from(s))` losing the string optimization. I think we're talking about things that are relatively obscure, is it worth changing what we have?
+- PDL: The obscure stuff is usually where the edge cases come in.
+- PDL: If we solve 2104 by saying we do not recurse, and follow the mental model of prioritizing whether something implements a time zone rather than contains one?
+- RGN: That by itself is one level of recursion.
+- PDL: That's not what I'm talking about. I mean, you get the identifier; an instance; an object implementing the interface. I.e. (1), (3), or (4); if not, then is it (2), (7), (5), or (6); fail otherwise.
+- JGT: So the change you're suggesting is in (3) to eagerly look for one or more TimeZone methods.
+- PDL: We decided that the TimeZone methods are all mandatory. So if any one is not present, it's not implementing the interface properly.
+- PFC: If some future proposal added a method to the interface, it'd break objects that hadn't adapted to that.
+- RGN: If a new method is added, it has to be optional.
+- JGT: Is the eager check the only change we're talking about?
+- RGN: I support that, it becomes much more comprehensible. First try to interpret as a time zone, and then as something containing a time zone.
+- PFC: The only observable difference is between (3) and (7).
+- RGN: The `timeZone` property might not exist anywhere so we'd have to change that as well.
+- JGT: We'd change it to `timeZoneId`.
+- RGN: But that property value can never be an object.
+- PDL: `timeZone` is still a valid property because otherwise I can never create a ZonedDateTime with custom time zone from a property bag in `ZonedDateTime.from({ …, timeZone: object })`. If it's valid for `ZonedDateTime.from()` then it should be valid for other `from()`.
+- RGN: You have a point, it makes sense for `ZonedDateTime.from()`.
+- JGT: PFC, have you thought about this for #1808?
+- PFC: I haven't. Maybe we should accept both `timeZone` and `timeZoneId`.
+- PDL: If we do, the type should be forced. If it's `timeZone`, it must be an object implementing the interface, and if it's `timeZoneId`, it must be an identifier.
+- RGN: Agreed.
+- JGT: You have a function that accepts a time zone parameter, and you eventually pass it to `ZonedDateTime.from()`. The safest thing for that developer to do is to wrap the parameter in `TimeZone.from()` which would give you an object and always pass it as the `timeZone` property. That would encourage developers to wrap an ID with an object, and get out of the builtin path. So the `timeZone` input property should polymorphically accept either an object or a string identifier.
+- PDL: The correct thing to do in that case would be `{ timeZoneId: ('string' === typeof tz ? tz : undefined), timeZone: ('object' === typeof tz ? tz : undefined) }`
+- JGT: I think as input, it should be OK to be a string or an object.
+- PDL: I can live with that.
+- RGN: I can too, but I think this is a minor point. I'd like to come back to TimeZone.from(). For a time zone, those properties don't have the same interpretation. I claim that a `timeZoneId` property must be a string in that case, and a `timeZone` property should not be checked at all.
+- PDL: That precludes the custom time zone in case (7). Case (7) is what you'd run into if you were implementing a ZonedWhatever in userland. I'd like `TimeZone.from()` to be able to extract the time zone out of that.
+- PFC: I get that, but I think the pitfall of case (7) sometimes giving you the fast builtin behaviour and sometimes the slow custom behaviour is big enough that it's worth removing that capability.
+- PDL: Case (3) is always the slow behaviour.
+- RGN: We're only talking about case (7) here.
+- PDL: I think case (2) and case (7) are different aspects of the same thing.
+- JGT: Do we actually need case (7)?
+- PFC: I say no.
+- PDL: To my mind we could strike case (2) and it would still be case (7).
+- RGN: There's an observable difference between them. Temporal instances are immutable, but I can create a ZDT and override its `timeZoneId` property. (2) checks the internal slot.
+- RGN: If you created a userland ZonedWhatever class, why wouldn't you override `Temporal.TimeZone.from()`? If you want that object to have special treatment, then you need to update the places that handle it.
+- PDL: When designing the API - the default treatment is (7) and the special treatment is (2).
+- PDL: Do we all agree that (7) is appropriate for ZonedDateTime.from()?
+- PFC: No; that would mean `ZonedDateTime.from({ year, month, day, hour, minute, second, timeZone: { timeZone: ... } })`
+- RGN: I think that the processing of the `timeZone` property in `ZonedDateTime.from()` property bags should not do the same thing as `TimeZone.from()`. `ZonedDateTime.from()` does not extract a time zone from the object that is supposed to _be_ a time zone.
+- PDL: So we have a ToTimeZone operation covering (1), (3), and (4), and an ExtractTimeZone operation covering (2), (5), (6), and (7).
+- RGN: I think the second is _only_ in `TimeZone.from()`.
+- PDL: In `ZonedDateTime.from()` we only call the former. In `TimeZone.from()` we also call the latter.
+- JGT: So in the examples in #2104, you would throw on `Temporal.PlainDate.from({ year: 2020, month: 1, day: 1, calendar: { calendar: 'iso8601' } })`.
+- PDL: I'd throw on 3, 4, and 5, and the question is whether we throw on 2: `Temporal.PlainDate.from({ year: 2020, month: 1, day: 1, calendar: date });`. I think yes.
+- RGN: Agreed.
+- JGT: So developers who want to retain the fast path, would need to know to pull out the calendar ID. An advantage of 2 here is to avoid developers having to know this.
+- RGN: If you want `withCalendar()` in this case, you should do `withCalendar()`.
+- PFC: or `date.with({ year: 2020, month: 1, day: 1 })`.
+- JGT: We'd be exposing people to a potential performance penalty.
+- RGN: You'd get an exception, not drop silently into the slow path.
+- JGT: But once I get the exception, I can choose to use `calendarId` or `getCalendar()`, the latter would put me in the slow path.
+- PDL: That's 2 ways of doing the wrong thing. `date.with({ year, month, day })` is the right thing and it's an education issue.
+- JGT: My point is that `{ calendar: date }` guarantees that the right thing happens without any education issue, whereas throwing an exception introduces a decision point in which developers can easily replace it with `calendarId` (losing support for custom calendars) or `getCalendar()` (falling into deoptimization). Not sure that's enough to justify not throwing here, but it is an issue.
+- PDL: `TimeZone.from()` was originally meant to extract a passable time zone argument. I wish we had a thing that you could pass in that preserved either the fast or slow path.
+- PFC: That would be `date.getISOFields().calendar`.
+- RGN: I think JGT's really identified the missing piece. What's missing is the thing that gives you the value of the slot.
+- PDL: I'd propose we throw on `{ calendar: date }` but create a `Calendar.extract()` and `TimeZone.extract()`, names TBD.
+- RGN: I think that's the wrong place, we need prototype properties.
+- PFC: That was DE's original proposal which nobody liked because they had unioned return types.
+- PDL: I also don't want that.
+- JGT: We do have that with `getISOFields()`, although it's not particularly ergonomic.
+- RGN: Really?
+- PFC: We've always said that `getISOFields()` gives you the contents of the internal slots.
+- JGT: Back to #2104, I think we all agree that 3 should throw. I have a weakly held opinion that 2 should not throw. I'm fine with putting a Temporal object there, not a property bag.
+- PDL: I'm thinking, should Temporal objects be that special?
+- JGT: We have explicit support for custom time zones and custom calendars. We don't support a custom PlainDate, for example. You could do that, but I'm not convinced it's a popular use case.
+- PDL: If we accept that there, we basically have to drop option (7) in #2483, to be logically consistent.
+- JGT: I'm OK with that.
+- RGN: I think it's not _necessary_ because {Calendar,TimeZone}.from fundamentally differ from the other $TemporalType.from
+- JGT: The difference with PlainDate is that property bags are necessary because there's more than one piece of data. With TimeZone and Calendar, there's only one piece of data. We don't lose much if case (7) goes away.
+- PFC: I think we gain if (7) goes away.
+- JGT: Proposal, in #2483, we remove case (7), and change case (3) to not have to check for `timeZone`.
+- PDL: Case (3) should still eagerly check for the methods.
+- PFC: I disagree with that, because we want to reduce the number of user visible calls. Design principle so far has been that we read the methods at most once inside any Temporal API call, when we're going to call them.
+- RGN: I think it'd be acceptable to check the methods in this case. We still get them at most once during a Temporal API call.
+- PDL: For strings we _do_ do verification. I think it makes sense to do it for objects as well. I'd love for there to be a sanity check here.
+- JGT: What does the Set Methods proposal do?
+- PFC: They check for all properties, but I think also in each method call they can potentially call all of them.
+- PDL: I'd be fine if we don't check that they are callable and just do HasProperty. That avoids the property access which might call getter functions.
+- RGN: There's no relevant difference in cost between HasProperty and verifying that it's callable.
+- PDL: Yes, if you need the value you might call a getter.
+- JGT: I think "do we validate the methods in our protocols" can be split into a separate issue. Back to the proposal on the table. In #2483, we remove case (7), and simplify case (3). In #2104 throw in case (3), (4), and (5).
+- Consensus.
+- PDL: Can we treat extracting the time zone as logically later than getting a time zone object? (2) would be logically later than the rest.
+- JGT: Now, there's property bags with a `timeZone` property; `TimeZone.from()`; and methods that take a time zone. The last case we haven't discussed yet.
+- PDL: I think the rule should be the same for the last case. If we have to extract, we fail everywhere except in the explicit `from()`.
+- JGT: What happens if you pass an ISO string to withCalendar or toZonedDateTimeISO? That's an extraction case, but it's somewhat privileged because it always ensures you get to the fast path. If you have to extract the time zone with `from()`, then you get the slow path.
+- PDL: The correct thing there would be to call `ZonedDateTime.from()` instead of `TimeZone.from()`. Now, I agree that the question is open as to whether we want to have shortcuts there. An ISO string could be treated as a ZonedDateTime there.
+- RGN: There's a distinction there: you cannot parse a string with UTC offset and no annotation as a ZonedDateTime. This is the problem originally mentioned in #2483. What I didn't appreciate 5 days ago when I wrote that is that using `TimeZone.from()` falls into the slow path.
+- PDL: We really need a function that gives a ZonedDateTime with GMT+2 time zone from a string with UTC offset.
+- JGT: You either append an annotation to the string, or pass in a TimeZone instance created from the string.
+- PDL: All of those are slow path, and there isn't a way to extract the `+02:00` from the string as a builtin time zone.
+- JGT: To get the fast path, you'd do `Temporal.Instant.from(s).toZonedDateTimeISO(Temporal.TimeZone.from(s).id)`.
+- PDL: That has the overhead of creating an additional object.
+- RGN: Earlier in the conversation, we said it's bad if people are encouraged to fall into the slow path. That's what we're talking about now.
+- JGT: My proposal is to retain the current behaviour, `Temporal.Instant.from(s).toZonedDateTimeISO(s)`. It's most ergonomic for the user and preserves the fast path.
+- RGN: My problem with that is that it requires magic behaviour in ToTimeZone that (a) parses a string (b) extracts the offset c) promotes the offset to an identifier
+- PDL: The more I think about this the more I think this is a bad solution to this use case.
+- JGT: It's a rare use case.
+- PDL: If you think about existing data in databases, for the most part they won't have a time zone annotation. You'll need to extract the offset in exactly this way. This solution is too obscure.
+- PFC: I don't think you'll extract the offset in most cases. In the database you'll have some sort of time zone ID, which you'll use instead.
+- PDL: Could we make an explicit special case for `TimeZone.parseISOString()` to do this?
+- JGT: We have an `offset` option in `ZonedDateTime.from()`, which we could add to `TimeZone.from()` when parsing ISO strings, to determine whether you want to pull out the offset or the annotation.
+- PDL: ZonedDateTime has this already?
+- JGT: ZonedDateTime has an option to manage conflicts.
+- PDL: What happens in `ZonedDateTime.from("2023-01-26T00+02:00", {offset:"use"})`?
+- JGT: Throw due to lack of time zone annotation.
+- PDL: But it does have an offset. Could we make `offset: "use"` take the offset into account?
+- JGT: Interesting idea.
+- RGN: There are already different semantics for `offset: "use"`, for conflict resolution. I'd be OK with the `offset` option, but not the `"use"` value.
+- PDL: `offset: "prefer"`?
+- RGN: That exists already as well.
+- PDL: `offset: "force"`?
+- RGN: OK.
+- PFC: Could we continue to treat `toZonedDateTimeISO()` etc. the same as `TimeZone.from()`?
+- JGT: That would be keeping things closest to the current behaviour.
+- RGN: If we drop (7) from `TimeZone.from()`, then what we're left with in `TimeZone.from()` is, interpret as a time zone, or extract a time zone from a string or Temporal instance. Maybe treating the #2104 case as `TimeZone.from()` isn't so bad ... well, it is.
+- JGT: The one change we agreed in #2104 is to get rid of the nesting. If case (7) goes away, then the nesting goes away.
+- PDL: Maybe getting rid of (7) is actually enough.
+- RGN: As soon as you say that an object is always interpreted as a time zone itself, and a string remains acceptable, then that's enough.
+- JGT: New proposal is that getting rid of (7) in 2483, fixes the case in 2104 so that (3) is no longer accepted.
+- That'll be the plan of record.
+
+### Review of TC39 presentation ([https://ptomato.name/talks/tc39-2023-01/](https://ptomato.name/talks/tc39-2023-01/))
