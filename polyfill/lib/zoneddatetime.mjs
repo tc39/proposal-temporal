@@ -382,6 +382,7 @@ export class ZonedDateTime {
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
+
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZoneRec, GetSlot(this, INSTANT));
     const dt = ES.GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), GetSlot(this, CALENDAR), offsetNs);
     let year = GetSlot(dt, ISO_YEAR);
@@ -393,53 +394,78 @@ export class ZonedDateTime {
     let millisecond = GetSlot(dt, ISO_MILLISECOND);
     let microsecond = GetSlot(dt, ISO_MICROSECOND);
     let nanosecond = GetSlot(dt, ISO_NANOSECOND);
+    let epochNanoseconds;
 
-    const calendar = GetSlot(this, CALENDAR);
-    const dtStart = ES.CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, 'iso8601');
-    const instantStart = ES.GetInstantFor(timeZoneRec, dtStart, 'compatible');
-    const endNs = ES.AddDaysToZonedDateTime(instantStart, dtStart, timeZoneRec, calendar, 1).epochNs;
-    const dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
-    if (dayLengthNs.leq(0)) {
-      throw new RangeError('cannot round a ZonedDateTime in a time zone with zero- or negative-length days');
+    if (smallestUnit === 'day') {
+      // Compute Instants for start-of-day and end-of-day
+      // Determine how far the current instant has progressed through this span.
+      const dtStart = ES.CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, 'iso8601');
+      const dEnd = ES.BalanceISODate(year, month, day + 1);
+      const dtEnd = ES.CreateTemporalDateTime(dEnd.year, dEnd.month, dEnd.day, 0, 0, 0, 0, 0, 0, 'iso8601');
+      const thisNs = GetSlot(GetSlot(this, INSTANT), EPOCHNANOSECONDS);
+
+      const instantStart = ES.GetInstantFor(timeZoneRec, dtStart, 'compatible');
+      const startNs = GetSlot(instantStart, EPOCHNANOSECONDS);
+      if (thisNs.lesser(startNs)) {
+        throw new RangeError(
+          'TimeZone protocol cannot produce an instant during a day that ' +
+            'occurs before another instant it deems start-of-day'
+        );
+      }
+
+      const instantEnd = ES.GetInstantFor(timeZoneRec, dtEnd, 'compatible');
+      const endNs = GetSlot(instantEnd, EPOCHNANOSECONDS);
+      if (thisNs.greaterOrEquals(endNs)) {
+        throw new RangeError(
+          'TimeZone protocol cannot produce an instant during a day that ' +
+            'occurs on or after another instant it deems end-of-day'
+        );
+      }
+
+      const dayLengthNs = endNs.subtract(startNs);
+      const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
+      epochNanoseconds = dayProgressNs.round(dayLengthNs, roundingMode).add(new TimeDuration(startNs)).totalNs;
+    } else {
+      // smallestUnit < day
+      // Round based on ISO-calendar time units
+      ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        roundingIncrement,
+        smallestUnit,
+        roundingMode
+      ));
+
+      // Now reset all DateTime fields but leave the TimeZone. The offset will
+      // also be retained if the new date/time values are still OK with the old
+      // offset. Otherwise the offset will be changed to be compatible with the
+      // new date/time values. If DST disambiguation is required, the `compatible`
+      // disambiguation algorithm will be used.
+      epochNanoseconds = ES.InterpretISODateTimeOffset(
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond,
+        'option',
+        offsetNs,
+        timeZoneRec,
+        'compatible',
+        'prefer',
+        /* matchMinute = */ false
+      );
     }
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode,
-      dayLengthNs
-    ));
-
-    // Now reset all DateTime fields but leave the TimeZone. The offset will
-    // also be retained if the new date/time values are still OK with the old
-    // offset. Otherwise the offset will be changed to be compatible with the
-    // new date/time values. If DST disambiguation is required, the `compatible`
-    // disambiguation algorithm will be used.
-    const epochNanoseconds = ES.InterpretISODateTimeOffset(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      'option',
-      offsetNs,
-      timeZoneRec,
-      'compatible',
-      'prefer',
-      /* matchMinute = */ false
-    );
 
     return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZoneRec.receiver, GetSlot(this, CALENDAR));
   }
