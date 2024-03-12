@@ -4252,7 +4252,6 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
-  resolvedOptions.largestUnit = settings.largestUnit;
 
   const Duration = GetIntrinsic('%Temporal.Duration%');
   if (
