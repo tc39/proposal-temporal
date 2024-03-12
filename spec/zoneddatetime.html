@@ -1509,7 +1509,6 @@
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _precalculatedPlainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
         1. Let _plainRelativeTo_ be ! CreateTemporalDate(_precalculatedPlainDateTime_.[[ISOYear]], _precalculatedPlainDateTime_.[[ISOMonth]], _precalculatedPlainDateTime_.[[ISODay]], _calendarRec_.[[Receiver]]).
-        1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. Let _result_ be ? DifferenceZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _settings_.[[LargestUnit]], _resolvedOptions_, _precalculatedPlainDateTime_).
         1. If _settings_.[[SmallestUnit]] is *"nanosecond"* and _settings_.[[RoundingIncrement]] is 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
         1. If _roundingGranularityIsNoop_ is *false*, then
