@@ -2176,7 +2176,7 @@
         1. If NormalizedTimeDurationSign(_oneDayLess_) &times; _direction_ &lt; 0, then
           1. Return ! CreateNormalizedDurationRecord(_years_, _months_, _weeks_, _days_, _norm_).
         1. Let _adjustedDateDuration_ be ? AddDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0, 0, 0, 0, _direction_, 0, 0, 0, 0, 0, 0, *undefined*, _zonedRelativeTo_, _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_).
-        1. Let _roundRecord_ be ! RoundDuration(0, 0, 0, 0, _oneDayLess_, _increment_, _unit_, _roundingMode_).
+        1. Let _roundRecord_ be ? RoundDuration(0, 0, 0, 0, _oneDayLess_, _increment_, _unit_, _roundingMode_).
         1. Return ? CombineDateAndNormalizedTimeDuration(_adjustedDateDuration_, _roundRecord_.[[NormalizedDuration]].[[NormalizedTime]]).
       </emu-alg>
     </emu-clause>
