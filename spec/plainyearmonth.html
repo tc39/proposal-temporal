@@ -638,7 +638,6 @@
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~date~, &laquo; *"week"*, *"day"* &raquo;, *"month"*, *"year"*).
         1. If _yearMonth_.[[ISOYear]] = _other_.[[ISOYear]] and _yearMonth_.[[ISOMonth]] = _other_.[[ISOMonth]] and _yearMonth_.[[ISODay]] = _other_.[[ISODay]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-add~, ~date-from-fields~, ~date-until~, ~fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"monthCode"*, *"year"* »).
         1. Let _thisFields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
