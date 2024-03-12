@@ -2180,9 +2180,7 @@
 	var $TypeError$q = type;
 	var $floor$3 = GetIntrinsic$f('%Math.floor%');
 
-	/** @typedef {(...args: unknown[]) => unknown} Func */
-
-	/** @type {<T extends Func = Func>(fn: T, length: number, loose?: boolean) => T} */
+	/** @type {import('.')} */
 	var setFunctionLength = function setFunctionLength(fn, length) {
 		if (typeof fn !== 'function') {
 			throw new $TypeError$q('`fn` is not a function');
@@ -10864,7 +10862,7 @@
 	      {
 	        const norm = TimeDuration.normalize(0, 0, 0, 0, 0, -nanoseconds);
 	        const earlierTime = AddTime(hour, minute, second, millisecond, microsecond, nanosecond, norm);
-	        const earlierDate = AddISODate(year, month, day, 0, 0, 0, earlierTime.deltaDays, 'constrain');
+	        const earlierDate = BalanceISODate(year, month, day + earlierTime.deltaDays);
 	        const earlierPlainDateTime = CreateTemporalDateTime(earlierDate.year, earlierDate.month, earlierDate.day, earlierTime.hour, earlierTime.minute, earlierTime.second, earlierTime.millisecond, earlierTime.microsecond, earlierTime.nanosecond);
 	        return GetPossibleInstantsFor(timeZoneRec, earlierPlainDateTime)[0];
 	      }
@@ -10874,7 +10872,7 @@
 	      {
 	        const norm = TimeDuration.normalize(0, 0, 0, 0, 0, nanoseconds);
 	        const laterTime = AddTime(hour, minute, second, millisecond, microsecond, nanosecond, norm);
-	        const laterDate = AddISODate(year, month, day, 0, 0, 0, laterTime.deltaDays, 'constrain');
+	        const laterDate = BalanceISODate(year, month, day + laterTime.deltaDays);
 	        const laterPlainDateTime = CreateTemporalDateTime(laterDate.year, laterDate.month, laterDate.day, laterTime.hour, laterTime.minute, laterTime.second, laterTime.millisecond, laterTime.microsecond, laterTime.nanosecond);
 	        const possible = GetPossibleInstantsFor(timeZoneRec, laterPlainDateTime);
 	        return possible[possible.length - 1];
@@ -12454,7 +12452,6 @@
 	  ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between months');
 	  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
-	  resolvedOptions.largestUnit = settings.largestUnit;
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  if (GetSlot(yearMonth, ISO_YEAR) === GetSlot(other, ISO_YEAR) && GetSlot(yearMonth, ISO_MONTH) === GetSlot(other, ISO_MONTH) && GetSlot(yearMonth, ISO_DAY) === GetSlot(other, ISO_DAY)) {
 	    return new Duration();
@@ -12524,7 +12521,6 @@
 	    const calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateUntil']);
 	    const precalculatedPlainDateTime = GetPlainDateTimeFor(timeZoneRec, GetSlot(zonedDateTime, INSTANT), calendarRec.receiver);
 	    const plainRelativeTo = TemporalDateTimeToDate(precalculatedPlainDateTime);
-	    resolvedOptions.largestUnit = settings.largestUnit;
 	    let norm;
 	    ({
 	      years,
@@ -12997,7 +12993,7 @@
 	  if (sign < 0) {
 	    const oneMonthDuration = new Duration(0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
 	    const nextMonth = CalendarDateAdd(calendarRec, startDate, oneMonthDuration);
-	    const endOfMonthISO = AddISODate(GetSlot(nextMonth, ISO_YEAR), GetSlot(nextMonth, ISO_MONTH), GetSlot(nextMonth, ISO_DAY), 0, 0, 0, -1, 'constrain');
+	    const endOfMonthISO = BalanceISODate(GetSlot(nextMonth, ISO_YEAR), GetSlot(nextMonth, ISO_MONTH), GetSlot(nextMonth, ISO_DAY) - 1);
 	    const endOfMonth = CreateTemporalDate(endOfMonthISO.year, endOfMonthISO.month, endOfMonthISO.day, calendarRec.receiver);
 	    fieldsCopy.day = CalendarDay(calendarRec, endOfMonth);
 	    startDate = CalendarDateFromFields(calendarRec, fieldsCopy);
@@ -13322,7 +13318,7 @@
 	        const monthsWeeksInDays = DaysUntil(yearsLater, yearsMonthsWeeksLater);
 	        plainRelativeTo = yearsLater;
 	        days += monthsWeeksInDays;
-	        const isoResult = AddISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY), 0, 0, 0, days, 'constrain');
+	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
 	        const untilOptions = ObjectCreate$8(null);
 	        untilOptions.largestUnit = 'year';
@@ -13358,7 +13354,7 @@
 	        const weeksInDays = DaysUntil(yearsMonthsLater, yearsMonthsWeeksLater);
 	        plainRelativeTo = yearsMonthsLater;
 	        days += weeksInDays;
-	        const isoResult = AddISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY), 0, 0, 0, days, 'constrain');
+	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
 	        const untilOptions = ObjectCreate$8(null);
 	        untilOptions.largestUnit = 'month';
@@ -13385,7 +13381,7 @@
 	      }
 	    case 'week':
 	      {
-	        const isoResult = AddISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY), 0, 0, 0, days, 'constrain');
+	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
 	        const untilOptions = ObjectCreate$8(null);
 	        untilOptions.largestUnit = 'week';
