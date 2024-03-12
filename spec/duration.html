@@ -2028,7 +2028,7 @@
           1. Let _monthsWeeksInDays_ be DaysUntil(_yearsLater_, _yearsMonthsWeeksLater_).
           1. Set _plainRelativeTo_ to _yearsLater_.
           1. Set _fractionalDays_ to _fractionalDays_ + _monthsWeeksInDays_.
-          1. Let _isoResult_ be ! AddISODate(_plainRelativeTo_.[[ISOYear]]. _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]], 0, 0, 0, truncate(_fractionalDays_), *"constrain"*).
+          1. Let _isoResult_ be BalanceISODate(_plainRelativeTo_.[[ISOYear]], _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]] + truncate(_fractionalDays_)).
           1. Let _wholeDaysLater_ be ? CreateTemporalDate(_isoResult_.[[Year]], _isoResult_.[[Month]], _isoResult_.[[Day]], _calendarRec_.[[Receiver]]).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"year"*).
@@ -2058,7 +2058,7 @@
           1. Let _weeksInDays_ be DaysUntil(_yearsMonthsLater_, _yearsMonthsWeeksLater_).
           1. Set _plainRelativeTo_ to _yearsMonthsLater_.
           1. Set _fractionalDays_ to _fractionalDays_ + _weeksInDays_.
-          1. Let _isoResult_ be ! AddISODate(_plainRelativeTo_.[[ISOYear]], _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]], 0, 0, 0, truncate(_fractionalDays_), *"constrain"*).
+          1. Let _isoResult_ be BalanceISODate(_plainRelativeTo_.[[ISOYear]], _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]] + truncate(_fractionalDays_)).
           1. Let _wholeDaysLater_ be ? CreateTemporalDate(_isoResult_.[[Year]], _isoResult_.[[Month]], _isoResult_.[[Day]], _calendarRec_.[[Receiver]]).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"month"*).
@@ -2081,7 +2081,7 @@
           1. Set _weeks_ to 0.
           1. Set _norm_ to ZeroTimeDuration().
         1. Else if _unit_ is *"week"*, then
-          1. Let _isoResult_ be ! AddISODate(_plainRelativeTo_.[[ISOYear]], _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]], 0, 0, 0, truncate(_fractionalDays_), *"constrain"*).
+          1. Let _isoResult_ be BalanceISODate(_plainRelativeTo_.[[ISOYear]], _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]] + truncate(_fractionalDays_)).
           1. Let _wholeDaysLater_ be ? CreateTemporalDate(_isoResult_.[[Year]], _isoResult_.[[Month]], _isoResult_.[[Day]], _calendarRec_.[[Receiver]]).
           1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"week"*).

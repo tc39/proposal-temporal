@@ -687,7 +687,7 @@
         1. If _sign_ &lt; 0, then
           1. Let _oneMonthDuration_ be ! CreateTemporalDuration(0, 1, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Let _nextMonth_ be ? CalendarDateAdd(_calendarRec_, _intermediateDate_, _oneMonthDuration_).
-          1. Let _endOfMonthISO_ be ! AddISODate(_nextMonth_.[[ISOYear]], _nextMonth_.[[ISOMonth]], _nextMonth_.[[ISODay]], 0, 0, 0, -1, *"constrain"*).
+          1. Let _endOfMonthISO_ be BalanceISODate(_nextMonth_.[[ISOYear]], _nextMonth_.[[ISOMonth]], _nextMonth_.[[ISODay]] - 1).
           1. Let _endOfMonth_ be ? CreateTemporalDate(_endOfMonthISO_.[[Year]], _endOfMonthISO_.[[Month]], _endOfMonthISO_.[[Day]], _calendarRec_.[[Receiver]]).
           1. Let _day_ be ? CalendarDay(_calendarRec_, _endOfMonth_).
           1. Perform ! CreateDataPropertyOrThrow(_fieldsCopy_, *"day"*, _day_).
