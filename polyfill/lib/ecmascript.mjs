@@ -4360,7 +4360,6 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
     );
     const plainRelativeTo = TemporalDateTimeToDate(precalculatedPlainDateTime);
 
-    resolvedOptions.largestUnit = settings.largestUnit;
     let norm;
     ({ years, months, weeks, days, norm } = DifferenceZonedDateTime(
       ns1,
