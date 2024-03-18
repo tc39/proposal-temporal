@@ -400,10 +400,31 @@ const durationYears = seq(
   [choice(durationMonths, durationWeeks, durationDays)]
 );
 const durationDate = seq(choice(durationYears, durationMonths, durationWeeks, durationDays), [durationTime]);
-const duration = seq(
-  withCode([temporalSign], (data, result) => (data.factor = result === '-' || result === '\u2212' ? -1 : 1)),
-  durationDesignator,
-  choice(durationDate, durationTime)
+const duration = withSyntaxConstraints(
+  seq(
+    withCode([temporalSign], (data, result) => (data.factor = result === '-' || result === '\u2212' ? -1 : 1)),
+    durationDesignator,
+    choice(durationDate, durationTime)
+  ),
+  (_, data) => {
+    try {
+      ES.RejectDuration(
+        data.years ?? 0,
+        data.months ?? 0,
+        data.weeks ?? 0,
+        data.days ?? 0,
+        data.hours ?? 0,
+        data.minutes ?? 0,
+        data.seconds ?? 0,
+        data.milliseconds ?? 0,
+        data.microseconds ?? 0,
+        data.nanoseconds ?? 0
+      );
+    } catch (e) {
+      if (e instanceof RangeError) throw new SyntaxError('duration too large, try again');
+      throw e;
+    }
+  }
 );
 
 const instant = seq(date, dateTimeSeparator, timeSpec, dateTimeUTCOffset, [timeZoneAnnotation], [annotations]);
