@@ -1704,7 +1704,7 @@
 	var $RangeError$1 = requireRange();
 	var $ReferenceError = ref;
 	var $SyntaxError$4 = syntax;
-	var $TypeError$s = type;
+	var $TypeError$t = type;
 	var $URIError = uri;
 
 	var $Function = Function;
@@ -1726,7 +1726,7 @@
 	}
 
 	var throwTypeError = function () {
-		throw new $TypeError$s();
+		throw new $TypeError$t();
 	};
 	var ThrowTypeError = $gOPD$2
 		? (function () {
@@ -1817,7 +1817,7 @@
 		'%SyntaxError%': $SyntaxError$4,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
-		'%TypeError%': $TypeError$s,
+		'%TypeError%': $TypeError$t,
 		'%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
 		'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
 		'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
@@ -1959,7 +1959,7 @@
 				value = doEval(intrinsicName);
 			}
 			if (typeof value === 'undefined' && !allowMissing) {
-				throw new $TypeError$s('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+				throw new $TypeError$t('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
 			}
 
 			return {
@@ -1974,10 +1974,10 @@
 
 	var getIntrinsic = function GetIntrinsic(name, allowMissing) {
 		if (typeof name !== 'string' || name.length === 0) {
-			throw new $TypeError$s('intrinsic name must be a non-empty string');
+			throw new $TypeError$t('intrinsic name must be a non-empty string');
 		}
 		if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
-			throw new $TypeError$s('"allowMissing" argument must be a boolean');
+			throw new $TypeError$t('"allowMissing" argument must be a boolean');
 		}
 
 		if ($exec(/^%?[^%]*%?$/, name) === null) {
@@ -2022,7 +2022,7 @@
 			} else if (value != null) {
 				if (!(part in value)) {
 					if (!allowMissing) {
-						throw new $TypeError$s('base intrinsic for ' + name + ' exists, but the property is not available.');
+						throw new $TypeError$t('base intrinsic for ' + name + ' exists, but the property is not available.');
 					}
 					return void undefined$1;
 				}
@@ -2081,9 +2081,9 @@
 		return esDefineProperty;
 	}
 
-	var GetIntrinsic$g = getIntrinsic;
+	var GetIntrinsic$f = getIntrinsic;
 
-	var $gOPD$1 = GetIntrinsic$g('%Object.getOwnPropertyDescriptor%', true);
+	var $gOPD$1 = GetIntrinsic$f('%Object.getOwnPropertyDescriptor%', true);
 
 	if ($gOPD$1) {
 		try {
@@ -2099,7 +2099,7 @@
 	var $defineProperty$2 = requireEsDefineProperty();
 
 	var $SyntaxError$3 = syntax;
-	var $TypeError$r = type;
+	var $TypeError$s = type;
 
 	var gopd = gopd$1;
 
@@ -2110,22 +2110,22 @@
 		value
 	) {
 		if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) {
-			throw new $TypeError$r('`obj` must be an object or a function`');
+			throw new $TypeError$s('`obj` must be an object or a function`');
 		}
 		if (typeof property !== 'string' && typeof property !== 'symbol') {
-			throw new $TypeError$r('`property` must be a string or a symbol`');
+			throw new $TypeError$s('`property` must be a string or a symbol`');
 		}
 		if (arguments.length > 3 && typeof arguments[3] !== 'boolean' && arguments[3] !== null) {
-			throw new $TypeError$r('`nonEnumerable`, if provided, must be a boolean or null');
+			throw new $TypeError$s('`nonEnumerable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 4 && typeof arguments[4] !== 'boolean' && arguments[4] !== null) {
-			throw new $TypeError$r('`nonWritable`, if provided, must be a boolean or null');
+			throw new $TypeError$s('`nonWritable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 5 && typeof arguments[5] !== 'boolean' && arguments[5] !== null) {
-			throw new $TypeError$r('`nonConfigurable`, if provided, must be a boolean or null');
+			throw new $TypeError$s('`nonConfigurable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 6 && typeof arguments[6] !== 'boolean') {
-			throw new $TypeError$r('`loose`, if provided, must be a boolean');
+			throw new $TypeError$s('`loose`, if provided, must be a boolean');
 		}
 
 		var nonEnumerable = arguments.length > 3 ? arguments[3] : null;
@@ -2172,21 +2172,21 @@
 
 	var hasPropertyDescriptors_1 = hasPropertyDescriptors$1;
 
-	var GetIntrinsic$f = getIntrinsic;
+	var GetIntrinsic$e = getIntrinsic;
 	var define = defineDataProperty;
 	var hasDescriptors = hasPropertyDescriptors_1();
 	var gOPD = gopd$1;
 
-	var $TypeError$q = type;
-	var $floor$3 = GetIntrinsic$f('%Math.floor%');
+	var $TypeError$r = type;
+	var $floor$3 = GetIntrinsic$e('%Math.floor%');
 
 	/** @type {import('.')} */
 	var setFunctionLength = function setFunctionLength(fn, length) {
 		if (typeof fn !== 'function') {
-			throw new $TypeError$q('`fn` is not a function');
+			throw new $TypeError$r('`fn` is not a function');
 		}
 		if (typeof length !== 'number' || length < 0 || length > 0xFFFFFFFF || $floor$3(length) !== length) {
-			throw new $TypeError$q('`length` must be a positive 32-bit integer');
+			throw new $TypeError$r('`length` must be a positive 32-bit integer');
 		}
 
 		var loose = arguments.length > 2 && !!arguments[2];
@@ -2252,14 +2252,14 @@
 
 	var callBindExports = callBind$2.exports;
 
-	var GetIntrinsic$e = getIntrinsic;
+	var GetIntrinsic$d = getIntrinsic;
 
 	var callBind$1 = callBindExports;
 
-	var $indexOf = callBind$1(GetIntrinsic$e('String.prototype.indexOf'));
+	var $indexOf = callBind$1(GetIntrinsic$d('String.prototype.indexOf'));
 
 	var callBound$4 = function callBoundIntrinsic(name, allowMissing) {
-		var intrinsic = GetIntrinsic$e(name, !!allowMissing);
+		var intrinsic = GetIntrinsic$d(name, !!allowMissing);
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
 			return callBind$1(intrinsic);
 		}
@@ -2268,9 +2268,9 @@
 
 	var callBound$5 = /*@__PURE__*/getDefaultExportFromCjs(callBound$4);
 
-	var GetIntrinsic$d = getIntrinsic;
+	var GetIntrinsic$c = getIntrinsic;
 
-	var $Array = GetIntrinsic$d('%Array%');
+	var $Array = GetIntrinsic$c('%Array%');
 
 	// eslint-disable-next-line global-require
 	var toStr$4 = !$Array.isArray && callBound$4('Object.prototype.toString');
@@ -2284,21 +2284,21 @@
 
 	var IsArray$4 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$3);
 
-	var GetIntrinsic$c = getIntrinsic;
+	var GetIntrinsic$b = getIntrinsic;
 	var callBound$3 = callBound$4;
 
-	var $TypeError$p = type;
+	var $TypeError$q = type;
 
 	var IsArray$2 = IsArray$3;
 
-	var $apply = GetIntrinsic$c('%Reflect.apply%', true) || callBound$3('Function.prototype.apply');
+	var $apply = GetIntrinsic$b('%Reflect.apply%', true) || callBound$3('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
 	var Call$3 = function Call(F, V) {
 		var argumentsList = arguments.length > 2 ? arguments[2] : [];
 		if (!IsArray$2(argumentsList)) {
-			throw new $TypeError$p('Assertion failed: optional `argumentsList`, if provided, must be a List');
+			throw new $TypeError$q('Assertion failed: optional `argumentsList`, if provided, must be a List');
 		}
 		return $apply(F, V, argumentsList);
 	};
@@ -5642,13 +5642,13 @@
 	    return xs;
 	}
 
-	var GetIntrinsic$b = getIntrinsic;
+	var GetIntrinsic$a = getIntrinsic;
 	var callBound$2 = callBound$4;
 	var inspect$4 = objectInspect;
 
-	var $TypeError$o = type;
-	var $WeakMap = GetIntrinsic$b('%WeakMap%', true);
-	var $Map = GetIntrinsic$b('%Map%', true);
+	var $TypeError$p = type;
+	var $WeakMap = GetIntrinsic$a('%WeakMap%', true);
+	var $Map = GetIntrinsic$a('%Map%', true);
 
 	var $weakMapGet = callBound$2('WeakMap.prototype.get', true);
 	var $weakMapSet = callBound$2('WeakMap.prototype.set', true);
@@ -5713,7 +5713,7 @@
 		var channel = {
 			assert: function (key) {
 				if (!channel.has(key)) {
-					throw new $TypeError$o('Side channel does not contain ' + inspect$4(key));
+					throw new $TypeError$p('Side channel does not contain ' + inspect$4(key));
 				}
 			},
 			get: function (key) { // eslint-disable-line consistent-return
@@ -5773,47 +5773,47 @@
 	var hasOwn$5 = hasown;
 	var channel = sideChannel();
 
-	var $TypeError$n = type;
+	var $TypeError$o = type;
 
 	var SLOT$1 = {
 		assert: function (O, slot) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$n('`O` is not an object');
+				throw new $TypeError$o('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$n('`slot` must be a string');
+				throw new $TypeError$o('`slot` must be a string');
 			}
 			channel.assert(O);
 			if (!SLOT$1.has(O, slot)) {
-				throw new $TypeError$n('`' + slot + '` is not present on `O`');
+				throw new $TypeError$o('`' + slot + '` is not present on `O`');
 			}
 		},
 		get: function (O, slot) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$n('`O` is not an object');
+				throw new $TypeError$o('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$n('`slot` must be a string');
+				throw new $TypeError$o('`slot` must be a string');
 			}
 			var slots = channel.get(O);
 			return slots && slots['$' + slot];
 		},
 		has: function (O, slot) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$n('`O` is not an object');
+				throw new $TypeError$o('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$n('`slot` must be a string');
+				throw new $TypeError$o('`slot` must be a string');
 			}
 			var slots = channel.get(O);
 			return !!slots && hasOwn$5(slots, '$' + slot);
 		},
 		set: function (O, slot, V) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$n('`O` is not an object');
+				throw new $TypeError$o('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$n('`slot` must be a string');
+				throw new $TypeError$o('`slot` must be a string');
 			}
 			var slots = channel.get(O);
 			if (!slots) {
@@ -5890,7 +5890,7 @@
 
 	var IsPropertyKey$a = /*@__PURE__*/getDefaultExportFromCjs(IsPropertyKey$9);
 
-	var $TypeError$m = type;
+	var $TypeError$n = type;
 
 	var hasOwn$4 = hasown;
 
@@ -5920,12 +5920,12 @@
 		var isData = hasOwn$4(Desc, '[[Value]]') || hasOwn$4(Desc, '[[Writable]]');
 		var IsAccessor = hasOwn$4(Desc, '[[Get]]') || hasOwn$4(Desc, '[[Set]]');
 		if (isData && IsAccessor) {
-			throw new $TypeError$m('Property Descriptors may not be both accessor and data descriptors');
+			throw new $TypeError$n('Property Descriptors may not be both accessor and data descriptors');
 		}
 		return true;
 	};
 
-	var $TypeError$l = type;
+	var $TypeError$m = type;
 
 	var hasOwn$3 = hasown;
 
@@ -5939,7 +5939,7 @@
 		}
 
 		if (!isPropertyDescriptor$6(Desc)) {
-			throw new $TypeError$l('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$m('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
 		if (!hasOwn$3(Desc, '[[Get]]') && !hasOwn$3(Desc, '[[Set]]')) {
@@ -5962,10 +5962,10 @@
 		return isPrimitive$4;
 	}
 
-	var GetIntrinsic$a = getIntrinsic;
+	var GetIntrinsic$9 = getIntrinsic;
 
-	var $preventExtensions = GetIntrinsic$a('%Object.preventExtensions%', true);
-	var $isExtensible = GetIntrinsic$a('%Object.isExtensible%', true);
+	var $preventExtensions = GetIntrinsic$9('%Object.preventExtensions%', true);
+	var $isExtensible = GetIntrinsic$9('%Object.isExtensible%', true);
 
 	var isPrimitive$3 = requireIsPrimitive();
 
@@ -6128,7 +6128,7 @@
 
 	var hasOwn$2 = hasown;
 
-	var $TypeError$k = type;
+	var $TypeError$l = type;
 
 	var Type$b = Type$c;
 	var ToBoolean$1 = ToBoolean$2;
@@ -6138,7 +6138,7 @@
 
 	var ToPropertyDescriptor$1 = function ToPropertyDescriptor(Obj) {
 		if (Type$b(Obj) !== 'Object') {
-			throw new $TypeError$k('ToPropertyDescriptor requires an object');
+			throw new $TypeError$l('ToPropertyDescriptor requires an object');
 		}
 
 		var desc = {};
@@ -6157,20 +6157,20 @@
 		if (hasOwn$2(Obj, 'get')) {
 			var getter = Obj.get;
 			if (typeof getter !== 'undefined' && !IsCallable$2(getter)) {
-				throw new $TypeError$k('getter must be a function');
+				throw new $TypeError$l('getter must be a function');
 			}
 			desc['[[Get]]'] = getter;
 		}
 		if (hasOwn$2(Obj, 'set')) {
 			var setter = Obj.set;
 			if (typeof setter !== 'undefined' && !IsCallable$2(setter)) {
-				throw new $TypeError$k('setter must be a function');
+				throw new $TypeError$l('setter must be a function');
 			}
 			desc['[[Set]]'] = setter;
 		}
 
 		if ((hasOwn$2(desc, '[[Get]]') || hasOwn$2(desc, '[[Set]]')) && (hasOwn$2(desc, '[[Value]]') || hasOwn$2(desc, '[[Writable]]'))) {
-			throw new $TypeError$k('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
+			throw new $TypeError$l('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
 		}
 		return desc;
 	};
@@ -6281,7 +6281,7 @@
 		return obj;
 	};
 
-	var $TypeError$j = type;
+	var $TypeError$k = type;
 
 	var isPropertyDescriptor$4 = propertyDescriptor;
 	var fromPropertyDescriptor = fromPropertyDescriptor$1;
@@ -6290,13 +6290,13 @@
 
 	var FromPropertyDescriptor$1 = function FromPropertyDescriptor(Desc) {
 		if (typeof Desc !== 'undefined' && !isPropertyDescriptor$4(Desc)) {
-			throw new $TypeError$j('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$k('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
 		return fromPropertyDescriptor(Desc);
 	};
 
-	var $TypeError$i = type;
+	var $TypeError$j = type;
 
 	var hasOwn$1 = hasown;
 
@@ -6310,7 +6310,7 @@
 		}
 
 		if (!isPropertyDescriptor$3(Desc)) {
-			throw new $TypeError$i('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$j('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
 		if (!hasOwn$1(Desc, '[[Value]]') && !hasOwn$1(Desc, '[[Writable]]')) {
@@ -6320,7 +6320,7 @@
 		return true;
 	};
 
-	var $TypeError$h = type;
+	var $TypeError$i = type;
 
 	var IsAccessorDescriptor$2 = IsAccessorDescriptor$3;
 	var IsDataDescriptor$1 = IsDataDescriptor$2;
@@ -6335,7 +6335,7 @@
 		}
 
 		if (!isPropertyDescriptor$2(Desc)) {
-			throw new $TypeError$h('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$i('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
 		if (!IsAccessorDescriptor$2(Desc) && !IsDataDescriptor$1(Desc)) {
@@ -6345,7 +6345,7 @@
 		return false;
 	};
 
-	var $TypeError$g = type;
+	var $TypeError$h = type;
 
 	var DefineOwnProperty = DefineOwnProperty$1;
 	var isFullyPopulatedPropertyDescriptor = isFullyPopulatedPropertyDescriptor$1;
@@ -6367,19 +6367,19 @@
 	var ValidateAndApplyPropertyDescriptor$1 = function ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current) {
 		var oType = Type$a(O);
 		if (oType !== 'Undefined' && oType !== 'Object') {
-			throw new $TypeError$g('Assertion failed: O must be undefined or an Object');
+			throw new $TypeError$h('Assertion failed: O must be undefined or an Object');
 		}
 		if (!IsPropertyKey$8(P)) {
-			throw new $TypeError$g('Assertion failed: P must be a Property Key');
+			throw new $TypeError$h('Assertion failed: P must be a Property Key');
 		}
 		if (typeof extensible !== 'boolean') {
-			throw new $TypeError$g('Assertion failed: extensible must be a Boolean');
+			throw new $TypeError$h('Assertion failed: extensible must be a Boolean');
 		}
 		if (!isPropertyDescriptor$1(Desc)) {
-			throw new $TypeError$g('Assertion failed: Desc must be a Property Descriptor');
+			throw new $TypeError$h('Assertion failed: Desc must be a Property Descriptor');
 		}
 		if (typeof current !== 'undefined' && !isPropertyDescriptor$1(current)) {
-			throw new $TypeError$g('Assertion failed: current must be a Property Descriptor, or undefined');
+			throw new $TypeError$h('Assertion failed: current must be a Property Descriptor, or undefined');
 		}
 
 		if (typeof current === 'undefined') { // step 2
@@ -6425,7 +6425,7 @@
 				current
 			)
 		) {
-			throw new $TypeError$g('`current`, when present, must be a fully populated and valid Property Descriptor');
+			throw new $TypeError$h('`current`, when present, must be a fully populated and valid Property Descriptor');
 		}
 
 		// 4. If every field in Desc is absent, return true.
@@ -6518,7 +6518,7 @@
 
 	var $gOPD = gopd$1;
 	var $SyntaxError$1 = syntax;
-	var $TypeError$f = type;
+	var $TypeError$g = type;
 
 	var isPropertyDescriptor = propertyDescriptor;
 
@@ -6534,13 +6534,13 @@
 
 	var OrdinaryDefineOwnProperty$1 = function OrdinaryDefineOwnProperty(O, P, Desc) {
 		if (Type$9(O) !== 'Object') {
-			throw new $TypeError$f('Assertion failed: O must be an Object');
+			throw new $TypeError$g('Assertion failed: O must be an Object');
 		}
 		if (!IsPropertyKey$7(P)) {
-			throw new $TypeError$f('Assertion failed: P must be a Property Key');
+			throw new $TypeError$g('Assertion failed: P must be a Property Key');
 		}
 		if (!isPropertyDescriptor(Desc)) {
-			throw new $TypeError$f('Assertion failed: Desc must be a Property Descriptor');
+			throw new $TypeError$g('Assertion failed: Desc must be a Property Descriptor');
 		}
 		if (!$gOPD) {
 			// ES3/IE 8 fallback
@@ -6569,7 +6569,7 @@
 		return ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current);
 	};
 
-	var $TypeError$e = type;
+	var $TypeError$f = type;
 
 	var IsPropertyKey$6 = IsPropertyKey$9;
 	var OrdinaryDefineOwnProperty = OrdinaryDefineOwnProperty$1;
@@ -6579,10 +6579,10 @@
 
 	var CreateDataProperty$1 = function CreateDataProperty(O, P, V) {
 		if (Type$8(O) !== 'Object') {
-			throw new $TypeError$e('Assertion failed: Type(O) is not Object');
+			throw new $TypeError$f('Assertion failed: Type(O) is not Object');
 		}
 		if (!IsPropertyKey$6(P)) {
-			throw new $TypeError$e('Assertion failed: IsPropertyKey(P) is not true');
+			throw new $TypeError$f('Assertion failed: IsPropertyKey(P) is not true');
 		}
 		var newDesc = {
 			'[[Configurable]]': true,
@@ -6593,7 +6593,7 @@
 		return OrdinaryDefineOwnProperty(O, P, newDesc);
 	};
 
-	var $TypeError$d = type;
+	var $TypeError$e = type;
 
 	var CreateDataProperty = CreateDataProperty$1;
 	var IsPropertyKey$5 = IsPropertyKey$9;
@@ -6603,21 +6603,21 @@
 
 	var CreateDataPropertyOrThrow = function CreateDataPropertyOrThrow(O, P, V) {
 		if (Type$7(O) !== 'Object') {
-			throw new $TypeError$d('Assertion failed: Type(O) is not Object');
+			throw new $TypeError$e('Assertion failed: Type(O) is not Object');
 		}
 		if (!IsPropertyKey$5(P)) {
-			throw new $TypeError$d('Assertion failed: IsPropertyKey(P) is not true');
+			throw new $TypeError$e('Assertion failed: IsPropertyKey(P) is not true');
 		}
 		var success = CreateDataProperty(O, P, V);
 		if (!success) {
-			throw new $TypeError$d('unable to create data property');
+			throw new $TypeError$e('unable to create data property');
 		}
 		return success;
 	};
 
 	var CreateDataPropertyOrThrow$1 = /*@__PURE__*/getDefaultExportFromCjs(CreateDataPropertyOrThrow);
 
-	var $TypeError$c = type;
+	var $TypeError$d = type;
 
 	var inspect$3 = objectInspect;
 
@@ -6629,11 +6629,11 @@
 	var Get$2 = function Get(O, P) {
 		// 7.3.1.1
 		if (Type$6(O) !== 'Object') {
-			throw new $TypeError$c('Assertion failed: Type(O) is not Object');
+			throw new $TypeError$d('Assertion failed: Type(O) is not Object');
 		}
 		// 7.3.1.2
 		if (!IsPropertyKey$4(P)) {
-			throw new $TypeError$c('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$3(P));
+			throw new $TypeError$d('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$3(P));
 		}
 		// 7.3.1.3
 		return O[P];
@@ -6864,10 +6864,10 @@
 
 	var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN$2(x) && x !== Infinity && x !== -Infinity; };
 
-	var GetIntrinsic$9 = getIntrinsic;
+	var GetIntrinsic$8 = getIntrinsic;
 
-	var $abs$1 = GetIntrinsic$9('%Math.abs%');
-	var $floor$1 = GetIntrinsic$9('%Math.floor%');
+	var $abs$1 = GetIntrinsic$8('%Math.abs%');
+	var $floor$1 = GetIntrinsic$8('%Math.floor%');
 
 	var $isNaN$1 = _isNaN;
 	var $isFinite$1 = _isFinite;
@@ -6930,7 +6930,7 @@
 		return AdvanceStringIndex$1;
 	}
 
-	var $TypeError$b = type;
+	var $TypeError$c = type;
 
 	var inspect$2 = objectInspect;
 
@@ -6942,7 +6942,7 @@
 	var GetV$2 = function GetV(V, P) {
 		// 7.3.2.1
 		if (!IsPropertyKey$3(P)) {
-			throw new $TypeError$b('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$2(P));
+			throw new $TypeError$c('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$2(P));
 		}
 
 		// 7.3.2.2-3
@@ -6952,7 +6952,7 @@
 		return V[P];
 	};
 
-	var $TypeError$a = type;
+	var $TypeError$b = type;
 
 	var GetV$1 = GetV$2;
 	var IsCallable$1 = IsCallable$3;
@@ -6965,7 +6965,7 @@
 	var GetMethod$3 = function GetMethod(O, P) {
 		// 7.3.9.1
 		if (!IsPropertyKey$2(P)) {
-			throw new $TypeError$a('Assertion failed: IsPropertyKey(P) is not true');
+			throw new $TypeError$b('Assertion failed: IsPropertyKey(P) is not true');
 		}
 
 		// 7.3.9.2
@@ -6978,7 +6978,7 @@
 
 		// 7.3.9.5
 		if (!IsCallable$1(func)) {
-			throw new $TypeError$a(inspect$1(P) + ' is not a function: ' + inspect$1(func));
+			throw new $TypeError$b(inspect$1(P) + ' is not a function: ' + inspect$1(func));
 		}
 
 		// 7.3.9.6
@@ -6987,11 +6987,11 @@
 
 	var GetMethod$4 = /*@__PURE__*/getDefaultExportFromCjs(GetMethod$3);
 
-	var GetIntrinsic$8 = getIntrinsic;
+	var GetIntrinsic$7 = getIntrinsic;
 
-	var $TypeError$9 = type;
+	var $TypeError$a = type;
 	var $SyntaxError = syntax;
-	var $asyncIterator = GetIntrinsic$8('%Symbol.asyncIterator%', true);
+	var $asyncIterator = GetIntrinsic$7('%Symbol.asyncIterator%', true);
 
 	var inspect = objectInspect;
 	var hasSymbols$2 = requireHasSymbols()();
@@ -7011,7 +7011,7 @@
 			actualHint = 'sync';
 		}
 		if (actualHint !== 'sync' && actualHint !== 'async') {
-			throw new $TypeError$9("Assertion failed: `hint` must be one of 'sync' or 'async', got " + inspect(hint));
+			throw new $TypeError$a("Assertion failed: `hint` must be one of 'sync' or 'async', got " + inspect(hint));
 		}
 
 		var actualMethod = method;
@@ -7036,7 +7036,7 @@
 		}
 		var iterator = Call$2(actualMethod, obj);
 		if (Type$5(iterator) !== 'Object') {
-			throw new $TypeError$9('iterator must return an object');
+			throw new $TypeError$a('iterator must return an object');
 		}
 
 		return iterator;
@@ -7054,7 +7054,7 @@
 
 	var GetIterator$1 = /*@__PURE__*/getDefaultExportFromCjs(GetIterator);
 
-	var $TypeError$8 = type;
+	var $TypeError$9 = type;
 
 	var hasOwn = hasown;
 
@@ -7065,10 +7065,10 @@
 
 	var HasOwnProperty = function HasOwnProperty(O, P) {
 		if (Type$4(O) !== 'Object') {
-			throw new $TypeError$8('Assertion failed: `O` must be an Object');
+			throw new $TypeError$9('Assertion failed: `O` must be an Object');
 		}
 		if (!IsPropertyKey$1(P)) {
-			throw new $TypeError$8('Assertion failed: `P` must be a Property Key');
+			throw new $TypeError$9('Assertion failed: `P` must be a Property Key');
 		}
 		return hasOwn(O, P);
 	};
@@ -7085,7 +7085,7 @@
 
 	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
 
-	var $TypeError$7 = type;
+	var $TypeError$8 = type;
 
 	var Call$1 = Call$3;
 	var CompletionRecord = CompletionRecord_1;
@@ -7097,10 +7097,10 @@
 
 	var IteratorClose = function IteratorClose(iterator, completion) {
 		if (Type$3(iterator) !== 'Object') {
-			throw new $TypeError$7('Assertion failed: Type(iterator) is not Object');
+			throw new $TypeError$8('Assertion failed: Type(iterator) is not Object');
 		}
 		if (!IsCallable(completion) && !(completion instanceof CompletionRecord)) {
-			throw new $TypeError$7('Assertion failed: completion is not a thunk representing a Completion Record, nor a Completion Record instance');
+			throw new $TypeError$8('Assertion failed: completion is not a thunk representing a Completion Record, nor a Completion Record instance');
 		}
 		var completionThunk = completion instanceof CompletionRecord ? function () { return completion['?'](); } : completion;
 
@@ -7127,7 +7127,7 @@
 		completionThunk = null; // ensure it's not called twice.
 
 		if (Type$3(innerResult) !== 'Object') {
-			throw new $TypeError$7('iterator .return must return an object');
+			throw new $TypeError$8('iterator .return must return an object');
 		}
 
 		return completionRecord;
@@ -7135,7 +7135,7 @@
 
 	var IteratorClose$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorClose);
 
-	var $TypeError$6 = type;
+	var $TypeError$7 = type;
 
 	var Get$1 = Get$2;
 	var ToBoolean = ToBoolean$2;
@@ -7145,12 +7145,12 @@
 
 	var IteratorComplete$1 = function IteratorComplete(iterResult) {
 		if (Type$2(iterResult) !== 'Object') {
-			throw new $TypeError$6('Assertion failed: Type(iterResult) is not Object');
+			throw new $TypeError$7('Assertion failed: Type(iterResult) is not Object');
 		}
 		return ToBoolean(Get$1(iterResult, 'done'));
 	};
 
-	var $TypeError$5 = type;
+	var $TypeError$6 = type;
 
 	var Call = Call$3;
 	var IsArray = IsArray$3;
@@ -7161,17 +7161,17 @@
 
 	var Invoke$1 = function Invoke(O, P) {
 		if (!IsPropertyKey(P)) {
-			throw new $TypeError$5('Assertion failed: P must be a Property Key');
+			throw new $TypeError$6('Assertion failed: P must be a Property Key');
 		}
 		var argumentsList = arguments.length > 2 ? arguments[2] : [];
 		if (!IsArray(argumentsList)) {
-			throw new $TypeError$5('Assertion failed: optional `argumentsList`, if provided, must be a List');
+			throw new $TypeError$6('Assertion failed: optional `argumentsList`, if provided, must be a List');
 		}
 		var func = GetV(O, P);
 		return Call(func, O, argumentsList);
 	};
 
-	var $TypeError$4 = type;
+	var $TypeError$5 = type;
 
 	var Invoke = Invoke$1;
 	var Type$1 = Type$c;
@@ -7181,7 +7181,7 @@
 	var IteratorNext$1 = function IteratorNext(iterator, value) {
 		var result = Invoke(iterator, 'next', arguments.length < 2 ? [] : [value]);
 		if (Type$1(result) !== 'Object') {
-			throw new $TypeError$4('iterator next must return an object');
+			throw new $TypeError$5('iterator next must return an object');
 		}
 		return result;
 	};
@@ -7199,7 +7199,7 @@
 
 	var IteratorStep$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorStep);
 
-	var $TypeError$3 = type;
+	var $TypeError$4 = type;
 
 	var Get = Get$2;
 	var Type = Type$c;
@@ -7208,16 +7208,16 @@
 
 	var IteratorValue = function IteratorValue(iterResult) {
 		if (Type(iterResult) !== 'Object') {
-			throw new $TypeError$3('Assertion failed: Type(iterResult) is not Object');
+			throw new $TypeError$4('Assertion failed: Type(iterResult) is not Object');
 		}
 		return Get(iterResult, 'value');
 	};
 
 	var IteratorValue$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorValue);
 
-	var GetIntrinsic$7 = getIntrinsic;
+	var GetIntrinsic$6 = getIntrinsic;
 
-	var $abs = GetIntrinsic$7('%Math.abs%');
+	var $abs = GetIntrinsic$6('%Math.abs%');
 
 	// http://262.ecma-international.org/5.1/#sec-5.2
 
@@ -7728,36 +7728,15 @@
 		return defineProperties_1;
 	}
 
-	var CheckObjectCoercible;
-	var hasRequiredCheckObjectCoercible;
+	var $TypeError$3 = type;
 
-	function requireCheckObjectCoercible () {
-		if (hasRequiredCheckObjectCoercible) return CheckObjectCoercible;
-		hasRequiredCheckObjectCoercible = 1;
-
-		var $TypeError = type;
-
-		// http://262.ecma-international.org/5.1/#sec-9.10
-
-		CheckObjectCoercible = function CheckObjectCoercible(value, optMessage) {
-			if (value == null) {
-				throw new $TypeError(optMessage || ('Cannot call method on ' + value));
-			}
-			return value;
-		};
-		return CheckObjectCoercible;
-	}
-
-	var RequireObjectCoercible$2;
-	var hasRequiredRequireObjectCoercible$1;
-
-	function requireRequireObjectCoercible$1 () {
-		if (hasRequiredRequireObjectCoercible$1) return RequireObjectCoercible$2;
-		hasRequiredRequireObjectCoercible$1 = 1;
-
-		RequireObjectCoercible$2 = requireCheckObjectCoercible();
-		return RequireObjectCoercible$2;
-	}
+	/** @type {import('./RequireObjectCoercible')} */
+	var RequireObjectCoercible$1 = function RequireObjectCoercible(value) {
+		if (value == null) {
+			throw new $TypeError$3((arguments.length > 0 && arguments[1]) || ('Cannot call method on ' + value));
+		}
+		return value;
+	};
 
 	var ToString$2;
 	var hasRequiredToString;
@@ -7789,7 +7768,7 @@
 		if (hasRequiredImplementation) return implementation;
 		hasRequiredImplementation = 1;
 
-		var RequireObjectCoercible = requireRequireObjectCoercible$1();
+		var RequireObjectCoercible = RequireObjectCoercible$1;
 		var ToString = requireToString();
 		var callBound = callBound$4;
 		var $replace = callBound('String.prototype.replace');
@@ -7869,7 +7848,7 @@
 
 		var callBind = callBindExports;
 		var define = requireDefineProperties();
-		var RequireObjectCoercible = requireRequireObjectCoercible$1();
+		var RequireObjectCoercible = RequireObjectCoercible$1;
 
 		var implementation = requireImplementation();
 		var getPolyfill = requirePolyfill();
@@ -7942,10 +7921,10 @@
 		return StringToNumber$1;
 	}
 
-	var GetIntrinsic$6 = getIntrinsic;
+	var GetIntrinsic$5 = getIntrinsic;
 
 	var $TypeError$2 = type;
-	var $Number = GetIntrinsic$6('%Number%');
+	var $Number = GetIntrinsic$5('%Number%');
 	var isPrimitive = requireIsPrimitive();
 
 	var ToPrimitive = ToPrimitive$1;
@@ -7994,29 +7973,21 @@
 
 	var ToIntegerOrInfinity$1 = /*@__PURE__*/getDefaultExportFromCjs(ToIntegerOrInfinity);
 
-	var RequireObjectCoercible$1;
-	var hasRequiredRequireObjectCoercible;
+	/** @type {import('.')} */
+	var esObjectAtoms = Object;
 
-	function requireRequireObjectCoercible () {
-		if (hasRequiredRequireObjectCoercible) return RequireObjectCoercible$1;
-		hasRequiredRequireObjectCoercible = 1;
+	var $Object = esObjectAtoms;
+	var RequireObjectCoercible = RequireObjectCoercible$1;
 
-		RequireObjectCoercible$1 = requireCheckObjectCoercible();
-		return RequireObjectCoercible$1;
-	}
-
-	var GetIntrinsic$5 = getIntrinsic;
-
-	var $Object = GetIntrinsic$5('%Object%');
-
-	var RequireObjectCoercible = requireRequireObjectCoercible();
-
-	// https://262.ecma-international.org/6.0/#sec-toobject
-
-	var ToObject = function ToObject(value) {
+	/** @type {import('./ToObject')} */
+	var ToObject$2 = function ToObject(value) {
 		RequireObjectCoercible(value);
 		return $Object(value);
 	};
+
+	// https://262.ecma-international.org/6.0/#sec-toobject
+
+	var ToObject = ToObject$2;
 
 	var ToObject$1 = /*@__PURE__*/getDefaultExportFromCjs(ToObject);
 
@@ -8465,7 +8436,7 @@
 	}
 	function _toPropertyKey(t) {
 	  var i = _toPrimitive(t, "string");
-	  return "symbol" == typeof i ? i : String(i);
+	  return "symbol" == typeof i ? i : i + "";
 	}
 	function _defineProperty(obj, key, value) {
 	  key = _toPropertyKey(key);
