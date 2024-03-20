@@ -5,7 +5,6 @@ import { CalendarMethodRecord } from './methodrecord.mjs';
 import { ISO_YEAR, ISO_MONTH, ISO_DAY, CALENDAR, GetSlot } from './slots.mjs';
 
 const ArrayPrototypeConcat = Array.prototype.concat;
-const ObjectCreate = Object.create;
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = 'iso8601', referenceISODay = 1) {
@@ -131,9 +130,7 @@ export class PlainYearMonth {
     let mergedFields = ES.CalendarMergeFields(calendarRec, fields, inputFields);
     const concatenatedFieldNames = ES.Call(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
     mergedFields = ES.PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
-    const options = ObjectCreate(null);
-    options.overflow = 'constrain';
-    return ES.CalendarDateFromFields(calendarRec, mergedFields, options);
+    return ES.CalendarDateFromFields(calendarRec, mergedFields);
   }
   getISOFields() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

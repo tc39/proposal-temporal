@@ -254,9 +254,7 @@
         1. Let _mergedFields_ be ? CalendarMergeFields(_calendarRec_, _fields_, _inputFields_).
         1. Let _concatenatedFieldNames_ be the list-concatenation of _receiverFieldNames_ and _inputFieldNames_.
         1. Set _mergedFields_ to ? PrepareTemporalFields(_mergedFields_, _concatenatedFieldNames_, «», «», ~ignore~).
-        1. Let _options_ be OrdinaryObjectCreate(*null*).
-        1. Perform ! CreateDataPropertyOrThrow(_options_, *"overflow"*, *"constrain"*).
-        1. Return ? CalendarDateFromFields(_calendarRec_, _mergedFields_, _options_).
+        1. Return ? CalendarDateFromFields(_calendarRec_, _mergedFields_).
       </emu-alg>
     </emu-clause>
 
