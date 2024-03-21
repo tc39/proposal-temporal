@@ -151,7 +151,9 @@
         1. Let _plainDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainDateTime_, [[InitializedTemporalDateTime]]).
         1. Let _calendar_ be _plainDateTime_.[[Calendar]].
-        1. Return ? CalendarEraYear(_calendar_, _plainDateTime_).
+        1. Let _result_ be ? CalendarEraYear(_calendar_, _plainDateTime_).
+        1. If _result_ is *undefined*, return *undefined*.
+        1. Return 𝔽(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -327,7 +329,9 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Return 𝔽(? CalendarWeekOfYear(_calendar_, _dateTime_)).
+        1. Let _result_ be ? CalendarWeekOfYear(_calendar_, _dateTime_).
+        1. If _result_ is *undefined*, return *undefined*.
+        1. Return 𝔽(_result_).
       </emu-alg>
     </emu-clause>
 
@@ -341,7 +345,9 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Return 𝔽(? CalendarYearOfWeek(_calendar_, _dateTime_)).
+        1. Let _result_ be ? CalendarYearOfWeek(_calendar_, _dateTime_).
+        1. If _result_ is *undefined*, return *undefined*.
+        1. Return 𝔽(_result_).
       </emu-alg>
     </emu-clause>
 
