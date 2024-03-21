@@ -441,6 +441,51 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-calendarera" type="abstract operation">
+      <h1>
+        CalendarEra (
+          _calendar_: a String or Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing either a String or *undefined*, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `era()` method and validates the result.</dd>
+      </dl>
+      <emu-alg>
+        1. If _calendar_ is a String, then
+          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
+          1. Return ! Call(%Temporal.Calendar.prototype.era%, _calendar_, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _dateLike_ »).
+        1. If _result_ is *undefined*, return *undefined*.
+        1. If Type(_result_) is not String, throw a *TypeError* exception.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarerayear" type="abstract operation">
+      <h1>
+        CalendarEraYear (
+          _calendar_: a String or Object,
+          _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): either a normal completion containing either an integer or *undefined*, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It calls the given _calendar_'s `eraYear()` method and validates the result.</dd>
+      </dl>
+      <emu-alg>
+        1. If _calendar_ is a String, then
+          1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
+          1. Return ! Call(%Temporal.Calendar.prototype.eraYear%, _calendar_, « _dateLike_ »).
+        1. Let _result_ be ? Invoke(_calendar_, *"eraYear"*, « _dateLike_ »).
+        1. If _result_ is *undefined*, return *undefined*.
+        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
+        1. Return ℝ(_result_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calendaryear" type="abstract operation">
       <h1>
         CalendarYear (
@@ -1460,6 +1505,36 @@
         1. If _largestUnit_ is *"auto"*, set _largestUnit_ to *"day"*.
         1. Let _result_ be DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.prototype.era">
+      <h1>Temporal.Calendar.prototype.era ( _temporalDateLike_ )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return *undefined*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.calendar.prototype.erayear">
+      <h1>Temporal.Calendar.prototype.eraYear ( _temporalDateLike_ )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _calendar_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
+        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
+        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. Return *undefined*.
       </emu-alg>
     </emu-clause>
 

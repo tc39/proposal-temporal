@@ -138,6 +138,40 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.era">
+      <h1>get Temporal.ZonedDateTime.prototype.era</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.era` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
+        1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Return ? CalendarEra(_calendar_, _plainDateTime_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.erayear">
+      <h1>get Temporal.ZonedDateTime.prototype.eraYear</h1>
+      <p>
+        `Temporal.ZonedDateTime.prototype.eraYear` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
+        1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Return ? CalendarEraYear(_calendar_, _plainDateTime_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.zoneddatetime.prototype.year">
       <h1>get Temporal.ZonedDateTime.prototype.year</h1>
       <p>
