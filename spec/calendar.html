@@ -481,7 +481,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.year%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.year%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"year"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -503,7 +503,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.month%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.month%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -526,7 +526,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.monthCode%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.monthCode%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"monthCode"*, « _dateLike_ »).
         1. If Type(_result_) is not String, throw a *TypeError* exception.
         1. Return _result_.
@@ -568,7 +568,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.dayOfWeek%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.dayOfWeek%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfWeek"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -591,7 +591,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.dayOfYear%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.dayOfYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -614,7 +614,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.weekOfYear%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.weekOfYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
         1. If _result_ is *undefined*, return *undefined*.
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
@@ -638,7 +638,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.yearOfWeek%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.yearOfWeek%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"yearOfWeek"*, « _dateLike_ »).
         1. If _result_ is *undefined*, return *undefined*.
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
@@ -661,7 +661,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.daysInWeek%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.daysInWeek%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"daysInWeek"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -684,7 +684,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.daysInMonth%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.daysInMonth%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"daysInMonth"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -707,7 +707,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.daysInYear%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.daysInYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"daysInYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -730,7 +730,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.monthsInYear%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.monthsInYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"monthsInYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
@@ -753,7 +753,7 @@
       <emu-alg>
         1. If _calendar_ is a String, then
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
-          1. Return ? Call(%Temporal.Calendar.prototype.inLeapYear%, _calendar_, « _dateLike_ »).
+          1. Return ! Call(%Temporal.Calendar.prototype.inLeapYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"inLeapYear"*, « _dateLike_ »).
         1. If Type(_result_) is not Boolean, throw a *TypeError* exception.
         1. Return _result_.
