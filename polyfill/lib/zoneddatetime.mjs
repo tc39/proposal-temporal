@@ -437,10 +437,6 @@ export class ZonedDateTime {
       }
 
       const dayLengthNs = endNs.subtract(startNs);
-      if (dayLengthNs.leq(0)) {
-        throw new RangeError('cannot round a ZonedDateTime in a time zone with zero- or negative-length days');
-      }
-
       const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
       epochNanoseconds = dayProgressNs.round(dayLengthNs, roundingMode).add(new TimeDuration(startNs)).totalNs;
     } else {
