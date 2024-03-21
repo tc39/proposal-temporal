@@ -124,6 +124,34 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-get-temporal.plaindate.prototype.era">
+      <h1>get Temporal.PlainDate.prototype.era</h1>
+      <p>
+        `Temporal.PlainDate.prototype.era` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Let _calendar_ be _plainDate_.[[Calendar]].
+        1. Return ? CalendarEra(_calendar_, _plainDate_).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-get-temporal.plaindate.prototype.erayear">
+      <h1>get Temporal.PlainDate.prototype.eraYear</h1>
+      <p>
+        `Temporal.PlainDate.prototype.eraYear` is an accessor property whose set accessor function is *undefined*.
+        Its get accessor function performs the following steps:
+      </p>
+      <emu-alg>
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Let _calendar_ be _plainDate_.[[Calendar]].
+        1. Return ? CalendarEraYear(_calendar_, _plainDate_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-get-temporal.plaindate.prototype.year">
       <h1>get Temporal.PlainDate.prototype.year</h1>
       <p>
