@@ -1197,7 +1197,6 @@
           _increment_: an integer,
           _unit_: *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
           _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
-          optional _dayLength_: an integer,
         ): an ISO Date-Time Record
       </h1>
       <dl class="header">
@@ -1206,8 +1205,7 @@
       </dl>
       <emu-alg>
         1. Assert: ISODateTimeWithinLimits(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
-        1. If _dayLength_ is not present, set _dayLength_ to nsPerDay.
-        1. Let _roundedTime_ be RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_, _dayLength_).
+        1. Let _roundedTime_ be RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_).
         1. Let _balanceResult_ be BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
         1. Return the Record {
             [[Year]]: _balanceResult_.[[Year]],

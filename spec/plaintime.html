@@ -962,18 +962,16 @@
           _increment_: an integer,
           _unit_: *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
           _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
-          optional _dayLengthNs_: an integer,
         ): a Time Record
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It rounds a time to the given increment, optionally adjusting for a non-24-hour day.</dd>
+        <dd>It rounds a time to the given increment.</dd>
       </dl>
       <emu-alg>
         1. Let _fractionalSecond_ be _nanosecond_ &times; 10<sup>-9</sup> + _microsecond_ &times; 10<sup>-6</sup> + _millisecond_ &times; 10<sup>-3</sup> + _second_.
         1. If _unit_ is *"day"*, then
-          1. If _dayLengthNs_ is not present, set _dayLengthNs_ to nsPerDay.
-          1. Let _quantity_ be (((((_hour_ &times; 60 + _minute_) &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_) / _dayLengthNs_.
+          1. Let _quantity_ be (((((_hour_ &times; 60 + _minute_) &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_) / nsPerDay.
         1. Else if _unit_ is *"hour"*, then
           1. Let _quantity_ be (_fractionalSecond_ / 60 + _minute_) / 60 + _hour_.
         1. Else if _unit_ is *"minute"*, then
