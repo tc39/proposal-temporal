@@ -146,7 +146,9 @@
         1. Let _plainYearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _calendar_ be _plainYearMonth_.[[Calendar]].
-        1. Return ? CalendarEraYear(_calendar_, _plainYearMonth_).
+        1. Let _result_ be ? CalendarEraYear(_calendar_, _plainYearMonth_).
+        1. If _result_ is *undefined*, return *undefined*.
+        1. Return 𝔽(_result_).
       </emu-alg>
     </emu-clause>
 

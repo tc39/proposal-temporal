@@ -2482,6 +2482,7 @@
               1. Let _yearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
               1. Let _yearWeek_ be CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
+              1. If _yearWeek_.[[Week]] is *undefined*, return *undefined*.
             1. Return 𝔽(_yearWeek_.[[Week]]).
           </emu-alg>
         </emu-clause>
@@ -2500,6 +2501,7 @@
               1. Let _yearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
             1. Else,
               1. Let _yearWeek_ be CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
+              1. If _yearWeek_.[[Year]] is *undefined*, return *undefined*.
             1. Return 𝔽(_yearWeek_.[[Year]]).
           </emu-alg>
         </emu-clause>
