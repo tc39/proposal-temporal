@@ -132,7 +132,8 @@
 
         <emu-note>
           Time zone identifiers in the IANA Time Zone Database can change over time.
-          At a minimum, it is recommended that implementations limit changes to the result of AvailableNamedTimeZoneIdentifiers to the changes allowed by GetAvailableNamedTimeZoneIdentifier, for the lifetime of the surrounding agent.
+          At a minimum, implementations must limit changes to the result of AvailableNamedTimeZoneIdentifiers to the changes allowed by GetAvailableNamedTimeZoneIdentifier, for the lifetime of the surrounding agent.
+          That is, implementations must not remove support for or change the primary vs. non-primary status of an identifier that was already reported as available, and they must not add support for an identifier that was already reported as not available.
           Due to the complexity of supporting these recommendations, it is recommended that the result of AvailableNamedTimeZoneIdentifiers remains the same for the lifetime of the surrounding agent.
         </emu-note>
       </emu-clause>
