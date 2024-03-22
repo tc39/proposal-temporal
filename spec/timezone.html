@@ -544,9 +544,16 @@
         1. Return ~empty~.
       </emu-alg>
       <emu-note>
-        For any _timeZoneIdentifier_, or any value that is an ASCII-case-insensitive match for it, the resulting Time Zone Identifier Record must contain the same field values for the lifetime of the surrounding agent.
-        Furthermore, time zone identifiers must not dynamically change from primary to non-primary during the lifetime of the surrounding agent, meaning that if _timeZoneIdentifier_ is an ASCII-case-insensitive match for the [[PrimaryIdentifier]] field of the result of a previous call to GetAvailableNamedTimeZoneIdentifier, then GetAvailableNamedTimeZoneIdentifier(_timeZoneIdentifier_) must return a record where [[Identifier]] is [[PrimaryIdentifier]].
-        Due to the complexity of supporting these requirements, it is recommended that the result of AvailableNamedTimeZoneIdentifiers (and therefore GetAvailableNamedTimeZoneIdentifier) remains the same for the lifetime of the surrounding agent.
+        <p>
+          For any _timeZoneIdentifier_, or any value that is an ASCII-case-insensitive match for it, the result of this operation must remain the same for the lifetime of the surrounding agent.
+          Specifically, if that result is a Time Zone Identifier Record, its fields must contain the same values.
+        </p>
+        <p>
+          Furthermore, time zone identifiers must not dynamically change from primary to non-primary or vice versa during the lifetime of the surrounding agent, meaning that if _timeZoneIdentifier_ is an ASCII-case-insensitive match for the [[PrimaryIdentifier]] field of the result of a previous call to GetAvailableNamedTimeZoneIdentifier, then GetAvailableNamedTimeZoneIdentifier(_timeZoneIdentifier_) must return a record where [[Identifier]] is [[PrimaryIdentifier]].
+        </p>
+        <p>
+          Due to the complexity of supporting these requirements, it is recommended that the result of AvailableNamedTimeZoneIdentifiers (and therefore GetAvailableNamedTimeZoneIdentifier) remains the same for the lifetime of the surrounding agent.
+        </p>
       </emu-note>
     </emu-clause>
 

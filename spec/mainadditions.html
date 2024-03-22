@@ -262,6 +262,13 @@
         1. Assert: _result_ contains a Time Zone Identifier Record _r_ such that _r_.[[Identifier]] is *"UTC"* and _r_.[[PrimaryIdentifier]] is *"UTC"*.
         1. Return _result_.
       </emu-alg>
+
+      <emu-note>
+        Time zone identifiers in the IANA Time Zone Database can change over time.
+        At a minimum, implementations must limit changes to the result of AvailableNamedTimeZoneIdentifiers to the changes allowed by GetAvailableNamedTimeZoneIdentifier, for the lifetime of the surrounding agent.
+        That is, implementations must not remove support for or change the primary vs. non-primary status of an identifier that was already reported as available, and they must not add support for an identifier that was already reported as not available.
+        Due to the complexity of supporting these recommendations, it is recommended that the result of AvailableNamedTimeZoneIdentifiers remains the same for the lifetime of the surrounding agent.
+      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-systemtimezoneidentifier" oldids="sec-defaulttimezone" type="implementation-defined abstract operation">
