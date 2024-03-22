@@ -217,7 +217,7 @@
         Offset time zone identifiers are compared using the number of minutes represented (not as a String), and are accepted as input in any the formats specified by |TimeZoneUTCOffsetName|.
         However, ECMAScript built-in objects will only output the <dfn variants="time zone identifier in normalized format,normalized time zone identifier">normalized format of a time zone identifier</dfn>.
         The normalized format of an available named time zone identifier is the preferred letter case for that identifier.
-        The normalized format of an offset time zone identifier is specified by |NormalizedUTCOffset|.
+        The normalized format of an offset time zone identifier is specified by |NormalizedUTCOffset| and produced by FormatOffsetTimeZoneIdentifier with _style_ either not present or set to ~separated~.
       </p>
       </ins>
       <p>
