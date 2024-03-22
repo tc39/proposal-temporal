@@ -1288,6 +1288,430 @@
         1. Return _dayOfWeek_.
       </emu-alg>
     </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatetoiso" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateToISO (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _fields_: an ordinary Object for which the value of the [[Prototype]] internal slot is *null* and every property is a data property,
+          _overflow_: *"constrain"* or *"reject"*,
+        ): either a normal completion containing an ISO Date Record or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It performs implementation-defined processing to convert _fields_, which represents a date or year and month or month and day in the built-in calendar identified by _calendar_, to a corresponding representative date in the ISO 8601 calendar, subject to processing specified by _overflow_.
+          For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
+          For *"constrain"*, values that do not form a valid date are clamped to the correct range.
+          It then returns an ISO Date Record with the corresponding ISO 8601 date.
+        </dd>
+      </dl>
+      <p>
+        Clamping an invalid date to the correct range when _overflow_ is *"constrain"* is a behaviour specific to each built-in calendar, but all built-in calendars follow this guideline:
+      </p>
+      <ul>
+        <li>Pick the closest day in the same month. If there are two equally-close dates in that month, pick the later one.</li>
+        <li>If the month is a leap month that doesn't exist in the year, pick another date according to the cultural conventions of that calendar's users. Usually this will result in the same day in the month before or after where that month would normally fall in a leap year.</li>
+        <li>Otherwise, pick the closest date that is still in the same year. If there are two equally-close dates in that year, pick the later one.</li>
+        <li>If the entire year doesn't exist, pick the closest date in a different year. If there are two equally-close dates, pick the later one.</li>
+      </ul>
+      <p>
+        Like RegulateISODate, the operation throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateTimeWithinLimits, or if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarmonthdaytoisoreferencedate" type="implementation-defined abstract operation">
+      <h1>
+        CalendarMonthDayToISOReferenceDate (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _fields_: an ordinary Object for which the value of the [[Prototype]] internal slot is *null* and every property is a data property,
+          _overflow_: *"constrain"* or *"reject"*,
+        ): either a normal completion containing a Record with fields [[ISOMonth]], [[ISODay]], and [[ReferenceISOYear]], or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to processing specified by _overflow_.
+          For *"reject"*, values that do not form a valid date cause an exception to be thrown.
+          For *"constrain"*, values that do not form a valid date are clamped to the correct range as in CalendarDateToISO.
+          It then returns a Record representing the reference ISO 8601 date.
+        </dd>
+      </dl>
+      <p>
+        The fields of the returned Record represent a reference date in the ISO 8601 calendar that, when converted to the built-in calendar identified by _calendar_, corresponds to the month code and day of _fields_ in an arbitrary but deterministically chosen reference year.
+        The reference date is the latest ISO 8601 date corresponding to the calendar date, that is also earlier than or equal to the ISO 8601 date December 31, 1972.
+        If that calendar date never occurs on or before the ISO 8601 date December 31, 1972, then the reference date is the earliest ISO 8601 date corresponding to that calendar date.
+        The reference year is almost always 1972 (the first ISO 8601 leap year after the epoch), with exceptions for calendars where some dates (e.g. leap days or days in leap months) didn't occur during that ISO 8601 year. For example, Hebrew calendar leap month Adar I was a part of calendar years 5730 and 5733 (respectively overlapping ISO 8601 February/March 1970 and February/March 1973), but did not occur between them.
+      </p>
+      <p>
+        Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is *"reject"* and the month and day described by _fields_ does not exist.
+        For example, when _calendar_ is *"gregory"* and _overflow_ is *"reject"*, _fields_ values of `{ monthCode: "M01", day: "32" }` and `{ "year": 2001, "month": 2, "day": 29 }` would both cause a *RangeError* to be thrown.
+        In the latter case, even though February 29 is a date in leap years of the Gregorian calendar, 2001 was not a leap year and a month code cannot be determined from the nonexistent date 2001-02-29 with the specified month index.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardateaddition" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateAddition (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDate,
+          _duration_: a Date Duration Record,
+          _overflow_: *"constrain"* or *"reject"*,
+        ): either a normal completion containing an ISO Date Record or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by _calendar_ and returns the corresponding day, month and year of the result in the ISO 8601 calendar values as an ISO Date Record.
+          It may throw a *RangeError* exception if _overflow_ is *"reject"* and the resulting month or day would need to be clamped in order to form a valid date in _calendar_, or if the date resulting from the addition is outside the range allowed by ISODateTimeWithinLimits.
+        </dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatedifference" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateDifference (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _one_: a Temporal.PlainDate,
+          _two_: a Temporal.PlainDate,
+          _largestUnit_: *"year"*, *"month"*, *"week"*, or *"day"*,
+        ): a Date Duration Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs implementation-defined processing to find the difference between the two dates _one_ and _two_ in the context of the calendar represented by _calendar_ and returns the corresponding duration.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardateera" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateEra (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): a String or *undefined*
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns a lowercase String value representing that era, or *undefined* for calendars that do not have eras.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardateerayear" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateEraYear (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): an integer or *undefined*
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs implementation-defined processing to find the era for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the ordinal position of the year of _date_ in that era, or *undefined* for calendars that do not have eras.</dd>
+      </dl>
+      <emu-note>
+        Era years are 1-indexed for many calendars, but not all (e.g., the eras of the Burmese calendar each start with a year 0). Years can also advance opposite the flow of time (as for BCE years in the Gregorian calendar).
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardateyear" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateYear (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
+        ): an integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs implementation-defined processing to find the year for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns it. The value should be a signed integer relative to the first day of a calendar-specific "epoch year".</dd>
+      </dl>
+
+      <emu-note>The year is relative to the first day of the calendar's epoch year, so if the epoch era starts in the middle of the year, the year will be the same value before and after the start date of the era.</emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatemonth" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateMonth (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate, Temporal.PlainYearMonth, or Temporal.PlainMonthDay,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the 1-based ordinal position of that month in the corresponding year of the calendar.</dd>
+      </dl>
+      <emu-note>
+        When the number of months in a year of the identified calendar is variable, a different value can be returned for dates that are part of the same month in different years. For example, in the Hebrew calendar, 1 Nisan 5781 is associated with value 7 while 1 Nisan 5782 is associated with value 8 because 5782 is a leap year and Nisan follows the insertion of Adar I.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatemonthcode" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateMonthCode (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate, Temporal.PlainYearMonth, or Temporal.PlainMonthDay,
+        ): a String
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs implementation-defined processing to find the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns its month code. The month code for a month that is not a leap month and whose 1-based ordinal position in a common year of the calendar (i.e., a year that is not a leap year) is _n_ should be the string-concatenation of *"M"* and ToZeroPaddedDecimalString(_n_, 2), and the month code for a month that is a leap month inserted after a month whose 1-based ordinal position in a common year of the calendar is _p_ should be the string-concatenation of *"M"*, ToZeroPaddedDecimalString(_p_, 2), and *"L"*.</dd>
+      </dl>
+      <emu-note>
+        For example, in the Hebrew calendar, the month code of Adar (and Adar II, in leap years) is *"M06"* and the month code of Adar I (the leap month inserted before Adar II) is *"M05L"*. In a calendar with a leap month at the start of some years, the month code of that month would be *"M00L"*.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardateday" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateDay (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainMonthDay,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs implementation-defined processing to find the day of the month for the date corresponding to _date_ in the context of the calendar represented by _calendar_ and returns an integer representing the 1-based ordinal position of that day in the corresponding month.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatedayofweek" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateDayOfWeek (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It takes a date-like object _date_ and returns the day of the week in the calendar represented by _calendar_. The return value should be 1-based, where 1 is the day corresponding to Monday in the given calendar.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatedayofyear" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateDayOfYear (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It takes a date-like object _date_ and returns the day of the year in the calendar represented by _calendar_. The return value should be 1-based.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardateweekofyear" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateWeekOfYear (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): a Year-Week Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It takes a date-like object _date_ and calculates the <em>calendar week of year</em>, and the corresponding <em>week calendar year</em>, in the calendar represented by _calendar_.</dd>
+      </dl>
+      <p>
+        The value in the [[Week]] field should be 1-based.
+      </p>
+      <p>
+        The value in the [[Year]] field is relative to the first day of a calendar-specific "epoch year", as in CalendarDateYear, not relative to an era as in CalendarDateEraYear.
+      </p>
+      <p>
+        Usually the [[Year]] field will contain the same value given by CalendarDateYear, but may contain the previous or next year if the week number in the [[Week]] field overlaps two different years.
+        See also ToISOWeekOfYear.
+      </p>
+      <p>
+        It returns *undefined* in [[Week]] and [[Year]] field for calendars that do not have a well-defined week calendar system.
+      </p>
+      <emu-note type="editor">
+        <p>
+          More details about this function will be specified in
+          <a href="https://tc39.es/proposal-intl-era-monthcode/">the Intl era and monthCode proposal</a>.
+        </p>
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatedaysinweek" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateDaysInWeek (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime or Temporal.PlainDate,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It takes a date-like object _date_ and returns the number of days in the given week in the calendar represented by _calendar_.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatedaysinmonth" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateDaysInMonth (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate or Temporal.PlainYearMonth,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It identifies the month in the specified calendar that contains _date_ and returns the number of days in that month.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatedaysinyear" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateDaysInYear (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate or Temporal.PlainYearMonth,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It takes a date-like object _date_ and returns the number of days in the given year in the calendar represented by _calendar_.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatemonthsinyear" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateMonthsInYear (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate or Temporal.PlainYearMonth,
+        ): a positive integer
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It takes a date-like object _date_ and returns the number of months in the given year in the calendar represented by _calendar_.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardateinleapyear" type="implementation-defined abstract operation">
+      <h1>
+        CalendarDateInLeapYear (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _date_: a Temporal.PlainDateTime, Temporal.PlainDate or Temporal.PlainYearMonth,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It takes a date-like object _date_ and returns *true* if it falls within a leap year for the calendar represented by _calendar_ and *false* otherwise.</dd>
+      </dl>
+      <emu-note>
+        A "leap year" is a year that contains more days than other years (for solar or lunar calendars) or more months than other years (for lunisolar calendars like Hebrew or Chinese).
+        Some calendars, especially lunisolar ones, have further variation in year length that is not represented in the output of this operation (e.g., the Hebrew calendar includes common years with 353, 354, or 355 days and leap years with 383, 384, or 385 days).
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarfielddescriptors" type="implementation-defined abstract operation">
+      <h1>
+        CalendarFieldDescriptors (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _type_: ~date~, ~year-month~, ~month-day~, or a List of Strings,
+        ): a List of Calendar Field Descriptor Records
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It characterizes calendar-specific fields that are relevant for values of the provided _type_ in the built-in calendar identified by _calendar_ (inferring the type when _type_ is a List by interpreting its elements as field names). For example, *"era"* (with ToString conversion) and *"eraYear"* (with ToIntegerWithTruncation conversion) are returned when _calendar_ is *"gregory"* or *"japanese"* and _type_ is ~date~ or ~year-month~ or a List containing *"year"*.</dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarfieldkeystoignore" type="implementation-defined abstract operation">
+      <h1>
+        CalendarFieldKeysToIgnore (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _keys_: a List of property keys,
+        ): a List of property keys
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines which calendar date fields changing any of the fields named in _keys_ can potentially conflict with or invalidate, for the given _calendar_.
+          A field always invalidates at least itself.
+        </dd>
+      </dl>
+      <p>
+        This operation is relevant for calendars which accept fields other than the standard set of ISO 8601 calendar fields, in order to implement the Temporal objects' `with()` methods, and `Temporal.Calendar.prototype.mergeFields()` in such a way that the result is free of ambiguity or conflicts.
+      </p>
+      <p>
+        For example, given a _calendar_ that uses eras, such as *"gregory"*, a key in _keys_ being any one of *"year"*, *"era"*, or *"eraYear"* would exclude all three.
+        Passing any one of the three to a `with()` method might conflict with either of the other two properties on the receiver object, so those properties of the receiver object should be ignored.
+        Given this, in addition to the ISO 8601 mutual exclusion of *"month"* and *"monthCode"* as in ISOFieldKeysToIgnore, a possible implementation might produce the following results when _calendar_ is *"gregory"*:
+      </p>
+      <emu-table id="table-calendarfieldkeystoignore-example">
+        <emu-caption>Example results of CalendarFieldKeysToIgnore</emu-caption>
+        <table>
+          <thead>
+            <tr>
+              <th>_keys_</th>
+              <th>Returned List</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>« *"era"* »</td>
+              <td>« *"era"*, *"eraYear"*, *"year*" »</td>
+            </tr>
+            <tr>
+              <td>« *"eraYear"* »</td>
+              <td>« *"era"*, *"eraYear"*, *"year"* »</td>
+            </tr>
+            <tr>
+              <td>« *"year"* »</td>
+              <td>« *"era"*, *"eraYear"*, *"year"* »</td>
+            </tr>
+            <tr>
+              <td>« *"month"* »</td>
+              <td>« *"month"*, *"monthCode*" »</td>
+            </tr>
+            <tr>
+              <td>« *"monthCode"* »</td>
+              <td>« *"month"*, *"monthCode"* »</td>
+            </tr>
+            <tr>
+              <td>« *"day"* »</td>
+              <td>« *"day"* »</td>
+            </tr>
+            <tr>
+              <td>« *"year"*, *"month"*, *"day"* »</td>
+              <td>« *"era"*, *"eraYear"*, *"year"*, *"month"*, *"monthCode"*, *"day"* »</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+      <emu-note>
+        In a _calendar_ such as *"japanese"* where eras do not start and end at year and/or month boundaries, note that the returned List should contain *"era"* and *"eraYear"* if _keys_ contains *"day"*, *"month"*, or *"monthCode"* (not only if it contains *"era"*, *"eraYear"*, or *"year"*, as in the example above) because it's possible for changing the day or month to cause a conflict with the era.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendarresolvefields" type="implementation-defined abstract operation">
+      <h1>
+        CalendarResolveFields (
+          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _fields_: an ordinary Object for which the value of the [[Prototype]] internal slot is *null* and every property is a data property,
+          _type_: ~date~, ~year-month~, or ~month-day~,
+        ): either a normal completion containing ~unused~ or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It performs implementation-defined processing to validate that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard properties and removing redundant properties (for example, merging *"month"* and *"monthCode"* into *"month"* and merging *"era"* and *"eraYear"* into *"year"*).
+        </dd>
+      </dl>
+      <p>
+        The operation throws a *TypeError* exception if the properties of _fields_ are internally inconsistent within the calendar or insufficient to identify a unique instance of _type_ in the calendar. For example:
+      </p>
+      <ul>
+        <li>If _type_ is ~date~ or ~month-day~ and *"day"* in the calendar has an interpretation analogous to ISO 8601 and its corresponding value is *undefined*.</li>
+        <li>If *"month"* and *"monthCode"* in the calendar have interpretations analogous to ISO 8601 and either the corresponding values for both are *undefined* or neither value is *undefined* but they do not identify the same month.</li>
+        <li>If _type_ is ~month-day~ and the value for *"monthCode"* is *undefined* and a year cannot be determined from _fields_.</li>
+        <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting as represented by *"year"*, *"era"*, and *"eraYear"* (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:<ul>
+          <li>The value for each of *"year"* and *"era"* and *"eraYear"* is *undefined*.</li>
+          <li>The value for *"era"* is *undefined* but the value for *"eraYear"* is not.</li>
+          <li>The value for *"eraYear"* is *undefined* but the value for *"era"* is not.</li>
+          <li>None of the three values are *undefined* but the values for *"era"* and *"eraYear"* do not together identify the same year as the value for *"year"*.</li>
+        </ul></li>
+      </ul>
+      <emu-note>
+        When _type_ is ~month-day~ and *"month"* is provided without *"monthCode"*, it is recommended that all built-in calendars other than the ISO 8601 calendar require a disambiguating year (e.g., either *"year"* or *"era"* and *"eraYear"*), including those that always use exactly the same months as the ISO 8601 calendar (which receives special handling in this specification as a default calendar that is permanently stable for automated processing).
+      </emu-note>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-temporal-calendar-constructor">
@@ -1395,22 +1819,26 @@
     <emu-clause id="sec-temporal.calendar.prototype.datefromfields">
       <h1>Temporal.Calendar.prototype.dateFromFields ( _fields_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dateFromFields` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"year"*, *"day"* »).
+        1. Let _relevantFieldNames_ be « *"day"*, *"month"*, *"monthCode"*, *"year"* ».
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « *"year"*, *"day"* »).
+        1. Else,
+          1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~date~).
+          1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Perform ? ISOResolveMonth(_fields_).
-        1. Let _result_ be ? ISODateFromFields(_fields_, _overflow_).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Perform ? ISOResolveMonth(_fields_).
+          1. Let _result_ be ? ISODateFromFields(_fields_, _overflow_).
+        1. Else,
+          1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~date~).
+          1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], *"iso8601"*).
       </emu-alg>
     </emu-clause>
@@ -1418,92 +1846,100 @@
     <emu-clause id="sec-temporal.calendar.prototype.yearmonthfromfields">
       <h1>Temporal.Calendar.prototype.yearMonthFromFields ( _fields_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.yearMonthFromFields` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"month"*, *"monthCode"*, *"year"* », « *"year"* »).
+        1. Let _relevantFieldNames_ be « *"month"*, *"monthCode"*, *"year"* ».
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « *"year"* »).
+        1. Else,
+          1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~year-month~).
+          1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
+          1. Let _firstDayIndex_ be the 1-based index of the first day of the month described by _fields_ (i.e., 1 unless the month's first day is skipped by this calendar.)
+          1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, 𝔽(_firstDayIndex_)).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Perform ? ISOResolveMonth(_fields_).
-        1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _overflow_).
-        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], *"iso8601"*, _result_.[[ReferenceISODay]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Perform ? ISOResolveMonth(_fields_).
+          1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _overflow_).
+        1. Else,
+          1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~year-month~).
+          1. Let _result_ be ? CalendarDateToISO(_calendar_.[[Identifier]], _fields_, _overflow_).
+          1. Set _result_.[[ReferenceISODay]] to _result_.[[Day]].
+        1. Return ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_.[[Identifier]], _result_.[[ReferenceISODay]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.monthdayfromfields">
       <h1>Temporal.Calendar.prototype.monthDayFromFields ( _fields_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.monthDayFromFields` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_fields_) is not Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"day"* »).
+        1. Let _relevantFieldNames_ be « *"day"*, *"month"*, *"monthCode"*, *"year"* ».
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « *"day"* »).
+        1. Else,
+          1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~month-day~).
+          1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
-        1. Perform ? ISOResolveMonth(_fields_).
-        1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _overflow_).
-        1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], *"iso8601"*, _result_.[[ReferenceISOYear]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Perform ? ISOResolveMonth(_fields_).
+          1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _overflow_).
+        1. Else,
+          1. Perform ? CalendarResolveFields(_calendar_.[[Identifier]], _fields_, ~month-day~).
+          1. Let _result_ be ? CalendarMonthDayToISOReferenceDate(_calendar_.[[Identifier]], _fields_, _overflow_).
+        1. Return ? CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_.[[Identifier]], _result_.[[ReferenceISOYear]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.dateadd">
       <h1>Temporal.Calendar.prototype.dateAdd ( _date_, _duration_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dateAdd` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Set _date_ to ? ToTemporalDate(_date_).
         1. Set _duration_ to ? ToTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? ToTemporalOverflow(_options_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be BalanceTimeDuration(_norm_, *"day"*).
-        1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _balanceResult_.[[Days]], _overflow_).
-        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], *"iso8601"*).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _result_ be ? AddISODate(_date_.[[ISOYear]], _date_.[[ISOMonth]], _date_.[[ISODay]], _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _balanceResult_.[[Days]], _overflow_).
+        1. Else,
+          1. Let _balancedDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _balanceResult_.[[Days]]).
+          1. Let _result_ be ? CalendarDateAddition(_calendar_.[[Identifier]], _date_, _balancedDuration_, _overflow_).
+        1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_.[[Identifier]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.dateuntil">
       <h1>Temporal.Calendar.prototype.dateUntil ( _one_, _two_ [ , _options_ ] )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dateUntil` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Set _one_ to ? ToTemporalDate(_one_).
         1. Set _two_ to ? ToTemporalDate(_two_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, ~date~, *"auto"*).
         1. If _largestUnit_ is *"auto"*, set _largestUnit_ to *"day"*.
-        1. Let _result_ be DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _result_ be DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
+        1. Else,
+          1. Let _result_ be CalendarDateDifference(_calendar_.[[Identifier]], _one_, _two_, _largestUnit_).
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -1516,10 +1952,10 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return *undefined*.
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, return *undefined*.
+        1. Return CalendarDateEra(_calendar_.[[Identifier]], _temporalDateLike_).
       </emu-alg>
     </emu-clause>
 
@@ -1531,147 +1967,142 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return *undefined*.
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, return *undefined*.
+        1. Let _eraYear_ be CalendarDateEraYear(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. If _eraYear_ is *undefined*, return *undefined*.
+        1. Return 𝔽(_eraYear_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.year">
       <h1>Temporal.Calendar.prototype.year ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.year` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Assert: _temporalDateLike_ has an [[ISOYear]] internal slot.
-        1. Return 𝔽(_temporalDateLike_.[[ISOYear]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Assert: _temporalDateLike_ has an [[ISOYear]] internal slot.
+          1. Let _year_ be _temporalDateLike_.[[ISOYear]].
+        1. Else,
+          1. Let _year_ be CalendarDateYear(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return 𝔽(_year_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.month">
       <h1>Temporal.Calendar.prototype.month ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.month` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is Object and _temporalDateLike_ has an [[InitializedTemporalMonthDay]] internal slot, then
           1. Throw a *TypeError* exception.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
-        1. Return 𝔽(_temporalDateLike_.[[ISOMonth]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
+          1. Let _month_ be _temporalDateLike_.[[ISOMonth]].
+        1. Else,
+          1. Let _month_ be CalendarDateMonth(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return 𝔽(_month_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.monthcode">
       <h1>Temporal.Calendar.prototype.monthCode ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.monthCode` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
-        1. Return ISOMonthCode(_temporalDateLike_.[[ISOMonth]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
+          1. Let _monthCode_ be ISOMonthCode(_temporalDateLike_.[[ISOMonth]]).
+        1. Else,
+          1. Let _monthCode_ be CalendarDateMonthCode(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return _monthCode_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.day">
       <h1>Temporal.Calendar.prototype.day ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.day` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalMonthDay]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Assert: _temporalDateLike_ has an [[ISODay]] internal slot.
-        1. Return 𝔽(_temporalDateLike_.[[ISODay]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Assert: _temporalDateLike_ has an [[ISODay]] internal slot.
+          1. Let _day_ be _temporalDateLike_.[[ISODay]].
+        1. Else,
+          1. Let _day_ be CalendarDateDay(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return 𝔽(_day_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.dayofweek">
       <h1>Temporal.Calendar.prototype.dayOfWeek ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dayOfWeek` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _dayOfWeek_ be ToISODayOfWeek(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Else,
+          1. Let _dayOfWeek_ be CalendarDateDayOfWeek(_calendar_.[[Identifier]], _temporalDate_).
+        1. Return 𝔽(_dayOfWeek_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.dayofyear">
       <h1>Temporal.Calendar.prototype.dayOfYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.dayOfYear` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]])).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _dayOfYear_ be ToISODayOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Else,
+          1. Let _dayOfYear_ be CalendarDateDayOfYear(_calendar_.[[Identifier]], _temporalDate_).
+        1. Return 𝔽(_dayOfYear_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.weekofyear">
       <h1>Temporal.Calendar.prototype.weekOfYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.weekOfYear` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Let _isoYearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
-        1. Return 𝔽(_isoYearWeek_.[[Week]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _yearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Else,
+          1. Let _yearWeek_ be CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
+          1. If _yearWeek_.[[Week]] is *undefined*, return *undefined*.
+        1. Return 𝔽(_yearWeek_.[[Week]]).
       </emu-alg>
     </emu-clause>
 
@@ -1687,148 +2118,146 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Let _isoYearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
-        1. Return 𝔽(_isoYearWeek_.[[Year]]).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _yearWeek_ be ToISOWeekOfYear(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]]).
+        1. Else,
+          1. Let _yearWeek_ be CalendarDateWeekOfYear(_calendar_.[[Identifier]], _temporalDate_).
+          1. If _yearWeek_.[[Year]] is *undefined*, return *undefined*.
+        1. Return 𝔽(_yearWeek_.[[Year]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.daysinweek">
       <h1>Temporal.Calendar.prototype.daysInWeek ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.daysInWeek` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Perform ? ToTemporalDate(_temporalDateLike_).
-        1. Return *7*<sub>𝔽</sub>.
+        1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _daysInWeek_ be 7.
+        1. Else,
+          1. Let _daysInWeek_ be CalendarDateDaysInWeek(_calendar_.[[Identifier]], _temporalDate_).
+        1. Return 𝔽(_daysInWeek_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.daysinmonth">
       <h1>Temporal.Calendar.prototype.daysInMonth ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.daysInMonth` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slots, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]])).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _daysInMonth_ be ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]]).
+        1. Else,
+          1. Let _daysInMonth_ be CalendarDateDaysInMonth(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return 𝔽(_daysInMonth_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.daysinyear">
       <h1>Temporal.Calendar.prototype.daysInYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.daysInYear` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. Return 𝔽(MathematicalDaysInYear(_temporalDateLike_.[[ISOYear]])).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _daysInYear_ be MathematicalDaysInYear(_temporalDateLike_.[[ISOYear]]).
+        1. Else,
+          1. Let _daysInYear_ be CalendarDateDaysInYear(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return 𝔽(_daysInYear_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.monthsinyear">
       <h1>Temporal.Calendar.prototype.monthsInYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.monthsInYear` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
-          1. Perform ? ToTemporalDate(_temporalDateLike_).
-        1. Return *12*<sub>𝔽</sub>.
+          1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _monthsInYear_ be 12.
+        1. Else,
+          1. Let _monthsInYear_ be CalendarDateMonthsInYear(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return 𝔽(_monthsInYear_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.inleapyear">
       <h1>Temporal.Calendar.prototype.inLeapYear ( _temporalDateLike_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.inLeapYear` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
-        1. If MathematicalInLeapYear(EpochTimeForYear(_temporalDateLike_.[[ISOYear]])) is 1, return *true*.
-        1. Return *false*.
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. If MathematicalInLeapYear(EpochTimeForYear(_temporalDateLike_.[[ISOYear]])) is 1, then
+            1. Let _inLeapYear_ be *true*.
+          1. Else,
+            1. Let _inLeapYear_ be *false*.
+        1. Else,
+          1. Let _inLeapYear_ be CalendarDateInLeapYear(_calendar_.[[Identifier]], _temporalDateLike_).
+        1. Return _inLeapYear_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.fields">
       <h1>Temporal.Calendar.prototype.fields ( _fields_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.fields` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
         1. Let _iteratorRecord_ be ? GetIterator(_fields_, ~sync~).
         1. Let _fieldNames_ be a new empty List.
-        1. Repeat,
-          1. Let _next_ be ? IteratorStepValue(_iteratorRecord_).
-          1. If _next_ is ~done~, then
-            1. Return CreateArrayFromList(_fieldNames_).
-          1. If _next_ is not a String, then
-            1. Let _completion_ be ThrowCompletion(a newly created *TypeError* object).
-            1. Return ? IteratorClose(_iteratorRecord_, _completion_).
-          1. If _fieldNames_ contains _next_, then
-            1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
-            1. Return ? IteratorClose(_iteratorRecord_, _completion_).
-          1. If _next_ is not one of *"year"*, *"month"*, *"monthCode"*, or *"day"*, then
-            1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
-            1. Return ? IteratorClose(_iteratorRecord_, _completion_).
-          1. Append _next_ to the end of the List _fieldNames_.
+        1. Let _next_ be *undefined*.
+        1. Repeat, while _next_ is not ~done~,
+          1. Set _next_ to ? IteratorStepValue(_iteratorRecord_).
+          1. If _next_ is not ~done~, then
+            1. If _next_ is not a String, then
+              1. Let _completion_ be ThrowCompletion(a newly created *TypeError* object).
+              1. Return ? IteratorClose(_iteratorRecord_, _completion_).
+            1. If _fieldNames_ contains _next_, then
+              1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
+              1. Return ? IteratorClose(_iteratorRecord_, _completion_).
+            1. If _next_ is not one of *"year"*, *"month"*, *"monthCode"*, or *"day"*, then
+              1. Let _completion_ be ThrowCompletion(a newly created *RangeError* object).
+              1. Return ? IteratorClose(_iteratorRecord_, _completion_).
+            1. Append _next_ to the end of the List _fieldNames_.
+        1. Let _result_ be _fieldNames_.
+        1. If _calendar_.[[Identifier]] is not *"iso8601"*, then
+          1. NOTE: Every built-in calendar preserves all input field names in output.
+          1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], _fieldNames_).
+          1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
+            1. Append _desc_.[[Property]] to _result_.
+        1. Return CreateArrayFromList(_result_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.calendar.prototype.mergefields">
       <h1>Temporal.Calendar.prototype.mergeFields ( _fields_, _additionalFields_ )</h1>
       <p>
-        An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Calendar.prototype.mergeFields` method as specified in the ECMA-402 specification.
-      </p>
-      <p>
-        An ECMAScript implementation that does not include the ECMA-402 API, may still include support for built-in calendars (see <emu-xref href="#sec-calendar-types"></emu-xref>).
-        The minimum implementation of this method for ECMAScript implementations that do not include the ECMA-402 API and do not support built-in calendars other than *"iso8601"* performs the following steps when called:
+        This method performs the following steps when called:
       </p>
       <emu-alg>
         1. Let _calendar_ be the *this* value.
@@ -1837,8 +2266,10 @@
         1. Let _additionalFieldsCopy_ be ? SnapshotOwnProperties(? ToObject(_additionalFields_), *null*, « », « *undefined* »).
         1. NOTE: Every property of _fieldsCopy_ and _additionalFieldsCopy_ is an enumerable data property with a non-*undefined* value, but some property keys may be Symbols.
         1. Let _additionalKeys_ be ! _additionalFieldsCopy_.[[OwnPropertyKeys]]().
-        1. Assert: _calendar_.[[Identifier]] is *"iso8601"*.
-        1. Let _overriddenKeys_ be ISOFieldKeysToIgnore(_additionalKeys_).
+        1. If _calendar_.[[Identifier]] is *"iso8601"*, then
+          1. Let _overriddenKeys_ be ISOFieldKeysToIgnore(_additionalKeys_).
+        1. Else,
+          1. Let _overriddenKeys_ be CalendarFieldKeysToIgnore(_calendar_, _additionalKeys_).
         1. Let _merged_ be OrdinaryObjectCreate(*null*).
         1. NOTE: The following steps ensure that property iteration order of _merged_ matches that of _fields_ as modified by omitting overridden properties and appending non-overlapping properties from _additionalFields_ in iteration order.
         1. Let _fieldsKeys_ be ! _fieldsCopy_.[[OwnPropertyKeys]]().
