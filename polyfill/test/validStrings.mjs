@@ -76,6 +76,7 @@ class Literal {
     return this.str;
   }
 }
+const empty = new Literal('');
 
 class Optional {
   constructor(productionLike) {
@@ -189,6 +190,8 @@ function seq(...productions) {
 
 // characters
 const temporalSign = character('+-−');
+const dateSeparator = (extended) => (extended ? character('-') : empty);
+const timeSeparator = (extended) => (extended ? character(':') : empty);
 const hour = zeroPaddedInclusive(0, 23, 2);
 const minuteSecond = zeroPaddedInclusive(0, 59, 2);
 const temporalDecimalSeparator = character('.,');
@@ -242,22 +245,28 @@ const timeFraction = withCode(temporalDecimalFraction, (data, result) => {
   data.microsecond = +fraction.slice(3, 6);
   data.nanosecond = +fraction.slice(6, 9);
 });
+
 function saveOffset(data, result) {
   data.offset = ES.ParseDateTimeUTCOffset(result);
 }
-const utcOffsetSubMinutePrecision = withCode(
-  seq(
-    temporalSign,
-    hour,
+const utcOffset = (subMinutePrecision) =>
+  seq(temporalSign, hour, [
     choice(
-      [minuteSecond, [minuteSecond, [temporalDecimalFraction]]],
-      seq(':', minuteSecond, [':', minuteSecond, [temporalDecimalFraction]])
+      seq(
+        timeSeparator(true),
+        minuteSecond,
+        subMinutePrecision ? [timeSeparator(true), minuteSecond, [temporalDecimalFraction]] : empty
+      ),
+      seq(
+        timeSeparator(false),
+        minuteSecond,
+        subMinutePrecision ? [timeSeparator(false), minuteSecond, [temporalDecimalFraction]] : empty
+      )
     )
-  ),
-  saveOffset
-);
-const dateTimeUTCOffset = choice(utcDesignator, utcOffsetSubMinutePrecision);
-const timeZoneUTCOffsetName = seq(temporalSign, hour, choice([minuteSecond], seq(':', minuteSecond)));
+  ]);
+const dateTimeUTCOffset = (plain) =>
+  plain ? withCode(utcOffset(true), saveOffset) : choice(utcDesignator, withCode(utcOffset(true), saveOffset));
+const timeZoneUTCOffsetName = utcOffset(false);
 const timeZoneIANAName = choice(...timezoneNames);
 const timeZoneIdentifier = withCode(
   choice(timeZoneUTCOffsetName, timeZoneIANAName),
@@ -281,42 +290,48 @@ const annotations = withSyntaxConstraints(oneOrMore(choice(calendarAnnotation, a
     throw new SyntaxError('more than one calendar annotation and at least one critical');
   }
 });
-const timeSpec = seq(
-  timeHour,
-  choice([':', timeMinute, [':', timeSecond, [timeFraction]]], seq(timeMinute, [timeSecond, [timeFraction]]))
-);
-const timeSpecWithOptionalOffsetNotAmbiguous = withSyntaxConstraints(seq(timeSpec, [dateTimeUTCOffset]), (result) => {
-  if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
-    throw new SyntaxError('valid PlainMonthDay');
-  }
-  if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
-    throw new SyntaxError('valid PlainYearMonth');
-  }
-});
+const timeSpec = (extended) =>
+  seq(timeHour, [timeSeparator(extended), timeMinute, [timeSeparator(extended), timeSecond, [timeFraction]]]);
+const time = choice(timeSpec(true), timeSpec(false));
 
 function validateDayOfMonth(result, { year, month, day }) {
   if (day > ES.ISODaysInMonth(year, month)) throw SyntaxError('retry if bad day of month');
 }
-const dateSpecMonthDay = withSyntaxConstraints(seq(['--'], dateMonth, ['-'], dateDay), validateDayOfMonth);
-const dateSpecYearMonth = seq(dateYear, ['-'], dateMonth);
-const date = withSyntaxConstraints(
-  choice(seq(dateYear, '-', dateMonth, '-', dateDay), seq(dateYear, dateMonth, dateDay)),
+const dateSpecMonthDay = withSyntaxConstraints(
+  seq(['--'], dateMonth, choice(dateSeparator(true), dateSeparator(false)), dateDay),
   validateDayOfMonth
 );
-const dateTime = seq(date, [dateTimeSeparator, timeSpec, [dateTimeUTCOffset]]);
+const dateSpecYearMonth = seq(dateYear, choice(dateSeparator(true), dateSeparator(false)), dateMonth);
+const dateSpec = (extended) =>
+  withSyntaxConstraints(
+    seq(dateYear, dateSeparator(extended), dateMonth, dateSeparator(extended), dateDay),
+    validateDayOfMonth
+  );
+const date = choice(dateSpec(true), dateSpec(false));
+const dateTime = (plain, timeRequired) =>
+  seq(
+    date,
+    timeRequired
+      ? seq(dateTimeSeparator, time, [dateTimeUTCOffset(plain)])
+      : [dateTimeSeparator, time, [dateTimeUTCOffset(plain)]]
+  );
 const annotatedTime = choice(
-  seq(timeDesignator, timeSpec, [dateTimeUTCOffset], [timeZoneAnnotation], [annotations]),
-  seq(timeSpecWithOptionalOffsetNotAmbiguous, [timeZoneAnnotation], [annotations])
+  seq(timeDesignator, time, [dateTimeUTCOffset(true)], [timeZoneAnnotation], [annotations]),
+  seq(
+    withSyntaxConstraints(seq(time, [dateTimeUTCOffset(true)]), (result) => {
+      if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
+        throw new SyntaxError('valid PlainMonthDay');
+      }
+      if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
+        throw new SyntaxError('valid PlainYearMonth');
+      }
+    }),
+    [timeZoneAnnotation],
+    [annotations]
+  )
 );
-const annotatedDateTime = seq(dateTime, [timeZoneAnnotation], [annotations]);
-const annotatedDateTimeTimeRequired = seq(
-  date,
-  dateTimeSeparator,
-  timeSpec,
-  [dateTimeUTCOffset],
-  [timeZoneAnnotation],
-  [annotations]
-);
+const annotatedDateTime = (zoned, timeRequired) =>
+  seq(dateTime(!zoned, timeRequired), zoned ? timeZoneAnnotation : [timeZoneAnnotation], [annotations]);
 const annotatedYearMonth = withSyntaxConstraints(
   seq(dateSpecYearMonth, [timeZoneAnnotation], [annotations]),
   (result, data) => {
@@ -406,19 +421,19 @@ const duration = seq(
   choice(durationDate, durationTime)
 );
 
-const instant = seq(date, dateTimeSeparator, timeSpec, dateTimeUTCOffset, [timeZoneAnnotation], [annotations]);
-const zonedDateTime = seq(dateTime, timeZoneAnnotation, [annotations]);
+const instant = seq(date, dateTimeSeparator, time, dateTimeUTCOffset(false), [timeZoneAnnotation], [annotations]);
+const zonedDateTime = annotatedDateTime(true, false);
 
 // goal elements
 const goals = {
   Instant: instant,
-  Date: annotatedDateTime,
-  DateTime: annotatedDateTime,
+  Date: annotatedDateTime(false, false),
+  DateTime: annotatedDateTime(false, false),
   Duration: duration,
-  MonthDay: choice(annotatedMonthDay, annotatedDateTime),
-  Time: choice(annotatedTime, annotatedDateTimeTimeRequired),
+  MonthDay: choice(annotatedMonthDay, annotatedDateTime(false, false)),
+  Time: choice(annotatedTime, annotatedDateTime(false, true)),
   TimeZone: choice(timeZoneIdentifier, zonedDateTime, instant),
-  YearMonth: choice(annotatedYearMonth, annotatedDateTime),
+  YearMonth: choice(annotatedYearMonth, annotatedDateTime(false, false)),
   ZonedDateTime: zonedDateTime
 };
 
@@ -446,16 +461,12 @@ const comparisonItems = {
   YearMonth: ['year', 'month', 'calendar'],
   ZonedDateTime: [...dateItems, ...timeItems, 'offset', 'z', 'tzAnnotation', 'calendar']
 };
-const plainModes = ['Date', 'DateTime', 'MonthDay', 'Time', 'YearMonth'];
 
 function fuzzMode(mode) {
   console.log('// starting to fuzz ' + mode);
   for (let count = 0; count < 1000; count++) {
-    let generatedData, fuzzed;
-    do {
-      generatedData = {};
-      fuzzed = goals[mode].generate(generatedData);
-    } while (plainModes.includes(mode) && /[0-9][zZ]/.test(fuzzed));
+    const generatedData = {};
+    const fuzzed = goals[mode].generate(generatedData);
     try {
       const parsingMethod = ES[`ParseTemporal${mode}StringRaw`] ?? ES[`ParseTemporal${mode}String`];
       const parsed = parsingMethod(fuzzed);

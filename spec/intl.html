@@ -650,7 +650,7 @@
           1. <ins>If _toLocaleStringTimeZone_ is present, throw a *TypeError* exception.</ins>
           1. Set _timeZone_ to ? ToString(_timeZone_).
         1. If IsTimeZoneOffsetString(_timeZone_) is *true*, then
-          1. Let _parseResult_ be ParseText(StringToCodePoints(_timeZone_), <del>|UTCOffset|</del><ins>|UTCOffsetMinutePrecision|</ins>).
+          1. Let _parseResult_ be ParseText(StringToCodePoints(_timeZone_), <del>|UTCOffset|</del><ins>|UTCOffset[~SubMinutePrecision]|</ins>).
           1. Assert: _parseResult_ is a Parse Node.
           1. <del>If _parseResult_ contains more than one |MinuteSecond| Parse Node, throw a *RangeError* exception.</del>
           1. Let _offsetNanoseconds_ be <del>ParseTimeZoneOffsetString</del><ins>? ParseDateTimeUTCOffset</ins>(_timeZone_).
