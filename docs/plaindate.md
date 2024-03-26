@@ -358,7 +358,7 @@ date.with({ year: 2100 }).inLeapYear; // => false
 
 ## Methods
 
-### date.**with**(_dateLike_: object | string, _options_?: object) : Temporal.PlainDate
+### date.**with**(_dateLike_: object, _options_?: object) : Temporal.PlainDate
 
 **Parameters:**
 
