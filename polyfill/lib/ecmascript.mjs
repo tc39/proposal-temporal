@@ -585,6 +585,7 @@ export function ParseTemporalYearMonthString(isoString) {
     year = ToIntegerOrInfinity(yearString);
     month = ToIntegerOrInfinity(match[2]);
     calendar = processAnnotations(match[3]);
+    referenceISODay = 1;
     if (calendar !== undefined && calendar !== 'iso8601') {
       throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
     }
@@ -1493,10 +1494,6 @@ export function ToTemporalYearMonth(item, options) {
   calendar = ASCIILowercase(calendar);
   ToTemporalOverflow(options); // validate and ignore
 
-  if (referenceISODay === undefined) {
-    RejectISODate(year, month, 1);
-    return CreateTemporalYearMonth(year, month, calendar);
-  }
   const result = CreateTemporalYearMonth(year, month, calendar, referenceISODay);
   const calendarRec = new CalendarMethodRecord(calendar, ['yearMonthFromFields']);
   return CalendarYearMonthFromFields(calendarRec, result);
