@@ -426,6 +426,9 @@ This method adds `duration` to `date`, returning a date that is in the future re
 The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a string such as `P5D`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
+If `duration` has any units smaller than `days`, they will be treated as if they are being added to the first moment of the day given by `date`.
+Effectively, this means that adding things like `{ minutes: 5 }` will be ignored.
+
 Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
@@ -465,6 +468,9 @@ This method subtracts `duration` from `date`, returning a date that is in the pa
 
 The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a string such as `P5D`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
+
+If `duration` has any units smaller than `days`, they will be treated as if they are being subtracted from the last moment of the day given by `date`.
+Effectively, this means that subtracting things like `{ minutes: 5 }` will be ignored.
 
 Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
