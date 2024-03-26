@@ -47,6 +47,7 @@ The following "invariants" (statements that are always true) hold for all built-
 - `obj.with({ month: 1, day: 1 })` will always return the first day of the object's year.
 - `obj.with({ month: obj.monthsInYear, day: Number.MAX_VALUE })` will always return the last day of the object's year.
 - `obj.month === obj.monthsInYear` during the last month of any year
+- `dayOfWeek`, `dayOfYear`, and `weekOfYear` are 1-based positive integers, that increase consecutively as time goes forward, except they reset at the boundary of a week or year, respectively
 
 ### Writing Cross-Calendar Code
 
