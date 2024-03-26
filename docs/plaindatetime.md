@@ -674,7 +674,7 @@ dt.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 
 This method computes the difference between the two times represented by `datetime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `datetime` then the resulting duration will be negative.
-The returned `Temporal.Duration`, when added to `datetime` with the same `options`, will yield `other`.
+If using the default `options`, adding the returned `Temporal.Duration` to `datetime` will yield `other`.
 
 If `other` is not a `Temporal.PlainDateTime` object, then it will be converted to one as if it were passed to `Temporal.PlainDateTime.from()`.
 
@@ -755,8 +755,7 @@ This method computes the difference between the two times represented by `dateti
 If `other` is later than `datetime` then the resulting duration will be negative.
 
 This method is similar to `Temporal.PlainDateTime.prototype.until()`, but reversed.
-The returned `Temporal.Duration`, when subtracted from `datetime` using the same `options`, will yield `other`.
-Using default options, `dt1.since(dt2)` yields the same result as `dt1.until(dt2).negated()`, but results may differ with options like `{ largestUnit: 'month' }`.
+If using the default `options`, subtracting the returned `Temporal.Duration` from `datetime` will yield `other`, and `dt1.since(dt2)` will yield the same result as `dt1.until(dt2).negated()`.
 
 Usage example:
 
