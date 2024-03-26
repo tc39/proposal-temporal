@@ -228,6 +228,14 @@ function timeAmend(options) {
 }
 
 function yearMonthAmend(options) {
+  // Try to fake what dateStyle should do for dates without a day. This is not
+  // accurate for locales that always print the era
+  const dateStyleHacks = {
+    short: { year: '2-digit', month: 'numeric' },
+    medium: { year: 'numeric', month: 'short' },
+    long: { year: 'numeric', month: 'long' },
+    full: { year: 'numeric', month: 'long' }
+  };
   options = amend(options, {
     day: false,
     hour: false,
@@ -236,9 +244,13 @@ function yearMonthAmend(options) {
     weekday: false,
     dayPeriod: false,
     timeZoneName: false,
-    dateStyle: false,
     timeStyle: false
   });
+  if ('dateStyle' in options) {
+    const style = options.dateStyle;
+    delete options.dateStyle;
+    Object.assign(options, dateStyleHacks[style]);
+  }
   if (!('year' in options || 'month' in options)) {
     options = ObjectAssign(options, { year: 'numeric', month: 'numeric' });
   }
@@ -246,6 +258,13 @@ function yearMonthAmend(options) {
 }
 
 function monthDayAmend(options) {
+  // Try to fake what dateStyle should do for dates without a day
+  const dateStyleHacks = {
+    short: { month: 'numeric', day: 'numeric' },
+    medium: { month: 'short', day: 'numeric' },
+    long: { month: 'long', day: 'numeric' },
+    full: { month: 'long', day: 'numeric' }
+  };
   options = amend(options, {
     year: false,
     hour: false,
@@ -254,9 +273,13 @@ function monthDayAmend(options) {
     weekday: false,
     dayPeriod: false,
     timeZoneName: false,
-    dateStyle: false,
     timeStyle: false
   });
+  if ('dateStyle' in options) {
+    const style = options.dateStyle;
+    delete options.dateStyle;
+    Object.assign(options, dateStyleHacks[style]);
+  }
   if (!('month' in options || 'day' in options)) {
     options = ObjectAssign({}, options, { month: 'numeric', day: 'numeric' });
   }
