@@ -306,7 +306,7 @@ time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
 
 This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `time` then the resulting duration will be negative.
-The returned `Temporal.Duration`, when added to `time` with the same `options`, will yield `other`.
+If using the default `options`, adding the returned `Temporal.Duration` to `time` will yield `other`.
 
 If `other` is not a `Temporal.PlainTime` object, then it will be converted to one as if it were passed to `Temporal.PlainTime.from()`.
 
@@ -359,8 +359,7 @@ This method computes the difference between the two times represented by `time` 
 If `other` is later than `time` then the resulting duration will be negative.
 
 This method is similar to `Temporal.PlainTime.prototype.until()`, but reversed.
-The returned `Temporal.Duration`, when subtracted from `time` using the same `options`, will yield `other`.
-Using default options, `time1.since(time2)` yields the same result as `time1.until(time2).negated()`.
+If using the default `options`, subtracting the returned `Temporal.Duration` from `time` will yield `other`, and `time1.since(time2)` will yield the same result as `time1.until(time2).negated()`.
 
 Usage example:
 

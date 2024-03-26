@@ -517,7 +517,7 @@ date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
 
 This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `date` then the resulting duration will be negative.
-The returned `Temporal.Duration`, when added to `date` with the same `options`, will yield `other`.
+If using the default `options`, adding the returned `Temporal.Duration` to `date` will yield `other`.
 
 If `other` is not a `Temporal.PlainDate` object, then it will be converted to one as if it were passed to `Temporal.PlainDate.from()`.
 
@@ -596,8 +596,7 @@ This method computes the difference between the two dates represented by `date` 
 If `other` is later than `date` then the resulting duration will be negative.
 
 This method is similar to `Temporal.PlainDate.prototype.until()`, but reversed.
-The returned `Temporal.Duration`, when subtracted from `date` using the same `options`, will yield `other`.
-Using default options, `date1.since(date2)` yields the same result as `date1.until(date2).negated()`, but results may differ with options like `{ largestUnit: 'month' }`.
+If using the default `options`, subtracting the returned `Temporal.Duration` from `date` will yield `other`, and `date1.since(date2)` will yield the same result as `date1.until(date2).negated()`.
 
 Usage example:
 

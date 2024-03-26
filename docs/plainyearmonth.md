@@ -412,7 +412,7 @@ ym.subtract({ years: 20, months: 4 }); // => 1999-02
 
 This method computes the difference between the two months represented by `yearMonth` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
 If `other` is earlier than `yearMonth` then the resulting duration will be negative.
-The returned `Temporal.Duration`, when added to `yearMonth` with the same `options`, will yield `other`.
+If using the default `options`, adding the returned `Temporal.Duration` to `yearMonth` will yield `other`.
 
 If `other` is not a `Temporal.PlainYearMonth` object, then it will be converted to one as if it were passed to `Temporal.PlainYearMonth.from()`.
 
@@ -475,8 +475,7 @@ This method computes the difference between the two months represented by `yearM
 If `other` is later than `yearMonth` then the resulting duration will be negative.
 
 This method is similar to `Temporal.PlainYearMonth.prototype.until()`, but reversed.
-The returned `Temporal.Duration`, when subtracted from `yearMonth` using the same `options`, will yield `other`.
-Using default options, `ym1.since(ym2)` yields the same result as `ym1.until(ym2).negated()`, but results may differ with options like `{ largestUnit: 'month' }`.
+If using the default `options`, subtracting the returned `Temporal.Duration` from `yearMonth` will yield `other`, and `ym1.since(ym2)` will yield the same result as `ym1.until(ym2).negated()`.
 
 Usage example:
 
