@@ -9,11 +9,11 @@ A `Temporal.Calendar` is a representation of a calendar system.
 It includes information about how many days are in each year, how many months are in each year, how many days are in each month, and how to do arithmetic in that calendar system.
 
 Much of the world uses the [Gregorian calendar](https://en.wikipedia.org/wiki/Gregorian_calendar), which was invented in 1582 C.E.
-On the modern Internet, the most often used calendar system is the calendar standardized by ISO 8601, which is the same as the Gregorian calendar with the addition of week-numbering rules.
-In general it is extended backwards ("proleptically") to cover the period of history before its invention, which is an optional modification allowed by the ISO 8601 standard.
+The ISO 8601 standard extends the Gregorian date reckoning backwards ("proleptically") to cover the period of history before its invention, to allow designating dates before 1582.
+The ISO 8601 calendar is the system most often used in computing, on the modern Internet.
 
-However, the ISO 8601 calendar is not the only calendar in common use in the world.
-Some places use another calendar system as the main calendar, or have a separate calendar system as a commonly-used civil or religious calendar.
+A significant number of places in the world use another calendar system as the main calendar, or use the Gregorian calendar alongside another calendar system as a commonly-used civil or religious calendar.
+Even places that use almost exclusively the Gregorian calendar today, often use a different calendar to denote dates before the invention or adoption of the Gregorian calendar.
 
 ### When to use `Temporal.Calendar`
 
