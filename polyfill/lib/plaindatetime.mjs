@@ -187,32 +187,18 @@ export class PlainDateTime {
   }
   withPlainTime(temporalTime = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const year = GetSlot(this, ISO_YEAR);
-    const month = GetSlot(this, ISO_MONTH);
-    const day = GetSlot(this, ISO_DAY);
-    const calendar = GetSlot(this, CALENDAR);
-
-    if (temporalTime === undefined) return ES.CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
-
-    temporalTime = ES.ToTemporalTime(temporalTime);
-    const hour = GetSlot(temporalTime, ISO_HOUR);
-    const minute = GetSlot(temporalTime, ISO_MINUTE);
-    const second = GetSlot(temporalTime, ISO_SECOND);
-    const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
-    const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
-    const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-
+    temporalTime = ES.ToTemporalTimeOrMidnight(temporalTime);
     return ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
+      GetSlot(this, ISO_YEAR),
+      GetSlot(this, ISO_MONTH),
+      GetSlot(this, ISO_DAY),
+      GetSlot(temporalTime, ISO_HOUR),
+      GetSlot(temporalTime, ISO_MINUTE),
+      GetSlot(temporalTime, ISO_SECOND),
+      GetSlot(temporalTime, ISO_MILLISECOND),
+      GetSlot(temporalTime, ISO_MICROSECOND),
+      GetSlot(temporalTime, ISO_NANOSECOND),
+      GetSlot(this, CALENDAR)
     );
   }
   withPlainDate(temporalDate) {

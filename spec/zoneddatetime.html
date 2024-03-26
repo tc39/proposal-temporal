@@ -622,10 +622,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. If _plainTimeLike_ is *undefined*, then
-          1. Let _plainTime_ be ! CreateTemporalTime(0, 0, 0, 0, 0, 0).
-        1. Else,
-          1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
+        1. Let _plainTime_ be ? ToTemporalTimeOrMidnight(_plainTimeLike_).
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].

@@ -641,6 +641,22 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-totemporaltimeormidnight" type="abstract operation">
+      <h1>
+        ToTemporalTimeOrMidnight (
+          _item_: an ECMAScript language value,
+        ): either a normal completion containing a `Temporal.PlainTime` or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns its argument _item_ if it is already a Temporal.PlainTime instance, converts _item_ to a new Temporal.PlainTime instance if possible, considering *undefined* to be the same as midnight, and throws otherwise.</dd>
+      </dl>
+      <emu-alg>
+        1. If _item_ is *undefined*, return ! CreateTemporalTime(0, 0, 0, 0, 0, 0).
+        1. Return ? ToTemporalTime(_item_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-regulatetime" aoid="RegulateTime">
       <h1>RegulateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_ )</h1>
       <emu-alg>

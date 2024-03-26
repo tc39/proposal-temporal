@@ -294,35 +294,24 @@ export class ZonedDateTime {
   withPlainTime(temporalTime = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 
-    const PlainTime = GetIntrinsic('%Temporal.PlainTime%');
-    temporalTime = temporalTime === undefined ? new PlainTime() : ES.ToTemporalTime(temporalTime);
+    temporalTime = ES.ToTemporalTimeOrMidnight(temporalTime);
 
     const timeZoneRec = new TimeZoneMethodRecord(GetSlot(this, TIME_ZONE), [
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
-    const thisDt = ES.GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), GetSlot(this, CALENDAR));
-    const year = GetSlot(thisDt, ISO_YEAR);
-    const month = GetSlot(thisDt, ISO_MONTH);
-    const day = GetSlot(thisDt, ISO_DAY);
     const calendar = GetSlot(this, CALENDAR);
-    const hour = GetSlot(temporalTime, ISO_HOUR);
-    const minute = GetSlot(temporalTime, ISO_MINUTE);
-    const second = GetSlot(temporalTime, ISO_SECOND);
-    const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
-    const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
-    const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-
+    const thisDt = ES.GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), calendar);
     const dt = ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
+      GetSlot(thisDt, ISO_YEAR),
+      GetSlot(thisDt, ISO_MONTH),
+      GetSlot(thisDt, ISO_DAY),
+      GetSlot(temporalTime, ISO_HOUR),
+      GetSlot(temporalTime, ISO_MINUTE),
+      GetSlot(temporalTime, ISO_SECOND),
+      GetSlot(temporalTime, ISO_MILLISECOND),
+      GetSlot(temporalTime, ISO_MICROSECOND),
+      GetSlot(temporalTime, ISO_NANOSECOND),
       calendar
     );
     const instant = ES.GetInstantFor(timeZoneRec, dt, 'compatible');
