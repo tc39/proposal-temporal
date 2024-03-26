@@ -1470,6 +1470,12 @@ export function ToTemporalTime(item, overflow = 'constrain') {
   return new TemporalPlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
+export function ToTemporalTimeOrMidnight(item) {
+  const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
+  if (item === undefined) return new TemporalPlainTime();
+  return ToTemporalTime(item);
+}
+
 export function ToTemporalYearMonth(item, options) {
   if (options !== undefined) options = SnapshotOwnProperties(GetOptionsObject(options), null);
   if (Type(item) === 'Object') {

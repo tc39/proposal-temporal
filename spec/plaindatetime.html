@@ -425,9 +425,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. If _plainTimeLike_ is *undefined*, then
-          1. Return ? CreateTemporalDateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], 0, 0, 0, 0, 0, 0, _dateTime_.[[Calendar]]).
-        1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
+        1. Let _plainTime_ be ? ToTemporalTimeOrMidnight(_plainTimeLike_).
         1. Return ? CreateTemporalDateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _plainTime_.[[ISOHour]], _plainTime_.[[ISOMinute]], _plainTime_.[[ISOSecond]], _plainTime_.[[ISOMillisecond]], _plainTime_.[[ISOMicrosecond]], _plainTime_.[[ISONanosecond]], _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
