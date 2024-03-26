@@ -440,6 +440,13 @@
       <emu-alg>
         1. Throw a *TypeError* exception.
       </emu-alg>
+      <emu-note>
+        <p>
+          This method always throws, because in the absence of `valueOf()`, expressions with arithmetic operators such as `plainTime1 > plainTime2` would fall back to being equivalent to `plainTime1.toString() > plainTime2.toString()`.
+          Lexicographical comparison of serialized strings might not seem obviously wrong, because the result would sometimes be correct.
+          Implementations are encouraged to phrase the error message to point users to `Temporal.PlainTime.compare()`, `Temporal.PlainTime.prototype.equals()`, and/or `Temporal.PlainTime.prototype.toString()`.
+        </p>
+      </emu-note>
     </emu-clause>
   </emu-clause>
 
