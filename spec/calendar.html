@@ -1132,7 +1132,7 @@
         1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
         1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1.
         1. If ParseText(StringToCodePoints(_monthCodeDigits_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
-        1. Let _monthCodeInteger_ be ! ToIntegerOrInfinity(_monthCodeDigits_).
+        1. Let _monthCodeInteger_ be ℝ(StringToNumber(_monthCodeDigits_)).
         1. Assert: SameValue(_monthCode_, ISOMonthCode(_monthCodeInteger_)) is *true*.
         1. If _month_ is not *undefined* and ℝ(_month_) ≠ _monthCodeInteger_, throw a *RangeError* exception.
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"month"*, 𝔽(_monthCodeInteger_)).
