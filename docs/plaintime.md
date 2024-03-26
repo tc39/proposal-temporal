@@ -203,7 +203,7 @@ time.nanosecond;  // => 205
 
 ## Methods
 
-### time.**with**(_timeLike_: object | string, _options_?: object) : Temporal.PlainTime
+### time.**with**(_timeLike_: object, _options_?: object) : Temporal.PlainTime
 
 **Parameters:**
 

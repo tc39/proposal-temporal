@@ -449,7 +449,7 @@ dt.with({ year: 2100 }).inLeapYear; // => false
 
 ## Methods
 
-### datetime.**with**(_dateTimeLike_: object | string, _options_?: object) : Temporal.PlainDateTime
+### datetime.**with**(_dateTimeLike_: object, _options_?: object) : Temporal.PlainDateTime
 
 **Parameters:**
 

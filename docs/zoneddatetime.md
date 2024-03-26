@@ -693,7 +693,7 @@ repeated0130 = daylightTime0130.with({ offset: minus8Hours });
 
 ## Methods
 
-### zonedDateTime.**with**(_zonedDateTimeLike_: object | string, _options_?: object) : Temporal.ZonedDateTime
+### zonedDateTime.**with**(_zonedDateTimeLike_: object, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
