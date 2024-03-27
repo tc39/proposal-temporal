@@ -1558,12 +1558,24 @@ export function InterpretISODateTimeOffset(
   // "prefer" or "reject"
   const possibleInstants = GetPossibleInstantsFor(timeZoneRec, dt);
   if (possibleInstants.length > 0) {
+    const utcEpochNs = GetUTCEpochNanoseconds(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond
+    );
     for (let index = 0; index < possibleInstants.length; index++) {
       const candidate = possibleInstants[index];
-      const candidateOffset = GetOffsetNanosecondsFor(timeZoneRec, candidate);
+      const candidateEpochNs = GetSlot(candidate, EPOCHNANOSECONDS);
+      const candidateOffset = utcEpochNs - candidateEpochNs;
       const roundedCandidateOffset = RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
       if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
-        return GetSlot(candidate, EPOCHNANOSECONDS);
+        return candidateEpochNs;
       }
     }
   }
