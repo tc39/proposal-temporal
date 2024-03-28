@@ -440,6 +440,8 @@ The default is <code>constrain</code>.</li>
 <p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
+<p>If <code>duration</code> has any units smaller than <code>months</code>, they will be treated as if they are being added to the first moment of the month given by <code>yearMonth</code>.
+Effectively, this means that adding things like <code>{ days: 1 }</code> will be ignored.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainYearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.PlainYearMonth</code> does not distinguish days.
@@ -462,6 +464,8 @@ The default is <code>constrain</code>.</li>
 <p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
+<p>If <code>duration</code> has any units smaller than <code>months</code>, they will be treated as if they are being subtracted from the last moment of the month given by <code>yearMonth</code>.
+Effectively, this means that subtracting things like <code>{ days: 1 }</code> will be ignored.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainYearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.PlainYearMonth</code> does not distinguish days.
@@ -491,7 +495,7 @@ The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towar
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the elapsed time after <code>yearMonth</code> and until <code>other</code>.</p>
 <p>This method computes the difference between the two months represented by <code>yearMonth</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is earlier than <code>yearMonth</code> then the resulting duration will be negative.
-The returned <code>Temporal.Duration</code>, when added to <code>yearMonth</code> with the same <code>options</code>, will yield <code>other</code>.</p>
+If using the default <code>options</code>, adding the returned <code>Temporal.Duration</code> to <code>yearMonth</code> will yield <code>other</code>.</p>
 <p>If <code>other</code> is not a <code>Temporal.PlainYearMonth</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainYearMonth.from()</code>.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
@@ -542,8 +546,7 @@ The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towar
 <p>This method computes the difference between the two months represented by <code>yearMonth</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>yearMonth</code> then the resulting duration will be negative.</p>
 <p>This method is similar to <code>Temporal.PlainYearMonth.prototype.until()</code>, but reversed.
-The returned <code>Temporal.Duration</code>, when subtracted from <code>yearMonth</code> using the same <code>options</code>, will yield <code>other</code>.
-Using default options, <code>ym1.since(ym2)</code> yields the same result as <code>ym1.until(ym2).negated()</code>, but results may differ with options like <code>{ largestUnit: &#39;month&#39; }</code>.</p>
+If using the default <code>options</code>, subtracting the returned <code>Temporal.Duration</code> from <code>yearMonth</code> will yield <code>other</code>, and <code>ym1.since(ym2)</code> will yield the same result as <code>ym1.until(ym2).negated()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 other <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

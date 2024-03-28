@@ -346,7 +346,7 @@ time<span class="token punctuation">.</span>millisecond<span class="token punctu
 time<span class="token punctuation">.</span>microsecond<span class="token punctuation">;</span> <span class="token comment">// => 346</span>
 time<span class="token punctuation">.</span>nanosecond<span class="token punctuation">;</span>  <span class="token comment">// => 205</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>time.<strong>with</strong>(<em>timeLike</em>: object, <em>options</em>?: object) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeLike</code> (object): an object with some or all of the properties of a <code>Temporal.PlainTime</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -419,7 +419,7 @@ The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towar
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the elapsed time after <code>time</code> and until <code>other</code>.</p>
 <p>This method computes the difference between the two times represented by <code>time</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is earlier than <code>time</code> then the resulting duration will be negative.
-The returned <code>Temporal.Duration</code>, when added to <code>time</code> with the same <code>options</code>, will yield <code>other</code>.</p>
+If using the default <code>options</code>, adding the returned <code>Temporal.Duration</code> to <code>time</code> will yield <code>other</code>.</p>
 <p>If <code>other</code> is not a <code>Temporal.PlainTime</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainTime.from()</code>.</p>
 <p>The <code>largestUnit</code> parameter controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
@@ -462,8 +462,7 @@ The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towar
 <p>This method computes the difference between the two times represented by <code>time</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>time</code> then the resulting duration will be negative.</p>
 <p>This method is similar to <code>Temporal.PlainTime.prototype.until()</code>, but reversed.
-The returned <code>Temporal.Duration</code>, when subtracted from <code>time</code> using the same <code>options</code>, will yield <code>other</code>.
-Using default options, <code>time1.since(time2)</code> yields the same result as <code>time1.until(time2).negated()</code>.</p>
+If using the default <code>options</code>, subtracting the returned <code>Temporal.Duration</code> from <code>time</code> will yield <code>other</code>, and <code>time1.since(time2)</code> will yield the same result as <code>time1.until(time2).negated()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'20:13:20.971398099'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 time<span class="token punctuation">.</span><span class="token function">since</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'19:39:09.068346205'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT34M11.903051894S</span>

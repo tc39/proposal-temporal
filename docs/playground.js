@@ -9018,6 +9018,7 @@
 	    year = ToIntegerOrInfinity$1(yearString);
 	    month = ToIntegerOrInfinity$1(match[2]);
 	    calendar = processAnnotations(match[3]);
+	    referenceISODay = 1;
 	    if (calendar !== undefined && calendar !== 'iso8601') {
 	      throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
 	    }
@@ -9975,6 +9976,11 @@
 	  const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
 	  return new TemporalPlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 	}
+	function ToTemporalTimeOrMidnight(item) {
+	  const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
+	  if (item === undefined) return new TemporalPlainTime();
+	  return ToTemporalTime(item);
+	}
 	function ToTemporalYearMonth(item, options) {
 	  if (options !== undefined) options = SnapshotOwnProperties(GetOptionsObject(options), null);
 	  if (Type$d(item) === 'Object') {
@@ -9996,10 +10002,6 @@
 	  calendar = ASCIILowercase(calendar);
 	  ToTemporalOverflow(options); // validate and ignore
 
-	  if (referenceISODay === undefined) {
-	    RejectISODate(year, month, 1);
-	    return CreateTemporalYearMonth(year, month, calendar);
-	  }
 	  const result = CreateTemporalYearMonth(year, month, calendar, referenceISODay);
 	  const calendarRec = new CalendarMethodRecord(calendar, ['yearMonthFromFields']);
 	  return CalendarYearMonthFromFields(calendarRec, result);
@@ -13827,6 +13829,26 @@
 	  return options;
 	}
 	function yearMonthAmend(options) {
+	  // Try to fake what dateStyle should do for dates without a day. This is not
+	  // accurate for locales that always print the era
+	  const dateStyleHacks = {
+	    short: {
+	      year: '2-digit',
+	      month: 'numeric'
+	    },
+	    medium: {
+	      year: 'numeric',
+	      month: 'short'
+	    },
+	    long: {
+	      year: 'numeric',
+	      month: 'long'
+	    },
+	    full: {
+	      year: 'numeric',
+	      month: 'long'
+	    }
+	  };
 	  options = amend(options, {
 	    day: false,
 	    hour: false,
@@ -13835,9 +13857,13 @@
 	    weekday: false,
 	    dayPeriod: false,
 	    timeZoneName: false,
-	    dateStyle: false,
 	    timeStyle: false
 	  });
+	  if ('dateStyle' in options) {
+	    const style = options.dateStyle;
+	    delete options.dateStyle;
+	    Object.assign(options, dateStyleHacks[style]);
+	  }
 	  if (!('year' in options || 'month' in options)) {
 	    options = ObjectAssign$2(options, {
 	      year: 'numeric',
@@ -13847,6 +13873,25 @@
 	  return options;
 	}
 	function monthDayAmend(options) {
+	  // Try to fake what dateStyle should do for dates without a day
+	  const dateStyleHacks = {
+	    short: {
+	      month: 'numeric',
+	      day: 'numeric'
+	    },
+	    medium: {
+	      month: 'short',
+	      day: 'numeric'
+	    },
+	    long: {
+	      month: 'long',
+	      day: 'numeric'
+	    },
+	    full: {
+	      month: 'long',
+	      day: 'numeric'
+	    }
+	  };
 	  options = amend(options, {
 	    year: false,
 	    hour: false,
@@ -13855,9 +13900,13 @@
 	    weekday: false,
 	    dayPeriod: false,
 	    timeZoneName: false,
-	    dateStyle: false,
 	    timeStyle: false
 	  });
+	  if ('dateStyle' in options) {
+	    const style = options.dateStyle;
+	    delete options.dateStyle;
+	    Object.assign(options, dateStyleHacks[style]);
+	  }
 	  if (!('month' in options || 'day' in options)) {
 	    options = ObjectAssign$2({}, options, {
 	      month: 'numeric',
@@ -16773,7 +16822,7 @@
 	        required: false
 	      }, {
 	        property: 'eraYear',
-	        conversion: ToIntegerOrInfinity$1,
+	        conversion: ToIntegerWithTruncation,
 	        required: false
 	      }];
 	    }
@@ -17201,19 +17250,8 @@
 	  toPlainDateTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
-	    const year = GetSlot(this, ISO_YEAR);
-	    const month = GetSlot(this, ISO_MONTH);
-	    const day = GetSlot(this, ISO_DAY);
-	    const calendar = GetSlot(this, CALENDAR);
-	    if (temporalTime === undefined) return CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
-	    temporalTime = ToTemporalTime(temporalTime);
-	    const hour = GetSlot(temporalTime, ISO_HOUR);
-	    const minute = GetSlot(temporalTime, ISO_MINUTE);
-	    const second = GetSlot(temporalTime, ISO_SECOND);
-	    const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
-	    const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
-	    const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-	    return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
+	    return CreateTemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(temporalTime, ISO_HOUR), GetSlot(temporalTime, ISO_MINUTE), GetSlot(temporalTime, ISO_SECOND), GetSlot(temporalTime, ISO_MILLISECOND), GetSlot(temporalTime, ISO_MICROSECOND), GetSlot(temporalTime, ISO_NANOSECOND), GetSlot(this, CALENDAR));
 	  }
 	  toZonedDateTime(item) {
 	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -17233,26 +17271,9 @@
 	    } else {
 	      timeZone = ToTemporalTimeZoneSlotValue(item);
 	    }
-	    const year = GetSlot(this, ISO_YEAR);
-	    const month = GetSlot(this, ISO_MONTH);
-	    const day = GetSlot(this, ISO_DAY);
 	    const calendar = GetSlot(this, CALENDAR);
-	    let hour = 0,
-	      minute = 0,
-	      second = 0,
-	      millisecond = 0,
-	      microsecond = 0,
-	      nanosecond = 0;
-	    if (temporalTime !== undefined) {
-	      temporalTime = ToTemporalTime(temporalTime);
-	      hour = GetSlot(temporalTime, ISO_HOUR);
-	      minute = GetSlot(temporalTime, ISO_MINUTE);
-	      second = GetSlot(temporalTime, ISO_SECOND);
-	      millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
-	      microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
-	      nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-	    }
-	    const dt = CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
+	    const dt = CreateTemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(temporalTime, ISO_HOUR), GetSlot(temporalTime, ISO_MINUTE), GetSlot(temporalTime, ISO_SECOND), GetSlot(temporalTime, ISO_MILLISECOND), GetSlot(temporalTime, ISO_MICROSECOND), GetSlot(temporalTime, ISO_NANOSECOND), calendar);
 	    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    const instant = GetInstantFor(timeZoneRec, dt, 'compatible');
 	    return CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
@@ -17450,19 +17471,8 @@
 	  withPlainTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-	    const year = GetSlot(this, ISO_YEAR);
-	    const month = GetSlot(this, ISO_MONTH);
-	    const day = GetSlot(this, ISO_DAY);
-	    const calendar = GetSlot(this, CALENDAR);
-	    if (temporalTime === undefined) return CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, calendar);
-	    temporalTime = ToTemporalTime(temporalTime);
-	    const hour = GetSlot(temporalTime, ISO_HOUR);
-	    const minute = GetSlot(temporalTime, ISO_MINUTE);
-	    const second = GetSlot(temporalTime, ISO_SECOND);
-	    const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
-	    const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
-	    const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-	    return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
+	    return CreateTemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(temporalTime, ISO_HOUR), GetSlot(temporalTime, ISO_MINUTE), GetSlot(temporalTime, ISO_SECOND), GetSlot(temporalTime, ISO_MILLISECOND), GetSlot(temporalTime, ISO_MICROSECOND), GetSlot(temporalTime, ISO_NANOSECOND), GetSlot(this, CALENDAR));
 	  }
 	  withPlainDate(temporalDate) {
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -19093,21 +19103,11 @@
 	  withPlainTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    const PlainTime = GetIntrinsic('%Temporal.PlainTime%');
-	    temporalTime = temporalTime === undefined ? new PlainTime() : ToTemporalTime(temporalTime);
+	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
 	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(this, TIME_ZONE), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
-	    const thisDt = GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), GetSlot(this, CALENDAR));
-	    const year = GetSlot(thisDt, ISO_YEAR);
-	    const month = GetSlot(thisDt, ISO_MONTH);
-	    const day = GetSlot(thisDt, ISO_DAY);
 	    const calendar = GetSlot(this, CALENDAR);
-	    const hour = GetSlot(temporalTime, ISO_HOUR);
-	    const minute = GetSlot(temporalTime, ISO_MINUTE);
-	    const second = GetSlot(temporalTime, ISO_SECOND);
-	    const millisecond = GetSlot(temporalTime, ISO_MILLISECOND);
-	    const microsecond = GetSlot(temporalTime, ISO_MICROSECOND);
-	    const nanosecond = GetSlot(temporalTime, ISO_NANOSECOND);
-	    const dt = CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
+	    const thisDt = GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), calendar);
+	    const dt = CreateTemporalDateTime(GetSlot(thisDt, ISO_YEAR), GetSlot(thisDt, ISO_MONTH), GetSlot(thisDt, ISO_DAY), GetSlot(temporalTime, ISO_HOUR), GetSlot(temporalTime, ISO_MINUTE), GetSlot(temporalTime, ISO_SECOND), GetSlot(temporalTime, ISO_MILLISECOND), GetSlot(temporalTime, ISO_MICROSECOND), GetSlot(temporalTime, ISO_NANOSECOND), calendar);
 	    const instant = GetInstantFor(timeZoneRec, dt, 'compatible');
 	    return CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZoneRec.receiver, calendar);
 	  }

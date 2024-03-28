@@ -453,7 +453,7 @@ Its value is <code>true</code> if the year is a leap year, and <code>false</code
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDateISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// example output: true</span>
 <span class="token comment">// Is 2100 a leap year? (no, because it's divisible by 100 and not 400)</span>
-date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>date.<strong>with</strong>(<em>dateLike</em>: object | string, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+date<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2100</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>inLeapYear<span class="token punctuation">;</span> <span class="token comment">// => false</span></code></pre><h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>date.<strong>with</strong>(<em>dateLike</em>: object, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>dateLike</code> (object): an object with some or all of the properties of a <code>Temporal.PlainDate</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
@@ -503,6 +503,8 @@ The default is <code>constrain</code>.</li>
 <p>This method adds <code>duration</code> to <code>date</code>, returning a date that is in the future relative to <code>date</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ days: 5 }</code>, or a string such as <code>P5D</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
+<p>If <code>duration</code> has any units smaller than <code>days</code>, they will be treated as if they are being added to the first moment of the day given by <code>date</code>.
+Effectively, this means that adding things like <code>{ minutes: 5 }</code> will be ignored.</p>
 <p>Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
@@ -533,6 +535,8 @@ The default is <code>constrain</code>.</li>
 <p>This method subtracts <code>duration</code> from <code>date</code>, returning a date that is in the past relative to <code>date</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ days: 5 }</code>, or a string such as <code>P5D</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
+<p>If <code>duration</code> has any units smaller than <code>days</code>, they will be treated as if they are being subtracted from the last moment of the day given by <code>date</code>.
+Effectively, this means that subtracting things like <code>{ minutes: 5 }</code> will be ignored.</p>
 <p>Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
@@ -570,7 +574,7 @@ The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towar
 <p><strong>Returns:</strong> a <code>Temporal.Duration</code> representing the time elapsed after <code>date</code> and until <code>other</code>.</p>
 <p>This method computes the difference between the two dates represented by <code>date</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is earlier than <code>date</code> then the resulting duration will be negative.
-The returned <code>Temporal.Duration</code>, when added to <code>date</code> with the same <code>options</code>, will yield <code>other</code>.</p>
+If using the default <code>options</code>, adding the returned <code>Temporal.Duration</code> to <code>date</code> will yield <code>other</code>.</p>
 <p>If <code>other</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
@@ -635,8 +639,7 @@ The default is <code>&#39;trunc&#39;</code>, which truncates any remainder towar
 <p>This method computes the difference between the two dates represented by <code>date</code> and <code>other</code>, optionally rounds it, and returns it as a <code>Temporal.Duration</code> object.
 If <code>other</code> is later than <code>date</code> then the resulting duration will be negative.</p>
 <p>This method is similar to <code>Temporal.PlainDate.prototype.until()</code>, but reversed.
-The returned <code>Temporal.Duration</code>, when subtracted from <code>date</code> using the same <code>options</code>, will yield <code>other</code>.
-Using default options, <code>date1.since(date2)</code> yields the same result as <code>date1.until(date2).negated()</code>, but results may differ with options like <code>{ largestUnit: &#39;month&#39; }</code>.</p>
+If using the default <code>options</code>, subtracting the returned <code>Temporal.Duration</code> from <code>date</code> will yield <code>other</code>, and <code>date1.since(date2)</code> will yield the same result as <code>date1.until(date2).negated()</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">earlier <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 later <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-01-31'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
