@@ -113,10 +113,9 @@
         </dl>
         <p>This definition supersedes the definition provided in <emu-xref href="#sec-availablenamedtimezoneidentifiers"></emu-xref>.</p>
         <emu-alg>
-          1. Let _identifiers_ be a List containing the String value of each Zone or Link name in the IANA Time Zone Database.
+          1. Let _identifiers_ be a List containing the String value of each Zone or Link name in the IANA Time Zone Database, sorted according to lexicographic code unit order.
           1. Assert: No element of _identifiers_ is an ASCII-case-insensitive match for any other element.
           1. Assert: Every element of _identifiers_ identifies a Zone or Link name in the IANA Time Zone Database.
-          1. Set _identifiers_ to SortStringListByCodeUnit(_identifiers_).
           1. Let _result_ be a new empty List.
           1. For each element _identifier_ of _identifiers_, do
             1. Let _primary_ be _identifier_.

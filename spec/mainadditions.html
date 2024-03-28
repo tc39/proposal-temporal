@@ -66,25 +66,6 @@
     </emu-clause>
   </ins>
 
-  <ins class="block">
-    <emu-clause id="sec-sortstringlistbycodeunit" type="abstract operation">
-      <h1>
-        SortStringListByCodeUnit (
-          _strings_: a List of Strings,
-        ): a List of Strings
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>The returned List contains the same Strings as _strings_, but sorted lexicographically by UTF-16 code unit in ascending order.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _result_ be a copy of _strings_.
-        1. [declared="comparefn"] Sort _result_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
-        1. Return _result_.
-      </emu-alg>
-    </emu-clause>
-  </ins>
-
   <emu-clause id="sec-mathematical-operations">
     <h1>Mathematical Operations</h1>
     <p>[...]</p>
@@ -231,45 +212,6 @@
         In time zone aware implementations, a primary time zone identifier is a Zone name, and a non-primary time zone identifier is a Link name, respectively, in the IANA Time Zone Database except as specifically overridden by AvailableNamedTimeZoneIdentifiers as specified in the ECMA-402 specification.
         Implementations that do not support the entire IANA Time Zone Database are still recommended to use IANA Time Zone Database names as identifiers to represent time zones.
       </p>
-    </emu-clause>
-
-    <emu-clause id="sec-availablenamedtimezoneidentifiers" type="implementation-defined abstract operation">
-      <h1>AvailableNamedTimeZoneIdentifiers ( ): a List of Time Zone Identifier Records</h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>
-          Its result describes all available named time zone identifiers in this implementation, as well as the primary time zone identifier corresponding to each available named time zone identifier.
-          The List is ordered according to the [[Identifier]] field of each Time Zone Identifier Record.
-        </dd>
-      </dl>
-      <p>
-        Time zone aware implementations, including all implementations that implement the ECMA-402 Internationalization API, must implement the AvailableNamedTimeZoneIdentifiers abstract operation as specified in the ECMA-402 specification.
-        For implementations that are not time zone aware, AvailableNamedTimeZoneIdentifiers performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. If the implementation does not include local political rules for any time zones, then
-          1. Return « the Time Zone Identifier Record { [[Identifier]]: *"UTC"*, [[PrimaryIdentifier]]: *"UTC"* } ».
-        1. Let _identifiers_ be the List of unique available named time zone identifiers.
-        1. <del>Sort _identifiers_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as the argument.</del>
-        1. <ins>Set _identifiers_ to SortStringListByCodeUnit(_identifiers_).</ins>
-        1. Let _result_ be a new empty List.
-        1. For each element _identifier_ of _identifiers_, do
-          1. Let _primary_ be _identifier_.
-          1. If _identifier_ is a non-primary time zone identifier in this implementation and _identifier_ is not *"UTC"*, then
-            1. Set _primary_ to the primary time zone identifier associated with _identifier_.
-            1. NOTE: An implementation may need to resolve _identifier_ iteratively to obtain the primary time zone identifier.
-          1. Let _record_ be the Time Zone Identifier Record { [[Identifier]]: _identifier_, [[PrimaryIdentifier]]: _primary_ }.
-          1. Append _record_ to _result_.
-        1. Assert: _result_ contains a Time Zone Identifier Record _r_ such that _r_.[[Identifier]] is *"UTC"* and _r_.[[PrimaryIdentifier]] is *"UTC"*.
-        1. Return _result_.
-      </emu-alg>
-
-      <emu-note>
-        Time zone identifiers in the IANA Time Zone Database can change over time.
-        At a minimum, implementations must limit changes to the result of AvailableNamedTimeZoneIdentifiers to the changes allowed by GetAvailableNamedTimeZoneIdentifier, for the lifetime of the surrounding agent.
-        That is, implementations must not remove support for or change the primary vs. non-primary status of an identifier that was already reported as available, and they must not add support for an identifier that was already reported as not available.
-        Due to the complexity of supporting these recommendations, it is recommended that the result of AvailableNamedTimeZoneIdentifiers remains the same for the lifetime of the surrounding agent.
-      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-systemtimezoneidentifier" oldids="sec-defaulttimezone" type="implementation-defined abstract operation">
