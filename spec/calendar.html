@@ -1216,12 +1216,13 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _ignoredKeys_ be an empty Set.
+        1. Let _ignoredKeys_ be an empty List.
         1. For each element _key_ of _keys_, do
-          1. Add _key_ to _ignoredKeys_.
-          1. If _key_ is *"month"*, add *"monthCode"* to _ignoredKeys_.
-          1. Else if _key_ is *"monthCode"*, add *"month"* to _ignoredKeys_.
-        1. Return the List of _ignoredKeys_' elements.
+          1. Append _key_ to _ignoredKeys_.
+          1. If _key_ is *"month"*, append *"monthCode"* to _ignoredKeys_.
+          1. Else if _key_ is *"monthCode"*, append *"month"* to _ignoredKeys_.
+        1. NOTE: While _ignoredKeys_ can have duplicate elements, this is not intended to be meaningful. This specification only checks whether particular keys are or are not members of the list.
+        1. Return _ignoredKeys_.
       </emu-alg>
     </emu-clause>
 
