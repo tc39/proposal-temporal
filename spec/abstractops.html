@@ -1507,19 +1507,24 @@
     </dl>
     <emu-alg>
       1. Let _parseResult_ be ~empty~.
-      1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalTimeString| &raquo;, do
-        1. If _parseResult_ is not a Parse Node, set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
-      1. For each nonterminal _goal_ of &laquo; |TemporalMonthDayString|, |TemporalYearMonthString| &raquo;, do
+      1. Let _calendar_ be ~empty~.
+      1. For each nonterminal _goal_ of &laquo; |TemporalDateTimeString|, |TemporalInstantString|, |TemporalTimeString|, |TemporalMonthDayString|, |TemporalYearMonthString| &raquo;, do
         1. If _parseResult_ is not a Parse Node, then
           1. Set _parseResult_ to ParseText(StringToCodePoints(_isoString_), _goal_).
           1. If _parseResult_ is a Parse Node, then
-            1. Let _foundCalendar_ be *undefined*.
+            1. Let _calendarWasCritical_ be *false*.
             1. For each |Annotation| Parse Node _annotation_ contained within _parseResult_, do
               1. Let _key_ be the source text matched by the |AnnotationKey| Parse Node contained within _annotation_.
               1. Let _value_ be the source text matched by the |AnnotationValue| Parse Node contained within _annotation_.
-              1. If CodePointsToString(_key_) is *"u-ca"*, and _foundCalendar_ is *undefined*, then
-                1. Set _foundCalendar_ to CodePointsToString(_value_).
-            1. If _foundCalendar_ is not *undefined* and the ASCII-lowercase of _foundCalendar_ is not *"iso8601"*, throw a *RangeError* exception.
+              1. If CodePointsToString(_key_) is *"u-ca"*, then
+                1. If _calendar_ is ~empty~, then
+                  1. Set _calendar_ to CodePointsToString(_value_).
+                  1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, set _calendarWasCritical_ to *true*.
+                1. Else,
+                  1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, or _calendarWasCritical_ is *true*, throw a *RangeError* exception.
+              1. Else,
+                1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, throw a *RangeError* exception.
+            1. If _goal_ is |TemporalMonthDayString| or |TemporalYearMonthString|, _calendar_ is not ~empty~, and the ASCII-lowercase of _calendar_ is not *"iso8601"*, throw a *RangeError* exception.
       1. If _parseResult_ is not a Parse Node, throw a *RangeError* exception.
       1. NOTE: Applications of StringToNumber below do not lose precision, since each of the parsed values is guaranteed to be a sufficiently short string of decimal digits.
       1. Let each of _year_, _month_, _day_, _hour_, _minute_, _second_, and _fSeconds_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, |TimeHour|, |TimeMinute|, |TimeSecond|, and |TimeFraction| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
@@ -1571,19 +1576,6 @@
       1. Else if _parseResult_ contains a |UTCOffsetSubMinutePrecision| Parse Node, then
         1. Let _offset_ be the source text matched by the |UTCOffsetSubMinutePrecision| Parse Node contained within _parseResult_.
         1. Set _timeZoneResult_.[[OffsetString]] to CodePointsToString(_offset_).
-      1. Let _calendar_ be *undefined*.
-      1. Let _calendarWasCritical_ be *false*.
-      1. For each |Annotation| Parse Node _annotation_ contained within _parseResult_, do
-        1. Let _key_ be the source text matched by the |AnnotationKey| Parse Node contained within _annotation_.
-        1. If CodePointsToString(_key_) is *"u-ca"*, then
-          1. If _calendar_ is *undefined*, then
-            1. Let _value_ be the source text matched by the |AnnotationValue| Parse Node contained within _annotation_.
-            1. Set _calendar_ to CodePointsToString(_value_).
-            1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, set _calendarWasCritical_ to *true*.
-          1. Else,
-            1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, or _calendarWasCritical_ is *true*, throw a *RangeError* exception.
-        1. Else,
-          1. If _annotation_ contains an |AnnotationCriticalFlag| Parse Node, throw a *RangeError* exception.
       1. Return the Record {
           [[Year]]: _yearMV_,
           [[Month]]: _monthMV_,
