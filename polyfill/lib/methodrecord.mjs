@@ -1,4 +1,4 @@
-import GetMethod from 'es-abstract/2022/GetMethod.js';
+import GetMethod from 'es-abstract/2024/GetMethod.js';
 
 import { GetIntrinsic } from './intrinsicclass.mjs';
 import { CALENDAR, GetSlot } from './slots.mjs';

@@ -114,7 +114,7 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const fieldsArray = [];
     const allowed = new OriginalSet(['year', 'month', 'monthCode', 'day']);
-    const iteratorRecord = ES.GetIterator(fields, 'sync');
+    const iteratorRecord = ES.GetIterator(fields, 'SYNC');
     const abort = (err) => {
       const completion = new ES.CompletionRecord('throw', err);
       return ES.IteratorClose(iteratorRecord, completion)['?']();
