@@ -481,6 +481,7 @@ export function ParseISODateTime(isoString) {
   // ZDT is the superset of fields for every other Temporal type
   const match = PARSE.zoneddatetime.exec(isoString);
   if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
+  const calendar = processAnnotations(match[16]);
   let yearString = match[1];
   if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
   if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
@@ -505,7 +506,6 @@ export function ParseISODateTime(isoString) {
     offset = match[14];
   }
   const tzAnnotation = match[15];
-  const calendar = processAnnotations(match[16]);
   RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   return {
     year,
@@ -549,6 +549,7 @@ export function ParseTemporalTimeString(isoString) {
   const match = PARSE.time.exec(isoString);
   let hour, minute, second, millisecond, microsecond, nanosecond;
   if (match) {
+    processAnnotations(match[10]); // ignore found calendar
     hour = +(match[1] ?? 0);
     minute = +(match[2] ?? match[5] ?? 0);
     second = +(match[3] ?? match[6] ?? 0);
@@ -557,7 +558,6 @@ export function ParseTemporalTimeString(isoString) {
     millisecond = +fraction.slice(0, 3);
     microsecond = +fraction.slice(3, 6);
     nanosecond = +fraction.slice(6, 9);
-    processAnnotations(match[10]); // ignore found calendar
     if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
   } else {
     let z, hasTime;
@@ -588,12 +588,12 @@ export function ParseTemporalYearMonthString(isoString) {
   const match = PARSE.yearmonth.exec(isoString);
   let year, month, calendar, referenceISODay;
   if (match) {
+    calendar = processAnnotations(match[3]);
     let yearString = match[1];
     if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
     if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     year = +yearString;
     month = +match[2];
-    calendar = processAnnotations(match[3]);
     referenceISODay = 1;
     if (calendar !== undefined && calendar !== 'iso8601') {
       throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
@@ -610,9 +610,9 @@ export function ParseTemporalMonthDayString(isoString) {
   const match = PARSE.monthday.exec(isoString);
   let month, day, calendar, referenceISOYear;
   if (match) {
+    calendar = processAnnotations(match[3]);
     month = +match[1];
     day = +match[2];
-    calendar = processAnnotations(match[3]);
     if (calendar !== undefined && calendar !== 'iso8601') {
       throw new RangeError('MM-DD format is only valid with iso8601 calendar');
     }
