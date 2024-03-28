@@ -1991,7 +1991,7 @@
           1. Append _desc_.[[Property]] to _fieldNames_.
           1. If _desc_.[[Required]] is *true* and _requiredFields_ is a List, then
             1. Append _desc_.[[Property]] to _requiredFields_.
-      1. Let _sortedFieldNames_ be SortStringListByCodeUnit(_fieldNames_).
+      1. Let _sortedFieldNames_ be a List whose elements are the elements of _fieldNames_, sorted according to lexicographic code unit order.
       1. Let _previousProperty_ be *undefined*.
       1. For each property name _property_ of _sortedFieldNames_, do
         1. If _property_ is one of *"constructor"* or *"__proto__"*, then

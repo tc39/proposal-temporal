@@ -49,11 +49,10 @@
         <dd>Each element in the returned List represents a calendar type supported by the implementation.</dd>
       </dl>
       <emu-alg>
-        1. Let _calendars_ be the List of String values representing calendar types supported by the implementation.
+        1. Let _calendars_ be the List of String values representing calendar types supported by the implementation, sorted according to lexicographic code unit order.
         1. Assert: _calendars_ contains *"iso8601"*.
         1. [declared="S"] Assert: _calendars_ does not contain any element _S_ for which the ASCII-lowercase of _S_ is not _S_.
         1. Assert: _calendars_ does not contain any element that does not identify a calendar type in the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>.
-        1. Return SortStringListByCodeUnit(_calendars_).
       </emu-alg>
     </emu-clause>
   </emu-clause>
