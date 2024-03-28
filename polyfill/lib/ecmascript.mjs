@@ -334,6 +334,10 @@ export function CopyDataProperties(target, source, excludedKeys, excludedValues)
     throw new $TypeError('Assertion failed: "excludedKeys" must be a List of Property Keys');
   }
 
+  if (excludedValues !== undefined && !IsArray(excludedValues)) {
+    throw new $TypeError('Assertion failed: "excludedValues" must be a List of ECMAScript language values');
+  }
+
   if (typeof source === 'undefined' || source === null) {
     return;
   }
