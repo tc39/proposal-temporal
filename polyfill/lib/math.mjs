@@ -8,7 +8,7 @@ const StringPrototypePadStart = String.prototype.padStart;
 const StringPrototypeRepeat = String.prototype.repeat;
 const StringPrototypeSlice = String.prototype.slice;
 
-import Call from 'es-abstract/2022/Call.js';
+import Call from 'es-abstract/2024/Call.js';
 
 // Computes trunc(x / 10**p) and x % 10**p, returning { div, mod }, with
 // precision loss only once in the quotient, by string manipulation. If the

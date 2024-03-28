@@ -33,26 +33,26 @@ const StringPrototypeSlice = String.prototype.slice;
 
 import bigInt from 'big-integer';
 import callBound from 'call-bind/callBound';
-import Call from 'es-abstract/2022/Call.js';
-import CompletionRecord from 'es-abstract/2022/CompletionRecord.js';
-import CreateDataPropertyOrThrow from 'es-abstract/2022/CreateDataPropertyOrThrow.js';
-import Get from 'es-abstract/2022/Get.js';
-import GetIterator from 'es-abstract/2022/GetIterator.js';
-import GetMethod from 'es-abstract/2022/GetMethod.js';
-import HasOwnProperty from 'es-abstract/2022/HasOwnProperty.js';
-import IsArray from 'es-abstract/2022/IsArray.js';
-import IsIntegralNumber from 'es-abstract/2022/IsIntegralNumber.js';
-import IsPropertyKey from 'es-abstract/2022/IsPropertyKey.js';
-import IteratorClose from 'es-abstract/2022/IteratorClose.js';
-import IteratorStep from 'es-abstract/2022/IteratorStep.js';
-import IteratorValue from 'es-abstract/2022/IteratorValue.js';
-import SameValue from 'es-abstract/2022/SameValue.js';
-import ToNumber from 'es-abstract/2022/ToNumber.js';
-import ToObject from 'es-abstract/2022/ToObject.js';
-import ToPrimitive from 'es-abstract/2022/ToPrimitive.js';
-import ToString from 'es-abstract/2022/ToString.js';
-import ToZeroPaddedDecimalString from 'es-abstract/2022/ToZeroPaddedDecimalString.js';
-import Type from 'es-abstract/2022/Type.js';
+import Call from 'es-abstract/2024/Call.js';
+import CompletionRecord from 'es-abstract/2024/CompletionRecord.js';
+import CreateDataPropertyOrThrow from 'es-abstract/2024/CreateDataPropertyOrThrow.js';
+import Get from 'es-abstract/2024/Get.js';
+import GetIterator from 'es-abstract/2024/GetIterator.js';
+import GetMethod from 'es-abstract/2024/GetMethod.js';
+import HasOwnProperty from 'es-abstract/2024/HasOwnProperty.js';
+import IsArray from 'es-abstract/2024/IsArray.js';
+import IsIntegralNumber from 'es-abstract/2024/IsIntegralNumber.js';
+import IsPropertyKey from 'es-abstract/2024/IsPropertyKey.js';
+import IteratorClose from 'es-abstract/2024/IteratorClose.js';
+import IteratorStep from 'es-abstract/2024/IteratorStep.js';
+import IteratorValue from 'es-abstract/2024/IteratorValue.js';
+import SameValue from 'es-abstract/2024/SameValue.js';
+import ToNumber from 'es-abstract/2024/ToNumber.js';
+import ToObject from 'es-abstract/2024/ToObject.js';
+import ToPrimitive from 'es-abstract/2024/ToPrimitive.js';
+import ToString from 'es-abstract/2024/ToString.js';
+import ToZeroPaddedDecimalString from 'es-abstract/2024/ToZeroPaddedDecimalString.js';
+import Type from 'es-abstract/2024/Type.js';
 
 import every from 'es-abstract/helpers/every.js';
 import forEach from 'es-abstract/helpers/forEach.js';
@@ -320,7 +320,7 @@ function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
   return instance;
 }
 
-// copied from es-abstract/2022/CopyDataProperties.js
+// copied from es-abstract/2024/CopyDataProperties.js
 // with modifications per Temporal spec/mainadditions.html
 
 export function CopyDataProperties(target, source, excludedKeys, excludedValues) {
