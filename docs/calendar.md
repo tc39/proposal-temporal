@@ -69,7 +69,7 @@ Here are best practices for writing code that will work regardless of the calend
   Manually calculating differences (e.g. `Math.floor(months/12)`) will fail for some calendars.
 - Use `daysInMonth` instead of assuming that each month has the same number of days in every year.
 - Days in a month are not always continuous.
-  There can be gaps due to political changes in calendars and/or time zones.
+  There can be gaps due to political changes in calendars.
   For this reason, instead of looping through a month from 1 to `date.daysInMonth`, it's better to start a loop with the first day of the month (`.with({day: 1})`) and `add` one day at a time until the `month` property returns a different value.
 - Use `daysInYear` instead of assuming that every year has 365 days (366 in a leap year).
 - Don't assume that `inLeapYear===true` implies that the year is one day longer than a regular year.
