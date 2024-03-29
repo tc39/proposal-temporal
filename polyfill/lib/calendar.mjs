@@ -157,7 +157,7 @@ export class Calendar {
     date = ES.ToTemporalDate(date);
     duration = ES.ToTemporalDuration(duration);
     options = ES.GetOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     const norm = TimeDuration.normalize(
       GetSlot(duration, HOURS),
       GetSlot(duration, MINUTES),
@@ -183,7 +183,7 @@ export class Calendar {
     one = ES.ToTemporalDate(one);
     two = ES.ToTemporalDate(two);
     options = ES.GetOptionsObject(options);
-    let largestUnit = ES.GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+    let largestUnit = ES.GetTemporalUnitValuedOption(options, 'largestUnit', 'date', 'auto');
     if (largestUnit === 'auto') largestUnit = 'day';
     const { years, months, weeks, days } = impl[GetSlot(this, CALENDAR_ID)].dateUntil(one, two, largestUnit);
     const Duration = GetIntrinsic('%Temporal.Duration%');
@@ -358,7 +358,7 @@ DefineIntrinsic('Temporal.Calendar.prototype.yearOfWeek', Calendar.prototype.yea
 impl['iso8601'] = {
   dateFromFields(fields, options, calendarSlotValue) {
     fields = ES.PrepareTemporalFields(fields, ['day', 'month', 'monthCode', 'year'], ['year', 'day']);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     fields = resolveNonLunisolarMonth(fields);
     let { year, month, day } = fields;
     ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
@@ -366,7 +366,7 @@ impl['iso8601'] = {
   },
   yearMonthFromFields(fields, options, calendarSlotValue) {
     fields = ES.PrepareTemporalFields(fields, ['month', 'monthCode', 'year'], ['year']);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     fields = resolveNonLunisolarMonth(fields);
     let { year, month } = fields;
     ({ year, month } = ES.RegulateISOYearMonth(year, month, overflow));
@@ -374,7 +374,7 @@ impl['iso8601'] = {
   },
   monthDayFromFields(fields, options, calendarSlotValue) {
     fields = ES.PrepareTemporalFields(fields, ['day', 'month', 'monthCode', 'year'], ['day']);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     const referenceISOYear = 1972;
     fields = resolveNonLunisolarMonth(fields);
     let { month, day, year } = fields;
@@ -2010,7 +2010,7 @@ const nonIsoGeneralImpl = {
     const fieldNames = ['day', 'month', 'monthCode', 'year'];
     const extraFieldDescriptors = this.CalendarFieldDescriptors('date');
     fields = ES.PrepareTemporalFields(fields, fieldNames, [], extraFieldDescriptors);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     const { year, month, day } = this.helper.calendarToIsoDate(fields, overflow, cache);
     const result = ES.CreateTemporalDate(year, month, day, calendarSlotValue);
     cache.setObject(result);
@@ -2021,7 +2021,7 @@ const nonIsoGeneralImpl = {
     const fieldNames = ['month', 'monthCode', 'year'];
     const extraFieldDescriptors = this.CalendarFieldDescriptors('year-month');
     fields = ES.PrepareTemporalFields(fields, fieldNames, [], extraFieldDescriptors);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     const { year, month, day } = this.helper.calendarToIsoDate({ ...fields, day: 1 }, overflow, cache);
     const result = ES.CreateTemporalYearMonth(year, month, calendarSlotValue, /* referenceISODay = */ day);
     cache.setObject(result);
@@ -2034,7 +2034,7 @@ const nonIsoGeneralImpl = {
     const fieldNames = ['day', 'month', 'monthCode', 'year'];
     const extraFieldDescriptors = this.CalendarFieldDescriptors('date');
     fields = ES.PrepareTemporalFields(fields, fieldNames, [], extraFieldDescriptors);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     const { year, month, day } = this.helper.monthDayFromFields(fields, overflow, cache);
     // `year` is a reference year where this month/day exists in this calendar
     const result = ES.CreateTemporalMonthDay(month, day, calendarSlotValue, /* referenceISOYear = */ year);

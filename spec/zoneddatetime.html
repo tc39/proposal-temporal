@@ -62,9 +62,9 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and ToTemporalOverflow reads *"overflow"*).
-          1. Perform ? ToTemporalDisambiguation(_options_).
-          1. Perform ? ToTemporalOffset(_options_, *"reject"*).
-          1. Perform ? ToTemporalOverflow(_options_).
+          1. Perform ? GetTemporalDisambiguationOption(_options_).
+          1. Perform ? GetTemporalOffsetOption(_options_, *"reject"*).
+          1. Perform ? GetTemporalOverflowOption(_options_).
           1. Return ! CreateTemporalZonedDateTime(_item_.[[Nanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
         1. Return ? ToTemporalZonedDateTime(_item_, _options_).
       </emu-alg>
@@ -642,8 +642,8 @@
         1. Let _fields_ be ? CalendarMergeFields(_calendarRec_, _fieldsResult_.[[Fields]], _partialZonedDateTime_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldsResult_.[[FieldNames]], « *"offset"* »).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_resolvedOptions_).
-        1. Let _offset_ be ? ToTemporalOffset(_resolvedOptions_, *"prefer"*).
+        1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
+        1. Let _offset_ be ? GetTemporalOffsetOption(_resolvedOptions_, *"prefer"*).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _resolvedOptions_).
         1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
         1. Assert: Type(_offsetString_) is String.
@@ -782,9 +782,9 @@
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « *"day"* »).
+        1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, *"halfExpand"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « *"day"* »).
         1. If _smallestUnit_ is *"day"*, then
           1. Let _maximum_ be 1.
           1. Let _inclusive_ be *true*.
@@ -847,13 +847,13 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToCalendarNameOption reads *"calendarName"*, ToFractionalSecondDigits reads *"fractionalSecondDigits"*, ToShowOffsetOption reads *"offset"*, and ToTemporalRoundingMode reads *"roundingMode"*).
-        1. Let _showCalendar_ be ? ToCalendarNameOption(_options_).
-        1. Let _digits_ be ? ToFractionalSecondDigits(_options_).
-        1. Let _showOffset_ be ? ToShowOffsetOption(_options_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~time~, *undefined*).
+        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
+        1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
+        1. Let _showOffset_ be ? GetTemporalShowOffsetOption(_options_).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, *undefined*).
         1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
-        1. Let _showTimeZone_ be ? ToTimeZoneNameOption(_options_).
+        1. Let _showTimeZone_ be ? GetTemporalShowTimeZoneNameOption(_options_).
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, _precision_.[[Precision]], _showCalendar_, _showTimeZone_, _showOffset_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
       </emu-alg>
@@ -1226,8 +1226,8 @@
           1. If _offsetString_ is *undefined*, then
             1. Set _offsetBehaviour_ to ~wall~.
           1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
-          1. Let _disambiguation_ be ? ToTemporalDisambiguation(_resolvedOptions_).
-          1. Let _offsetOption_ be ? ToTemporalOffset(_resolvedOptions_, *"reject"*).
+          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
+          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_resolvedOptions_, *"reject"*).
           1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _resolvedOptions_).
         1. Else,
           1. If _item_ is not a String, throw a *TypeError* exception.
@@ -1245,9 +1245,9 @@
           1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
           1. Set _calendar_ to the ASCII-lowercase of _calendar_.
           1. Set _matchBehaviour_ to ~match-minutes~.
-          1. Let _disambiguation_ be ? ToTemporalDisambiguation(_resolvedOptions_).
-          1. Let _offsetOption_ be ? ToTemporalOffset(_resolvedOptions_, *"reject"*).
-          1. Perform ? ToTemporalOverflow(_resolvedOptions_).
+          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
+          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_resolvedOptions_, *"reject"*).
+          1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetNanoseconds_ to ? ParseDateTimeUTCOffset(_offsetString_).
@@ -1363,7 +1363,7 @@
         1. Else,
           1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
         1. If _years_ = 0, and _months_ = 0, and _weeks_ = 0, then
-          1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+          1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
           1. Let _intermediate_ be ? AddDaysToZonedDateTime(_instant_, _temporalDateTime_, _timeZoneRec_, _calendarRec_.[[Receiver]], _days_, _overflow_).[[EpochNanoseconds]].
           1. Return ? AddInstant(_intermediate_, _norm_).
         1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.

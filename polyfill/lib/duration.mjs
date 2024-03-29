@@ -247,11 +247,11 @@ export class Duration {
       roundTo = ES.GetOptionsObject(roundTo);
     }
 
-    let largestUnit = ES.GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
-    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.ToRelativeTemporalObject(roundTo);
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
-    const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
-    let smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
+    let largestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
+    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.GetTemporalRelativeToOption(roundTo);
+    const roundingIncrement = ES.GetRoundingIncrementOption(roundTo);
+    const roundingMode = ES.GetRoundingModeOption(roundTo, 'halfExpand');
+    let smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'datetime', undefined);
 
     let smallestUnitPresent = true;
     if (!smallestUnit) {
@@ -415,8 +415,8 @@ export class Duration {
     } else {
       totalOf = ES.GetOptionsObject(totalOf);
     }
-    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.ToRelativeTemporalObject(totalOf);
-    const unit = ES.GetTemporalUnit(totalOf, 'unit', 'datetime', ES.REQUIRED);
+    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.GetTemporalRelativeToOption(totalOf);
+    const unit = ES.GetTemporalUnitValuedOption(totalOf, 'unit', 'datetime', ES.REQUIRED);
 
     let precalculatedPlainDateTime;
     const plainDateTimeOrRelativeToWillBeUsed =
@@ -505,9 +505,9 @@ export class Duration {
   toString(options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
-    const digits = ES.ToFractionalSecondDigits(options);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+    const digits = ES.GetTemporalFractionalSecondDigitsOption(options);
+    const roundingMode = ES.GetRoundingModeOption(options, 'trunc');
+    const smallestUnit = ES.GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour' || smallestUnit === 'minute') {
       throw new RangeError('smallestUnit must be a time unit other than "hours" or "minutes"');
     }
@@ -660,7 +660,7 @@ export class Duration {
     ) {
       return 0;
     }
-    const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.ToRelativeTemporalObject(options);
+    const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.GetTemporalRelativeToOption(options);
 
     const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
 

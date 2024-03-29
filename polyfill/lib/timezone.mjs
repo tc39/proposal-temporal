@@ -79,7 +79,7 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     dateTime = ES.ToTemporalDateTime(dateTime);
     options = ES.GetOptionsObject(options);
-    const disambiguation = ES.ToTemporalDisambiguation(options);
+    const disambiguation = ES.GetTemporalDisambiguationOption(options);
     const timeZoneRec = new TimeZoneMethodRecord(this, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
     return ES.GetInstantFor(timeZoneRec, dateTime, disambiguation);
   }

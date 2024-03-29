@@ -148,15 +148,15 @@ describe('ECMAScript', () => {
     });
   });
 
-  describe('ToRelativeTemporalObject', () => {
+  describe('GetTemporalRelativeToOption', () => {
     it('bare date-time string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({ relativeTo: '2019-11-01T00:00' });
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00' });
       equal(`${plainRelativeTo}`, '2019-11-01');
       equal(zonedRelativeTo, undefined);
     });
 
     it('bare date-time property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: { year: 2019, month: 11, day: 1 }
       });
       equal(`${plainRelativeTo}`, '2019-11-01');
@@ -164,7 +164,7 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + offset string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: '2019-11-01T00:00-07:00'
       });
       equal(`${plainRelativeTo}`, '2019-11-01');
@@ -172,7 +172,7 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + offset property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: { year: 2019, month: 11, day: 1, offset: '-07:00' }
       });
       equal(`${plainRelativeTo}`, '2019-11-01');
@@ -180,7 +180,7 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + annotation string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: '2019-11-01T00:00[-07:00]'
       });
       equal(plainRelativeTo, undefined);
@@ -188,7 +188,7 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + annotation property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: { year: 2019, month: 11, day: 1, timeZone: '-07:00' }
       });
       equal(plainRelativeTo, undefined);
@@ -196,7 +196,7 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + offset + annotation string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: '2019-11-01T00:00+00:00[UTC]'
       });
       equal(plainRelativeTo, undefined);
@@ -204,7 +204,7 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + offset + annotation property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: { year: 2019, month: 11, day: 1, offset: '+00:00', timeZone: 'UTC' }
       });
       equal(plainRelativeTo, undefined);
@@ -212,7 +212,7 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + Z + offset', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.ToRelativeTemporalObject({
+      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
         relativeTo: '2019-11-01T00:00Z[-07:00]'
       });
       equal(plainRelativeTo, undefined);
@@ -220,17 +220,17 @@ describe('ECMAScript', () => {
     });
 
     it('date-time + Z', () => {
-      throws(() => ES.ToRelativeTemporalObject({ relativeTo: '2019-11-01T00:00Z' }), RangeError);
+      throws(() => ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00Z' }), RangeError);
     });
 
     it('string offset does not agree', () => {
-      throws(() => ES.ToRelativeTemporalObject({ relativeTo: '2019-11-01T00:00+04:15[UTC]' }), RangeError);
+      throws(() => ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00+04:15[UTC]' }), RangeError);
     });
 
     it('property bag offset does not agree', () => {
       throws(
         () =>
-          ES.ToRelativeTemporalObject({
+          ES.GetTemporalRelativeToOption({
             relativeTo: { year: 2019, month: 11, day: 1, offset: '+04:15', timeZone: 'UTC' }
           }),
         RangeError

@@ -282,9 +282,9 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totemporaloverflow" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporaloverflowoption" type="abstract operation">
     <h1>
-      ToTemporalOverflow (
+      GetTemporalOverflowOption (
         _options_: an Object or *undefined*,
       ): either a normal completion containing either *"constrain"* or *"reject"*, or a throw completion
     </h1>
@@ -298,9 +298,9 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totemporaldisambiguation" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporaldisambiguationoption" type="abstract operation">
     <h1>
-      ToTemporalDisambiguation (
+      GetTemporalDisambiguationOption (
         _options_: an Object or *undefined*,
       ): either a normal completion containing either *"compatible"*, *"earlier"*, *"later"*, or *"reject"*, or a throw completion
     </h1>
@@ -314,23 +314,20 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totemporalroundingmode" type="abstract operation">
+  <emu-clause id="sec-temporal-getroundingmodeoption" type="abstract operation">
     <h1>
-      ToTemporalRoundingMode (
-        _normalizedOptions_: an Object,
+      GetRoundingModeOption (
+        _options_: an Object,
         _fallback_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
       ): either a normal completion containing a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>
-        It extracts the value of the property named *"roundingMode"* from _normalizedOptions_ and makes sure it is a valid value for the option.
-        The value _fallback_ is returned if the property is not present.
-      </dd>
+      <dd>It fetches and validates the *"roundingMode"* property from _options_, returning _fallback_ as a default if absent.</dd>
     </dl>
     <emu-alg>
       1. Let _roundingModes_ be the List of Strings from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>.
-      1. Return ? GetOption(_normalizedOptions_, *"roundingMode"*, ~string~, _roundingModes_, _fallback_).
+      1. Return ? GetOption(_options_, *"roundingMode"*, ~string~, _roundingModes_, _fallback_).
     </emu-alg>
     <!-- copied from ECMA-402 -->
     <emu-table id="table-temporal-rounding-modes">
@@ -457,9 +454,9 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totemporaloffset" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporaloffsetoption" type="abstract operation">
     <h1>
-      ToTemporalOffset (
+      GetTemporalOffsetOption (
         _options_: an Object or *undefined*,
         _fallback_: *"prefer"*, *"use"*, *"ignore"*, or *"reject"*,
       ): either a normal completion containing either *"prefer"*, *"use"*, *"ignore"*, or *"reject"*, or a throw completion
@@ -474,76 +471,76 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tocalendarnameoption" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporalshowcalendarnameoption" type="abstract operation">
     <h1>
-      ToCalendarNameOption (
-        _normalizedOptions_: an Object,
+      GetTemporalShowCalendarNameOption (
+        _options_: an Object,
       ): either a normal completion containing either *"auto"*, *"always"*, *"never"*, or *"critical"*, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It extracts the value of the property named *"calendarName"* from _normalizedOptions_ and makes sure it is a valid value for the option.</dd>
+      <dd>It fetches and validates the *"calendarName"* property from _options_, returning a default if absent.</dd>
     </dl>
     <emu-note>
       This property is used in `toString` methods in Temporal to control whether a calendar annotation should be output.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"calendarName"*, ~string~, « *"auto"*, *"always"*, *"never"*, *"critical"* », *"auto"*).
+      1. Return ? GetOption(_options_, *"calendarName"*, ~string~, « *"auto"*, *"always"*, *"never"*, *"critical"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totimezonenameoption" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporalshowtimezonenameoption" type="abstract operation">
     <h1>
-      ToTimeZoneNameOption (
-        _normalizedOptions_: an Object,
+      GetTemporalShowTimeZoneNameOption (
+        _options_: an Object,
       ): either a normal completion containing either *"auto"*, *"never"*, or *"critical"*, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It extracts the value of the property named *"timeZoneName"* from _normalizedOptions_ and makes sure it is a valid value for the option.</dd>
+      <dd>It fetches and validates the *"timeZoneName"* property from _options_, returning a default if absent.</dd>
     </dl>
     <emu-note>
       This property is used in `Temporal.ZonedDateTime.prototype.toString()`.
       It is different from the `timeZone` property passed to `Temporal.ZonedDateTime.from()` and from the `timeZone` property in the options passed to `Temporal.Instant.prototype.toString()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"timeZoneName"*, ~string~, « *"auto"*, *"never"*, *"critical"* », *"auto"*).
+      1. Return ? GetOption(_options_, *"timeZoneName"*, ~string~, « *"auto"*, *"never"*, *"critical"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-toshowoffsetoption" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporalshowoffsetoption" type="abstract operation">
     <h1>
-      ToShowOffsetOption (
-        _normalizedOptions_: an Object,
+      GetTemporalShowOffsetOption (
+        _options_: an Object,
       ): either a normal completion containing either *"auto"* or *"never"*, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It extracts the value of the property named *"offset"* from _normalizedOptions_ and makes sure it is a valid value for the option.</dd>
+      <dd>It fetches and validates the *"offset"* property from _options_, returning a default if absent.</dd>
     </dl>
     <emu-note>
       This property is used in `Temporal.ZonedDateTime.prototype.toString()`.
       It is different from the `offset` property passed to `Temporal.ZonedDateTime.from()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_normalizedOptions_, *"offset"*, ~string~, « *"auto"*, *"never"* », *"auto"*).
+      1. Return ? GetOption(_options_, *"offset"*, ~string~, « *"auto"*, *"never"* », *"auto"*).
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-totemporalroundingincrement" type="abstract operation">
+  <emu-clause id="sec-temporal-getroundingincrementoption" type="abstract operation">
     <h1>
-      ToTemporalRoundingIncrement (
-        _normalizedOptions_: an Object,
-      ): either a normal completion containing a positive integer, or a throw completion
+      GetRoundingIncrementOption (
+        _options_: an Object,
+      ): either a normal completion containing a positive integer in the inclusive interval from 1 to 10<sup>9</sup>, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>
-        It extracts the value of the property named *"roundingIncrement"* from _normalizedOptions_, makes sure it represents a number in the inclusive interval from 1 to 10<sup>9</sup>, and returns that value truncated to an integer.
+        It fetches and validates the *"roundingIncrement"* property from _options_, returning a default if absent.
       </dd>
     </dl>
     <emu-alg>
-      1. Let _value_ be ? Get(_normalizedOptions_, *"roundingIncrement"*).
+      1. Let _value_ be ? Get(_options_, *"roundingIncrement"*).
       1. If _value_ is *undefined*, return *1*<sub>𝔽</sub>.
       1. Let _increment_ be ? ToNumber(_value_).
       1. If _increment_ is not finite, throw a *RangeError* exception.
@@ -581,18 +578,18 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tofractionalseconddigits" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporalfractionalseconddigitsoption" type="abstract operation">
     <h1>
-      ToFractionalSecondDigits (
-        _normalizedOptions_: an Object,
+      GetTemporalFractionalSecondDigitsOption (
+        _options_: an Object,
       ): either a normal completion containing either *"auto"* or an integer in the inclusive interval from 0 to 9, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It extracts the value of the property named *"fractionalSecondDigits"* from _normalizedOptions_ and makes sure it is a valid value for the option.</dd>
+      <dd>It fetches and validates the *"fractionalSecondDigits"* property from _options_, returning a default if absent.</dd>
     </dl>
     <emu-alg>
-      1. Let _digitsValue_ be ? Get(_normalizedOptions_, *"fractionalSecondDigits"*).
+      1. Let _digitsValue_ be ? Get(_options_, *"fractionalSecondDigits"*).
       1. If _digitsValue_ is *undefined*, return *"auto"*.
       1. If _digitsValue_ is not a Number, then
         1. If ? ToString(_digitsValue_) is not *"auto"*, throw a *RangeError* exception.
@@ -684,10 +681,10 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-gettemporalunit" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporalunitvaluedoption" type="abstract operation">
     <h1>
-      GetTemporalUnit (
-        _normalizedOptions_: an Object,
+      GetTemporalUnitValuedOption (
+        _options_: an Object,
         _key_: a property key,
         _unitGroup_: ~date~, ~time~, or ~datetime~,
         _default_: ~required~ or an ECMAScript language value,
@@ -696,7 +693,7 @@
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>It attempts to read from the specified property of _normalizedOptions_ a Temporal unit that is <emu-not-ref>covered</emu-not-ref> by the union of _unitGroup_ and _extraValues_, substituting _default_ if the property value is *undefined*.</dd>
+      <dd>It attempts to read from the specified property of _options_ a Temporal unit that is <emu-not-ref>covered</emu-not-ref> by the union of _unitGroup_ and _extraValues_, substituting _default_ if the property value is *undefined*.</dd>
     </dl>
     <p>
       Both singular and plural unit names are accepted, but only the singular form is used internally.
@@ -721,7 +718,7 @@
           1. Let _pluralName_ be the value in the "Plural" column of the corresponding row.
           1. Append _pluralName_ to _allowedValues_.
       1. NOTE: For each singular Temporal unit name that is contained within _allowedValues_, the corresponding plural name is also contained within it.
-      1. Let _value_ be ? GetOption(_normalizedOptions_, _key_, ~string~, _allowedValues_, _defaultValue_).
+      1. Let _value_ be ? GetOption(_options_, _key_, ~string~, _allowedValues_, _defaultValue_).
       1. If _value_ is *undefined* and _default_ is ~required~, throw a *RangeError* exception.
       1. If _value_ is listed in the "Plural" column of <emu-xref href="#table-temporal-units"></emu-xref>, then
         1. Set _value_ to the value in the "Singular" column of the corresponding row.
@@ -729,9 +726,9 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-torelativetemporalobject" type="abstract operation">
+  <emu-clause id="sec-temporal-gettemporalrelativetooption" type="abstract operation">
     <h1>
-      ToRelativeTemporalObject (
+      GetTemporalRelativeToOption (
         _options_: an Object,
       ): either a normal completion containing a Record with fields [[PlainRelativeTo]] (a Temporal.PlainDate or *undefined*), [[ZonedRelativeTo]] (a Temporal.ZonedDateTime or *undefined*), and [[TimeZoneRec]] (a Time Zone Methods Record or *undefined*), or a throw completion
     </h1>
@@ -2215,14 +2212,14 @@
       <dd>It reads unit and rounding options needed by difference operations.</dd>
     </dl>
     <emu-alg>
-      1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
-      1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, _unitGroup_, *"auto"*).
+      1. NOTE: The following steps read options and perform independent validation in alphabetical order.
+      1. Let _largestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"largestUnit"*, _unitGroup_, *"auto"*).
       1. If _disallowedUnits_ contains _largestUnit_, throw a *RangeError* exception.
-      1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_options_).
-      1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
+      1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_options_).
+      1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
       1. If _operation_ is ~since~, then
         1. Set _roundingMode_ to NegateTemporalRoundingMode(_roundingMode_).
-      1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, _unitGroup_, _fallbackSmallestUnit_).
+      1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, _unitGroup_, _fallbackSmallestUnit_).
       1. If _disallowedUnits_ contains _smallestUnit_, throw a *RangeError* exception.
       1. Let _defaultLargestUnit_ be LargerOfTwoTemporalUnits(_smallestLargestDefaultUnit_, _smallestUnit_).
       1. If _largestUnit_ is *"auto"*, set _largestUnit_ to _defaultLargestUnit_.

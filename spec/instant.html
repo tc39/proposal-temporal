@@ -276,9 +276,9 @@
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~time~, ~required~).
+        1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, *"halfExpand"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~).
         1. If _smallestUnit_ is *"hour"*, then
           1. Let _maximum_ be HoursPerDay.
         1. Else if _smallestUnit_ is *"minute"*, then
@@ -322,9 +322,9 @@
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToFractionalSecondDigits reads *"fractionalSecondDigits"* and ToTemporalRoundingMode reads *"roundingMode"*).
-        1. Let _digits_ be ? ToFractionalSecondDigits(_options_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~time~, *undefined*).
+        1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, *undefined*).
         1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
         1. Let _timeZone_ be ? Get(_options_, *"timeZone"*).
         1. If _timeZone_ is not *undefined*, then
