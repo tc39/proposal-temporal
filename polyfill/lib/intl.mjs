@@ -1,7 +1,10 @@
 import * as ES from './ecmascript.mjs';
+import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { TimeZoneMethodRecord } from './methodrecord.mjs';
 import {
+  CreateSlots,
   GetSlot,
+  HasSlot,
   ISO_YEAR,
   ISO_MONTH,
   ISO_DAY,
@@ -11,6 +14,7 @@ import {
   ISO_MILLISECOND,
   ISO_MICROSECOND,
   ISO_NANOSECOND,
+  SetSlot,
   CALENDAR
 } from './slots.mjs';
 
@@ -27,36 +31,67 @@ const CAL_ID = Symbol('calendar-id');
 const LOCALE = Symbol('locale');
 const OPTIONS = Symbol('options');
 
-const descriptor = (value) => {
-  return {
-    value,
-    enumerable: true,
-    writable: false,
-    configurable: true
-  };
-};
-
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const ObjectAssign = Object.assign;
+const ObjectCreate = Object.create;
+const ObjectDefineProperty = Object.defineProperty;
 
 // Construction of built-in Intl.DateTimeFormat objects is sloooooow,
 // so we'll only create those instances when we need them.
 // See https://bugs.chromium.org/p/v8/issues/detail?id=6528
-function getPropLazy(obj, prop) {
-  let val = obj[prop];
+function getSlotLazy(obj, slot) {
+  let val = GetSlot(obj, slot);
   if (typeof val === 'function') {
-    val = new IntlDateTimeFormat(obj[LOCALE], val(obj[OPTIONS]));
-    obj[prop] = val;
+    val = new IntlDateTimeFormat(GetSlot(obj, LOCALE), val(GetSlot(obj, OPTIONS)));
+    SetSlot(obj, slot, val);
   }
   return val;
 }
 
-export function DateTimeFormat(locale = undefined, options = undefined) {
-  if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
+function createDateTimeFormat(dtf, locale, options) {
   const hasOptions = typeof options !== 'undefined';
-  options = hasOptions ? ObjectAssign({}, options) : {};
+  if (hasOptions) {
+    // Read all the options in the expected order and copy them to a
+    // null-prototype object with which we can do further operations
+    // unobservably
+    const props = [
+      'localeMatcher',
+      'calendar',
+      'numberingSystem',
+      'hour12',
+      'hourCycle',
+      'timeZone',
+      'weekday',
+      'era',
+      'year',
+      'month',
+      'day',
+      'dayPeriod',
+      'hour',
+      'minute',
+      'second',
+      'fractionalSecondDigits',
+      'timeZoneName',
+      'formatMatcher',
+      'dateStyle',
+      'timeStyle'
+    ];
+    options = ES.ToObject(options);
+    const newOptions = ObjectCreate(null);
+    for (const prop of props) {
+      if (ES.HasOwnProperty(options, prop)) {
+        newOptions[prop] = options[prop];
+      }
+    }
+    options = newOptions;
+  } else {
+    options = ObjectCreate(null);
+  }
+
   const original = new IntlDateTimeFormat(locale, options);
   const ro = original.resolvedOptions();
+
+  CreateSlots(dtf);
 
   // DateTimeFormat instances are very expensive to create. Therefore, they will
   // be lazily created only when needed, using the locale and options provided.
@@ -71,25 +106,25 @@ export function DateTimeFormat(locale = undefined, options = undefined) {
   // Therefore, we limit the properties in the clone to properties that were
   // present in the original input.
   if (hasOptions) {
-    const clonedResolved = ObjectAssign({}, ro);
+    const clonedResolved = ObjectAssign(ObjectCreate(null), ro);
     for (const prop in clonedResolved) {
       if (!ES.HasOwnProperty(options, prop)) delete clonedResolved[prop];
     }
-    this[OPTIONS] = clonedResolved;
+    SetSlot(dtf, OPTIONS, clonedResolved);
   } else {
-    this[OPTIONS] = options;
+    SetSlot(dtf, OPTIONS, options);
   }
 
-  this[LOCALE] = ro.locale;
-  this[ORIGINAL] = original;
-  this[TZ_CANONICAL] = ro.timeZone;
-  this[CAL_ID] = ro.calendar;
-  this[DATE] = dateAmend;
-  this[YM] = yearMonthAmend;
-  this[MD] = monthDayAmend;
-  this[TIME] = timeAmend;
-  this[DATETIME] = datetimeAmend;
-  this[INST] = instantAmend;
+  SetSlot(dtf, LOCALE, ro.locale);
+  SetSlot(dtf, ORIGINAL, original);
+  SetSlot(dtf, TZ_CANONICAL, ro.timeZone);
+  SetSlot(dtf, CAL_ID, ro.calendar);
+  SetSlot(dtf, DATE, dateAmend);
+  SetSlot(dtf, YM, yearMonthAmend);
+  SetSlot(dtf, MD, monthDayAmend);
+  SetSlot(dtf, TIME, timeAmend);
+  SetSlot(dtf, DATETIME, datetimeAmend);
+  SetSlot(dtf, INST, instantAmend);
 
   // Save the original time zone, for a few reasons:
   // - Clearer error messages
@@ -98,7 +133,7 @@ export function DateTimeFormat(locale = undefined, options = undefined) {
   //   support of offset strings and other potential changes like proposal-canonical-tz.
   const timeZoneOption = hasOptions ? options.timeZone : undefined;
   if (timeZoneOption === undefined) {
-    this[TZ_ORIGINAL] = ro.timeZone;
+    SetSlot(dtf, TZ_ORIGINAL, ro.timeZone);
   } else {
     const id = ES.ToString(timeZoneOption);
     if (ES.IsOffsetTimeZoneIdentifier(id)) {
@@ -107,39 +142,75 @@ export function DateTimeFormat(locale = undefined, options = undefined) {
     }
     const record = ES.GetAvailableNamedTimeZoneIdentifier(id);
     if (!record) throw new RangeError(`Intl.DateTimeFormat formats built-in time zones, not ${id}`);
-    this[TZ_ORIGINAL] = record.identifier;
+    SetSlot(dtf, TZ_ORIGINAL, record.identifier);
   }
 }
 
-DateTimeFormat.supportedLocalesOf = function (...args) {
-  return IntlDateTimeFormat.supportedLocalesOf(...args);
-};
+class DateTimeFormatImpl {
+  constructor(locales = undefined, options = undefined) {
+    createDateTimeFormat(this, locales, options);
+  }
 
-const properties = {
-  resolvedOptions: descriptor(resolvedOptions),
-  format: descriptor(format),
-  formatRange: descriptor(formatRange)
-};
+  get format() {
+    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    const boundFormat = (datetime, ...args) => ES.Call(format, this, [datetime, ...args]);
+    ObjectDefineProperty(boundFormat, 'name', {
+      value: '',
+      enumerable: false,
+      writable: false,
+      configurable: true
+    });
+    return boundFormat;
+  }
 
-if ('formatToParts' in IntlDateTimeFormat.prototype) {
-  properties.formatToParts = descriptor(formatToParts);
+  formatRange(a, b) {
+    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    return ES.Call(formatRange, this, [a, b]);
+  }
+
+  formatToParts(datetime, ...rest) {
+    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    return ES.Call(formatToParts, this, [datetime, ...rest]);
+  }
+
+  formatRangeToParts(a, b) {
+    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    return ES.Call(formatRangeToParts, this, [a, b]);
+  }
+
+  resolvedOptions() {
+    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    return ES.Call(resolvedOptions, this, []);
+  }
 }
 
-if ('formatRangeToParts' in IntlDateTimeFormat.prototype) {
-  properties.formatRangeToParts = descriptor(formatRangeToParts);
+if (!('formatToParts' in IntlDateTimeFormat.prototype)) {
+  delete DateTimeFormatImpl.prototype.formatToParts;
 }
 
-DateTimeFormat.prototype = Object.create(IntlDateTimeFormat.prototype, properties);
+if (!('formatRangeToParts' in IntlDateTimeFormat.prototype)) {
+  delete DateTimeFormatImpl.prototype.formatRangeToParts;
+}
 
-Object.defineProperty(DateTimeFormat, 'prototype', {
+// A non-class constructor is needed because Intl.DateTimeFormat must be able to
+// be called without 'new'
+export function DateTimeFormat(locales = undefined, options = undefined) {
+  return new DateTimeFormatImpl(locales, options);
+}
+DateTimeFormatImpl.prototype.constructor = DateTimeFormat;
+
+ObjectDefineProperty(DateTimeFormat, 'prototype', {
+  value: DateTimeFormatImpl.prototype,
   writable: false,
   enumerable: false,
   configurable: false
 });
+DateTimeFormat.supportedLocalesOf = IntlDateTimeFormat.supportedLocalesOf;
+MakeIntrinsicClass(DateTimeFormat, 'Intl.DateTimeFormat');
 
 function resolvedOptions() {
-  const resolved = this[ORIGINAL].resolvedOptions();
-  resolved.timeZone = this[TZ_ORIGINAL];
+  const resolved = GetSlot(this, ORIGINAL).resolvedOptions();
+  resolved.timeZone = GetSlot(this, TZ_ORIGINAL);
   return resolved;
 }
 
@@ -148,7 +219,7 @@ function format(datetime, ...rest) {
   if (instant && formatter) {
     return formatter.format(instant.epochMilliseconds);
   }
-  return this[ORIGINAL].format(datetime, ...rest);
+  return GetSlot(this, ORIGINAL).format(datetime, ...rest);
 }
 
 function formatToParts(datetime, ...rest) {
@@ -156,7 +227,7 @@ function formatToParts(datetime, ...rest) {
   if (instant && formatter) {
     return formatter.formatToParts(instant.epochMilliseconds);
   }
-  return this[ORIGINAL].formatToParts(datetime, ...rest);
+  return GetSlot(this, ORIGINAL).formatToParts(datetime, ...rest);
 }
 
 function formatRange(a, b) {
@@ -170,7 +241,7 @@ function formatRange(a, b) {
       return aformatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
     }
   }
-  return this[ORIGINAL].formatRange(a, b);
+  return GetSlot(this, ORIGINAL).formatRange(a, b);
 }
 
 function formatRangeToParts(a, b) {
@@ -184,7 +255,7 @@ function formatRangeToParts(a, b) {
       return aformatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
     }
   }
-  return this[ORIGINAL].formatRangeToParts(a, b);
+  return GetSlot(this, ORIGINAL).formatRangeToParts(a, b);
 }
 
 function amend(options = {}, amended = {}) {
@@ -388,13 +459,13 @@ function extractOverrides(temporalObj, main) {
       nanosecond,
       'iso8601'
     );
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
-      formatter: getPropLazy(main, TIME)
+      formatter: getSlotLazy(main, TIME)
     };
   }
 
@@ -403,19 +474,20 @@ function extractOverrides(temporalObj, main) {
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const referenceISODay = GetSlot(temporalObj, ISO_DAY);
     const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-    if (calendar !== main[CAL_ID]) {
+    const mainCalendar = GetSlot(main, CAL_ID);
+    if (calendar !== mainCalendar) {
       throw new RangeError(
-        `cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
     const datetime = ES.CreateTemporalDateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
-      formatter: getPropLazy(main, YM)
+      formatter: getSlotLazy(main, YM)
     };
   }
 
@@ -424,19 +496,20 @@ function extractOverrides(temporalObj, main) {
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
     const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-    if (calendar !== main[CAL_ID]) {
+    const mainCalendar = GetSlot(main, CAL_ID);
+    if (calendar !== mainCalendar) {
       throw new RangeError(
-        `cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
     const datetime = ES.CreateTemporalDateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
-      formatter: getPropLazy(main, MD)
+      formatter: getSlotLazy(main, MD)
     };
   }
 
@@ -445,34 +518,36 @@ function extractOverrides(temporalObj, main) {
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
     const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
-      throw new RangeError(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`);
+    const mainCalendar = GetSlot(main, CAL_ID);
+    if (calendar !== 'iso8601' && calendar !== mainCalendar) {
+      throw new RangeError(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`);
     }
-    const datetime = ES.CreateTemporalDateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+    const datetime = ES.CreateTemporalDateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, mainCalendar);
+    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
-      formatter: getPropLazy(main, DATE)
+      formatter: getSlotLazy(main, DATE)
     };
   }
 
   if (ES.IsTemporalDateTime(temporalObj)) {
     const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
+    const mainCalendar = GetSlot(main, CAL_ID);
+    if (calendar !== 'iso8601' && calendar !== mainCalendar) {
       throw new RangeError(
-        `cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${main[CAL_ID]}`
+        `cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], [
+    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
       'getOffsetNanosecondsFor',
       'getPossibleInstantsFor'
     ]);
     return {
       instant: ES.GetInstantFor(timeZoneRec, temporalObj, 'compatible'),
-      formatter: getPropLazy(main, DATETIME)
+      formatter: getSlotLazy(main, DATETIME)
     };
   }
 
@@ -485,7 +560,7 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalInstant(temporalObj)) {
     return {
       instant: temporalObj,
-      formatter: getPropLazy(main, INST)
+      formatter: getSlotLazy(main, INST)
     };
   }
 

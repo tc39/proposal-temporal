@@ -5722,13 +5722,16 @@ export function ASCIILowercase(str) {
   // values. For example, Turkish's "I" character was the source of a security
   // issue involving "file://" URLs. See
   // https://haacked.com/archive/2012/07/05/turkish-i-problem-and-why-you-should-care.aspx/.
-  return Call(StringPrototypeReplace, str, [
-    /[A-Z]/g,
-    (l) => {
-      const code = Call(StringPrototypeCharCodeAt, l, [0]);
-      return StringFromCharCode(code + 0x20);
+  let lowercase = '';
+  for (let ix = 0; ix < str.length; ix++) {
+    const code = Call(StringPrototypeCharCodeAt, str, [ix]);
+    if (code >= 0x41 && code <= 0x5a) {
+      lowercase += StringFromCharCode(code + 0x20);
+    } else {
+      lowercase += StringFromCharCode(code);
     }
-  ]);
+  }
+  return lowercase;
 }
 
 // This function isn't in the spec, but we put it in the polyfill to avoid
