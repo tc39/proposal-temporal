@@ -61,7 +61,7 @@
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
-          1. Perform ? ToTemporalOverflow(_options_).
+          1. Perform ? GetTemporalOverflowOption(_options_).
           1. Return ! CreateTemporalYearMonth(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
         1. Return ? ToTemporalYearMonth(_item_, _options_).
       </emu-alg>
@@ -342,7 +342,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _showCalendar_ be ? ToCalendarNameOption(_options_).
+        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
         1. Return ? TemporalYearMonthToString(_yearMonth_, _showCalendar_).
       </emu-alg>
     </emu-clause>
@@ -571,7 +571,7 @@
         1. If _calendar_ is *undefined*, set _calendar_ to *"iso8601"*.
         1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
         1. Set _calendar_ to the ASCII-lowercase of _calendar_.
-        1. Perform ? ToTemporalOverflow(_options_).
+        1. Perform ? GetTemporalOverflowOption(_options_).
         1. Set _result_ to ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[Day]]).
         1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~year-month-from-fields~ »).

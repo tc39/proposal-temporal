@@ -172,7 +172,7 @@
         1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
         1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disambiguation_ be ? ToTemporalDisambiguation(_options_).
+        1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_options_).
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
         1. Return ? GetInstantFor(_timeZoneRec_, _dateTime_, _disambiguation_).
       </emu-alg>

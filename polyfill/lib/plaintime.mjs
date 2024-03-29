@@ -112,7 +112,7 @@ export class PlainTime {
     }
     ES.RejectTemporalLikeObject(temporalTimeLike);
     options = ES.GetOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
 
     const partialTime = ES.ToTemporalTimeRecord(temporalTimeLike, 'partial');
 
@@ -155,9 +155,9 @@ export class PlainTime {
     } else {
       roundTo = ES.GetOptionsObject(roundTo);
     }
-    const roundingIncrement = ES.ToTemporalRoundingIncrement(roundTo);
-    const roundingMode = ES.ToTemporalRoundingMode(roundTo, 'halfExpand');
-    const smallestUnit = ES.GetTemporalUnit(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
+    const roundingIncrement = ES.GetRoundingIncrementOption(roundTo);
+    const roundingMode = ES.GetRoundingModeOption(roundTo, 'halfExpand');
+    const smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
     const MAX_INCREMENTS = {
       hour: 24,
       minute: 60,
@@ -202,9 +202,9 @@ export class PlainTime {
   toString(options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     options = ES.GetOptionsObject(options);
-    const digits = ES.ToFractionalSecondDigits(options);
-    const roundingMode = ES.ToTemporalRoundingMode(options, 'trunc');
-    const smallestUnit = ES.GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+    const digits = ES.GetTemporalFractionalSecondDigitsOption(options);
+    const roundingMode = ES.GetRoundingModeOption(options, 'trunc');
+    const smallestUnit = ES.GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
@@ -310,7 +310,7 @@ export class PlainTime {
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);
-    const overflow = ES.ToTemporalOverflow(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     if (ES.IsTemporalTime(item)) {
       return new PlainTime(
         GetSlot(item, ISO_HOUR),

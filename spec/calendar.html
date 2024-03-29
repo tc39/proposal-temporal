@@ -1831,7 +1831,7 @@
         1. Else,
           1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~date~).
           1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Perform ? ISOResolveMonth(_fields_).
           1. Let _result_ be ? ISODateFromFields(_fields_, _overflow_).
@@ -1860,7 +1860,7 @@
           1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
           1. Let _firstDayIndex_ be the 1-based index of the first day of the month described by _fields_ (i.e., 1 unless the month's first day is skipped by this calendar.)
           1. Perform ! CreateDataPropertyOrThrow(_fields_, *"day"*, 𝔽(_firstDayIndex_)).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Perform ? ISOResolveMonth(_fields_).
           1. Let _result_ be ? ISOYearMonthFromFields(_fields_, _overflow_).
@@ -1888,7 +1888,7 @@
         1. Else,
           1. Let _calendarRelevantFieldDescriptors_ be CalendarFieldDescriptors(_calendar_.[[Identifier]], ~month-day~).
           1. Set _fields_ to ? PrepareTemporalFields(_fields_, _relevantFieldNames_, « », _calendarRelevantFieldDescriptors_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Perform ? ISOResolveMonth(_fields_).
           1. Let _result_ be ? ISOMonthDayFromFields(_fields_, _overflow_).
@@ -1910,7 +1910,7 @@
         1. Set _date_ to ? ToTemporalDate(_date_).
         1. Set _duration_ to ? ToTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _overflow_ be ? ToTemporalOverflow(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be BalanceTimeDuration(_norm_, *"day"*).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
@@ -1933,7 +1933,7 @@
         1. Set _one_ to ? ToTemporalDate(_one_).
         1. Set _two_ to ? ToTemporalDate(_two_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _largestUnit_ be ? GetTemporalUnit(_options_, *"largestUnit"*, ~date~, *"auto"*).
+        1. Let _largestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"largestUnit"*, ~date~, *"auto"*).
         1. If _largestUnit_ is *"auto"*, set _largestUnit_ to *"day"*.
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Let _result_ be DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).

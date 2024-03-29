@@ -96,7 +96,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. If _one_.[[Years]] = _two_.[[Years]], and _one_.[[Months]] = _two_.[[Months]], and _one_.[[Weeks]] = _two_.[[Weeks]], and _one_.[[Days]] = _two_.[[Days]], and _one_.[[Hours]] = _two_.[[Hours]], and _one_.[[Minutes]] = _two_.[[Minutes]], and _one_.[[Seconds]] = _two_.[[Seconds]], and _one_.[[Millieconds]] = _two_.[[Millieconds]], and _one_.[[Microseconds]] = _two_.[[Microseconds]], and _one_.[[Nanoseconds]] = _two_.[[Nanoseconds]], then
           1. Return *+0*<sub>𝔽</sub>.
-        1. Let _relativeToRecord_ be ? ToRelativeTemporalObject(_options_).
+        1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_options_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
@@ -429,14 +429,14 @@
         1. Let _smallestUnitPresent_ be *true*.
         1. Let _largestUnitPresent_ be *true*.
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToRelativeTemporalObject reads *"relativeTo"*, ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
-        1. Let _largestUnit_ be ? GetTemporalUnit(_roundTo_, *"largestUnit"*, ~datetime~, *undefined*, « *"auto"* »).
-        1. Let _relativeToRecord_ be ? ToRelativeTemporalObject(_roundTo_).
+        1. Let _largestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"largestUnit"*, ~datetime~, *undefined*, « *"auto"* »).
+        1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_roundTo_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
-        1. Let _roundingIncrement_ be ? ToTemporalRoundingIncrement(_roundTo_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_roundTo_, *"halfExpand"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_roundTo_, *"smallestUnit"*, ~datetime~, *undefined*).
+        1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, *"halfExpand"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~datetime~, *undefined*).
         1. If _smallestUnit_ is *undefined*, then
           1. Set _smallestUnitPresent_ to *false*.
           1. Set _smallestUnit_ to *"nanosecond"*.
@@ -499,11 +499,11 @@
         1. Else,
           1. Set _totalOf_ to ? GetOptionsObject(_totalOf_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToRelativeTemporalObject reads *"relativeTo"*).
-        1. Let _relativeToRecord_ be ? ToRelativeTemporalObject(_totalOf_).
+        1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_totalOf_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
-        1. Let _unit_ be ? GetTemporalUnit(_totalOf_, *"unit"*, ~datetime~, ~required~).
+        1. Let _unit_ be ? GetTemporalUnitValuedOption(_totalOf_, *"unit"*, ~datetime~, ~required~).
         1. Let _precalculatedPlainDateTime_ be *undefined*.
         1. If IsCalendarUnit(_unit_) is *true*, or _unit_ is *"day"*, or _duration_.[[Years]] &ne; 0, or _duration_.[[Months]] &ne; 0, or _duration_.[[Weeks]] &ne; 0, or _duration_.[[Days]] &ne; 0, let _plainDateTimeOrRelativeToWillBeUsed_ be *true*; else let _plainDateTimeOrRelativeToWillBeUsed_ be *false*.
         1. If _zonedRelativeTo_ is not *undefined* and _plainDateTimeOrRelativeToWillBeUsed_ is *true*, then
@@ -554,9 +554,9 @@
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToFractionalSecondDigits reads *"fractionalSecondDigits"* and ToTemporalRoundingMode reads *"roundingMode"*).
-        1. Let _digits_ be ? ToFractionalSecondDigits(_options_).
-        1. Let _roundingMode_ be ? ToTemporalRoundingMode(_options_, *"trunc"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnit(_options_, *"smallestUnit"*, ~time~, *undefined*).
+        1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, *undefined*).
         1. If _smallestUnit_ is *"hour"* or *"minute"*, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. If _precision_.[[Unit]] is not *"nanosecond"* or _precision_.[[Increment]] &ne; 1, then
@@ -2229,7 +2229,7 @@
         1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalDurationRecord(_other_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _relativeToRecord_ be ? ToRelativeTemporalObject(_options_).
+        1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_options_).
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].

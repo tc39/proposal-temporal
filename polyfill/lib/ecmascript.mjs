@@ -858,17 +858,17 @@ export function ToLimitedTemporalDuration(item, disallowedProperties) {
   return record;
 }
 
-export function ToTemporalOverflow(options) {
+export function GetTemporalOverflowOption(options) {
   if (options === undefined) return 'constrain';
   return GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
 }
 
-export function ToTemporalDisambiguation(options) {
+export function GetTemporalDisambiguationOption(options) {
   if (options === undefined) return 'compatible';
   return GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
 }
 
-export function ToTemporalRoundingMode(options, fallback) {
+export function GetRoundingModeOption(options, fallback) {
   return GetOption(
     options,
     'roundingMode',
@@ -892,24 +892,24 @@ export function NegateTemporalRoundingMode(roundingMode) {
   }
 }
 
-export function ToTemporalOffset(options, fallback) {
+export function GetTemporalOffsetOption(options, fallback) {
   if (options === undefined) return fallback;
   return GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
 }
 
-export function ToCalendarNameOption(options) {
+export function GetTemporalShowCalendarNameOption(options) {
   return GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
 }
 
-export function ToTimeZoneNameOption(options) {
+export function GetTemporalShowTimeZoneNameOption(options) {
   return GetOption(options, 'timeZoneName', ['auto', 'never', 'critical'], 'auto');
 }
 
-export function ToShowOffsetOption(options) {
+export function GetTemporalShowOffsetOption(options) {
   return GetOption(options, 'offset', ['auto', 'never'], 'auto');
 }
 
-export function ToTemporalRoundingIncrement(options) {
+export function GetRoundingIncrementOption(options) {
   let increment = options.roundingIncrement;
   if (increment === undefined) return 1;
   increment = ToNumber(increment);
@@ -933,8 +933,8 @@ export function ValidateTemporalRoundingIncrement(increment, dividend, inclusive
   }
 }
 
-export function ToFractionalSecondDigits(normalizedOptions) {
-  let digitsValue = normalizedOptions.fractionalSecondDigits;
+export function GetTemporalFractionalSecondDigitsOption(options) {
+  let digitsValue = options.fractionalSecondDigits;
   if (digitsValue === undefined) return 'auto';
   if (Type(digitsValue) !== 'Number') {
     if (ToString(digitsValue) !== 'auto') {
@@ -985,7 +985,7 @@ export function ToSecondsStringPrecisionRecord(smallestUnit, precision) {
 
 export const REQUIRED = Symbol('~required~');
 
-export function GetTemporalUnit(options, key, unitGroup, requiredOrDefault, extraValues = []) {
+export function GetTemporalUnitValuedOption(options, key, unitGroup, requiredOrDefault, extraValues = []) {
   const allowedSingular = [];
   for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
     const unitInfo = TEMPORAL_UNITS[index];
@@ -1017,7 +1017,7 @@ export function GetTemporalUnit(options, key, unitGroup, requiredOrDefault, extr
   return retval;
 }
 
-export function ToRelativeTemporalObject(options) {
+export function GetTemporalRelativeToOption(options) {
   // returns: {
   //   plainRelativeTo: Temporal.PlainDate | undefined
   //   zonedRelativeTo: Temporal.ZonedDateTime | undefined
@@ -1282,7 +1282,7 @@ export function ToTemporalDate(item, options) {
   if (Type(item) === 'Object') {
     if (IsTemporalDate(item)) return item;
     if (IsTemporalZonedDateTime(item)) {
-      ToTemporalOverflow(options); // validate and ignore
+      GetTemporalOverflowOption(options); // validate and ignore
       const timeZoneRec = new TimeZoneMethodRecord(GetSlot(item, TIME_ZONE), ['getOffsetNanosecondsFor']);
       item = GetPlainDateTimeFor(timeZoneRec, GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
       return CreateTemporalDate(
@@ -1293,7 +1293,7 @@ export function ToTemporalDate(item, options) {
       );
     }
     if (IsTemporalDateTime(item)) {
-      ToTemporalOverflow(options); // validate and ignore
+      GetTemporalOverflowOption(options); // validate and ignore
       return CreateTemporalDate(
         GetSlot(item, ISO_YEAR),
         GetSlot(item, ISO_MONTH),
@@ -1313,14 +1313,14 @@ export function ToTemporalDate(item, options) {
   if (!calendar) calendar = 'iso8601';
   if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
   calendar = ASCIILowercase(calendar);
-  ToTemporalOverflow(options); // validate and ignore
+  GetTemporalOverflowOption(options); // validate and ignore
   return CreateTemporalDate(year, month, day, calendar);
 }
 
 export function InterpretTemporalDateTimeFields(calendarRec, fields, options) {
   // dateFromFields must be looked up
   let { hour, minute, second, millisecond, microsecond, nanosecond } = ToTemporalTimeRecord(fields);
-  const overflow = ToTemporalOverflow(options);
+  const overflow = GetTemporalOverflowOption(options);
   options.overflow = overflow; // options is always an internal object, so not observable
   const date = CalendarDateFromFields(calendarRec, fields, options);
   const year = GetSlot(date, ISO_YEAR);
@@ -1345,12 +1345,12 @@ export function ToTemporalDateTime(item, options) {
   if (Type(item) === 'Object') {
     if (IsTemporalDateTime(item)) return item;
     if (IsTemporalZonedDateTime(item)) {
-      ToTemporalOverflow(resolvedOptions); // validate and ignore
+      GetTemporalOverflowOption(resolvedOptions); // validate and ignore
       const timeZoneRec = new TimeZoneMethodRecord(GetSlot(item, TIME_ZONE), ['getOffsetNanosecondsFor']);
       return GetPlainDateTimeFor(timeZoneRec, GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
     }
     if (IsTemporalDate(item)) {
-      ToTemporalOverflow(resolvedOptions); // validate and ignore
+      GetTemporalOverflowOption(resolvedOptions); // validate and ignore
       return CreateTemporalDateTime(
         GetSlot(item, ISO_YEAR),
         GetSlot(item, ISO_MONTH),
@@ -1388,7 +1388,7 @@ export function ToTemporalDateTime(item, options) {
     if (!calendar) calendar = 'iso8601';
     if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
     calendar = ASCIILowercase(calendar);
-    ToTemporalOverflow(resolvedOptions); // validate and ignore
+    GetTemporalOverflowOption(resolvedOptions); // validate and ignore
   }
   return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 }
@@ -1465,7 +1465,7 @@ export function ToTemporalMonthDay(item, options) {
   if (calendar === undefined) calendar = 'iso8601';
   if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
   calendar = ASCIILowercase(calendar);
-  ToTemporalOverflow(options); // validate and ignore
+  GetTemporalOverflowOption(options); // validate and ignore
 
   if (referenceISOYear === undefined) {
     if (calendar !== 'iso8601') {
@@ -1536,7 +1536,7 @@ export function ToTemporalYearMonth(item, options) {
   if (calendar === undefined) calendar = 'iso8601';
   if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
   calendar = ASCIILowercase(calendar);
-  ToTemporalOverflow(options); // validate and ignore
+  GetTemporalOverflowOption(options); // validate and ignore
 
   const result = CreateTemporalYearMonth(year, month, calendar, referenceISODay);
   const calendarRec = new CalendarMethodRecord(calendar, ['yearMonthFromFields']);
@@ -1654,8 +1654,8 @@ export function ToTemporalZonedDateTime(item, options) {
     if (offset === undefined) {
       offsetBehaviour = 'wall';
     }
-    disambiguation = ToTemporalDisambiguation(resolvedOptions);
-    offsetOpt = ToTemporalOffset(resolvedOptions, 'reject');
+    disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
+    offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
     ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = InterpretTemporalDateTimeFields(
       calendarRec,
       fields,
@@ -1688,9 +1688,9 @@ export function ToTemporalZonedDateTime(item, options) {
     if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
     calendar = ASCIILowercase(calendar);
     matchMinute = true; // ISO strings may specify offset with less precision
-    disambiguation = ToTemporalDisambiguation(resolvedOptions);
-    offsetOpt = ToTemporalOffset(resolvedOptions, 'reject');
-    ToTemporalOverflow(resolvedOptions); // validate and ignore
+    disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
+    offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
+    GetTemporalOverflowOption(resolvedOptions); // validate and ignore
   }
   let offsetNs = 0;
   if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
@@ -4038,17 +4038,17 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
     return allowed;
   }, []);
 
-  let largestUnit = GetTemporalUnit(options, 'largestUnit', group, 'auto');
+  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit', group, 'auto');
   if (Call(ArrayIncludes, disallowed, [largestUnit])) {
     throw new RangeError(`largestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${largestUnit}`);
   }
 
-  const roundingIncrement = ToTemporalRoundingIncrement(options);
+  const roundingIncrement = GetRoundingIncrementOption(options);
 
-  let roundingMode = ToTemporalRoundingMode(options, 'trunc');
+  let roundingMode = GetRoundingModeOption(options, 'trunc');
   if (op === 'since') roundingMode = NegateTemporalRoundingMode(roundingMode);
 
-  const smallestUnit = GetTemporalUnit(options, 'smallestUnit', group, fallbackSmallest);
+  const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', group, fallbackSmallest);
   if (Call(ArrayIncludes, disallowed, [smallestUnit])) {
     throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
   }
@@ -4537,7 +4537,7 @@ export function AddDate(calendarRec, plainDate, duration, options = undefined) {
   let year = GetSlot(plainDate, ISO_YEAR);
   let month = GetSlot(plainDate, ISO_MONTH);
   let day = GetSlot(plainDate, ISO_DAY);
-  const overflow = ToTemporalOverflow(options);
+  const overflow = GetTemporalOverflowOption(options);
   const norm = TimeDuration.normalize(
     GetSlot(duration, HOURS),
     GetSlot(duration, MINUTES),
@@ -4772,7 +4772,7 @@ export function AddZonedDateTime(
 
   const dt = precalculatedPlainDateTime ?? GetPlainDateTimeFor(timeZoneRec, instant, calendarRec.receiver);
   if (DurationSign(years, months, weeks, 0, 0, 0, 0, 0, 0, 0) === 0) {
-    const overflow = ToTemporalOverflow(options);
+    const overflow = GetTemporalOverflowOption(options);
     const intermediate = AddDaysToZonedDateTime(instant, dt, timeZoneRec, calendarRec.receiver, days, overflow).epochNs;
     return AddInstant(intermediate, norm);
   }
@@ -4854,7 +4854,7 @@ export function AddDurationToOrSubtractDurationFromDuration(operation, duration,
   let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
     ToTemporalDurationRecord(other);
   options = GetOptionsObject(options);
-  const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ToRelativeTemporalObject(options);
+  const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = GetTemporalRelativeToOption(options);
 
   const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, [
     'dateAdd',
