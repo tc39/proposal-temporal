@@ -12206,28 +12206,74 @@
 	      norm: TimeDuration.ZERO
 	    };
 	  }
+	  const sign = nsDiff.lt(0) ? -1 : 1;
 
-	  // Find the difference in dates only.
+	  // Convert start/end instants to datetimes
 	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	  const start = new TemporalInstant(ns1);
 	  const end = new TemporalInstant(ns2);
 	  const dtStart = precalculatedDtStart !== null && precalculatedDtStart !== void 0 ? precalculatedDtStart : GetPlainDateTimeFor(timeZoneRec, start, calendarRec.receiver);
 	  const dtEnd = GetPlainDateTimeFor(timeZoneRec, end, calendarRec.receiver);
-	  let {
-	    years,
-	    months,
-	    weeks
-	  } = DifferenceISODateTime(GetSlot(dtStart, ISO_YEAR), GetSlot(dtStart, ISO_MONTH), GetSlot(dtStart, ISO_DAY), GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), GetSlot(dtEnd, ISO_YEAR), GetSlot(dtEnd, ISO_MONTH), GetSlot(dtEnd, ISO_DAY), GetSlot(dtEnd, ISO_HOUR), GetSlot(dtEnd, ISO_MINUTE), GetSlot(dtEnd, ISO_SECOND), GetSlot(dtEnd, ISO_MILLISECOND), GetSlot(dtEnd, ISO_MICROSECOND), GetSlot(dtEnd, ISO_NANOSECOND), calendarRec, largestUnit, options);
-	  let intermediateNs = AddZonedDateTime(start, timeZoneRec, calendarRec, years, months, weeks, 0, TimeDuration.ZERO, dtStart);
-	  // may disambiguate
 
-	  let norm = TimeDuration.fromEpochNsDiff(ns2, intermediateNs);
-	  const intermediate = CreateTemporalZonedDateTime(intermediateNs, timeZoneRec.receiver, calendarRec.receiver);
-	  let days;
-	  ({
-	    norm,
-	    days
-	  } = NormalizedTimeDurationToDays(norm, intermediate, timeZoneRec));
+	  // Simulate moving ns1 as many years/months/weeks/days as possible without
+	  // surpassing ns2. This value is stored in intermediateDateTime/intermediateInstant/intermediateNs.
+	  // We do not literally move years/months/weeks/days with calendar arithmetic,
+	  // but rather assume intermediateDateTime will have the same time-parts as
+	  // dtStart and the date-parts from dtEnd, and move backward from there.
+	  // The number of days we move backward is stored in dayCorrection.
+	  // Credit to Adam Shaw for devising this algorithm.
+	  let dayCorrection = 0;
+	  let intermediateDateTime;
+	  let norm;
+
+	  // The max number of allowed day corrections depends on the direction of travel.
+	  // Both directions allow for 1 day correction due to an ISO wall-clock overshoot (see below).
+	  // Only the forward direction allows for an additional 1 day correction caused by a push-forward
+	  // 'compatible' DST transition causing the wall-clock to overshoot again.
+	  // This max value is inclusive.
+	  let maxDayCorrection = sign === 1 ? 2 : 1;
+
+	  // Detect ISO wall-clock overshoot.
+	  // If the diff of the ISO wall-clock times is opposite to the overall diff's sign,
+	  // we are guaranteed to need at least one day correction.
+	  let timeDuration = DifferenceTime(GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), GetSlot(dtEnd, ISO_HOUR), GetSlot(dtEnd, ISO_MINUTE), GetSlot(dtEnd, ISO_SECOND), GetSlot(dtEnd, ISO_MILLISECOND), GetSlot(dtEnd, ISO_MICROSECOND), GetSlot(dtEnd, ISO_NANOSECOND));
+	  if (timeDuration.sign() === -sign) {
+	    dayCorrection++;
+	  }
+	  for (; dayCorrection <= maxDayCorrection; dayCorrection++) {
+	    const intermediateDate = BalanceISODate(GetSlot(dtEnd, ISO_YEAR), GetSlot(dtEnd, ISO_MONTH), GetSlot(dtEnd, ISO_DAY) - dayCorrection * sign);
+
+	    // Incorporate time parts from dtStart
+	    intermediateDateTime = CreateTemporalDateTime(intermediateDate.year, intermediateDate.month, intermediateDate.day, GetSlot(dtStart, ISO_HOUR), GetSlot(dtStart, ISO_MINUTE), GetSlot(dtStart, ISO_SECOND), GetSlot(dtStart, ISO_MILLISECOND), GetSlot(dtStart, ISO_MICROSECOND), GetSlot(dtStart, ISO_NANOSECOND), calendarRec.receiver);
+
+	    // Convert intermediate datetime to epoch-nanoseconds (may disambiguate)
+	    const intermediateInstant = GetInstantFor(timeZoneRec, intermediateDateTime, 'compatible');
+	    const intermediateNs = GetSlot(intermediateInstant, EPOCHNANOSECONDS);
+
+	    // Compute the nanosecond diff between the intermediate instant and the final destination
+	    norm = TimeDuration.fromEpochNsDiff(ns2, intermediateNs);
+
+	    // Did intermediateNs NOT surpass ns2?
+	    // If so, exit the loop with success (without incrementing dayCorrection past maxDayCorrection)
+	    if (norm.sign() !== -sign) {
+	      break;
+	    }
+	  }
+	  if (dayCorrection > maxDayCorrection) {
+	    throw new RangeError("inconsistent return from calendar or time zone method: more than ".concat(maxDayCorrection, " day correction needed"));
+	  }
+
+	  // Similar to what happens in DifferenceISODateTime with date parts only:
+	  const date1 = TemporalDateTimeToDate(dtStart);
+	  const date2 = TemporalDateTimeToDate(intermediateDateTime);
+	  const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
+	  const untilOptions = SnapshotOwnProperties(options, null);
+	  untilOptions.largestUnit = dateLargestUnit;
+	  const dateDifference = DifferenceDate(calendarRec, date1, date2, untilOptions);
+	  const years = GetSlot(dateDifference, YEARS);
+	  const months = GetSlot(dateDifference, MONTHS);
+	  const weeks = GetSlot(dateDifference, WEEKS);
+	  const days = GetSlot(dateDifference, DAYS);
 	  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, norm);
 	  return {
 	    years,
