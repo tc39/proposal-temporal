@@ -8653,7 +8653,7 @@
 	const NumberIsNaN = Number.isNaN;
 	const NumberIsSafeInteger = Number.isSafeInteger;
 	const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
-	const ObjectCreate$8 = Object.create;
+	const ObjectCreate$6 = Object.create;
 	const ObjectDefineProperty = Object.defineProperty;
 	const ObjectEntries$1 = Object.entries;
 	const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
@@ -9563,7 +9563,7 @@
 	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
 	    Call$4(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
 	    const fields = PrepareTemporalFields(relativeTo, fieldNames, []);
-	    const dateOptions = ObjectCreate$8(null);
+	    const dateOptions = ObjectCreate$6(null);
 	    dateOptions.overflow = 'constrain';
 	    ({
 	      year,
@@ -9657,7 +9657,7 @@
 	  let {
 	    emptySourceErrorMessage = 'no supported properties found'
 	  } = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-	  const result = ObjectCreate$8(null);
+	  const result = ObjectCreate$6(null);
 	  let any = false;
 	  if (extraFieldDescriptors) {
 	    for (let index = 0; index < extraFieldDescriptors.length; index++) {
@@ -10146,7 +10146,7 @@
 	function CreateTemporalDate(isoYear, isoMonth, isoDay) {
 	  let calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'iso8601';
 	  const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-	  const result = ObjectCreate$8(TemporalPlainDate.prototype);
+	  const result = ObjectCreate$6(TemporalPlainDate.prototype);
 	  CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar);
 	  return result;
 	}
@@ -10182,7 +10182,7 @@
 	function CreateTemporalDateTime(isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns) {
 	  let calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 'iso8601';
 	  const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-	  const result = ObjectCreate$8(TemporalPlainDateTime.prototype);
+	  const result = ObjectCreate$6(TemporalPlainDateTime.prototype);
 	  CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar);
 	  return result;
 	}
@@ -10214,7 +10214,7 @@
 	  let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	  let referenceISOYear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1972;
 	  const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
-	  const result = ObjectCreate$8(TemporalPlainMonthDay.prototype);
+	  const result = ObjectCreate$6(TemporalPlainMonthDay.prototype);
 	  CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, referenceISOYear);
 	  return result;
 	}
@@ -10246,7 +10246,7 @@
 	  let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	  let referenceISODay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
 	  const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
-	  const result = ObjectCreate$8(TemporalPlainYearMonth.prototype);
+	  const result = ObjectCreate$6(TemporalPlainYearMonth.prototype);
 	  CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar, referenceISODay);
 	  return result;
 	}
@@ -10293,7 +10293,7 @@
 	function CreateTemporalZonedDateTime(epochNanoseconds, timeZone) {
 	  let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	  const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-	  const result = ObjectCreate$8(TemporalZonedDateTime.prototype);
+	  const result = ObjectCreate$6(TemporalZonedDateTime.prototype);
 	  CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZone, calendar);
 	  return result;
 	}
@@ -11841,7 +11841,7 @@
 	      {
 	        // balance years down to months
 	        const later = CalendarDateAdd(calendarRec, plainRelativeTo, new TemporalDuration(years));
-	        const untilOptions = ObjectCreate$8(null);
+	        const untilOptions = ObjectCreate$6(null);
 	        untilOptions.largestUnit = 'month';
 	        const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
 	        const yearsInMonths = GetSlot(untilResult, MONTHS);
@@ -11895,7 +11895,7 @@
 	    };
 	  }
 	  if (!plainRelativeTo) throw new RangeError("a starting point is required for ".concat(largestUnit, "s balancing"));
-	  const untilOptions = ObjectCreate$8(null);
+	  const untilOptions = ObjectCreate$6(null);
 	  untilOptions.largestUnit = largestUnit;
 	  switch (largestUnit) {
 	    case 'year':
@@ -12675,7 +12675,7 @@
 	    const intermediate = AddDate(calendarRec, plainRelativeTo, dateDuration1);
 	    const end = AddDate(calendarRec, intermediate, dateDuration2);
 	    const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-	    const differenceOptions = ObjectCreate$8(null);
+	    const differenceOptions = ObjectCreate$6(null);
 	    differenceOptions.largestUnit = dateLargestUnit;
 	    const untilResult = DifferenceDate(calendarRec, plainRelativeTo, end, differenceOptions);
 	    years = GetSlot(untilResult, YEARS);
@@ -12731,7 +12731,7 @@
 	        weeks,
 	        days,
 	        norm
-	      } = DifferenceZonedDateTime(GetSlot(zonedRelativeTo, EPOCHNANOSECONDS), endNs, timeZoneRec, calendarRec, largestUnit, ObjectCreate$8(null), startDateTime));
+	      } = DifferenceZonedDateTime(GetSlot(zonedRelativeTo, EPOCHNANOSECONDS), endNs, timeZoneRec, calendarRec, largestUnit, ObjectCreate$6(null), startDateTime));
 	      ({
 	        hours,
 	        minutes,
@@ -13339,7 +13339,7 @@
 	        days += monthsWeeksInDays;
 	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-	        const untilOptions = ObjectCreate$8(null);
+	        const untilOptions = ObjectCreate$6(null);
 	        untilOptions.largestUnit = 'year';
 	        const yearsPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), YEARS);
 	        years += yearsPassed;
@@ -13375,7 +13375,7 @@
 	        days += weeksInDays;
 	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-	        const untilOptions = ObjectCreate$8(null);
+	        const untilOptions = ObjectCreate$6(null);
 	        untilOptions.largestUnit = 'month';
 	        const monthsPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), MONTHS);
 	        months += monthsPassed;
@@ -13402,7 +13402,7 @@
 	      {
 	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-	        const untilOptions = ObjectCreate$8(null);
+	        const untilOptions = ObjectCreate$6(null);
 	        untilOptions.largestUnit = 'week';
 	        const weeksPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), WEEKS);
 	        weeks += weeksPassed;
@@ -13588,14 +13588,14 @@
 	  return value < 0 ? -1 : value > 0 ? 1 : value;
 	}
 	function GetOptionsObject(options) {
-	  if (options === undefined) return ObjectCreate$8(null);
+	  if (options === undefined) return ObjectCreate$6(null);
 	  if (Type$d(options) === 'Object') return options;
 	  throw new TypeError("Options parameter must be an object, not ".concat(options === null ? 'null' : "a ".concat(typeof options)));
 	}
 	function SnapshotOwnProperties(source, proto) {
 	  let excludedKeys = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 	  let excludedValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-	  const copy = ObjectCreate$8(proto);
+	  const copy = ObjectCreate$6(proto);
 	  CopyDataProperties(copy, source, excludedKeys, excludedValues);
 	  return copy;
 	}
@@ -14118,7 +14118,7 @@
 
 	/* global true */
 
-	const ObjectCreate$7 = Object.create;
+	const ObjectCreate$5 = Object.create;
 	class Instant {
 	  constructor(epochNanoseconds) {
 	    // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
@@ -14183,7 +14183,7 @@
 	    if (roundTo === undefined) throw new TypeError('options parameter is required');
 	    if (Type$d(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$7(null);
+	      roundTo = ObjectCreate$5(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -14317,7 +14317,7 @@
 	const MathAbs$1 = Math.abs;
 	const MathFloor = Math.floor;
 	const ObjectAssign$1 = Object.assign;
-	const ObjectCreate$6 = Object.create;
+	const ObjectCreate$4 = Object.create;
 	const ObjectEntries = Object.entries;
 	const OriginalMap = Map;
 	const OriginalSet = Set;
@@ -14423,7 +14423,7 @@
 	    const additionalFieldsCopy = SnapshotOwnProperties(ToObject$1(additionalFields), null, [], [undefined]);
 	    const additionalKeys = ReflectOwnKeys(additionalFieldsCopy);
 	    const overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
-	    const merged = ObjectCreate$6(null);
+	    const merged = ObjectCreate$4(null);
 	    const fieldsKeys = ReflectOwnKeys(fieldsCopy);
 	    for (let ix = 0; ix < fieldsKeys.length; ix++) {
 	      const key = fieldsKeys[ix];
@@ -17369,7 +17369,7 @@
 	MakeIntrinsicClass(PlainDate, 'Temporal.PlainDate');
 
 	const ArrayPrototypePush$1 = Array.prototype.push;
-	const ObjectCreate$5 = Object.create;
+	const ObjectCreate$3 = Object.create;
 	class PlainDateTime {
 	  constructor(isoYear, isoMonth, isoDay) {
 	    let hour = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
@@ -17566,7 +17566,7 @@
 	    if (roundTo === undefined) throw new TypeError('options parameter is required');
 	    if (Type$d(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$5(null);
+	      roundTo = ObjectCreate$3(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -17723,7 +17723,7 @@
 	/* global true */
 
 	const MathAbs = Math.abs;
-	const ObjectCreate$4 = Object.create;
+	const ObjectCreate$2 = Object.create;
 	class Duration {
 	  constructor() {
 	    let years = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -17867,7 +17867,7 @@
 	    const existingLargestUnit = DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	    if (Type$d(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$4(null);
+	      roundTo = ObjectCreate$2(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -17992,7 +17992,7 @@
 	    if (totalOf === undefined) throw new TypeError('options argument is required');
 	    if (Type$d(totalOf) === 'String') {
 	      const stringParam = totalOf;
-	      totalOf = ObjectCreate$4(null);
+	      totalOf = ObjectCreate$2(null);
 	      totalOf.unit = stringParam;
 	    } else {
 	      totalOf = GetOptionsObject(totalOf);
@@ -18192,7 +18192,6 @@
 	MakeIntrinsicClass(Duration, 'Temporal.Duration');
 
 	const ArrayPrototypeConcat$1 = Array.prototype.concat;
-	const ObjectCreate$3 = Object.create;
 	class PlainMonthDay {
 	  constructor(isoMonth, isoDay) {
 	    let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
@@ -18271,9 +18270,7 @@
 	    let mergedFields = CalendarMergeFields(calendarRec, fields, inputFields);
 	    const concatenatedFieldNames = Call$4(ArrayPrototypeConcat$1, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
-	    const options = ObjectCreate$3(null);
-	    options.overflow = 'constrain';
-	    return CalendarDateFromFields(calendarRec, mergedFields, options);
+	    return CalendarDateFromFields(calendarRec, mergedFields);
 	  }
 	  getISOFields() {
 	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
@@ -18365,7 +18362,7 @@
 	/* global true */
 
 	const ObjectAssign = Object.assign;
-	const ObjectCreate$2 = Object.create;
+	const ObjectCreate$1 = Object.create;
 	function TemporalTimeToString(time, precision) {
 	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 	  let hour = GetSlot(time, ISO_HOUR);
@@ -18499,7 +18496,7 @@
 	    if (roundTo === undefined) throw new TypeError('options parameter is required');
 	    if (Type$d(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$2(null);
+	      roundTo = ObjectCreate$1(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -18770,7 +18767,6 @@
 	DefineIntrinsic('Temporal.TimeZone.prototype.getPossibleInstantsFor', TimeZone.prototype.getPossibleInstantsFor);
 
 	const ArrayPrototypeConcat = Array.prototype.concat;
-	const ObjectCreate$1 = Object.create;
 	class PlainYearMonth {
 	  constructor(isoYear, isoMonth) {
 	    let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
@@ -18896,9 +18892,7 @@
 	    let mergedFields = CalendarMergeFields(calendarRec, fields, inputFields);
 	    const concatenatedFieldNames = Call$4(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
-	    const options = ObjectCreate$1(null);
-	    options.overflow = 'constrain';
-	    return CalendarDateFromFields(calendarRec, mergedFields, options);
+	    return CalendarDateFromFields(calendarRec, mergedFields);
 	  }
 	  getISOFields() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
