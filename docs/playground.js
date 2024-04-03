@@ -8653,8 +8653,8 @@
 	const NumberIsNaN = Number.isNaN;
 	const NumberIsSafeInteger = Number.isSafeInteger;
 	const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
-	const ObjectCreate$6 = Object.create;
-	const ObjectDefineProperty = Object.defineProperty;
+	const ObjectCreate$7 = Object.create;
+	const ObjectDefineProperty$1 = Object.defineProperty;
 	const ObjectEntries$1 = Object.entries;
 	const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 	const SetPrototypeHas$1 = Set.prototype.has;
@@ -8775,6 +8775,9 @@
 	  }
 	  if (!IsArray$4(excludedKeys) || !every$1(excludedKeys, IsPropertyKey$a)) {
 	    throw new $TypeError('Assertion failed: "excludedKeys" must be a List of Property Keys');
+	  }
+	  if (excludedValues !== undefined && !IsArray$4(excludedValues)) {
+	    throw new $TypeError('Assertion failed: "excludedValues" must be a List of ECMAScript language values');
 	  }
 	  if (typeof source === 'undefined' || source === null) {
 	    return;
@@ -9563,7 +9566,7 @@
 	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
 	    Call$4(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
 	    const fields = PrepareTemporalFields(relativeTo, fieldNames, []);
-	    const dateOptions = ObjectCreate$6(null);
+	    const dateOptions = ObjectCreate$7(null);
 	    dateOptions.overflow = 'constrain';
 	    ({
 	      year,
@@ -9657,7 +9660,7 @@
 	  let {
 	    emptySourceErrorMessage = 'no supported properties found'
 	  } = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-	  const result = ObjectCreate$6(null);
+	  const result = ObjectCreate$7(null);
 	  let any = false;
 	  if (extraFieldDescriptors) {
 	    for (let index = 0; index < extraFieldDescriptors.length; index++) {
@@ -10135,7 +10138,7 @@
 	    } else {
 	      repr += '[u-ca=<calendar object>]';
 	    }
-	    ObjectDefineProperty(result, '_repr_', {
+	    ObjectDefineProperty$1(result, '_repr_', {
 	      value: "Temporal.PlainDate <".concat(repr, ">"),
 	      writable: false,
 	      enumerable: false,
@@ -10146,7 +10149,7 @@
 	function CreateTemporalDate(isoYear, isoMonth, isoDay) {
 	  let calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'iso8601';
 	  const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-	  const result = ObjectCreate$6(TemporalPlainDate.prototype);
+	  const result = ObjectCreate$7(TemporalPlainDate.prototype);
 	  CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar);
 	  return result;
 	}
@@ -10182,7 +10185,7 @@
 	function CreateTemporalDateTime(isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns) {
 	  let calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 'iso8601';
 	  const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-	  const result = ObjectCreate$6(TemporalPlainDateTime.prototype);
+	  const result = ObjectCreate$7(TemporalPlainDateTime.prototype);
 	  CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar);
 	  return result;
 	}
@@ -10214,7 +10217,7 @@
 	  let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	  let referenceISOYear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1972;
 	  const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
-	  const result = ObjectCreate$6(TemporalPlainMonthDay.prototype);
+	  const result = ObjectCreate$7(TemporalPlainMonthDay.prototype);
 	  CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, referenceISOYear);
 	  return result;
 	}
@@ -10246,7 +10249,7 @@
 	  let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	  let referenceISODay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
 	  const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
-	  const result = ObjectCreate$6(TemporalPlainYearMonth.prototype);
+	  const result = ObjectCreate$7(TemporalPlainYearMonth.prototype);
 	  CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar, referenceISODay);
 	  return result;
 	}
@@ -10293,7 +10296,7 @@
 	function CreateTemporalZonedDateTime(epochNanoseconds, timeZone) {
 	  let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	  const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-	  const result = ObjectCreate$6(TemporalZonedDateTime.prototype);
+	  const result = ObjectCreate$7(TemporalZonedDateTime.prototype);
 	  CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZone, calendar);
 	  return result;
 	}
@@ -11841,7 +11844,7 @@
 	      {
 	        // balance years down to months
 	        const later = CalendarDateAdd(calendarRec, plainRelativeTo, new TemporalDuration(years));
-	        const untilOptions = ObjectCreate$6(null);
+	        const untilOptions = ObjectCreate$7(null);
 	        untilOptions.largestUnit = 'month';
 	        const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
 	        const yearsInMonths = GetSlot(untilResult, MONTHS);
@@ -11895,7 +11898,7 @@
 	    };
 	  }
 	  if (!plainRelativeTo) throw new RangeError("a starting point is required for ".concat(largestUnit, "s balancing"));
-	  const untilOptions = ObjectCreate$6(null);
+	  const untilOptions = ObjectCreate$7(null);
 	  untilOptions.largestUnit = largestUnit;
 	  switch (largestUnit) {
 	    case 'year':
@@ -12675,7 +12678,7 @@
 	    const intermediate = AddDate(calendarRec, plainRelativeTo, dateDuration1);
 	    const end = AddDate(calendarRec, intermediate, dateDuration2);
 	    const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-	    const differenceOptions = ObjectCreate$6(null);
+	    const differenceOptions = ObjectCreate$7(null);
 	    differenceOptions.largestUnit = dateLargestUnit;
 	    const untilResult = DifferenceDate(calendarRec, plainRelativeTo, end, differenceOptions);
 	    years = GetSlot(untilResult, YEARS);
@@ -12731,7 +12734,7 @@
 	        weeks,
 	        days,
 	        norm
-	      } = DifferenceZonedDateTime(GetSlot(zonedRelativeTo, EPOCHNANOSECONDS), endNs, timeZoneRec, calendarRec, largestUnit, ObjectCreate$6(null), startDateTime));
+	      } = DifferenceZonedDateTime(GetSlot(zonedRelativeTo, EPOCHNANOSECONDS), endNs, timeZoneRec, calendarRec, largestUnit, ObjectCreate$7(null), startDateTime));
 	      ({
 	        hours,
 	        minutes,
@@ -13339,7 +13342,7 @@
 	        days += monthsWeeksInDays;
 	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-	        const untilOptions = ObjectCreate$6(null);
+	        const untilOptions = ObjectCreate$7(null);
 	        untilOptions.largestUnit = 'year';
 	        const yearsPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), YEARS);
 	        years += yearsPassed;
@@ -13375,7 +13378,7 @@
 	        days += weeksInDays;
 	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-	        const untilOptions = ObjectCreate$6(null);
+	        const untilOptions = ObjectCreate$7(null);
 	        untilOptions.largestUnit = 'month';
 	        const monthsPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), MONTHS);
 	        months += monthsPassed;
@@ -13402,7 +13405,7 @@
 	      {
 	        const isoResult = BalanceISODate(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY) + days);
 	        const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-	        const untilOptions = ObjectCreate$6(null);
+	        const untilOptions = ObjectCreate$7(null);
 	        untilOptions.largestUnit = 'week';
 	        const weeksPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), WEEKS);
 	        weeks += weeksPassed;
@@ -13588,14 +13591,14 @@
 	  return value < 0 ? -1 : value > 0 ? 1 : value;
 	}
 	function GetOptionsObject(options) {
-	  if (options === undefined) return ObjectCreate$6(null);
+	  if (options === undefined) return ObjectCreate$7(null);
 	  if (Type$d(options) === 'Object') return options;
 	  throw new TypeError("Options parameter must be an object, not ".concat(options === null ? 'null' : "a ".concat(typeof options)));
 	}
 	function SnapshotOwnProperties(source, proto) {
 	  let excludedKeys = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 	  let excludedValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
-	  const copy = ObjectCreate$6(proto);
+	  const copy = ObjectCreate$7(proto);
 	  CopyDataProperties(copy, source, excludedKeys, excludedValues);
 	  return copy;
 	}
@@ -13620,10 +13623,16 @@
 	  // values. For example, Turkish's "I" character was the source of a security
 	  // issue involving "file://" URLs. See
 	  // https://haacked.com/archive/2012/07/05/turkish-i-problem-and-why-you-should-care.aspx/.
-	  return Call$4(StringPrototypeReplace, str, [/[A-Z]/g, l => {
-	    const code = Call$4(StringPrototypeCharCodeAt, l, [0]);
-	    return StringFromCharCode(code + 0x20);
-	  }]);
+	  let lowercase = '';
+	  for (let ix = 0; ix < str.length; ix++) {
+	    const code = Call$4(StringPrototypeCharCodeAt, str, [ix]);
+	    if (code >= 0x41 && code <= 0x5a) {
+	      lowercase += StringFromCharCode(code + 0x20);
+	    } else {
+	      lowercase += StringFromCharCode(code);
+	    }
+	  }
+	  return lowercase;
 	}
 
 	// This function isn't in the spec, but we put it in the polyfill to avoid
@@ -13675,36 +13684,43 @@
 	const CAL_ID = Symbol('calendar-id');
 	const LOCALE = Symbol('locale');
 	const OPTIONS = Symbol('options');
-	const descriptor = value => {
-	  return {
-	    value,
-	    enumerable: true,
-	    writable: false,
-	    configurable: true
-	  };
-	};
 	const IntlDateTimeFormat$1 = globalThis.Intl.DateTimeFormat;
 	const ObjectAssign$2 = Object.assign;
+	const ObjectCreate$6 = Object.create;
+	const ObjectDefineProperty = Object.defineProperty;
 
 	// Construction of built-in Intl.DateTimeFormat objects is sloooooow,
 	// so we'll only create those instances when we need them.
 	// See https://bugs.chromium.org/p/v8/issues/detail?id=6528
-	function getPropLazy(obj, prop) {
-	  let val = obj[prop];
+	function getSlotLazy(obj, slot) {
+	  let val = GetSlot(obj, slot);
 	  if (typeof val === 'function') {
-	    val = new IntlDateTimeFormat$1(obj[LOCALE], val(obj[OPTIONS]));
-	    obj[prop] = val;
+	    val = new IntlDateTimeFormat$1(GetSlot(obj, LOCALE), val(GetSlot(obj, OPTIONS)));
+	    SetSlot(obj, slot, val);
 	  }
 	  return val;
 	}
-	function DateTimeFormat() {
-	  let locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	  if (!(this instanceof DateTimeFormat)) return new DateTimeFormat(locale, options);
+	function createDateTimeFormat(dtf, locale, options) {
 	  const hasOptions = typeof options !== 'undefined';
-	  options = hasOptions ? ObjectAssign$2({}, options) : {};
+	  if (hasOptions) {
+	    // Read all the options in the expected order and copy them to a
+	    // null-prototype object with which we can do further operations
+	    // unobservably
+	    const props = ['localeMatcher', 'calendar', 'numberingSystem', 'hour12', 'hourCycle', 'timeZone', 'weekday', 'era', 'year', 'month', 'day', 'dayPeriod', 'hour', 'minute', 'second', 'fractionalSecondDigits', 'timeZoneName', 'formatMatcher', 'dateStyle', 'timeStyle'];
+	    options = ToObject$1(options);
+	    const newOptions = ObjectCreate$6(null);
+	    for (const prop of props) {
+	      if (HasOwnProperty$1(options, prop)) {
+	        newOptions[prop] = options[prop];
+	      }
+	    }
+	    options = newOptions;
+	  } else {
+	    options = ObjectCreate$6(null);
+	  }
 	  const original = new IntlDateTimeFormat$1(locale, options);
 	  const ro = original.resolvedOptions();
+	  CreateSlots(dtf);
 
 	  // DateTimeFormat instances are very expensive to create. Therefore, they will
 	  // be lazily created only when needed, using the locale and options provided.
@@ -13719,24 +13735,24 @@
 	  // Therefore, we limit the properties in the clone to properties that were
 	  // present in the original input.
 	  if (hasOptions) {
-	    const clonedResolved = ObjectAssign$2({}, ro);
+	    const clonedResolved = ObjectAssign$2(ObjectCreate$6(null), ro);
 	    for (const prop in clonedResolved) {
 	      if (!HasOwnProperty$1(options, prop)) delete clonedResolved[prop];
 	    }
-	    this[OPTIONS] = clonedResolved;
+	    SetSlot(dtf, OPTIONS, clonedResolved);
 	  } else {
-	    this[OPTIONS] = options;
+	    SetSlot(dtf, OPTIONS, options);
 	  }
-	  this[LOCALE] = ro.locale;
-	  this[ORIGINAL] = original;
-	  this[TZ_CANONICAL] = ro.timeZone;
-	  this[CAL_ID] = ro.calendar;
-	  this[DATE] = dateAmend;
-	  this[YM] = yearMonthAmend;
-	  this[MD] = monthDayAmend;
-	  this[TIME] = timeAmend;
-	  this[DATETIME] = datetimeAmend;
-	  this[INST] = instantAmend;
+	  SetSlot(dtf, LOCALE, ro.locale);
+	  SetSlot(dtf, ORIGINAL, original);
+	  SetSlot(dtf, TZ_CANONICAL, ro.timeZone);
+	  SetSlot(dtf, CAL_ID, ro.calendar);
+	  SetSlot(dtf, DATE, dateAmend);
+	  SetSlot(dtf, YM, yearMonthAmend);
+	  SetSlot(dtf, MD, monthDayAmend);
+	  SetSlot(dtf, TIME, timeAmend);
+	  SetSlot(dtf, DATETIME, datetimeAmend);
+	  SetSlot(dtf, INST, instantAmend);
 
 	  // Save the original time zone, for a few reasons:
 	  // - Clearer error messages
@@ -13745,7 +13761,7 @@
 	  //   support of offset strings and other potential changes like proposal-canonical-tz.
 	  const timeZoneOption = hasOptions ? options.timeZone : undefined;
 	  if (timeZoneOption === undefined) {
-	    this[TZ_ORIGINAL] = ro.timeZone;
+	    SetSlot(dtf, TZ_ORIGINAL, ro.timeZone);
 	  } else {
 	    const id = ToString$1(timeZoneOption);
 	    if (IsOffsetTimeZoneIdentifier(id)) {
@@ -13754,32 +13770,78 @@
 	    }
 	    const record = GetAvailableNamedTimeZoneIdentifier(id);
 	    if (!record) throw new RangeError("Intl.DateTimeFormat formats built-in time zones, not ".concat(id));
-	    this[TZ_ORIGINAL] = record.identifier;
+	    SetSlot(dtf, TZ_ORIGINAL, record.identifier);
 	  }
 	}
-	DateTimeFormat.supportedLocalesOf = function () {
-	  return IntlDateTimeFormat$1.supportedLocalesOf(...arguments);
-	};
-	const properties = {
-	  resolvedOptions: descriptor(resolvedOptions),
-	  format: descriptor(format),
-	  formatRange: descriptor(formatRange)
-	};
-	if ('formatToParts' in IntlDateTimeFormat$1.prototype) {
-	  properties.formatToParts = descriptor(formatToParts);
+	class DateTimeFormatImpl {
+	  constructor() {
+	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+	    createDateTimeFormat(this, locales, options);
+	  }
+	  get format() {
+	    var _this = this;
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    const boundFormat = function (datetime) {
+	      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	        args[_key - 1] = arguments[_key];
+	      }
+	      return Call$4(format, _this, [datetime, ...args]);
+	    };
+	    ObjectDefineProperty(boundFormat, 'name', {
+	      value: '',
+	      enumerable: false,
+	      writable: false,
+	      configurable: true
+	    });
+	    return boundFormat;
+	  }
+	  formatRange(a, b) {
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    return Call$4(formatRange, this, [a, b]);
+	  }
+	  formatToParts(datetime) {
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	      rest[_key2 - 1] = arguments[_key2];
+	    }
+	    return Call$4(formatToParts, this, [datetime, ...rest]);
+	  }
+	  formatRangeToParts(a, b) {
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    return Call$4(formatRangeToParts, this, [a, b]);
+	  }
+	  resolvedOptions() {
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    return Call$4(resolvedOptions, this, []);
+	  }
 	}
-	if ('formatRangeToParts' in IntlDateTimeFormat$1.prototype) {
-	  properties.formatRangeToParts = descriptor(formatRangeToParts);
+	if (!('formatToParts' in IntlDateTimeFormat$1.prototype)) {
+	  delete DateTimeFormatImpl.prototype.formatToParts;
 	}
-	DateTimeFormat.prototype = Object.create(IntlDateTimeFormat$1.prototype, properties);
-	Object.defineProperty(DateTimeFormat, 'prototype', {
+	if (!('formatRangeToParts' in IntlDateTimeFormat$1.prototype)) {
+	  delete DateTimeFormatImpl.prototype.formatRangeToParts;
+	}
+
+	// A non-class constructor is needed because Intl.DateTimeFormat must be able to
+	// be called without 'new'
+	function DateTimeFormat() {
+	  let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+	  return new DateTimeFormatImpl(locales, options);
+	}
+	DateTimeFormatImpl.prototype.constructor = DateTimeFormat;
+	ObjectDefineProperty(DateTimeFormat, 'prototype', {
+	  value: DateTimeFormatImpl.prototype,
 	  writable: false,
 	  enumerable: false,
 	  configurable: false
 	});
+	DateTimeFormat.supportedLocalesOf = IntlDateTimeFormat$1.supportedLocalesOf;
+	MakeIntrinsicClass(DateTimeFormat, 'Intl.DateTimeFormat');
 	function resolvedOptions() {
-	  const resolved = this[ORIGINAL].resolvedOptions();
-	  resolved.timeZone = this[TZ_ORIGINAL];
+	  const resolved = GetSlot(this, ORIGINAL).resolvedOptions();
+	  resolved.timeZone = GetSlot(this, TZ_ORIGINAL);
 	  return resolved;
 	}
 	function format(datetime) {
@@ -13790,10 +13852,10 @@
 	  if (instant && formatter) {
 	    return formatter.format(instant.epochMilliseconds);
 	  }
-	  for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	    rest[_key - 1] = arguments[_key];
+	  for (var _len3 = arguments.length, rest = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+	    rest[_key3 - 1] = arguments[_key3];
 	  }
-	  return this[ORIGINAL].format(datetime, ...rest);
+	  return GetSlot(this, ORIGINAL).format(datetime, ...rest);
 	}
 	function formatToParts(datetime) {
 	  let {
@@ -13803,10 +13865,10 @@
 	  if (instant && formatter) {
 	    return formatter.formatToParts(instant.epochMilliseconds);
 	  }
-	  for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-	    rest[_key2 - 1] = arguments[_key2];
+	  for (var _len4 = arguments.length, rest = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+	    rest[_key4 - 1] = arguments[_key4];
 	  }
-	  return this[ORIGINAL].formatToParts(datetime, ...rest);
+	  return GetSlot(this, ORIGINAL).formatToParts(datetime, ...rest);
 	}
 	function formatRange(a, b) {
 	  if (isTemporalObject(a) || isTemporalObject(b)) {
@@ -13825,7 +13887,7 @@
 	      return aformatter.formatRange(aa.epochMilliseconds, bb.epochMilliseconds);
 	    }
 	  }
-	  return this[ORIGINAL].formatRange(a, b);
+	  return GetSlot(this, ORIGINAL).formatRange(a, b);
 	}
 	function formatRangeToParts(a, b) {
 	  if (isTemporalObject(a) || isTemporalObject(b)) {
@@ -13844,7 +13906,7 @@
 	      return aformatter.formatRangeToParts(aa.epochMilliseconds, bb.epochMilliseconds);
 	    }
 	  }
-	  return this[ORIGINAL].formatRangeToParts(a, b);
+	  return GetSlot(this, ORIGINAL).formatRangeToParts(a, b);
 	}
 	function amend() {
 	  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -14037,10 +14099,10 @@
 	    const microsecond = GetSlot(temporalObj, ISO_MICROSECOND);
 	    const nanosecond = GetSlot(temporalObj, ISO_NANOSECOND);
 	    const datetime = CreateTemporalDateTime(1970, 1, 1, hour, minute, second, millisecond, microsecond, nanosecond, 'iso8601');
-	    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
+	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    return {
 	      instant: GetInstantFor(timeZoneRec, datetime, 'compatible'),
-	      formatter: getPropLazy(main, TIME)
+	      formatter: getSlotLazy(main, TIME)
 	    };
 	  }
 	  if (IsTemporalYearMonth(temporalObj)) {
@@ -14048,14 +14110,15 @@
 	    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
 	    const referenceISODay = GetSlot(temporalObj, ISO_DAY);
 	    const calendar = ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-	    if (calendar !== main[CAL_ID]) {
-	      throw new RangeError("cannot format PlainYearMonth with calendar ".concat(calendar, " in locale with calendar ").concat(main[CAL_ID]));
+	    const mainCalendar = GetSlot(main, CAL_ID);
+	    if (calendar !== mainCalendar) {
+	      throw new RangeError("cannot format PlainYearMonth with calendar ".concat(calendar, " in locale with calendar ").concat(mainCalendar));
 	    }
 	    const datetime = CreateTemporalDateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
-	    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
+	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    return {
 	      instant: GetInstantFor(timeZoneRec, datetime, 'compatible'),
-	      formatter: getPropLazy(main, YM)
+	      formatter: getSlotLazy(main, YM)
 	    };
 	  }
 	  if (IsTemporalMonthDay(temporalObj)) {
@@ -14063,14 +14126,15 @@
 	    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
 	    const isoDay = GetSlot(temporalObj, ISO_DAY);
 	    const calendar = ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-	    if (calendar !== main[CAL_ID]) {
-	      throw new RangeError("cannot format PlainMonthDay with calendar ".concat(calendar, " in locale with calendar ").concat(main[CAL_ID]));
+	    const mainCalendar = GetSlot(main, CAL_ID);
+	    if (calendar !== mainCalendar) {
+	      throw new RangeError("cannot format PlainMonthDay with calendar ".concat(calendar, " in locale with calendar ").concat(mainCalendar));
 	    }
 	    const datetime = CreateTemporalDateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
-	    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
+	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    return {
 	      instant: GetInstantFor(timeZoneRec, datetime, 'compatible'),
-	      formatter: getPropLazy(main, MD)
+	      formatter: getSlotLazy(main, MD)
 	    };
 	  }
 	  if (IsTemporalDate(temporalObj)) {
@@ -14078,25 +14142,27 @@
 	    const isoMonth = GetSlot(temporalObj, ISO_MONTH);
 	    const isoDay = GetSlot(temporalObj, ISO_DAY);
 	    const calendar = ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-	    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
-	      throw new RangeError("cannot format PlainDate with calendar ".concat(calendar, " in locale with calendar ").concat(main[CAL_ID]));
+	    const mainCalendar = GetSlot(main, CAL_ID);
+	    if (calendar !== 'iso8601' && calendar !== mainCalendar) {
+	      throw new RangeError("cannot format PlainDate with calendar ".concat(calendar, " in locale with calendar ").concat(mainCalendar));
 	    }
-	    const datetime = CreateTemporalDateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, main[CAL_ID]);
-	    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
+	    const datetime = CreateTemporalDateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, mainCalendar);
+	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    return {
 	      instant: GetInstantFor(timeZoneRec, datetime, 'compatible'),
-	      formatter: getPropLazy(main, DATE)
+	      formatter: getSlotLazy(main, DATE)
 	    };
 	  }
 	  if (IsTemporalDateTime(temporalObj)) {
 	    const calendar = ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
-	    if (calendar !== 'iso8601' && calendar !== main[CAL_ID]) {
-	      throw new RangeError("cannot format PlainDateTime with calendar ".concat(calendar, " in locale with calendar ").concat(main[CAL_ID]));
+	    const mainCalendar = GetSlot(main, CAL_ID);
+	    if (calendar !== 'iso8601' && calendar !== mainCalendar) {
+	      throw new RangeError("cannot format PlainDateTime with calendar ".concat(calendar, " in locale with calendar ").concat(mainCalendar));
 	    }
-	    const timeZoneRec = new TimeZoneMethodRecord(main[TZ_CANONICAL], ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
+	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    return {
 	      instant: GetInstantFor(timeZoneRec, temporalObj, 'compatible'),
-	      formatter: getPropLazy(main, DATETIME)
+	      formatter: getSlotLazy(main, DATETIME)
 	    };
 	  }
 	  if (IsTemporalZonedDateTime(temporalObj)) {
@@ -14105,7 +14171,7 @@
 	  if (IsTemporalInstant(temporalObj)) {
 	    return {
 	      instant: temporalObj,
-	      formatter: getPropLazy(main, INST)
+	      formatter: getSlotLazy(main, INST)
 	    };
 	  }
 	  return {};
