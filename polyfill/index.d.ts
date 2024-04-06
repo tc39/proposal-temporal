@@ -462,7 +462,7 @@ export namespace Temporal {
       };
 
   /**
-   * Options to control behavior of `Duration.compare()`, `Duration.add()`
+   * Options to control behavior of `Duration.compare()`
    */
   export interface DurationArithmeticOptions {
     /**
@@ -542,7 +542,7 @@ export namespace Temporal {
     negated(): Temporal.Duration;
     abs(): Temporal.Duration;
     with(durationLike: DurationLike): Temporal.Duration;
-    add(other: Temporal.Duration | DurationLike | string, options?: DurationArithmeticOptions): Temporal.Duration;
+    add(other: Temporal.Duration | DurationLike | string): Temporal.Duration;
     round(roundTo: DurationRoundTo): Temporal.Duration;
     total(totalOf: DurationTotalOf): number;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
