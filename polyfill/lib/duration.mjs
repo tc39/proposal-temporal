@@ -209,13 +209,13 @@ export class Duration {
       Math.abs(GetSlot(this, NANOSECONDS))
     );
   }
-  add(other, options = undefined) {
+  add(other) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurations('add', this, other, options);
+    return ES.AddDurations('add', this, other);
   }
-  subtract(other, options = undefined) {
+  subtract(other) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurations('subtract', this, other, options);
+    return ES.AddDurations('subtract', this, other);
   }
   round(roundTo) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
