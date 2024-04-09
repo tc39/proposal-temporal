@@ -327,8 +327,6 @@ This method subtracts `other` from `duration`, resulting in a shorter duration.
 The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
-If `other` is larger than `duration` and the subtraction would result in a negative duration, the method will throw a `RangeError`.
-
 In order to be valid, the resulting duration must not have fields with mixed signs, and so the result is balanced.
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md#duration-arithmetic).
 
