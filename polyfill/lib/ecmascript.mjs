@@ -877,7 +877,7 @@ export function GetRoundingModeOption(options, fallback) {
   );
 }
 
-export function NegateTemporalRoundingMode(roundingMode) {
+export function NegateRoundingMode(roundingMode) {
   switch (roundingMode) {
     case 'ceil':
       return 'floor';
@@ -4046,7 +4046,7 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
   const roundingIncrement = GetRoundingIncrementOption(options);
 
   let roundingMode = GetRoundingModeOption(options, 'trunc');
-  if (op === 'since') roundingMode = NegateTemporalRoundingMode(roundingMode);
+  if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
 
   const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', group, fallbackSmallest);
   if (Call(ArrayIncludes, disallowed, [smallestUnit])) {
