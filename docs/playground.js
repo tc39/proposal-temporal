@@ -13145,7 +13145,6 @@
 	  return wholeDays.plus(roundedRemainder);
 	}
 	function RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
-	  let dayLengthNs = arguments.length > 12 && arguments[12] !== undefined ? arguments[12] : 86400e9;
 	  let deltaDays = 0;
 	  ({
 	    deltaDays,
@@ -13155,7 +13154,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode, dayLengthNs));
+	  } = RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode));
 	  ({
 	    year,
 	    month,
@@ -13174,7 +13173,6 @@
 	  };
 	}
 	function RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
-	  let dayLengthNs = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 86400e9;
 	  let quantity = bigInt.zero;
 	  switch (unit) {
 	    case 'day':
@@ -13196,7 +13194,7 @@
 	    case 'nanosecond':
 	      quantity = quantity.multiply(1000).plus(nanosecond);
 	  }
-	  const nsPerUnit = unit === 'day' ? dayLengthNs : nsPerTimeUnit[unit];
+	  const nsPerUnit = nsPerTimeUnit[unit];
 	  const rounded = RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode);
 	  const result = rounded.divide(nsPerUnit).toJSNumber();
 	  switch (unit) {
@@ -13664,6 +13662,7 @@
 	  return right;
 	}
 	const nsPerTimeUnit = {
+	  day: 86400e9,
 	  hour: 3600e9,
 	  minute: 60e9,
 	  second: 1e9,
@@ -19289,32 +19288,49 @@
 	    let millisecond = GetSlot(dt, ISO_MILLISECOND);
 	    let microsecond = GetSlot(dt, ISO_MICROSECOND);
 	    let nanosecond = GetSlot(dt, ISO_NANOSECOND);
-	    const calendar = GetSlot(this, CALENDAR);
-	    const dtStart = CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, 'iso8601');
-	    const instantStart = GetInstantFor(timeZoneRec, dtStart, 'compatible');
-	    const endNs = AddDaysToZonedDateTime(instantStart, dtStart, timeZoneRec, calendar, 1).epochNs;
-	    const dayLengthNs = endNs.subtract(GetSlot(instantStart, EPOCHNANOSECONDS));
-	    if (dayLengthNs.leq(0)) {
-	      throw new RangeError('cannot round a ZonedDateTime in a time zone with zero- or negative-length days');
-	    }
-	    ({
-	      year,
-	      month,
-	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
-	    } = RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode, dayLengthNs));
+	    let epochNanoseconds;
+	    if (smallestUnit === 'day') {
+	      // Compute Instants for start-of-day and end-of-day
+	      // Determine how far the current instant has progressed through this span.
+	      const dtStart = CreateTemporalDateTime(year, month, day, 0, 0, 0, 0, 0, 0, 'iso8601');
+	      const dEnd = BalanceISODate(year, month, day + 1);
+	      const dtEnd = CreateTemporalDateTime(dEnd.year, dEnd.month, dEnd.day, 0, 0, 0, 0, 0, 0, 'iso8601');
+	      const thisNs = GetSlot(GetSlot(this, INSTANT), EPOCHNANOSECONDS);
+	      const instantStart = GetInstantFor(timeZoneRec, dtStart, 'compatible');
+	      const startNs = GetSlot(instantStart, EPOCHNANOSECONDS);
+	      if (thisNs.lesser(startNs)) {
+	        throw new RangeError('TimeZone protocol cannot produce an instant during a day that ' + 'occurs before another instant it deems start-of-day');
+	      }
+	      const instantEnd = GetInstantFor(timeZoneRec, dtEnd, 'compatible');
+	      const endNs = GetSlot(instantEnd, EPOCHNANOSECONDS);
+	      if (thisNs.greaterOrEquals(endNs)) {
+	        throw new RangeError('TimeZone protocol cannot produce an instant during a day that ' + 'occurs on or after another instant it deems end-of-day');
+	      }
+	      const dayLengthNs = endNs.subtract(startNs);
+	      const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
+	      epochNanoseconds = dayProgressNs.round(dayLengthNs, roundingMode).add(new TimeDuration(startNs)).totalNs;
+	    } else {
+	      // smallestUnit < day
+	      // Round based on ISO-calendar time units
+	      ({
+	        year,
+	        month,
+	        day,
+	        hour,
+	        minute,
+	        second,
+	        millisecond,
+	        microsecond,
+	        nanosecond
+	      } = RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, roundingIncrement, smallestUnit, roundingMode));
 
-	    // Now reset all DateTime fields but leave the TimeZone. The offset will
-	    // also be retained if the new date/time values are still OK with the old
-	    // offset. Otherwise the offset will be changed to be compatible with the
-	    // new date/time values. If DST disambiguation is required, the `compatible`
-	    // disambiguation algorithm will be used.
-	    const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZoneRec, 'compatible', 'prefer', /* matchMinute = */false);
+	      // Now reset all DateTime fields but leave the TimeZone. The offset will
+	      // also be retained if the new date/time values are still OK with the old
+	      // offset. Otherwise the offset will be changed to be compatible with the
+	      // new date/time values. If DST disambiguation is required, the `compatible`
+	      // disambiguation algorithm will be used.
+	      epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZoneRec, 'compatible', 'prefer', /* matchMinute = */false);
+	    }
 	    return CreateTemporalZonedDateTime(epochNanoseconds, timeZoneRec.receiver, GetSlot(this, CALENDAR));
 	  }
 	  equals(other) {
