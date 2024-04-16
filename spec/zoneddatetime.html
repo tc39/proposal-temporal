@@ -1113,7 +1113,7 @@
           _disambiguation_: one of *"earlier"*, *"later"*, *"compatible"*, or *"reject"*,
           _offsetOption_: one of *"ignore"*, *"use"*, *"prefer"*, or *"reject"*,
           _matchBehaviour_: one of ~match-exactly~ or ~match-minutes~,
-        ): either a normal completion containing a BigInt or an abrupt completion
+        ): either a normal completion containing a BigInt or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1229,7 +1229,7 @@
           _timeZone_: a String or Object,
           _calendar_: a String or Object,
           optional _newTarget_: a constructor,
-        ): either a normal completion containing a Temporal.ZonedDateTime, or an abrupt completion
+        ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1257,7 +1257,7 @@
           optional _increment_: an integer,
           optional _unit_: one of *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
           optional _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
-        ): either a normal completion containing a String or an abrupt completion
+        ): either a normal completion containing a String or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1304,7 +1304,7 @@
           _norm_: a Normalized Time Duration Record,
           optional _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
           optional _options_: an Object,
-        ): either a normal completion containing a BigInt or an abrupt completion
+        ): either a normal completion containing a BigInt or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1443,7 +1443,7 @@
           _zonedRelativeTo_: a Temporal.ZonedDateTime,
           _timeZoneRec_: a Time Zone Methods Record,
           optional _precalculatedPlainDateTime_: a Temporal.PlainDateTime,
-        ): either a normal completion containing a Record with fields [[Days]] (an integer), [[Remainder]] (a Normalized Time Duration Record), and [[DayLength]] (an integer), or an abrupt completion
+        ): either a normal completion containing a Record with fields [[Days]] (an integer), [[Remainder]] (a Normalized Time Duration Record), and [[DayLength]] (an integer), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1512,7 +1512,7 @@
           _zonedDateTime_: a Temporal.ZonedDateTime,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.Duration or an abrupt completion
+        ): either a normal completion containing a Temporal.Duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1560,7 +1560,7 @@
           _zonedDateTime_: a Temporal.ZonedDateTime,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.ZonedDateTime or an abrupt completion
+        ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>

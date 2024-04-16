@@ -791,7 +791,7 @@
           _microsecond_: an integer,
           _nanosecond_: an integer,
           optional _newTarget_: a constructor,
-        ): either a normal completion containing a Temporal.PlainTime, or an abrupt completion
+        ): either a normal completion containing a Temporal.PlainTime or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -816,7 +816,7 @@
         ToTemporalTimeRecord (
           _temporalTimeLike_: an Object,
           optional _completeness_: ~partial~ or ~complete~,
-        ): either a normal completion containing a TemporalTimeLike Record, or an abrupt completion
+        ): either a normal completion containing a TemporalTimeLike Record or a throw completion
       </h1>
       <dl class="header">
       </dl>
@@ -1017,7 +1017,7 @@
           _temporalTime_: a Temporal.PlainTime,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.Duration or an abrupt completion
+        ): either a normal completion containing a Temporal.Duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1042,7 +1042,7 @@
           _operation_: ~add~ or ~subtract~,
           _temporalTime_: a Temporal.PlainTime,
           _temporalDurationLike_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.PlainTime or an abrupt completion
+        ): either a normal completion containing a Temporal.PlainTime or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>

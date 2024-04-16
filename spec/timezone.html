@@ -489,7 +489,7 @@
         CreateTemporalTimeZone (
           _identifier_: a String,
           optional _newTarget_: a constructor,
-        ): either a normal completion containing a Temporal.TimeZone, or an abrupt completion
+        ): either a normal completion containing a Temporal.TimeZone or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -816,7 +816,7 @@
         GetOffsetNanosecondsFor (
           _timeZoneRec_: a Time Zone Methods Record,
           _instant_: a Temporal.Instant,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -840,7 +840,7 @@
         GetOffsetStringFor (
           _timeZoneRec_: a Time Zone Methods Record,
           _instant_: a Temporal.Instant,
-        ): either a normal completion containing a String, or an abrupt completion
+        ): either a normal completion containing a String or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -862,7 +862,7 @@
           _instant_: a Temporal.Instant,
           _calendar_: a String or Object,
           optional _precalculatedOffsetNanoseconds_: an integer,
-        ): either a normal completion containing a Temporal.PlainDateTime, or an abrupt completion
+        ): either a normal completion containing a Temporal.PlainDateTime or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -888,7 +888,7 @@
           _timeZoneRec_: a Time Zone Methods Record,
           _dateTime_: a Temporal.PlainDateTime,
           _disambiguation_: *"compatible"*, *"earlier"*, *"later"*, or *"reject"*,
-        ): either a normal completion containing a Temporal.Instant, or an abrupt completion
+        ): either a normal completion containing a Temporal.Instant or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -913,7 +913,7 @@
           _timeZoneRec_: a Time Zone Methods Record,
           _dateTime_: a Temporal.PlainDateTime,
           _disambiguation_: *"compatible"*, *"earlier"*, *"later"*, or *"reject"*,
-        ): either a normal completion containing a Temporal.Instant, or an abrupt completion
+        ): either a normal completion containing a Temporal.Instant or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -974,7 +974,7 @@
         GetPossibleInstantsFor (
           _timeZoneRec_: a Time Zone Methods Record,
           _dateTime_: a Temporal.PlainDateTime,
-        ): either a normal completion containing a List of Temporal.Instant objects, or an abrupt completion
+        ): either a normal completion containing a List of Temporal.Instants or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>

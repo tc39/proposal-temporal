@@ -157,7 +157,7 @@
         CreateCalendarMethodsRecord (
           _calendar_: a String or Object,
           _methods_: a List of one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
-        ): either a normal completion containing a Calendar Methods Record, or a throw completion
+        ): either a normal completion containing a Calendar Methods Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -205,7 +205,7 @@
         CalendarMethodsRecordLookup (
           _calendarRec_: a Calendar Methods Record,
           _methodName_: one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
-        ): either a normal completion containing ~unused~, or a throw completion
+        ): either a normal completion containing ~unused~ or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -324,7 +324,7 @@
           _calendarRec_: a Calendar Methods Record,
           _methodName_: one of ~date-add~, ~date-from-fields~, ~date-until~, ~day~, ~fields~, ~merge-fields~, ~month-day-from-fields~, or ~year-month-from-fields~,
           _arguments_: a List of ECMAScript language values,
-        ): either a normal completion containing an ECMAScript language value, or a throw completion
+        ): either a normal completion containing an ECMAScript language value or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -359,7 +359,7 @@
         CreateTemporalCalendar (
           _identifier_: a String,
           optional _newTarget_: a constructor,
-        ): either a normal completion containing a Temporal.Calendar, or an abrupt completion
+        ): either a normal completion containing a Temporal.Calendar or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -406,7 +406,7 @@
           _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           _additionalFields_: an Object,
-        ): either a normal completion containing an Object, or a throw completion
+        ): either a normal completion containing an Object or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -427,7 +427,7 @@
           _date_: a Temporal.PlainDate,
           _duration_: a Temporal.Duration,
           optional _options_: an Object or *undefined*,
-        ): either a normal completion containing a Temporal.PlainDate, or an abrupt completion
+        ): either a normal completion containing a Temporal.PlainDate or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -451,7 +451,7 @@
           _one_: a Temporal.PlainDate,
           _two_: a Temporal.PlainDate,
           _options_: an Object or *undefined*,
-        ): either a normal completion containing a Temporal.Duration, or an abrupt completion
+        ): either a normal completion containing a Temporal.Duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -472,7 +472,7 @@
         CalendarYear (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -494,7 +494,7 @@
         CalendarMonth (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -517,7 +517,7 @@
         CalendarMonthCode (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, Temporal.PlainYearMonth, or Temporal.PlainMonthDay,
-        ): either a normal completion containing a String, or an abrupt completion
+        ): either a normal completion containing a String or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -538,7 +538,7 @@
         CalendarDay (
           _calendarRec_: a Calendar Methods Record,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainMonthDay,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -559,7 +559,7 @@
         CalendarDayOfWeek (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -582,7 +582,7 @@
         CalendarDayOfYear (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -652,7 +652,7 @@
         CalendarDaysInWeek (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime or Temporal.PlainDate,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -675,7 +675,7 @@
         CalendarDaysInMonth (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -698,7 +698,7 @@
         CalendarDaysInYear (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -721,7 +721,7 @@
         CalendarMonthsInYear (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
-        ): either a normal completion containing an integer, or an abrupt completion
+        ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -744,7 +744,7 @@
         CalendarInLeapYear (
           _calendar_: a String or Object,
           _dateLike_: a Temporal.PlainDateTime, Temporal.PlainDate, or Temporal.PlainYearMonth,
-        ): either a normal completion containing a Boolean, or an abrupt completion
+        ): either a normal completion containing a Boolean or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -764,7 +764,7 @@
       <h1>
         ObjectImplementsTemporalCalendarProtocol (
           _object_: an Object,
-        ): either a normal completion containing a Boolean, or a throw completion
+        ): either a normal completion containing a Boolean or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -841,7 +841,7 @@
       <h1>
         ToTemporalCalendarIdentifier (
           _calendarSlotValue_: a String or Object,
-        ): either a normal completion containing a String, or a throw completion
+        ): either a normal completion containing a String or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -879,7 +879,7 @@
           _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           optional _options_: an Object or *undefined*,
-        ): either a normal completion containing a `Temporal.PlainDate` or an abrupt completion
+        ): either a normal completion containing a Temporal.PlainDate or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -902,7 +902,7 @@
           _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           optional _options_: an Object or *undefined*,
-        ): either a normal completion containing a `Temporal.PlainYearMonth` or an abrupt completion
+        ): either a normal completion containing a Temporal.PlainYearMonth or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -923,7 +923,7 @@
           _calendarRec_: a Calendar Methods Record,
           _fields_: an Object,
           optional _options_: an Object or *undefined*,
-        ): either a normal completion containing a `Temporal.PlainMonthDay` or an abrupt completion
+        ): either a normal completion containing a Temporal.PlainMonthDay or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -943,7 +943,7 @@
         MaybeFormatCalendarAnnotation (
           _calendar_: a String or Object,
           _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
-        ): either a normal completion containing a String, or an abrupt completion
+        ): either a normal completion containing a String or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
