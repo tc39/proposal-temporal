@@ -77,7 +77,7 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalTime(_one_).
         1. Set _two_ to ? ToTemporalTime(_two_).
-        1. Return 𝔽(! CompareTemporalTime(_one_.[[ISOHour]], _one_.[[ISOMinute]], _one_.[[ISOSecond]], _one_.[[ISOMillisecond]], _one_.[[ISOMicrosecond]], _one_.[[ISONanosecond]], _two_.[[ISOHour]], _two_.[[ISOMinute]], _two_.[[ISOSecond]], _two_.[[ISOMillisecond]], _two_.[[ISOMicrosecond]], _two_.[[ISONanosecond]])).
+        1. Return 𝔽(CompareTemporalTime(_one_.[[ISOHour]], _one_.[[ISOMinute]], _one_.[[ISOSecond]], _one_.[[ISOMillisecond]], _one_.[[ISOMicrosecond]], _one_.[[ISONanosecond]], _two_.[[ISOHour]], _two_.[[ISOMinute]], _two_.[[ISOSecond]], _two_.[[ISOMillisecond]], _two_.[[ISOMicrosecond]], _two_.[[ISONanosecond]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -397,7 +397,7 @@
         1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Let _roundResult_ be RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
-        1. Return ! TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
+        1. Return TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
 
@@ -416,7 +416,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ! TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"auto"*).
+        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -428,7 +428,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ! TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"auto"*).
+        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -620,14 +620,19 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporaltime" aoid="ToTemporalTime">
-      <h1>ToTemporalTime ( _item_ [ , _overflow_ ] )</h1>
-      <p>
-        The abstract operation ToTemporalTime returns its argument _item_ if it is already a Temporal.PlainTime instance, converts _item_ to a new Temporal.PlainTime instance if possible, and throws otherwise.
-      </p>
+    <emu-clause id="sec-temporal-totemporaltime" type="abstract operation">
+      <h1>
+        ToTemporalTime (
+          _item_: an ECMAScript language value,
+          optional _overflow_: *"constrain"* or *"reject"*,
+        ): either a normal completion containing a Temporal.PlainTime or a throw Completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns its argument _item_ if it is already a Temporal.PlainTime instance, converts _item_ to a new Temporal.PlainTime instance if possible, and throws otherwise.</dd>
+      </dl>
       <emu-alg>
         1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If Type(_item_) is Object, then
           1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
             1. Return _item_.
@@ -664,13 +669,29 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-regulatetime" aoid="RegulateTime">
-      <h1>RegulateTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_ )</h1>
+    <emu-clause id="sec-temporal-regulatetime" type="abstract operation">
+      <h1>
+        RegulateTime (
+          _hour_: an integer,
+          _minute_: an integer,
+          _second_: an integer,
+          _millisecond_: an integer,
+          _microsecond_: an integer,
+          _nanosecond_: an integer,
+          _overflow_: *"constrain"* or *"reject"*
+        ): either a normal completion containing a Time Record or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It applies the correction given by _overflow_ to the given time.
+          If _overflow_ is *"constrain"*, out-of-range values are clamped.
+          If _overflow_ is *"reject"*, a *RangeError* is thrown if any values are out of range.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_ and _nanosecond_ are integers.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"constrain"*, then
-          1. Return ! ConstrainTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+          1. Return ConstrainTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. Else,
           1. Assert: _overflow_ is *"reject"*.
           1. If IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, throw a *RangeError* exception.
@@ -761,10 +782,22 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-constraintime" aoid="ConstrainTime">
-      <h1>ConstrainTime ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_ )</h1>
+    <emu-clause id="sec-temporal-constraintime" type="abstract operation">
+      <h1>
+        ConstrainTime (
+          _hour_: an integer,
+          _minute_: an integer,
+          _second_: an integer,
+          _millisecond_: an integer,
+          _microsecond_: an integer,
+          _nanosecond_: an integer,
+        ): a Time Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It clamps any out-of-range components of the given time so they are in range.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
         1. Set _hour_ to the result of clamping _hour_ between 0 and 23.
         1. Set _minute_ to the result of clamping _minute_ between 0 and 59.
         1. Set _second_ to the result of clamping _second_ between 0 and 59.
@@ -900,19 +933,50 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaltimetostring" aoid="TemporalTimeToString">
-      <h1>TemporalTimeToString ( _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _precision_ )</h1>
+    <emu-clause id="sec-temporal-temporaltimetostring" type="abstract operation">
+      <h1>
+        TemporalTimeToString (
+          _hour_: an integer in the inclusive interval from 0 to 23,
+          _minute_: an integer in the inclusive interval from 0 to 59,
+          _second_: an integer in the inclusive interval from 0 to 59,
+          _millisecond_: an integer in the inclusive interval from 0 to 999,
+          _microsecond_: an integer in the inclusive interval from 0 to 999,
+          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+          _precision_: an integer in the inclusive interval from 0 to 9, *"minute"*, or *"auto"*,
+        ): a String
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It formats the given time as an ISO 8601 string, to the precision specified by _precision_.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _hour_, _minute_, _second_, _millisecond_, _microsecond_ and _nanosecond_ are integers.
         1. Let _subSecondNanoseconds_ be _millisecond_ &times; 10<sup>6</sup> + _microsecond_ &times; 10<sup>3</sup> + _nanosecond_.
         1. Return FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-comparetemporaltime" aoid="CompareTemporalTime">
-      <h1>CompareTemporalTime ( _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ )</h1>
+    <emu-clause id="sec-temporal-comparetemporaltime" type="abstract operation">
+      <h1>
+        CompareTemporalTime (
+          _h1_: an integer in the inclusive interval from 0 to 23,
+          _min1_: an integer in the inclusive interval from 0 to 59,
+          _s1_: an integer in the inclusive interval from 0 to 59,
+          _ms1_: an integer in the inclusive interval from 0 to 999,
+          _mus1_: an integer in the inclusive interval from 0 to 999,
+          _ns1_: an integer in the inclusive interval from 0 to 999,
+          _h2_: an integer in the inclusive interval from 0 to 23,
+          _min2_: an integer in the inclusive interval from 0 to 59,
+          _s2_: an integer in the inclusive interval from 0 to 59,
+          _ms2_: an integer in the inclusive interval from 0 to 999,
+          _mus2_: an integer in the inclusive interval from 0 to 999,
+          _ns2_: an integer in the inclusive interval from 0 to 999,
+        ): -1, 0, or 1
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It compares the two given times and returns -1 if the second comes earlier in the day than the first, 1 if the first comes earlier in the day than the second, and 0 if they are the same.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, and _ns2_ are integers.
         1. If _h1_ &gt; _h2_, return 1.
         1. If _h1_ &lt; _h2_, return -1.
         1. If _min1_ &gt; _min2_, return 1.

@@ -79,7 +79,7 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalDateTime(_one_).
         1. Set _two_ to ? ToTemporalDateTime(_two_).
-        1. Return 𝔽(! CompareISODateTime(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[ISOHour]], _one_.[[ISOMinute]], _one_.[[ISOSecond]], _one_.[[ISOMillisecond]], _one_.[[ISOMicrosecond]], _one_.[[ISONanosecond]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[ISOHour]], _two_.[[ISOMinute]], _two_.[[ISOSecond]], _two_.[[ISOMillisecond]], _two_.[[ISOMicrosecond]], _two_.[[ISONanosecond]])).
+        1. Return 𝔽(CompareISODateTime(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[ISOHour]], _one_.[[ISOMinute]], _one_.[[ISOSecond]], _one_.[[ISOMillisecond]], _one_.[[ISOMicrosecond]], _one_.[[ISONanosecond]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[ISOHour]], _two_.[[ISOMinute]], _two_.[[ISOSecond]], _two_.[[ISOMillisecond]], _two_.[[ISOMicrosecond]], _two_.[[ISONanosecond]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -549,7 +549,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Set _other_ to ? ToTemporalDateTime(_other_).
-        1. Let _result_ be ! CompareISODateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
+        1. Let _result_ be CompareISODateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
         1. If _result_ is not 0, return *false*.
         1. Return ? CalendarEquals(_dateTime_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
@@ -1110,10 +1110,29 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaldatetimetostring" aoid="TemporalDateTimeToString">
-      <h1>TemporalDateTimeToString ( _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _calendar_, _precision_, _showCalendar_ )</h1>
+    <emu-clause id="sec-temporal-temporaldatetimetostring" type="abstract operation">
+      <h1>
+        TemporalDateTimeToString (
+          _isoYear_: an integer,
+          _isoMonth_: an integer,
+          _isoDay_: an integer,
+          _hour_: an integer in the inclusive interval from 0 to 23,
+          _minute_: an integer in the inclusive interval from 0 to 59,
+          _second_: an integer in the inclusive interval from 0 to 59,
+          _millisecond_: an integer in the inclusive interval from 0 to 999,
+          _microsecond_: an integer in the inclusive interval from 0 to 999,
+          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+          _calendar_: a String or Object,
+          _precision_: an integer in the inclusive interval from 0 to 9, *"minute"*, or *"auto"*,
+          _showCalendar_: *"auto"*, *"always"*, *"never"*, or *"critical"*,
+        ): either a normal completion containing a String or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It formats the internal slots of a Temporal.PlainDateTime into an ISO 8601 string, to the precision specified by _precision_.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _isoYear_, _isoMonth_, _isoDay_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, and _nanosecond_ are integers.
+        1. Assert: IsValidISODate(_isoYear_, _isoMonth_, _isoDay_) is *true*.
         1. Let _yearString_ be PadISOYear(_isoYear_).
         1. Let _monthString_ be ToZeroPaddedDecimalString(_isoMonth_, 2).
         1. Let _dayString_ be ToZeroPaddedDecimalString(_isoDay_, 2).
@@ -1124,14 +1143,40 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-compareisodatetime" aoid="CompareISODateTime">
-      <h1>CompareISODateTime ( _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_ )</h1>
+    <emu-clause id="sec-temporal-compareisodatetime" type="abstract operation">
+      <h1>
+        CompareISODateTime (
+          _y1_: an integer,
+          _mon1_: an integer,
+          _d1_: an integer,
+          _h1_: an integer in the inclusive interval from 0 to 23,
+          _min1_: an integer in the inclusive interval from 0 to 59,
+          _s1_: an integer in the inclusive interval from 0 to 59,
+          _ms1_: an integer in the inclusive interval from 0 to 999,
+          _mus1_: an integer in the inclusive interval from 0 to 999,
+          _ns1_: an integer in the inclusive interval from 0 to 999,
+          _y2_: an integer,
+          _mon2_: an integer,
+          _d2_: an integer,
+          _h2_: an integer in the inclusive interval from 0 to 23,
+          _min2_: an integer in the inclusive interval from 0 to 59,
+          _s2_: an integer in the inclusive interval from 0 to 59,
+          _ms2_: an integer in the inclusive interval from 0 to 999,
+          _mus2_: an integer in the inclusive interval from 0 to 999,
+          _ns2_: an integer in the inclusive interval from 0 to 999,
+        ): -1, 0, or 1
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs a comparison of two date-times according to ISO 8601 calendar arithmetic.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, and _ns2_ are integers.
-        1. Let _dateResult_ be ! CompareISODate(_y1_, _mon1_, _d1_, _y2_, _mon2_, _d2_).
+        1. Assert: IsValidISODate(_y1_, _mon1_, _d1_) is *true*.
+        1. Assert: IsValidISODate(_y2_, _mon2_, _d2_) is *true*.
+        1. Let _dateResult_ be CompareISODate(_y1_, _mon1_, _d1_, _y2_, _mon2_, _d2_).
         1. If _dateResult_ is not 0, then
           1. Return _dateResult_.
-        1. Return ! CompareTemporalTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
+        1. Return CompareTemporalTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
       </emu-alg>
     </emu-clause>
 
@@ -1261,7 +1306,7 @@
         1. Assert: If _y1_ &ne; _y2_, and _mon1_ &ne; _mon2_, and _d1_ &ne; _d2_, and LargerOfTwoTemporalUnits(_largestUnit_, *"day"*) is not *"day"*, CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-until~) is *true*.
         1. Let _timeDuration_ be DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_timeDuration_).
-        1. Let _dateSign_ be ! CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
+        1. Let _dateSign_ be CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
         1. Let _adjustedDate_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
         1. If _timeSign_ is -_dateSign_, then
           1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] - _timeSign_).

@@ -115,7 +115,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Return ! SystemInstant().
+        1. Return SystemInstant().
       </emu-alg>
     </emu-clause>
 
@@ -228,17 +228,30 @@
       <p>ECMAScript hosts that are not web browsers must use the default implementation of HostSystemUTCEpochNanoseconds.</p>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systemutcepochmilliseconds" aoid="SystemUTCEpochMilliseconds">
-      <h1>SystemUTCEpochMilliseconds ( )</h1>
-      <emu-alg>
+    <emu-clause id="sec-temporal-systemutcepochmilliseconds" type="abstract operation">
+      <h1>
+        SystemUTCEpochMilliseconds (
+        ): a Number
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
         1. Let _global_ be GetGlobalObject().
         1. Let _nowNs_ be HostSystemUTCEpochNanoseconds(_global_).
         1. Return 𝔽(floor(_nowNs_ / 10<sup>6</sup>)).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systemutcepochnanoseconds" aoid="SystemUTCEpochNanoseconds">
-      <h1>SystemUTCEpochNanoseconds ( )</h1>
+    <emu-clause id="sec-temporal-systemutcepochnanoseconds" type="abstract operation">
+      <h1>
+        SystemUTCEpochNanoseconds (
+        ): a BigInt
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
       <emu-alg>
         1. Let _global_ be GetGlobalObject().
         1. Let _nowNs_ be HostSystemUTCEpochNanoseconds(_global_).
@@ -246,37 +259,62 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systeminstant" aoid="SystemInstant">
-      <h1>SystemInstant ( )</h1>
+    <emu-clause id="sec-temporal-systeminstant" type="abstract operation">
+      <h1>
+        SystemInstant (
+        ): a Temporal.Instant
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
       <emu-alg>
-        1. Let _ns_ be ! SystemUTCEpochNanoseconds().
+        1. Let _ns_ be SystemUTCEpochNanoseconds().
         1. Return ! CreateTemporalInstant(_ns_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systemdatetime" aoid="SystemDateTime">
-      <h1>SystemDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
+    <emu-clause id="sec-temporal-systemdatetime" type="abstract operation">
+      <h1>
+        SystemDateTime (
+          _temporalTimeZoneLike_: an ECMAScript language value,
+          _calendarLike_: an ECMAScript language value,
+        ): either a normal completion containing a Temporal.PlainDateTime or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
-        1. Let _instant_ be ! SystemInstant().
+        1. Let _instant_ be SystemInstant().
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
         1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systemzoneddatetime" aoid="SystemZonedDateTime">
-      <h1>SystemZonedDateTime ( _temporalTimeZoneLike_, _calendarLike_ )</h1>
+    <emu-clause id="sec-temporal-systemzoneddatetime" type="abstract operation">
+      <h1>
+        SystemZonedDateTime (
+          _temporalTimeZoneLike_: an ECMAScript language value,
+          _calendarLike_: an ECMAScript language value,
+        ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
-        1. Let _ns_ be ! SystemUTCEpochNanoseconds().
+        1. Let _ns_ be SystemUTCEpochNanoseconds().
         1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
