@@ -77,7 +77,7 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalDate(_one_).
         1. Set _two_ to ? ToTemporalDate(_two_).
-        1. Return 𝔽(! CompareISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]])).
+        1. Return 𝔽(CompareISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -988,11 +988,18 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaldatetostring" aoid="TemporalDateToString">
-      <h1>TemporalDateToString ( _temporalDate_, _showCalendar_ )</h1>
+    <emu-clause id="sec-temporal-temporaldatetostring" type="abstract operation">
+      <h1>
+        TemporalDateToString (
+          _temporalDate_: a Temporal.PlainDate,
+          _showCalendar_: *"auto"*, *"always"*, *"never"*, or *"critical"*,
+        ): either a normal completion containing a String or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It formats _temporalDate_ to an ISO 8601 string.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_temporalDate_) is Object.
-        1. Assert: _temporalDate_ has an [[InitializedTemporalDate]] internal slot.
         1. Let _year_ be PadISOYear(_temporalDate_.[[ISOYear]]).
         1. Let _month_ be ToZeroPaddedDecimalString(_temporalDate_.[[ISOMonth]], 2).
         1. Let _day_ be ToZeroPaddedDecimalString(_temporalDate_.[[ISODay]], 2).
@@ -1001,11 +1008,28 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addisodate" aoid="AddISODate">
-      <h1>AddISODate ( _year_, _month_, _day_, _years_, _months_, _weeks_, _days_, _overflow_ )</h1>
+    <emu-clause id="sec-temporal-addisodate" type="abstract operation">
+      <h1>
+        AddISODate (
+          _year_: an integer,
+          _month_: an integer,
+          _day_: an integer,
+          _years_: an integer,
+          _months_: an integer,
+          _weeks_: an integer,
+          _days_: an integer,
+          _overflow_: *"constrain"* or *"reject"*,
+        ): either a normal completion containing an ISO Date Record or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It adds the duration denoted by _years_, _months_, _weeks_, _days_ to the date denoted by _year_, _month_, _day_, according to ISO 8601 calendar arithmetic.
+          If addition of _years_ or _months_ results in a nonexistent date, depending on _overflow_ it will be coerced to an existing date or the operation will throw.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_, _month_, _day_, _years_, _months_, _weeks_, and _days_ are integers.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Let _intermediate_ be BalanceISOYearMonth(_year_ + _years_, _month_ + _months_).
         1. Set _intermediate_ to ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _overflow_).
         1. Set _days_ to _days_ + 7 &times; _weeks_.
@@ -1043,10 +1067,23 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-compareisodate" aoid="CompareISODate">
-      <h1>CompareISODate ( _y1_, _m1_, _d1_, _y2_, _m2_, _d2_ )</h1>
+    <emu-clause id="sec-temporal-compareisodate" type="abstract operation">
+      <h1>
+        CompareISODate (
+          _y1_: an integer,
+          _m1_: an integer,
+          _d1_: an integer,
+          _y2_: an integer,
+          _m2_: an integer,
+          _d2_: an integer,
+        ): -1, 0, or 1
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It performs a comparison of the two dates denoted by _y1_, _m1_, _d1_ and _y2, _m2_, _d2_ according to ISO 8601 calendar arithmetic.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _y1_, _m1_, _d1_, _y2_, _m2_, and _d2_ are integers.
+        1. Assert: IsValidISODate(_y2_, _m2_, _d2_) is *true*.
         1. If _y1_ &gt; _y2_, return 1.
         1. If _y1_ &lt; _y2_, return -1.
         1. If _m1_ &gt; _m2_, return 1.

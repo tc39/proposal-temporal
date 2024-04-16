@@ -75,7 +75,7 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalYearMonth(_one_).
         1. Set _two_ to ? ToTemporalYearMonth(_two_).
-        1. Return 𝔽(! CompareISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]])).
+        1. Return 𝔽(CompareISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]])).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -585,19 +585,18 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isoyearmonthwithinlimits" aoid="ISOYearMonthWithinLimits">
-      <h1>ISOYearMonthWithinLimits ( _year_, _month_ )</h1>
-      <p>
-        The abstract operation ISOYearMonthWithinLimits returns *true* if its arguments represent a month within the range that a Temporal.PlainYearMonth object can represent, and *false* otherwise.
-      </p>
-      <emu-note>
-        <p>
-          Temporal.PlainYearMonth objects can represent any month that contains a day that a Temporal.PlainDate can represent.
-          This ensures that a Temporal.PlainDate object can always be converted into a Temporal.PlainYearMonth object.
-        </p>
-      </emu-note>
+    <emu-clause id="sec-temporal-isoyearmonthwithinlimits" type="abstract operation">
+      <h1>
+        ISOYearMonthWithinLimits (
+          _year_: an integer,
+          _month_: an integer in the inclusive interval from 1 to 12,
+        ): a Boolean
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns *true* if its arguments represent a month within the range that a Temporal.PlainYearMonth object can represent, and *false* otherwise.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_ and _month_ are integers.
         1. If _year_ &lt; -271821 or _year_ &gt; 275760, then
           1. Return *false*.
         1. If _year_ is -271821 and _month_ &lt; 4, then
@@ -606,6 +605,12 @@
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
+      <emu-note>
+        <p>
+          Temporal.PlainYearMonth objects can represent any month that contains a day that a Temporal.PlainDate can represent.
+          This ensures that a Temporal.PlainDate object can always be converted into a Temporal.PlainYearMonth object.
+        </p>
+      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-balanceisoyearmonth" type="abstract operation">
@@ -645,7 +650,7 @@
       </dl>
       <emu-alg>
         1. If IsValidISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, throw a *RangeError* exception.
-        1. If ! ISOYearMonthWithinLimits(_isoYear_, _isoMonth_) is *false*, throw a *RangeError* exception.
+        1. If ISOYearMonthWithinLimits(_isoYear_, _isoMonth_) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainYearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
@@ -656,11 +661,18 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporalyearmonthtostring" aoid="TemporalYearMonthToString">
-      <h1>TemporalYearMonthToString ( _yearMonth_, _showCalendar_ )</h1>
+    <emu-clause id="sec-temporal-temporalyearmonthtostring" type="abstract operation">
+      <h1>
+        TemporalYearMonthToString (
+          _yearMonth_: a Temporal.PlainYearMonth,
+          _showCalendar_: *"auto"*, *"always"*, *"never"*, or *"critical"*,
+        ): either a normal completion containing a String or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It formats _yearMonth_ as an ISO 8601 string.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_yearMonth_) is Object.
-        1. Assert: _yearMonth_ has an [[InitializedTemporalYearMonth]] internal slot.
         1. Let _year_ be PadISOYear(_yearMonth_.[[ISOYear]]).
         1. Let _month_ be ToZeroPaddedDecimalString(_yearMonth_.[[ISOMonth]], 2).
         1. Let _result_ be the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), and _month_.

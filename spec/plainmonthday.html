@@ -428,11 +428,18 @@
       </emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporalmonthdaytostring" aoid="TemporalMonthDayToString">
-      <h1>TemporalMonthDayToString ( _monthDay_, _showCalendar_ )</h1>
+    <emu-clause id="sec-temporal-temporalmonthdaytostring" type="abstract operation">
+      <h1>
+        TemporalMonthDayToString (
+          _monthDay_: a Temporal.MonthDay,
+          _showCalendar_: *"auto"*, *"always"*, *"never"*, or *"critical"*,
+        ): either a normal completion containing a String or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It formats _monthDay_ into an ISO 8601 string.</dd>
+      </dl>
       <emu-alg>
-        1. Assert: Type(_monthDay_) is Object.
-        1. Assert: _monthDay_ has an [[InitializedTemporalMonthDay]] internal slot.
         1. Let _month_ be ToZeroPaddedDecimalString(_monthDay_.[[ISOMonth]], 2).
         1. Let _day_ be ToZeroPaddedDecimalString(_monthDay_.[[ISODay]], 2).
         1. Let _result_ be the string-concatenation of _month_, the code unit 0x002D (HYPHEN-MINUS), and _day_.

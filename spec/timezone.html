@@ -568,7 +568,7 @@
         <dd>It returns the components of a date in UTC corresponding to the given number of nanoseconds since the epoch.</dd>
       </dl>
       <emu-alg>
-        1. Assert: ! IsValidEpochNanoseconds(ℤ(_epochNanoseconds_)) is *true*.
+        1. Assert: IsValidEpochNanoseconds(ℤ(_epochNanoseconds_)) is *true*.
         1. Let _remainderNs_ be _epochNanoseconds_ modulo 10<sup>6</sup>.
         1. Let _epochMilliseconds_ be 𝔽((_epochNanoseconds_ - _remainderNs_) / 10<sup>6</sup>).
         1. Let _year_ be EpochTimeToEpochYear(_epochMilliseconds_).

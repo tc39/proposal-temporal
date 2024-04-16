@@ -1236,7 +1236,7 @@
         <dd>It creates a Temporal.ZonedDateTime instance and fills the internal slots with valid values.</dd>
       </dl>
       <emu-alg>
-        1. Assert: ! IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
+        1. Assert: IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.ZonedDateTime%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.ZonedDateTime.prototype%"*, « [[InitializedTemporalZonedDateTime]], [[Nanoseconds]], [[TimeZone]], [[Calendar]] »).
         1. Set _object_.[[Nanoseconds]] to _epochNanoseconds_.
