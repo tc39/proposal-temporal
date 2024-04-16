@@ -484,6 +484,39 @@
   <emu-clause id="sec-temporal-plainyearmonth-abstract-ops">
     <h1>Abstract Operations</h1>
 
+    <emu-clause id="sec-temporal-iso-year-month-records">
+      <h1>ISO Year-Month Records</h1>
+      <p>
+        An <dfn variants="ISO Year-Month Records">ISO Year-Month Record</dfn> is a Record value used to represent a valid month in the ISO 8601 calendar, although the year may be outside of the allowed range for Temporal.
+      </p>
+      <p>
+        ISO Year-Month Records have the fields listed in <emu-xref href="#table-temporal-iso-year-month-record-fields"></emu-xref>.
+      </p>
+      <emu-table id="table-temporal-iso-year-month-record-fields" caption="ISO Year-Month Record Fields">
+        <table class="real-table">
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Year]]</td>
+            <td>an integer</td>
+            <td>
+              The year in the ISO 8601 calendar.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Month]]</td>
+            <td>an integer between 1 and 12, inclusive</td>
+            <td>
+              The number of the month in the ISO 8601 calendar.
+            </td>
+          </tr>
+        </table>
+      </emu-table>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-totemporalyearmonth" type="abstract operation">
       <h1>
         ToTemporalYearMonth (
@@ -520,21 +553,32 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-regulateisoyearmonth" aoid="RegulateISOYearMonth">
-      <h1>RegulateISOYearMonth ( _year_, _month_, _overflow_ )</h1>
+    <emu-clause id="sec-temporal-regulateisoyearmonth" type="abstract operation">
+      <h1>
+        RegulateISOYearMonth (
+          _year_: an integer,
+          _month_: an integer,
+          _overflow_: *"constrain"* or *"reject"*,
+        ): either a normal completion containing an ISO Year-Month Record or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It applies the correction given by _overflow_ to the given month.
+          If _overflow_ is *"constrain"*, _month_ is clamped to a valid value.
+          If _overflow_ is *"reject"* and _month_ is out of range, a *RangeError* is thrown.
+        </dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_ and _month_ are integers.
-        1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
         1. If _overflow_ is *"constrain"*, then
           1. Set _month_ to the result of clamping _month_ between 1 and 12.
-          1. Return the Record {
+          1. Return ISO Year-Month Record {
               [[Year]]: _year_,
               [[Month]]: _month_
             }.
         1. Else,
           1. Assert: _overflow_ is *"reject"*.
           1. If _month_ &lt; 1 or _month_ &gt; 12, throw a *RangeError* exception.
-          1. Return the Record {
+          1. Return ISO Year-Month Record {
               [[Year]]: _year_,
               [[Month]]: _month_
             }.
@@ -564,13 +608,21 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balanceisoyearmonth" aoid="BalanceISOYearMonth">
-      <h1>BalanceISOYearMonth ( _year_, _month_ )</h1>
+    <emu-clause id="sec-temporal-balanceisoyearmonth" type="abstract operation">
+      <h1>
+        BalanceISOYearMonth (
+          _year_: an integer,
+          _month_: an integer,
+        ): an ISO Year-Month Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd></dd>
+      </dl>
       <emu-alg>
-        1. Assert: _year_ and _month_ are integers.
         1. Set _year_ to _year_ + floor((_month_ - 1) / 12).
         1. Set _month_ to ((_month_ - 1) modulo 12) + 1.
-        1. Return the Record {
+        1. Return ISO Year-Month Record {
             [[Year]]: _year_,
             [[Month]]: _month_
           }.

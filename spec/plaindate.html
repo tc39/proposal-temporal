@@ -1006,7 +1006,7 @@
       <emu-alg>
         1. Assert: _year_, _month_, _day_, _years_, _months_, _weeks_, and _days_ are integers.
         1. Assert: _overflow_ is either *"constrain"* or *"reject"*.
-        1. Let _intermediate_ be ! BalanceISOYearMonth(_year_ + _years_, _month_ + _months_).
+        1. Let _intermediate_ be BalanceISOYearMonth(_year_ + _years_, _month_ + _months_).
         1. Set _intermediate_ to ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _day_, _overflow_).
         1. Set _days_ to _days_ + 7 &times; _weeks_.
         1. Let _d_ be _intermediate_.[[Day]] + _days_.
