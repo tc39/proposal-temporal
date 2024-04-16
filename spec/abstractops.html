@@ -462,7 +462,7 @@
         _increment_: a positive integer,
         _dividend_: a positive integer,
         _inclusive_: a Boolean,
-      ): either a normal completion containing ~unused~, or a throw completion
+      ): either a normal completion containing ~unused~ or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -595,7 +595,7 @@
         _unitGroup_: ~date~, ~time~, or ~datetime~,
         _default_: ~required~ or an ECMAScript language value,
         optional _extraValues_: a List of ECMAScript language values,
-      ): either a normal completion containing an ECMAScript language value, or a throw completion
+      ): either a normal completion containing an ECMAScript language value or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -847,7 +847,7 @@
     <h1>
       IsPartialTemporalObject (
         _object_: an ECMAScript language value,
-      ): either a normal completion containing a Boolean, or a throw completion
+      ): either a normal completion containing a Boolean or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1693,7 +1693,7 @@
     <h1>
       ParseTemporalDurationString (
         _isoString_: a String,
-      ): either a normal completion containing a Duration Record, or a throw completion
+      ): either a normal completion containing a Duration Record or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1893,7 +1893,7 @@
     <h1>
       ToPositiveIntegerWithTruncation (
         _argument_: an ECMAScript language value,
-      ): either a normal completion containing a positive integer, or an abrupt completion
+      ): either a normal completion containing a positive integer or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1910,7 +1910,7 @@
     <h1>
       ToIntegerWithTruncation (
         _argument_: an ECMAScript language value,
-      ): either a normal completion containing an integer, or an abrupt completion
+      ): either a normal completion containing an integer or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1927,7 +1927,7 @@
     <h1>
       ToIntegerIfIntegral (
         _argument_: an ECMAScript language value,
-      ): either a normal completion containing an integer, or an abrupt completion
+      ): either a normal completion containing an integer or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1948,7 +1948,7 @@
         _requiredFields_: ~partial~ or a List of property names,
         optional _extraFieldDescriptors_: a List of Calendar Field Descriptor Records,
         optional _duplicateBehaviour_: ~throw~ or ~ignore~,
-      ): either a normal completion containing an Object, or an abrupt completion
+      ): either a normal completion containing an Object or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>

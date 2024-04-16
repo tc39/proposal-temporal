@@ -499,7 +499,7 @@
         CreateTemporalInstant (
           _epochNanoseconds_: a BigInt,
           optional _newTarget_: a constructor,
-        ): either a normal completion containing a Temporal.Instant, or an abrupt completion
+        ): either a normal completion containing a Temporal.Instant or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -560,7 +560,7 @@
         AddInstant (
           _epochNanoseconds_: a BigInt value,
           _norm_: a Normalized Time Duration Record,
-        ): either a normal completion containing a BigInt, or a throw completion
+        ): either a normal completion containing a BigInt or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -652,7 +652,7 @@
           _instant_: a Temporal.Instant,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.Duration or an abrupt completion
+        ): either a normal completion containing a Temporal.Duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -674,7 +674,7 @@
           _operation_: ~add~ or ~subtract~,
           _instant_: a Temporal.Instant,
           _temporalDurationLike_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.Instant or an abrupt completion
+        ): either a normal completion containing a Temporal.Instant or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>

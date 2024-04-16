@@ -1060,7 +1060,7 @@
           _weeks_: an integer,
           _days_: an integer,
           _norm_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Duration Record, or a throw completion
+        ): either a normal completion containing a Normalized Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1077,7 +1077,7 @@
         CombineDateAndNormalizedTimeDuration (
           _dateDurationRecord_: a Date Duration Record,
           _norm_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Duration Record, or a throw completion
+        ): either a normal completion containing a Normalized Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1101,7 +1101,7 @@
       <h1>
         ToTemporalDuration (
           _item_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.Duration, or a throw completion
+        ): either a normal completion containing a Temporal.Duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1119,7 +1119,7 @@
       <h1>
         ToTemporalDurationRecord (
           _temporalDurationLike_: an ECMAScript language value,
-        ): either a normal completion containing a Duration Record, or an abrupt completion
+        ): either a normal completion containing a Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1247,7 +1247,7 @@
       <h1>
         ToTemporalPartialDurationRecord (
           _temporalDurationLike_: an ECMAScript language value,
-        ): either a normal completion containing a partial Duration Record, or an abrupt completion
+        ): either a normal completion containing a partial Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1297,7 +1297,7 @@
           _microseconds_: an integer,
           _nanoseconds_: an integer,
           optional _newTarget_: a constructor,
-        ): either a normal completion containing a Temporal.Duration, or an abrupt completion
+        ): either a normal completion containing a Temporal.Duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1386,7 +1386,7 @@
         AddNormalizedTimeDuration (
           _one_: a Normalized Time Duration Record,
           _two_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Time Duration Record, or a throw completion
+        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1404,7 +1404,7 @@
         Add24HourDaysToNormalizedTimeDuration (
           _d_: a Normalized Time Duration Record,
           _days_: an integer,
-        ): either a normal completion containing a Normalized Time Duration Record, or a throw completion
+        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1515,7 +1515,7 @@
           _d_: a Normalized Time Duration Record,
           _increment_: an integer,
           _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
-        ): either a normal completion containing a Normalized Time Duration Record, or a throw completion
+        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1580,7 +1580,7 @@
         SubtractNormalizedTimeDuration (
           _one_: a Normalized Time Duration Record,
           _two_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Time Duration Record, or a throw completion
+        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1686,7 +1686,7 @@
           _zonedRelativeTo_: a Temporal.ZonedDateTime,
           _timeZoneRec_: a Time Zone Methods Record,
           _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
-        ): either a normal completion containing a Time Duration Record, or an abrupt completion
+        ): either a normal completion containing a Time Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1854,7 +1854,7 @@
           _zonedRelativeTo_: a Temporal.ZonedDateTime or *undefined*,
           _timeZoneRec_: a Time Zone Methods Record or *undefined*,
           optional _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
-        ): either a normal completion containing a Duration Record, or a throw completion
+        ): either a normal completion containing a Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1963,7 +1963,7 @@
           _weeks_: an integer,
           _days_: an integer,
           _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
-        ): either a normal completion containing a Temporal.ZonedDateTime, or a throw completion
+        ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -2155,7 +2155,7 @@
           _calendarRec_: a Calendar Methods Record,
           _timeZoneRec_: a Time Zone Methods Record,
           _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
-        ): either a normal completion containing a Normalized Duration Record, or a throw completion
+        ): either a normal completion containing a Normalized Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -2238,7 +2238,7 @@
           _duration_: a Temporal.Duration,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.Duration or an abrupt completion
+        ): either a normal completion containing a Temporal.Duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
