@@ -867,7 +867,7 @@
   <emu-clause id="sec-temporal-formatfractionalseconds" type="abstract operation">
     <h1>
       FormatFractionalSeconds (
-        _subSecondNanoseconds_: an integer,
+        _subSecondNanoseconds_: an integer in the inclusive interval from 0 to 999999999,
         _precision_: either an integer in the inclusive range 0 to 9 or *"auto"*
       ): a String
     </h1>
@@ -894,10 +894,10 @@
   <emu-clause id="sec-temporal-formattimestring" type="abstract operation">
     <h1>
       FormatTimeString (
-        _hour_: a non-negative integer,
-        _minute_: a non-negative integer,
-        _second_: a non-negative integer,
-        _subSecondNanoseconds_: a non-negative integer,
+        _hour_: an integer in the inclusive interval from 0 to 23,
+        _minute_: an integer in the inclusive interval from 0 to 59,
+        _second_: an integer in the inclusive interval from 0 to 59,
+        _subSecondNanoseconds_: an integer in the inclusive interval from 0 to 999999999,
         _precision_: an integer in the inclusive range 0 to 9, *"minute"*, or *"auto"*,
         optional _style_: ~separated~ or ~unseparated~,
       ): a String
