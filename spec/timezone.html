@@ -1038,7 +1038,7 @@
       <h1>
         ParseTimeZoneIdentifier (
           _identifier_: a String,
-        ): either a normal completion containing a Record containing [[Name]] and [[OffsetMinutes]] fields, or a throw completion
+        ): either a normal completion containing a Record with fields [[Name]] (a String or ~empty~) and [[OffsetMinutes]] (an integer or ~empty~), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1054,7 +1054,7 @@
         1. If _parseResult_ contains a |TimeZoneIANAName| Parse Node, then
           1. Let _name_ be the source text matched by the |TimeZoneIANAName| Parse Node contained within _parseResult_.
           1. NOTE: _name_ is syntactically valid, but does not necessarily conform to <a href="https://data.iana.org/time-zones/theory.html#naming">IANA Time Zone Database naming guidelines</a> or correspond with an available named time zone identifier.
-          1. Return the Record { [[Name]]: _name_, [[OffsetMinutes]]: ~empty~ }.
+          1. Return the Record { [[Name]]: CodePointsToString(_name_), [[OffsetMinutes]]: ~empty~ }.
         1. Else,
           1. Assert: _parseResult_ contains a |TimeZoneUTCOffsetName| Parse Node.
           1. Let _offsetString_ be the source text matched by the |TimeZoneUTCOffsetName| Parse Node contained within _parseResult_.

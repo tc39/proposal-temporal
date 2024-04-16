@@ -709,7 +709,7 @@
     <h1>
       ToRelativeTemporalObject (
         _options_: an Object,
-      ): either a normal completion containing a Record with fields [[PlainRelativeTo]], [[ZonedRelativeTo]], and [[TimeZoneRec]], or a throw completion
+      ): either a normal completion containing a Record with fields [[PlainRelativeTo]] (a Temporal.PlainDate or *undefined*), [[ZonedRelativeTo]] (a Temporal.ZonedDateTime or *undefined*), and [[TimeZoneRec]] (a Time Zone Methods Record or *undefined*), or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -2123,7 +2123,7 @@
         _disallowedUnits_: a List of Strings,
         _fallbackSmallestUnit_: a String,
         _smallestLargestDefaultUnit_: a String,
-      ): either a normal completion containing a Record or an abrupt completion
+      ): either a normal completion containing a Record with fields [[SmallestUnit]] (a String), [[LargestUnit]] (a String), [[RoundingMode]] (a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>), and [[RoundingIncrement]] (an integer in the inclusive interval from 1 to 10<sup>9</sup>), or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>

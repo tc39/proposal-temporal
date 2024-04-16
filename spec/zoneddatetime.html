@@ -1350,17 +1350,14 @@
           _calendar_: a String or Object,
           _days_: an integer,
           optional _overflow_: *"constrain"* or *"reject"*,
-        ): either a normal completion containing a Record, or an abrupt completion
+        ): either a normal completion containing a Record with fields [[EpochNanoseconds]] (a BigInt), [[Instant]] (a Temporal.Instant), and [[DateTime]] (a Temporal.PlainDateTime), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          The returned Record has fields [[EpochNanoseconds]] (a BigInt), [[Instant]] (a Temporal.Instant), and [[DateTime]] (a Temporal.PlainDateTime).
+          This operation is similar to AddZonedDateTime, but adds only a number of days instead of a full duration, which allows performing fewer observable operations.
         </dd>
       </dl>
-      <p>
-        This operation is similar to AddZonedDateTime, but adds only a number of days instead of a full duration, which allows performing fewer observable operations.
-      </p>
       <emu-alg>
         1. Assert: If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_) is *true*, _dateTime_'s internal slots are the same as those of the Object returned from ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
         1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
