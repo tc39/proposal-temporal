@@ -737,13 +737,13 @@
           1. <ins>Let _limitedOptions_ be a new Record.</ins>
           1. <ins>If _dateStyle_ is *undefined* and _timeStyle_ is *undefined*, then</ins>
             1. <ins>Set _needDefaults_ to *true*.</ins>
-            1. <ins>Let _fields_ be the list of fields in the Supported fields column of the row.</ins>
+            1. <ins>Let _fields_ be the List of fields in the Supported fields column of the row.</ins>
             1. <ins>For each property name _prop_ of _formatOptions_, do</ins>
               1. <ins>If _prop_ is in _fields_, then</ins>
                 1. <ins>Set _needDefaults_ to *false*.</ins>
                 1. <ins>Set _limitedOptions_.[[&lt;_prop_&gt;]] to _formatOptions_.[[&lt;_prop_&gt;]].</ins>
             1. <ins>If _needDefaults_ is *true*, then</ins>
-              1. <ins>Let _defaultFields_ be the list of fields in the Default fields column of the row.</ins>
+              1. <ins>Let _defaultFields_ be the List of fields in the Default fields column of the row.</ins>
               1. <ins>If the Pattern column of the row is [[TemporalInstantPattern]], and _toLocaleStringTimeZone_ is present, append [[timeZoneName]] to _defaultFields_.</ins>
               1. <ins>For each property name _prop_ of _defaultFields_, do</ins>
                 1. <ins>If _prop_ is [[timeZoneName]], then</ins>
