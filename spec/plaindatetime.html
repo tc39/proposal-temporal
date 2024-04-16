@@ -1184,8 +1184,8 @@
       <h1>
         AddDateTime (
           _year_: an integer,
-          _month_: an integer in the inclusive interval from 1 to 12,
-          _day_: an integer in the inclusive interval from 1 to 31,
+          _month_: an integer,
+          _day_: an integer,
           _hour_: an integer in the inclusive interval from 0 to 23,
           _minute_: an integer in the inclusive interval from 0 to 59,
           _second_: an integer in the inclusive interval from 0 to 59,
@@ -1208,6 +1208,7 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Assert: ISODateTimeWithinLimits(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
         1. Let _timeResult_ be AddTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _norm_).
         1. Let _datePart_ be ! CreateTemporalDate(_year_, _month_, _day_, _calendarRec_.[[Receiver]]).
@@ -1231,8 +1232,8 @@
       <h1>
         RoundISODateTime (
           _year_: an integer,
-          _month_: an integer in the inclusive interval from 1 to 12,
-          _day_: an integer in the inclusive interval from 1 to 31,
+          _month_: an integer,
+          _day_: an integer,
           _hour_: an integer in the inclusive interval from 0 to 23,
           _minute_: an integer in the inclusive interval from 0 to 59,
           _second_: an integer in the inclusive interval from 0 to 59,
@@ -1249,6 +1250,7 @@
         <dd>It rounds the time part of a combined date and time, carrying over any excess into the date part.</dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Assert: ISODateTimeWithinLimits(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *true*.
         1. Let _roundedTime_ be RoundTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _increment_, _unit_, _roundingMode_).
         1. Let _balanceResult_ be BalanceISODate(_year_, _month_, _day_ + _roundedTime_.[[Days]]).
