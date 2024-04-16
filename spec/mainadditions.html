@@ -167,8 +167,8 @@
       <h1>
         GetUTCEpochNanoseconds (
           _year_: an integer,
-          _month_: an integer in the inclusive interval from 1 to 12,
-          _day_: an integer in the inclusive interval from 1 to 31,
+          _month_: an integer,
+          _day_: an integer,
           _hour_: an integer in the inclusive interval from 0 to 23,
           _minute_: an integer in the inclusive interval from 0 to 59,
           _second_: an integer in the inclusive interval from 0 to 59,
@@ -186,6 +186,7 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
         1. Let _date_ be MakeDay(𝔽(_year_), 𝔽(_month_ - 1), 𝔽(_day_)).
         1. Let _time_ be MakeTime(𝔽(_hour_), 𝔽(_minute_), 𝔽(_second_), 𝔽(_millisecond_)).
         1. Let _ms_ be MakeDate(_date_, _time_).

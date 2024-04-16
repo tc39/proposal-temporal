@@ -786,8 +786,8 @@
           _m1_: an integer,
           _d1_: an integer,
           _y2_: an integer,
-          _m2_: an integer in the inclusive interval from 1 to 12,
-          _d2_: an integer in the inclusive interval from 1 to ISODaysInMonth(_m2_),
+          _m2_: an integer,
+          _d2_: an integer,
         ): a Boolean
       </h1>
       <dl class="header">
@@ -799,6 +799,7 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_y2_, _m2_, _d2_).
         1. Let _comparison_ be CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
         1. If _sign_ &times; _comparison_ is 1, return *true*.
         1. Return *false*.
