@@ -1259,7 +1259,7 @@
         1. Assert: ISODateTimeWithinLimits(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_) is *true*.
         1. Assert: ISODateTimeWithinLimits(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_) is *true*.
         1. Assert: If _y1_ &ne; _y2_, and _mon1_ &ne; _mon2_, and _d1_ &ne; _d2_, and LargerOfTwoTemporalUnits(_largestUnit_, *"day"*) is not *"day"*, CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-until~) is *true*.
-        1. Let _timeDuration_ be ! DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
+        1. Let _timeDuration_ be DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_timeDuration_).
         1. Let _dateSign_ be ! CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
         1. Let _adjustedDate_ be CreateISODateRecord(_y1_, _mon1_, _d1_).

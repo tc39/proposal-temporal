@@ -2349,7 +2349,7 @@
               1. Let _result_ be DifferenceISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _largestUnit_).
             1. Else,
               1. Let _result_ be ! CalendarDateDifference(_calendar_.[[Identifier]], _one_, _two_, _largestUnit_).
-              1. Assert: ! IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0) is *true*.
+              1. Assert: IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0) is *true*.
             1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], 0, 0, 0, 0, 0, 0).
           </emu-alg>
         </emu-clause>

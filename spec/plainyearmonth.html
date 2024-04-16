@@ -676,12 +676,12 @@
       <emu-alg>
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, then
-          1. Set _duration_ to ! CreateNegatedTemporalDuration(_duration_).
+          1. Set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be BalanceTimeDuration(_norm_, *"day"*).
         1. Let _days_ be _duration_.[[Days]] + _balanceResult_.[[Days]].
-        1. Let _sign_ be ! DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, 0, 0, 0, 0, 0, 0).
+        1. Let _sign_ be DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, 0, 0, 0, 0, 0, 0).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~date-add~, ~date-from-fields~, ~day~, ~fields~, ~year-month-from-fields~ »).
         1. Let _fieldNames_ be ? CalendarFields(_calendarRec_, « *"monthCode"*, *"year"* »).
         1. Let _fields_ be ? PrepareTemporalFields(_yearMonth_, _fieldNames_, «»).
