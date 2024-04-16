@@ -392,7 +392,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _negatedDuration_ be ! CreateNegatedTemporalDuration(_duration_).
+        1. Let _negatedDuration_ be CreateNegatedTemporalDuration(_duration_).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_temporalDate_.[[Calendar]], « ~date-add~ »).
         1. Return ? AddDate(_calendarRec_, _temporalDate_, _negatedDuration_, _options_).
       </emu-alg>

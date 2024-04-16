@@ -601,11 +601,11 @@
           _ms2_: an integer between 0 and 999 inclusive,
           _mus2_: an integer between 0 and 999 inclusive,
           _ns2_: an integer between 0 and 999 inclusive,
-        )
+        ): a Normalized Time Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns a Normalized Time Duration Record with the elapsed duration from a first wall-clock time, until a second wall-clock time.</dd>
+        <dd>It returns the elapsed duration from a first wall-clock time, until a second wall-clock time.</dd>
       </dl>
       <emu-alg>
         1. Let _hours_ be _h2_ - _h1_.
@@ -1030,7 +1030,7 @@
         1. Set _other_ to ? ToTemporalTime(_other_).
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
-        1. Let _norm_ be ! DifferenceTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
+        1. Let _norm_ be DifferenceTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
         1. If _settings_.[[SmallestUnit]] is not *"nanosecond"* or _settings_.[[RoundingIncrement]] &ne; 1, then
           1. Let _roundRecord_ be ! RoundDuration(0, 0, 0, 0, _norm_, _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
           1. Set _norm_ to _roundRecord_.[[NormalizedDuration]].[[NormalizedTime]].
