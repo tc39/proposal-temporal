@@ -1073,17 +1073,17 @@
           1. NOTE: This is the last week of the previous year.
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
           1. If _dayOfJan1st_ is _friday_, then
-            1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
+            1. Return Year-Week Record { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
           1. If _dayOfJan1st_ is _saturday_, and MathematicalInLeapYear(EpochTimeForYear(_year_ - 1)) is 1, then
-            1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_. [[Year]]: _year_ - 1 }.
-          1. Return the Year-Week Record { [[Week]]: _maxWeekNumber_ - 1, [[Year]]: _year_ - 1 }.
+            1. Return Year-Week Record { [[Week]]: _maxWeekNumber_. [[Year]]: _year_ - 1 }.
+          1. Return Year-Week Record { [[Week]]: _maxWeekNumber_ - 1, [[Year]]: _year_ - 1 }.
         1. If _week_ is _maxWeekNumber_, then
           1. Let _daysInYear_ be MathematicalDaysInYear(_year_).
           1. Let _daysLaterInYear_ be _daysInYear_ - _dayOfYear_.
           1. Let _daysAfterThursday_ be _thursday_ - _dayOfWeek_.
           1. If _daysLaterInYear_ &lt; _daysAfterThursday_, then
-            1. Return the Year-Week Record { [[Week]]: 1, [[Year]]: _year_ + 1 }.
-        1. Return the Year-Week Record { [[Week]]: _week_, [[Year]]: _year_ }.
+            1. Return Year-Week Record { [[Week]]: 1, [[Year]]: _year_ + 1 }.
+        1. Return Year-Week Record { [[Week]]: _week_, [[Year]]: _year_ }.
       </emu-alg>
       <emu-note>In the ISO 8601 week calendar, calendar week number 1 of a calendar year is the week including the first Thursday of that year (based on the principle that a week belongs to the same calendar year as the majority of its calendar days), which always includes January 4 and starts on the Monday on or immediately before then. Because of this, some calendar days of the first calendar week of a calendar year may be part of the _preceding_ [proleptic Gregorian] date calendar year, and some calendar days of the last calendar week of a calendar year may be part of the _following_ [proleptic Gregorian] date calendar year. See ISO 8601 for details.</emu-note>
       <emu-note>For example, week calendar year 2020 includes both 31 December 2019 (a Tuesday belonging to its calendar week 1) and 1 January 2021 (a Friday belonging to its calendar week 53).</emu-note>

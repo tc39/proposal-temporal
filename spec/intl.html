@@ -1259,7 +1259,7 @@
       1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
-      1. Return the Record {
+      1. Return Value Format Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
           [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
@@ -1285,7 +1285,7 @@
       1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
-      1. Return the Record {
+      1. Return Value Format Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
           [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
@@ -1311,7 +1311,7 @@
       1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
-      1. Return the Record {
+      1. Return Value Format Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
           [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
@@ -1334,7 +1334,7 @@
       1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _plainDateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
-      1. Return the Record {
+      1. Return Value Format Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
           [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
@@ -1359,7 +1359,7 @@
       1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_dateTimeFormat_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
       1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _dateTime_, *"compatible"*).
       1. If _pattern_ is *null*, throw a *TypeError* exception.
-      1. Return the Record {
+      1. Return Value Format Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
           [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
@@ -1379,7 +1379,7 @@
       <emu-alg>
       1. Let _pattern_ be _dateTimeFormat_.[[TemporalInstantPattern]].
       1. If _pattern_ is *null*, throw a *TypeError* exception.
-      1. Return the Record {
+      1. Return Value Format Record {
           [[pattern]]: _pattern_.[[pattern]],
           [[rangePatterns]]: _pattern_.[[rangePatterns]],
           [[epochNanoseconds]]: _instant_.[[Nanoseconds]]
@@ -1402,7 +1402,7 @@
       1. Set _x_ to TimeClip(_x_).
       1. If _x_ is *NaN*, throw a *RangeError* exception.
       1. Let _epochNanoseconds_ be ℤ(_x_) &times; ℤ(10<sup>6</sup>).
-      1. Return the Record {
+      1. Return Value Format Record {
           [[pattern]]: _pattern_,
           [[rangePatterns]]: _rangePatterns_,
           [[epochNanoseconds]]: _epochNanoseconds_
