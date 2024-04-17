@@ -467,7 +467,6 @@ The following option is recognized:<ul>
 <p>This method subtracts <code>other</code> from <code>duration</code>, resulting in a shorter duration.</p>
 <p>The <code>other</code> argument is an object with properties denoting a duration, such as <code>{ hours: 5, minutes: 30 }</code>, or a string such as <code>PT5H30M</code>, or a <code>Temporal.Duration</code> object.
 If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
-<p>If <code>other</code> is larger than <code>duration</code> and the subtraction would result in a negative duration, the method will throw a <code>RangeError</code>.</p>
 <p>In order to be valid, the resulting duration must not have fields with mixed signs, and so the result is balanced.
 For usage examples and a more complete explanation of how balancing works and why it is necessary, see <a href="./balancing.html#duration-arithmetic">Duration balancing</a>.</p>
 <p>By default, you cannot subtract durations with years, months, or weeks, as that could be ambiguous depending on the start date.

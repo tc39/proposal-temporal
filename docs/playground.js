@@ -1703,8 +1703,8 @@
 	var $EvalError = _eval;
 	var $RangeError$1 = requireRange();
 	var $ReferenceError = ref;
-	var $SyntaxError$4 = syntax;
-	var $TypeError$t = type;
+	var $SyntaxError$3 = syntax;
+	var $TypeError$u = type;
 	var $URIError = uri;
 
 	var $Function = Function;
@@ -1726,7 +1726,7 @@
 	}
 
 	var throwTypeError = function () {
-		throw new $TypeError$t();
+		throw new $TypeError$u();
 	};
 	var ThrowTypeError = $gOPD$2
 		? (function () {
@@ -1814,10 +1814,10 @@
 		'%String%': String,
 		'%StringIteratorPrototype%': hasSymbols$3 && getProto ? getProto(''[Symbol.iterator]()) : undefined$1,
 		'%Symbol%': hasSymbols$3 ? Symbol : undefined$1,
-		'%SyntaxError%': $SyntaxError$4,
+		'%SyntaxError%': $SyntaxError$3,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
-		'%TypeError%': $TypeError$t,
+		'%TypeError%': $TypeError$u,
 		'%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
 		'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
 		'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
@@ -1919,7 +1919,7 @@
 	};
 
 	var bind = functionBind;
-	var hasOwn$7 = hasown;
+	var hasOwn$8 = hasown;
 	var $concat$1 = bind.call(Function.call, Array.prototype.concat);
 	var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
 	var $replace$1 = bind.call(Function.call, String.prototype.replace);
@@ -1933,9 +1933,9 @@
 		var first = $strSlice(string, 0, 1);
 		var last = $strSlice(string, -1);
 		if (first === '%' && last !== '%') {
-			throw new $SyntaxError$4('invalid intrinsic syntax, expected closing `%`');
+			throw new $SyntaxError$3('invalid intrinsic syntax, expected closing `%`');
 		} else if (last === '%' && first !== '%') {
-			throw new $SyntaxError$4('invalid intrinsic syntax, expected opening `%`');
+			throw new $SyntaxError$3('invalid intrinsic syntax, expected opening `%`');
 		}
 		var result = [];
 		$replace$1(string, rePropName, function (match, number, quote, subString) {
@@ -1948,18 +1948,18 @@
 	var getBaseIntrinsic = function getBaseIntrinsic(name, allowMissing) {
 		var intrinsicName = name;
 		var alias;
-		if (hasOwn$7(LEGACY_ALIASES, intrinsicName)) {
+		if (hasOwn$8(LEGACY_ALIASES, intrinsicName)) {
 			alias = LEGACY_ALIASES[intrinsicName];
 			intrinsicName = '%' + alias[0] + '%';
 		}
 
-		if (hasOwn$7(INTRINSICS$1, intrinsicName)) {
+		if (hasOwn$8(INTRINSICS$1, intrinsicName)) {
 			var value = INTRINSICS$1[intrinsicName];
 			if (value === needsEval) {
 				value = doEval(intrinsicName);
 			}
 			if (typeof value === 'undefined' && !allowMissing) {
-				throw new $TypeError$t('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+				throw new $TypeError$u('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
 			}
 
 			return {
@@ -1969,19 +1969,19 @@
 			};
 		}
 
-		throw new $SyntaxError$4('intrinsic ' + name + ' does not exist!');
+		throw new $SyntaxError$3('intrinsic ' + name + ' does not exist!');
 	};
 
 	var getIntrinsic = function GetIntrinsic(name, allowMissing) {
 		if (typeof name !== 'string' || name.length === 0) {
-			throw new $TypeError$t('intrinsic name must be a non-empty string');
+			throw new $TypeError$u('intrinsic name must be a non-empty string');
 		}
 		if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
-			throw new $TypeError$t('"allowMissing" argument must be a boolean');
+			throw new $TypeError$u('"allowMissing" argument must be a boolean');
 		}
 
 		if ($exec(/^%?[^%]*%?$/, name) === null) {
-			throw new $SyntaxError$4('`%` may not be present anywhere but at the beginning and end of the intrinsic name');
+			throw new $SyntaxError$3('`%` may not be present anywhere but at the beginning and end of the intrinsic name');
 		}
 		var parts = stringToPath(name);
 		var intrinsicBaseName = parts.length > 0 ? parts[0] : '';
@@ -2008,7 +2008,7 @@
 				)
 				&& first !== last
 			) {
-				throw new $SyntaxError$4('property names with quotes must have matching quotes');
+				throw new $SyntaxError$3('property names with quotes must have matching quotes');
 			}
 			if (part === 'constructor' || !isOwn) {
 				skipFurtherCaching = true;
@@ -2017,12 +2017,12 @@
 			intrinsicBaseName += '.' + part;
 			intrinsicRealName = '%' + intrinsicBaseName + '%';
 
-			if (hasOwn$7(INTRINSICS$1, intrinsicRealName)) {
+			if (hasOwn$8(INTRINSICS$1, intrinsicRealName)) {
 				value = INTRINSICS$1[intrinsicRealName];
 			} else if (value != null) {
 				if (!(part in value)) {
 					if (!allowMissing) {
-						throw new $TypeError$t('base intrinsic for ' + name + ' exists, but the property is not available.');
+						throw new $TypeError$u('base intrinsic for ' + name + ' exists, but the property is not available.');
 					}
 					return void undefined$1;
 				}
@@ -2043,7 +2043,7 @@
 						value = value[part];
 					}
 				} else {
-					isOwn = hasOwn$7(value, part);
+					isOwn = hasOwn$8(value, part);
 					value = value[part];
 				}
 
@@ -2081,9 +2081,9 @@
 		return esDefineProperty;
 	}
 
-	var GetIntrinsic$f = getIntrinsic;
+	var GetIntrinsic$d = getIntrinsic;
 
-	var $gOPD$1 = GetIntrinsic$f('%Object.getOwnPropertyDescriptor%', true);
+	var $gOPD$1 = GetIntrinsic$d('%Object.getOwnPropertyDescriptor%', true);
 
 	if ($gOPD$1) {
 		try {
@@ -2098,8 +2098,8 @@
 
 	var $defineProperty$2 = requireEsDefineProperty();
 
-	var $SyntaxError$3 = syntax;
-	var $TypeError$s = type;
+	var $SyntaxError$2 = syntax;
+	var $TypeError$t = type;
 
 	var gopd = gopd$1;
 
@@ -2110,22 +2110,22 @@
 		value
 	) {
 		if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) {
-			throw new $TypeError$s('`obj` must be an object or a function`');
+			throw new $TypeError$t('`obj` must be an object or a function`');
 		}
 		if (typeof property !== 'string' && typeof property !== 'symbol') {
-			throw new $TypeError$s('`property` must be a string or a symbol`');
+			throw new $TypeError$t('`property` must be a string or a symbol`');
 		}
 		if (arguments.length > 3 && typeof arguments[3] !== 'boolean' && arguments[3] !== null) {
-			throw new $TypeError$s('`nonEnumerable`, if provided, must be a boolean or null');
+			throw new $TypeError$t('`nonEnumerable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 4 && typeof arguments[4] !== 'boolean' && arguments[4] !== null) {
-			throw new $TypeError$s('`nonWritable`, if provided, must be a boolean or null');
+			throw new $TypeError$t('`nonWritable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 5 && typeof arguments[5] !== 'boolean' && arguments[5] !== null) {
-			throw new $TypeError$s('`nonConfigurable`, if provided, must be a boolean or null');
+			throw new $TypeError$t('`nonConfigurable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 6 && typeof arguments[6] !== 'boolean') {
-			throw new $TypeError$s('`loose`, if provided, must be a boolean');
+			throw new $TypeError$t('`loose`, if provided, must be a boolean');
 		}
 
 		var nonEnumerable = arguments.length > 3 ? arguments[3] : null;
@@ -2147,7 +2147,7 @@
 			// must fall back to [[Set]], and was not explicitly asked to make non-enumerable, non-writable, or non-configurable
 			obj[property] = value; // eslint-disable-line no-param-reassign
 		} else {
-			throw new $SyntaxError$3('This environment does not support defining a property as non-configurable, non-writable, or non-enumerable.');
+			throw new $SyntaxError$2('This environment does not support defining a property as non-configurable, non-writable, or non-enumerable.');
 		}
 	};
 
@@ -2172,21 +2172,21 @@
 
 	var hasPropertyDescriptors_1 = hasPropertyDescriptors$1;
 
-	var GetIntrinsic$e = getIntrinsic;
+	var GetIntrinsic$c = getIntrinsic;
 	var define = defineDataProperty;
 	var hasDescriptors = hasPropertyDescriptors_1();
 	var gOPD = gopd$1;
 
-	var $TypeError$r = type;
-	var $floor$3 = GetIntrinsic$e('%Math.floor%');
+	var $TypeError$s = type;
+	var $floor$2 = GetIntrinsic$c('%Math.floor%');
 
 	/** @type {import('.')} */
 	var setFunctionLength = function setFunctionLength(fn, length) {
 		if (typeof fn !== 'function') {
-			throw new $TypeError$r('`fn` is not a function');
+			throw new $TypeError$s('`fn` is not a function');
 		}
-		if (typeof length !== 'number' || length < 0 || length > 0xFFFFFFFF || $floor$3(length) !== length) {
-			throw new $TypeError$r('`length` must be a positive 32-bit integer');
+		if (typeof length !== 'number' || length < 0 || length > 0xFFFFFFFF || $floor$2(length) !== length) {
+			throw new $TypeError$s('`length` must be a positive 32-bit integer');
 		}
 
 		var loose = arguments.length > 2 && !!arguments[2];
@@ -2252,14 +2252,14 @@
 
 	var callBindExports = callBind$2.exports;
 
-	var GetIntrinsic$d = getIntrinsic;
+	var GetIntrinsic$b = getIntrinsic;
 
 	var callBind$1 = callBindExports;
 
-	var $indexOf = callBind$1(GetIntrinsic$d('String.prototype.indexOf'));
+	var $indexOf = callBind$1(GetIntrinsic$b('String.prototype.indexOf'));
 
 	var callBound$4 = function callBoundIntrinsic(name, allowMissing) {
-		var intrinsic = GetIntrinsic$d(name, !!allowMissing);
+		var intrinsic = GetIntrinsic$b(name, !!allowMissing);
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
 			return callBind$1(intrinsic);
 		}
@@ -2268,42 +2268,42 @@
 
 	var callBound$5 = /*@__PURE__*/getDefaultExportFromCjs(callBound$4);
 
-	var GetIntrinsic$c = getIntrinsic;
+	var GetIntrinsic$a = getIntrinsic;
 
-	var $Array = GetIntrinsic$c('%Array%');
+	var $Array = GetIntrinsic$a('%Array%');
 
 	// eslint-disable-next-line global-require
 	var toStr$4 = !$Array.isArray && callBound$4('Object.prototype.toString');
 
-	var IsArray$5 = $Array.isArray || function IsArray(argument) {
+	var IsArray$4 = $Array.isArray || function IsArray(argument) {
 		return toStr$4(argument) === '[object Array]';
 	};
 
 	// https://262.ecma-international.org/6.0/#sec-isarray
-	var IsArray$3 = IsArray$5;
+	var IsArray$2 = IsArray$4;
 
-	var IsArray$4 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$3);
+	var IsArray$3 = /*@__PURE__*/getDefaultExportFromCjs(IsArray$2);
 
-	var GetIntrinsic$b = getIntrinsic;
+	var GetIntrinsic$9 = getIntrinsic;
 	var callBound$3 = callBound$4;
 
-	var $TypeError$q = type;
+	var $TypeError$r = type;
 
-	var IsArray$2 = IsArray$3;
+	var IsArray$1 = IsArray$2;
 
-	var $apply = GetIntrinsic$b('%Reflect.apply%', true) || callBound$3('Function.prototype.apply');
+	var $apply = GetIntrinsic$9('%Reflect.apply%', true) || callBound$3('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
-	var Call$3 = function Call(F, V) {
+	var Call$2 = function Call(F, V) {
 		var argumentsList = arguments.length > 2 ? arguments[2] : [];
-		if (!IsArray$2(argumentsList)) {
-			throw new $TypeError$q('Assertion failed: optional `argumentsList`, if provided, must be a List');
+		if (!IsArray$1(argumentsList)) {
+			throw new $TypeError$r('Assertion failed: optional `argumentsList`, if provided, must be a List');
 		}
 		return $apply(F, V, argumentsList);
 	};
 
-	var Call$4 = /*@__PURE__*/getDefaultExportFromCjs(Call$3);
+	var Call$3 = /*@__PURE__*/getDefaultExportFromCjs(Call$2);
 
 	var global$1 = (typeof global !== "undefined" ? global :
 	  typeof self !== "undefined" ? self :
@@ -5143,7 +5143,7 @@
 	var $concat = Array.prototype.concat;
 	var $join = Array.prototype.join;
 	var $arrSlice = Array.prototype.slice;
-	var $floor$2 = Math.floor;
+	var $floor$1 = Math.floor;
 	var bigIntValueOf = typeof BigInt === 'function' ? BigInt.prototype.valueOf : null;
 	var gOPS = Object.getOwnPropertySymbols;
 	var symToString = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' ? Symbol.prototype.toString : null;
@@ -5174,7 +5174,7 @@
 	    }
 	    var sepRegex = /[0-9](?=(?:[0-9]{3})+(?![0-9]))/g;
 	    if (typeof num === 'number') {
-	        var int = num < 0 ? -$floor$2(-num) : $floor$2(num); // trunc(num)
+	        var int = num < 0 ? -$floor$1(-num) : $floor$1(num); // trunc(num)
 	        if (int !== num) {
 	            var intStr = String(int);
 	            var dec = $slice.call(str, intStr.length + 1);
@@ -5428,9 +5428,9 @@
 	    return false;
 	}
 
-	var hasOwn$6 = Object.prototype.hasOwnProperty || function (key) { return key in this; };
+	var hasOwn$7 = Object.prototype.hasOwnProperty || function (key) { return key in this; };
 	function has(obj, key) {
-	    return hasOwn$6.call(obj, key);
+	    return hasOwn$7.call(obj, key);
 	}
 
 	function toStr$3(obj) {
@@ -5642,13 +5642,13 @@
 	    return xs;
 	}
 
-	var GetIntrinsic$a = getIntrinsic;
+	var GetIntrinsic$8 = getIntrinsic;
 	var callBound$2 = callBound$4;
 	var inspect$4 = objectInspect;
 
-	var $TypeError$p = type;
-	var $WeakMap = GetIntrinsic$a('%WeakMap%', true);
-	var $Map = GetIntrinsic$a('%Map%', true);
+	var $TypeError$q = type;
+	var $WeakMap = GetIntrinsic$8('%WeakMap%', true);
+	var $Map = GetIntrinsic$8('%Map%', true);
 
 	var $weakMapGet = callBound$2('WeakMap.prototype.get', true);
 	var $weakMapSet = callBound$2('WeakMap.prototype.set', true);
@@ -5713,7 +5713,7 @@
 		var channel = {
 			assert: function (key) {
 				if (!channel.has(key)) {
-					throw new $TypeError$p('Side channel does not contain ' + inspect$4(key));
+					throw new $TypeError$q('Side channel does not contain ' + inspect$4(key));
 				}
 			},
 			get: function (key) { // eslint-disable-line consistent-return
@@ -5770,50 +5770,50 @@
 		return channel;
 	};
 
-	var hasOwn$5 = hasown;
+	var hasOwn$6 = hasown;
 	var channel = sideChannel();
 
-	var $TypeError$o = type;
+	var $TypeError$p = type;
 
 	var SLOT$1 = {
 		assert: function (O, slot) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$o('`O` is not an object');
+				throw new $TypeError$p('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$o('`slot` must be a string');
+				throw new $TypeError$p('`slot` must be a string');
 			}
 			channel.assert(O);
 			if (!SLOT$1.has(O, slot)) {
-				throw new $TypeError$o('`' + slot + '` is not present on `O`');
+				throw new $TypeError$p('`' + slot + '` is not present on `O`');
 			}
 		},
 		get: function (O, slot) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$o('`O` is not an object');
+				throw new $TypeError$p('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$o('`slot` must be a string');
+				throw new $TypeError$p('`slot` must be a string');
 			}
 			var slots = channel.get(O);
 			return slots && slots['$' + slot];
 		},
 		has: function (O, slot) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$o('`O` is not an object');
+				throw new $TypeError$p('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$o('`slot` must be a string');
+				throw new $TypeError$p('`slot` must be a string');
 			}
 			var slots = channel.get(O);
-			return !!slots && hasOwn$5(slots, '$' + slot);
+			return !!slots && hasOwn$6(slots, '$' + slot);
 		},
 		set: function (O, slot, V) {
 			if (!O || (typeof O !== 'object' && typeof O !== 'function')) {
-				throw new $TypeError$o('`O` is not an object');
+				throw new $TypeError$p('`O` is not an object');
 			}
 			if (typeof slot !== 'string') {
-				throw new $TypeError$o('`slot` must be a string');
+				throw new $TypeError$p('`slot` must be a string');
 			}
 			var slots = channel.get(O);
 			if (!slots) {
@@ -5830,7 +5830,7 @@
 
 	var internalSlot = SLOT$1;
 
-	var $SyntaxError$2 = syntax;
+	var $SyntaxError$1 = syntax;
 
 	var SLOT = internalSlot;
 
@@ -5841,7 +5841,7 @@
 			return new CompletionRecord(type, value);
 		}
 		if (type !== 'normal' && type !== 'break' && type !== 'continue' && type !== 'return' && type !== 'throw') {
-			throw new $SyntaxError$2('Assertion failed: `type` must be one of "normal", "break", "continue", "return", or "throw"');
+			throw new $SyntaxError$1('Assertion failed: `type` must be one of "normal", "break", "continue", "return", or "throw"');
 		}
 		SLOT.set(this, '[[Type]]', type);
 		SLOT.set(this, '[[Value]]', value);
@@ -5866,14 +5866,14 @@
 		if (type === 'throw') {
 			throw value;
 		}
-		throw new $SyntaxError$2('Completion Record is not of type "normal" or "throw": other types not supported');
+		throw new $SyntaxError$1('Completion Record is not of type "normal" or "throw": other types not supported');
 	};
 
 	CompletionRecord$1.prototype['!'] = function assert() {
 		var type = SLOT.get(this, '[[Type]]');
 
 		if (type !== 'normal') {
-			throw new $SyntaxError$2('Assertion failed: Completion Record is not of type "normal"');
+			throw new $SyntaxError$1('Assertion failed: Completion Record is not of type "normal"');
 		}
 		return SLOT.get(this, '[[Value]]');
 	};
@@ -5884,15 +5884,15 @@
 
 	// https://262.ecma-international.org/6.0/#sec-ispropertykey
 
-	var IsPropertyKey$9 = function IsPropertyKey(argument) {
+	var IsPropertyKey$8 = function IsPropertyKey(argument) {
 		return typeof argument === 'string' || typeof argument === 'symbol';
 	};
 
-	var IsPropertyKey$a = /*@__PURE__*/getDefaultExportFromCjs(IsPropertyKey$9);
+	var IsPropertyKey$9 = /*@__PURE__*/getDefaultExportFromCjs(IsPropertyKey$8);
 
-	var $TypeError$n = type;
+	var $TypeError$o = type;
 
-	var hasOwn$4 = hasown;
+	var hasOwn$5 = hasown;
 
 	var allowed = {
 		__proto__: null,
@@ -5912,22 +5912,22 @@
 		}
 
 		for (var key in Desc) { // eslint-disable-line
-			if (hasOwn$4(Desc, key) && !allowed[key]) {
+			if (hasOwn$5(Desc, key) && !allowed[key]) {
 				return false;
 			}
 		}
 
-		var isData = hasOwn$4(Desc, '[[Value]]') || hasOwn$4(Desc, '[[Writable]]');
-		var IsAccessor = hasOwn$4(Desc, '[[Get]]') || hasOwn$4(Desc, '[[Set]]');
+		var isData = hasOwn$5(Desc, '[[Value]]') || hasOwn$5(Desc, '[[Writable]]');
+		var IsAccessor = hasOwn$5(Desc, '[[Get]]') || hasOwn$5(Desc, '[[Set]]');
 		if (isData && IsAccessor) {
-			throw new $TypeError$n('Property Descriptors may not be both accessor and data descriptors');
+			throw new $TypeError$o('Property Descriptors may not be both accessor and data descriptors');
 		}
 		return true;
 	};
 
-	var $TypeError$m = type;
+	var $TypeError$n = type;
 
-	var hasOwn$3 = hasown;
+	var hasOwn$4 = hasown;
 
 	var isPropertyDescriptor$6 = propertyDescriptor;
 
@@ -5939,10 +5939,10 @@
 		}
 
 		if (!isPropertyDescriptor$6(Desc)) {
-			throw new $TypeError$m('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$n('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
-		if (!hasOwn$3(Desc, '[[Get]]') && !hasOwn$3(Desc, '[[Set]]')) {
+		if (!hasOwn$4(Desc, '[[Get]]') && !hasOwn$4(Desc, '[[Set]]')) {
 			return false;
 		}
 
@@ -5962,10 +5962,10 @@
 		return isPrimitive$4;
 	}
 
-	var GetIntrinsic$9 = getIntrinsic;
+	var GetIntrinsic$7 = getIntrinsic;
 
-	var $preventExtensions = GetIntrinsic$9('%Object.preventExtensions%', true);
-	var $isExtensible = GetIntrinsic$9('%Object.isExtensible%', true);
+	var $preventExtensions = GetIntrinsic$7('%Object.preventExtensions%', true);
+	var $isExtensible = GetIntrinsic$7('%Object.isExtensible%', true);
 
 	var isPrimitive$3 = requireIsPrimitive();
 
@@ -5981,7 +5981,7 @@
 
 	// https://262.ecma-international.org/5.1/#sec-8
 
-	var Type$e = function Type(x) {
+	var Type$d = function Type(x) {
 		if (x === null) {
 			return 'Null';
 		}
@@ -6002,11 +6002,11 @@
 		}
 	};
 
-	var ES5Type = Type$e;
+	var ES5Type = Type$d;
 
 	// https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
 
-	var Type$c = function Type(x) {
+	var Type$b = function Type(x) {
 		if (typeof x === 'symbol') {
 			return 'Symbol';
 		}
@@ -6016,7 +6016,7 @@
 		return ES5Type(x);
 	};
 
-	var Type$d = /*@__PURE__*/getDefaultExportFromCjs(Type$c);
+	var Type$c = /*@__PURE__*/getDefaultExportFromCjs(Type$b);
 
 	// http://262.ecma-international.org/5.1/#sec-9.2
 
@@ -6126,51 +6126,51 @@
 
 	var IsCallable$3 = isCallable$1;
 
-	var hasOwn$2 = hasown;
+	var hasOwn$3 = hasown;
 
-	var $TypeError$l = type;
+	var $TypeError$m = type;
 
-	var Type$b = Type$c;
+	var Type$a = Type$b;
 	var ToBoolean$1 = ToBoolean$2;
 	var IsCallable$2 = IsCallable$3;
 
 	// https://262.ecma-international.org/5.1/#sec-8.10.5
 
 	var ToPropertyDescriptor$1 = function ToPropertyDescriptor(Obj) {
-		if (Type$b(Obj) !== 'Object') {
-			throw new $TypeError$l('ToPropertyDescriptor requires an object');
+		if (Type$a(Obj) !== 'Object') {
+			throw new $TypeError$m('ToPropertyDescriptor requires an object');
 		}
 
 		var desc = {};
-		if (hasOwn$2(Obj, 'enumerable')) {
+		if (hasOwn$3(Obj, 'enumerable')) {
 			desc['[[Enumerable]]'] = ToBoolean$1(Obj.enumerable);
 		}
-		if (hasOwn$2(Obj, 'configurable')) {
+		if (hasOwn$3(Obj, 'configurable')) {
 			desc['[[Configurable]]'] = ToBoolean$1(Obj.configurable);
 		}
-		if (hasOwn$2(Obj, 'value')) {
+		if (hasOwn$3(Obj, 'value')) {
 			desc['[[Value]]'] = Obj.value;
 		}
-		if (hasOwn$2(Obj, 'writable')) {
+		if (hasOwn$3(Obj, 'writable')) {
 			desc['[[Writable]]'] = ToBoolean$1(Obj.writable);
 		}
-		if (hasOwn$2(Obj, 'get')) {
+		if (hasOwn$3(Obj, 'get')) {
 			var getter = Obj.get;
 			if (typeof getter !== 'undefined' && !IsCallable$2(getter)) {
-				throw new $TypeError$l('getter must be a function');
+				throw new $TypeError$m('getter must be a function');
 			}
 			desc['[[Get]]'] = getter;
 		}
-		if (hasOwn$2(Obj, 'set')) {
+		if (hasOwn$3(Obj, 'set')) {
 			var setter = Obj.set;
 			if (typeof setter !== 'undefined' && !IsCallable$2(setter)) {
-				throw new $TypeError$l('setter must be a function');
+				throw new $TypeError$m('setter must be a function');
 			}
 			desc['[[Set]]'] = setter;
 		}
 
-		if ((hasOwn$2(desc, '[[Get]]') || hasOwn$2(desc, '[[Set]]')) && (hasOwn$2(desc, '[[Value]]') || hasOwn$2(desc, '[[Writable]]'))) {
-			throw new $TypeError$l('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
+		if ((hasOwn$3(desc, '[[Get]]') || hasOwn$3(desc, '[[Set]]')) && (hasOwn$3(desc, '[[Value]]') || hasOwn$3(desc, '[[Writable]]'))) {
+			throw new $TypeError$m('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
 		}
 		return desc;
 	};
@@ -6179,7 +6179,7 @@
 		return a !== a;
 	};
 
-	var $isNaN$3 = _isNaN;
+	var $isNaN$1 = _isNaN;
 
 	// http://262.ecma-international.org/5.1/#sec-9.12
 
@@ -6188,7 +6188,7 @@
 			if (x === 0) { return 1 / x === 1 / y; }
 			return true;
 		}
-		return $isNaN$3(x) && $isNaN$3(y);
+		return $isNaN$1(x) && $isNaN$1(y);
 	};
 
 	var SameValue$3 = /*@__PURE__*/getDefaultExportFromCjs(SameValue$2);
@@ -6200,7 +6200,7 @@
 	var hasArrayLengthDefineBug = hasPropertyDescriptors.hasArrayLengthDefineBug();
 
 	// eslint-disable-next-line global-require
-	var isArray = hasArrayLengthDefineBug && IsArray$5;
+	var isArray = hasArrayLengthDefineBug && IsArray$4;
 
 	var callBound$1 = callBound$4;
 
@@ -6281,7 +6281,7 @@
 		return obj;
 	};
 
-	var $TypeError$k = type;
+	var $TypeError$l = type;
 
 	var isPropertyDescriptor$4 = propertyDescriptor;
 	var fromPropertyDescriptor = fromPropertyDescriptor$1;
@@ -6290,15 +6290,15 @@
 
 	var FromPropertyDescriptor$1 = function FromPropertyDescriptor(Desc) {
 		if (typeof Desc !== 'undefined' && !isPropertyDescriptor$4(Desc)) {
-			throw new $TypeError$k('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$l('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
 		return fromPropertyDescriptor(Desc);
 	};
 
-	var $TypeError$j = type;
+	var $TypeError$k = type;
 
-	var hasOwn$1 = hasown;
+	var hasOwn$2 = hasown;
 
 	var isPropertyDescriptor$3 = propertyDescriptor;
 
@@ -6310,17 +6310,17 @@
 		}
 
 		if (!isPropertyDescriptor$3(Desc)) {
-			throw new $TypeError$j('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$k('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
-		if (!hasOwn$1(Desc, '[[Value]]') && !hasOwn$1(Desc, '[[Writable]]')) {
+		if (!hasOwn$2(Desc, '[[Value]]') && !hasOwn$2(Desc, '[[Writable]]')) {
 			return false;
 		}
 
 		return true;
 	};
 
-	var $TypeError$i = type;
+	var $TypeError$j = type;
 
 	var IsAccessorDescriptor$2 = IsAccessorDescriptor$3;
 	var IsDataDescriptor$1 = IsDataDescriptor$2;
@@ -6335,7 +6335,7 @@
 		}
 
 		if (!isPropertyDescriptor$2(Desc)) {
-			throw new $TypeError$i('Assertion failed: `Desc` must be a Property Descriptor');
+			throw new $TypeError$j('Assertion failed: `Desc` must be a Property Descriptor');
 		}
 
 		if (!IsAccessorDescriptor$2(Desc) && !IsDataDescriptor$1(Desc)) {
@@ -6345,7 +6345,7 @@
 		return false;
 	};
 
-	var $TypeError$h = type;
+	var $TypeError$i = type;
 
 	var DefineOwnProperty = DefineOwnProperty$1;
 	var isFullyPopulatedPropertyDescriptor = isFullyPopulatedPropertyDescriptor$1;
@@ -6355,9 +6355,9 @@
 	var IsAccessorDescriptor$1 = IsAccessorDescriptor$3;
 	var IsDataDescriptor = IsDataDescriptor$2;
 	var IsGenericDescriptor = IsGenericDescriptor$1;
-	var IsPropertyKey$8 = IsPropertyKey$9;
+	var IsPropertyKey$7 = IsPropertyKey$8;
 	var SameValue$1 = SameValue$2;
-	var Type$a = Type$c;
+	var Type$9 = Type$b;
 
 	// https://262.ecma-international.org/13.0/#sec-validateandapplypropertydescriptor
 
@@ -6365,21 +6365,21 @@
 
 	// eslint-disable-next-line max-lines-per-function, max-statements
 	var ValidateAndApplyPropertyDescriptor$1 = function ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current) {
-		var oType = Type$a(O);
+		var oType = Type$9(O);
 		if (oType !== 'Undefined' && oType !== 'Object') {
-			throw new $TypeError$h('Assertion failed: O must be undefined or an Object');
+			throw new $TypeError$i('Assertion failed: O must be undefined or an Object');
 		}
-		if (!IsPropertyKey$8(P)) {
-			throw new $TypeError$h('Assertion failed: P must be a Property Key');
+		if (!IsPropertyKey$7(P)) {
+			throw new $TypeError$i('Assertion failed: P must be a Property Key');
 		}
 		if (typeof extensible !== 'boolean') {
-			throw new $TypeError$h('Assertion failed: extensible must be a Boolean');
+			throw new $TypeError$i('Assertion failed: extensible must be a Boolean');
 		}
 		if (!isPropertyDescriptor$1(Desc)) {
-			throw new $TypeError$h('Assertion failed: Desc must be a Property Descriptor');
+			throw new $TypeError$i('Assertion failed: Desc must be a Property Descriptor');
 		}
 		if (typeof current !== 'undefined' && !isPropertyDescriptor$1(current)) {
-			throw new $TypeError$h('Assertion failed: current must be a Property Descriptor, or undefined');
+			throw new $TypeError$i('Assertion failed: current must be a Property Descriptor, or undefined');
 		}
 
 		if (typeof current === 'undefined') { // step 2
@@ -6425,7 +6425,7 @@
 				current
 			)
 		) {
-			throw new $TypeError$h('`current`, when present, must be a fully populated and valid Property Descriptor');
+			throw new $TypeError$i('`current`, when present, must be a fully populated and valid Property Descriptor');
 		}
 
 		// 4. If every field in Desc is absent, return true.
@@ -6517,35 +6517,35 @@
 	};
 
 	var $gOPD = gopd$1;
-	var $SyntaxError$1 = syntax;
-	var $TypeError$g = type;
+	var $SyntaxError = syntax;
+	var $TypeError$h = type;
 
 	var isPropertyDescriptor = propertyDescriptor;
 
 	var IsAccessorDescriptor = IsAccessorDescriptor$3;
 	var IsExtensible = IsExtensible$1;
-	var IsPropertyKey$7 = IsPropertyKey$9;
+	var IsPropertyKey$6 = IsPropertyKey$8;
 	var ToPropertyDescriptor = ToPropertyDescriptor$1;
 	var SameValue = SameValue$2;
-	var Type$9 = Type$c;
+	var Type$8 = Type$b;
 	var ValidateAndApplyPropertyDescriptor = ValidateAndApplyPropertyDescriptor$1;
 
 	// https://262.ecma-international.org/6.0/#sec-ordinarydefineownproperty
 
 	var OrdinaryDefineOwnProperty$1 = function OrdinaryDefineOwnProperty(O, P, Desc) {
-		if (Type$9(O) !== 'Object') {
-			throw new $TypeError$g('Assertion failed: O must be an Object');
+		if (Type$8(O) !== 'Object') {
+			throw new $TypeError$h('Assertion failed: O must be an Object');
 		}
-		if (!IsPropertyKey$7(P)) {
-			throw new $TypeError$g('Assertion failed: P must be a Property Key');
+		if (!IsPropertyKey$6(P)) {
+			throw new $TypeError$h('Assertion failed: P must be a Property Key');
 		}
 		if (!isPropertyDescriptor(Desc)) {
-			throw new $TypeError$g('Assertion failed: Desc must be a Property Descriptor');
+			throw new $TypeError$h('Assertion failed: Desc must be a Property Descriptor');
 		}
 		if (!$gOPD) {
 			// ES3/IE 8 fallback
 			if (IsAccessorDescriptor(Desc)) {
-				throw new $SyntaxError$1('This environment does not support accessor property descriptors.');
+				throw new $SyntaxError('This environment does not support accessor property descriptors.');
 			}
 			var creatingNormalDataProperty = !(P in O)
 				&& Desc['[[Writable]]']
@@ -6561,7 +6561,7 @@
 				O[P] = Desc['[[Value]]']; // eslint-disable-line no-param-reassign
 				return SameValue(O[P], Desc['[[Value]]']);
 			}
-			throw new $SyntaxError$1('This environment does not support defining non-writable, non-enumerable, or non-configurable properties');
+			throw new $SyntaxError('This environment does not support defining non-writable, non-enumerable, or non-configurable properties');
 		}
 		var desc = $gOPD(O, P);
 		var current = desc && ToPropertyDescriptor(desc);
@@ -6569,20 +6569,20 @@
 		return ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current);
 	};
 
-	var $TypeError$f = type;
+	var $TypeError$g = type;
 
-	var IsPropertyKey$6 = IsPropertyKey$9;
+	var IsPropertyKey$5 = IsPropertyKey$8;
 	var OrdinaryDefineOwnProperty = OrdinaryDefineOwnProperty$1;
-	var Type$8 = Type$c;
+	var Type$7 = Type$b;
 
 	// https://262.ecma-international.org/6.0/#sec-createdataproperty
 
 	var CreateDataProperty$1 = function CreateDataProperty(O, P, V) {
-		if (Type$8(O) !== 'Object') {
-			throw new $TypeError$f('Assertion failed: Type(O) is not Object');
+		if (Type$7(O) !== 'Object') {
+			throw new $TypeError$g('Assertion failed: Type(O) is not Object');
 		}
-		if (!IsPropertyKey$6(P)) {
-			throw new $TypeError$f('Assertion failed: IsPropertyKey(P) is not true');
+		if (!IsPropertyKey$5(P)) {
+			throw new $TypeError$g('Assertion failed: IsPropertyKey(P) is not true');
 		}
 		var newDesc = {
 			'[[Configurable]]': true,
@@ -6593,156 +6593,52 @@
 		return OrdinaryDefineOwnProperty(O, P, newDesc);
 	};
 
-	var $TypeError$e = type;
+	var $TypeError$f = type;
 
 	var CreateDataProperty = CreateDataProperty$1;
-	var IsPropertyKey$5 = IsPropertyKey$9;
-	var Type$7 = Type$c;
+	var IsPropertyKey$4 = IsPropertyKey$8;
+	var Type$6 = Type$b;
 
-	// // https://262.ecma-international.org/6.0/#sec-createdatapropertyorthrow
+	// // https://262.ecma-international.org/14.0/#sec-createdatapropertyorthrow
 
 	var CreateDataPropertyOrThrow = function CreateDataPropertyOrThrow(O, P, V) {
-		if (Type$7(O) !== 'Object') {
-			throw new $TypeError$e('Assertion failed: Type(O) is not Object');
+		if (Type$6(O) !== 'Object') {
+			throw new $TypeError$f('Assertion failed: Type(O) is not Object');
 		}
-		if (!IsPropertyKey$5(P)) {
-			throw new $TypeError$e('Assertion failed: IsPropertyKey(P) is not true');
+		if (!IsPropertyKey$4(P)) {
+			throw new $TypeError$f('Assertion failed: IsPropertyKey(P) is not true');
 		}
 		var success = CreateDataProperty(O, P, V);
 		if (!success) {
-			throw new $TypeError$e('unable to create data property');
+			throw new $TypeError$f('unable to create data property');
 		}
-		return success;
 	};
 
 	var CreateDataPropertyOrThrow$1 = /*@__PURE__*/getDefaultExportFromCjs(CreateDataPropertyOrThrow);
 
-	var $TypeError$d = type;
+	var $TypeError$e = type;
 
 	var inspect$3 = objectInspect;
 
-	var IsPropertyKey$4 = IsPropertyKey$9;
-	var Type$6 = Type$c;
+	var IsPropertyKey$3 = IsPropertyKey$8;
+	var Type$5 = Type$b;
 
 	// https://262.ecma-international.org/6.0/#sec-get-o-p
 
 	var Get$2 = function Get(O, P) {
 		// 7.3.1.1
-		if (Type$6(O) !== 'Object') {
-			throw new $TypeError$d('Assertion failed: Type(O) is not Object');
+		if (Type$5(O) !== 'Object') {
+			throw new $TypeError$e('Assertion failed: Type(O) is not Object');
 		}
 		// 7.3.1.2
-		if (!IsPropertyKey$4(P)) {
-			throw new $TypeError$d('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$3(P));
+		if (!IsPropertyKey$3(P)) {
+			throw new $TypeError$e('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$3(P));
 		}
 		// 7.3.1.3
 		return O[P];
 	};
 
 	var Get$3 = /*@__PURE__*/getDefaultExportFromCjs(Get$2);
-
-	var shams;
-	var hasRequiredShams;
-
-	function requireShams () {
-		if (hasRequiredShams) return shams;
-		hasRequiredShams = 1;
-
-		var hasSymbols = requireShams$1();
-
-		/** @type {import('.')} */
-		shams = function hasToStringTagShams() {
-			return hasSymbols() && !!Symbol.toStringTag;
-		};
-		return shams;
-	}
-
-	var isString;
-	var hasRequiredIsString;
-
-	function requireIsString () {
-		if (hasRequiredIsString) return isString;
-		hasRequiredIsString = 1;
-
-		var strValue = String.prototype.valueOf;
-		var tryStringObject = function tryStringObject(value) {
-			try {
-				strValue.call(value);
-				return true;
-			} catch (e) {
-				return false;
-			}
-		};
-		var toStr = Object.prototype.toString;
-		var strClass = '[object String]';
-		var hasToStringTag = requireShams()();
-
-		isString = function isString(value) {
-			if (typeof value === 'string') {
-				return true;
-			}
-			if (typeof value !== 'object') {
-				return false;
-			}
-			return hasToStringTag ? tryStringObject(value) : toStr.call(value) === strClass;
-		};
-		return isString;
-	}
-
-	var getIteratorMethod$1;
-	var hasRequiredGetIteratorMethod;
-
-	function requireGetIteratorMethod () {
-		if (hasRequiredGetIteratorMethod) return getIteratorMethod$1;
-		hasRequiredGetIteratorMethod = 1;
-
-		var hasSymbols = requireHasSymbols()();
-		var GetIntrinsic = getIntrinsic;
-		var callBound = callBound$4;
-		var isString = requireIsString();
-
-		var $iterator = GetIntrinsic('%Symbol.iterator%', true);
-		var $stringSlice = callBound('String.prototype.slice');
-		var $String = GetIntrinsic('%String%');
-
-		getIteratorMethod$1 = function getIteratorMethod(ES, iterable) {
-			var usingIterator;
-			if (hasSymbols) {
-				usingIterator = ES.GetMethod(iterable, $iterator);
-			} else if (ES.IsArray(iterable)) {
-				usingIterator = function () {
-					var i = -1;
-					var arr = this; // eslint-disable-line no-invalid-this
-					return {
-						next: function () {
-							i += 1;
-							return {
-								done: i >= arr.length,
-								value: arr[i]
-							};
-						}
-					};
-				};
-			} else if (isString(iterable)) {
-				usingIterator = function () {
-					var i = 0;
-					return {
-						next: function () {
-							var nextIndex = ES.AdvanceStringIndex($String(iterable), i, true);
-							var value = $stringSlice(iterable, i, nextIndex);
-							i = nextIndex;
-							return {
-								done: nextIndex > iterable.length,
-								value: value
-							};
-						}
-					};
-				};
-			}
-			return usingIterator;
-		};
-		return getIteratorMethod$1;
-	}
 
 	var isLeadingSurrogate;
 	var hasRequiredIsLeadingSurrogate;
@@ -6860,25 +6756,34 @@
 		return CodePointAt;
 	}
 
-	var $isNaN$2 = _isNaN;
+	var $isNaN = _isNaN;
 
-	var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN$2(x) && x !== Infinity && x !== -Infinity; };
+	var _isFinite = function (x) { return (typeof x === 'number' || typeof x === 'bigint') && !$isNaN(x) && x !== Infinity && x !== -Infinity; };
 
-	var GetIntrinsic$8 = getIntrinsic;
+	var isInteger$1;
+	var hasRequiredIsInteger;
 
-	var $abs$1 = GetIntrinsic$8('%Math.abs%');
-	var $floor$1 = GetIntrinsic$8('%Math.floor%');
+	function requireIsInteger () {
+		if (hasRequiredIsInteger) return isInteger$1;
+		hasRequiredIsInteger = 1;
 
-	var $isNaN$1 = _isNaN;
-	var $isFinite$1 = _isFinite;
+		var GetIntrinsic = getIntrinsic;
 
-	var isInteger$2 = function isInteger(argument) {
-		if (typeof argument !== 'number' || $isNaN$1(argument) || !$isFinite$1(argument)) {
-			return false;
-		}
-		var absValue = $abs$1(argument);
-		return $floor$1(absValue) === absValue;
-	};
+		var $abs = GetIntrinsic('%Math.abs%');
+		var $floor = GetIntrinsic('%Math.floor%');
+
+		var $isNaN = _isNaN;
+		var $isFinite = _isFinite;
+
+		isInteger$1 = function isInteger(argument) {
+			if (typeof argument !== 'number' || $isNaN(argument) || !$isFinite(argument)) {
+				return false;
+			}
+			var absValue = $abs(argument);
+			return $floor(absValue) === absValue;
+		};
+		return isInteger$1;
+	}
 
 	var maxSafeInteger;
 	var hasRequiredMaxSafeInteger;
@@ -6900,7 +6805,7 @@
 
 		var CodePointAt = requireCodePointAt();
 
-		var isInteger = isInteger$2;
+		var isInteger = requireIsInteger();
 		var MAX_SAFE_INTEGER = requireMaxSafeInteger();
 
 		var $TypeError = type;
@@ -6930,19 +6835,151 @@
 		return AdvanceStringIndex$1;
 	}
 
+	var CreateIterResultObject;
+	var hasRequiredCreateIterResultObject;
+
+	function requireCreateIterResultObject () {
+		if (hasRequiredCreateIterResultObject) return CreateIterResultObject;
+		hasRequiredCreateIterResultObject = 1;
+
+		var $TypeError = type;
+
+		// https://262.ecma-international.org/6.0/#sec-createiterresultobject
+
+		CreateIterResultObject = function CreateIterResultObject(value, done) {
+			if (typeof done !== 'boolean') {
+				throw new $TypeError('Assertion failed: Type(done) is not Boolean');
+			}
+			return {
+				value: value,
+				done: done
+			};
+		};
+		return CreateIterResultObject;
+	}
+
+	var $TypeError$d = type;
+
+	var Get$1 = Get$2;
+	var ToBoolean = ToBoolean$2;
+	var Type$4 = Type$b;
+
+	// https://262.ecma-international.org/6.0/#sec-iteratorcomplete
+
+	var IteratorComplete$1 = function IteratorComplete(iterResult) {
+		if (Type$4(iterResult) !== 'Object') {
+			throw new $TypeError$d('Assertion failed: Type(iterResult) is not Object');
+		}
+		return ToBoolean(Get$1(iterResult, 'done'));
+	};
+
 	var $TypeError$c = type;
+
+	var Get = Get$2;
+	var Type$3 = Type$b;
+
+	// https://262.ecma-international.org/6.0/#sec-iteratorvalue
+
+	var IteratorValue = function IteratorValue(iterResult) {
+		if (Type$3(iterResult) !== 'Object') {
+			throw new $TypeError$c('Assertion failed: Type(iterResult) is not Object');
+		}
+		return Get(iterResult, 'value');
+	};
+
+	var IteratorValue$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorValue);
+
+	var PromiseResolve;
+	var hasRequiredPromiseResolve;
+
+	function requirePromiseResolve () {
+		if (hasRequiredPromiseResolve) return PromiseResolve;
+		hasRequiredPromiseResolve = 1;
+
+		var GetIntrinsic = getIntrinsic;
+		var callBind = callBindExports;
+		var $SyntaxError = syntax;
+
+		var $resolve = GetIntrinsic('%Promise.resolve%', true);
+		var $PromiseResolve = $resolve && callBind($resolve);
+
+		// https://262.ecma-international.org/9.0/#sec-promise-resolve
+
+		PromiseResolve = function PromiseResolve(C, x) {
+			if (!$PromiseResolve) {
+				throw new $SyntaxError('This environment does not support Promises.');
+			}
+			return $PromiseResolve(C, x);
+		};
+		return PromiseResolve;
+	}
+
+	var AsyncFromSyncIteratorContinuation;
+	var hasRequiredAsyncFromSyncIteratorContinuation;
+
+	function requireAsyncFromSyncIteratorContinuation () {
+		if (hasRequiredAsyncFromSyncIteratorContinuation) return AsyncFromSyncIteratorContinuation;
+		hasRequiredAsyncFromSyncIteratorContinuation = 1;
+
+		var GetIntrinsic = getIntrinsic;
+
+		var $SyntaxError = syntax;
+		var $TypeError = type;
+		var $Promise = GetIntrinsic('%Promise%', true);
+
+		var callBound = callBound$4;
+
+		var CreateIterResultObject = requireCreateIterResultObject();
+		var IteratorComplete = IteratorComplete$1;
+		var IteratorValue$1 = IteratorValue;
+		var PromiseResolve = requirePromiseResolve();
+		var Type = Type$b;
+
+		var $then = callBound('Promise.prototype.then', true);
+
+		// https://262.ecma-international.org/10.0/#sec-asyncfromsynciteratorcontinuation
+
+		AsyncFromSyncIteratorContinuation = function AsyncFromSyncIteratorContinuation(result) {
+			if (Type(result) !== 'Object') {
+				throw new $TypeError('Assertion failed: Type(O) is not Object');
+			}
+
+			if (arguments.length > 1) {
+				throw new $SyntaxError('although AsyncFromSyncIteratorContinuation should take a second argument, it is not used in this implementation');
+			}
+
+			if (!$Promise) {
+				throw new $SyntaxError('This environment does not support Promises.');
+			}
+
+			return new $Promise(function (resolve) {
+				var done = IteratorComplete(result); // step 2
+				var value = IteratorValue$1(result); // step 4
+				var valueWrapper = PromiseResolve($Promise, value); // step 6
+
+				// eslint-disable-next-line no-shadow
+				var onFulfilled = function (value) { // steps 8-9
+					return CreateIterResultObject(value, done); // step 8.a
+				};
+				resolve($then(valueWrapper, onFulfilled)); // step 11
+			}); // step 12
+		};
+		return AsyncFromSyncIteratorContinuation;
+	}
+
+	var $TypeError$b = type;
 
 	var inspect$2 = objectInspect;
 
-	var IsPropertyKey$3 = IsPropertyKey$9;
+	var IsPropertyKey$2 = IsPropertyKey$8;
 	// var ToObject = require('./ToObject');
 
 	// https://262.ecma-international.org/6.0/#sec-getv
 
-	var GetV$2 = function GetV(V, P) {
+	var GetV$1 = function GetV(V, P) {
 		// 7.3.2.1
-		if (!IsPropertyKey$3(P)) {
-			throw new $TypeError$c('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$2(P));
+		if (!IsPropertyKey$2(P)) {
+			throw new $TypeError$b('Assertion failed: IsPropertyKey(P) is not true, got ' + inspect$2(P));
 		}
 
 		// 7.3.2.2-3
@@ -6952,11 +6989,11 @@
 		return V[P];
 	};
 
-	var $TypeError$b = type;
+	var $TypeError$a = type;
 
-	var GetV$1 = GetV$2;
+	var GetV = GetV$1;
 	var IsCallable$1 = IsCallable$3;
-	var IsPropertyKey$2 = IsPropertyKey$9;
+	var IsPropertyKey$1 = IsPropertyKey$8;
 
 	var inspect$1 = objectInspect;
 
@@ -6964,12 +7001,12 @@
 
 	var GetMethod$3 = function GetMethod(O, P) {
 		// 7.3.9.1
-		if (!IsPropertyKey$2(P)) {
-			throw new $TypeError$b('Assertion failed: IsPropertyKey(P) is not true');
+		if (!IsPropertyKey$1(P)) {
+			throw new $TypeError$a('Assertion failed: IsPropertyKey(P) is not true');
 		}
 
 		// 7.3.9.2
-		var func = GetV$1(O, P);
+		var func = GetV(O, P);
 
 		// 7.3.9.4
 		if (func == null) {
@@ -6978,7 +7015,7 @@
 
 		// 7.3.9.5
 		if (!IsCallable$1(func)) {
-			throw new $TypeError$b(inspect$1(P) + ' is not a function: ' + inspect$1(func));
+			throw new $TypeError$a(inspect$1(P) + ' is not a function: ' + inspect$1(func));
 		}
 
 		// 7.3.9.6
@@ -6987,243 +7024,478 @@
 
 	var GetMethod$4 = /*@__PURE__*/getDefaultExportFromCjs(GetMethod$3);
 
-	var GetIntrinsic$7 = getIntrinsic;
+	var hasOwn$1 = hasown;
 
-	var $TypeError$a = type;
-	var $SyntaxError = syntax;
-	var $asyncIterator = GetIntrinsic$7('%Symbol.asyncIterator%', true);
+	var iteratorRecord = function isIteratorRecord(value) {
+		return !!value
+			&& typeof value === 'object'
+			&& hasOwn$1(value, '[[Iterator]]')
+			&& hasOwn$1(value, '[[NextMethod]]')
+			&& typeof value['[[NextMethod]]'] === 'function'
+			&& hasOwn$1(value, '[[Done]]')
+			&& typeof value['[[Done]]'] === 'boolean';
+	};
+
+	var $TypeError$9 = type;
+
+	var Call$1 = Call$2;
+	var Type$2 = Type$b;
+
+	var isIteratorRecord$2 = iteratorRecord;
+
+	// https://262.ecma-international.org/14.0/#sec-iteratornext
+
+	var IteratorNext$1 = function IteratorNext(iteratorRecord) {
+		if (!isIteratorRecord$2(iteratorRecord)) {
+			throw new $TypeError$9('Assertion failed: `iteratorRecord` must be an Iterator Record'); // step 1
+		}
+
+		var result;
+		if (arguments.length < 2) { // step 1
+			result = Call$1(iteratorRecord['[[NextMethod]]'], iteratorRecord['[[Iterator]]']); // step 1.a
+		} else { // step 2
+			result = Call$1(iteratorRecord['[[NextMethod]]'], iteratorRecord['[[Iterator]]'], [arguments[1]]); // step 2.a
+		}
+
+		if (Type$2(result) !== 'Object') {
+			throw new $TypeError$9('iterator next must return an object'); // step 3
+		}
+		return result; // step 4
+	};
+
+	var forEach = function forEach(array, callback) {
+		for (var i = 0; i < array.length; i += 1) {
+			callback(array[i], i, array); // eslint-disable-line callback-return
+		}
+	};
+
+	var forEach$1 = /*@__PURE__*/getDefaultExportFromCjs(forEach);
+
+	var OrdinaryObjectCreate;
+	var hasRequiredOrdinaryObjectCreate;
+
+	function requireOrdinaryObjectCreate () {
+		if (hasRequiredOrdinaryObjectCreate) return OrdinaryObjectCreate;
+		hasRequiredOrdinaryObjectCreate = 1;
+
+		var GetIntrinsic = getIntrinsic;
+
+		var $ObjectCreate = GetIntrinsic('%Object.create%', true);
+		var $TypeError = type;
+		var $SyntaxError = syntax;
+
+		var IsArray = IsArray$2;
+		var Type = Type$b;
+
+		var forEach$1 = forEach;
+
+		var SLOT = internalSlot;
+
+		var hasProto = hasProto$1();
+
+		// https://262.ecma-international.org/11.0/#sec-objectcreate
+
+		OrdinaryObjectCreate = function OrdinaryObjectCreate(proto) {
+			if (proto !== null && Type(proto) !== 'Object') {
+				throw new $TypeError('Assertion failed: `proto` must be null or an object');
+			}
+			var additionalInternalSlotsList = arguments.length < 2 ? [] : arguments[1];
+			if (!IsArray(additionalInternalSlotsList)) {
+				throw new $TypeError('Assertion failed: `additionalInternalSlotsList` must be an Array');
+			}
+
+			// var internalSlotsList = ['[[Prototype]]', '[[Extensible]]']; // step 1
+			// internalSlotsList.push(...additionalInternalSlotsList); // step 2
+			// var O = MakeBasicObject(internalSlotsList); // step 3
+			// setProto(O, proto); // step 4
+			// return O; // step 5
+
+			var O;
+			if ($ObjectCreate) {
+				O = $ObjectCreate(proto);
+			} else if (hasProto) {
+				O = { __proto__: proto };
+			} else {
+				if (proto === null) {
+					throw new $SyntaxError('native Object.create support is required to create null objects');
+				}
+				var T = function T() {};
+				T.prototype = proto;
+				O = new T();
+			}
+
+			if (additionalInternalSlotsList.length > 0) {
+				forEach$1(additionalInternalSlotsList, function (slot) {
+					SLOT.set(O, slot, void undefined);
+				});
+			}
+
+			return O;
+		};
+		return OrdinaryObjectCreate;
+	}
+
+	var CreateAsyncFromSyncIterator$1;
+	var hasRequiredCreateAsyncFromSyncIterator;
+
+	function requireCreateAsyncFromSyncIterator () {
+		if (hasRequiredCreateAsyncFromSyncIterator) return CreateAsyncFromSyncIterator$1;
+		hasRequiredCreateAsyncFromSyncIterator = 1;
+
+		var GetIntrinsic = getIntrinsic;
+
+		var $SyntaxError = syntax;
+		var $TypeError = type;
+		var $Promise = GetIntrinsic('%Promise%', true);
+
+		var AsyncFromSyncIteratorContinuation = requireAsyncFromSyncIteratorContinuation();
+		var Call = Call$2;
+		var CreateIterResultObject = requireCreateIterResultObject();
+		var Get = Get$2;
+		var GetMethod = GetMethod$3;
+		var IteratorNext = IteratorNext$1;
+		var OrdinaryObjectCreate = requireOrdinaryObjectCreate();
+		var Type = Type$b;
+
+		var SLOT = internalSlot;
+
+		var isIteratorRecord = iteratorRecord;
+
+		var $AsyncFromSyncIteratorPrototype = GetIntrinsic('%AsyncFromSyncIteratorPrototype%', true) || {
+			next: function next(value) {
+				if (!$Promise) {
+					throw new $SyntaxError('This environment does not support Promises.');
+				}
+
+				var O = this; // step 1
+
+				SLOT.assert(O, '[[SyncIteratorRecord]]'); // step 2
+
+				var argsLength = arguments.length;
+
+				return new $Promise(function (resolve) { // step 3
+					var syncIteratorRecord = SLOT.get(O, '[[SyncIteratorRecord]]'); // step 4
+					var result;
+					if (argsLength > 0) {
+						result = IteratorNext(syncIteratorRecord, value); // step 5.a
+					} else { // step 6
+						result = IteratorNext(syncIteratorRecord);// step 6.a
+					}
+					resolve(AsyncFromSyncIteratorContinuation(result)); // step 8
+				});
+			},
+			'return': function () {
+				if (!$Promise) {
+					throw new $SyntaxError('This environment does not support Promises.');
+				}
+
+				var O = this; // step 1
+
+				SLOT.assert(O, '[[SyncIteratorRecord]]'); // step 2
+
+				var valueIsPresent = arguments.length > 0;
+				var value = valueIsPresent ? arguments[0] : void undefined;
+
+				return new $Promise(function (resolve, reject) { // step 3
+					var syncIterator = SLOT.get(O, '[[SyncIteratorRecord]]')['[[Iterator]]']; // step 4
+					var iteratorReturn = GetMethod(syncIterator, 'return'); // step 5
+
+					if (typeof iteratorReturn === 'undefined') { // step 7
+						var iterResult = CreateIterResultObject(value, true); // step 7.a
+						Call(resolve, undefined, [iterResult]); // step 7.b
+						return;
+					}
+					var result;
+					if (valueIsPresent) { // step 8
+						result = Call(iteratorReturn, syncIterator, [value]); // step 8.a
+					} else { // step 9
+						result = Call(iteratorReturn, syncIterator); // step 9.a
+					}
+					if (Type(result) !== 'Object') { // step 11
+						Call(reject, undefined, [new $TypeError('Iterator `return` method returned a non-object value.')]); // step 11.a
+						return;
+					}
+
+					resolve(AsyncFromSyncIteratorContinuation(result)); // step 12
+				});
+			},
+			'throw': function () {
+				if (!$Promise) {
+					throw new $SyntaxError('This environment does not support Promises.');
+				}
+
+				var O = this; // step 1
+
+				SLOT.assert(O, '[[SyncIteratorRecord]]'); // step 2
+
+				var valueIsPresent = arguments.length > 0;
+				var value = valueIsPresent ? arguments[0] : void undefined;
+
+				return new $Promise(function (resolve, reject) { // step 3
+					var syncIterator = SLOT.get(O, '[[SyncIteratorRecord]]')['[[Iterator]]']; // step 4
+
+					var throwMethod = GetMethod(syncIterator, 'throw'); // step 5
+
+					if (typeof throwMethod === 'undefined') { // step 7
+						Call(reject, undefined, [value]); // step 7.a
+						return;
+					}
+
+					var result;
+					if (valueIsPresent) { // step 8
+						result = Call(throwMethod, syncIterator, [value]); // step 8.a
+					} else { // step 9
+						result = Call(throwMethod, syncIterator); // step 9.a
+					}
+					if (Type(result) !== 'Object') { // step 11
+						Call(reject, undefined, [new $TypeError('Iterator `throw` method returned a non-object value.')]); // step 11.a
+						return;
+					}
+
+					resolve(AsyncFromSyncIteratorContinuation(result/* , promiseCapability */)); // step 12
+				});
+			}
+		};
+
+		// https://262.ecma-international.org/14.0/#sec-createasyncfromsynciterator
+
+		CreateAsyncFromSyncIterator$1 = function CreateAsyncFromSyncIterator(syncIteratorRecord) {
+			if (!isIteratorRecord(syncIteratorRecord)) {
+				throw new $TypeError('Assertion failed: `syncIteratorRecord` must be an Iterator Record');
+			}
+
+			// var asyncIterator = OrdinaryObjectCreate(%AsyncFromSyncIteratorPrototype%, « [[SyncIteratorRecord]] »); // step 1
+			var asyncIterator = OrdinaryObjectCreate($AsyncFromSyncIteratorPrototype);
+
+			SLOT.set(asyncIterator, '[[SyncIteratorRecord]]', syncIteratorRecord); // step 2
+
+			var nextMethod = Get(asyncIterator, 'next'); // step 3
+
+			return { // steps 3-4
+				'[[Iterator]]': asyncIterator,
+				'[[NextMethod]]': nextMethod,
+				'[[Done]]': false
+			};
+		};
+		return CreateAsyncFromSyncIterator$1;
+	}
+
+	var GetIteratorFromMethod$1;
+	var hasRequiredGetIteratorFromMethod;
+
+	function requireGetIteratorFromMethod () {
+		if (hasRequiredGetIteratorFromMethod) return GetIteratorFromMethod$1;
+		hasRequiredGetIteratorFromMethod = 1;
+
+		var $TypeError = type;
+
+		var Call = Call$2;
+		var Get = Get$2;
+		var IsCallable = IsCallable$3;
+		var Type = Type$b;
+
+		// https://262.ecma-international.org/15.0/#sec-getiteratorfrommethod
+
+		GetIteratorFromMethod$1 = function GetIteratorFromMethod(obj, method) {
+			if (!IsCallable(method)) {
+				throw new $TypeError('method must be a function');
+			}
+
+			var iterator = Call(method, obj); // step 1
+			if (Type(iterator) !== 'Object') {
+				throw new $TypeError('iterator must return an object'); // step 2
+			}
+
+			var nextMethod = Get(iterator, 'next'); // step 3
+			return { // steps 4-5
+				'[[Iterator]]': iterator,
+				'[[NextMethod]]': nextMethod,
+				'[[Done]]': false
+			};
+		};
+		return GetIteratorFromMethod$1;
+	}
+
+	var shams;
+	var hasRequiredShams;
+
+	function requireShams () {
+		if (hasRequiredShams) return shams;
+		hasRequiredShams = 1;
+
+		var hasSymbols = requireShams$1();
+
+		/** @type {import('.')} */
+		shams = function hasToStringTagShams() {
+			return hasSymbols() && !!Symbol.toStringTag;
+		};
+		return shams;
+	}
+
+	var isString;
+	var hasRequiredIsString;
+
+	function requireIsString () {
+		if (hasRequiredIsString) return isString;
+		hasRequiredIsString = 1;
+
+		var strValue = String.prototype.valueOf;
+		var tryStringObject = function tryStringObject(value) {
+			try {
+				strValue.call(value);
+				return true;
+			} catch (e) {
+				return false;
+			}
+		};
+		var toStr = Object.prototype.toString;
+		var strClass = '[object String]';
+		var hasToStringTag = requireShams()();
+
+		isString = function isString(value) {
+			if (typeof value === 'string') {
+				return true;
+			}
+			if (typeof value !== 'object') {
+				return false;
+			}
+			return hasToStringTag ? tryStringObject(value) : toStr.call(value) === strClass;
+		};
+		return isString;
+	}
+
+	var getIteratorMethod$1;
+	var hasRequiredGetIteratorMethod;
+
+	function requireGetIteratorMethod () {
+		if (hasRequiredGetIteratorMethod) return getIteratorMethod$1;
+		hasRequiredGetIteratorMethod = 1;
+
+		var hasSymbols = requireHasSymbols()();
+		var GetIntrinsic = getIntrinsic;
+		var callBound = callBound$4;
+		var isString = requireIsString();
+
+		var $iterator = GetIntrinsic('%Symbol.iterator%', true);
+		var $stringSlice = callBound('String.prototype.slice');
+		var $String = GetIntrinsic('%String%');
+
+		getIteratorMethod$1 = function getIteratorMethod(ES, iterable) {
+			var usingIterator;
+			if (hasSymbols) {
+				usingIterator = ES.GetMethod(iterable, $iterator);
+			} else if (ES.IsArray(iterable)) {
+				usingIterator = function () {
+					var i = -1;
+					var arr = this; // eslint-disable-line no-invalid-this
+					return {
+						next: function () {
+							i += 1;
+							return {
+								done: i >= arr.length,
+								value: arr[i]
+							};
+						}
+					};
+				};
+			} else if (isString(iterable)) {
+				usingIterator = function () {
+					var i = 0;
+					return {
+						next: function () {
+							var nextIndex = ES.AdvanceStringIndex($String(iterable), i, true);
+							var value = $stringSlice(iterable, i, nextIndex);
+							i = nextIndex;
+							return {
+								done: nextIndex > iterable.length,
+								value: value
+							};
+						}
+					};
+				};
+			}
+			return usingIterator;
+		};
+		return getIteratorMethod$1;
+	}
+
+	var GetIntrinsic$6 = getIntrinsic;
+
+	var $TypeError$8 = type;
+	var $asyncIterator = GetIntrinsic$6('%Symbol.asyncIterator%', true);
 
 	var inspect = objectInspect;
 	var hasSymbols$2 = requireHasSymbols()();
 
-	var getIteratorMethod = requireGetIteratorMethod();
 	var AdvanceStringIndex = requireAdvanceStringIndex();
-	var Call$2 = Call$3;
+	var CreateAsyncFromSyncIterator = requireCreateAsyncFromSyncIterator();
+	var GetIteratorFromMethod = requireGetIteratorFromMethod();
 	var GetMethod$2 = GetMethod$3;
-	var IsArray$1 = IsArray$3;
-	var Type$5 = Type$c;
+	var IsArray = IsArray$2;
 
-	// https://262.ecma-international.org/11.0/#sec-getiterator
+	var getIteratorMethod = requireGetIteratorMethod();
 
-	var GetIterator = function GetIterator(obj, hint, method) {
-		var actualHint = hint;
-		if (arguments.length < 2) {
-			actualHint = 'sync';
-		}
-		if (actualHint !== 'sync' && actualHint !== 'async') {
-			throw new $TypeError$a("Assertion failed: `hint` must be one of 'sync' or 'async', got " + inspect(hint));
+	// https://262.ecma-international.org/14.0/#sec-getiterator
+
+	var GetIterator = function GetIterator(obj, kind) {
+		if (kind !== 'SYNC' && kind !== 'ASYNC') {
+			throw new $TypeError$8("Assertion failed: `kind` must be one of 'sync' or 'async', got " + inspect(kind));
 		}
 
-		var actualMethod = method;
-		if (arguments.length < 3) {
-			if (actualHint === 'async') {
-				if (hasSymbols$2 && $asyncIterator) {
-					actualMethod = GetMethod$2(obj, $asyncIterator);
-				}
-				if (actualMethod === undefined) {
-					throw new $SyntaxError("async from sync iterators aren't currently supported");
-				}
-			} else {
-				actualMethod = getIteratorMethod(
-					{
-						AdvanceStringIndex: AdvanceStringIndex,
-						GetMethod: GetMethod$2,
-						IsArray: IsArray$1
-					},
-					obj
-				);
+		var method;
+		if (kind === 'ASYNC') { // step 1
+			if (hasSymbols$2 && $asyncIterator) {
+				method = GetMethod$2(obj, $asyncIterator); // step 1.a
 			}
 		}
-		var iterator = Call$2(actualMethod, obj);
-		if (Type$5(iterator) !== 'Object') {
-			throw new $TypeError$a('iterator must return an object');
+		if (typeof method === 'undefined') { // step 1.b
+			// var syncMethod = GetMethod(obj, $iterator); // step 1.b.i
+			var syncMethod = getIteratorMethod(
+				{
+					AdvanceStringIndex: AdvanceStringIndex,
+					GetMethod: GetMethod$2,
+					IsArray: IsArray
+				},
+				obj
+			);
+			if (kind === 'ASYNC') {
+				if (typeof syncMethod === 'undefined') {
+					throw new $TypeError$8('iterator method is `undefined`'); // step 1.b.ii
+				}
+				var syncIteratorRecord = GetIteratorFromMethod(obj, syncMethod); // step 1.b.iii
+				return CreateAsyncFromSyncIterator(syncIteratorRecord); // step 1.b.iv
+			}
+			method = syncMethod; // step 2, kind of
 		}
 
-		return iterator;
-
-		// TODO: This should return an IteratorRecord
-		/*
-		var nextMethod = GetV(iterator, 'next');
-		return {
-			'[[Iterator]]': iterator,
-			'[[NextMethod]]': nextMethod,
-			'[[Done]]': false
-		};
-		*/
+		if (typeof method === 'undefined') {
+			throw new $TypeError$8('iterator method is `undefined`'); // step 3
+		}
+		return GetIteratorFromMethod(obj, method); // step 4
 	};
 
 	var GetIterator$1 = /*@__PURE__*/getDefaultExportFromCjs(GetIterator);
 
-	var $TypeError$9 = type;
+	var $TypeError$7 = type;
 
 	var hasOwn = hasown;
 
-	var IsPropertyKey$1 = IsPropertyKey$9;
-	var Type$4 = Type$c;
+	var IsPropertyKey = IsPropertyKey$8;
+	var Type$1 = Type$b;
 
 	// https://262.ecma-international.org/6.0/#sec-hasownproperty
 
 	var HasOwnProperty = function HasOwnProperty(O, P) {
-		if (Type$4(O) !== 'Object') {
-			throw new $TypeError$9('Assertion failed: `O` must be an Object');
+		if (Type$1(O) !== 'Object') {
+			throw new $TypeError$7('Assertion failed: `O` must be an Object');
 		}
-		if (!IsPropertyKey$1(P)) {
-			throw new $TypeError$9('Assertion failed: `P` must be a Property Key');
+		if (!IsPropertyKey(P)) {
+			throw new $TypeError$7('Assertion failed: `P` must be a Property Key');
 		}
 		return hasOwn(O, P);
 	};
 
 	var HasOwnProperty$1 = /*@__PURE__*/getDefaultExportFromCjs(HasOwnProperty);
-
-	var isInteger$1 = isInteger$2;
-
-	// https://262.ecma-international.org/12.0/#sec-isinteger
-
-	var IsIntegralNumber = function IsIntegralNumber(argument) {
-		return isInteger$1(argument);
-	};
-
-	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
-
-	var $TypeError$8 = type;
-
-	var Call$1 = Call$3;
-	var CompletionRecord = CompletionRecord_1;
-	var GetMethod$1 = GetMethod$3;
-	var IsCallable = IsCallable$3;
-	var Type$3 = Type$c;
-
-	// https://262.ecma-international.org/6.0/#sec-iteratorclose
-
-	var IteratorClose = function IteratorClose(iterator, completion) {
-		if (Type$3(iterator) !== 'Object') {
-			throw new $TypeError$8('Assertion failed: Type(iterator) is not Object');
-		}
-		if (!IsCallable(completion) && !(completion instanceof CompletionRecord)) {
-			throw new $TypeError$8('Assertion failed: completion is not a thunk representing a Completion Record, nor a Completion Record instance');
-		}
-		var completionThunk = completion instanceof CompletionRecord ? function () { return completion['?'](); } : completion;
-
-		var iteratorReturn = GetMethod$1(iterator, 'return');
-
-		if (typeof iteratorReturn === 'undefined') {
-			return completionThunk();
-		}
-
-		var completionRecord;
-		try {
-			var innerResult = Call$1(iteratorReturn, iterator, []);
-		} catch (e) {
-			// if we hit here, then "e" is the innerResult completion that needs re-throwing
-
-			// if the completion is of type "throw", this will throw.
-			completionThunk();
-			completionThunk = null; // ensure it's not called twice.
-
-			// if not, then return the innerResult completion
-			throw e;
-		}
-		completionRecord = completionThunk(); // if innerResult worked, then throw if the completion does
-		completionThunk = null; // ensure it's not called twice.
-
-		if (Type$3(innerResult) !== 'Object') {
-			throw new $TypeError$8('iterator .return must return an object');
-		}
-
-		return completionRecord;
-	};
-
-	var IteratorClose$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorClose);
-
-	var $TypeError$7 = type;
-
-	var Get$1 = Get$2;
-	var ToBoolean = ToBoolean$2;
-	var Type$2 = Type$c;
-
-	// https://262.ecma-international.org/6.0/#sec-iteratorcomplete
-
-	var IteratorComplete$1 = function IteratorComplete(iterResult) {
-		if (Type$2(iterResult) !== 'Object') {
-			throw new $TypeError$7('Assertion failed: Type(iterResult) is not Object');
-		}
-		return ToBoolean(Get$1(iterResult, 'done'));
-	};
-
-	var $TypeError$6 = type;
-
-	var Call = Call$3;
-	var IsArray = IsArray$3;
-	var GetV = GetV$2;
-	var IsPropertyKey = IsPropertyKey$9;
-
-	// https://262.ecma-international.org/6.0/#sec-invoke
-
-	var Invoke$1 = function Invoke(O, P) {
-		if (!IsPropertyKey(P)) {
-			throw new $TypeError$6('Assertion failed: P must be a Property Key');
-		}
-		var argumentsList = arguments.length > 2 ? arguments[2] : [];
-		if (!IsArray(argumentsList)) {
-			throw new $TypeError$6('Assertion failed: optional `argumentsList`, if provided, must be a List');
-		}
-		var func = GetV(O, P);
-		return Call(func, O, argumentsList);
-	};
-
-	var $TypeError$5 = type;
-
-	var Invoke = Invoke$1;
-	var Type$1 = Type$c;
-
-	// https://262.ecma-international.org/6.0/#sec-iteratornext
-
-	var IteratorNext$1 = function IteratorNext(iterator, value) {
-		var result = Invoke(iterator, 'next', arguments.length < 2 ? [] : [value]);
-		if (Type$1(result) !== 'Object') {
-			throw new $TypeError$5('iterator next must return an object');
-		}
-		return result;
-	};
-
-	var IteratorComplete = IteratorComplete$1;
-	var IteratorNext = IteratorNext$1;
-
-	// https://262.ecma-international.org/6.0/#sec-iteratorstep
-
-	var IteratorStep = function IteratorStep(iterator) {
-		var result = IteratorNext(iterator);
-		var done = IteratorComplete(result);
-		return done === true ? false : result;
-	};
-
-	var IteratorStep$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorStep);
-
-	var $TypeError$4 = type;
-
-	var Get = Get$2;
-	var Type = Type$c;
-
-	// https://262.ecma-international.org/6.0/#sec-iteratorvalue
-
-	var IteratorValue = function IteratorValue(iterResult) {
-		if (Type(iterResult) !== 'Object') {
-			throw new $TypeError$4('Assertion failed: Type(iterResult) is not Object');
-		}
-		return Get(iterResult, 'value');
-	};
-
-	var IteratorValue$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorValue);
-
-	var GetIntrinsic$6 = getIntrinsic;
-
-	var $abs = GetIntrinsic$6('%Math.abs%');
-
-	// http://262.ecma-international.org/5.1/#sec-5.2
-
-	var abs$1 = function abs(x) {
-		return $abs(x);
-	};
 
 	// var modulo = require('./modulo');
 	var $floor = Math.floor;
@@ -7237,6 +7509,119 @@
 		}
 		return $floor(x);
 	};
+
+	var floor = floor$1;
+
+	var $TypeError$6 = type;
+
+	// https://262.ecma-international.org/14.0/#eqn-truncate
+
+	var truncate$1 = function truncate(x) {
+		if (typeof x !== 'number' && typeof x !== 'bigint') {
+			throw new $TypeError$6('argument must be a Number or a BigInt');
+		}
+		var result = x < 0 ? -floor(-x) : floor(x);
+		return result === 0 ? 0 : result; // in the spec, these are math values, so we filter out -0 here
+	};
+
+	var truncate = truncate$1;
+
+	var $isFinite = _isFinite;
+
+	// https://262.ecma-international.org/14.0/#sec-isintegralnumber
+
+	var IsIntegralNumber = function IsIntegralNumber(argument) {
+		if (typeof argument !== 'number' || !$isFinite(argument)) {
+			return false;
+		}
+		return truncate(argument) === argument;
+	};
+
+	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
+
+	var $TypeError$5 = type;
+
+	var Call = Call$2;
+	var CompletionRecord = CompletionRecord_1;
+	var GetMethod$1 = GetMethod$3;
+	var IsCallable = IsCallable$3;
+	var Type = Type$b;
+
+	var isIteratorRecord$1 = iteratorRecord;
+
+	// https://262.ecma-international.org/14.0/#sec-iteratorclose
+
+	var IteratorClose = function IteratorClose(iteratorRecord, completion) {
+		if (!isIteratorRecord$1(iteratorRecord)) {
+			throw new $TypeError$5('Assertion failed: `iteratorRecord` must be an Iterator Record'); // step 1
+		}
+		if (Type(iteratorRecord['[[Iterator]]']) !== 'Object') {
+			throw new $TypeError$5('Assertion failed: iteratorRecord.[[Iterator]] must be an Object'); // step 1
+		}
+
+		if (!IsCallable(completion) && !(completion instanceof CompletionRecord)) { // step 2
+			throw new $TypeError$5('Assertion failed: completion is not a thunk representing a Completion Record, nor a Completion Record instance');
+		}
+		var completionThunk = completion instanceof CompletionRecord ? function () { return completion['?'](); } : completion;
+
+		var iterator = iteratorRecord['[[Iterator]]']; // step 3
+
+		var iteratorReturn;
+		try {
+			iteratorReturn = GetMethod$1(iterator, 'return'); // step 4
+		} catch (e) {
+			completionThunk(); // throws if `completion` is a throw completion // step 6
+			completionThunk = null; // ensure it's not called twice.
+			throw e; // step 7
+		}
+		if (typeof iteratorReturn === 'undefined') {
+			return completionThunk(); // step 5.a - 5.b
+		}
+
+		var innerResult;
+		try {
+			innerResult = Call(iteratorReturn, iterator, []);
+		} catch (e) {
+			// if we hit here, then "e" is the innerResult completion that needs re-throwing
+
+			completionThunk(); // throws if `completion` is a throw completion // step 6
+			completionThunk = null; // ensure it's not called twice.
+
+			// if not, then return the innerResult completion
+			throw e; // step 7
+		}
+		var completionRecord = completionThunk(); // if innerResult worked, then throw if the completion does
+		completionThunk = null; // ensure it's not called twice.
+
+		if (Type(innerResult) !== 'Object') {
+			throw new $TypeError$5('iterator .return must return an object');
+		}
+
+		return completionRecord;
+	};
+
+	var IteratorClose$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorClose);
+
+	var $TypeError$4 = type;
+
+	var IteratorComplete = IteratorComplete$1;
+	var IteratorNext = IteratorNext$1;
+
+	var isIteratorRecord = iteratorRecord;
+
+	// https://262.ecma-international.org/14.0/#sec-iteratorstep
+
+	var IteratorStep = function IteratorStep(iteratorRecord) {
+		if (!isIteratorRecord(iteratorRecord)) {
+			throw new $TypeError$4('Assertion failed: `iteratorRecord` must be an Iterator Record'); // step 1
+		}
+
+		var result = IteratorNext(iteratorRecord); // step 1
+		var done = IteratorComplete(result); // step 2
+		return done === true ? false : result; // steps 3-4
+	};
+
+	var IteratorStep$1 = /*@__PURE__*/getDefaultExportFromCjs(IteratorStep);
 
 	var isPrimitive$2 = function isPrimitive(value) {
 		return value === null || (typeof value !== 'function' && typeof value !== 'object');
@@ -7738,28 +8123,21 @@
 		return value;
 	};
 
-	var ToString$2;
-	var hasRequiredToString;
+	var GetIntrinsic$5 = getIntrinsic;
 
-	function requireToString () {
-		if (hasRequiredToString) return ToString$2;
-		hasRequiredToString = 1;
+	var $String$1 = GetIntrinsic$5('%String%');
+	var $TypeError$2 = type;
 
-		var GetIntrinsic = getIntrinsic;
+	// https://262.ecma-international.org/6.0/#sec-tostring
 
-		var $String = GetIntrinsic('%String%');
-		var $TypeError = type;
+	var ToString = function ToString(argument) {
+		if (typeof argument === 'symbol') {
+			throw new $TypeError$2('Cannot convert a Symbol value to a string');
+		}
+		return $String$1(argument);
+	};
 
-		// https://262.ecma-international.org/6.0/#sec-tostring
-
-		ToString$2 = function ToString(argument) {
-			if (typeof argument === 'symbol') {
-				throw new $TypeError('Cannot convert a Symbol value to a string');
-			}
-			return $String(argument);
-		};
-		return ToString$2;
-	}
+	var ToString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToString);
 
 	var implementation;
 	var hasRequiredImplementation;
@@ -7769,7 +8147,7 @@
 		hasRequiredImplementation = 1;
 
 		var RequireObjectCoercible = RequireObjectCoercible$1;
-		var ToString = requireToString();
+		var ToString$1 = ToString;
 		var callBound = callBound$4;
 		var $replace = callBound('String.prototype.replace');
 
@@ -7784,7 +8162,7 @@
 		/* eslint-enable no-control-regex */
 
 		implementation = function trim() {
-			var S = ToString(RequireObjectCoercible(this));
+			var S = ToString$1(RequireObjectCoercible(this));
 			return $replace($replace(S, leftWhitespace, ''), rightWhitespace, '');
 		};
 		return implementation;
@@ -7921,10 +8299,10 @@
 		return StringToNumber$1;
 	}
 
-	var GetIntrinsic$5 = getIntrinsic;
+	var GetIntrinsic$4 = getIntrinsic;
 
-	var $TypeError$2 = type;
-	var $Number = GetIntrinsic$5('%Number%');
+	var $TypeError$1 = type;
+	var $Number = GetIntrinsic$4('%Number%');
 	var isPrimitive = requireIsPrimitive();
 
 	var ToPrimitive = ToPrimitive$1;
@@ -7932,13 +8310,13 @@
 
 	// https://262.ecma-international.org/13.0/#sec-tonumber
 
-	var ToNumber$1 = function ToNumber(argument) {
+	var ToNumber = function ToNumber(argument) {
 		var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number);
 		if (typeof value === 'symbol') {
-			throw new $TypeError$2('Cannot convert a Symbol value to a number');
+			throw new $TypeError$1('Cannot convert a Symbol value to a number');
 		}
 		if (typeof value === 'bigint') {
-			throw new $TypeError$2('Conversion from \'BigInt\' to \'number\' is not allowed.');
+			throw new $TypeError$1('Conversion from \'BigInt\' to \'number\' is not allowed.');
 		}
 		if (typeof value === 'string') {
 			return StringToNumber(value);
@@ -7946,32 +8324,7 @@
 		return $Number(value);
 	};
 
-	var ToNumber$2 = /*@__PURE__*/getDefaultExportFromCjs(ToNumber$1);
-
-	var sign = function sign(number) {
-		return number >= 0 ? 1 : -1;
-	};
-
-	var abs = abs$1;
-	var floor = floor$1;
-	var ToNumber = ToNumber$1;
-
-	var $isNaN = _isNaN;
-	var $isFinite = _isFinite;
-	var $sign = sign;
-
-	// https://262.ecma-international.org/12.0/#sec-tointegerorinfinity
-
-	var ToIntegerOrInfinity = function ToIntegerOrInfinity(value) {
-		var number = ToNumber(value);
-		if ($isNaN(number) || number === 0) { return 0; }
-		if (!$isFinite(number)) { return number; }
-		var integer = floor(abs(number));
-		if (integer === 0) { return 0; }
-		return $sign(number) * integer;
-	};
-
-	var ToIntegerOrInfinity$1 = /*@__PURE__*/getDefaultExportFromCjs(ToIntegerOrInfinity);
+	var ToNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(ToNumber);
 
 	/** @type {import('.')} */
 	var esObjectAtoms = Object;
@@ -7991,42 +8344,6 @@
 
 	var ToObject$1 = /*@__PURE__*/getDefaultExportFromCjs(ToObject);
 
-	var GetIntrinsic$4 = getIntrinsic;
-
-	var $String$1 = GetIntrinsic$4('%String%');
-	var $TypeError$1 = type;
-
-	// https://262.ecma-international.org/6.0/#sec-tostring
-
-	var ToString = function ToString(argument) {
-		if (typeof argument === 'symbol') {
-			throw new $TypeError$1('Cannot convert a Symbol value to a string');
-		}
-		return $String$1(argument);
-	};
-
-	var ToString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToString);
-
-	var ToLength;
-	var hasRequiredToLength;
-
-	function requireToLength () {
-		if (hasRequiredToLength) return ToLength;
-		hasRequiredToLength = 1;
-
-		var MAX_SAFE_INTEGER = requireMaxSafeInteger();
-
-		var ToIntegerOrInfinity$1 = ToIntegerOrInfinity;
-
-		ToLength = function ToLength(argument) {
-			var len = ToIntegerOrInfinity$1(argument);
-			if (len <= 0) { return 0; } // includes converting -0 to +0
-			if (len > MAX_SAFE_INTEGER) { return MAX_SAFE_INTEGER; }
-			return len;
-		};
-		return ToLength;
-	}
-
 	var StringPad$1;
 	var hasRequiredStringPad;
 
@@ -8038,40 +8355,44 @@
 
 		var callBound = callBound$4;
 
-		var ToLength = requireToLength();
-		var ToString$1 = ToString;
+		var isInteger = requireIsInteger();
 
 		var $strSlice = callBound('String.prototype.slice');
 
-		// https://262.ecma-international.org/11.0/#sec-stringpad
+		// https://262.ecma-international.org/15.0/#sec-stringpad
 
-		StringPad$1 = function StringPad(O, maxLength, fillString, placement) {
-			if (placement !== 'start' && placement !== 'end') {
-				throw new $TypeError('Assertion failed: `placement` must be "start" or "end"');
+		StringPad$1 = function StringPad(S, maxLength, fillString, placement) {
+			if (typeof S !== 'string') {
+				throw new $TypeError('Assertion failed: `S` must be a String');
 			}
-			var S = ToString$1(O);
-			var intMaxLength = ToLength(maxLength);
-			var stringLength = S.length;
-			if (intMaxLength <= stringLength) {
-				return S;
+			if (!isInteger(maxLength) || maxLength < 0) {
+				throw new $TypeError('Assertion failed: `maxLength` must be a non-negative integer');
 			}
-			var filler = typeof fillString === 'undefined' ? ' ' : ToString$1(fillString);
-			if (filler === '') {
-				return S;
+			if (typeof fillString !== 'string') {
+				throw new $TypeError('Assertion failed: `fillString` must be a String');
 			}
-			var fillLen = intMaxLength - stringLength;
+			if (placement !== 'start' && placement !== 'end' && placement !== 'START' && placement !== 'END') {
+				throw new $TypeError('Assertion failed: `placement` must be ~START~ or ~END~');
+			}
 
-			// the String value consisting of repeated concatenations of filler truncated to length fillLen.
+			var stringLength = S.length; // step 1
+
+			if (maxLength <= stringLength) { return S; } // step 2
+
+			if (fillString === '') { return S; } // step 3
+
+			var fillLen = maxLength - stringLength; // step 4
+
+			// 5. Let _truncatedStringFiller_ be the String value consisting of repeated concatenations of _fillString_ truncated to length _fillLen_.
 			var truncatedStringFiller = '';
 			while (truncatedStringFiller.length < fillLen) {
-				truncatedStringFiller += filler;
+				truncatedStringFiller += fillString;
 			}
 			truncatedStringFiller = $strSlice(truncatedStringFiller, 0, fillLen);
 
-			if (placement === 'start') {
-				return truncatedStringFiller + S;
-			}
-			return S + truncatedStringFiller;
+			if (placement === 'start' || placement === 'START') { return truncatedStringFiller + S; } // step 6
+
+			return S + truncatedStringFiller; // step 7
 		};
 		return StringPad$1;
 	}
@@ -8083,7 +8404,7 @@
 
 	var StringPad = requireStringPad();
 
-	var isInteger = isInteger$2;
+	var isInteger = requireIsInteger();
 
 	// https://262.ecma-international.org/13.0/#sec-tozeropaddeddecimalstring
 
@@ -8107,14 +8428,6 @@
 	};
 
 	var every$1 = /*@__PURE__*/getDefaultExportFromCjs(every);
-
-	var forEach = function forEach(array, callback) {
-		for (var i = 0; i < array.length; i += 1) {
-			callback(array[i], i, array); // eslint-disable-line callback-return
-		}
-	};
-
-	var forEach$1 = /*@__PURE__*/getDefaultExportFromCjs(forEach);
 
 	var GetIntrinsic$2 = getIntrinsic;
 
@@ -8246,9 +8559,9 @@
 	  };
 
 	  // would perform nearest rounding if x was not an integer:
-	  const xStr = Call$4(NumberPrototypeToPrecision, x, [xDigits]);
-	  const div = sign * NumberParseInt(Call$4(StringPrototypeSlice$1, xStr, [0, xDigits - p]), 10);
-	  const mod = sign * NumberParseInt(Call$4(StringPrototypeSlice$1, xStr, [xDigits - p]), 10);
+	  const xStr = Call$3(NumberPrototypeToPrecision, x, [xDigits]);
+	  const div = sign * NumberParseInt(Call$3(StringPrototypeSlice$1, xStr, [0, xDigits - p]), 10);
+	  const mod = sign * NumberParseInt(Call$3(StringPrototypeSlice$1, xStr, [xDigits - p]), 10);
 	  return {
 	    div,
 	    mod
@@ -8264,10 +8577,10 @@
 	  const sign = MathSign$2(x) || MathSign$2(z);
 	  x = MathAbs$4(x);
 	  z = MathAbs$4(z);
-	  const xStr = Call$4(NumberPrototypeToPrecision, x, [MathTrunc$1(1 + MathLog10(x))]);
-	  if (z === 0) return sign * NumberParseInt(xStr + Call$4(StringPrototypeRepeat, '0', [p]), 10);
-	  const zStr = Call$4(NumberPrototypeToPrecision, z, [MathTrunc$1(1 + MathLog10(z))]);
-	  const resStr = xStr + Call$4(StringPrototypePadStart, zStr, [p, '0']);
+	  const xStr = Call$3(NumberPrototypeToPrecision, x, [MathTrunc$1(1 + MathLog10(x))]);
+	  if (z === 0) return sign * NumberParseInt(xStr + Call$3(StringPrototypeRepeat, '0', [p]), 10);
+	  const zStr = Call$3(NumberPrototypeToPrecision, z, [MathTrunc$1(1 + MathLog10(z))]);
+	  const resStr = xStr + Call$3(StringPrototypePadStart, zStr, [p, '0']);
 	  return sign * NumberParseInt(resStr, 10);
 	}
 
@@ -8687,7 +9000,7 @@
 	const BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
 	const ICU_LEGACY_TIME_ZONE_IDS = new Set(['ACT', 'AET', 'AGT', 'ART', 'AST', 'BET', 'BST', 'CAT', 'CNT', 'CST', 'CTT', 'EAT', 'ECT', 'IET', 'IST', 'JST', 'MIT', 'NET', 'NST', 'PLT', 'PNT', 'PRT', 'PST', 'SST', 'VST']);
 	function ToIntegerWithTruncation(value) {
-	  const number = ToNumber$2(value);
+	  const number = ToNumber$1(value);
 	  if (number === 0) return 0;
 	  if (NumberIsNaN(number) || !NumberIsFinite(number)) {
 	    throw new RangeError('invalid number value');
@@ -8707,7 +9020,7 @@
 	  return integer;
 	}
 	function ToIntegerIfIntegral(value) {
-	  const number = ToNumber$2(value);
+	  const number = ToNumber$1(value);
 	  if (!NumberIsFinite(number)) throw new RangeError('infinity is out of range');
 	  if (!IsIntegralNumber$1(number)) throw new RangeError("unsupported fractional value ".concat(value));
 	  if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
@@ -8717,7 +9030,7 @@
 	// This convenience function isn't in the spec, but is useful in the polyfill
 	// for DRY and better error messages.
 	function RequireString(value) {
-	  if (Type$d(value) !== 'String') {
+	  if (Type$c(value) !== 'String') {
 	    // Use String() to ensure that Symbols won't throw
 	    throw new TypeError("expected a string, not ".concat(StringCtor(value)));
 	  }
@@ -8766,17 +9079,17 @@
 	  return instance;
 	}
 
-	// copied from es-abstract/2022/CopyDataProperties.js
+	// copied from es-abstract/2024/CopyDataProperties.js
 	// with modifications per Temporal spec/mainadditions.html
 
 	function CopyDataProperties(target, source, excludedKeys, excludedValues) {
-	  if (Type$d(target) !== 'Object') {
+	  if (Type$c(target) !== 'Object') {
 	    throw new $TypeError('Assertion failed: "target" must be an Object');
 	  }
-	  if (!IsArray$4(excludedKeys) || !every$1(excludedKeys, IsPropertyKey$a)) {
+	  if (!IsArray$3(excludedKeys) || !every$1(excludedKeys, IsPropertyKey$9)) {
 	    throw new $TypeError('Assertion failed: "excludedKeys" must be a List of Property Keys');
 	  }
-	  if (excludedValues !== undefined && !IsArray$4(excludedValues)) {
+	  if (excludedValues !== undefined && !IsArray$3(excludedValues)) {
 	    throw new $TypeError('Assertion failed: "excludedValues" must be a List of ECMAScript language values');
 	  }
 	  if (typeof source === 'undefined' || source === null) {
@@ -8791,7 +9104,7 @@
 	    if (excluded) return;
 	    var enumerable = $isEnumerable(from, nextKey) ||
 	    // this is to handle string keys being non-enumerable in older engines
-	    typeof source === 'string' && nextKey >= 0 && IsIntegralNumber$1(ToNumber$2(nextKey));
+	    typeof source === 'string' && nextKey >= 0 && IsIntegralNumber$1(ToNumber$1(nextKey));
 	    if (enumerable) {
 	      var propValue = Get$3(from, nextKey);
 	      if (excludedValues !== undefined) {
@@ -8867,7 +9180,7 @@
 	function processAnnotations(annotations) {
 	  let calendar;
 	  let calendarWasCritical = false;
-	  for (const [, critical, key, value] of Call$4(StringPrototypeMatchAll, annotations, [annotation])) {
+	  for (const [, critical, key, value] of Call$3(StringPrototypeMatchAll, annotations, [annotation])) {
 	    if (key === 'u-ca') {
 	      if (calendar === undefined) {
 	        calendar = value;
@@ -8882,24 +9195,25 @@
 	  return calendar;
 	}
 	function ParseISODateTime(isoString) {
+	  var _ref3, _match$, _ref4, _match$2, _match$3, _ref5, _match$4, _ref6, _match$5, _ref7, _match$6;
 	  // ZDT is the superset of fields for every other Temporal type
 	  const match = zoneddatetime.exec(isoString);
 	  if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
 	  let yearString = match[1];
 	  if (yearString[0] === '\u2212') yearString = "-".concat(yearString.slice(1));
 	  if (yearString === '-000000') throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
-	  const year = ToIntegerOrInfinity$1(yearString);
-	  const month = ToIntegerOrInfinity$1(match[2] || match[4]);
-	  const day = ToIntegerOrInfinity$1(match[3] || match[5]);
+	  const year = +yearString;
+	  const month = +((_ref3 = (_match$ = match[2]) !== null && _match$ !== void 0 ? _match$ : match[4]) !== null && _ref3 !== void 0 ? _ref3 : 1);
+	  const day = +((_ref4 = (_match$2 = match[3]) !== null && _match$2 !== void 0 ? _match$2 : match[5]) !== null && _ref4 !== void 0 ? _ref4 : 1);
 	  const hasTime = match[6] !== undefined;
-	  const hour = ToIntegerOrInfinity$1(match[6]);
-	  const minute = ToIntegerOrInfinity$1(match[7] || match[10]);
-	  let second = ToIntegerOrInfinity$1(match[8] || match[11]);
+	  const hour = +((_match$3 = match[6]) !== null && _match$3 !== void 0 ? _match$3 : 0);
+	  const minute = +((_ref5 = (_match$4 = match[7]) !== null && _match$4 !== void 0 ? _match$4 : match[10]) !== null && _ref5 !== void 0 ? _ref5 : 0);
+	  let second = +((_ref6 = (_match$5 = match[8]) !== null && _match$5 !== void 0 ? _match$5 : match[11]) !== null && _ref6 !== void 0 ? _ref6 : 0);
 	  if (second === 60) second = 59;
-	  const fraction = (match[9] || match[12]) + '000000000';
-	  const millisecond = ToIntegerOrInfinity$1(fraction.slice(0, 3));
-	  const microsecond = ToIntegerOrInfinity$1(fraction.slice(3, 6));
-	  const nanosecond = ToIntegerOrInfinity$1(fraction.slice(6, 9));
+	  const fraction = ((_ref7 = (_match$6 = match[9]) !== null && _match$6 !== void 0 ? _match$6 : match[12]) !== null && _ref7 !== void 0 ? _ref7 : '') + '000000000';
+	  const millisecond = +fraction.slice(0, 3);
+	  const microsecond = +fraction.slice(3, 6);
+	  const nanosecond = +fraction.slice(6, 9);
 	  let offset;
 	  let z = false;
 	  if (match[13]) {
@@ -8948,14 +9262,15 @@
 	  const match = time.exec(isoString);
 	  let hour, minute, second, millisecond, microsecond, nanosecond;
 	  if (match) {
-	    hour = ToIntegerOrInfinity$1(match[1]);
-	    minute = ToIntegerOrInfinity$1(match[2] || match[5]);
-	    second = ToIntegerOrInfinity$1(match[3] || match[6]);
+	    var _match$7, _ref8, _match$8, _ref9, _match$9, _ref10, _match$10;
+	    hour = +((_match$7 = match[1]) !== null && _match$7 !== void 0 ? _match$7 : 0);
+	    minute = +((_ref8 = (_match$8 = match[2]) !== null && _match$8 !== void 0 ? _match$8 : match[5]) !== null && _ref8 !== void 0 ? _ref8 : 0);
+	    second = +((_ref9 = (_match$9 = match[3]) !== null && _match$9 !== void 0 ? _match$9 : match[6]) !== null && _ref9 !== void 0 ? _ref9 : 0);
 	    if (second === 60) second = 59;
-	    const fraction = (match[4] || match[7]) + '000000000';
-	    millisecond = ToIntegerOrInfinity$1(fraction.slice(0, 3));
-	    microsecond = ToIntegerOrInfinity$1(fraction.slice(3, 6));
-	    nanosecond = ToIntegerOrInfinity$1(fraction.slice(6, 9));
+	    const fraction = ((_ref10 = (_match$10 = match[4]) !== null && _match$10 !== void 0 ? _match$10 : match[7]) !== null && _ref10 !== void 0 ? _ref10 : '') + '000000000';
+	    millisecond = +fraction.slice(0, 3);
+	    microsecond = +fraction.slice(3, 6);
+	    nanosecond = +fraction.slice(6, 9);
 	    processAnnotations(match[10]); // ignore found calendar
 	    if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
 	  } else {
@@ -9018,8 +9333,8 @@
 	    let yearString = match[1];
 	    if (yearString[0] === '\u2212') yearString = "-".concat(yearString.slice(1));
 	    if (yearString === '-000000') throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
-	    year = ToIntegerOrInfinity$1(yearString);
-	    month = ToIntegerOrInfinity$1(match[2]);
+	    year = +yearString;
+	    month = +match[2];
 	    calendar = processAnnotations(match[3]);
 	    referenceISODay = 1;
 	    if (calendar !== undefined && calendar !== 'iso8601') {
@@ -9047,8 +9362,8 @@
 	  const match = monthday.exec(isoString);
 	  let month, day, calendar, referenceISOYear;
 	  if (match) {
-	    month = ToIntegerOrInfinity$1(match[1]);
-	    day = ToIntegerOrInfinity$1(match[2]);
+	    month = +match[1];
+	    day = +match[2];
 	    calendar = processAnnotations(match[3]);
 	    if (calendar !== undefined && calendar !== 'iso8601') {
 	      throw new RangeError('MM-DD format is only valid with iso8601 calendar');
@@ -9161,16 +9476,16 @@
 	  // fractional hours, minutes, or seconds, expressed in whole nanoseconds:
 	  let excessNanoseconds = 0;
 	  if (fHours !== undefined) {
-	    var _ref3, _ref4, _ref5;
-	    if ((_ref3 = (_ref4 = (_ref5 = minutesStr !== null && minutesStr !== void 0 ? minutesStr : fMinutes) !== null && _ref5 !== void 0 ? _ref5 : secondsStr) !== null && _ref4 !== void 0 ? _ref4 : fSeconds) !== null && _ref3 !== void 0 ? _ref3 : false) {
+	    var _ref11, _ref12, _ref13;
+	    if ((_ref11 = (_ref12 = (_ref13 = minutesStr !== null && minutesStr !== void 0 ? minutesStr : fMinutes) !== null && _ref13 !== void 0 ? _ref13 : secondsStr) !== null && _ref12 !== void 0 ? _ref12 : fSeconds) !== null && _ref11 !== void 0 ? _ref11 : false) {
 	      throw new RangeError('only the smallest unit can be fractional');
 	    }
 	    excessNanoseconds = ToIntegerWithTruncation((fHours + '000000000').slice(0, 9)) * 3600 * sign;
 	  } else {
 	    minutes = minutesStr === undefined ? 0 : ToIntegerWithTruncation(minutesStr) * sign;
 	    if (fMinutes !== undefined) {
-	      var _ref6;
-	      if ((_ref6 = secondsStr !== null && secondsStr !== void 0 ? secondsStr : fSeconds) !== null && _ref6 !== void 0 ? _ref6 : false) {
+	      var _ref14;
+	      if ((_ref14 = secondsStr !== null && secondsStr !== void 0 ? secondsStr : fSeconds) !== null && _ref14 !== void 0 ? _ref14 : false) {
 	        throw new RangeError('only the smallest unit can be fractional');
 	      }
 	      excessNanoseconds = ToIntegerWithTruncation((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
@@ -9263,7 +9578,7 @@
 	  };
 	}
 	function ToTemporalDurationRecord(item) {
-	  if (Type$d(item) !== 'Object') {
+	  if (Type$c(item) !== 'Object') {
 	    return ParseTemporalDurationString(RequireString(item));
 	  }
 	  if (IsTemporalDuration(item)) {
@@ -9316,7 +9631,7 @@
 	  return result;
 	}
 	function ToTemporalPartialDurationRecord(temporalDurationLike) {
-	  if (Type$d(temporalDurationLike) !== 'Object') {
+	  if (Type$c(temporalDurationLike) !== 'Object') {
 	    throw new TypeError('invalid duration-like');
 	  }
 	  const result = {
@@ -9395,7 +9710,7 @@
 	function ToTemporalRoundingIncrement(options) {
 	  let increment = options.roundingIncrement;
 	  if (increment === undefined) return 1;
-	  increment = ToNumber$2(increment);
+	  increment = ToNumber$1(increment);
 	  if (!NumberIsFinite(increment)) {
 	    throw new RangeError('roundingIncrement must be finite');
 	  }
@@ -9417,7 +9732,7 @@
 	function ToFractionalSecondDigits(normalizedOptions) {
 	  let digitsValue = normalizedOptions.fractionalSecondDigits;
 	  if (digitsValue === undefined) return 'auto';
-	  if (Type$d(digitsValue) !== 'Number') {
+	  if (Type$c(digitsValue) !== 'Number') {
 	    if (ToString$1(digitsValue) !== 'auto') {
 	      throw new RangeError("fractionalSecondDigits must be 'auto' or 0 through 9, not ".concat(digitsValue));
 	    }
@@ -9513,7 +9828,7 @@
 	      allowedSingular.push(singular);
 	    }
 	  }
-	  Call$4(ArrayPrototypePush$3, allowedSingular, extraValues);
+	  Call$3(ArrayPrototypePush$3, allowedSingular, extraValues);
 	  let defaultVal = requiredOrDefault;
 	  if (defaultVal === REQUIRED) {
 	    defaultVal = undefined;
@@ -9521,7 +9836,7 @@
 	    allowedSingular.push(defaultVal);
 	  }
 	  const allowedValues = [];
-	  Call$4(ArrayPrototypePush$3, allowedValues, allowedSingular);
+	  Call$3(ArrayPrototypePush$3, allowedValues, allowedSingular);
 	  for (let index = 0; index < allowedSingular.length; index++) {
 	    const singular = allowedSingular[index];
 	    const plural = PLURAL_FOR.get(singular);
@@ -9547,7 +9862,7 @@
 	  let offsetBehaviour = 'option';
 	  let matchMinutes = false;
 	  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
-	  if (Type$d(relativeTo) === 'Object') {
+	  if (Type$c(relativeTo) === 'Object') {
 	    if (IsTemporalZonedDateTime(relativeTo)) {
 	      const timeZoneRec = new TimeZoneMethodRecord(GetSlot(relativeTo, TIME_ZONE), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	      return {
@@ -9564,7 +9879,7 @@
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(relativeTo);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
 	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    Call$4(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
+	    Call$3(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
 	    const fields = PrepareTemporalFields(relativeTo, fieldNames, []);
 	    const dateOptions = ObjectCreate$7(null);
 	    dateOptions.overflow = 'constrain';
@@ -9665,13 +9980,13 @@
 	  if (extraFieldDescriptors) {
 	    for (let index = 0; index < extraFieldDescriptors.length; index++) {
 	      let desc = extraFieldDescriptors[index];
-	      Call$4(ArrayPrototypePush$3, fields, [desc.property]);
+	      Call$3(ArrayPrototypePush$3, fields, [desc.property]);
 	      if (desc.required === true && requiredFields !== 'partial') {
-	        Call$4(ArrayPrototypePush$3, requiredFields, [desc.property]);
+	        Call$3(ArrayPrototypePush$3, requiredFields, [desc.property]);
 	      }
 	    }
 	  }
-	  Call$4(ArrayPrototypeSort$1, fields, []);
+	  Call$3(ArrayPrototypeSort$1, fields, []);
 	  let previousProperty = undefined;
 	  for (let index = 0; index < fields.length; index++) {
 	    const property = fields[index];
@@ -9685,7 +10000,7 @@
 	        if (BUILTIN_CASTS.has(property)) {
 	          value = BUILTIN_CASTS.get(property)(value);
 	        } else if (extraFieldDescriptors) {
-	          const matchingDescriptor = Call$4(ArrayPrototypeFind, extraFieldDescriptors, [desc => desc.property === property]);
+	          const matchingDescriptor = Call$3(ArrayPrototypeFind, extraFieldDescriptors, [desc => desc.property === property]);
 	          if (matchingDescriptor) {
 	            const convertor = matchingDescriptor.conversion;
 	            value = convertor(value);
@@ -9693,7 +10008,7 @@
 	        }
 	        result[property] = value;
 	      } else if (requiredFields !== 'partial') {
-	        if (Call$4(ArrayIncludes$1, requiredFields, [property])) {
+	        if (Call$3(ArrayIncludes$1, requiredFields, [property])) {
 	          throw new TypeError("required property '".concat(property, "' missing or undefined"));
 	        }
 	        value = BUILTIN_DEFAULTS.get(property);
@@ -9729,7 +10044,7 @@
 	}
 	function ToTemporalDate(item, options) {
 	  if (options !== undefined) options = SnapshotOwnProperties(GetOptionsObject(options), null);
-	  if (Type$d(item) === 'Object') {
+	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalDate(item)) return item;
 	    if (IsTemporalZonedDateTime(item)) {
 	      ToTemporalOverflow(options); // validate and ignore
@@ -9799,7 +10114,7 @@
 	function ToTemporalDateTime(item, options) {
 	  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
 	  const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
-	  if (Type$d(item) === 'Object') {
+	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalDateTime(item)) return item;
 	    if (IsTemporalZonedDateTime(item)) {
 	      ToTemporalOverflow(resolvedOptions); // validate and ignore
@@ -9813,7 +10128,7 @@
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(item);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
 	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    Call$4(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+	    Call$3(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
 	    const fields = PrepareTemporalFields(item, fieldNames, []);
 	    ({
 	      year,
@@ -9868,7 +10183,7 @@
 	  return new TemporalDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	}
 	function ToTemporalInstant(item) {
-	  if (Type$d(item === 'Object')) {
+	  if (Type$c(item === 'Object')) {
 	    if (IsTemporalInstant(item)) return item;
 	    if (IsTemporalZonedDateTime(item)) {
 	      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
@@ -9899,7 +10214,7 @@
 	}
 	function ToTemporalMonthDay(item, options) {
 	  if (options !== undefined) options = SnapshotOwnProperties(GetOptionsObject(options), null);
-	  if (Type$d(item) === 'Object') {
+	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalMonthDay(item)) return item;
 	    let calendar;
 	    if (HasSlot(item, CALENDAR)) {
@@ -9939,7 +10254,7 @@
 	function ToTemporalTime(item) {
 	  let overflow = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'constrain';
 	  let hour, minute, second, millisecond, microsecond, nanosecond;
-	  if (Type$d(item) === 'Object') {
+	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalTime(item)) return item;
 	    if (IsTemporalZonedDateTime(item)) {
 	      const timeZoneRec = new TimeZoneMethodRecord(GetSlot(item, TIME_ZONE), ['getOffsetNanosecondsFor']);
@@ -9986,7 +10301,7 @@
 	}
 	function ToTemporalYearMonth(item, options) {
 	  if (options !== undefined) options = SnapshotOwnProperties(GetOptionsObject(options), null);
-	  if (Type$d(item) === 'Object') {
+	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalYearMonth(item)) return item;
 	    const calendar = GetTemporalCalendarSlotValueWithISODefault(item);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['fields', 'yearMonthFromFields']);
@@ -10060,12 +10375,12 @@
 	  let disambiguation, offsetOpt;
 	  let matchMinute = false;
 	  let offsetBehaviour = 'option';
-	  if (Type$d(item) === 'Object') {
+	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalZonedDateTime(item)) return item;
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(item);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
 	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    Call$4(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
+	    Call$3(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
 	    const fields = PrepareTemporalFields(item, fieldNames, ['timeZone']);
 	    timeZone = ToTemporalTimeZoneSlotValue(fields.timeZone);
 	    offset = fields.offset;
@@ -10310,14 +10625,14 @@
 	  fieldNames = calendarRec.fields(fieldNames);
 	  const result = [];
 	  for (const name of fieldNames) {
-	    if (Type$d(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
-	    Call$4(ArrayPrototypePush$3, result, [name]);
+	    if (Type$c(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
+	    Call$3(ArrayPrototypePush$3, result, [name]);
 	  }
 	  return result;
 	}
 	function CalendarMergeFields(calendarRec, fields, additionalFields) {
 	  const result = calendarRec.mergeFields(fields, additionalFields);
-	  if (!calendarRec.isBuiltIn() && Type$d(result) !== 'Object') {
+	  if (!calendarRec.isBuiltIn() && Type$c(result) !== 'Object') {
 	    throw new TypeError('bad return from calendar.mergeFields()');
 	  }
 	  return result;
@@ -10336,10 +10651,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.year%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.year%'), calendar, [dateLike]);
 	  }
 	  const year = GetMethod$4(calendar, 'year');
-	  const result = Call$4(year, calendar, [dateLike]);
+	  const result = Call$3(year, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar year result must be an integer');
 	  }
@@ -10352,10 +10667,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.month%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.month%'), calendar, [dateLike]);
 	  }
 	  const month = GetMethod$4(calendar, 'month');
-	  const result = Call$4(month, calendar, [dateLike]);
+	  const result = Call$3(month, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar month result must be a positive integer');
 	  }
@@ -10368,10 +10683,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.monthCode%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.monthCode%'), calendar, [dateLike]);
 	  }
 	  const monthCode = GetMethod$4(calendar, 'monthCode');
-	  const result = Call$4(monthCode, calendar, [dateLike]);
+	  const result = Call$3(monthCode, calendar, [dateLike]);
 	  if (typeof result !== 'string') {
 	    throw new TypeError('calendar monthCode result must be a string');
 	  }
@@ -10393,10 +10708,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.era%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.era%'), calendar, [dateLike]);
 	  }
 	  const era = GetMethod$4(calendar, 'era');
-	  let result = Call$4(era, calendar, [dateLike]);
+	  let result = Call$3(era, calendar, [dateLike]);
 	  if (result === undefined) {
 	    return result;
 	  }
@@ -10409,10 +10724,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.eraYear%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.eraYear%'), calendar, [dateLike]);
 	  }
 	  const eraYear = GetMethod$4(calendar, 'eraYear');
-	  let result = Call$4(eraYear, calendar, [dateLike]);
+	  let result = Call$3(eraYear, calendar, [dateLike]);
 	  if (result === undefined) {
 	    return result;
 	  }
@@ -10428,10 +10743,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.dayOfWeek%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.dayOfWeek%'), calendar, [dateLike]);
 	  }
 	  const dayOfWeek = GetMethod$4(calendar, 'dayOfWeek');
-	  const result = Call$4(dayOfWeek, calendar, [dateLike]);
+	  const result = Call$3(dayOfWeek, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar dayOfWeek result must be a positive integer');
 	  }
@@ -10444,10 +10759,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.dayOfYear%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.dayOfYear%'), calendar, [dateLike]);
 	  }
 	  const dayOfYear = GetMethod$4(calendar, 'dayOfYear');
-	  const result = Call$4(dayOfYear, calendar, [dateLike]);
+	  const result = Call$3(dayOfYear, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar dayOfYear result must be a positive integer');
 	  }
@@ -10460,10 +10775,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.weekOfYear%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.weekOfYear%'), calendar, [dateLike]);
 	  }
 	  const weekOfYear = GetMethod$4(calendar, 'weekOfYear');
-	  const result = Call$4(weekOfYear, calendar, [dateLike]);
+	  const result = Call$3(weekOfYear, calendar, [dateLike]);
 	  if (typeof result !== 'number' && result !== undefined) {
 	    throw new TypeError('calendar weekOfYear result must be a positive integer');
 	  }
@@ -10476,10 +10791,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.yearOfWeek%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.yearOfWeek%'), calendar, [dateLike]);
 	  }
 	  const yearOfWeek = GetMethod$4(calendar, 'yearOfWeek');
-	  const result = Call$4(yearOfWeek, calendar, [dateLike]);
+	  const result = Call$3(yearOfWeek, calendar, [dateLike]);
 	  if (typeof result !== 'number' && result !== undefined) {
 	    throw new TypeError('calendar yearOfWeek result must be an integer');
 	  }
@@ -10492,10 +10807,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.daysInWeek%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.daysInWeek%'), calendar, [dateLike]);
 	  }
 	  const daysInWeek = GetMethod$4(calendar, 'daysInWeek');
-	  const result = Call$4(daysInWeek, calendar, [dateLike]);
+	  const result = Call$3(daysInWeek, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar daysInWeek result must be a positive integer');
 	  }
@@ -10508,10 +10823,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.daysInMonth%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.daysInMonth%'), calendar, [dateLike]);
 	  }
 	  const daysInMonth = GetMethod$4(calendar, 'daysInMonth');
-	  const result = Call$4(daysInMonth, calendar, [dateLike]);
+	  const result = Call$3(daysInMonth, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar daysInMonth result must be a positive integer');
 	  }
@@ -10524,10 +10839,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.daysInYear%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.daysInYear%'), calendar, [dateLike]);
 	  }
 	  const daysInYear = GetMethod$4(calendar, 'daysInYear');
-	  const result = Call$4(daysInYear, calendar, [dateLike]);
+	  const result = Call$3(daysInYear, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar daysInYear result must be a positive integer');
 	  }
@@ -10540,10 +10855,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.monthsInYear%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.monthsInYear%'), calendar, [dateLike]);
 	  }
 	  const monthsInYear = GetMethod$4(calendar, 'monthsInYear');
-	  const result = Call$4(monthsInYear, calendar, [dateLike]);
+	  const result = Call$3(monthsInYear, calendar, [dateLike]);
 	  if (typeof result !== 'number') {
 	    throw new TypeError('calendar monthsInYear result must be a positive integer');
 	  }
@@ -10556,10 +10871,10 @@
 	  if (typeof calendar === 'string') {
 	    const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	    calendar = new TemporalCalendar(calendar);
-	    return Call$4(GetIntrinsic('%Temporal.Calendar.prototype.inLeapYear%'), calendar, [dateLike]);
+	    return Call$3(GetIntrinsic('%Temporal.Calendar.prototype.inLeapYear%'), calendar, [dateLike]);
 	  }
 	  const inLeapYear = GetMethod$4(calendar, 'inLeapYear');
-	  const result = Call$4(inLeapYear, calendar, [dateLike]);
+	  const result = Call$3(inLeapYear, calendar, [dateLike]);
 	  if (typeof result !== 'boolean') {
 	    throw new TypeError('calendar inLeapYear result must be a boolean');
 	  }
@@ -10570,7 +10885,7 @@
 	  return 'dateAdd' in object && 'dateFromFields' in object && 'dateUntil' in object && 'day' in object && 'dayOfWeek' in object && 'dayOfYear' in object && 'daysInMonth' in object && 'daysInWeek' in object && 'daysInYear' in object && 'fields' in object && 'id' in object && 'inLeapYear' in object && 'mergeFields' in object && 'month' in object && 'monthCode' in object && 'monthDayFromFields' in object && 'monthsInYear' in object && 'weekOfYear' in object && 'year' in object && 'yearMonthFromFields' in object && 'yearOfWeek' in object;
 	}
 	function ToTemporalCalendarSlotValue(calendarLike) {
-	  if (Type$d(calendarLike) === 'Object') {
+	  if (Type$c(calendarLike) === 'Object') {
 	    if (HasSlot(calendarLike, CALENDAR)) return GetSlot(calendarLike, CALENDAR);
 	    if (!ObjectImplementsTemporalCalendarProtocol(calendarLike)) {
 	      throw new TypeError('expected a Temporal.Calendar or object implementing the Temporal.Calendar protocol');
@@ -10614,7 +10929,7 @@
 	  return result;
 	}
 	function ToTemporalCalendarObject(slotValue) {
-	  if (Type$d(slotValue) === 'Object') return slotValue;
+	  if (Type$c(slotValue) === 'Object') return slotValue;
 	  const TemporalCalendar = GetIntrinsic('%Temporal.Calendar%');
 	  return new TemporalCalendar(slotValue);
 	}
@@ -10669,7 +10984,7 @@
 	  return 'getOffsetNanosecondsFor' in object && 'getPossibleInstantsFor' in object && 'id' in object;
 	}
 	function ToTemporalTimeZoneSlotValue(temporalTimeZoneLike) {
-	  if (Type$d(temporalTimeZoneLike) === 'Object') {
+	  if (Type$c(temporalTimeZoneLike) === 'Object') {
 	    if (IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
 	    if (!ObjectImplementsTemporalTimeZoneProtocol(temporalTimeZoneLike)) {
 	      throw new TypeError('expected a Temporal.TimeZone or object implementing the Temporal.TimeZone protocol');
@@ -10696,7 +11011,7 @@
 	  return result;
 	}
 	function ToTemporalTimeZoneObject(slotValue) {
-	  if (Type$d(slotValue) === 'Object') return slotValue;
+	  if (Type$c(slotValue) === 'Object') return slotValue;
 	  const TemporalTimeZone = GetIntrinsic('%Temporal.TimeZone%');
 	  return new TemporalTimeZone(slotValue);
 	}
@@ -10869,11 +11184,11 @@
 	    if (!IsTemporalInstant(instant)) {
 	      throw new TypeError('bad return from getPossibleInstantsFor');
 	    }
-	    Call$4(ArrayPrototypePush$3, result, [instant]);
+	    Call$3(ArrayPrototypePush$3, result, [instant]);
 	  }
 	  const numResults = result.length;
 	  if (numResults > 1) {
-	    const mapped = Call$4(ArrayPrototypeMap, result, [i => GetSlot(i, EPOCHNANOSECONDS)]);
+	    const mapped = Call$3(ArrayPrototypeMap, result, [i => GetSlot(i, EPOCHNANOSECONDS)]);
 	    const min = bigInt.min(...mapped);
 	    const max = bigInt.max(...mapped);
 	    if (bigInt(max).subtract(min).abs().greater(DAY_NANOS)) {
@@ -10902,11 +11217,11 @@
 	    if (subSecondNanoseconds === 0) return '';
 	    const fractionFullPrecision = ToZeroPaddedDecimalString$1(subSecondNanoseconds, 9);
 	    // now remove any trailing zeroes
-	    fraction = Call$4(StringPrototypeReplace, fractionFullPrecision, [/0+$/, '']);
+	    fraction = Call$3(StringPrototypeReplace, fractionFullPrecision, [/0+$/, '']);
 	  } else {
 	    if (precision === 0) return '';
 	    const fractionFullPrecision = ToZeroPaddedDecimalString$1(subSecondNanoseconds, 9);
-	    fraction = Call$4(StringPrototypeSlice, fractionFullPrecision, [0, precision]);
+	    fraction = Call$3(StringPrototypeSlice, fractionFullPrecision, [0, precision]);
 	  }
 	  return ".".concat(fraction);
 	}
@@ -11090,7 +11405,7 @@
 	      canonicalTimeZoneIdsCache = new MapCtor();
 	      for (let ix = 0; ix < canonicalTimeZoneIds.length; ix++) {
 	        const id = canonicalTimeZoneIds[ix];
-	        Call$4(MapPrototypeSet$1, canonicalTimeZoneIdsCache, [ASCIILowercase(id), id]);
+	        Call$3(MapPrototypeSet$1, canonicalTimeZoneIdsCache, [ASCIILowercase(id), id]);
 	      }
 	    } else {
 	      canonicalTimeZoneIdsCache = null;
@@ -11115,7 +11430,7 @@
 	  // Some legacy identifiers are aliases in ICU but not legal IANA identifiers.
 	  // Reject them even if the implementation's Intl supports them, as they are
 	  // not present in the IANA time zone database.
-	  if (Call$4(SetPrototypeHas$1, ICU_LEGACY_TIME_ZONE_IDS, [identifier])) {
+	  if (Call$3(SetPrototypeHas$1, ICU_LEGACY_TIME_ZONE_IDS, [identifier])) {
 	    throw new RangeError("".concat(identifier, " is a legacy time zone identifier from ICU. Use ").concat(primaryIdentifier, " instead"));
 	  }
 
@@ -12291,20 +12606,20 @@
 	    const p = unitInfo[0];
 	    const s = unitInfo[1];
 	    const c = unitInfo[2];
-	    if ((group === 'datetime' || c === group) && !Call$4(ArrayIncludes$1, disallowed, [s])) {
+	    if ((group === 'datetime' || c === group) && !Call$3(ArrayIncludes$1, disallowed, [s])) {
 	      allowed.push(s, p);
 	    }
 	    return allowed;
 	  }, []);
 	  let largestUnit = GetTemporalUnit(options, 'largestUnit', group, 'auto');
-	  if (Call$4(ArrayIncludes$1, disallowed, [largestUnit])) {
+	  if (Call$3(ArrayIncludes$1, disallowed, [largestUnit])) {
 	    throw new RangeError("largestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(largestUnit));
 	  }
 	  const roundingIncrement = ToTemporalRoundingIncrement(options);
 	  let roundingMode = ToTemporalRoundingMode(options, 'trunc');
 	  if (op === 'since') roundingMode = NegateTemporalRoundingMode(roundingMode);
 	  const smallestUnit = GetTemporalUnit(options, 'smallestUnit', group, fallbackSmallest);
-	  if (Call$4(ArrayIncludes$1, disallowed, [smallestUnit])) {
+	  if (Call$3(ArrayIncludes$1, disallowed, [smallestUnit])) {
 	    throw new RangeError("smallestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(smallestUnit));
 	  }
 	  const defaultLargestUnit = LargerOfTwoTemporalUnits(smallestLargestDefaultUnit, smallestUnit);
@@ -12655,13 +12970,13 @@
 	  const largestUnit2 = DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
 	  const largestUnit = LargerOfTwoTemporalUnits(largestUnit1, largestUnit2);
 	  let years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
+	  const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
+	  const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
 	  if (!zonedRelativeTo && !plainRelativeTo) {
 	    if (IsCalendarUnit(largestUnit)) {
 	      throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
 	    }
 	    years = months = weeks = 0;
-	    const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
-	    const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
 	    ({
 	      days,
 	      hours,
@@ -12686,8 +13001,6 @@
 	    weeks = GetSlot(untilResult, WEEKS);
 	    days = GetSlot(untilResult, DAYS);
 	    // Signs of date part and time part may not agree; balance them together
-	    const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
-	    const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
 	    ({
 	      days,
 	      hours,
@@ -12707,8 +13020,6 @@
 	      var _startDateTime;
 	      (_startDateTime = startDateTime) !== null && _startDateTime !== void 0 ? _startDateTime : startDateTime = GetPlainDateTimeFor(timeZoneRec, startInstant, calendar);
 	    }
-	    const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
-	    const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
 	    const intermediateNs = AddZonedDateTime(startInstant, timeZoneRec, calendarRec, y1, mon1, w1, d1, norm1, startDateTime);
 	    const endNs = AddZonedDateTime(new TemporalInstant(intermediateNs), timeZoneRec, calendarRec, y2, mon2, w2, d2, norm2);
 	    if (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week' && largestUnit !== 'day') {
@@ -13590,7 +13901,7 @@
 	}
 	function GetOptionsObject(options) {
 	  if (options === undefined) return ObjectCreate$7(null);
-	  if (Type$d(options) === 'Object') return options;
+	  if (Type$c(options) === 'Object') return options;
 	  throw new TypeError("Options parameter must be an object, not ".concat(options === null ? 'null' : "a ".concat(typeof options)));
 	}
 	function SnapshotOwnProperties(source, proto) {
@@ -13612,7 +13923,7 @@
 	  return fallback;
 	}
 	function IsBuiltinCalendar(id) {
-	  return Call$4(ArrayIncludes$1, BUILTIN_CALENDAR_IDS, [ASCIILowercase(id)]);
+	  return Call$3(ArrayIncludes$1, BUILTIN_CALENDAR_IDS, [ASCIILowercase(id)]);
 	}
 	function ASCIILowercase(str) {
 	  // The spec defines this operation distinct from String.prototype.lowercase,
@@ -13623,7 +13934,7 @@
 	  // https://haacked.com/archive/2012/07/05/turkish-i-problem-and-why-you-should-care.aspx/.
 	  let lowercase = '';
 	  for (let ix = 0; ix < str.length; ix++) {
-	    const code = Call$4(StringPrototypeCharCodeAt, str, [ix]);
+	    const code = Call$3(StringPrototypeCharCodeAt, str, [ix]);
 	    if (code >= 0x41 && code <= 0x5a) {
 	      lowercase += StringFromCharCode(code + 0x20);
 	    } else {
@@ -13785,7 +14096,7 @@
 	      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	        args[_key - 1] = arguments[_key];
 	      }
-	      return Call$4(format, _this, [datetime, ...args]);
+	      return Call$3(format, _this, [datetime, ...args]);
 	    };
 	    ObjectDefineProperty(boundFormat, 'name', {
 	      value: '',
@@ -13797,22 +14108,22 @@
 	  }
 	  formatRange(a, b) {
 	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
-	    return Call$4(formatRange, this, [a, b]);
+	    return Call$3(formatRange, this, [a, b]);
 	  }
 	  formatToParts(datetime) {
 	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
 	    for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
 	      rest[_key2 - 1] = arguments[_key2];
 	    }
-	    return Call$4(formatToParts, this, [datetime, ...rest]);
+	    return Call$3(formatToParts, this, [datetime, ...rest]);
 	  }
 	  formatRangeToParts(a, b) {
 	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
-	    return Call$4(formatRangeToParts, this, [a, b]);
+	    return Call$3(formatRangeToParts, this, [a, b]);
 	  }
 	  resolvedOptions() {
 	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
-	    return Call$4(resolvedOptions, this, []);
+	    return Call$3(resolvedOptions, this, []);
 	  }
 	}
 	if (!('formatToParts' in IntlDateTimeFormat$1.prototype)) {
@@ -14246,7 +14557,7 @@
 	  round(roundTo) {
 	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    if (roundTo === undefined) throw new TypeError('options parameter is required');
-	    if (Type$d(roundTo) === 'String') {
+	    if (Type$c(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate$5(null);
 	      roundTo.smallestUnit = stringParam;
@@ -14311,7 +14622,7 @@
 	  }
 	  toZonedDateTime(item) {
 	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(item) !== 'Object') {
+	    if (Type$c(item) !== 'Object') {
 	      throw new TypeError('invalid argument in toZonedDateTime');
 	    }
 	    const calendarLike = item.calendar;
@@ -14332,13 +14643,13 @@
 	    return CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
 	  }
 	  static fromEpochSeconds(epochSeconds) {
-	    epochSeconds = ToNumber$2(epochSeconds);
+	    epochSeconds = ToNumber$1(epochSeconds);
 	    const epochNanoseconds = bigInt(epochSeconds).multiply(1e9);
 	    ValidateEpochNanoseconds(epochNanoseconds);
 	    return new Instant(epochNanoseconds);
 	  }
 	  static fromEpochMilliseconds(epochMilliseconds) {
-	    epochMilliseconds = ToNumber$2(epochMilliseconds);
+	    epochMilliseconds = ToNumber$1(epochMilliseconds);
 	    const epochNanoseconds = bigInt(epochMilliseconds).multiply(1e6);
 	    ValidateEpochNanoseconds(epochNanoseconds);
 	    return new Instant(epochNanoseconds);
@@ -14398,18 +14709,18 @@
 	const SymbolIterator = Symbol.iterator;
 	const WeakMapPrototypeGet = WeakMap.prototype.get;
 	const WeakMapPrototypeSet = WeakMap.prototype.set;
-	const MapIterator = Call$4(MapPrototypeEntries, new Map(), []);
+	const MapIterator = Call$3(MapPrototypeEntries, new Map(), []);
 	const MapIteratorPrototypeNext = MapIterator.next;
-	const SetIterator = Call$4(SetPrototypeValues, new Set(), []);
+	const SetIterator = Call$3(SetPrototypeValues, new Set(), []);
 	const SetIteratorPrototypeNext = SetIterator.next;
 	function arrayFromSet(src) {
-	  const valuesIterator = Call$4(SetPrototypeValues, src, []);
+	  const valuesIterator = Call$3(SetPrototypeValues, src, []);
 	  return ArrayFrom({
 	    [SymbolIterator]() {
 	      return this;
 	    },
 	    next() {
-	      return Call$4(SetIteratorPrototypeNext, valuesIterator, []);
+	      return Call$3(SetIteratorPrototypeNext, valuesIterator, []);
 	    }
 	  });
 	}
@@ -14437,7 +14748,7 @@
 	  dateFromFields(fields) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(fields) !== 'Object') throw new TypeError('invalid fields');
+	    if (Type$c(fields) !== 'Object') throw new TypeError('invalid fields');
 	    options = GetOptionsObject(options);
 	    const id = GetSlot(this, CALENDAR_ID);
 	    return impl[id].dateFromFields(fields, options, id);
@@ -14445,7 +14756,7 @@
 	  yearMonthFromFields(fields) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(fields) !== 'Object') throw new TypeError('invalid fields');
+	    if (Type$c(fields) !== 'Object') throw new TypeError('invalid fields');
 	    options = GetOptionsObject(options);
 	    const id = GetSlot(this, CALENDAR_ID);
 	    return impl[id].yearMonthFromFields(fields, options, id);
@@ -14453,7 +14764,7 @@
 	  monthDayFromFields(fields) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(fields) !== 'Object') throw new TypeError('invalid fields');
+	    if (Type$c(fields) !== 'Object') throw new TypeError('invalid fields');
 	    options = GetOptionsObject(options);
 	    const id = GetSlot(this, CALENDAR_ID);
 	    return impl[id].monthDayFromFields(fields, options, id);
@@ -14462,7 +14773,7 @@
 	    if (!IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
 	    const fieldsArray = [];
 	    const allowed = new OriginalSet(['year', 'month', 'monthCode', 'day']);
-	    const iteratorRecord = GetIterator$1(fields, 'sync');
+	    const iteratorRecord = GetIterator$1(fields, 'SYNC');
 	    const abort = err => {
 	      const completion = new CompletionRecord$2('throw', err);
 	      return IteratorClose$1(iteratorRecord, completion)['?']();
@@ -14472,12 +14783,12 @@
 	      next = IteratorStep$1(iteratorRecord);
 	      if (next !== false) {
 	        let name = IteratorValue$1(next);
-	        if (Type$d(name) !== 'String') return abort(new TypeError('invalid fields'));
-	        if (!Call$4(SetPrototypeHas, allowed, [name])) {
+	        if (Type$c(name) !== 'String') return abort(new TypeError('invalid fields'));
+	        if (!Call$3(SetPrototypeHas, allowed, [name])) {
 	          return abort(new RangeError("invalid or duplicate field name ".concat(name)));
 	        }
-	        Call$4(SetPrototypeDelete, allowed, [name]);
-	        Call$4(ArrayPrototypePush$2, fieldsArray, [name]);
+	        Call$3(SetPrototypeDelete, allowed, [name]);
+	        Call$3(ArrayPrototypePush$2, fieldsArray, [name]);
 	      }
 	    }
 	    return impl[GetSlot(this, CALENDAR_ID)].fields(fieldsArray);
@@ -14493,7 +14804,7 @@
 	    for (let ix = 0; ix < fieldsKeys.length; ix++) {
 	      const key = fieldsKeys[ix];
 	      let propValue = undefined;
-	      if (Call$4(ArrayIncludes, overriddenKeys, [key])) propValue = additionalFieldsCopy[key];else propValue = fieldsCopy[key];
+	      if (Call$3(ArrayIncludes, overriddenKeys, [key])) propValue = additionalFieldsCopy[key];else propValue = fieldsCopy[key];
 	      if (propValue !== undefined) merged[key] = propValue;
 	    }
 	    CopyDataProperties(merged, additionalFieldsCopy, []);
@@ -14753,11 +15064,11 @@
 	    const result = new OriginalSet();
 	    for (let ix = 0; ix < keys.length; ix++) {
 	      const key = keys[ix];
-	      Call$4(SetPrototypeAdd, result, [key]);
+	      Call$3(SetPrototypeAdd, result, [key]);
 	      if (key === 'month') {
-	        Call$4(SetPrototypeAdd, result, ['monthCode']);
+	        Call$3(SetPrototypeAdd, result, ['monthCode']);
 	      } else if (key === 'monthCode') {
-	        Call$4(SetPrototypeAdd, result, ['month']);
+	        Call$3(SetPrototypeAdd, result, ['month']);
 	      }
 	    }
 	    return arrayFromSet(result);
@@ -14907,17 +15218,17 @@
 	    this.misses = 0;
 	    if (cacheToClone !== undefined) {
 	      let i = 0;
-	      const entriesIterator = Call$4(MapPrototypeEntries, cacheToClone.map, []);
+	      const entriesIterator = Call$3(MapPrototypeEntries, cacheToClone.map, []);
 	      for (;;) {
-	        const iterResult = Call$4(MapIteratorPrototypeNext, entriesIterator, []);
+	        const iterResult = Call$3(MapIteratorPrototypeNext, entriesIterator, []);
 	        if (iterResult.done) break;
 	        if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
-	        Call$4(MapPrototypeSet, this.map, iterResult.value);
+	        Call$3(MapPrototypeSet, this.map, iterResult.value);
 	      }
 	    }
 	  }
 	  get(key) {
-	    const result = Call$4(MapPrototypeGet, this.map, [key]);
+	    const result = Call$3(MapPrototypeGet, this.map, [key]);
 	    if (result) {
 	      this.hits++;
 	      this.report();
@@ -14926,7 +15237,7 @@
 	    return result;
 	  }
 	  set(key, value) {
-	    Call$4(MapPrototypeSet, this.map, [key, value]);
+	    Call$3(MapPrototypeSet, this.map, [key, value]);
 	    this.misses++;
 	    this.report();
 	  }
@@ -14939,8 +15250,8 @@
 	    */
 	  }
 	  setObject(obj) {
-	    if (Call$4(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError('object already cached');
-	    Call$4(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
+	    if (Call$3(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError('object already cached');
+	    Call$3(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
 	    this.report();
 	  }
 	}
@@ -14953,10 +15264,10 @@
 	 * @param obj - object to associate with the cache
 	 */
 	OneObjectCache.getCacheForObject = function (obj) {
-	  let cache = Call$4(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj]);
+	  let cache = Call$3(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj]);
 	  if (!cache) {
 	    cache = new OneObjectCache();
-	    Call$4(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, cache]);
+	    Call$3(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, cache]);
 	  }
 	  return cache;
 	};
@@ -15131,7 +15442,7 @@
 	    if (day === undefined) throw new RangeError('Missing day');
 	    if (monthCode !== undefined) {
 	      if (typeof monthCode !== 'string') {
-	        throw new RangeError("monthCode must be a string, not ".concat(Type$d(monthCode).toLowerCase()));
+	        throw new RangeError("monthCode must be a string, not ".concat(Type$c(monthCode).toLowerCase()));
 	      }
 	      if (!/^M([01]?\d)(L?)$/.test(monthCode)) throw new RangeError("Invalid monthCode: ".concat(monthCode));
 	    }
@@ -16230,7 +16541,7 @@
 	  // Ensure that the latest epoch is first in the array. This lets us try to
 	  // match eras in index order, with the last era getting the remaining older
 	  // years. Any reverse-signed era must be at the end.
-	  Call$4(ArrayPrototypeSort, eras, [(e1, e2) => {
+	  Call$3(ArrayPrototypeSort, eras, [(e1, e2) => {
 	    if (e1.reverseOf) return 1;
 	    if (e2.reverseOf) return -1;
 	    if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
@@ -16385,7 +16696,7 @@
 	      };
 	      this.validateCalendarDate(calendarDate);
 	      calendarDate = this.completeEraYear(calendarDate);
-	      calendarDate = Call$4(nonIsoHelperBase.adjustCalendarDate, this, [calendarDate, cache, overflow]);
+	      calendarDate = Call$3(nonIsoHelperBase.adjustCalendarDate, this, [calendarDate, cache, overflow]);
 	      return calendarDate;
 	    },
 	    estimateIsoDate(calendarDate) {
@@ -16991,8 +17302,8 @@
 	    return result;
 	  },
 	  fields(fields) {
-	    if (Call$4(ArrayIncludes, fields, ['year'])) {
-	      Call$4(ArrayPrototypePush$2, fields, ['era', 'eraYear']);
+	    if (Call$3(ArrayIncludes, fields, ['year'])) {
+	      Call$3(ArrayPrototypePush$2, fields, ['era', 'eraYear']);
 	    }
 	    return fields;
 	  },
@@ -17000,39 +17311,39 @@
 	    const result = new OriginalSet();
 	    for (let ix = 0; ix < keys.length; ix++) {
 	      const key = keys[ix];
-	      Call$4(SetPrototypeAdd, result, [key]);
+	      Call$3(SetPrototypeAdd, result, [key]);
 	      switch (key) {
 	        case 'era':
-	          Call$4(SetPrototypeAdd, result, ['eraYear']);
-	          Call$4(SetPrototypeAdd, result, ['year']);
+	          Call$3(SetPrototypeAdd, result, ['eraYear']);
+	          Call$3(SetPrototypeAdd, result, ['year']);
 	          break;
 	        case 'eraYear':
-	          Call$4(SetPrototypeAdd, result, ['era']);
-	          Call$4(SetPrototypeAdd, result, ['year']);
+	          Call$3(SetPrototypeAdd, result, ['era']);
+	          Call$3(SetPrototypeAdd, result, ['year']);
 	          break;
 	        case 'year':
-	          Call$4(SetPrototypeAdd, result, ['era']);
-	          Call$4(SetPrototypeAdd, result, ['eraYear']);
+	          Call$3(SetPrototypeAdd, result, ['era']);
+	          Call$3(SetPrototypeAdd, result, ['eraYear']);
 	          break;
 	        case 'month':
-	          Call$4(SetPrototypeAdd, result, ['monthCode']);
+	          Call$3(SetPrototypeAdd, result, ['monthCode']);
 	          // See https://github.com/tc39/proposal-temporal/issues/1784
 	          if (this.helper.erasBeginMidYear) {
-	            Call$4(SetPrototypeAdd, result, ['era']);
-	            Call$4(SetPrototypeAdd, result, ['eraYear']);
+	            Call$3(SetPrototypeAdd, result, ['era']);
+	            Call$3(SetPrototypeAdd, result, ['eraYear']);
 	          }
 	          break;
 	        case 'monthCode':
-	          Call$4(SetPrototypeAdd, result, ['month']);
+	          Call$3(SetPrototypeAdd, result, ['month']);
 	          if (this.helper.erasBeginMidYear) {
-	            Call$4(SetPrototypeAdd, result, ['era']);
-	            Call$4(SetPrototypeAdd, result, ['eraYear']);
+	            Call$3(SetPrototypeAdd, result, ['era']);
+	            Call$3(SetPrototypeAdd, result, ['eraYear']);
 	          }
 	          break;
 	        case 'day':
 	          if (this.helper.erasBeginMidYear) {
-	            Call$4(SetPrototypeAdd, result, ['era']);
-	            Call$4(SetPrototypeAdd, result, ['eraYear']);
+	            Call$3(SetPrototypeAdd, result, ['era']);
+	            Call$3(SetPrototypeAdd, result, ['eraYear']);
 	          }
 	          break;
 	      }
@@ -17286,7 +17597,7 @@
 	  with(temporalDateLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(temporalDateLike) !== 'Object') {
+	    if (Type$c(temporalDateLike) !== 'Object') {
 	      throw new TypeError('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalDateLike);
@@ -17367,7 +17678,7 @@
 	  toZonedDateTime(item) {
 	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
 	    let timeZone, temporalTime;
-	    if (Type$d(item) === 'Object') {
+	    if (Type$c(item) === 'Object') {
 	      if (IsTemporalTimeZone(item)) {
 	        timeZone = item;
 	      } else {
@@ -17548,7 +17859,7 @@
 	  with(temporalDateTimeLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(temporalDateTimeLike) !== 'Object') {
+	    if (Type$c(temporalDateTimeLike) !== 'Object') {
 	      throw new TypeError('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalDateTimeLike);
@@ -17562,7 +17873,7 @@
 	    fields.millisecond = GetSlot(this, ISO_MILLISECOND);
 	    fields.microsecond = GetSlot(this, ISO_MICROSECOND);
 	    fields.nanosecond = GetSlot(this, ISO_NANOSECOND);
-	    Call$4(ArrayPrototypePush$1, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+	    Call$3(ArrayPrototypePush$1, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
 	    const partialDateTime = PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
 	    fields = CalendarMergeFields(calendarRec, fields, partialDateTime);
 	    fields = PrepareTemporalFields(fields, fieldNames, []);
@@ -17629,7 +17940,7 @@
 	  round(roundTo) {
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 	    if (roundTo === undefined) throw new TypeError('options parameter is required');
-	    if (Type$d(roundTo) === 'String') {
+	    if (Type$c(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate$3(null);
 	      roundTo.smallestUnit = stringParam;
@@ -17930,7 +18241,7 @@
 	    let microseconds = GetSlot(this, MICROSECONDS);
 	    let nanoseconds = GetSlot(this, NANOSECONDS);
 	    const existingLargestUnit = DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-	    if (Type$d(roundTo) === 'String') {
+	    if (Type$c(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate$2(null);
 	      roundTo.smallestUnit = stringParam;
@@ -18055,7 +18366,7 @@
 	    let microseconds = GetSlot(this, MICROSECONDS);
 	    let nanoseconds = GetSlot(this, NANOSECONDS);
 	    if (totalOf === undefined) throw new TypeError('options argument is required');
-	    if (Type$d(totalOf) === 'String') {
+	    if (Type$c(totalOf) === 'String') {
 	      const stringParam = totalOf;
 	      totalOf = ObjectCreate$2(null);
 	      totalOf.unit = stringParam;
@@ -18283,7 +18594,7 @@
 	  with(temporalMonthDayLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(temporalMonthDayLike) !== 'Object') {
+	    if (Type$c(temporalMonthDayLike) !== 'Object') {
 	      throw new TypeError('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalMonthDayLike);
@@ -18326,14 +18637,14 @@
 	  }
 	  toPlainDate(item) {
 	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(item) !== 'Object') throw new TypeError('argument should be an object');
+	    if (Type$c(item) !== 'Object') throw new TypeError('argument should be an object');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
 	    const receiverFieldNames = CalendarFields(calendarRec, ['day', 'monthCode']);
 	    let fields = PrepareTemporalFields(this, receiverFieldNames, []);
 	    const inputFieldNames = CalendarFields(calendarRec, ['year']);
 	    const inputFields = PrepareTemporalFields(item, inputFieldNames, []);
 	    let mergedFields = CalendarMergeFields(calendarRec, fields, inputFields);
-	    const concatenatedFieldNames = Call$4(ArrayPrototypeConcat$1, receiverFieldNames, inputFieldNames);
+	    const concatenatedFieldNames = Call$3(ArrayPrototypeConcat$1, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
 	    return CalendarDateFromFields(calendarRec, mergedFields);
 	  }
@@ -18512,7 +18823,7 @@
 	  with(temporalTimeLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(temporalTimeLike) !== 'Object') {
+	    if (Type$c(temporalTimeLike) !== 'Object') {
 	      throw new TypeError('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalTimeLike);
@@ -18559,7 +18870,7 @@
 	  round(roundTo) {
 	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
 	    if (roundTo === undefined) throw new TypeError('options parameter is required');
-	    if (Type$d(roundTo) === 'String') {
+	    if (Type$c(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate$1(null);
 	      roundTo.smallestUnit = stringParam;
@@ -18653,7 +18964,7 @@
 	  }
 	  toZonedDateTime(item) {
 	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(item) !== 'Object') {
+	    if (Type$c(item) !== 'Object') {
 	      throw new TypeError('invalid argument');
 	    }
 	    const dateLike = item.plainDate;
@@ -18885,7 +19196,7 @@
 	  with(temporalYearMonthLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(temporalYearMonthLike) !== 'Object') {
+	    if (Type$c(temporalYearMonthLike) !== 'Object') {
 	      throw new TypeError('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalYearMonthLike);
@@ -18948,14 +19259,14 @@
 	  }
 	  toPlainDate(item) {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(item) !== 'Object') throw new TypeError('argument should be an object');
+	    if (Type$c(item) !== 'Object') throw new TypeError('argument should be an object');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
 	    const receiverFieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
 	    let fields = PrepareTemporalFields(this, receiverFieldNames, []);
 	    const inputFieldNames = CalendarFields(calendarRec, ['day']);
 	    const inputFields = PrepareTemporalFields(item, inputFieldNames, []);
 	    let mergedFields = CalendarMergeFields(calendarRec, fields, inputFields);
-	    const concatenatedFieldNames = Call$4(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
+	    const concatenatedFieldNames = Call$3(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
 	    return CalendarDateFromFields(calendarRec, mergedFields);
 	  }
@@ -19146,7 +19457,7 @@
 	  with(temporalZonedDateTimeLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    if (Type$d(temporalZonedDateTimeLike) !== 'Object') {
+	    if (Type$c(temporalZonedDateTimeLike) !== 'Object') {
 	      throw new TypeError('invalid zoned-date-time-like');
 	    }
 	    RejectTemporalLikeObject(temporalZonedDateTimeLike);
@@ -19164,7 +19475,7 @@
 	    fields.microsecond = GetSlot(dt, ISO_MICROSECOND);
 	    fields.nanosecond = GetSlot(dt, ISO_NANOSECOND);
 	    fields.offset = FormatUTCOffsetNanoseconds(offsetNs);
-	    Call$4(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second']);
+	    Call$3(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second']);
 	    const partialZonedDateTime = PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
 	    fields = CalendarMergeFields(calendarRec, fields, partialZonedDateTime);
 	    fields = PrepareTemporalFields(fields, fieldNames, ['offset']);
@@ -19249,7 +19560,7 @@
 	  round(roundTo) {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    if (roundTo === undefined) throw new TypeError('options parameter is required');
-	    if (Type$d(roundTo) === 'String') {
+	    if (Type$c(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate(null);
 	      roundTo.smallestUnit = stringParam;
@@ -19392,7 +19703,7 @@
 	      optionsCopy.timeZone = record.identifier;
 	    }
 	    const formatter = new DateTimeFormat(locales, optionsCopy);
-	    const localeCalendarIdentifier = Call$4(customResolvedOptions, formatter, []).calendar;
+	    const localeCalendarIdentifier = Call$3(customResolvedOptions, formatter, []).calendar;
 	    const calendarIdentifier = ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
 	    if (calendarIdentifier !== 'iso8601' && localeCalendarIdentifier !== 'iso8601' && localeCalendarIdentifier !== calendarIdentifier) {
 	      throw new RangeError("cannot format ZonedDateTime with calendar ".concat(calendarIdentifier) + " in locale with calendar ".concat(localeCalendarIdentifier));
@@ -19527,7 +19838,7 @@
 
 	const DatePrototypeValueOf = Date.prototype.valueOf;
 	function toTemporalInstant() {
-	  const epochNanoseconds = bigInt(Call$4(DatePrototypeValueOf, this, [])).multiply(1e6);
+	  const epochNanoseconds = bigInt(Call$3(DatePrototypeValueOf, this, [])).multiply(1e6);
 	  return new Instant(BigIntIfAvailable(epochNanoseconds));
 	}
 
