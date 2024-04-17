@@ -1092,7 +1092,8 @@
           1. Return ? CalendarDateAdd(_calendarRec_, _plainDate_, _duration_, _options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _days_ be _duration_.[[Days]] + BalanceTimeDuration(_norm_, *"day"*).[[Days]].
+        1. Let _balancedDuration_ be ! BalanceTimeDuration(_norm_, *"day"*).
+        1. Let _days_ be _duration_.[[Days]] + _balancedDuration_.[[Days]].
         1. Let _result_ be ? AddISODate(_plainDate_.[[ISOYear]], _plainDate_.[[ISOMonth]], _plainDate_.[[ISODay]], 0, 0, 0, _days_, _overflow_).
         1. Return ! CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendarRec_.[[Receiver]]).
       </emu-alg>
