@@ -60,7 +60,7 @@
       </p>
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _item_ is an Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
           1. Perform ? GetTemporalOverflowOption(_options_).
           1. Return ! CreateTemporalYearMonth(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
         1. Return ? ToTemporalYearMonth(_item_, _options_).
@@ -403,7 +403,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. If Type(_item_) is not Object, then
+        1. If _item_ is not an Object, then
           1. Throw a *TypeError* exception.
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~date-from-fields~, ~fields~, ~merge-fields~ »).
         1. Let _receiverFieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _yearMonth_, « *"monthCode"*, *"year"* »).
@@ -558,7 +558,7 @@
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. If _options_ is not *undefined*, set _options_ to ? SnapshotOwnProperties(! GetOptionsObject(_options_), *null*).
-        1. If Type(_item_) is Object, then
+        1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).

@@ -55,7 +55,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalInstant]] internal slot, then
+        1. If _item_ is an Object and _item_ has an [[InitializedTemporalInstant]] internal slot, then
           1. Return ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
         1. Return ? ToTemporalInstant(_item_).
       </emu-alg>
@@ -269,7 +269,7 @@
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
         1. If _roundTo_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. If Type(_roundTo_) is String, then
+        1. If _roundTo_ is a String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
@@ -392,7 +392,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. If Type(_item_) is not Object, then
+        1. If _item_ is not an Object, then
           1. Throw a *TypeError* exception.
         1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
         1. If _calendarLike_ is *undefined*, then
@@ -529,7 +529,7 @@
         <dd>It returns its argument _item_ if it is already a Temporal.Instant instance, converts _item_ to a new Temporal.Instant instance if possible, and throws otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_item_) is Object, then
+        1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalInstant]] internal slot, then
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then

@@ -759,7 +759,7 @@
         <dd>It attempts to derive a value from _temporalTimeZoneLike_ that is suitable for storing in a Temporal.ZonedDateTime's [[TimeZone]] internal slot, and returns that value if found or throws an exception if not.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_temporalTimeZoneLike_) is Object, then
+        1. If _temporalTimeZoneLike_ is an Object, then
           1. If _temporalTimeZoneLike_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalTimeZoneLike_.[[TimeZone]].
           1. If ? ObjectImplementsTemporalTimeZoneProtocol(_temporalTimeZoneLike_) is *false*, throw a *TypeError* exception.
@@ -827,7 +827,7 @@
       <emu-alg>
         1. Let _offsetNanoseconds_ be ? TimeZoneMethodsRecordCall(_timeZoneRec_, ~get-offset-nanoseconds-for~, « _instant_ »).
         1. If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_), return ℝ(_offsetNanoseconds_).
-        1. If Type(_offsetNanoseconds_) is not Number, throw a *TypeError* exception.
+        1. If _offsetNanoseconds_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_offsetNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Set _offsetNanoseconds_ to ℝ(_offsetNanoseconds_).
         1. If abs(_offsetNanoseconds_) &ge; nsPerDay, throw a *RangeError* exception.

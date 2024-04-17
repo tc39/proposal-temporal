@@ -79,7 +79,7 @@
         The `Temporal.Duration.from` function performs the following steps when called:
       </p>
       <emu-alg>
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
+        1. If _item_ is an Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return ! CreateTemporalDuration(_item_.[[Years]], _item_.[[Months]], _item_.[[Weeks]], _item_.[[Days]], _item_.[[Hours]], _item_.[[Minutes]], _item_.[[Seconds]], _item_.[[Milliseconds]], _item_.[[Microseconds]], _item_.[[Nanoseconds]]).
         1. Return ? ToTemporalDuration(_item_).
       </emu-alg>
@@ -420,7 +420,7 @@
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. If _roundTo_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. If Type(_roundTo_) is String, then
+        1. If _roundTo_ is a String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
@@ -492,7 +492,7 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. If _totalOf_ is *undefined*, throw a *TypeError* exception.
-        1. If Type(_totalOf_) is String, then
+        1. If _totalOf_ is a String, then
           1. Let _paramString_ be _totalOf_.
           1. Set _totalOf_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_totalOf_, *"unit"*, _paramString_).
@@ -1108,7 +1108,7 @@
         <dd>It returns its argument _item_ if it is already a Temporal.Duration instance, converts _item_ to a new Temporal.Duration instance if possible and returns that, and throws otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
+        1. If _item_ is an Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return _item_.
         1. Let _result_ be ? ToTemporalDurationRecord(_item_).
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
@@ -1126,7 +1126,7 @@
         <dd>The returned Record has its fields set according to the properties of _temporalDurationLike_, with absent or undefined properties corresponding to fields containing 0.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_temporalDurationLike_) is not Object, then
+        1. If _temporalDurationLike_ is not an Object, then
           1. If _temporalDurationLike_ is not a String, throw a *TypeError* exception.
           1. Return ? ParseTemporalDurationString(_temporalDurationLike_).
         1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
@@ -1254,7 +1254,7 @@
         <dd>The returned Record has its fields set according to the properties of _temporalDurationLike_.</dd>
       </dl>
       <emu-alg>
-        1. If Type(_temporalDurationLike_) is not Object, then
+        1. If _temporalDurationLike_ is not an Object, then
           1. Throw a *TypeError* exception.
         1. Let _result_ be a new partial Duration Record with each field set to *undefined*.
         1. NOTE: The following steps read properties and perform independent validation in alphabetical order.

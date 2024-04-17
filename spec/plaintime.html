@@ -63,7 +63,7 @@
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalTime]] internal slot, then
+        1. If _item_ is an Object and _item_ has an [[InitializedTemporalTime]] internal slot, then
           1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
         1. Return ? ToTemporalTime(_item_, _overflow_).
       </emu-alg>
@@ -284,7 +284,7 @@
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. If _roundTo_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. If Type(_roundTo_) is String, then
+        1. If _roundTo_ is a String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
@@ -345,7 +345,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. If Type(_item_) is not Object, then
+        1. If _item_ is not an Object, then
           1. Throw a *TypeError* exception.
         1. Let _temporalDateLike_ be ? Get(_item_, *"plainDate"*).
         1. If _temporalDateLike_ is *undefined*, then
@@ -633,7 +633,7 @@
       </dl>
       <emu-alg>
         1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
-        1. If Type(_item_) is Object, then
+        1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then

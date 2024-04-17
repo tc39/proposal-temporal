@@ -388,7 +388,7 @@
       <emu-alg>
         1. Let _result_ be ? CalendarMethodsRecordCall(_calendarRec_, ~merge-fields~, « _fields_, _additionalFields_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _result_.
-        1. If Type(_result_) is not Object, throw a *TypeError* exception.
+        1. If _result_ is not an Object, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -457,7 +457,7 @@
           1. Return ! Call(%Temporal.Calendar.prototype.era%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"era"*, « _dateLike_ »).
         1. If _result_ is *undefined*, return *undefined*.
-        1. If Type(_result_) is not String, throw a *TypeError* exception.
+        1. If _result_ is not a String, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -479,7 +479,7 @@
           1. Return ! Call(%Temporal.Calendar.prototype.eraYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"eraYear"*, « _dateLike_ »).
         1. If _result_ is *undefined*, return *undefined*.
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. Return ℝ(_result_).
       </emu-alg>
@@ -501,7 +501,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.year%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"year"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. Return ℝ(_result_).
       </emu-alg>
@@ -523,7 +523,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.month%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"month"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -546,7 +546,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.monthCode%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"monthCode"*, « _dateLike_ »).
-        1. If Type(_result_) is not String, throw a *TypeError* exception.
+        1. If _result_ is not a String, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -565,7 +565,7 @@
       <emu-alg>
         1. Let _result_ be ? CalendarMethodsRecordCall(_calendarRec_, ~day~, « _dateLike_ »).
         1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, return _result_.
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -588,7 +588,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.dayOfWeek%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfWeek"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -611,7 +611,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.dayOfYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"dayOfYear"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -635,7 +635,7 @@
           1. Return ! Call(%Temporal.Calendar.prototype.weekOfYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"weekOfYear"*, « _dateLike_ »).
         1. If _result_ is *undefined*, return *undefined*.
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -659,7 +659,7 @@
           1. Return ! Call(%Temporal.Calendar.prototype.yearOfWeek%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"yearOfWeek"*, « _dateLike_ »).
         1. If _result_ is *undefined*, return *undefined*.
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. Return ℝ(_result_).
       </emu-alg>
@@ -681,7 +681,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.daysInWeek%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"daysInWeek"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -704,7 +704,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.daysInMonth%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"daysInMonth"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -727,7 +727,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.daysInYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"daysInYear"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -750,7 +750,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.monthsInYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"monthsInYear"*, « _dateLike_ »).
-        1. If Type(_result_) is not Number, throw a *TypeError* exception.
+        1. If _result_ is not a Number, throw a *TypeError* exception.
         1. If IsIntegralNumber(_result_) is *false*, throw a *RangeError* exception.
         1. If _result_ &lt; *1*<sub>𝔽</sub>, throw a *RangeError* exception.
         1. Return ℝ(_result_).
@@ -773,7 +773,7 @@
           1. Set _calendar_ to ! CreateTemporalCalendar(_calendar_).
           1. Return ! Call(%Temporal.Calendar.prototype.inLeapYear%, _calendar_, « _dateLike_ »).
         1. Let _result_ be ? Invoke(_calendar_, *"inLeapYear"*, « _dateLike_ »).
-        1. If Type(_result_) is not Boolean, throw a *TypeError* exception.
+        1. If _result_ is not a Boolean, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -822,7 +822,7 @@
         1. If _temporalCalendarLike_ is *undefined* and _default_ is present, then
           1. Assert: IsBuiltinCalendar(_default_) is *true*.
           1. Return _default_.
-        1. If Type(_temporalCalendarLike_) is Object, then
+        1. If _temporalCalendarLike_ is an Object, then
           1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalCalendarLike_.[[Calendar]].
           1. If ? ObjectImplementsTemporalCalendarProtocol(_temporalCalendarLike_) is *false*, throw a *TypeError* exception.
@@ -1830,7 +1830,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_fields_) is not Object, throw a *TypeError* exception.
+        1. If _fields_ is not an Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relevantFieldNames_ be « *"day"*, *"month"*, *"monthCode"*, *"year"* ».
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
@@ -1857,7 +1857,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_fields_) is not Object, throw a *TypeError* exception.
+        1. If _fields_ is not an Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relevantFieldNames_ be « *"month"*, *"monthCode"*, *"year"* ».
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
@@ -1886,7 +1886,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_fields_) is not Object, throw a *TypeError* exception.
+        1. If _fields_ is not an Object, throw a *TypeError* exception.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relevantFieldNames_ be « *"day"*, *"month"*, *"monthCode"*, *"year"* ».
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
@@ -1957,7 +1957,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, return *undefined*.
         1. Return CalendarDateEra(_calendar_.[[Identifier]], _temporalDateLike_).
@@ -1972,7 +1972,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, return *undefined*.
         1. Let _eraYear_ be CalendarDateEraYear(_calendar_.[[Identifier]], _temporalDateLike_).
@@ -1989,7 +1989,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Assert: _temporalDateLike_ has an [[ISOYear]] internal slot.
@@ -2008,9 +2008,9 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is Object and _temporalDateLike_ has an [[InitializedTemporalMonthDay]] internal slot, then
+        1. If _temporalDateLike_ is an Object and _temporalDateLike_ has an [[InitializedTemporalMonthDay]] internal slot, then
           1. Throw a *TypeError* exception.
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
@@ -2029,7 +2029,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Assert: _temporalDateLike_ has an [[ISOMonth]] internal slot.
@@ -2048,7 +2048,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalMonthDay]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalMonthDay]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Assert: _temporalDateLike_ has an [[ISODay]] internal slot.
@@ -2158,7 +2158,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slots, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slots, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Let _daysInMonth_ be ISODaysInMonth(_temporalDateLike_.[[ISOYear]], _temporalDateLike_.[[ISOMonth]]).
@@ -2176,7 +2176,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Let _daysInYear_ be MathematicalDaysInYear(_temporalDateLike_.[[ISOYear]]).
@@ -2194,7 +2194,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. Let _monthsInYear_ be 12.
@@ -2212,7 +2212,7 @@
       <emu-alg>
         1. Let _calendar_ be the *this* value.
         1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. If Type(_temporalDateLike_) is not Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
+        1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
           1. If MathematicalInLeapYear(EpochTimeForYear(_temporalDateLike_.[[ISOYear]])) is 1, then

@@ -62,7 +62,7 @@
       </p>
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalDate]] internal slot, then
+        1. If _item_ is an Object and _item_ has an [[InitializedTemporalDate]] internal slot, then
           1. Perform ? GetTemporalOverflowOption(_options_).
           1. Return ! CreateTemporalDate(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
         1. Return ? ToTemporalDate(_item_, _options_).
@@ -526,7 +526,7 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. If Type(_item_) is Object, then
+        1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalTimeZone]] internal slot, then
             1. Let _timeZone_ be _item_.
             1. Let _temporalTime_ be *undefined*.
@@ -780,7 +780,7 @@
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
         1. If _options_ is not *undefined*, set _options_ to ? SnapshotOwnProperties(! GetOptionsObject(_options_), *null*).
-        1. If Type(_item_) is Object, then
+        1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then

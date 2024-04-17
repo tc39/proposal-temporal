@@ -246,7 +246,7 @@
     <emu-alg>
       1. If _options_ is *undefined*, then
         1. Return OrdinaryObjectCreate(*null*).
-      1. If Type(_options_) is Object, then
+      1. If _options_ is an Object, then
         1. Return _options_.
       1. Throw a *TypeError* exception.
     </emu-alg>
@@ -750,7 +750,7 @@
       1. If _value_ is *undefined*, return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
       1. Let _offsetBehaviour_ be ~option~.
       1. Let _matchBehaviour_ be ~match-exactly~.
-      1. If Type(_value_) is Object, then
+      1. If _value_ is an Object, then
         1. If _value_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_value_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
           1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _value_, [[TimeZoneRec]]: _timeZoneRec_ }.
