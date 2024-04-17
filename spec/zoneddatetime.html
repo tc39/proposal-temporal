@@ -60,7 +60,7 @@
       </p>
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. If Type(_item_) is Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+        1. If _item_ is an Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and ToTemporalOverflow reads *"overflow"*).
           1. Perform ? GetTemporalDisambiguationOption(_options_).
           1. Perform ? GetTemporalOffsetOption(_options_, *"reject"*).
@@ -646,7 +646,7 @@
         1. Let _offset_ be ? GetTemporalOffsetOption(_resolvedOptions_, *"prefer"*).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _resolvedOptions_).
         1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
-        1. Assert: Type(_offsetString_) is String.
+        1. Assert: _offsetString_ is a String.
         1. Let _newOffsetNanoseconds_ be ? ParseDateTimeUTCOffset(_offsetString_).
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _newOffsetNanoseconds_, _timeZoneRec_, _disambiguation_, _offset_, ~match-exactly~).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZoneRec_.[[Receiver]], _calendarRec_.[[Receiver]]).
@@ -775,7 +775,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. If _roundTo_ is *undefined*, then
           1. Throw a *TypeError* exception.
-        1. If Type(_roundTo_) is String, then
+        1. If _roundTo_ is a String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
@@ -1213,7 +1213,7 @@
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(! GetOptionsObject(_options_), *null*).
         1. Let _offsetBehaviour_ be ~option~.
         1. Let _matchBehaviour_ be ~match-exactly~.
-        1. If Type(_item_) is Object, then
+        1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
@@ -1354,7 +1354,7 @@
         1. If _precalculatedPlainDateTime_ is not present, set _precalculatedPlainDateTime_ to *undefined*.
         1. Assert: If _precalculatedPlainDateTime_ is *undefined*, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Assert: Type(_options_) is Object or Undefined.
+        1. Assert: _options_ is an Object or *undefined*.
         1. If _years_ = 0, _months_ = 0, _weeks_ = 0, and _days_ = 0, then
           1. Return ? AddInstant(_epochNanoseconds_, _norm_).
         1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
