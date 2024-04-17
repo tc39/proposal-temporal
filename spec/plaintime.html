@@ -554,32 +554,32 @@
           </tr>
           <tr>
             <td>[[Hour]]</td>
-            <td>an integer in the inclusive range 0 to 23</td>
+            <td>an integer in the inclusive interval from 0 to 23</td>
             <td>The number of the hour.</td>
           </tr>
           <tr>
             <td>[[Minute]]</td>
-            <td>an integer in the inclusive range 0 to 59</td>
+            <td>an integer in the inclusive interval from 0 to 59</td>
             <td>The number of the minute.</td>
           </tr>
           <tr>
             <td>[[Second]]</td>
-            <td>an integer in the inclusive range 0 to 59</td>
+            <td>an integer in the inclusive interval from 0 to 59</td>
             <td>The number of the second.</td>
           </tr>
           <tr>
             <td>[[Millisecond]]</td>
-            <td>an integer in the inclusive range 0 to 999</td>
+            <td>an integer in the inclusive interval from 0 to 999</td>
             <td>The number of the millisecond.</td>
           </tr>
           <tr>
             <td>[[Microsecond]]</td>
-            <td>an integer in the inclusive range 0 to 999</td>
+            <td>an integer in the inclusive interval from 0 to 999</td>
             <td>The number of the microsecond.</td>
           </tr>
           <tr>
             <td>[[Nanosecond]]</td>
-            <td>an integer in the inclusive range 0 to 999</td>
+            <td>an integer in the inclusive interval from 0 to 999</td>
             <td>The number of the nanosecond.</td>
           </tr>
         </table>
@@ -996,12 +996,12 @@
     <emu-clause id="sec-temporal-addtime" type="abstract operation">
       <h1>
         AddTime (
-          _hour_: an integer in the inclusive range 0 to 23,
-          _minute_: an integer in the inclusive range 0 to 59,
-          _second_: an integer in the inclusive range 0 to 59,
-          _millisecond_: an integer in the inclusive range 0 to 999,
-          _microsecond_: an integer in the inclusive range 0 to 999,
-          _nanosecond_: an integer in the inclusive range 0 to 999,
+          _hour_: an integer in the inclusive interval from 0 to 23,
+          _minute_: an integer in the inclusive interval from 0 to 59,
+          _second_: an integer in the inclusive interval from 0 to 59,
+          _millisecond_: an integer in the inclusive interval from 0 to 999,
+          _microsecond_: an integer in the inclusive interval from 0 to 999,
+          _nanosecond_: an integer in the inclusive interval from 0 to 999,
           _norm_: a Normalized Time Duration Record,
         ): a Time Record
       </h1>
@@ -1019,12 +1019,12 @@
     <emu-clause id="sec-temporal-roundtime" type="abstract operation">
       <h1>
         RoundTime (
-          _hour_: an integer in the inclusive range 0 to 23,
-          _minute_: an integer in the inclusive range 0 to 59,
-          _second_: an integer in the inclusive range 0 to 59,
-          _millisecond_: an integer in the inclusive range 0 to 999,
-          _microsecond_: an integer in the inclusive range 0 to 999,
-          _nanosecond_: an integer in the inclusive range 0 to 999,
+          _hour_: an integer in the inclusive interval from 0 to 23,
+          _minute_: an integer in the inclusive interval from 0 to 59,
+          _second_: an integer in the inclusive interval from 0 to 59,
+          _millisecond_: an integer in the inclusive interval from 0 to 999,
+          _microsecond_: an integer in the inclusive interval from 0 to 999,
+          _nanosecond_: an integer in the inclusive interval from 0 to 999,
           _increment_: an integer,
           _unit_: *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
           _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
