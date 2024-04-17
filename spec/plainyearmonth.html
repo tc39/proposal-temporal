@@ -771,7 +771,7 @@
           1. Set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _balanceResult_ be BalanceTimeDuration(_norm_, *"day"*).
+        1. Let _balanceResult_ be ! BalanceTimeDuration(_norm_, *"day"*).
         1. Let _days_ be _duration_.[[Days]] + _balanceResult_.[[Days]].
         1. Let _sign_ be DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, 0, 0, 0, 0, 0, 0).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~date-add~, ~date-from-fields~, ~day~, ~fields~, ~year-month-from-fields~ »).
