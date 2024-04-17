@@ -793,7 +793,7 @@
           1. Assert: _maximum_ is not *undefined*.
           1. Let _inclusive_ be *false*.
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, _inclusive_).
-        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ is 1, then
+        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, then
           1. Return ! CreateTemporalZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]]).
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
@@ -1433,7 +1433,7 @@
       </dl>
       <p>Unless _ns1_ and _ns2_ are equal, _timeZoneRec_ must have looked up both `getOffsetNanosecondsFor` and `getPossibleInstantsFor`.</p>
       <emu-alg>
-        1. If _ns1_ is _ns2_, then
+        1. If _ns1_ = _ns2_, then
           1. Return ! CreateNormalizedDurationRecord(0, 0, 0, 0, ZeroTimeDuration()).
         1. Let _endInstant_ be ! CreateTemporalInstant(_ns2_).
         1. Let _endDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _endInstant_, _calendarRec_.[[Receiver]]).
@@ -1493,7 +1493,7 @@
           1. Let _durationRecord_ be CreateDurationRecord(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _diffRecord_.[[Total]] }.
         1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZoneRec_, _calendarRec_, _largestUnit_, _resolvedOptions_, _precalculatedPlainDateTime_).
-        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ is 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
+        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
         1. If _roundingGranularityIsNoop_ is *true*, then
           1. Let _timeResult_ be BalanceTimeDuration(_difference_.[[NormalizedTime]], *"hour"*).
           1. Let _total_ be NormalizedTimeDurationSeconds(_difference_.[[NormalizedTime]]) × 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_difference_.[[NormalizedTime]]).

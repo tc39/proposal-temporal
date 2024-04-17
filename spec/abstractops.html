@@ -44,7 +44,7 @@
     <emu-alg>
       1. Let _resolvedYear_ be _year_ + floor(_month_ / 12).
       1. Let _resolvedMonth_ be _month_ modulo 12.
-      1. Find a time _t_ such that EpochTimeToEpochYear(_t_) is _resolvedYear_, EpochTimeToMonthInYear(_t_) is _resolvedMonth_, and EpochTimeToDate(_t_) is 1.
+      1. Find a time _t_ such that EpochTimeToEpochYear(_t_) = _resolvedYear_, EpochTimeToMonthInYear(_t_) = _resolvedMonth_, and EpochTimeToDate(_t_) = 1.
       1. Return EpochTimeToDayNumber(_t_) + _date_ - 1.
     </emu-alg>
     <emu-note type="editor"> This operation corresponds to ECMA-262 operation MakeDay(_year_, _month_, _date_). It calculates the result in mathematical values instead of Number values. These two operations would be unified when https://github.com/tc39/ecma262/issues/1087 is fixed.</emu-note>
@@ -88,8 +88,8 @@
     <p>The following function returns 1 for a time within leap year otherwise it returns 0:</p>
     <emu-eqn id="eqn-mathematicalinleapyear" aoid="MathematicalInLeapYear">
       MathematicalInLeapYear(_t_)
-        = 0 if MathematicalDaysInYear(EpochTimeToEpochYear(_t_)) is 365
-        = 1 if MathematicalDaysInYear(EpochTimeToEpochYear(_t_)) is 366
+        = 0 if MathematicalDaysInYear(EpochTimeToEpochYear(_t_)) = 365
+        = 1 if MathematicalDaysInYear(EpochTimeToEpochYear(_t_)) = 366
     </emu-eqn>
     <p>The month number for a time _t_ is given by:</p>
     <emu-eqn id="eqn-epochtimetomonthinyear" aoid="EpochTimeToMonthInYear">
@@ -113,18 +113,18 @@
     <p>The date number for a time _t_ is given by:</p>
     <emu-eqn id="eqn-epochtimetodate" aoid="EpochTimeToDate">
       EpochTimeToDate(_t_)
-        = EpochTimeToDayInYear(_t_) + 1 if EpochTimeToMonthInYear(_t_) is 0
-        = EpochTimeToDayInYear(_t_) - 30 if EpochTimeToMonthInYear(_t_) is 1
-        = EpochTimeToDayInYear(_t_) - 58 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 2
-        = EpochTimeToDayInYear(_t_) - 89 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 3
-        = EpochTimeToDayInYear(_t_) - 119 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 4
-        = EpochTimeToDayInYear(_t_) - 150 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 5
-        = EpochTimeToDayInYear(_t_) - 180 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 6
-        = EpochTimeToDayInYear(_t_) - 211 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 7
-        = EpochTimeToDayInYear(_t_) - 242 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 8
-        = EpochTimeToDayInYear(_t_) - 272 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 9
-        = EpochTimeToDayInYear(_t_) - 303 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 10
-        = EpochTimeToDayInYear(_t_) - 333 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) is 11
+        = EpochTimeToDayInYear(_t_) + 1 if EpochTimeToMonthInYear(_t_) = 0
+        = EpochTimeToDayInYear(_t_) - 30 if EpochTimeToMonthInYear(_t_) = 1
+        = EpochTimeToDayInYear(_t_) - 58 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 2
+        = EpochTimeToDayInYear(_t_) - 89 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 3
+        = EpochTimeToDayInYear(_t_) - 119 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 4
+        = EpochTimeToDayInYear(_t_) - 150 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 5
+        = EpochTimeToDayInYear(_t_) - 180 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 6
+        = EpochTimeToDayInYear(_t_) - 211 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 7
+        = EpochTimeToDayInYear(_t_) - 242 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 8
+        = EpochTimeToDayInYear(_t_) - 272 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 9
+        = EpochTimeToDayInYear(_t_) - 303 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 10
+        = EpochTimeToDayInYear(_t_) - 333 - MathematicalInLeapYear(_t_) if EpochTimeToMonthInYear(_t_) = 11
     </emu-eqn>
     <p>The weekday for a particular time _t_ is defined as:</p>
     <emu-eqn id="eqn-epochtimetoweekday" aoid="EpochTimeToWeekDay">EpochTimeToWeekDay(_t_) =(EpochTimeToDayNumber(_t_) + 4) modulo 7</emu-eqn>
@@ -654,25 +654,25 @@
             [[Unit]]: *"nanosecond"*,
             [[Increment]]: 1
           }.
-      1. If _fractionalDigitCount_ is 0, then
+      1. If _fractionalDigitCount_ = 0, then
         1. Return the Record {
             [[Precision]]: 0,
             [[Unit]]: *"second"*,
             [[Increment]]: 1
           }.
-      1. If _fractionalDigitCount_ is 1, 2, or 3, then
+      1. If _fractionalDigitCount_ is in the inclusive interval from 1 to 3, then
         1. Return the Record {
             [[Precision]]: _fractionalDigitCount_,
             [[Unit]]: *"millisecond"*,
             [[Increment]]: 10<sup>3 - _fractionalDigitCount_</sup>
           }.
-      1. If _fractionalDigitCount_ is 4, 5, or 6, then
+      1. If _fractionalDigitCount_ is in the inclusive interval from 4 to 6, then
         1. Return the Record {
             [[Precision]]: _fractionalDigitCount_,
             [[Unit]]: *"microsecond"*,
             [[Increment]]: 10<sup>6 - _fractionalDigitCount_</sup>
           }.
-      1. Assert: _fractionalDigitCount_ is 7, 8, or 9.
+      1. Assert: _fractionalDigitCount_ is in the inclusive interval from 7 to 9.
       1. Return the Record {
           [[Precision]]: _fractionalDigitCount_,
           [[Unit]]: *"nanosecond"*,
@@ -899,11 +899,11 @@
     </dl>
     <emu-alg>
       1. If _precision_ is *"auto"*, then
-        1. If _subSecondNanoseconds_ is 0, return the empty String.
+        1. If _subSecondNanoseconds_ = 0, return the empty String.
         1. Let _fractionString_ be ToZeroPaddedDecimalString(_subSecondNanoseconds_, 9).
         1. Set _fractionString_ to the longest prefix of _fractionString_ ending with a code unit other than 0x0030 (DIGIT ZERO).
       1. Else,
-        1. If _precision_ is 0, return the empty String.
+        1. If _precision_ = 0, return the empty String.
         1. Let _fractionString_ be ToZeroPaddedDecimalString(_subSecondNanoseconds_, 9).
         1. Set _fractionString_ to the substring of _fractionString_ from 0 to _precision_.
       1. Return the string-concatenation of the code unit 0x002E (FULL STOP) and _fractionString_.
@@ -1066,7 +1066,7 @@
       <dd>It considers _x_, bracketed below by _r1_ and above by _r2_, and returns either _r1_ or _r2_ according to _unsignedRoundingMode_.</dd>
     </dl>
     <emu-alg>
-      1. If _x_ is equal to _r1_, return _r1_.
+      1. If _x_ = _r1_, return _r1_.
       1. Assert: _r1_ &lt; _x_ &lt; _r2_.
       1. Assert: _unsignedRoundingMode_ is not *undefined*.
       1. If _unsignedRoundingMode_ is ~zero~, return _r1_.
@@ -1080,7 +1080,7 @@
       1. If _unsignedRoundingMode_ is ~half-infinity~, return _r2_.
       1. Assert: _unsignedRoundingMode_ is ~half-even~.
       1. Let _cardinality_ be <emu-eqn>(_r1_ / (_r2_ – _r1_)) modulo 2</emu-eqn>.
-      1. If _cardinality_ is 0, return _r1_.
+      1. If _cardinality_ = 0, return _r1_.
       1. Return _r2_.
     </emu-alg>
   </emu-clause>
@@ -1550,7 +1550,7 @@
         1. Let _secondMV_ be 0.
       1. Else,
         1. Let _secondMV_ be ℝ(StringToNumber(CodePointsToString(_second_))).
-        1. If _secondMV_ is 60, then
+        1. If _secondMV_ = 60, then
           1. Set _secondMV_ to 59.
       1. If _fSeconds_ is not empty, then
         1. Let _fSecondsDigits_ be the substring of CodePointsToString(_fSeconds_) from 1.

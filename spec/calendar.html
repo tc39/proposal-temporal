@@ -1059,7 +1059,7 @@
       <emu-alg>
         1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
         1. If _month_ is 4, 6, 9, or 11, return 30.
-        1. Assert: _month_ is 2.
+        1. Assert: _month_ = 2.
         1. Return 28 + MathematicalInLeapYear(EpochTimeForYear(_year_)).
       </emu-alg>
     </emu-clause>
@@ -1090,12 +1090,12 @@
         1. If _week_ &lt; 1, then
           1. NOTE: This is the last week of the previous year.
           1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
-          1. If _dayOfJan1st_ is _friday_, then
+          1. If _dayOfJan1st_ = _friday_, then
             1. Return Year-Week Record { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
-          1. If _dayOfJan1st_ is _saturday_, and MathematicalInLeapYear(EpochTimeForYear(_year_ - 1)) is 1, then
+          1. If _dayOfJan1st_ = _saturday_, and MathematicalInLeapYear(EpochTimeForYear(_year_ - 1)) = 1, then
             1. Return Year-Week Record { [[Week]]: _maxWeekNumber_. [[Year]]: _year_ - 1 }.
           1. Return Year-Week Record { [[Week]]: _maxWeekNumber_ - 1, [[Year]]: _year_ - 1 }.
-        1. If _week_ is _maxWeekNumber_, then
+        1. If _week_ = _maxWeekNumber_, then
           1. Let _daysInYear_ be MathematicalDaysInYear(_year_).
           1. Let _daysLaterInYear_ be _daysInYear_ - _dayOfYear_.
           1. Let _daysAfterThursday_ be _thursday_ - _dayOfWeek_.
@@ -2215,7 +2215,7 @@
         1. If _temporalDateLike_ is not an Object or _temporalDateLike_ does not have an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], or [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _temporalDateLike_ to ? ToTemporalDate(_temporalDateLike_).
         1. If _calendar_.[[Identifier]] is *"iso8601"*, then
-          1. If MathematicalInLeapYear(EpochTimeForYear(_temporalDateLike_.[[ISOYear]])) is 1, then
+          1. If MathematicalInLeapYear(EpochTimeForYear(_temporalDateLike_.[[ISOYear]])) = 1, then
             1. Let _inLeapYear_ be *true*.
           1. Else,
             1. Let _inLeapYear_ be *false*.
