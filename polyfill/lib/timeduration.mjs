@@ -76,7 +76,8 @@ export class TimeDuration {
   }
 
   fdiv(n) {
-    if (n === 0) throw new Error('division by zero');
+    n = bigInt(n);
+    if (n.isZero()) throw new Error('division by zero');
     let { quotient, remainder } = this.totalNs.divmod(n);
 
     // Perform long division to calculate the fractional part of the quotient
