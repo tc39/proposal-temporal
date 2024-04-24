@@ -1402,13 +1402,9 @@
           1. Let _total_ be NormalizedTimeDurationSeconds(_normWithDays_) × 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_normWithDays_).
           1. Let _durationRecord_ be CreateDurationRecord(_diff_.[[Years]], _diff_.[[Months]], _diff_.[[Weeks]], _timeResult_.[[Days]], _timeResult_.[[Hours]], _timeResult_.[[Minutes]], _timeResult_.[[Seconds]], _timeResult_.[[Milliseconds]], _timeResult_.[[Microseconds]], _timeResult_.[[Nanoseconds]]).
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _total_ }.
-        1. Let _roundRecord_ be ? RoundDuration(_diff_.[[Years]], _diff_.[[Months]], _diff_.[[Weeks]], _diff_.[[Days]], _diff_.[[NormalizedTime]], _roundingIncrement_, _smallestUnit_, _roundingMode_, _plainDate1_, _calendarRec_).
-        1. Let _roundResult_ be _roundRecord_.[[NormalizedDuration]].
-        1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_roundResult_.[[NormalizedTime]], _roundResult_.[[Days]]).
-        1. Let _timeResult_ be BalanceTimeDuration(_normWithDays_, _largestUnit_).
-        1. Let _balanceResult_ be ? BalanceDateDurationRelative(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _timeResult_.[[Days]], _largestUnit_, _smallestUnit_, _plainDate1_, _calendarRec_).
-        1. Let _durationRecord_ be CreateDurationRecord(_balanceResult_.[[Years]], _balanceResult_.[[Months]], _balanceResult_.[[Weeks]], _balanceResult_.[[Days]], _timeResult_.[[Hours]], _timeResult_.[[Minutes]], _timeResult_.[[Seconds]], _timeResult_.[[Milliseconds]], _timeResult_.[[Microseconds]], _timeResult_.[[Nanoseconds]]).
-        1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _roundRecord_.[[Total]] }.
+        1. Let _dateTime_ be ISO Date-TimeRecord { [[Year]]: _y1_, [[Month]]: _mon1_, [[Day]]: _d1_, [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
+        1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _dateTime_, _calendarRec_, ~unset~, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 

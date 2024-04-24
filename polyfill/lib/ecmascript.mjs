@@ -3264,119 +3264,6 @@ export function BalanceTime(hour, minute, second, millisecond, microsecond, nano
   };
 }
 
-export function NormalizedTimeDurationToDays(norm, zonedRelativeTo, timeZoneRec, precalculatedPlainDateTime) {
-  // getOffsetNanosecondsFor and getPossibleInstantsFor must be looked up
-  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-  const sign = norm.sign();
-  if (sign === 0) return { days: 0, norm, dayLengthNs: DAY_NANOS };
-
-  const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-  const start = GetSlot(zonedRelativeTo, INSTANT);
-  const endNs = norm.addToEpochNs(startNs);
-  const end = new TemporalInstant(endNs);
-  const calendar = GetSlot(zonedRelativeTo, CALENDAR);
-
-  // Find the difference in days only. Inline DifferenceISODateTime because we
-  // don't need the path that potentially calls calendar methods.
-  const dtStart = precalculatedPlainDateTime ?? GetPlainDateTimeFor(timeZoneRec, start, 'iso8601');
-  const dtEnd = GetPlainDateTimeFor(timeZoneRec, end, 'iso8601');
-  const date1 = TemporalDateTimeToDate(dtStart);
-  const date2 = TemporalDateTimeToDate(dtEnd);
-  let days = DaysUntil(date1, date2);
-
-  const timeSign = CompareTemporalTime(
-    GetSlot(dtStart, ISO_HOUR),
-    GetSlot(dtStart, ISO_MINUTE),
-    GetSlot(dtStart, ISO_SECOND),
-    GetSlot(dtStart, ISO_MILLISECOND),
-    GetSlot(dtStart, ISO_MICROSECOND),
-    GetSlot(dtStart, ISO_NANOSECOND),
-    GetSlot(dtEnd, ISO_HOUR),
-    GetSlot(dtEnd, ISO_MINUTE),
-    GetSlot(dtEnd, ISO_SECOND),
-    GetSlot(dtEnd, ISO_MILLISECOND),
-    GetSlot(dtEnd, ISO_MICROSECOND),
-    GetSlot(dtEnd, ISO_NANOSECOND)
-  );
-
-  if (days > 0 && timeSign > 0) {
-    days--;
-  } else if (days < 0 && timeSign < 0) {
-    days++;
-  }
-
-  let relativeResult = AddDaysToZonedDateTime(start, dtStart, timeZoneRec, calendar, days);
-  // may disambiguate
-
-  // If clock time after addition was in the middle of a skipped period, the
-  // endpoint was disambiguated to a later clock time. So it's possible that
-  // the resulting disambiguated result is later than endNs. If so, then back
-  // up one day and try again. Repeat if necessary (some transitions are
-  // > 24 hours) until either there's zero days left or the date duration is
-  // back inside the period where it belongs. Note that this case only can
-  // happen for positive durations because the only direction that
-  // `disambiguation: 'compatible'` can change clock time is forwards.
-  if (sign === 1 && days > 0 && relativeResult.epochNs.greater(endNs)) {
-    days--;
-    relativeResult = AddDaysToZonedDateTime(start, dtStart, timeZoneRec, calendar, days);
-    // may do disambiguation
-    if (days > 0 && relativeResult.epochNs.greater(endNs)) {
-      throw new RangeError('inconsistent result from custom time zone getInstantFor()');
-    }
-  }
-  norm = TimeDuration.fromEpochNsDiff(endNs, relativeResult.epochNs);
-
-  // calculate length of the next day (day that contains the time remainder)
-  let oneDayFarther = AddDaysToZonedDateTime(
-    relativeResult.instant,
-    relativeResult.dateTime,
-    timeZoneRec,
-    calendar,
-    sign
-  );
-  let dayLengthNs = TimeDuration.fromEpochNsDiff(oneDayFarther.epochNs, relativeResult.epochNs);
-  const oneDayLess = norm.subtract(dayLengthNs);
-  let isOverflow = oneDayLess.sign() * sign >= 0;
-  if (isOverflow) {
-    norm = oneDayLess;
-    relativeResult = oneDayFarther;
-    days += sign;
-
-    // ensure there was no more overflow
-    oneDayFarther = AddDaysToZonedDateTime(
-      relativeResult.instant,
-      relativeResult.dateTime,
-      timeZoneRec,
-      calendar,
-      sign
-    );
-
-    dayLengthNs = TimeDuration.fromEpochNsDiff(oneDayFarther.epochNs, relativeResult.epochNs);
-    isOverflow = norm.subtract(dayLengthNs).sign() * sign >= 0;
-    if (isOverflow) throw new RangeError('inconsistent result from custom time zone getPossibleInstantsFor()');
-  }
-  if (days !== 0 && MathSign(days) != sign) {
-    throw new RangeError('Time zone or calendar converted nanoseconds into a number of days with the opposite sign');
-  }
-  if (sign === -1) {
-    if (norm.sign() === 1) {
-      throw new RangeError('Time zone or calendar ended up with a remainder of nanoseconds with the opposite sign');
-    }
-  } else if (norm.sign() === -1) {
-    throw new Error('assert not reached');
-  }
-  if (norm.abs().cmp(dayLengthNs.abs()) >= 0) {
-    throw new Error('assert not reached');
-  }
-  const daylen = dayLengthNs.abs().totalNs.toJSNumber();
-  if (!NumberIsSafeInteger(daylen)) {
-    const h = daylen / 3600e9;
-    throw new RangeError(`Time zone calculated a day length of ${h} h, longer than ~2502 h causes precision loss`);
-  }
-  if (MathAbs(days) > NumberMaxSafeInteger / 86400) throw new Error('assert not reached');
-  return { days, norm, dayLengthNs: daylen };
-}
-
 export function BalanceTimeDuration(norm, largestUnit) {
   const sign = norm.sign();
   let nanoseconds = norm.abs().subsec;
@@ -3467,47 +3354,6 @@ export function BalanceTimeDuration(norm, largestUnit) {
   return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
 }
 
-export function BalanceTimeDurationRelative(
-  days,
-  norm,
-  largestUnit,
-  zonedRelativeTo,
-  timeZoneRec,
-  precalculatedPlainDateTime
-) {
-  const startNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-  const startInstant = GetSlot(zonedRelativeTo, INSTANT);
-
-  let intermediateNs = startNs;
-  if (days !== 0) {
-    precalculatedPlainDateTime ??= GetPlainDateTimeFor(timeZoneRec, startInstant, 'iso8601');
-    intermediateNs = AddDaysToZonedDateTime(
-      startInstant,
-      precalculatedPlainDateTime,
-      timeZoneRec,
-      'iso8601',
-      days
-    ).epochNs;
-  }
-
-  const endNs = AddInstant(intermediateNs, norm);
-  norm = TimeDuration.fromEpochNsDiff(endNs, startNs);
-  if (norm.isZero()) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: 0, microseconds: 0, nanoseconds: 0 };
-  }
-
-  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
-    precalculatedPlainDateTime ??= GetPlainDateTimeFor(timeZoneRec, startInstant, 'iso8601');
-    ({ days, norm } = NormalizedTimeDurationToDays(norm, zonedRelativeTo, timeZoneRec, precalculatedPlainDateTime));
-    largestUnit = 'hour';
-  } else {
-    days = 0;
-  }
-
-  const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(norm, largestUnit);
-  return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
-}
-
 export function UnbalanceDateDurationRelative(years, months, weeks, days, plainRelativeTo, calendarRec) {
   // calendarRec must have looked up dateAdd, unless calendar units 0
   if (years === 0 && months === 0 && weeks === 0) return days;
@@ -3517,91 +3363,6 @@ export function UnbalanceDateDurationRelative(years, months, weeks, days, plainR
   const later = CalendarDateAdd(calendarRec, plainRelativeTo, new TemporalDuration(years, months, weeks));
   const yearsMonthsWeeksInDays = DaysUntil(plainRelativeTo, later);
   return days + yearsMonthsWeeksInDays;
-}
-
-export function BalanceDateDurationRelative(
-  years,
-  months,
-  weeks,
-  days,
-  largestUnit,
-  smallestUnit,
-  plainRelativeTo,
-  calendarRec
-) {
-  // calendarRec must have looked up dateAdd and dateUntil
-  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-
-  // If no nonzero calendar units, then there's nothing to balance.
-  // If largestUnit is 'day' or lower, then the balance is a no-op.
-  // In both cases, return early. Anything after this requires a calendar.
-  if (
-    (years === 0 && months === 0 && weeks === 0 && days === 0) ||
-    (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week')
-  ) {
-    return { years, months, weeks, days };
-  }
-
-  const untilOptions = ObjectCreate(null);
-  untilOptions.largestUnit = largestUnit;
-
-  switch (largestUnit) {
-    case 'year': {
-      // There is a special case for smallestUnit === week, because months and
-      // years aren't equal to an integer number of weeks. We don't want "1 year
-      // and 5 weeks" to balance to "1 year, 1 month, and 5 days" which would
-      // contravene the requested smallestUnit.
-      if (smallestUnit === 'week') {
-        // balance months up to years
-        const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(years, months));
-        const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
-        return {
-          years: GetSlot(untilResult, YEARS),
-          months: GetSlot(untilResult, MONTHS),
-          weeks,
-          days: 0
-        };
-      }
-      // balance weeks, months and days up to years
-      const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(years, months, weeks, days));
-      const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
-      return {
-        years: GetSlot(untilResult, YEARS),
-        months: GetSlot(untilResult, MONTHS),
-        weeks: GetSlot(untilResult, WEEKS),
-        days: GetSlot(untilResult, DAYS)
-      };
-    }
-    case 'month': {
-      // Same special case for rounding to weeks as above; in this case we
-      // don't need to balance.
-      if (smallestUnit === 'week') {
-        return { years: 0, months, weeks, days: 0 };
-      }
-      // balance weeks and days up to months
-      const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(0, months, weeks, days));
-      const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
-      return {
-        years: 0,
-        months: GetSlot(untilResult, MONTHS),
-        weeks: GetSlot(untilResult, WEEKS),
-        days: GetSlot(untilResult, DAYS)
-      };
-    }
-    case 'week': {
-      // balance days up to weeks
-      const later = AddDate(calendarRec, plainRelativeTo, new TemporalDuration(0, 0, weeks, days));
-      const untilResult = CalendarDateUntil(calendarRec, plainRelativeTo, later, untilOptions);
-      return {
-        years: 0,
-        months: 0,
-        weeks: GetSlot(untilResult, WEEKS),
-        days: GetSlot(untilResult, DAYS)
-      };
-    }
-    default:
-    // not reached
-  }
 }
 
 export function CreateNegatedTemporalDuration(duration) {
@@ -3800,7 +3561,7 @@ export function DifferenceTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, 
 
 export function DifferenceInstant(ns1, ns2, increment, smallestUnit, roundingMode) {
   const diff = TimeDuration.fromEpochNsDiff(ns2, ns1);
-  return RoundDuration(0, 0, 0, 0, diff, increment, smallestUnit, roundingMode);
+  return RoundTimeDuration(0, diff, increment, smallestUnit, roundingMode);
 }
 
 export function DifferenceDate(calendarRec, plainDate1, plainDate2, options) {
@@ -3990,6 +3751,536 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZoneRec, calendarRec, larg
   return { years, months, weeks, days, norm };
 }
 
+// Epoch-nanosecond bounding technique where the start/end of the calendar-unit
+// interval are converted to epoch-nanosecond times and destEpochNs is nudged to
+// either one.
+function NudgeToCalendarUnit(
+  sign,
+  duration,
+  destEpochNs,
+  dateTime,
+  calendarRec,
+  timeZoneRec,
+  increment,
+  unit,
+  roundingMode
+) {
+  // unit must be day, week, month, or year
+  // timeZoneRec may be undefined
+
+  // Create a duration with smallestUnit trunc'd towards zero
+  // Create a separate duration that incorporates roundingIncrement
+  let r1, r2, startDuration, endDuration;
+  switch (unit) {
+    case 'year': {
+      const years = RoundNumberToIncrement(duration.years, increment, 'trunc');
+      r1 = years;
+      r2 = years + increment * sign;
+      startDuration = { years: r1, months: 0, weeks: 0, days: 0, norm: TimeDuration.ZERO };
+      endDuration = { ...startDuration, years: r2 };
+      break;
+    }
+    case 'month': {
+      const months = RoundNumberToIncrement(duration.months, increment, 'trunc');
+      r1 = months;
+      r2 = months + increment * sign;
+      startDuration = { ...duration, months: r1, weeks: 0, days: 0, norm: TimeDuration.ZERO };
+      endDuration = { ...startDuration, months: r2 };
+      break;
+    }
+    case 'week': {
+      const year = dateTime.year + duration.years;
+      const month = dateTime.month + duration.months;
+      const day = dateTime.day;
+      const isoResult1 = BalanceISODate(year, month, day);
+      const isoResult2 = BalanceISODate(year, month, day + duration.days);
+      const weeksStart = CreateTemporalDate(isoResult1.year, isoResult1.month, isoResult1.day, calendarRec.receiver);
+      const weeksEnd = CreateTemporalDate(isoResult2.year, isoResult2.month, isoResult2.day, calendarRec.receiver);
+      const untilOptions = ObjectCreate(null);
+      untilOptions.largestUnit = 'week';
+      const untilResult = DifferenceDate(calendarRec, weeksStart, weeksEnd, untilOptions);
+      const weeks = RoundNumberToIncrement(duration.weeks + GetSlot(untilResult, WEEKS), increment, 'trunc');
+      r1 = weeks;
+      r2 = weeks + increment * sign;
+      startDuration = { ...duration, weeks: r1, days: 0, norm: TimeDuration.ZERO };
+      endDuration = { ...startDuration, weeks: r2 };
+      break;
+    }
+    case 'day': {
+      const days = RoundNumberToIncrement(duration.days, increment, 'trunc');
+      r1 = days;
+      r2 = days + increment * sign;
+      startDuration = { ...duration, days: r1, norm: TimeDuration.ZERO };
+      endDuration = { ...startDuration, days: r2 };
+      break;
+    }
+    default:
+      throw new Error('assert not reached');
+  }
+
+  // Apply to origin, output PlainDateTimes
+  const start = AddDateTime(
+    dateTime.year,
+    dateTime.month,
+    dateTime.day,
+    dateTime.hour,
+    dateTime.minute,
+    dateTime.second,
+    dateTime.millisecond,
+    dateTime.microsecond,
+    dateTime.nanosecond,
+    calendarRec,
+    startDuration.years,
+    startDuration.months,
+    startDuration.weeks,
+    startDuration.days,
+    startDuration.norm
+  );
+  const end = AddDateTime(
+    dateTime.year,
+    dateTime.month,
+    dateTime.day,
+    dateTime.hour,
+    dateTime.minute,
+    dateTime.second,
+    dateTime.millisecond,
+    dateTime.microsecond,
+    dateTime.nanosecond,
+    calendarRec,
+    endDuration.years,
+    endDuration.months,
+    endDuration.weeks,
+    endDuration.days,
+    endDuration.norm
+  );
+
+  // Convert to epoch-nanoseconds
+  let startEpochNs, endEpochNs;
+  if (timeZoneRec) {
+    const startDateTime = CreateTemporalDateTime(
+      start.year,
+      start.month,
+      start.day,
+      start.hour,
+      start.minute,
+      start.second,
+      start.millisecond,
+      start.microsecond,
+      start.nanosecond,
+      calendarRec.receiver
+    );
+    startEpochNs = GetSlot(GetInstantFor(timeZoneRec, startDateTime, 'compatible'), EPOCHNANOSECONDS);
+    const endDateTime = CreateTemporalDateTime(
+      end.year,
+      end.month,
+      end.day,
+      end.hour,
+      end.minute,
+      end.second,
+      end.millisecond,
+      end.microsecond,
+      end.nanosecond,
+      calendarRec.receiver
+    );
+    endEpochNs = GetSlot(GetInstantFor(timeZoneRec, endDateTime, 'compatible'), EPOCHNANOSECONDS);
+  } else {
+    startEpochNs = GetUTCEpochNanoseconds(
+      start.year,
+      start.month,
+      start.day,
+      start.hour,
+      start.minute,
+      start.second,
+      start.millisecond,
+      start.microsecond,
+      start.nanosecond
+    );
+    endEpochNs = GetUTCEpochNanoseconds(
+      end.year,
+      end.month,
+      end.day,
+      end.hour,
+      end.minute,
+      end.second,
+      end.millisecond,
+      end.microsecond,
+      end.nanosecond
+    );
+  }
+
+  // Round the smallestUnit within the epoch-nanosecond span
+  if (endEpochNs.equals(startEpochNs)) {
+    throw new RangeError(`custom calendar reported a ${unit} that is 0 days long`);
+  }
+  const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
+  const denominator = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
+  const unsignedRoundingMode = GetUnsignedRoundingMode(roundingMode, sign < 0 ? 'negative' : 'positive');
+  const cmp = numerator.add(numerator).abs().subtract(denominator.abs()).sign();
+  const even = (r1 / (increment * sign)) % 2 === 0;
+  const roundedUnit = numerator.isZero() ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+
+  // Trick to minimize rounding error, due to the lack of fma() in JS
+  const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
+  const total = fakeNumerator.fdiv(denominator.totalNs);
+
+  // Determine whether expanded or contracted
+  const didExpandCalendarUnit = MathSign(roundedUnit - total) === sign;
+  duration = didExpandCalendarUnit ? endDuration : startDuration;
+
+  return {
+    duration,
+    total,
+    nudgedEpochNs: didExpandCalendarUnit ? endEpochNs : startEpochNs,
+    didExpandCalendarUnit
+  };
+}
+
+// Attempts rounding of time units within a time zone's day, but if the rounding
+// causes time to exceed the total time within the day, rerun rounding in next
+// day.
+function NudgeToZonedTime(sign, duration, dateTime, calendarRec, timeZoneRec, increment, unit, roundingMode) {
+  // unit must be hour or smaller
+
+  // Apply to origin, output start/end of the day as PlainDateTimes
+  const start = AddDateTime(
+    dateTime.year,
+    dateTime.month,
+    dateTime.day,
+    dateTime.hour,
+    dateTime.minute,
+    dateTime.second,
+    dateTime.millisecond,
+    dateTime.microsecond,
+    dateTime.nanosecond,
+    calendarRec,
+    duration.years,
+    duration.months,
+    duration.weeks,
+    duration.days,
+    TimeDuration.ZERO
+  );
+  const startDateTime = CreateTemporalDateTime(
+    start.year,
+    start.month,
+    start.day,
+    start.hour,
+    start.minute,
+    start.second,
+    start.millisecond,
+    start.microsecond,
+    start.nanosecond,
+    calendarRec.receiver
+  );
+  const endDate = BalanceISODate(start.year, start.month, start.day + sign);
+  const endDateTime = CreateTemporalDateTime(
+    endDate.year,
+    endDate.month,
+    endDate.day,
+    start.hour,
+    start.minute,
+    start.second,
+    start.millisecond,
+    start.microsecond,
+    start.nanosecond,
+    calendarRec.receiver
+  );
+
+  // Compute the epoch-nanosecond start/end of the final whole-day interval
+  // If duration has negative sign, startEpochNs will be after endEpochNs
+  const startEpochNs = GetSlot(GetInstantFor(timeZoneRec, startDateTime, 'compatible'), EPOCHNANOSECONDS);
+  const endEpochNs = GetSlot(GetInstantFor(timeZoneRec, endDateTime, 'compatible'), EPOCHNANOSECONDS);
+
+  // The signed amount of time from the start of the whole-day interval to the end
+  const daySpan = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
+  if (daySpan.sign() !== sign) throw new RangeError('time zone returned inconsistent Instants');
+
+  // Compute time parts of the duration to nanoseconds and round
+  // Result could be negative
+  let roundedNorm = duration.norm.round(NS_PER_TIME_UNIT.get(unit) * increment, roundingMode);
+
+  // Does the rounded time exceed the time-in-day?
+  const beyondDaySpan = roundedNorm.subtract(daySpan);
+  const didRoundBeyondDay = beyondDaySpan.sign() !== -sign;
+
+  let dayDelta, nudgedEpochNs;
+  if (didRoundBeyondDay) {
+    // If rounded into next day, use the day-end as the local origin and rerun
+    // the rounding
+    dayDelta = sign;
+    roundedNorm = beyondDaySpan.round(NS_PER_TIME_UNIT.get(unit) * increment, roundingMode);
+    nudgedEpochNs = roundedNorm.addToEpochNs(endEpochNs);
+  } else {
+    // Otherwise, if time not rounded beyond day, use the day-start as the local
+    // origin
+    dayDelta = 0;
+    nudgedEpochNs = roundedNorm.addToEpochNs(startEpochNs);
+  }
+
+  duration = {
+    years: duration.years,
+    months: duration.months,
+    weeks: duration.weeks,
+    days: duration.days + dayDelta,
+    norm: roundedNorm
+  };
+  return {
+    duration,
+    total: NaN, // Not computed in this path, so we assert that it is not NaN later on
+    nudgedEpochNs,
+    didExpandCalendarUnit: didRoundBeyondDay
+  };
+}
+
+// Converts all fields to nanoseconds and does integer rounding.
+function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smallestUnit, roundingMode) {
+  // unit must be day or smaller
+
+  const norm = duration.norm.add24HourDays(duration.days);
+  // Convert to nanoseconds and round
+  const unitLength = NS_PER_TIME_UNIT.get(smallestUnit);
+  const total = norm.fdiv(unitLength);
+  const roundedNorm = norm.round(increment * unitLength, roundingMode);
+  const diffNorm = roundedNorm.subtract(norm);
+
+  // Determine if whole days expanded
+  const { quotient: wholeDays } = norm.divmod(DAY_NANOS);
+  const { quotient: roundedWholeDays, remainder: roundedDaysRemainder } = roundedNorm.divmod(DAY_NANOS);
+  const didExpandDays = MathSign(roundedWholeDays - wholeDays) === norm.sign();
+
+  const nudgedEpochNs = diffNorm.addToEpochNs(destEpochNs);
+
+  let days = 0;
+  let remainder = roundedNorm;
+  if (LargerOfTwoTemporalUnits(largestUnit, 'day') === largestUnit) {
+    days = roundedWholeDays;
+    remainder = roundedDaysRemainder;
+  }
+
+  duration = { ...duration, days, norm: remainder };
+  return {
+    duration,
+    total,
+    nudgedEpochNs,
+    didExpandCalendarUnit: didExpandDays
+  };
+}
+
+// Given a potentially bottom-heavy duration, bubble up smaller units to larger
+// units. Any units smaller than smallestUnit are already zeroed-out.
+function BubbleRelativeDuration(
+  sign,
+  duration,
+  nudgedEpochNs,
+  plainDateTime,
+  calendarRec,
+  timeZoneRec,
+  largestUnit,
+  smallestUnit
+) {
+  // smallestUnit is day or larger
+
+  if (smallestUnit === 'year') return duration;
+
+  // Check to see if nudgedEpochNs has hit the boundary of any units higher than
+  // smallestUnit, in which case increment the higher unit and clear smaller
+  // units.
+  const largestUnitIndex = UNITS_DESCENDING.indexOf(largestUnit);
+  const smallestUnitIndex = UNITS_DESCENDING.indexOf(smallestUnit);
+  for (let unitIndex = smallestUnitIndex - 1; unitIndex >= largestUnitIndex; unitIndex--) {
+    // The only situation where days and smaller bubble-up into weeks is when
+    // largestUnit is 'week' (not to be confused with the situation where
+    // smallestUnit is 'week', in which case days and smaller are ROUNDED-up
+    // into weeks, but that has already happened by the time this function
+    // executes)
+    // So, if days and smaller are NOT bubbled-up into weeks, and the current
+    // unit is weeks, skip.
+    const unit = UNITS_DESCENDING[unitIndex];
+    if (unit === 'week' && largestUnit !== 'week') {
+      continue;
+    }
+
+    let endDuration;
+    switch (unit) {
+      case 'year': {
+        const years = duration.years + sign;
+        endDuration = { years, months: 0, weeks: 0, days: 0, norm: TimeDuration.ZERO };
+        break;
+      }
+      case 'month': {
+        const months = duration.months + sign;
+        endDuration = { ...duration, months, weeks: 0, days: 0, norm: TimeDuration.ZERO };
+        break;
+      }
+      case 'week': {
+        const weeks = duration.weeks + sign;
+        endDuration = { ...duration, weeks, days: 0, norm: TimeDuration.ZERO };
+        break;
+      }
+      case 'day': {
+        const days = duration.days + sign;
+        endDuration = { ...duration, days, norm: TimeDuration.ZERO };
+        break;
+      }
+      default:
+        throw new Error('assert not reached');
+    }
+
+    // Compute end-of-unit in epoch-nanoseconds
+    const end = AddDateTime(
+      plainDateTime.year,
+      plainDateTime.month,
+      plainDateTime.day,
+      plainDateTime.hour,
+      plainDateTime.minute,
+      plainDateTime.second,
+      plainDateTime.millisecond,
+      plainDateTime.microsecond,
+      plainDateTime.nanosecond,
+      calendarRec,
+      endDuration.years,
+      endDuration.months,
+      endDuration.weeks,
+      endDuration.days,
+      TimeDuration.ZERO
+    );
+    let endEpochNs;
+    if (timeZoneRec) {
+      const endDateTime = CreateTemporalDateTime(
+        end.year,
+        end.month,
+        end.day,
+        end.hour,
+        end.minute,
+        end.second,
+        end.millisecond,
+        end.microsecond,
+        end.nanosecond,
+        calendarRec.receiver
+      );
+      endEpochNs = GetSlot(GetInstantFor(timeZoneRec, endDateTime, 'compatible'), EPOCHNANOSECONDS);
+    } else {
+      endEpochNs = GetUTCEpochNanoseconds(
+        end.year,
+        end.month,
+        end.day,
+        end.hour,
+        end.minute,
+        end.second,
+        end.millisecond,
+        end.microsecond,
+        end.nanosecond
+      );
+    }
+
+    const didExpandToEnd = nudgedEpochNs.compare(endEpochNs) !== -sign;
+
+    // Is nudgedEpochNs at the end-of-unit? This means it should bubble-up to
+    // the next highest unit (and possibly further...)
+    if (didExpandToEnd) {
+      duration = endDuration;
+    } else {
+      // NOT at end-of-unit. Stop looking for bubbling
+      break;
+    }
+  }
+
+  return duration;
+}
+
+function RoundRelativeDuration(
+  duration,
+  destEpochNs,
+  dateTime,
+  calendarRec,
+  timeZoneRec,
+  largestUnit,
+  increment,
+  smallestUnit,
+  roundingMode
+) {
+  // The duration must already be balanced. This should be achieved by calling
+  // one of the non-rounding since/until internal methods prior. It's okay to
+  // have a bottom-heavy weeks because weeks don't bubble-up into months. It's
+  // okay to have >24 hour day assuming the final day of relativeTo+duration has
+  // >24 hours in its timezone. (should automatically end up like this if using
+  // non-rounding since/until internal methods prior)
+  const irregularLengthUnit = IsCalendarUnit(smallestUnit) || (timeZoneRec && smallestUnit === 'day');
+  const sign =
+    DurationSign(duration.years, duration.months, duration.weeks, duration.days, duration.norm.sign()) < 0 ? -1 : 1;
+
+  let nudgeResult;
+  if (irregularLengthUnit) {
+    // Rounding an irregular-length unit? Use epoch-nanosecond-bounding technique
+    nudgeResult = NudgeToCalendarUnit(
+      sign,
+      duration,
+      destEpochNs,
+      dateTime,
+      calendarRec,
+      timeZoneRec,
+      increment,
+      smallestUnit,
+      roundingMode
+    );
+  } else if (timeZoneRec) {
+    // Special-case for rounding time units within a zoned day. total() never
+    // takes this path because largestUnit is then also a time unit, so
+    // DifferenceZonedDateTimeWithRounding uses Instant math
+    nudgeResult = NudgeToZonedTime(
+      sign,
+      duration,
+      dateTime,
+      calendarRec,
+      timeZoneRec,
+      increment,
+      smallestUnit,
+      roundingMode
+    );
+  } else {
+    // Rounding uniform-length days/hours/minutes/etc units. Simple nanosecond
+    // math. years/months/weeks unchanged
+    nudgeResult = NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smallestUnit, roundingMode);
+  }
+
+  duration = nudgeResult.duration;
+  // Did nudging cause the duration to expand to the next day or larger?
+  // Bubble-up smaller calendar units into higher ones, except for weeks, which
+  // don't balance up into months
+  if (nudgeResult.didExpandCalendarUnit && smallestUnit !== 'week') {
+    duration = BubbleRelativeDuration(
+      sign,
+      duration,
+      nudgeResult.nudgedEpochNs, // The destEpochNs after expanding/contracting
+      dateTime,
+      calendarRec,
+      timeZoneRec,
+      largestUnit, // where to STOP bubbling
+      LargerOfTwoTemporalUnits(smallestUnit, 'day') // where to START bubbling-up from
+    );
+  }
+
+  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
+    largestUnit = 'hour';
+  }
+  const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
+    duration.norm,
+    largestUnit
+  );
+  return {
+    years: duration.years,
+    months: duration.months,
+    weeks: duration.weeks,
+    days: duration.days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds,
+    total: nudgeResult.total
+  };
+}
+
 export function DifferencePlainDateTimeWithRounding(
   plainDate1,
   h1,
@@ -4069,44 +4360,35 @@ export function DifferencePlainDateTimeWithRounding(
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, total };
   }
 
-  let total;
-  ({ years, months, weeks, days, norm, total } = RoundDuration(
-    years,
-    months,
-    weeks,
-    days,
-    norm,
+  const dateTime = {
+    year: y1,
+    month: mon1,
+    day: d1,
+    hour: h1,
+    minute: min1,
+    second: s1,
+    millisecond: ms1,
+    microsecond: µs1,
+    nanosecond: ns1
+  };
+  const destEpochNs = GetUTCEpochNanoseconds(y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2);
+  return RoundRelativeDuration(
+    { years, months, weeks, days, norm },
+    destEpochNs,
+    dateTime,
+    calendarRec,
+    null,
+    largestUnit,
     roundingIncrement,
     smallestUnit,
-    roundingMode,
-    plainDate1,
-    calendarRec
-  ));
-  const normWithDays = norm.add24HourDays(days);
-  let hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-  ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
-    normWithDays,
-    largestUnit
-  ));
-  ({ years, months, weeks, days } = BalanceDateDurationRelative(
-    years,
-    months,
-    weeks,
-    days,
-    largestUnit,
-    smallestUnit,
-    plainDate1,
-    calendarRec
-  ));
-  return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, total };
+    roundingMode
+  );
 }
 
 export function DifferenceZonedDateTimeWithRounding(
   ns1,
   ns2,
-  plainRelativeTo,
   calendarRec,
-  zonedDateTime,
   timeZoneRec,
   precalculatedPlainDateTime,
   resolvedOptions,
@@ -4151,50 +4433,28 @@ export function DifferenceZonedDateTimeWithRounding(
     return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, total };
   }
 
-  let total;
-  ({ years, months, weeks, days, norm, total } = RoundDuration(
-    years,
-    months,
-    weeks,
-    days,
-    norm,
-    roundingIncrement,
-    smallestUnit,
-    roundingMode,
-    plainRelativeTo,
-    calendarRec,
-    zonedDateTime,
-    timeZoneRec,
-    precalculatedPlainDateTime
-  ));
-  ({ years, months, weeks, days, norm } = AdjustRoundedDurationDays(
-    years,
-    months,
-    weeks,
-    days,
-    norm,
-    roundingIncrement,
-    smallestUnit,
-    roundingMode,
-    zonedDateTime,
+  const dateTime = {
+    year: GetSlot(precalculatedPlainDateTime, ISO_YEAR),
+    month: GetSlot(precalculatedPlainDateTime, ISO_MONTH),
+    day: GetSlot(precalculatedPlainDateTime, ISO_DAY),
+    hour: GetSlot(precalculatedPlainDateTime, ISO_HOUR),
+    minute: GetSlot(precalculatedPlainDateTime, ISO_MINUTE),
+    second: GetSlot(precalculatedPlainDateTime, ISO_SECOND),
+    millisecond: GetSlot(precalculatedPlainDateTime, ISO_MILLISECOND),
+    microsecond: GetSlot(precalculatedPlainDateTime, ISO_MICROSECOND),
+    nanosecond: GetSlot(precalculatedPlainDateTime, ISO_NANOSECOND)
+  };
+  return RoundRelativeDuration(
+    { years, months, weeks, days, norm },
+    ns2,
+    dateTime,
     calendarRec,
     timeZoneRec,
-    precalculatedPlainDateTime
-  ));
-  ({ years, months, weeks, days } = BalanceDateDurationRelative(
-    years,
-    months,
-    weeks,
-    days,
     largestUnit,
+    roundingIncrement,
     smallestUnit,
-    plainRelativeTo,
-    calendarRec
-  ));
-  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, norm);
-  const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(norm, 'hour');
-
-  return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds, total };
+    roundingMode
+  );
 }
 
 export function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
@@ -4307,27 +4567,38 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
 
   const roundingIsNoop = settings.smallestUnit === 'day' && settings.roundingIncrement === 1;
   if (!roundingIsNoop) {
-    ({ years, months, weeks, days } = RoundDuration(
-      years,
-      months,
-      weeks,
-      days,
-      TimeDuration.ZERO,
+    const dateTime = {
+      year: GetSlot(plainDate, ISO_YEAR),
+      month: GetSlot(plainDate, ISO_MONTH),
+      day: GetSlot(plainDate, ISO_DAY),
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0,
+      nanosecond: 0
+    };
+    const destEpochNs = GetUTCEpochNanoseconds(
+      GetSlot(other, ISO_YEAR),
+      GetSlot(other, ISO_MONTH),
+      GetSlot(other, ISO_DAY),
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    );
+    ({ years, months, weeks, days } = RoundRelativeDuration(
+      { years, months, weeks, days, norm: TimeDuration.ZERO },
+      destEpochNs,
+      dateTime,
+      calendarRec,
+      null,
+      settings.largestUnit,
       settings.roundingIncrement,
       settings.smallestUnit,
-      settings.roundingMode,
-      plainDate,
-      calendarRec
-    ));
-    ({ years, months, weeks, days } = BalanceDateDurationRelative(
-      years,
-      months,
-      weeks,
-      days,
-      settings.largestUnit,
-      settings.smallestUnit,
-      plainDate,
-      calendarRec
+      settings.roundingMode
     ));
   }
 
@@ -4425,16 +4696,7 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
     GetSlot(other, ISO_NANOSECOND)
   );
   if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
-    ({ norm } = RoundDuration(
-      0,
-      0,
-      0,
-      0,
-      norm,
-      settings.roundingIncrement,
-      settings.smallestUnit,
-      settings.roundingMode
-    ));
+    ({ norm } = RoundTimeDuration(0, norm, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
   }
   const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
     norm,
@@ -4490,27 +4752,38 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
   let { years, months } = CalendarDateUntil(calendarRec, thisDate, otherDate, resolvedOptions);
 
   if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
-    ({ years, months } = RoundDuration(
-      years,
-      months,
+    const dateTime = {
+      year: GetSlot(thisDate, ISO_YEAR),
+      month: GetSlot(thisDate, ISO_MONTH),
+      day: GetSlot(thisDate, ISO_DAY),
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0,
+      nanosecond: 0
+    };
+    const destEpochNs = GetUTCEpochNanoseconds(
+      GetSlot(otherDate, ISO_YEAR),
+      GetSlot(otherDate, ISO_MONTH),
+      GetSlot(otherDate, ISO_DAY),
       0,
       0,
-      TimeDuration.ZERO,
+      0,
+      0,
+      0,
+      0
+    );
+    ({ years, months } = RoundRelativeDuration(
+      { years, months, weeks: 0, days: 0, norm: TimeDuration.ZERO },
+      destEpochNs,
+      dateTime,
+      calendarRec,
+      null,
+      settings.largestUnit,
       settings.roundingIncrement,
       settings.smallestUnit,
-      settings.roundingMode,
-      thisDate,
-      calendarRec
-    ));
-    ({ years, months } = BalanceDateDurationRelative(
-      years,
-      months,
-      0,
-      0,
-      settings.largestUnit,
-      settings.smallestUnit,
-      thisDate,
-      calendarRec
+      settings.roundingMode
     ));
   }
 
@@ -4577,15 +4850,12 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
       GetSlot(zonedDateTime, INSTANT),
       calendarRec.receiver
     );
-    const plainRelativeTo = TemporalDateTimeToDate(precalculatedPlainDateTime);
 
     ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
       DifferenceZonedDateTimeWithRounding(
         ns1,
         ns2,
-        plainRelativeTo,
         calendarRec,
-        zonedDateTime,
         timeZoneRec,
         precalculatedPlainDateTime,
         resolvedOptions,
@@ -5305,295 +5575,24 @@ export function DaysUntil(earlier, later) {
   ).days;
 }
 
-export function MoveRelativeDate(calendarRec, relativeTo, duration) {
-  // dateAdd must be looked up if years, months, weeks != 0
-  const later = AddDate(calendarRec, relativeTo, duration);
-  const days = DaysUntil(relativeTo, later);
-  return { relativeTo: later, days };
-}
-
-export function MoveRelativeZonedDateTime(
-  relativeTo,
-  calendarRec,
-  timeZoneRec,
-  years,
-  months,
-  weeks,
-  days,
-  precalculatedPlainDateTime
-) {
-  // getOffsetNanosecondsFor and getPossibleInstantsFor must be looked up
-  // dateAdd must be looked up if years, months, weeks != 0
-  const intermediateNs = AddZonedDateTime(
-    GetSlot(relativeTo, INSTANT),
-    timeZoneRec,
-    calendarRec,
-    years,
-    months,
-    weeks,
-    days,
-    TimeDuration.ZERO,
-    precalculatedPlainDateTime
-  );
-  return CreateTemporalZonedDateTime(intermediateNs, timeZoneRec.receiver, calendarRec.receiver);
-}
-
-export function AdjustRoundedDurationDays(
-  years,
-  months,
-  weeks,
-  days,
-  norm,
-  increment,
-  unit,
-  roundingMode,
-  zonedRelativeTo,
-  calendarRec,
-  timeZoneRec,
-  precalculatedPlainDateTime
-) {
-  // both dateAdd and dateUntil must be looked up if unit <= hour, any rounding
-  // is requested, and any of years...weeks != 0
-  if (IsCalendarUnit(unit) || unit === 'day' || (unit === 'nanosecond' && increment === 1)) {
-    return { years, months, weeks, days, norm };
-  }
-
-  // There's one more round of rounding possible: if relativeTo is a
-  // ZonedDateTime, the time units could have rounded up into enough hours
-  // to exceed the day length. If this happens, grow the date part by a
-  // single day and re-run exact time rounding on the smaller remainder. DO
-  // NOT RECURSE, because once the extra hours are sucked up into the date
-  // duration, there's no way for another full day to come from the next
-  // round of rounding. And if it were possible (e.g. contrived calendar
-  // with 30-minute-long "days") then it'd risk an infinite loop.
-  const direction = norm.sign();
-
-  const calendar = GetSlot(zonedRelativeTo, CALENDAR);
-  // requires dateAdd if years...weeks != 0
-  const dayStart = AddZonedDateTime(
-    GetSlot(zonedRelativeTo, INSTANT),
-    timeZoneRec,
-    calendarRec,
-    years,
-    months,
-    weeks,
-    days,
-    TimeDuration.ZERO,
-    precalculatedPlainDateTime
-  );
-  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-  const dayStartInstant = new TemporalInstant(dayStart);
-  const dayStartDateTime = GetPlainDateTimeFor(timeZoneRec, dayStartInstant, calendar);
-  const dayEnd = AddDaysToZonedDateTime(dayStartInstant, dayStartDateTime, timeZoneRec, calendar, direction).epochNs;
-  const dayLength = TimeDuration.fromEpochNsDiff(dayEnd, dayStart);
-
-  const oneDayLess = norm.subtract(dayLength);
-  if (oneDayLess.sign() * direction >= 0) {
-    // requires dateAdd and dateUntil if years...weeks != 0
-    ({ years, months, weeks, days } = AddDuration(
-      years,
-      months,
-      weeks,
-      days,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      direction,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      /* plainRelativeTo = */ undefined,
-      zonedRelativeTo,
-      calendarRec,
-      timeZoneRec,
-      precalculatedPlainDateTime
-    ));
-    ({ norm } = RoundDuration(0, 0, 0, 0, oneDayLess, increment, unit, roundingMode));
-  }
-  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, norm);
-  return { years, months, weeks, days, norm };
-}
-
-export function RoundDuration(
-  years,
-  months,
-  weeks,
-  days,
-  norm,
-  increment,
-  unit,
-  roundingMode,
-  plainRelativeTo = undefined,
-  calendarRec = undefined,
-  zonedRelativeTo = undefined,
-  timeZoneRec = undefined,
-  precalculatedPlainDateTime = undefined
-) {
-  // dateAdd and dateUntil must be looked up
-  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-
-  if (IsCalendarUnit(unit) && !plainRelativeTo) {
-    throw new RangeError(`A starting point is required for ${unit}s rounding`);
-  }
-
-  // First convert time units up to days, if rounding to days or higher units.
-  // If rounding relative to a ZonedDateTime, then some days may not be 24h.
-  let dayLengthNs;
-  if (IsCalendarUnit(unit) || unit === 'day') {
-    let deltaDays;
-    if (zonedRelativeTo) {
-      const intermediate = MoveRelativeZonedDateTime(
-        zonedRelativeTo,
-        calendarRec,
-        timeZoneRec,
-        years,
-        months,
-        weeks,
-        days,
-        precalculatedPlainDateTime
-      );
-      ({ days: deltaDays, norm, dayLengthNs } = NormalizedTimeDurationToDays(norm, intermediate, timeZoneRec));
-    } else {
-      ({ quotient: deltaDays, remainder: norm } = norm.divmod(DAY_NANOS));
-      dayLengthNs = DAY_NANOS;
-    }
-    days += deltaDays;
-  }
+export function RoundTimeDuration(days, norm, increment, unit, roundingMode) {
+  // unit must not be a calendar unit
 
   let total;
-  switch (unit) {
-    case 'year': {
-      // convert months and weeks to days by calculating difference(
-      // relativeTo + years, relativeTo + { years, months, weeks })
-      const yearsDuration = new TemporalDuration(years);
-      const yearsLater = AddDate(calendarRec, plainRelativeTo, yearsDuration);
-      const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-      const yearsMonthsWeeksLater = AddDate(calendarRec, plainRelativeTo, yearsMonthsWeeks);
-      const monthsWeeksInDays = DaysUntil(yearsLater, yearsMonthsWeeksLater);
-      plainRelativeTo = yearsLater;
-      days += monthsWeeksInDays;
-
-      const isoResult = BalanceISODate(
-        GetSlot(plainRelativeTo, ISO_YEAR),
-        GetSlot(plainRelativeTo, ISO_MONTH),
-        GetSlot(plainRelativeTo, ISO_DAY) + days
-      );
-      const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-      const untilOptions = ObjectCreate(null);
-      untilOptions.largestUnit = 'year';
-      const yearsPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), YEARS);
-      years += yearsPassed;
-      const yearsPassedDuration = new TemporalDuration(yearsPassed);
-      let daysPassed;
-      ({ relativeTo: plainRelativeTo, days: daysPassed } = MoveRelativeDate(
-        calendarRec,
-        plainRelativeTo,
-        yearsPassedDuration
-      ));
-      days -= daysPassed;
-      const oneYear = new TemporalDuration(days < 0 ? -1 : 1);
-      let { days: oneYearDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneYear);
-
-      oneYearDays = MathAbs(oneYearDays);
-      if (oneYearDays === 0) throw new RangeError('custom calendar reported that a year is 0 days long');
-      total = years + (days + norm.fdiv(dayLengthNs)) / oneYearDays;
-      years = RoundNumberToIncrement(total, increment, roundingMode);
-      months = weeks = days = 0;
-      norm = TimeDuration.ZERO;
-      break;
-    }
-    case 'month': {
-      // convert weeks to days by calculating difference(relativeTo +
-      //   { years, months }, relativeTo + { years, months, weeks })
-      const yearsMonths = new TemporalDuration(years, months);
-      const yearsMonthsLater = AddDate(calendarRec, plainRelativeTo, yearsMonths);
-      const yearsMonthsWeeks = new TemporalDuration(years, months, weeks);
-      const yearsMonthsWeeksLater = AddDate(calendarRec, plainRelativeTo, yearsMonthsWeeks);
-      const weeksInDays = DaysUntil(yearsMonthsLater, yearsMonthsWeeksLater);
-      plainRelativeTo = yearsMonthsLater;
-      days += weeksInDays;
-
-      const isoResult = BalanceISODate(
-        GetSlot(plainRelativeTo, ISO_YEAR),
-        GetSlot(plainRelativeTo, ISO_MONTH),
-        GetSlot(plainRelativeTo, ISO_DAY) + days
-      );
-      const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-      const untilOptions = ObjectCreate(null);
-      untilOptions.largestUnit = 'month';
-      const monthsPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), MONTHS);
-      months += monthsPassed;
-      const monthsPassedDuration = new TemporalDuration(0, monthsPassed);
-      let daysPassed;
-      ({ relativeTo: plainRelativeTo, days: daysPassed } = MoveRelativeDate(
-        calendarRec,
-        plainRelativeTo,
-        monthsPassedDuration
-      ));
-      days -= daysPassed;
-      const oneMonth = new TemporalDuration(0, days < 0 ? -1 : 1);
-      let { days: oneMonthDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneMonth);
-
-      oneMonthDays = MathAbs(oneMonthDays);
-      if (oneMonthDays === 0) throw new RangeError('custom calendar reported that a month is 0 days long');
-      total = months + (days + norm.fdiv(dayLengthNs)) / oneMonthDays;
-      months = RoundNumberToIncrement(total, increment, roundingMode);
-      weeks = days = 0;
-      norm = TimeDuration.ZERO;
-      break;
-    }
-    case 'week': {
-      const isoResult = BalanceISODate(
-        GetSlot(plainRelativeTo, ISO_YEAR),
-        GetSlot(plainRelativeTo, ISO_MONTH),
-        GetSlot(plainRelativeTo, ISO_DAY) + days
-      );
-      const wholeDaysLater = CreateTemporalDate(isoResult.year, isoResult.month, isoResult.day, calendarRec.receiver);
-      const untilOptions = ObjectCreate(null);
-      untilOptions.largestUnit = 'week';
-      const weeksPassed = GetSlot(DifferenceDate(calendarRec, plainRelativeTo, wholeDaysLater, untilOptions), WEEKS);
-      weeks += weeksPassed;
-      const weeksPassedDuration = new TemporalDuration(0, 0, weeksPassed);
-      let daysPassed;
-      ({ relativeTo: plainRelativeTo, days: daysPassed } = MoveRelativeDate(
-        calendarRec,
-        plainRelativeTo,
-        weeksPassedDuration
-      ));
-      days -= daysPassed;
-      const oneWeek = new TemporalDuration(0, 0, days < 0 ? -1 : 1);
-      let { days: oneWeekDays } = MoveRelativeDate(calendarRec, plainRelativeTo, oneWeek);
-
-      oneWeekDays = MathAbs(oneWeekDays);
-      if (oneWeekDays === 0) throw new RangeError('custom calendar reported that a week is 0 days long');
-      total = weeks + (days + norm.fdiv(dayLengthNs)) / oneWeekDays;
-      weeks = RoundNumberToIncrement(total, increment, roundingMode);
-      days = 0;
-      norm = TimeDuration.ZERO;
-      break;
-    }
-    case 'day':
-      total = days + norm.fdiv(dayLengthNs);
-      days = RoundNumberToIncrement(total, increment, roundingMode);
-      norm = TimeDuration.ZERO;
-      break;
-    default: {
-      const divisor = NS_PER_TIME_UNIT.get(unit);
-      total = norm.fdiv(divisor);
-      norm = norm.round(divisor * increment, roundingMode);
-    }
+  if (unit === 'day') {
+    // First convert time units up to days
+    const { quotient, remainder } = norm.divmod(DAY_NANOS);
+    days += quotient;
+    total = days + remainder.fdiv(DAY_NANOS);
+    days = RoundNumberToIncrement(total, increment, roundingMode);
+    norm = TimeDuration.ZERO;
+  } else {
+    const divisor = NS_PER_TIME_UNIT.get(unit);
+    total = norm.fdiv(divisor);
+    norm = norm.round(divisor * increment, roundingMode);
   }
-  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, norm);
-  return { years, months, weeks, days, norm, total };
+  CombineDateAndNormalizedTimeDuration(0, 0, 0, days, norm);
+  return { days, norm, total };
 }
 
 export function CompareISODate(y1, m1, d1, y2, m2, d2) {
