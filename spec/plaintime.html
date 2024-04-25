@@ -1026,7 +1026,7 @@
           _microsecond_: an integer in the inclusive interval from 0 to 999,
           _nanosecond_: an integer in the inclusive interval from 0 to 999,
           _increment_: an integer,
-          _unit_: *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
+          _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): a Time Record
       </h1>
@@ -1035,23 +1035,21 @@
         <dd>It rounds a time to the given increment.</dd>
       </dl>
       <emu-alg>
-        1. Let _fractionalSecond_ be _nanosecond_ &times; 10<sup>-9</sup> + _microsecond_ &times; 10<sup>-6</sup> + _millisecond_ &times; 10<sup>-3</sup> + _second_.
-        1. If _unit_ is *"day"*, then
-          1. Let _quantity_ be (((((_hour_ &times; 60 + _minute_) &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_) / nsPerDay.
-        1. Else if _unit_ is *"hour"*, then
-          1. Let _quantity_ be (_fractionalSecond_ / 60 + _minute_) / 60 + _hour_.
+        1. If _unit_ is *"day"* or *"hour"*, then
+          1. Let _quantity_ be ((((_hour_ &times; 60 + _minute_) &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
         1. Else if _unit_ is *"minute"*, then
-          1. Let _quantity_ be _fractionalSecond_ / 60 + _minute_.
+          1. Let _quantity_ be (((_minute_ &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
         1. Else if _unit_ is *"second"*, then
-          1. Let _quantity_ be _fractionalSecond_.
+          1. Let _quantity_ be ((_second_ &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
         1. Else if _unit_ is *"millisecond"*, then
-          1. Let _quantity_ be _nanosecond_ &times; 10<sup>-6</sup> + _microsecond_ &times; 10<sup>-3</sup> + _millisecond_.
+          1. Let _quantity_ be (_millisecond_ &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
         1. Else if _unit_ is *"microsecond"*, then
-          1. Let _quantity_ be _nanosecond_ &times; 10<sup>-3</sup> + _microsecond_.
+          1. Let _quantity_ be _microsecond_ &times; 1000 + _nanosecond_.
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
           1. Let _quantity_ be _nanosecond_.
-        1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_, _roundingMode_).
+        1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
+        1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_ &times; _unitLength_, _roundingMode_) / _unitLength_.
         1. If _unit_ is *"day"*, then
           1. Return Time Record {
             [[Days]]: _result_,
