@@ -133,6 +133,87 @@
     <emu-note type="editor"> Note that the operation EpochTimeToMonthInYear(_t_) uses 0-based months unlike rest of Temporal since it's intended to be unified with MonthFromTime(_t_) when the above mentioned issue is fixed.</emu-note>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-units">
+    <h1>Units</h1>
+    <p>
+      Time is reckoned using multiple units.
+      These units are listed in <emu-xref href="#table-temporal-units"></emu-xref>.
+    </p>
+    <emu-table id="table-temporal-units">
+      <emu-caption>Temporal units by descending magnitude</emu-caption>
+      <table class="real-table">
+        <thead>
+          <tr>
+            <th>Singular</th>
+            <th>Plural</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>*"year"*</td>
+            <td>*"years"*</td>
+            <td>~date~</td>
+          </tr>
+
+          <tr>
+            <td>*"month"*</td>
+            <td>*"months"*</td>
+            <td>~date~</td>
+          </tr>
+
+          <tr>
+            <td>*"week"*</td>
+            <td>*"weeks"*</td>
+            <td>~date~</td>
+          </tr>
+
+          <tr>
+            <td>*"day"*</td>
+            <td>*"days"*</td>
+            <td>~date~</td>
+          </tr>
+
+          <tr>
+            <td>*"hour"*</td>
+            <td>*"hours"*</td>
+            <td>~time~</td>
+          </tr>
+
+          <tr>
+            <td>*"minute"*</td>
+            <td>*"minutes"*</td>
+            <td>~time~</td>
+          </tr>
+
+          <tr>
+            <td>*"second"*</td>
+            <td>*"seconds"*</td>
+            <td>~time~</td>
+          </tr>
+
+          <tr>
+            <td>*"millisecond"*</td>
+            <td>*"milliseconds"*</td>
+            <td>~time~</td>
+          </tr>
+
+          <tr>
+            <td>*"microsecond"*</td>
+            <td>*"microseconds"*</td>
+            <td>~time~</td>
+          </tr>
+
+          <tr>
+            <td>*"nanosecond"*</td>
+            <td>*"nanoseconds"*</td>
+            <td>~time~</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <!-- Copied from ECMA-402 GetOptionsObject -->
   <emu-clause id="sec-getoptionsobject" type="abstract operation">
     <h1>
@@ -631,79 +712,6 @@
         1. Set _value_ to the value in the Singular column of the corresponding row.
       1. Return _value_.
     </emu-alg>
-    <emu-table id="table-temporal-units">
-      <emu-caption>Temporal units by descending magnitude</emu-caption>
-      <table class="real-table">
-        <thead>
-          <tr>
-            <th>Singular</th>
-            <th>Plural</th>
-            <th>Category</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>*"year"*</td>
-            <td>*"years"*</td>
-            <td>~date~</td>
-          </tr>
-
-          <tr>
-            <td>*"month"*</td>
-            <td>*"months"*</td>
-            <td>~date~</td>
-          </tr>
-
-          <tr>
-            <td>*"week"*</td>
-            <td>*"weeks"*</td>
-            <td>~date~</td>
-          </tr>
-
-          <tr>
-            <td>*"day"*</td>
-            <td>*"days"*</td>
-            <td>~date~</td>
-          </tr>
-
-          <tr>
-            <td>*"hour"*</td>
-            <td>*"hours"*</td>
-            <td>~time~</td>
-          </tr>
-
-          <tr>
-            <td>*"minute"*</td>
-            <td>*"minutes"*</td>
-            <td>~time~</td>
-          </tr>
-
-          <tr>
-            <td>*"second"*</td>
-            <td>*"seconds"*</td>
-            <td>~time~</td>
-          </tr>
-
-          <tr>
-            <td>*"millisecond"*</td>
-            <td>*"milliseconds"*</td>
-            <td>~time~</td>
-          </tr>
-
-          <tr>
-            <td>*"microsecond"*</td>
-            <td>*"microseconds"*</td>
-            <td>~time~</td>
-          </tr>
-
-          <tr>
-            <td>*"nanosecond"*</td>
-            <td>*"nanoseconds"*</td>
-            <td>~time~</td>
-          </tr>
-        </tbody>
-      </table>
-    </emu-table>
   </emu-clause>
 
   <emu-clause id="sec-temporal-torelativetemporalobject" type="abstract operation">

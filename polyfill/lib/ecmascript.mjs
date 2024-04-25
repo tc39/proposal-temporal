@@ -251,7 +251,7 @@ const BUILTIN_DEFAULTS = new Map([
 ]);
 
 // each item is [plural, singular, category]
-const SINGULAR_PLURAL_UNITS = [
+const TEMPORAL_UNITS = [
   ['years', 'year', 'date'],
   ['months', 'month', 'date'],
   ['weeks', 'week', 'date'],
@@ -263,9 +263,9 @@ const SINGULAR_PLURAL_UNITS = [
   ['microseconds', 'microsecond', 'time'],
   ['nanoseconds', 'nanosecond', 'time']
 ];
-const SINGULAR_FOR = new Map(SINGULAR_PLURAL_UNITS);
-const PLURAL_FOR = new Map(SINGULAR_PLURAL_UNITS.map(([p, s]) => [s, p]));
-const UNITS_DESCENDING = SINGULAR_PLURAL_UNITS.map(([, s]) => s);
+const SINGULAR_FOR = new Map(TEMPORAL_UNITS);
+const PLURAL_FOR = new Map(TEMPORAL_UNITS.map(([p, s]) => [s, p]));
+const UNITS_DESCENDING = TEMPORAL_UNITS.map(([, s]) => s);
 
 const DURATION_FIELDS = [
   'days',
@@ -981,8 +981,8 @@ export const REQUIRED = Symbol('~required~');
 
 export function GetTemporalUnit(options, key, unitGroup, requiredOrDefault, extraValues = []) {
   const allowedSingular = [];
-  for (let index = 0; index < SINGULAR_PLURAL_UNITS.length; index++) {
-    const unitInfo = SINGULAR_PLURAL_UNITS[index];
+  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
+    const unitInfo = TEMPORAL_UNITS[index];
     const singular = unitInfo[1];
     const category = unitInfo[2];
     if (unitGroup === 'datetime' || unitGroup === category) {
@@ -4022,7 +4022,7 @@ export function DifferenceZonedDateTime(
 }
 
 export function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
-  const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, unitInfo) => {
+  const ALLOWED_UNITS = TEMPORAL_UNITS.reduce((allowed, unitInfo) => {
     const p = unitInfo[0];
     const s = unitInfo[1];
     const c = unitInfo[2];
