@@ -250,22 +250,23 @@ const BUILTIN_DEFAULTS = new Map([
   ['nanosecond', 0]
 ]);
 
-// each item is [plural, singular, category]
+// each item is [plural, singular, category, (length in ns)]
 const TEMPORAL_UNITS = [
   ['years', 'year', 'date'],
   ['months', 'month', 'date'],
   ['weeks', 'week', 'date'],
-  ['days', 'day', 'date'],
-  ['hours', 'hour', 'time'],
-  ['minutes', 'minute', 'time'],
-  ['seconds', 'second', 'time'],
-  ['milliseconds', 'millisecond', 'time'],
-  ['microseconds', 'microsecond', 'time'],
-  ['nanoseconds', 'nanosecond', 'time']
+  ['days', 'day', 'date', DAY_NANOS],
+  ['hours', 'hour', 'time', 3600e9],
+  ['minutes', 'minute', 'time', 60e9],
+  ['seconds', 'second', 'time', 1e9],
+  ['milliseconds', 'millisecond', 'time', 1e6],
+  ['microseconds', 'microsecond', 'time', 1e3],
+  ['nanoseconds', 'nanosecond', 'time', 1]
 ];
 const SINGULAR_FOR = new Map(TEMPORAL_UNITS);
 const PLURAL_FOR = new Map(TEMPORAL_UNITS.map(([p, s]) => [s, p]));
 const UNITS_DESCENDING = TEMPORAL_UNITS.map(([, s]) => s);
+const NS_PER_TIME_UNIT = new Map(TEMPORAL_UNITS.map(([, s, , l]) => [s, l]).filter(([, l]) => l));
 
 const DURATION_FIELDS = [
   'days',
@@ -5169,7 +5170,7 @@ export function RoundJSNumberToIncrement(quantity, increment, mode) {
 export function RoundInstant(epochNs, increment, unit, roundingMode) {
   let { remainder } = NonNegativeBigIntDivmod(epochNs, DAY_NANOS);
   const wholeDays = epochNs.minus(remainder);
-  const roundedRemainder = RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
+  const roundedRemainder = RoundNumberToIncrement(remainder, NS_PER_TIME_UNIT.get(unit) * increment, roundingMode);
   return wholeDays.plus(roundedRemainder);
 }
 
@@ -5225,7 +5226,7 @@ export function RoundTime(hour, minute, second, millisecond, microsecond, nanose
     case 'nanosecond':
       quantity = quantity.multiply(1000).plus(nanosecond);
   }
-  const nsPerUnit = nsPerTimeUnit[unit];
+  const nsPerUnit = NS_PER_TIME_UNIT.get(unit);
   const rounded = RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode);
   const result = rounded.divide(nsPerUnit).toJSNumber();
   switch (unit) {
@@ -5769,13 +5770,3 @@ function bisect(getState, left, right, lstate = getState(left), rstate = getStat
   }
   return right;
 }
-
-const nsPerTimeUnit = {
-  day: 86400e9,
-  hour: 3600e9,
-  minute: 60e9,
-  second: 1e9,
-  millisecond: 1e6,
-  microsecond: 1e3,
-  nanosecond: 1
-};

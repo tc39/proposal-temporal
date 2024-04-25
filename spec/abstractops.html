@@ -147,6 +147,7 @@
             <th>Singular</th>
             <th>Plural</th>
             <th>Category</th>
+            <th>Length in nanoseconds</th>
           </tr>
         </thead>
         <tbody>
@@ -154,64 +155,78 @@
             <td>*"year"*</td>
             <td>*"years"*</td>
             <td>~date~</td>
+            <td>calendar-dependent</td>
           </tr>
 
           <tr>
             <td>*"month"*</td>
             <td>*"months"*</td>
             <td>~date~</td>
+            <td>calendar-dependent</td>
           </tr>
 
           <tr>
             <td>*"week"*</td>
             <td>*"weeks"*</td>
             <td>~date~</td>
+            <td>calendar-dependent</td>
           </tr>
 
           <tr>
             <td>*"day"*</td>
             <td>*"days"*</td>
             <td>~date~</td>
+            <td>nsPerDay</td>
           </tr>
 
           <tr>
             <td>*"hour"*</td>
             <td>*"hours"*</td>
             <td>~time~</td>
+            <td>3.6 &times; 10<sup>12</sup></td>
           </tr>
 
           <tr>
             <td>*"minute"*</td>
             <td>*"minutes"*</td>
             <td>~time~</td>
+            <td>6 &times; 10<sup>10</sup></td>
           </tr>
 
           <tr>
             <td>*"second"*</td>
             <td>*"seconds"*</td>
             <td>~time~</td>
+            <td>10<sup>9</sup></td>
           </tr>
 
           <tr>
             <td>*"millisecond"*</td>
             <td>*"milliseconds"*</td>
             <td>~time~</td>
+            <td>10<sup>6</sup></td>
           </tr>
 
           <tr>
             <td>*"microsecond"*</td>
             <td>*"microseconds"*</td>
             <td>~time~</td>
+            <td>10<sup>3</sup></td>
           </tr>
 
           <tr>
             <td>*"nanosecond"*</td>
             <td>*"nanoseconds"*</td>
             <td>~time~</td>
+            <td>1</td>
           </tr>
         </tbody>
       </table>
     </emu-table>
+    <emu-note>
+      The length of a day is given as nsPerDay in the table.
+      Note that changes in the UTC offset of a time zone may result in longer or shorter days, so care should be taken when using this value in the context of `Temporal.ZonedDateTime`.
+    </emu-note>
   </emu-clause>
 
   <!-- Copied from ECMA-402 GetOptionsObject -->
