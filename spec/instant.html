@@ -610,7 +610,7 @@
         RoundTemporalInstant (
           _ns_: a BigInt,
           _increment_: a positive integer,
-          _unit_: a String,
+          _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): a BigInt
       </h1>
@@ -619,19 +619,9 @@
         <dd>It rounds a number of nanoseconds _ns_ since the epoch to the given rounding increment.</dd>
       </dl>
       <emu-alg>
-        1. If _unit_ is *"hour"*, then
-          1. Let _incrementNs_ be _increment_ &times; 3.6 &times; 10<sup>12</sup>.
-        1. Else if _unit_ is *"minute"*, then
-          1. Let _incrementNs_ be _increment_ &times; 6 &times; 10<sup>10</sup>.
-        1. Else if _unit_ is *"second"*, then
-          1. Let _incrementNs_ be _increment_ &times; 10<sup>9</sup>.
-        1. Else if _unit_ is *"millisecond"*, then
-          1. Let _incrementNs_ be _increment_ &times; 10<sup>6</sup>.
-        1. Else if _unit_ is *"microsecond"*, then
-          1. Let _incrementNs_ be _increment_ &times; 10<sup>3</sup>.
-        1. Else,
-          1. Assert: _unit_ is *"nanosecond"*.
-          1. Let _incrementNs_ be _increment_.
+        1. Assert: The value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_, is ~time~.
+        1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
+        1. Let _incrementNs_ be _increment_ &times; _unitLength_.
         1. Return ℤ(RoundNumberToIncrementAsIfPositive(ℝ(_ns_), _incrementNs_, _roundingMode_)).
       </emu-alg>
     </emu-clause>
