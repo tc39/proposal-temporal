@@ -1986,7 +1986,7 @@
           _days_: an integer,
           _norm_: a Normalized Time Duration Record,
           _increment_: an integer,
-          _unit_: a String,
+          _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the Identifier column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
           optional _plainRelativeTo_: *undefined* or a Temporal.PlainDate,
           optional _calendarRec_: *undefined* or a Calendar Methods Record,
@@ -2109,30 +2109,11 @@
           1. Set _days_ to RoundNumberToIncrement(_fractionalDays_, _increment_, _roundingMode_).
           1. Let _total_ be _fractionalDays_.
           1. Set _norm_ to ZeroTimeDuration().
-        1. Else if _unit_ is *"hour"*, then
-          1. Let _divisor_ be 3.6 &times; 10<sup>12</sup>.
-          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
-          1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
-        1. Else if _unit_ is *"minute"*, then
-          1. Let _divisor_ be 6 &times; 10<sup>10</sup>.
-          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
-          1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
-        1. Else if _unit_ is *"second"*, then
-          1. Let _divisor_ be 10<sup>9</sup>.
-          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
-          1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
-        1. Else if _unit_ is *"millisecond"*, then
-          1. Let _divisor_ be 10<sup>6</sup>.
-          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
-          1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
-        1. Else if _unit_ is *"microsecond"*, then
-          1. Let _divisor_ be 10<sup>3</sup>.
-          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
-          1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
         1. Else,
-          1. Assert: _unit_ is *"nanosecond"*.
-          1. Let _total_ be NormalizedTimeDurationSeconds(_norm_) &times; 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_norm_).
-          1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _increment_, _roundingMode_).
+          1. Assert: The value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_, is ~time~.
+          1. Let _divisor_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
+          1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
+          1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ &times; _increment_, _roundingMode_).
         1. Return the Record {
           [[NormalizedDuration]]: ? CreateNormalizedDurationRecord(_years_, _months_, _weeks_, _days_, _norm_),
           [[Total]]: _total_
