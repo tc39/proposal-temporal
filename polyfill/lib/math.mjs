@@ -53,3 +53,39 @@ export function FMAPowerOf10(x, p, z) {
   const resStr = xStr + Call(StringPrototypePadStart, zStr, [p, '0']);
   return sign * NumberParseInt(resStr, 10);
 }
+
+export function GetUnsignedRoundingMode(mode, sign) {
+  const index = +(sign === 'negative'); // 0 = positive, 1 = negative
+  switch (mode) {
+    case 'ceil':
+      return ['infinity', 'zero'][index];
+    case 'floor':
+      return ['zero', 'infinity'][index];
+    case 'expand':
+      return 'infinity';
+    case 'trunc':
+      return 'zero';
+    case 'halfCeil':
+      return ['half-infinity', 'half-zero'][index];
+    case 'halfFloor':
+      return ['half-zero', 'half-infinity'][index];
+    case 'halfExpand':
+      return 'half-infinity';
+    case 'halfTrunc':
+      return 'half-zero';
+    case 'halfEven':
+      return 'half-even';
+  }
+}
+
+// Omits first step from spec algorithm so that it can be used both for
+// RoundNumberToIncrement and RoundNormalizedTimeDurationToIncrement
+export function ApplyUnsignedRoundingMode(r1, r2, cmp, evenCardinality, unsignedRoundingMode) {
+  if (unsignedRoundingMode === 'zero') return r1;
+  if (unsignedRoundingMode === 'infinity') return r2;
+  if (cmp < 0) return r1;
+  if (cmp > 0) return r2;
+  if (unsignedRoundingMode === 'half-zero') return r1;
+  if (unsignedRoundingMode === 'half-infinity') return r2;
+  return evenCardinality ? r1 : r2;
+}
