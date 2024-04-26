@@ -8950,6 +8950,7 @@
 	const ArrayIncludes$1 = Array.prototype.includes;
 	const ArrayPrototypeMap = Array.prototype.map;
 	const ArrayPrototypePush$3 = Array.prototype.push;
+	const ArrayPrototypeSlice = Array.prototype.slice;
 	const ArrayPrototypeSort$1 = Array.prototype.sort;
 	const ArrayPrototypeFind = Array.prototype.find;
 	const IntlDateTimeFormat$2 = globalThis.Intl.DateTimeFormat;
@@ -9878,9 +9879,7 @@
 	    };
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(relativeTo);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    Call$3(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
-	    const fields = PrepareTemporalFields(relativeTo, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, relativeTo, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'], []);
 	    const dateOptions = ObjectCreate$7(null);
 	    dateOptions.overflow = 'constrain';
 	    ({
@@ -10024,6 +10023,38 @@
 	  }
 	  return result;
 	}
+	function PrepareCalendarFieldsAndFieldNames(calendarRec, bag, calendarFieldNames) {
+	  let nonCalendarFieldNames = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+	  let requiredFieldNames = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+	  // Special-case built-in method, because we should skip the observable array
+	  // iteration in Calendar.prototype.fields
+	  let fieldNames;
+	  if (calendarRec.isBuiltIn()) {
+	    if (calendarRec.receiver !== 'iso8601') {
+	      fieldNames = GetIntrinsic('%calendarFieldsImpl%')(calendarRec.receiver, calendarFieldNames);
+	    } else {
+	      fieldNames = Call$3(ArrayPrototypeSlice, calendarFieldNames, []);
+	    }
+	  } else {
+	    fieldNames = [];
+	    for (const name of calendarRec.fields(calendarFieldNames)) {
+	      if (Type$c(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
+	      Call$3(ArrayPrototypePush$3, fieldNames, [name]);
+	    }
+	  }
+	  Call$3(ArrayPrototypePush$3, fieldNames, nonCalendarFieldNames);
+	  const fields = PrepareTemporalFields(bag, fieldNames, requiredFieldNames);
+	  return {
+	    fields,
+	    fieldNames
+	  };
+	}
+	function PrepareCalendarFields(calendarRec, bag, calendarFieldNames, nonCalendarFieldNames, requiredFieldNames) {
+	  const {
+	    fields
+	  } = PrepareCalendarFieldsAndFieldNames(calendarRec, bag, calendarFieldNames, nonCalendarFieldNames, requiredFieldNames);
+	  return fields;
+	}
 	function ToTemporalTimeRecord(bag) {
 	  let completeness = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'complete';
 	  const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
@@ -10057,8 +10088,7 @@
 	      return CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
 	    }
 	    const calendarRec = new CalendarMethodRecord(GetTemporalCalendarSlotValueWithISODefault(item), ['dateFromFields', 'fields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    const fields = PrepareTemporalFields(item, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, item, ['day', 'month', 'monthCode', 'year'], [], []);
 	    return CalendarDateFromFields(calendarRec, fields, options);
 	  }
 	  let {
@@ -10127,9 +10157,7 @@
 	    }
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(item);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    Call$3(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
-	    const fields = PrepareTemporalFields(item, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, item, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'], []);
 	    ({
 	      year,
 	      month,
@@ -10225,8 +10253,7 @@
 	      calendar = ToTemporalCalendarSlotValue(calendar);
 	    }
 	    const calendarRec = new CalendarMethodRecord(calendar, ['fields', 'monthDayFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    const fields = PrepareTemporalFields(item, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, item, ['day', 'month', 'monthCode', 'year'], [], []);
 	    return CalendarMonthDayFromFields(calendarRec, fields, options);
 	  }
 	  let {
@@ -10305,8 +10332,7 @@
 	    if (IsTemporalYearMonth(item)) return item;
 	    const calendar = GetTemporalCalendarSlotValueWithISODefault(item);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['fields', 'yearMonthFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['month', 'monthCode', 'year']);
-	    const fields = PrepareTemporalFields(item, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, item, ['month', 'monthCode', 'year'], [], []);
 	    return CalendarYearMonthFromFields(calendarRec, fields, options);
 	  }
 	  let {
@@ -10379,9 +10405,7 @@
 	    if (IsTemporalZonedDateTime(item)) return item;
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(item);
 	    const calendarRec = new CalendarMethodRecord(calendar, ['dateFromFields', 'fields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    Call$3(ArrayPrototypePush$3, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone']);
-	    const fields = PrepareTemporalFields(item, fieldNames, ['timeZone']);
+	    const fields = PrepareCalendarFields(calendarRec, item, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'], ['timeZone']);
 	    timeZone = ToTemporalTimeZoneSlotValue(fields.timeZone);
 	    offset = fields.offset;
 	    if (offset === undefined) {
@@ -10613,21 +10637,6 @@
 	  const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
 	  const result = ObjectCreate$7(TemporalZonedDateTime.prototype);
 	  CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZone, calendar);
-	  return result;
-	}
-	function CalendarFields(calendarRec, fieldNames) {
-	  // Special-case built-in method, because we should skip the observable array
-	  // iteration in Calendar.prototype.fields
-	  if (calendarRec.isBuiltIn()) {
-	    if (calendarRec.receiver === 'iso8601') return fieldNames;
-	    return GetIntrinsic('%calendarFieldsImpl%')(calendarRec.receiver, fieldNames);
-	  }
-	  fieldNames = calendarRec.fields(fieldNames);
-	  const result = [];
-	  for (const name of fieldNames) {
-	    if (Type$c(name) !== 'String') throw new TypeError('bad return from calendar.fields()');
-	    Call$3(ArrayPrototypePush$3, result, [name]);
-	  }
 	  return result;
 	}
 	function CalendarMergeFields(calendarRec, fields, additionalFields) {
@@ -12794,8 +12803,10 @@
 	    return new Duration();
 	  }
 	  const calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateFromFields', 'dateUntil', 'fields']);
-	  const fieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-	  const thisFields = PrepareTemporalFields(yearMonth, fieldNames, []);
+	  const {
+	    fields: thisFields,
+	    fieldNames
+	  } = PrepareCalendarFieldsAndFieldNames(calendarRec, yearMonth, ['monthCode', 'year']);
 	  thisFields.day = 1;
 	  const thisDate = CalendarDateFromFields(calendarRec, thisFields);
 	  const otherFields = PrepareTemporalFields(other, fieldNames, []);
@@ -13317,8 +13328,10 @@
 	  days += BalanceTimeDuration(norm, 'day').days;
 	  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 	  const calendarRec = new CalendarMethodRecord(GetSlot(yearMonth, CALENDAR), ['dateAdd', 'dateFromFields', 'day', 'fields', 'yearMonthFromFields']);
-	  const fieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-	  const fields = PrepareTemporalFields(yearMonth, fieldNames, []);
+	  const {
+	    fields,
+	    fieldNames
+	  } = PrepareCalendarFieldsAndFieldNames(calendarRec, yearMonth, ['monthCode', 'year']);
 	  const fieldsCopy = SnapshotOwnProperties(fields, null);
 	  fields.day = 1;
 	  let startDate = CalendarDateFromFields(calendarRec, fields);
@@ -17603,8 +17616,10 @@
 	    RejectTemporalLikeObject(temporalDateLike);
 	    const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    let fields = PrepareTemporalFields(this, fieldNames, []);
+	    let {
+	      fields,
+	      fieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, this, ['day', 'month', 'monthCode', 'year']);
 	    const partialDate = PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
 	    fields = CalendarMergeFields(calendarRec, fields, partialDate);
 	    fields = PrepareTemporalFields(fields, fieldNames, []);
@@ -17703,15 +17718,13 @@
 	  toPlainYearMonth() {
 	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-	    const fields = PrepareTemporalFields(this, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, this, ['monthCode', 'year'], [], []);
 	    return CalendarYearMonthFromFields(calendarRec, fields);
 	  }
 	  toPlainMonthDay() {
 	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'monthCode']);
-	    const fields = PrepareTemporalFields(this, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, this, ['day', 'monthCode'], [], []);
 	    return CalendarMonthDayFromFields(calendarRec, fields);
 	  }
 	  getISOFields() {
@@ -17865,8 +17878,10 @@
 	    RejectTemporalLikeObject(temporalDateTimeLike);
 	    const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    let fields = PrepareTemporalFields(this, fieldNames, []);
+	    let {
+	      fields,
+	      fieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, this, ['day', 'month', 'monthCode', 'year']);
 	    fields.hour = GetSlot(this, ISO_HOUR);
 	    fields.minute = GetSlot(this, ISO_MINUTE);
 	    fields.second = GetSlot(this, ISO_SECOND);
@@ -18045,15 +18060,13 @@
 	  toPlainYearMonth() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-	    const fields = PrepareTemporalFields(this, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, this, ['monthCode', 'year'], [], []);
 	    return CalendarYearMonthFromFields(calendarRec, fields);
 	  }
 	  toPlainMonthDay() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'monthCode']);
-	    const fields = PrepareTemporalFields(this, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, this, ['day', 'monthCode'], [], []);
 	    return CalendarMonthDayFromFields(calendarRec, fields);
 	  }
 	  toPlainTime() {
@@ -18600,8 +18613,10 @@
 	    RejectTemporalLikeObject(temporalMonthDayLike);
 	    const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'mergeFields', 'monthDayFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    let fields = PrepareTemporalFields(this, fieldNames, []);
+	    let {
+	      fields,
+	      fieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, this, ['day', 'month', 'monthCode', 'year']);
 	    const partialMonthDay = PrepareTemporalFields(temporalMonthDayLike, fieldNames, 'partial');
 	    fields = CalendarMergeFields(calendarRec, fields, partialMonthDay);
 	    fields = PrepareTemporalFields(fields, fieldNames, []);
@@ -18639,10 +18654,14 @@
 	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
 	    if (Type$c(item) !== 'Object') throw new TypeError('argument should be an object');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-	    const receiverFieldNames = CalendarFields(calendarRec, ['day', 'monthCode']);
-	    let fields = PrepareTemporalFields(this, receiverFieldNames, []);
-	    const inputFieldNames = CalendarFields(calendarRec, ['year']);
-	    const inputFields = PrepareTemporalFields(item, inputFieldNames, []);
+	    const {
+	      fields,
+	      fieldNames: receiverFieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, this, ['day', 'monthCode']);
+	    const {
+	      fields: inputFields,
+	      fieldNames: inputFieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, item, ['year']);
 	    let mergedFields = CalendarMergeFields(calendarRec, fields, inputFields);
 	    const concatenatedFieldNames = Call$3(ArrayPrototypeConcat$1, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
@@ -19202,8 +19221,10 @@
 	    RejectTemporalLikeObject(temporalYearMonthLike);
 	    const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'mergeFields', 'yearMonthFromFields']);
-	    const fieldNames = CalendarFields(calendarRec, ['month', 'monthCode', 'year']);
-	    let fields = PrepareTemporalFields(this, fieldNames, []);
+	    let {
+	      fields,
+	      fieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, this, ['month', 'monthCode', 'year']);
 	    const partialYearMonth = PrepareTemporalFields(temporalYearMonthLike, fieldNames, 'partial');
 	    fields = CalendarMergeFields(calendarRec, fields, partialYearMonth);
 	    fields = PrepareTemporalFields(fields, fieldNames, []);
@@ -19261,10 +19282,14 @@
 	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
 	    if (Type$c(item) !== 'Object') throw new TypeError('argument should be an object');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-	    const receiverFieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-	    let fields = PrepareTemporalFields(this, receiverFieldNames, []);
-	    const inputFieldNames = CalendarFields(calendarRec, ['day']);
-	    const inputFields = PrepareTemporalFields(item, inputFieldNames, []);
+	    const {
+	      fields,
+	      fieldNames: receiverFieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, this, ['monthCode', 'year']);
+	    const {
+	      fields: inputFields,
+	      fieldNames: inputFieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, item, ['day']);
 	    let mergedFields = CalendarMergeFields(calendarRec, fields, inputFields);
 	    const concatenatedFieldNames = Call$3(ArrayPrototypeConcat, receiverFieldNames, inputFieldNames);
 	    mergedFields = PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
@@ -19466,8 +19491,10 @@
 	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(this, TIME_ZONE), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    const offsetNs = GetOffsetNanosecondsFor(timeZoneRec, GetSlot(this, INSTANT));
 	    const dt = GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), GetSlot(this, CALENDAR), offsetNs);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'month', 'monthCode', 'year']);
-	    let fields = PrepareTemporalFields(dt, fieldNames, []);
+	    let {
+	      fields,
+	      fieldNames
+	    } = PrepareCalendarFieldsAndFieldNames(calendarRec, dt, ['day', 'month', 'monthCode', 'year']);
 	    fields.hour = GetSlot(dt, ISO_HOUR);
 	    fields.minute = GetSlot(dt, ISO_MINUTE);
 	    fields.second = GetSlot(dt, ISO_SECOND);
@@ -19747,16 +19774,14 @@
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
 	    const dt = dateTime(this);
-	    const fieldNames = CalendarFields(calendarRec, ['monthCode', 'year']);
-	    const fields = PrepareTemporalFields(dt, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, dt, ['monthCode', 'year'], [], []);
 	    return CalendarYearMonthFromFields(calendarRec, fields);
 	  }
 	  toPlainMonthDay() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
 	    const dt = dateTime(this);
-	    const fieldNames = CalendarFields(calendarRec, ['day', 'monthCode']);
-	    const fields = PrepareTemporalFields(dt, fieldNames, []);
+	    const fields = PrepareCalendarFields(calendarRec, dt, ['day', 'monthCode'], [], []);
 	    return CalendarMonthDayFromFields(calendarRec, fields);
 	  }
 	  getISOFields() {
