@@ -1,5 +1,7 @@
 import bigInt from 'big-integer';
 
+import { ApplyUnsignedRoundingMode, GetUnsignedRoundingMode } from './math.mjs';
+
 const MathAbs = Math.abs;
 const MathSign = Math.sign;
 const NumberIsInteger = Number.isInteger;
@@ -96,46 +98,16 @@ export class TimeDuration {
   }
 
   round(increment, mode) {
-    if (increment === 1) return this;
-    let { quotient, remainder } = this.totalNs.divmod(increment);
-    if (remainder.equals(bigInt.zero)) return this;
-    const sign = remainder.lt(bigInt.zero) ? -1 : 1;
-    const tiebreaker = remainder.multiply(2).abs();
-    const tie = tiebreaker.equals(increment);
-    const expandIsNearer = tiebreaker.gt(increment);
-    switch (mode) {
-      case 'ceil':
-        if (sign > 0) quotient = quotient.add(sign);
-        break;
-      case 'floor':
-        if (sign < 0) quotient = quotient.add(sign);
-        break;
-      case 'expand':
-        // always expand if there is a remainder
-        quotient = quotient.add(sign);
-        break;
-      case 'trunc':
-        // no change needed, because divmod is a truncation
-        break;
-      case 'halfCeil':
-        if (expandIsNearer || (tie && sign > 0)) quotient = quotient.add(sign);
-        break;
-      case 'halfFloor':
-        if (expandIsNearer || (tie && sign < 0)) quotient = quotient.add(sign);
-        break;
-      case 'halfExpand':
-        // "half up away from zero"
-        if (expandIsNearer || tie) quotient = quotient.add(sign);
-        break;
-      case 'halfTrunc':
-        if (expandIsNearer) quotient = quotient.add(sign);
-        break;
-      case 'halfEven': {
-        if (expandIsNearer || (tie && quotient.isOdd())) quotient = quotient.add(sign);
-        break;
-      }
-    }
-    return TimeDuration.#validateNew(quotient.multiply(increment), 'rounding');
+    const { quotient, remainder } = this.totalNs.divmod(increment);
+    const sign = this.totalNs.lt(0) ? 'negative' : 'positive';
+    const r1 = quotient.abs().multiply(increment);
+    const r2 = r1.add(increment);
+    const cmp = remainder.multiply(2).abs().compare(increment);
+    const even = quotient.isEven();
+    const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
+    const rounded = this.totalNs.abs().eq(r1) ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+    const result = sign === 'positive' ? rounded : rounded.multiply(-1);
+    return TimeDuration.#validateNew(result, 'rounding');
   }
 
   sign() {
