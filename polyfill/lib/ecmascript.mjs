@@ -2728,7 +2728,7 @@ export function TemporalZonedDateTimeToString(
 
   if (options) {
     const { unit, increment, roundingMode } = options;
-    const ns = RoundInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
+    const ns = RoundTemporalInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
     instant = new TemporalInstant(ns);
   }
@@ -5100,15 +5100,28 @@ export function RoundNumberToIncrement(quantity, increment, mode) {
   return increment * (sign === 'positive' ? rounded : -rounded);
 }
 
-export function RoundInstant(epochNs, increment, unit, roundingMode) {
-  let { remainder } = NonNegativeBigIntDivmod(epochNs, DAY_NANOS);
-  const wholeDays = epochNs.minus(remainder);
-  const roundedRemainder = RoundNumberToIncrement(
-    remainder.toJSNumber(),
-    NS_PER_TIME_UNIT.get(unit) * increment,
-    roundingMode
-  );
-  return wholeDays.plus(roundedRemainder);
+export function RoundNumberToIncrementAsIfPositive(quantity, increment, mode) {
+  const { quotient, remainder } = quantity.divmod(increment);
+  const unsignedRoundingMode = GetUnsignedRoundingMode(mode, 'positive');
+  let r1, r2;
+  if (quantity.lt(0)) {
+    r1 = quotient.add(-1);
+    r2 = quotient;
+  } else {
+    r1 = quotient;
+    r2 = quotient.add(1);
+  }
+  const cmp = remainder.times(2).abs().compare(increment) * (quantity.lt(0) ? -1 : 1);
+  const even = r1.isEven();
+  const rounded = quotient.times(increment).eq(quantity)
+    ? quotient
+    : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+  return rounded.times(increment);
+}
+
+export function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
+  const incrementNs = NS_PER_TIME_UNIT.get(unit) * increment;
+  return RoundNumberToIncrementAsIfPositive(epochNs, incrementNs, roundingMode);
 }
 
 export function RoundISODateTime(
