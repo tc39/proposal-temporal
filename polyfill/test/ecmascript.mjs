@@ -7,6 +7,7 @@ const { reporter } = Pretty;
 import { strict as assert } from 'assert';
 const { deepEqual, equal, throws } = assert;
 
+import bigInt from 'big-integer';
 import { readFileSync } from 'fs';
 
 import * as ES from '../lib/ecmascript.mjs';
@@ -59,6 +60,33 @@ describe('ECMAScript', () => {
           it(`rounds ${value} to ${expected}`, () => {
             const result = ES.RoundNumberToIncrement(value, increment, roundingMode);
             equal(result, expected);
+          });
+        });
+      });
+    }
+  });
+
+  describe('RoundNumberToIncrementAsIfPositive', () => {
+    const increment = bigInt(100);
+    const testValues = [-150, -100, -80, -50, -30, 0, 30, 50, 80, 100, 150];
+    const expectations = {
+      ceil: [-100, -100, -0, -0, -0, 0, 100, 100, 100, 100, 200],
+      expand: [-100, -100, -0, -0, -0, 0, 100, 100, 100, 100, 200],
+      floor: [-200, -100, -100, -100, -100, 0, 0, 0, 0, 100, 100],
+      trunc: [-200, -100, -100, -100, -100, 0, 0, 0, 0, 100, 100],
+      halfCeil: [-100, -100, -100, -0, -0, 0, 0, 100, 100, 100, 200],
+      halfExpand: [-100, -100, -100, -0, -0, 0, 0, 100, 100, 100, 200],
+      halfFloor: [-200, -100, -100, -100, -0, 0, 0, 0, 100, 100, 100],
+      halfTrunc: [-200, -100, -100, -100, -0, 0, 0, 0, 100, 100, 100],
+      halfEven: [-200, -100, -100, -0, -0, 0, 0, 0, 100, 100, 200]
+    };
+    for (const roundingMode of Object.keys(expectations)) {
+      describe(roundingMode, () => {
+        testValues.forEach((value, ix) => {
+          const expected = expectations[roundingMode][ix];
+          it(`rounds ${value} to ${expected}`, () => {
+            const result = ES.RoundNumberToIncrementAsIfPositive(bigInt(value), increment, roundingMode);
+            equal(result.toJSNumber(), bigInt(expected).toJSNumber());
           });
         });
       });
