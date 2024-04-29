@@ -9047,17 +9047,24 @@
 	const BUILTIN_CASTS = new Map([['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToPrimitiveAndRequireString], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['years', ToIntegerIfIntegral], ['months', ToIntegerIfIntegral], ['weeks', ToIntegerIfIntegral], ['days', ToIntegerIfIntegral], ['hours', ToIntegerIfIntegral], ['minutes', ToIntegerIfIntegral], ['seconds', ToIntegerIfIntegral], ['milliseconds', ToIntegerIfIntegral], ['microseconds', ToIntegerIfIntegral], ['nanoseconds', ToIntegerIfIntegral], ['offset', ToPrimitiveAndRequireString]]);
 	const BUILTIN_DEFAULTS = new Map([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
 
-	// each item is [plural, singular, category]
-	const SINGULAR_PLURAL_UNITS = [['years', 'year', 'date'], ['months', 'month', 'date'], ['weeks', 'week', 'date'], ['days', 'day', 'date'], ['hours', 'hour', 'time'], ['minutes', 'minute', 'time'], ['seconds', 'second', 'time'], ['milliseconds', 'millisecond', 'time'], ['microseconds', 'microsecond', 'time'], ['nanoseconds', 'nanosecond', 'time']];
-	const SINGULAR_FOR = new Map(SINGULAR_PLURAL_UNITS);
-	const PLURAL_FOR = new Map(SINGULAR_PLURAL_UNITS.map(_ref => {
+	// each item is [plural, singular, category, (length in ns)]
+	const TEMPORAL_UNITS = [['years', 'year', 'date'], ['months', 'month', 'date'], ['weeks', 'week', 'date'], ['days', 'day', 'date', DAY_NANOS], ['hours', 'hour', 'time', 3600e9], ['minutes', 'minute', 'time', 60e9], ['seconds', 'second', 'time', 1e9], ['milliseconds', 'millisecond', 'time', 1e6], ['microseconds', 'microsecond', 'time', 1e3], ['nanoseconds', 'nanosecond', 'time', 1]];
+	const SINGULAR_FOR = new Map(TEMPORAL_UNITS);
+	const PLURAL_FOR = new Map(TEMPORAL_UNITS.map(_ref => {
 	  let [p, s] = _ref;
 	  return [s, p];
 	}));
-	const UNITS_DESCENDING = SINGULAR_PLURAL_UNITS.map(_ref2 => {
+	const UNITS_DESCENDING = TEMPORAL_UNITS.map(_ref2 => {
 	  let [, s] = _ref2;
 	  return s;
 	});
+	const NS_PER_TIME_UNIT = new Map(TEMPORAL_UNITS.map(_ref3 => {
+	  let [, s,, l] = _ref3;
+	  return [s, l];
+	}).filter(_ref4 => {
+	  let [, l] = _ref4;
+	  return l;
+	}));
 	const DURATION_FIELDS = ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'];
 	const IntlDateTimeFormatEnUsCache = new Map();
 	function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
@@ -9196,7 +9203,7 @@
 	  return calendar;
 	}
 	function ParseISODateTime(isoString) {
-	  var _ref3, _match$, _ref4, _match$2, _match$3, _ref5, _match$4, _ref6, _match$5, _ref7, _match$6;
+	  var _ref5, _match$, _ref6, _match$2, _match$3, _ref7, _match$4, _ref8, _match$5, _ref9, _match$6;
 	  // ZDT is the superset of fields for every other Temporal type
 	  const match = zoneddatetime.exec(isoString);
 	  if (!match) throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
@@ -9204,14 +9211,14 @@
 	  if (yearString[0] === '\u2212') yearString = "-".concat(yearString.slice(1));
 	  if (yearString === '-000000') throw new RangeError("invalid ISO 8601 string: ".concat(isoString));
 	  const year = +yearString;
-	  const month = +((_ref3 = (_match$ = match[2]) !== null && _match$ !== void 0 ? _match$ : match[4]) !== null && _ref3 !== void 0 ? _ref3 : 1);
-	  const day = +((_ref4 = (_match$2 = match[3]) !== null && _match$2 !== void 0 ? _match$2 : match[5]) !== null && _ref4 !== void 0 ? _ref4 : 1);
+	  const month = +((_ref5 = (_match$ = match[2]) !== null && _match$ !== void 0 ? _match$ : match[4]) !== null && _ref5 !== void 0 ? _ref5 : 1);
+	  const day = +((_ref6 = (_match$2 = match[3]) !== null && _match$2 !== void 0 ? _match$2 : match[5]) !== null && _ref6 !== void 0 ? _ref6 : 1);
 	  const hasTime = match[6] !== undefined;
 	  const hour = +((_match$3 = match[6]) !== null && _match$3 !== void 0 ? _match$3 : 0);
-	  const minute = +((_ref5 = (_match$4 = match[7]) !== null && _match$4 !== void 0 ? _match$4 : match[10]) !== null && _ref5 !== void 0 ? _ref5 : 0);
-	  let second = +((_ref6 = (_match$5 = match[8]) !== null && _match$5 !== void 0 ? _match$5 : match[11]) !== null && _ref6 !== void 0 ? _ref6 : 0);
+	  const minute = +((_ref7 = (_match$4 = match[7]) !== null && _match$4 !== void 0 ? _match$4 : match[10]) !== null && _ref7 !== void 0 ? _ref7 : 0);
+	  let second = +((_ref8 = (_match$5 = match[8]) !== null && _match$5 !== void 0 ? _match$5 : match[11]) !== null && _ref8 !== void 0 ? _ref8 : 0);
 	  if (second === 60) second = 59;
-	  const fraction = ((_ref7 = (_match$6 = match[9]) !== null && _match$6 !== void 0 ? _match$6 : match[12]) !== null && _ref7 !== void 0 ? _ref7 : '') + '000000000';
+	  const fraction = ((_ref9 = (_match$6 = match[9]) !== null && _match$6 !== void 0 ? _match$6 : match[12]) !== null && _ref9 !== void 0 ? _ref9 : '') + '000000000';
 	  const millisecond = +fraction.slice(0, 3);
 	  const microsecond = +fraction.slice(3, 6);
 	  const nanosecond = +fraction.slice(6, 9);
@@ -9263,12 +9270,12 @@
 	  const match = time.exec(isoString);
 	  let hour, minute, second, millisecond, microsecond, nanosecond;
 	  if (match) {
-	    var _match$7, _ref8, _match$8, _ref9, _match$9, _ref10, _match$10;
+	    var _match$7, _ref10, _match$8, _ref11, _match$9, _ref12, _match$10;
 	    hour = +((_match$7 = match[1]) !== null && _match$7 !== void 0 ? _match$7 : 0);
-	    minute = +((_ref8 = (_match$8 = match[2]) !== null && _match$8 !== void 0 ? _match$8 : match[5]) !== null && _ref8 !== void 0 ? _ref8 : 0);
-	    second = +((_ref9 = (_match$9 = match[3]) !== null && _match$9 !== void 0 ? _match$9 : match[6]) !== null && _ref9 !== void 0 ? _ref9 : 0);
+	    minute = +((_ref10 = (_match$8 = match[2]) !== null && _match$8 !== void 0 ? _match$8 : match[5]) !== null && _ref10 !== void 0 ? _ref10 : 0);
+	    second = +((_ref11 = (_match$9 = match[3]) !== null && _match$9 !== void 0 ? _match$9 : match[6]) !== null && _ref11 !== void 0 ? _ref11 : 0);
 	    if (second === 60) second = 59;
-	    const fraction = ((_ref10 = (_match$10 = match[4]) !== null && _match$10 !== void 0 ? _match$10 : match[7]) !== null && _ref10 !== void 0 ? _ref10 : '') + '000000000';
+	    const fraction = ((_ref12 = (_match$10 = match[4]) !== null && _match$10 !== void 0 ? _match$10 : match[7]) !== null && _ref12 !== void 0 ? _ref12 : '') + '000000000';
 	    millisecond = +fraction.slice(0, 3);
 	    microsecond = +fraction.slice(3, 6);
 	    nanosecond = +fraction.slice(6, 9);
@@ -9477,16 +9484,16 @@
 	  // fractional hours, minutes, or seconds, expressed in whole nanoseconds:
 	  let excessNanoseconds = 0;
 	  if (fHours !== undefined) {
-	    var _ref11, _ref12, _ref13;
-	    if ((_ref11 = (_ref12 = (_ref13 = minutesStr !== null && minutesStr !== void 0 ? minutesStr : fMinutes) !== null && _ref13 !== void 0 ? _ref13 : secondsStr) !== null && _ref12 !== void 0 ? _ref12 : fSeconds) !== null && _ref11 !== void 0 ? _ref11 : false) {
+	    var _ref13, _ref14, _ref15;
+	    if ((_ref13 = (_ref14 = (_ref15 = minutesStr !== null && minutesStr !== void 0 ? minutesStr : fMinutes) !== null && _ref15 !== void 0 ? _ref15 : secondsStr) !== null && _ref14 !== void 0 ? _ref14 : fSeconds) !== null && _ref13 !== void 0 ? _ref13 : false) {
 	      throw new RangeError('only the smallest unit can be fractional');
 	    }
 	    excessNanoseconds = ToIntegerWithTruncation((fHours + '000000000').slice(0, 9)) * 3600 * sign;
 	  } else {
 	    minutes = minutesStr === undefined ? 0 : ToIntegerWithTruncation(minutesStr) * sign;
 	    if (fMinutes !== undefined) {
-	      var _ref14;
-	      if ((_ref14 = secondsStr !== null && secondsStr !== void 0 ? secondsStr : fSeconds) !== null && _ref14 !== void 0 ? _ref14 : false) {
+	      var _ref16;
+	      if ((_ref16 = secondsStr !== null && secondsStr !== void 0 ? secondsStr : fSeconds) !== null && _ref16 !== void 0 ? _ref16 : false) {
 	        throw new RangeError('only the smallest unit can be fractional');
 	      }
 	      excessNanoseconds = ToIntegerWithTruncation((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
@@ -9821,8 +9828,8 @@
 	function GetTemporalUnit(options, key, unitGroup, requiredOrDefault) {
 	  let extraValues = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
 	  const allowedSingular = [];
-	  for (let index = 0; index < SINGULAR_PLURAL_UNITS.length; index++) {
-	    const unitInfo = SINGULAR_PLURAL_UNITS[index];
+	  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
+	    const unitInfo = TEMPORAL_UNITS[index];
 	    const singular = unitInfo[1];
 	    const category = unitInfo[2];
 	    if (unitGroup === 'datetime' || unitGroup === category) {
@@ -12611,7 +12618,7 @@
 	  };
 	}
 	function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
-	  const ALLOWED_UNITS = SINGULAR_PLURAL_UNITS.reduce((allowed, unitInfo) => {
+	  const ALLOWED_UNITS = TEMPORAL_UNITS.reduce((allowed, unitInfo) => {
 	    const p = unitInfo[0];
 	    const s = unitInfo[1];
 	    const c = unitInfo[2];
@@ -13465,7 +13472,7 @@
 	    remainder
 	  } = NonNegativeBigIntDivmod(epochNs, DAY_NANOS);
 	  const wholeDays = epochNs.minus(remainder);
-	  const roundedRemainder = RoundNumberToIncrement(remainder, nsPerTimeUnit[unit] * increment, roundingMode);
+	  const roundedRemainder = RoundNumberToIncrement(remainder, NS_PER_TIME_UNIT.get(unit) * increment, roundingMode);
 	  return wholeDays.plus(roundedRemainder);
 	}
 	function RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
@@ -13497,30 +13504,29 @@
 	  };
 	}
 	function RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
-	  let quantity = bigInt.zero;
+	  let quantity;
 	  switch (unit) {
 	    case 'day':
 	    case 'hour':
-	      quantity = bigInt(hour);
-	    // fall through
+	      quantity = ((((hour * 60 + minute) * 60 + second) * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
+	      break;
 	    case 'minute':
-	      quantity = quantity.multiply(60).plus(minute);
-	    // fall through
+	      quantity = (((minute * 60 + second) * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
+	      break;
 	    case 'second':
-	      quantity = quantity.multiply(60).plus(second);
-	    // fall through
+	      quantity = ((second * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
+	      break;
 	    case 'millisecond':
-	      quantity = quantity.multiply(1000).plus(millisecond);
-	    // fall through
+	      quantity = (millisecond * 1000 + microsecond) * 1000 + nanosecond;
+	      break;
 	    case 'microsecond':
-	      quantity = quantity.multiply(1000).plus(microsecond);
-	    // fall through
+	      quantity = microsecond * 1000 + nanosecond;
+	      break;
 	    case 'nanosecond':
-	      quantity = quantity.multiply(1000).plus(nanosecond);
+	      quantity = nanosecond;
 	  }
-	  const nsPerUnit = nsPerTimeUnit[unit];
-	  const rounded = RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode);
-	  const result = rounded.divide(nsPerUnit).toJSNumber();
+	  const nsPerUnit = NS_PER_TIME_UNIT.get(unit);
+	  const result = RoundJSNumberToIncrement(quantity, nsPerUnit * increment, roundingMode) / nsPerUnit;
 	  switch (unit) {
 	    case 'day':
 	      return {
@@ -13751,52 +13757,15 @@
 	        break;
 	      }
 	    case 'day':
+	      total = days + norm.fdiv(dayLengthNs);
+	      days = RoundJSNumberToIncrement(total, increment, roundingMode);
+	      norm = TimeDuration.ZERO;
+	      break;
+	    default:
 	      {
-	        total = days + norm.fdiv(dayLengthNs);
-	        days = RoundJSNumberToIncrement(total, increment, roundingMode);
-	        norm = TimeDuration.ZERO;
-	        break;
-	      }
-	    case 'hour':
-	      {
-	        const divisor = 3600e9;
+	        const divisor = NS_PER_TIME_UNIT.get(unit);
 	        total = norm.fdiv(divisor);
 	        norm = norm.round(divisor * increment, roundingMode);
-	        break;
-	      }
-	    case 'minute':
-	      {
-	        const divisor = 60e9;
-	        total = norm.fdiv(divisor);
-	        norm = norm.round(divisor * increment, roundingMode);
-	        break;
-	      }
-	    case 'second':
-	      {
-	        const divisor = 1e9;
-	        total = norm.fdiv(divisor);
-	        norm = norm.round(divisor * increment, roundingMode);
-	        break;
-	      }
-	    case 'millisecond':
-	      {
-	        const divisor = 1e6;
-	        total = norm.fdiv(divisor);
-	        norm = norm.round(divisor * increment, roundingMode);
-	        break;
-	      }
-	    case 'microsecond':
-	      {
-	        const divisor = 1e3;
-	        total = norm.fdiv(divisor);
-	        norm = norm.round(divisor * increment, roundingMode);
-	        break;
-	      }
-	    case 'nanosecond':
-	      {
-	        total = norm.totalNs.toJSNumber();
-	        norm = norm.round(increment, roundingMode);
-	        break;
 	      }
 	  }
 	  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, norm);
@@ -13985,15 +13954,6 @@
 	  }
 	  return right;
 	}
-	const nsPerTimeUnit = {
-	  day: 86400e9,
-	  hour: 3600e9,
-	  minute: 60e9,
-	  second: 1e9,
-	  millisecond: 1e6,
-	  microsecond: 1e3,
-	  nanosecond: 1
-	};
 
 	const DATE = Symbol('date');
 	const YM = Symbol('ym');
