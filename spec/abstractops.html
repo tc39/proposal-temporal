@@ -2157,7 +2157,7 @@
         1. Let _iteratorRecord_ be ? GetIterator(_calendarFieldsArray_, ~sync~).
         1. Let _fieldNames_ be ? IteratorToListOfType(_iteratorRecord_, « String »).
       1. If _nonCalendarFieldNames_ is present, set _fieldNames_ to the list-concatenation of _fieldNames_ and _nonCalendarFieldNames_.
-      1. Let _fields_ be ? PrepareTemporalFields(_fields_, _fieldNames_, «»).
+      1. Let _fields_ be ? PrepareTemporalFields(_fields_, _fieldNames_, _requiredFieldNames_).
       1. Return the Record { [[Fields]]: _fields_, [[FieldNames]]: _fieldNames_ }.
     </emu-alg>
   </emu-clause>
