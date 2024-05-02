@@ -8583,6 +8583,41 @@
 	  const resStr = xStr + Call$3(StringPrototypePadStart, zStr, [p, '0']);
 	  return sign * NumberParseInt(resStr, 10);
 	}
+	function GetUnsignedRoundingMode(mode, sign) {
+	  const index = +(sign === 'negative'); // 0 = positive, 1 = negative
+	  switch (mode) {
+	    case 'ceil':
+	      return ['infinity', 'zero'][index];
+	    case 'floor':
+	      return ['zero', 'infinity'][index];
+	    case 'expand':
+	      return 'infinity';
+	    case 'trunc':
+	      return 'zero';
+	    case 'halfCeil':
+	      return ['half-infinity', 'half-zero'][index];
+	    case 'halfFloor':
+	      return ['half-zero', 'half-infinity'][index];
+	    case 'halfExpand':
+	      return 'half-infinity';
+	    case 'halfTrunc':
+	      return 'half-zero';
+	    case 'halfEven':
+	      return 'half-even';
+	  }
+	}
+
+	// Omits first step from spec algorithm so that it can be used both for
+	// RoundNumberToIncrement and RoundNormalizedTimeDurationToIncrement
+	function ApplyUnsignedRoundingMode(r1, r2, cmp, evenCardinality, unsignedRoundingMode) {
+	  if (unsignedRoundingMode === 'zero') return r1;
+	  if (unsignedRoundingMode === 'infinity') return r2;
+	  if (cmp < 0) return r1;
+	  if (cmp > 0) return r2;
+	  if (unsignedRoundingMode === 'half-zero') return r1;
+	  if (unsignedRoundingMode === 'half-infinity') return r2;
+	  return evenCardinality ? r1 : r2;
+	}
 
 	// Instant
 	const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
@@ -8850,50 +8885,19 @@
 	    return this.totalNs.isZero();
 	  }
 	  round(increment, mode) {
-	    if (increment === 1) return this;
-	    let {
+	    const {
 	      quotient,
 	      remainder
 	    } = this.totalNs.divmod(increment);
-	    if (remainder.equals(bigInt.zero)) return this;
-	    const sign = remainder.lt(bigInt.zero) ? -1 : 1;
-	    const tiebreaker = remainder.multiply(2).abs();
-	    const tie = tiebreaker.equals(increment);
-	    const expandIsNearer = tiebreaker.gt(increment);
-	    switch (mode) {
-	      case 'ceil':
-	        if (sign > 0) quotient = quotient.add(sign);
-	        break;
-	      case 'floor':
-	        if (sign < 0) quotient = quotient.add(sign);
-	        break;
-	      case 'expand':
-	        // always expand if there is a remainder
-	        quotient = quotient.add(sign);
-	        break;
-	      case 'trunc':
-	        // no change needed, because divmod is a truncation
-	        break;
-	      case 'halfCeil':
-	        if (expandIsNearer || tie && sign > 0) quotient = quotient.add(sign);
-	        break;
-	      case 'halfFloor':
-	        if (expandIsNearer || tie && sign < 0) quotient = quotient.add(sign);
-	        break;
-	      case 'halfExpand':
-	        // "half up away from zero"
-	        if (expandIsNearer || tie) quotient = quotient.add(sign);
-	        break;
-	      case 'halfTrunc':
-	        if (expandIsNearer) quotient = quotient.add(sign);
-	        break;
-	      case 'halfEven':
-	        {
-	          if (expandIsNearer || tie && quotient.isOdd()) quotient = quotient.add(sign);
-	          break;
-	        }
-	    }
-	    return _validateNew.call(TimeDuration, quotient.multiply(increment), 'rounding');
+	    const sign = this.totalNs.lt(0) ? 'negative' : 'positive';
+	    const r1 = quotient.abs().multiply(increment);
+	    const r2 = r1.add(increment);
+	    const cmp = remainder.multiply(2).abs().compare(increment);
+	    const even = quotient.isEven();
+	    const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
+	    const rounded = this.totalNs.abs().eq(r1) ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	    const result = sign === 'positive' ? rounded : rounded.multiply(-1);
+	    return _validateNew.call(TimeDuration, result, 'rounding');
 	  }
 	  sign() {
 	    return this.cmp(new TimeDuration(0n));
@@ -10383,7 +10387,7 @@
 	    for (let index = 0; index < possibleInstants.length; index++) {
 	      const candidate = possibleInstants[index];
 	      const candidateOffset = GetOffsetNanosecondsFor(timeZoneRec, candidate);
-	      const roundedCandidateOffset = RoundNumberToIncrement(bigInt(candidateOffset), 60e9, 'halfExpand').toJSNumber();
+	      const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
 	      if (candidateOffset === offsetNs || matchMinute && roundedCandidateOffset === offsetNs) {
 	        return GetSlot(candidate, EPOCHNANOSECONDS);
 	      }
@@ -11373,7 +11377,7 @@
 	      increment,
 	      roundingMode
 	    } = options;
-	    const ns = RoundInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
+	    const ns = RoundTemporalInstant(GetSlot(zdt, EPOCHNANOSECONDS), increment, unit, roundingMode);
 	    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	    instant = new TemporalInstant(ns);
 	  }
@@ -11539,7 +11543,7 @@
 	  return "".concat(sign).concat(timeString);
 	}
 	function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {
-	  offsetNanoseconds = RoundNumberToIncrement(bigInt(offsetNanoseconds), 60e9, 'halfExpand').toJSNumber();
+	  offsetNanoseconds = RoundNumberToIncrement(offsetNanoseconds, 60e9, 'halfExpand');
 	  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
 	}
 	function GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
@@ -13379,101 +13383,39 @@
 	  return CreateTemporalZonedDateTime(epochNanoseconds, timeZoneRec.receiver, calendarRec.receiver);
 	}
 	function RoundNumberToIncrement(quantity, increment, mode) {
-	  if (increment === 1) return quantity;
-	  let {
+	  const quotient = MathTrunc(quantity / increment);
+	  const remainder = quantity % increment;
+	  const sign = quantity < 0 ? 'negative' : 'positive';
+	  const r1 = MathAbs$2(quotient);
+	  const r2 = r1 + 1;
+	  const cmp = ComparisonResult(MathAbs$2(remainder * 2) - increment);
+	  const even = r1 % 2 === 0;
+	  const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
+	  const rounded = MathAbs$2(quantity) === r1 * increment ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	  return increment * (sign === 'positive' ? rounded : -rounded);
+	}
+	function RoundNumberToIncrementAsIfPositive(quantity, increment, mode) {
+	  const {
 	    quotient,
 	    remainder
 	  } = quantity.divmod(increment);
-	  if (remainder.equals(bigInt.zero)) return quantity;
-	  const sign = remainder.lt(bigInt.zero) ? -1 : 1;
-	  const tiebreaker = remainder.multiply(2).abs();
-	  const tie = tiebreaker.equals(increment);
-	  const expandIsNearer = tiebreaker.gt(increment);
-	  switch (mode) {
-	    case 'ceil':
-	      if (sign > 0) quotient = quotient.add(sign);
-	      break;
-	    case 'floor':
-	      if (sign < 0) quotient = quotient.add(sign);
-	      break;
-	    case 'expand':
-	      // always expand if there is a remainder
-	      quotient = quotient.add(sign);
-	      break;
-	    case 'trunc':
-	      // no change needed, because divmod is a truncation
-	      break;
-	    case 'halfCeil':
-	      if (expandIsNearer || tie && sign > 0) quotient = quotient.add(sign);
-	      break;
-	    case 'halfFloor':
-	      if (expandIsNearer || tie && sign < 0) quotient = quotient.add(sign);
-	      break;
-	    case 'halfExpand':
-	      // "half up away from zero"
-	      if (expandIsNearer || tie) quotient = quotient.add(sign);
-	      break;
-	    case 'halfTrunc':
-	      if (expandIsNearer) quotient = quotient.add(sign);
-	      break;
-	    case 'halfEven':
-	      {
-	        if (expandIsNearer || tie && quotient.isOdd()) quotient = quotient.add(sign);
-	        break;
-	      }
+	  const unsignedRoundingMode = GetUnsignedRoundingMode(mode, 'positive');
+	  let r1, r2;
+	  if (quantity.lt(0)) {
+	    r1 = quotient.add(-1);
+	    r2 = quotient;
+	  } else {
+	    r1 = quotient;
+	    r2 = quotient.add(1);
 	  }
-	  return quotient.multiply(increment);
+	  const cmp = remainder.times(2).abs().compare(increment) * (quantity.lt(0) ? -1 : 1);
+	  const even = r1.isEven();
+	  const rounded = quotient.times(increment).eq(quantity) ? quotient : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	  return rounded.times(increment);
 	}
-	function RoundJSNumberToIncrement(quantity, increment, mode) {
-	  let quotient = MathTrunc(quantity / increment);
-	  const remainder = quantity % increment;
-	  if (remainder === 0) return quantity;
-	  const sign = remainder < 0 ? -1 : 1;
-	  const tiebreaker = MathAbs$2(remainder * 2);
-	  const tie = tiebreaker === increment;
-	  const expandIsNearer = tiebreaker > increment;
-	  switch (mode) {
-	    case 'ceil':
-	      if (sign > 0) quotient += sign;
-	      break;
-	    case 'floor':
-	      if (sign < 0) quotient += sign;
-	      break;
-	    case 'expand':
-	      // always expand if there is a remainder
-	      quotient += sign;
-	      break;
-	    case 'trunc':
-	      // no change needed, because divmod is a truncation
-	      break;
-	    case 'halfCeil':
-	      if (expandIsNearer || tie && sign > 0) quotient += sign;
-	      break;
-	    case 'halfFloor':
-	      if (expandIsNearer || tie && sign < 0) quotient += sign;
-	      break;
-	    case 'halfExpand':
-	      // "half up away from zero"
-	      if (expandIsNearer || tie) quotient += sign;
-	      break;
-	    case 'halfTrunc':
-	      if (expandIsNearer) quotient += sign;
-	      break;
-	    case 'halfEven':
-	      {
-	        if (expandIsNearer || tie && quotient % 2 === 1) quotient += sign;
-	        break;
-	      }
-	  }
-	  return quotient * increment;
-	}
-	function RoundInstant(epochNs, increment, unit, roundingMode) {
-	  let {
-	    remainder
-	  } = NonNegativeBigIntDivmod(epochNs, DAY_NANOS);
-	  const wholeDays = epochNs.minus(remainder);
-	  const roundedRemainder = RoundNumberToIncrement(remainder, NS_PER_TIME_UNIT.get(unit) * increment, roundingMode);
-	  return wholeDays.plus(roundedRemainder);
+	function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
+	  const incrementNs = NS_PER_TIME_UNIT.get(unit) * increment;
+	  return RoundNumberToIncrementAsIfPositive(epochNs, incrementNs, roundingMode);
 	}
 	function RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
 	  let deltaDays = 0;
@@ -13526,7 +13468,7 @@
 	      quantity = nanosecond;
 	  }
 	  const nsPerUnit = NS_PER_TIME_UNIT.get(unit);
-	  const result = RoundJSNumberToIncrement(quantity, nsPerUnit * increment, roundingMode) / nsPerUnit;
+	  const result = RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode) / nsPerUnit;
 	  switch (unit) {
 	    case 'day':
 	      return {
@@ -13688,7 +13630,7 @@
 	        oneYearDays = MathAbs$2(oneYearDays);
 	        if (oneYearDays === 0) throw new RangeError('custom calendar reported that a year is 0 days long');
 	        total = years + (days + norm.fdiv(dayLengthNs)) / oneYearDays;
-	        years = RoundJSNumberToIncrement(total, increment, roundingMode);
+	        years = RoundNumberToIncrement(total, increment, roundingMode);
 	        months = weeks = days = 0;
 	        norm = TimeDuration.ZERO;
 	        break;
@@ -13724,7 +13666,7 @@
 	        oneMonthDays = MathAbs$2(oneMonthDays);
 	        if (oneMonthDays === 0) throw new RangeError('custom calendar reported that a month is 0 days long');
 	        total = months + (days + norm.fdiv(dayLengthNs)) / oneMonthDays;
-	        months = RoundJSNumberToIncrement(total, increment, roundingMode);
+	        months = RoundNumberToIncrement(total, increment, roundingMode);
 	        weeks = days = 0;
 	        norm = TimeDuration.ZERO;
 	        break;
@@ -13751,14 +13693,14 @@
 	        oneWeekDays = MathAbs$2(oneWeekDays);
 	        if (oneWeekDays === 0) throw new RangeError('custom calendar reported that a week is 0 days long');
 	        total = weeks + (days + norm.fdiv(dayLengthNs)) / oneWeekDays;
-	        weeks = RoundJSNumberToIncrement(total, increment, roundingMode);
+	        weeks = RoundNumberToIncrement(total, increment, roundingMode);
 	        days = 0;
 	        norm = TimeDuration.ZERO;
 	        break;
 	      }
 	    case 'day':
 	      total = days + norm.fdiv(dayLengthNs);
-	      days = RoundJSNumberToIncrement(total, increment, roundingMode);
+	      days = RoundNumberToIncrement(total, increment, roundingMode);
 	      norm = TimeDuration.ZERO;
 	      break;
 	    default:
@@ -14550,7 +14492,7 @@
 	    };
 	    ValidateTemporalRoundingIncrement(roundingIncrement, maximumIncrements[smallestUnit], true);
 	    const ns = GetSlot(this, EPOCHNANOSECONDS);
-	    const roundedNs = RoundInstant(ns, roundingIncrement, smallestUnit, roundingMode);
+	    const roundedNs = RoundTemporalInstant(ns, roundingIncrement, smallestUnit, roundingMode);
 	    return new Instant(roundedNs);
 	  }
 	  equals(other) {
@@ -14576,7 +14518,7 @@
 	      increment
 	    } = ToSecondsStringPrecisionRecord(smallestUnit, digits);
 	    const ns = GetSlot(this, EPOCHNANOSECONDS);
-	    const roundedNs = RoundInstant(ns, increment, unit, roundingMode);
+	    const roundedNs = RoundTemporalInstant(ns, increment, unit, roundingMode);
 	    const roundedInstant = new Instant(roundedNs);
 	    return TemporalInstantToString(roundedInstant, timeZone, precision);
 	  }
