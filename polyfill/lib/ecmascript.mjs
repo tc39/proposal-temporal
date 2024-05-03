@@ -3898,15 +3898,7 @@ export function DifferenceISODateTime(
   return { years, months, weeks, days, norm: timeDuration };
 }
 
-export function DifferenceZonedDateTime(
-  ns1,
-  ns2,
-  timeZoneRec,
-  calendarRec,
-  largestUnit,
-  options,
-  precalculatedDtStart = undefined
-) {
+export function DifferenceZonedDateTime(ns1, ns2, timeZoneRec, calendarRec, largestUnit, options, dtStart) {
   // getOffsetNanosecondsFor and getPossibleInstantsFor must be looked up
   // dateAdd must be looked up if the instants are not identical (and the date
   // difference has no years, months, or weeks, which can't be determined)
@@ -3926,9 +3918,7 @@ export function DifferenceZonedDateTime(
 
   // Convert start/end instants to datetimes
   const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-  const start = new TemporalInstant(ns1);
   const end = new TemporalInstant(ns2);
-  const dtStart = precalculatedDtStart ?? GetPlainDateTimeFor(timeZoneRec, start, calendarRec.receiver);
   const dtEnd = GetPlainDateTimeFor(timeZoneRec, end, calendarRec.receiver);
 
   // Simulate moving ns1 as many years/months/weeks/days as possible without
