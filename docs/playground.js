@@ -9681,18 +9681,18 @@
 	  }
 	  return record;
 	}
-	function ToTemporalOverflow(options) {
+	function GetTemporalOverflowOption(options) {
 	  if (options === undefined) return 'constrain';
 	  return GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
 	}
-	function ToTemporalDisambiguation(options) {
+	function GetTemporalDisambiguationOption(options) {
 	  if (options === undefined) return 'compatible';
 	  return GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
 	}
-	function ToTemporalRoundingMode(options, fallback) {
+	function GetRoundingModeOption(options, fallback) {
 	  return GetOption(options, 'roundingMode', ['ceil', 'floor', 'expand', 'trunc', 'halfCeil', 'halfFloor', 'halfExpand', 'halfTrunc', 'halfEven'], fallback);
 	}
-	function NegateTemporalRoundingMode(roundingMode) {
+	function NegateRoundingMode(roundingMode) {
 	  switch (roundingMode) {
 	    case 'ceil':
 	      return 'floor';
@@ -9706,20 +9706,20 @@
 	      return roundingMode;
 	  }
 	}
-	function ToTemporalOffset(options, fallback) {
+	function GetTemporalOffsetOption(options, fallback) {
 	  if (options === undefined) return fallback;
 	  return GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
 	}
-	function ToCalendarNameOption(options) {
+	function GetTemporalShowCalendarNameOption(options) {
 	  return GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
 	}
-	function ToTimeZoneNameOption(options) {
+	function GetTemporalShowTimeZoneNameOption(options) {
 	  return GetOption(options, 'timeZoneName', ['auto', 'never', 'critical'], 'auto');
 	}
-	function ToShowOffsetOption(options) {
+	function GetTemporalShowOffsetOption(options) {
 	  return GetOption(options, 'offset', ['auto', 'never'], 'auto');
 	}
-	function ToTemporalRoundingIncrement(options) {
+	function GetRoundingIncrementOption(options) {
 	  let increment = options.roundingIncrement;
 	  if (increment === undefined) return 1;
 	  increment = ToNumber$1(increment);
@@ -9741,8 +9741,8 @@
 	    throw new RangeError("Rounding increment must divide evenly into ".concat(dividend));
 	  }
 	}
-	function ToFractionalSecondDigits(normalizedOptions) {
-	  let digitsValue = normalizedOptions.fractionalSecondDigits;
+	function GetTemporalFractionalSecondDigitsOption(options) {
+	  let digitsValue = options.fractionalSecondDigits;
 	  if (digitsValue === undefined) return 'auto';
 	  if (Type$c(digitsValue) !== 'Number') {
 	    if (ToString$1(digitsValue) !== 'auto') {
@@ -9829,7 +9829,7 @@
 	  }
 	}
 	const REQUIRED = Symbol('~required~');
-	function GetTemporalUnit(options, key, unitGroup, requiredOrDefault) {
+	function GetTemporalUnitValuedOption(options, key, unitGroup, requiredOrDefault) {
 	  let extraValues = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
 	  const allowedSingular = [];
 	  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
@@ -9861,7 +9861,7 @@
 	  if (SINGULAR_FOR.has(retval)) retval = SINGULAR_FOR.get(retval);
 	  return retval;
 	}
-	function ToRelativeTemporalObject(options) {
+	function GetTemporalRelativeToOption(options) {
 	  // returns: {
 	  //   plainRelativeTo: Temporal.PlainDate | undefined
 	  //   zonedRelativeTo: Temporal.ZonedDateTime | undefined
@@ -10089,13 +10089,13 @@
 	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalDate(item)) return item;
 	    if (IsTemporalZonedDateTime(item)) {
-	      ToTemporalOverflow(options); // validate and ignore
+	      GetTemporalOverflowOption(options); // validate and ignore
 	      const timeZoneRec = new TimeZoneMethodRecord(GetSlot(item, TIME_ZONE), ['getOffsetNanosecondsFor']);
 	      item = GetPlainDateTimeFor(timeZoneRec, GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
 	      return CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
 	    }
 	    if (IsTemporalDateTime(item)) {
-	      ToTemporalOverflow(options); // validate and ignore
+	      GetTemporalOverflowOption(options); // validate and ignore
 	      return CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
 	    }
 	    const calendarRec = new CalendarMethodRecord(GetTemporalCalendarSlotValueWithISODefault(item), ['dateFromFields', 'fields']);
@@ -10113,7 +10113,7 @@
 	  if (!calendar) calendar = 'iso8601';
 	  if (!IsBuiltinCalendar(calendar)) throw new RangeError("invalid calendar identifier ".concat(calendar));
 	  calendar = ASCIILowercase(calendar);
-	  ToTemporalOverflow(options); // validate and ignore
+	  GetTemporalOverflowOption(options); // validate and ignore
 	  return CreateTemporalDate(year, month, day, calendar);
 	}
 	function InterpretTemporalDateTimeFields(calendarRec, fields, options) {
@@ -10126,7 +10126,7 @@
 	    microsecond,
 	    nanosecond
 	  } = ToTemporalTimeRecord(fields);
-	  const overflow = ToTemporalOverflow(options);
+	  const overflow = GetTemporalOverflowOption(options);
 	  options.overflow = overflow; // options is always an internal object, so not observable
 	  const date = CalendarDateFromFields(calendarRec, fields, options);
 	  const year = GetSlot(date, ISO_YEAR);
@@ -10158,12 +10158,12 @@
 	  if (Type$c(item) === 'Object') {
 	    if (IsTemporalDateTime(item)) return item;
 	    if (IsTemporalZonedDateTime(item)) {
-	      ToTemporalOverflow(resolvedOptions); // validate and ignore
+	      GetTemporalOverflowOption(resolvedOptions); // validate and ignore
 	      const timeZoneRec = new TimeZoneMethodRecord(GetSlot(item, TIME_ZONE), ['getOffsetNanosecondsFor']);
 	      return GetPlainDateTimeFor(timeZoneRec, GetSlot(item, INSTANT), GetSlot(item, CALENDAR));
 	    }
 	    if (IsTemporalDate(item)) {
-	      ToTemporalOverflow(resolvedOptions); // validate and ignore
+	      GetTemporalOverflowOption(resolvedOptions); // validate and ignore
 	      return CreateTemporalDateTime(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), 0, 0, 0, 0, 0, 0, GetSlot(item, CALENDAR));
 	    }
 	    calendar = GetTemporalCalendarSlotValueWithISODefault(item);
@@ -10200,7 +10200,7 @@
 	    if (!calendar) calendar = 'iso8601';
 	    if (!IsBuiltinCalendar(calendar)) throw new RangeError("invalid calendar identifier ".concat(calendar));
 	    calendar = ASCIILowercase(calendar);
-	    ToTemporalOverflow(resolvedOptions); // validate and ignore
+	    GetTemporalOverflowOption(resolvedOptions); // validate and ignore
 	  }
 	  return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 	}
@@ -10276,7 +10276,7 @@
 	  if (calendar === undefined) calendar = 'iso8601';
 	  if (!IsBuiltinCalendar(calendar)) throw new RangeError("invalid calendar identifier ".concat(calendar));
 	  calendar = ASCIILowercase(calendar);
-	  ToTemporalOverflow(options); // validate and ignore
+	  GetTemporalOverflowOption(options); // validate and ignore
 
 	  if (referenceISOYear === undefined) {
 	    if (calendar !== 'iso8601') {
@@ -10355,7 +10355,7 @@
 	  if (calendar === undefined) calendar = 'iso8601';
 	  if (!IsBuiltinCalendar(calendar)) throw new RangeError("invalid calendar identifier ".concat(calendar));
 	  calendar = ASCIILowercase(calendar);
-	  ToTemporalOverflow(options); // validate and ignore
+	  GetTemporalOverflowOption(options); // validate and ignore
 
 	  const result = CreateTemporalYearMonth(year, month, calendar, referenceISODay);
 	  const calendarRec = new CalendarMethodRecord(calendar, ['yearMonthFromFields']);
@@ -10422,8 +10422,8 @@
 	    if (offset === undefined) {
 	      offsetBehaviour = 'wall';
 	    }
-	    disambiguation = ToTemporalDisambiguation(resolvedOptions);
-	    offsetOpt = ToTemporalOffset(resolvedOptions, 'reject');
+	    disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
+	    offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
 	    ({
 	      year,
 	      month,
@@ -10462,9 +10462,9 @@
 	    if (!IsBuiltinCalendar(calendar)) throw new RangeError("invalid calendar identifier ".concat(calendar));
 	    calendar = ASCIILowercase(calendar);
 	    matchMinute = true; // ISO strings may specify offset with less precision
-	    disambiguation = ToTemporalDisambiguation(resolvedOptions);
-	    offsetOpt = ToTemporalOffset(resolvedOptions, 'reject');
-	    ToTemporalOverflow(resolvedOptions); // validate and ignore
+	    disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
+	    offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
+	    GetTemporalOverflowOption(resolvedOptions); // validate and ignore
 	  }
 	  let offsetNs = 0;
 	  if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
@@ -12631,14 +12631,14 @@
 	    }
 	    return allowed;
 	  }, []);
-	  let largestUnit = GetTemporalUnit(options, 'largestUnit', group, 'auto');
+	  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit', group, 'auto');
 	  if (Call$3(ArrayIncludes$1, disallowed, [largestUnit])) {
 	    throw new RangeError("largestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(largestUnit));
 	  }
-	  const roundingIncrement = ToTemporalRoundingIncrement(options);
-	  let roundingMode = ToTemporalRoundingMode(options, 'trunc');
-	  if (op === 'since') roundingMode = NegateTemporalRoundingMode(roundingMode);
-	  const smallestUnit = GetTemporalUnit(options, 'smallestUnit', group, fallbackSmallest);
+	  const roundingIncrement = GetRoundingIncrementOption(options);
+	  let roundingMode = GetRoundingModeOption(options, 'trunc');
+	  if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
+	  const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', group, fallbackSmallest);
 	  if (Call$3(ArrayIncludes$1, disallowed, [smallestUnit])) {
 	    throw new RangeError("smallestUnit must be one of ".concat(ALLOWED_UNITS.join(', '), ", not ").concat(smallestUnit));
 	  }
@@ -12969,7 +12969,7 @@
 	  let year = GetSlot(plainDate, ISO_YEAR);
 	  let month = GetSlot(plainDate, ISO_MONTH);
 	  let day = GetSlot(plainDate, ISO_DAY);
-	  const overflow = ToTemporalOverflow(options);
+	  const overflow = GetTemporalOverflowOption(options);
 	  const norm = TimeDuration.normalize(GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS));
 	  const days = GetSlot(duration, DAYS) + BalanceTimeDuration(norm, 'day').days;
 	  ({
@@ -13153,7 +13153,7 @@
 	  }
 	  const dt = precalculatedPlainDateTime !== null && precalculatedPlainDateTime !== void 0 ? precalculatedPlainDateTime : GetPlainDateTimeFor(timeZoneRec, instant, calendarRec.receiver);
 	  if (DurationSign(years, months, weeks, 0, 0, 0, 0, 0, 0, 0) === 0) {
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    const intermediate = AddDaysToZonedDateTime(instant, dt, timeZoneRec, calendarRec.receiver, days, overflow).epochNs;
 	    return AddInstant(intermediate, norm);
 	  }
@@ -13214,7 +13214,7 @@
 	    plainRelativeTo,
 	    zonedRelativeTo,
 	    timeZoneRec
-	  } = ToRelativeTemporalObject(options);
+	  } = GetTemporalRelativeToOption(options);
 	  const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, ['dateAdd', 'dateUntil']);
 	  ({
 	    years,
@@ -14479,9 +14479,9 @@
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
 	    }
-	    const roundingIncrement = ToTemporalRoundingIncrement(roundTo);
-	    const roundingMode = ToTemporalRoundingMode(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnit(roundTo, 'smallestUnit', 'time', REQUIRED);
+	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
+	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED);
 	    const maximumIncrements = {
 	      hour: 24,
 	      minute: 1440,
@@ -14506,9 +14506,9 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const digits = ToFractionalSecondDigits(options);
-	    const roundingMode = ToTemporalRoundingMode(options, 'trunc');
-	    const smallestUnit = GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+	    const digits = GetTemporalFractionalSecondDigitsOption(options);
+	    const roundingMode = GetRoundingModeOption(options, 'trunc');
+	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
 	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
 	    let timeZone = options.timeZone;
 	    if (timeZone !== undefined) timeZone = ToTemporalTimeZoneSlotValue(timeZone);
@@ -14731,7 +14731,7 @@
 	    date = ToTemporalDate(date);
 	    duration = ToTemporalDuration(duration);
 	    options = GetOptionsObject(options);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    const norm = TimeDuration.normalize(GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS));
 	    const days = GetSlot(duration, DAYS) + BalanceTimeDuration(norm, 'day').days;
 	    const id = GetSlot(this, CALENDAR_ID);
@@ -14743,7 +14743,7 @@
 	    one = ToTemporalDate(one);
 	    two = ToTemporalDate(two);
 	    options = GetOptionsObject(options);
-	    let largestUnit = GetTemporalUnit(options, 'largestUnit', 'date', 'auto');
+	    let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit', 'date', 'auto');
 	    if (largestUnit === 'auto') largestUnit = 'day';
 	    const {
 	      years,
@@ -14928,7 +14928,7 @@
 	impl['iso8601'] = {
 	  dateFromFields(fields, options, calendarSlotValue) {
 	    fields = PrepareTemporalFields(fields, ['day', 'month', 'monthCode', 'year'], ['year', 'day']);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    fields = resolveNonLunisolarMonth(fields);
 	    let {
 	      year,
@@ -14944,7 +14944,7 @@
 	  },
 	  yearMonthFromFields(fields, options, calendarSlotValue) {
 	    fields = PrepareTemporalFields(fields, ['month', 'monthCode', 'year'], ['year']);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    fields = resolveNonLunisolarMonth(fields);
 	    let {
 	      year,
@@ -14958,7 +14958,7 @@
 	  },
 	  monthDayFromFields(fields, options, calendarSlotValue) {
 	    fields = PrepareTemporalFields(fields, ['day', 'month', 'monthCode', 'year'], ['day']);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    const referenceISOYear = 1972;
 	    fields = resolveNonLunisolarMonth(fields);
 	    let {
@@ -17170,7 +17170,7 @@
 	    const fieldNames = ['day', 'month', 'monthCode', 'year'];
 	    const extraFieldDescriptors = this.CalendarFieldDescriptors('date');
 	    fields = PrepareTemporalFields(fields, fieldNames, [], extraFieldDescriptors);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    const {
 	      year,
 	      month,
@@ -17185,7 +17185,7 @@
 	    const fieldNames = ['month', 'monthCode', 'year'];
 	    const extraFieldDescriptors = this.CalendarFieldDescriptors('year-month');
 	    fields = PrepareTemporalFields(fields, fieldNames, [], extraFieldDescriptors);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    const {
 	      year,
 	      month,
@@ -17205,7 +17205,7 @@
 	    const fieldNames = ['day', 'month', 'monthCode', 'year'];
 	    const extraFieldDescriptors = this.CalendarFieldDescriptors('date');
 	    fields = PrepareTemporalFields(fields, fieldNames, [], extraFieldDescriptors);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    const {
 	      year,
 	      month,
@@ -17570,7 +17570,7 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const showCalendar = ToCalendarNameOption(options);
+	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    return TemporalDateToString(this, showCalendar);
 	  }
 	  toJSON() {
@@ -17646,7 +17646,7 @@
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
 	    if (IsTemporalDate(item)) {
-	      ToTemporalOverflow(options); // validate and ignore
+	      GetTemporalOverflowOption(options); // validate and ignore
 	      return CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
 	    }
 	    return ToTemporalDate(item, options);
@@ -17864,9 +17864,9 @@
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
 	    }
-	    const roundingIncrement = ToTemporalRoundingIncrement(roundTo);
-	    const roundingMode = ToTemporalRoundingMode(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnit(roundTo, 'smallestUnit', 'time', REQUIRED, ['day']);
+	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
+	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED, ['day']);
 	    const maximumIncrements = {
 	      day: 1,
 	      hour: 24,
@@ -17916,10 +17916,10 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const showCalendar = ToCalendarNameOption(options);
-	    const digits = ToFractionalSecondDigits(options);
-	    const roundingMode = ToTemporalRoundingMode(options, 'trunc');
-	    const smallestUnit = GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+	    const showCalendar = GetTemporalShowCalendarNameOption(options);
+	    const digits = GetTemporalFractionalSecondDigitsOption(options);
+	    const roundingMode = GetRoundingModeOption(options, 'trunc');
+	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
 	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
 	    const {
 	      precision,
@@ -17950,7 +17950,7 @@
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 	    const timeZone = ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
 	    options = GetOptionsObject(options);
-	    const disambiguation = ToTemporalDisambiguation(options);
+	    const disambiguation = GetTemporalDisambiguationOption(options);
 	    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    const instant = GetInstantFor(timeZoneRec, this, disambiguation);
 	    return CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
@@ -17998,7 +17998,7 @@
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
 	    if (IsTemporalDateTime(item)) {
-	      ToTemporalOverflow(options); // validate and ignore
+	      GetTemporalOverflowOption(options); // validate and ignore
 	      return CreateTemporalDateTime(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, ISO_HOUR), GetSlot(item, ISO_MINUTE), GetSlot(item, ISO_SECOND), GetSlot(item, ISO_MILLISECOND), GetSlot(item, ISO_MICROSECOND), GetSlot(item, ISO_NANOSECOND), GetSlot(item, CALENDAR));
 	    }
 	    return ToTemporalDateTime(item, options);
@@ -18163,15 +18163,15 @@
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
 	    }
-	    let largestUnit = GetTemporalUnit(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
+	    let largestUnit = GetTemporalUnitValuedOption(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
 	    let {
 	      plainRelativeTo,
 	      zonedRelativeTo,
 	      timeZoneRec
-	    } = ToRelativeTemporalObject(roundTo);
-	    const roundingIncrement = ToTemporalRoundingIncrement(roundTo);
-	    const roundingMode = ToTemporalRoundingMode(roundTo, 'halfExpand');
-	    let smallestUnit = GetTemporalUnit(roundTo, 'smallestUnit', 'datetime', undefined);
+	    } = GetTemporalRelativeToOption(roundTo);
+	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
+	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
+	    let smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'datetime', undefined);
 	    let smallestUnitPresent = true;
 	    if (!smallestUnit) {
 	      smallestUnitPresent = false;
@@ -18292,8 +18292,8 @@
 	      plainRelativeTo,
 	      zonedRelativeTo,
 	      timeZoneRec
-	    } = ToRelativeTemporalObject(totalOf);
-	    const unit = GetTemporalUnit(totalOf, 'unit', 'datetime', REQUIRED);
+	    } = GetTemporalRelativeToOption(totalOf);
+	    const unit = GetTemporalUnitValuedOption(totalOf, 'unit', 'datetime', REQUIRED);
 	    let precalculatedPlainDateTime;
 	    const plainDateTimeOrRelativeToWillBeUsed = IsCalendarUnit(unit) || unit === 'day' || years !== 0 || months !== 0 || weeks !== 0 || days !== 0;
 	    if (zonedRelativeTo && plainDateTimeOrRelativeToWillBeUsed) {
@@ -18353,9 +18353,9 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const digits = ToFractionalSecondDigits(options);
-	    const roundingMode = ToTemporalRoundingMode(options, 'trunc');
-	    const smallestUnit = GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+	    const digits = GetTemporalFractionalSecondDigitsOption(options);
+	    const roundingMode = GetRoundingModeOption(options, 'trunc');
+	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
 	    if (smallestUnit === 'hour' || smallestUnit === 'minute') {
 	      throw new RangeError('smallestUnit must be a time unit other than "hours" or "minutes"');
 	    }
@@ -18454,7 +18454,7 @@
 	      plainRelativeTo,
 	      zonedRelativeTo,
 	      timeZoneRec
-	    } = ToRelativeTemporalObject(options);
+	    } = GetTemporalRelativeToOption(options);
 	    const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
 	    const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, ['dateAdd']);
 	    if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
@@ -18536,7 +18536,7 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const showCalendar = ToCalendarNameOption(options);
+	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    return TemporalMonthDayToString(this, showCalendar);
 	  }
 	  toJSON() {
@@ -18586,7 +18586,7 @@
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
 	    if (IsTemporalMonthDay(item)) {
-	      ToTemporalOverflow(options); // validate and ignore
+	      GetTemporalOverflowOption(options); // validate and ignore
 	      return CreateTemporalMonthDay(GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR), GetSlot(item, ISO_YEAR));
 	    }
 	    return ToTemporalMonthDay(item, options);
@@ -18749,7 +18749,7 @@
 	    }
 	    RejectTemporalLikeObject(temporalTimeLike);
 	    options = GetOptionsObject(options);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    const partialTime = ToTemporalTimeRecord(temporalTimeLike, 'partial');
 	    const fields = ToTemporalTimeRecord(this);
 	    let {
@@ -18798,9 +18798,9 @@
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
 	    }
-	    const roundingIncrement = ToTemporalRoundingIncrement(roundTo);
-	    const roundingMode = ToTemporalRoundingMode(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnit(roundTo, 'smallestUnit', 'time', REQUIRED);
+	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
+	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED);
 	    const MAX_INCREMENTS = {
 	      hour: 24,
 	      minute: 60,
@@ -18840,9 +18840,9 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const digits = ToFractionalSecondDigits(options);
-	    const roundingMode = ToTemporalRoundingMode(options, 'trunc');
-	    const smallestUnit = GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+	    const digits = GetTemporalFractionalSecondDigitsOption(options);
+	    const roundingMode = GetRoundingModeOption(options, 'trunc');
+	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
 	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
 	    const {
 	      precision,
@@ -18927,7 +18927,7 @@
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
-	    const overflow = ToTemporalOverflow(options);
+	    const overflow = GetTemporalOverflowOption(options);
 	    if (IsTemporalTime(item)) {
 	      return new PlainTime(GetSlot(item, ISO_HOUR), GetSlot(item, ISO_MINUTE), GetSlot(item, ISO_SECOND), GetSlot(item, ISO_MILLISECOND), GetSlot(item, ISO_MICROSECOND), GetSlot(item, ISO_NANOSECOND));
 	    }
@@ -19001,7 +19001,7 @@
 	    if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
 	    dateTime = ToTemporalDateTime(dateTime);
 	    options = GetOptionsObject(options);
-	    const disambiguation = ToTemporalDisambiguation(options);
+	    const disambiguation = GetTemporalDisambiguationOption(options);
 	    const timeZoneRec = new TimeZoneMethodRecord(this, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
 	    return GetInstantFor(timeZoneRec, dateTime, disambiguation);
 	  }
@@ -19164,7 +19164,7 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const showCalendar = ToCalendarNameOption(options);
+	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    return TemporalYearMonthToString(this, showCalendar);
 	  }
 	  toJSON() {
@@ -19214,7 +19214,7 @@
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
 	    if (IsTemporalYearMonth(item)) {
-	      ToTemporalOverflow(options); // validate and ignore
+	      GetTemporalOverflowOption(options); // validate and ignore
 	      return CreateTemporalYearMonth(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, CALENDAR), GetSlot(item, ISO_DAY));
 	    }
 	    return ToTemporalYearMonth(item, options);
@@ -19408,8 +19408,8 @@
 	    const partialZonedDateTime = PrepareTemporalFields(temporalZonedDateTimeLike, fieldNames, 'partial');
 	    fields = CalendarMergeFields(calendarRec, fields, partialZonedDateTime);
 	    fields = PrepareTemporalFields(fields, fieldNames, ['offset']);
-	    const disambiguation = ToTemporalDisambiguation(resolvedOptions);
-	    const offset = ToTemporalOffset(resolvedOptions, 'prefer');
+	    const disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
+	    const offset = GetTemporalOffsetOption(resolvedOptions, 'prefer');
 	    let {
 	      year,
 	      month,
@@ -19496,9 +19496,9 @@
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
 	    }
-	    const roundingIncrement = ToTemporalRoundingIncrement(roundTo);
-	    const roundingMode = ToTemporalRoundingMode(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnit(roundTo, 'smallestUnit', 'time', REQUIRED, ['day']);
+	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
+	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED, ['day']);
 	    const maximumIncrements = {
 	      day: 1,
 	      hour: 24,
@@ -19586,13 +19586,13 @@
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    options = GetOptionsObject(options);
-	    const showCalendar = ToCalendarNameOption(options);
-	    const digits = ToFractionalSecondDigits(options);
-	    const showOffset = ToShowOffsetOption(options);
-	    const roundingMode = ToTemporalRoundingMode(options, 'trunc');
-	    const smallestUnit = GetTemporalUnit(options, 'smallestUnit', 'time', undefined);
+	    const showCalendar = GetTemporalShowCalendarNameOption(options);
+	    const digits = GetTemporalFractionalSecondDigitsOption(options);
+	    const showOffset = GetTemporalShowOffsetOption(options);
+	    const roundingMode = GetRoundingModeOption(options, 'trunc');
+	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
 	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
-	    const showTimeZone = ToTimeZoneNameOption(options);
+	    const showTimeZone = GetTemporalShowTimeZoneNameOption(options);
 	    const {
 	      precision,
 	      unit,
@@ -19718,9 +19718,9 @@
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
 	    if (IsTemporalZonedDateTime(item)) {
-	      ToTemporalDisambiguation(options); // validate and ignore
-	      ToTemporalOffset(options, 'reject');
-	      ToTemporalOverflow(options);
+	      GetTemporalDisambiguationOption(options); // validate and ignore
+	      GetTemporalOffsetOption(options, 'reject');
+	      GetTemporalOverflowOption(options);
 	      return CreateTemporalZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
 	    }
 	    return ToTemporalZonedDateTime(item, options);
