@@ -1422,7 +1422,7 @@
           _calendarRec_: a Calendar Methods Record,
           _largestUnit_: a String,
           _options_: an ordinary Object for which the value of the [[Prototype]] internal slot is *null* and every property is a data property,
-          _precalculatedPlainDateTime_: a Temporal.PlainDateTime,
+          _startDateTime_: a Temporal.PlainDateTime,
         ): either a normal completion containing a Normalized Duration Record, or a throw completion
       </h1>
       <dl class="header">
@@ -1435,11 +1435,6 @@
       <emu-alg>
         1. If _ns1_ is _ns2_, then
           1. Return ! CreateNormalizedDurationRecord(0, 0, 0, 0, ZeroTimeDuration()).
-        1. If _precalculatedPlainDateTime_ is *undefined*, then
-          1. Let _startInstant_ be ! CreateTemporalInstant(_ns1_).
-          1. Let _startDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _startInstant_, _calendarRec_.[[Receiver]]).
-        1. Else,
-          1. Let _startDateTime_ be _precalculatedPlainDateTime_.
         1. Let _endInstant_ be ! CreateTemporalInstant(_ns2_).
         1. Let _endDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _endInstant_, _calendarRec_.[[Receiver]]).
         1. If _ns2_ - _ns1_ &lt; 0, let _sign_ be -1; else let _sign_ be 1.
