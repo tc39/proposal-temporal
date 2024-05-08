@@ -1103,8 +1103,6 @@ export namespace Temporal {
       dateTime: Temporal.PlainDateTime | PlainDateTimeLike | string,
       options?: ToInstantOptions
     ): Temporal.Instant;
-    getNextTransition(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
-    getPreviousTransition(startingPoint: Temporal.Instant | string): Temporal.Instant | null;
     getPossibleInstantsFor(dateTime: Temporal.PlainDateTime | PlainDateTimeLike | string): Temporal.Instant[];
     toString(): string;
     toJSON(): string;
@@ -1253,6 +1251,8 @@ export namespace Temporal {
       roundTo: RoundTo<'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.ZonedDateTime;
     startOfDay(): Temporal.ZonedDateTime;
+    nextTransition(): Temporal.ZonedDateTime | null;
+    previousTransition(): Temporal.ZonedDateTime | null;
     toInstant(): Temporal.Instant;
     toPlainDateTime(): Temporal.PlainDateTime;
     toPlainDate(): Temporal.PlainDate;

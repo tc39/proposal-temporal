@@ -201,38 +201,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.timezone.prototype.getnexttransition">
-      <h1>Temporal.TimeZone.prototype.getNextTransition ( _startingPoint_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return *null*.
-        1. Let _transition_ be GetNamedTimeZoneNextTransition(_timeZone_.[[Identifier]], _startingPoint_.[[Nanoseconds]]).
-        1. If _transition_ is *null*, return *null*.
-        1. Return ! CreateTemporalInstant(_transition_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.getprevioustransition">
-      <h1>Temporal.TimeZone.prototype.getPreviousTransition ( _startingPoint_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _startingPoint_ to ? ToTemporalInstant(_startingPoint_).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return *null*.
-        1. Let _transition_ be GetNamedTimeZonePreviousTransition(_timeZone_.[[Identifier]], _startingPoint_.[[Nanoseconds]]).
-        1. If _transition_ is *null*, return *null*.
-        1. Return ! CreateTemporalInstant(_transition_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.timezone.prototype.tostring">
       <h1>Temporal.TimeZone.prototype.toString ( )</h1>
       <p>

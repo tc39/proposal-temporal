@@ -525,6 +525,32 @@ export class ZonedDateTime {
     const instant = ES.GetInstantFor(timeZoneRec, dtStart, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZoneRec.receiver, calendar);
   }
+  nextTransition() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const id = ES.ToTemporalTimeZoneIdentifier(timeZone);
+
+    // Offset time zones or UTC have no transitions
+    if (ES.IsOffsetTimeZoneIdentifier(id) || id === 'UTC') {
+      return null;
+    }
+
+    const epochNanoseconds = ES.GetNamedTimeZoneNextTransition(id, GetSlot(this, EPOCHNANOSECONDS));
+    return epochNanoseconds === null ? null : new ZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
+  }
+  previousTransition() {
+    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+    const timeZone = GetSlot(this, TIME_ZONE);
+    const id = ES.ToTemporalTimeZoneIdentifier(timeZone);
+
+    // Offset time zones or UTC have no transitions
+    if (ES.IsOffsetTimeZoneIdentifier(id) || id === 'UTC') {
+      return null;
+    }
+
+    const epochNanoseconds = ES.GetNamedTimeZonePreviousTransition(id, GetSlot(this, EPOCHNANOSECONDS));
+    return epochNanoseconds === null ? null : new ZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
+  }
   toInstant() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const TemporalInstant = GetIntrinsic('%Temporal.Instant%');

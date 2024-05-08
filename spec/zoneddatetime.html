@@ -844,6 +844,40 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.nexttransition">
+      <h1>Temporal.ZonedDateTime.prototype.nextTransition ( )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. If IsOffsetTimeZoneIdentifier(_timeZone_) is *true* or _timeZone_ is *"UTC"*, return *null*.
+        1. Let _id_ be ? ToTemporalTimeZoneIdentifier(_timeZone_).
+        1. Let _transition_ be GetNamedTimeZoneNextTransition(_id_, _zonedDateTime_.[[Nanoseconds]]).
+        1. If _transition_ is *null*, return *null*.
+        1. Return ! CreateTemporalZonedDateTime(_transition_, _timeZone_, _zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.previoustransition">
+      <h1>Temporal.ZonedDateTime.prototype.previousTransition ( )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. If IsOffsetTimeZoneIdentifier(_timeZone_) is *true* or _timeZone_ is *"UTC"*, return *null*.
+        1. Let _id_ be ? ToTemporalTimeZoneIdentifier(_timeZone_).
+        1. Let _transition_ be GetNamedTimeZonePreviousTransition(_id_, _zonedDateTime_.[[Nanoseconds]]).
+        1. If _transition_ is *null*, return *null*.
+        1. Return ! CreateTemporalZonedDateTime(_transition_, _timeZone_, _zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toinstant">
       <h1>Temporal.ZonedDateTime.prototype.toInstant ( )</h1>
       <p>
