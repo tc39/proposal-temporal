@@ -527,6 +527,21 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-getdirectionoption" type="abstract operation">
+    <h1>
+      GetDirectionOption (
+        _options_: an Object,
+      ): either a normal completion containing either *"next"* or *"previous"*, or a throw completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>It fetches and validates the *"direction"* property from _options_, throwing if absent.</dd>
+    </dl>
+    <emu-alg>
+      1. Return ? GetOption(_options_, *"direction"*, ~string~, « *"next"*, *"previous"* », ~required~).
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-getroundingincrementoption" type="abstract operation">
     <h1>
       GetRoundingIncrementOption (

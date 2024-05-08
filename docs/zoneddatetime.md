@@ -1155,6 +1155,44 @@ zdt = Temporal.ZonedDateTime.from('2018-11-04T12:00-02:00[America/Sao_Paulo]').s
 ```
 <!-- prettier-ignore-end -->
 
+### zonedDateTime.**getTimeZoneTransition**(direction: string | object) : Temporal.ZonedDateTime | null
+
+**Parameters:**
+
+- `direction` (string | object): A required string or object to control the operation.
+  A string parameter is treated the same as an object whose `direction` property value is that string.
+  If an object is passed, the following properties are recognized:
+    - `direction` (required string): The direction in which to search for the closest UTC offset transition.
+      Valid values are `'next'` and `'previous'`.
+
+**Returns:** A `Temporal.ZonedDateTime` object representing the following UTC offset transition in `zonedDateTime`'s time zone in the given direction, or `null` if no transitions farther than `zonedDateTime` could be found.
+
+This method is used to calculate the closest past or future UTC offset transition from `zonedDateTime` for its time zone.
+A "transition" is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
+Transitions can also be caused by other political changes like a country permanently changing the UTC offset of its time zone.
+
+The returned `Temporal.ZonedDateTime` will represent the first nanosecond where the newer UTC offset is used, not the last nanosecond where the previous UTC offset is used.
+
+When no more transitions are expected in the given directoin, this method will return `null`.
+Some time zones (e.g., `Etc/GMT+5` or `-05:00`) have no offset transitions.
+If `zonedDateTime` has one of these time zones, this method will always return `null`.
+
+Example usage:
+
+```javascript
+// How long until the next offset change from now, in the current location?
+tz = Temporal.Now.timeZoneId();
+now = Temporal.Now.zonedDateTimeISO(tz);
+nextTransition = now.getTimeZoneTransition('next');
+duration = nextTransition.since(now);
+duration.toLocaleString(); // output will vary
+
+// How long until the previous offset change from now, in the current location?
+previousTransition = now.getTimeZoneTransition('previous');
+duration = now.since(previousTransition);
+duration.toLocaleString(); // output will vary
+```
+
 ### zonedDateTime.**equals**(_other_: Temporal.ZonedDateTime) : boolean
 
 **Parameters:**
