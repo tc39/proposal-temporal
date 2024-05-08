@@ -23,27 +23,26 @@
 function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'earlier') {
   // Handle the built-in modes first
   if (['compatible', 'earlier', 'later', 'reject'].includes(disambiguation)) {
-    return timeZone.getInstantFor(dateTime, { disambiguation });
+    return dateTime.toZonedDateTime(timeZone, { disambiguation }).toInstant();
   }
 
-  const possible = timeZone.getPossibleInstantsFor(dateTime);
+  const zdts = ['earlier', 'later'].map((disambiguation) => dateTime.toZonedDateTime(timeZone, { disambiguation }));
+  const instants = zdts.map((zdt) => zdt.toInstant()).reduce((a, b) => (a.equals(b) ? [a] : [a, b]));
 
   // Return only possibility if no disambiguation needed
-  if (possible.length === 1) return possible[0];
+  if (instants.length === 1) return instants[0];
 
   switch (disambiguation) {
     case 'clipEarlier':
-      if (possible.length === 0) {
-        const before = timeZone.getInstantFor(dateTime, { disambiguation: 'earlier' });
-        return timeZone.getNextTransition(before).subtract({ nanoseconds: 1 });
+      if (zdts[0].toPlainDateTime().equals(dateTime)) {
+        return instants[0];
       }
-      return possible[0];
+      return zdts[0].getTimeZoneTransition('next').subtract({ nanoseconds: 1 }).toInstant();
     case 'clipLater':
-      if (possible.length === 0) {
-        const before = timeZone.getInstantFor(dateTime, { disambiguation: 'earlier' });
-        return timeZone.getNextTransition(before);
+      if (zdts[1].toPlainDateTime().equals(dateTime)) {
+        return instants[1];
       }
-      return possible[possible.length - 1];
+      return zdts[0].getTimeZoneTransition('next').toInstant();
   }
   throw new RangeError(`invalid disambiguation ${disambiguation}`);
 }

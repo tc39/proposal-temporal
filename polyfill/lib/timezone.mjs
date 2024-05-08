@@ -120,36 +120,6 @@ export class TimeZone {
     );
     return possibleEpochNs.map((ns) => new Instant(ns));
   }
-  getNextTransition(startingPoint) {
-    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    startingPoint = ES.ToTemporalInstant(startingPoint);
-    const id = GetSlot(this, TIMEZONE_ID);
-
-    // Offset time zones or UTC have no transitions
-    if (ES.IsOffsetTimeZoneIdentifier(id) || id === 'UTC') {
-      return null;
-    }
-
-    let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-    const Instant = GetIntrinsic('%Temporal.Instant%');
-    epochNanoseconds = ES.GetNamedTimeZoneNextTransition(id, epochNanoseconds);
-    return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
-  }
-  getPreviousTransition(startingPoint) {
-    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    startingPoint = ES.ToTemporalInstant(startingPoint);
-    const id = GetSlot(this, TIMEZONE_ID);
-
-    // Offset time zones or UTC have no transitions
-    if (ES.IsOffsetTimeZoneIdentifier(id) || id === 'UTC') {
-      return null;
-    }
-
-    let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-    const Instant = GetIntrinsic('%Temporal.Instant%');
-    epochNanoseconds = ES.GetNamedTimeZonePreviousTransition(id, epochNanoseconds);
-    return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
-  }
   toString() {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, TIMEZONE_ID);

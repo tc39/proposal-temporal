@@ -876,6 +876,35 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal.zoneddatetime.prototype.gettimezonetransition">
+      <h1>Temporal.ZonedDateTime.prototype.getTimeZoneTransition ( _directionParam_ )</h1>
+      <p>
+        This method performs the following steps when called:
+      </p>
+      <emu-alg>
+        1. Let _zonedDateTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _id_ be ? ToTemporalTimeZoneIdentifier(_timeZone_).
+        1. If _directionParam_ is *undefined*, throw a *TypeError* exception.
+        1. If _directionParam_ is a String, then
+          1. Let _paramString_ be _directionParam_.
+          1. Set _directionParam_ to OrdinaryObjectCreate(*null*).
+          1. Perform ! CreateDataPropertyOrThrow(_directionParam_, *"direction"*, _paramString_).
+        1. Else,
+          1. Set _directionParam_ to ? GetOptionsObject(_directionParam_).
+        1. Let _direction_ be ? GetDirectionOption(_directionParam_).
+        1. If IsOffsetTimeZoneIdentifier(_id_) is *true* or _id_ is *"UTC"*, return *null*.
+        1. If _direction_ is *"next"*, then
+          1. Let _transition_ be GetNamedTimeZoneNextTransition(_id_, _zonedDateTime_.[[Nanoseconds]]).
+        1. Else,
+          1. Assert: _direction_ is *"previous"*.
+          1. Let _transition_ be GetNamedTimeZonePreviousTransition(_id_, _zonedDateTime_.[[Nanoseconds]]).
+        1. If _transition_ is *null*, return *null*.
+        1. Return ! CreateTemporalZonedDateTime(_transition_, _timeZone_, _zonedDateTime_.[[Calendar]]).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toinstant">
       <h1>Temporal.ZonedDateTime.prototype.toInstant ( )</h1>
       <p>

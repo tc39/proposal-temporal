@@ -428,13 +428,13 @@ Take the difference between two `Temporal.Instant` instances as a `Temporal.Dura
 ```
 <!-- prettier-ignore-end -->
 
-### Nearest offset transition in a time zone
+### Next offset transition in a time zone
 
-Map a `Temporal.Instant` instance and a `Temporal.TimeZone` object into a `Temporal.Instant` instance representing the nearest following exact time at which there is an offset transition in the time zone (e.g., for setting reminders).
+Map a `Temporal.ZonedDateTime` instance into another `Temporal.ZonedDateTime` instance representing the nearest following exact time at which there is an offset transition in the time zone (e.g., for setting reminders).
 
 <!-- prettier-ignore-start -->
 ```javascript
-{{cookbook/getInstantOfNearestOffsetTransitionToInstant.mjs}}
+{{cookbook/getNextOffsetTransitionFromExactTime.mjs}}
 ```
 <!-- prettier-ignore-end -->
 

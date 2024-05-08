@@ -909,6 +909,10 @@ export function GetTemporalShowOffsetOption(options) {
   return GetOption(options, 'offset', ['auto', 'never'], 'auto');
 }
 
+export function GetDirectionOption(options) {
+  return GetOption(options, 'direction', ['next', 'previous'], REQUIRED);
+}
+
 export function GetRoundingIncrementOption(options) {
   let increment = options.roundingIncrement;
   if (increment === undefined) return 1;
@@ -5584,6 +5588,7 @@ export function GetOption(options, property, allowedValues, fallback) {
     }
     return value;
   }
+  if (fallback === REQUIRED) throw new RangeError(`${property} option is required`);
   return fallback;
 }
 
