@@ -993,30 +993,6 @@
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
-
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.getcalendar">
-      <h1>Temporal.ZonedDateTime.prototype.getCalendar ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ToTemporalCalendarObject(_zonedDateTime_.[[Calendar]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.gettimezone">
-      <h1>Temporal.ZonedDateTime.prototype.getTimeZone ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ToTemporalTimeZoneObject(_zonedDateTime_.[[TimeZone]]).
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-zoneddatetime-instances">
