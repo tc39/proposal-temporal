@@ -813,13 +813,6 @@ date.toPlainYearMonth(); // => 2006-08
 date.toPlainMonthDay(); // => 08-24
 ```
 
-### date.**getCalendar**(): object
-
-**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `date` is reckoned.
-
-This method is mainly useful if you need an object on which to call calendar methods.
-Most code will not need to use it.
-
 ### date.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `date` is reckoned.

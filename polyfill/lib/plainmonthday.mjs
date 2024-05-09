@@ -108,10 +108,6 @@ export class PlainMonthDay {
       isoYear: GetSlot(this, ISO_YEAR)
     };
   }
-  getCalendar() {
-    if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-    return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
-  }
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);

@@ -642,13 +642,6 @@ ym = Temporal.PlainYearMonth.from('2019-06');
 ym.toPlainDate({ day: 24 }); // => 2019-06-24
 ```
 
-### yearMonth.**getCalendar**(): object
-
-**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `yearMonth` is reckoned.
-
-This method is mainly useful if you need an object on which to call calendar methods.
-Most code will not need to use it.
-
 ### yearMonth.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) that `yearMonth` is reckoned in.

@@ -1410,20 +1410,6 @@ zdt.toPlainDate().toPlainYearMonth(); // => 1995-12
 zdt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
 
-### zonedDateTime.**getCalendar**(): object
-
-**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `zonedDateTime` is reckoned.
-
-This method is mainly useful if you need an object on which to call calendar methods.
-Most code will not need to use it.
-
-### zonedDateTime.**getTimeZone**(): object
-
-**Returns:** a `Temporal.TimeZone` instance or plain object representing the time zone in which `zonedDateTime` is reckoned.
-
-This method is mainly useful if you need an object on which to call time zone methods.
-Most code will not need to use it.
-
 ### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: string | object, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `offset` property, and the calendar and time zone (which are usually strings, but may be objects) in which `zonedDateTime` is reckoned.
