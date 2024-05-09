@@ -588,14 +588,6 @@ export class ZonedDateTime {
       timeZone: timeZoneRec.receiver
     };
   }
-  getCalendar() {
-    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
-  }
-  getTimeZone() {
-    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.ToTemporalTimeZoneObject(GetSlot(this, TIME_ZONE));
-  }
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);

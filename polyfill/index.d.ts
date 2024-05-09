@@ -798,7 +798,6 @@ export namespace Temporal {
     readonly monthCode: string;
     readonly day: number;
     readonly calendarId: string;
-    getCalendar(): CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number | undefined;
@@ -909,7 +908,6 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     readonly calendarId: string;
-    getCalendar(): CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number | undefined;
@@ -970,7 +968,6 @@ export namespace Temporal {
     readonly monthCode: string;
     readonly day: number;
     readonly calendarId: string;
-    getCalendar(): CalendarProtocol;
     equals(other: Temporal.PlainMonthDay | PlainMonthDayLike | string): boolean;
     with(monthDayLike: PlainMonthDayLike, options?: AssignmentOptions): Temporal.PlainMonthDay;
     toPlainDate(year: { year: number }): Temporal.PlainDate;
@@ -1141,7 +1138,6 @@ export namespace Temporal {
     readonly month: number;
     readonly monthCode: string;
     readonly calendarId: string;
-    getCalendar(): CalendarProtocol;
     readonly daysInMonth: number;
     readonly daysInYear: number;
     readonly monthsInYear: number;
@@ -1218,9 +1214,7 @@ export namespace Temporal {
     readonly microsecond: number;
     readonly nanosecond: number;
     readonly timeZoneId: string;
-    getTimeZone(): TimeZoneProtocol;
     readonly calendarId: string;
-    getCalendar(): CalendarProtocol;
     readonly dayOfWeek: number;
     readonly dayOfYear: number;
     readonly weekOfYear: number | undefined;

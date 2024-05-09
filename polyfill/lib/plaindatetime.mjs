@@ -383,10 +383,6 @@ export class PlainDateTime {
       isoYear: GetSlot(this, ISO_YEAR)
     };
   }
-  getCalendar() {
-    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
-  }
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);

@@ -223,10 +223,6 @@ export class PlainDate {
       isoYear: GetSlot(this, ISO_YEAR)
     };
   }
-  getCalendar() {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.ToTemporalCalendarObject(GetSlot(this, CALENDAR));
-  }
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);

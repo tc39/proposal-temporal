@@ -941,13 +941,6 @@ dt.toPlainDate().toPlainYearMonth(); // => 1995-12
 dt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
 
-### datetime.**getCalendar**(): object
-
-**Returns:** a `Temporal.Calendar` instance or plain object representing the calendar in which `datetime` is reckoned.
-
-This method is mainly useful if you need an object on which to call calendar methods.
-Most code will not need to use it.
-
 ### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `datetime` is reckoned.
