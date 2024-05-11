@@ -47,11 +47,6 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, TIMEZONE_ID);
   }
-  equals(other) {
-    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    const timeZoneSlotValue = ES.ToTemporalTimeZoneSlotValue(other);
-    return ES.TimeZoneEquals(this, timeZoneSlotValue);
-  }
   getOffsetNanosecondsFor(instant) {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     instant = ES.ToTemporalInstant(instant);
