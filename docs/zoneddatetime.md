@@ -1223,6 +1223,30 @@ To ignore both time zones and calendars, compare the instants of both:
 zdt.toInstant().equals(other.toInstant());
 ```
 
+To compare time zone IDs directly, compare two ZonedDateTimes with the same instant and calendar:
+
+```javascript
+zdt.withTimeZone(id1).equals(zdt.withTimeZone(id2));
+```
+
+The time zones of _zonedDateTime_ and _other_ are considered equivalent by the following algorithm:
+
+- If the time zone objects are the same object, then the time zones are equivalent.
+- Otherwise, the IDs are compared.
+  If any of the following conditions are true, then the time zones are equivalent:
+  - Both string identifiers are Zone or Link names in the [IANA Time Zone Database](https://www.iana.org/time-zones), and they resolve to the same Zone name.
+    This resolution is case-insensitive.
+  - Both identifiers are numeric offset time zone identifiers like "+05:30", and they represent the same offset.
+- Otherwise, the time zones are not equivalent.
+
+Note that "resolve to the same Zone name" noted above is behavior that can vary between ECMAScript and other consumers of the IANA Time Zone Database.
+ECMAScript implementations generally do not allow identifiers to be equivalent if they represent different <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha-2</a> country codes.
+However, non-ECMAScript platforms may merge Zone names across country boundaries.
+See [above](#variation-between-ecmascript-and-other-consumers-of-the-iana-time-zone-database) to learn more about this variation.
+
+Time zones that resolve to different Zones in the IANA Time Zone Database are not equivalent, even if those Zones always use the same offsets.
+Offset time zones and IANA time zones are also never equivalent.
+
 Example usage:
 
 ```javascript
@@ -1230,6 +1254,21 @@ zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/P
 zdt2 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+01:00[Europe/Brussels]');
 zdt1.equals(zdt2); // => false (same offset but different time zones)
 zdt1.equals(zdt1); // => true
+
+// To compare time zone IDs, use withTimeZone() with each ID on the same
+// ZonedDateTime instance, and use equals() to compare
+kolkata = zdt1.withTimeZone('Asia/Kolkata');
+kolkata.equals(zdt.withTimeZone('Asia/Calcutta')); // => true
+
+// Offset time zones are never equivalent to named time zones
+kolkata.equals(zdt.withTimeZone('+05:30')); // => false
+zeroOffset = zdt1.withTimeZone('+00:00');
+zeroOffset.equals(zdt1.withTimeZone('UTC'));  // => false
+
+// For offset time zones, any valid format is accepted
+zeroOffset.equals(zdt1.withTimeZone('+00:00')); // => true
+zeroOffset.equals(zdt1.withTimeZone('+0000')); // => true
+zeroOffset.equals(zdt1.withTimeZone('+00')); // => true
 ```
 
 ### zonedDateTime.**toString**(_options_?: object) : string
