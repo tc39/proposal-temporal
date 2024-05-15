@@ -1338,12 +1338,12 @@
         1. Let _timeDuration_ be DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_timeDuration_).
         1. Let _dateSign_ be CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
-        1. Let _adjustedDate_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
+        1. Let _adjustedDate_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
         1. If _timeSign_ = -_dateSign_, then
-          1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] - _timeSign_).
+          1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] + _timeSign_).
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, -_timeSign_).
-        1. Let _date1_ be ! CreateTemporalDate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]], _calendarRec_.[[Receiver]]).
-        1. Let _date2_ be ! CreateTemporalDate(_y2_, _mon2_, _d2_, _calendarRec_.[[Receiver]]).
+        1. Let _date1_ be ! CreateTemporalDate(_y1_, _mon1_, _d1_, _calendarRec_.[[Receiver]]).
+        1. Let _date2_ be ! CreateTemporalDate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]], _calendarRec_.[[Receiver]]).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
         1. Let _untilOptions_ be ! SnapshotOwnProperties(_options_, *null*).
         1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, _dateLargestUnit_).
