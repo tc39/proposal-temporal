@@ -1235,7 +1235,7 @@
 
       DateYear :::
           DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          TemporalSign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          ASCIISign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
       DateMonth :::
           `0` NonZeroDigit
@@ -1273,11 +1273,11 @@
           ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
 
       UTCOffset[SubMinutePrecision] :::
-          TemporalSign Hour
-          TemporalSign Hour TimeSeparator[+Extended] MinuteSecond
-          TemporalSign Hour TimeSeparator[~Extended] MinuteSecond
-          [+SubMinutePrecision] TemporalSign Hour TimeSeparator[+Extended] MinuteSecond TimeSeparator[+Extended] MinuteSecond TemporalDecimalFraction?
-          [+SubMinutePrecision] TemporalSign Hour TimeSeparator[~Extended] MinuteSecond TimeSeparator[~Extended] MinuteSecond TemporalDecimalFraction?
+          ASCIISign Hour
+          ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
+          ASCIISign Hour TimeSeparator[~Extended] MinuteSecond
+          [+SubMinutePrecision] ASCIISign Hour TimeSeparator[+Extended] MinuteSecond TimeSeparator[+Extended] MinuteSecond TemporalDecimalFraction?
+          [+SubMinutePrecision] ASCIISign Hour TimeSeparator[~Extended] MinuteSecond TimeSeparator[~Extended] MinuteSecond TemporalDecimalFraction?
 
       DateTimeUTCOffset[Z] :::
           [+Z] UTCDesignator
@@ -1402,8 +1402,8 @@
           DurationDaysPart DurationTime?
 
       Duration :::
-          TemporalSign? DurationDesignator DurationDate
-          TemporalSign? DurationDesignator DurationTime
+          ASCIISign? DurationDesignator DurationDate
+          ASCIISign? DurationDesignator DurationTime
 
       TemporalInstantString :::
           Date DateTimeSeparator Time DateTimeUTCOffset[+Z] TimeZoneAnnotation? Annotations?
@@ -1495,11 +1495,11 @@
       </ul>
       <emu-grammar>
         DateYear :::
-          TemporalSign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+          ASCIISign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
       </emu-grammar>
       <ul>
         <li>
-          It is a Syntax Error if |DateYear| is *"-000000"* or *"−000000"* (U+2212 MINUS SIGN followed by `000000`).
+          It is a Syntax Error if |DateYear| is *"-000000"*.
         </li>
       </ul>
     </emu-clause>
@@ -1611,7 +1611,6 @@
       1. If _parseResult_ is not a Parse Node, throw a *RangeError* exception.
       1. NOTE: Applications of StringToNumber below do not lose precision, since each of the parsed values is guaranteed to be a sufficiently short string of decimal digits.
       1. Let each of _year_, _month_, _day_, _hour_, _minute_, _second_, and _fSeconds_ be the source text matched by the respective |DateYear|, |DateMonth|, |DateDay|, the first |Hour|, the first |MinuteSecond|, |TimeSecond|, and the first |TemporalDecimalFraction| Parse Node contained within _parseResult_, or an empty sequence of code points if not present.
-      1. If the first code point of _year_ is U+2212 (MINUS SIGN), replace the first code point with U+002D (HYPHEN-MINUS).
       1. Let _yearMV_ be ℝ(StringToNumber(CodePointsToString(_year_))).
       1. If _month_ is empty, then
         1. Let _monthMV_ be 1.
@@ -1767,7 +1766,7 @@
     <emu-alg>
       1. Let _duration_ be ParseText(StringToCodePoints(_isoString_), |TemporalDurationString|).
       1. If _duration_ is a List of errors, throw a *RangeError* exception.
-      1. Let _sign_ be the source text matched by the |TemporalSign| Parse Node contained within _duration_, or an empty sequence of code points if not present.
+      1. Let _sign_ be the source text matched by the |ASCIISign| Parse Node contained within _duration_, or an empty sequence of code points if not present.
       1. If _duration_ contains a |DurationYearsPart| Parse Node, then
         1. Let _yearsNode_ be that |DurationYearsPart| Parse Node contained within _duration_.
         1. Let _years_ be the source text matched by the |DecimalDigits| Parse Node contained within _yearsNode_.
@@ -1838,7 +1837,7 @@
         1. Let _millisecondsMV_ be remainder(_secondsMV_, 1) &times; 1000.
       1. Let _microsecondsMV_ be remainder(_millisecondsMV_, 1) &times; 1000.
       1. Let _nanosecondsMV_ be remainder(_microsecondsMV_, 1) &times; 1000.
-      1. If _sign_ contains the code point U+002D (HYPHEN-MINUS) or U+2212 (MINUS SIGN), then
+      1. If _sign_ contains the code point U+002D (HYPHEN-MINUS), then
         1. Let _factor_ be -1.
       1. Else,
         1. Let _factor_ be 1.
