@@ -585,13 +585,8 @@
     <emu-clause id="sec-temporal.plaindate.prototype.tojson">
       <h1>Temporal.PlainDate.prototype.toJSON ( )</h1>
       <p>
-        This method performs the following steps when called:
+        The value of the `Temporal.PlainDate.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return ? TemporalDateToString(_temporalDate_, *"auto"*).
-      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.plaindate.prototype.valueof">

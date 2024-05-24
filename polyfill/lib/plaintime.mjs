@@ -203,10 +203,6 @@ export class PlainTime {
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
   }
-  toJSON() {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return TemporalTimeToString(this, 'auto');
-  }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
@@ -261,6 +257,12 @@ export class PlainTime {
 
 MakeIntrinsicClass(PlainTime, 'Temporal.PlainTime');
 Object.defineProperties(PlainTime.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  },
   valueOf: {
     enumerable: false,
     writable: true,

@@ -581,26 +581,6 @@ export class Duration {
     const normSeconds = TimeDuration.normalize(0, 0, seconds, milliseconds, microseconds, nanoseconds);
     return ES.TemporalDurationToString(years, months, weeks, days, hours, minutes, normSeconds, precision);
   }
-  toJSON() {
-    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const normSeconds = TimeDuration.normalize(
-      0,
-      0,
-      GetSlot(this, SECONDS),
-      GetSlot(this, MILLISECONDS),
-      GetSlot(this, MICROSECONDS),
-      GetSlot(this, NANOSECONDS)
-    );
-    return ES.TemporalDurationToString(
-      GetSlot(this, YEARS),
-      GetSlot(this, MONTHS),
-      GetSlot(this, WEEKS),
-      GetSlot(this, DAYS),
-      GetSlot(this, HOURS),
-      GetSlot(this, MINUTES),
-      normSeconds
-    );
-  }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
@@ -733,6 +713,12 @@ export class Duration {
 
 MakeIntrinsicClass(Duration, 'Temporal.Duration');
 Object.defineProperties(Duration.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  },
   valueOf: {
     enumerable: false,
     writable: true,

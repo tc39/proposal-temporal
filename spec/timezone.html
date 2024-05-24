@@ -249,14 +249,8 @@
     <emu-clause id="sec-temporal.timezone.prototype.tojson">
       <h1>Temporal.TimeZone.prototype.toJSON ( )</h1>
       <p>
-        This method performs the following steps when called:
+        The value of the `Temporal.TimeZone.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return FormatOffsetTimeZoneIdentifier(_timeZone_.[[OffsetMinutes]]).
-        1. Return _timeZone_.[[Identifier]].
-      </emu-alg>
     </emu-clause>
   </emu-clause>
 

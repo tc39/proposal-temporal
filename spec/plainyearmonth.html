@@ -369,13 +369,8 @@
     <emu-clause id="sec-temporal.plainyearmonth.prototype.tojson">
       <h1>Temporal.PlainYearMonth.prototype.toJSON ( )</h1>
       <p>
-        This method performs the following steps when called:
+        The value of the `Temporal.PlainYearMonth.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _yearMonth_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? TemporalYearMonthToString(_yearMonth_, *"auto"*).
-      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.valueof">

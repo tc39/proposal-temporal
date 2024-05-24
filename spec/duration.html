@@ -573,14 +573,8 @@
     <emu-clause id="sec-temporal.duration.prototype.tojson">
       <h1>Temporal.Duration.prototype.toJSON ( )</h1>
       <p>
-        The `Temporal.Duration.prototype.toJSON` method performs the following steps when called:
+        The value of the `Temporal.Duration.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _duration_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Let _normSeconds_ be NormalizeTimeDuration(0, 0, _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Return TemporalDurationToString(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _normSeconds_, *"auto"*).
-      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.duration.prototype.tolocalestring">

@@ -289,4 +289,17 @@
       </emu-alg>
     </emu-clause>
   </emu-clause>
+
+  <emu-clause id="sec-temporal-tojson">
+    <h1>toJSON ( )</h1>
+    <p>This function object is %TemporalToJSON%. It performs the following steps when called:</p>
+    <emu-alg>
+      1. Let _object_ be the *this* value.
+      1. If _object_ does not have an [[InitializedTemporalCalendar]], [[InitializedTemporalDuration]], [[InitializedTemporalInstant]], [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], [[InitializedTemporalTimeZone]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+        1. Throw a *TypeError* exception.
+      1. Let _toString_ be ? GetMethod(_object_, *"toString"*).
+      1. If _toString_ is *null*, or *undefined*, throw a *TypeError* exception.
+      1. Return ? Call(_toString_, _object_, « »).
+    </emu-alg>
+  </emu-clause>
 </emu-clause>

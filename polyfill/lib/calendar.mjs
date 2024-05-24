@@ -320,10 +320,6 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, CALENDAR_ID);
   }
-  toJSON() {
-    if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, CALENDAR_ID);
-  }
   static from(item) {
     const calendarSlotValue = ES.ToTemporalCalendarSlotValue(item);
     return ES.ToTemporalCalendarObject(calendarSlotValue);
@@ -331,6 +327,14 @@ export class Calendar {
 }
 
 MakeIntrinsicClass(Calendar, 'Temporal.Calendar');
+Object.defineProperties(Calendar.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  }
+});
 DefineIntrinsic('Temporal.Calendar.from', Calendar.from);
 DefineIntrinsic('Temporal.Calendar.prototype.dateAdd', Calendar.prototype.dateAdd);
 DefineIntrinsic('Temporal.Calendar.prototype.dateFromFields', Calendar.prototype.dateFromFields);

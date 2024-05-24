@@ -510,10 +510,6 @@ export class ZonedDateTime {
 
     return formatter.format(GetSlot(this, INSTANT));
   }
-  toJSON() {
-    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.TemporalZonedDateTimeToString(this, 'auto');
-  }
   startOfDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const timeZoneRec = new TimeZoneMethodRecord(GetSlot(this, TIME_ZONE), [
@@ -610,6 +606,12 @@ export class ZonedDateTime {
 
 MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');
 Object.defineProperties(ZonedDateTime.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  },
   valueOf: {
     enumerable: false,
     writable: true,

@@ -108,10 +108,6 @@ export class Instant {
     const roundedInstant = new Instant(roundedNs);
     return ES.TemporalInstantToString(roundedInstant, timeZone, precision);
   }
-  toJSON() {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    return ES.TemporalInstantToString(this, undefined, 'auto');
-  }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
@@ -152,6 +148,12 @@ export class Instant {
 
 MakeIntrinsicClass(Instant, 'Temporal.Instant');
 Object.defineProperties(Instant.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  },
   valueOf: {
     enumerable: false,
     writable: true,

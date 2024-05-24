@@ -832,13 +832,8 @@
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tojson">
       <h1>Temporal.ZonedDateTime.prototype.toJSON ( )</h1>
       <p>
-        This method performs the following steps when called:
+        The value of the `Temporal.ZonedDateTime.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
-      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.valueof">

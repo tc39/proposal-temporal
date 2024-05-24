@@ -354,10 +354,6 @@ export class PlainDateTime {
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     return ES.TemporalDateTimeToString(this, precision, showCalendar, { unit, increment, roundingMode });
   }
-  toJSON() {
-    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.TemporalDateTimeToString(this, 'auto');
-  }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
@@ -447,6 +443,12 @@ export class PlainDateTime {
 
 MakeIntrinsicClass(PlainDateTime, 'Temporal.PlainDateTime');
 Object.defineProperties(PlainDateTime.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  },
   valueOf: {
     enumerable: false,
     writable: true,
