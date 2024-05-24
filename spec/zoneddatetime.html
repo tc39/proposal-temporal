@@ -672,25 +672,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.withplaindate">
-      <h1>Temporal.ZonedDateTime.prototype.withPlainDate ( _plainDateLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _plainDate_ be ? ToTemporalDate(_plainDateLike_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-        1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _zonedDateTime_.[[Calendar]]).
-        1. Let _calendar_ be ? ConsolidateCalendars(_zonedDateTime_.[[Calendar]], _plainDate_.[[Calendar]]).
-        1. Let _resultPlainDateTime_ be ? CreateTemporalDateTime(_plainDate_.[[ISOYear]], _plainDate_.[[ISOMonth]], _plainDate_.[[ISODay]], _plainDateTime_.[[ISOHour]], _plainDateTime_.[[ISOMinute]], _plainDateTime_.[[ISOSecond]], _plainDateTime_.[[ISOMillisecond]], _plainDateTime_.[[ISOMicrosecond]], _plainDateTime_.[[ISONanosecond]], _calendar_).
-        1. Set _instant_ to ? GetInstantFor(_timeZoneRec_, _resultPlainDateTime_, *"compatible"*).
-        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZoneRec_.[[Receiver]], _calendar_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withtimezone">
       <h1>Temporal.ZonedDateTime.prototype.withTimeZone ( _timeZoneLike_ )</h1>
       <p>

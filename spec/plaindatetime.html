@@ -463,20 +463,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.plaindatetime.prototype.withplaindate">
-      <h1>Temporal.PlainDateTime.prototype.withPlainDate ( _plainDateLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _dateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _plainDate_ be ? ToTemporalDate(_plainDateLike_).
-        1. Let _calendar_ be ? ConsolidateCalendars(_dateTime_.[[Calendar]], _plainDate_.[[Calendar]]).
-        1. Return ? CreateTemporalDateTime(_plainDate_.[[ISOYear]], _plainDate_.[[ISOMonth]], _plainDate_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _calendar_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.plaindatetime.prototype.withcalendar">
       <h1>Temporal.PlainDateTime.prototype.withCalendar ( _calendarLike_ )</h1>
       <p>
