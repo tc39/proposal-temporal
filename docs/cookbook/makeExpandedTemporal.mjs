@@ -156,23 +156,11 @@ class ExpandedPlainDateTime extends Temporal.PlainDateTime {
   }
 }
 
-class ExpandedPlainTime extends Temporal.PlainTime {
-  toPlainDateTime(date) {
-    return ExpandedPlainDateTime._convert(super.toPlainDateTime(date), date.year);
-  }
-
-  static from(item) {
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = super.from(item);
-    return new ExpandedPlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  }
-}
-
 function makeExpandedTemporal() {
   return {
     ...Temporal,
     PlainDate: ExpandedPlainDate,
-    PlainDateTime: ExpandedPlainDateTime,
-    PlainTime: ExpandedPlainTime
+    PlainDateTime: ExpandedPlainDateTime
   };
 }
 
@@ -180,7 +168,5 @@ const ExpandedTemporal = makeExpandedTemporal();
 
 const date = ExpandedTemporal.PlainDate.from({ year: 635427810, month: 2, day: 2 });
 assert.equal(date.toString(), '+0635427810-02-02');
-const dateTime = ExpandedTemporal.PlainTime.from('10:23').toPlainDateTime(date);
-assert.equal(dateTime.toString(), '+0635427810-02-02T10:23:00');
 const dateFromString = ExpandedTemporal.PlainDateTime.from('-0075529144-02-29T12:53:27.55');
 assert.equal(dateFromString.year, -75529144n);

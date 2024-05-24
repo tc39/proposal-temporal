@@ -3,20 +3,14 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { TimeZoneMethodRecord } from './methodrecord.mjs';
 
 import {
-  ISO_YEAR,
-  ISO_MONTH,
-  ISO_DAY,
   ISO_HOUR,
   ISO_MINUTE,
   ISO_SECOND,
   ISO_MILLISECOND,
   ISO_MICROSECOND,
   ISO_NANOSECOND,
-  CALENDAR,
-  EPOCHNANOSECONDS,
   CreateSlots,
   GetSlot,
   SetSlot
@@ -221,81 +215,6 @@ export class PlainTime {
     ES.ValueOfThrows('PlainTime');
   }
 
-  toPlainDateTime(temporalDate) {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-
-    temporalDate = ES.ToTemporalDate(temporalDate);
-    const year = GetSlot(temporalDate, ISO_YEAR);
-    const month = GetSlot(temporalDate, ISO_MONTH);
-    const day = GetSlot(temporalDate, ISO_DAY);
-    const calendar = GetSlot(temporalDate, CALENDAR);
-
-    const hour = GetSlot(this, ISO_HOUR);
-    const minute = GetSlot(this, ISO_MINUTE);
-    const second = GetSlot(this, ISO_SECOND);
-    const millisecond = GetSlot(this, ISO_MILLISECOND);
-    const microsecond = GetSlot(this, ISO_MICROSECOND);
-    const nanosecond = GetSlot(this, ISO_NANOSECOND);
-
-    return ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
-  }
-  toZonedDateTime(item) {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-
-    if (ES.Type(item) !== 'Object') {
-      throw new TypeError('invalid argument');
-    }
-
-    const dateLike = item.plainDate;
-    if (dateLike === undefined) {
-      throw new TypeError('missing date property');
-    }
-    const temporalDate = ES.ToTemporalDate(dateLike);
-
-    const timeZoneLike = item.timeZone;
-    if (timeZoneLike === undefined) {
-      throw new TypeError('missing timeZone property');
-    }
-    const timeZone = ES.ToTemporalTimeZoneSlotValue(timeZoneLike);
-
-    const year = GetSlot(temporalDate, ISO_YEAR);
-    const month = GetSlot(temporalDate, ISO_MONTH);
-    const day = GetSlot(temporalDate, ISO_DAY);
-    const calendar = GetSlot(temporalDate, CALENDAR);
-    const hour = GetSlot(this, ISO_HOUR);
-    const minute = GetSlot(this, ISO_MINUTE);
-    const second = GetSlot(this, ISO_SECOND);
-    const millisecond = GetSlot(this, ISO_MILLISECOND);
-    const microsecond = GetSlot(this, ISO_MICROSECOND);
-    const nanosecond = GetSlot(this, ISO_NANOSECOND);
-
-    const dt = ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar
-    );
-    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
-    const instant = ES.GetInstantFor(timeZoneRec, dt, 'compatible');
-    return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
-  }
   getISOFields() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return {
