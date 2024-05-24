@@ -119,16 +119,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.now.plaindatetime">
-      <h1>Temporal.Now.plainDateTime ( _calendarLike_ [ , _temporalTimeZoneLike_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Return ? SystemDateTime(_temporalTimeZoneLike_, _calendarLike_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.now.plaindatetimeiso">
       <h1>Temporal.Now.plainDateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>
@@ -139,16 +129,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.now.zoneddatetime">
-      <h1>Temporal.Now.zonedDateTime ( _calendarLike_ [ , _temporalTimeZoneLike_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_, _calendarLike_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.now.zoneddatetimeiso">
       <h1>Temporal.Now.zonedDateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>
@@ -156,17 +136,6 @@
       </p>
       <emu-alg>
         1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_, *"iso8601"*).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.now.plaindate">
-      <h1>Temporal.Now.plainDate ( _calendarLike_ [ , _temporalTimeZoneLike_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, _calendarLike_).
-        1. Return ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
