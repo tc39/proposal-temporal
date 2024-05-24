@@ -922,29 +922,23 @@ If the result is earlier or later than the range that `Temporal.ZonedDateTime` c
 
 **Returns:** a `Temporal.PlainDate` object that is the same as the date portion of `datetime`.
 
-### datetime.**toPlainYearMonth**() : Temporal.PlainYearMonth
-
-**Returns:** a `Temporal.PlainYearMonth` object that is the same as the year and month of `datetime`.
-
-### datetime.**toPlainMonthDay**() : Temporal.PlainMonthDay
-
-**Returns:** a `Temporal.PlainMonthDay` object that is the same as the month and day of `datetime`.
-
 ### datetime.**toPlainTime**() : Temporal.PlainTime
 
 **Returns:** a `Temporal.PlainTime` object that is the same as the wall-clock time portion of `datetime`.
 
-The above four methods can be used to convert `Temporal.PlainDateTime` into a `Temporal.PlainDate`, `Temporal.PlainYearMonth`, `Temporal.PlainMonthDay`, or `Temporal.PlainTime` respectively.
+The above two methods can be used to convert `Temporal.PlainDateTime` into a `Temporal.PlainDate` or `Temporal.PlainTime` respectively.
 The converted object carries a copy of all the relevant fields of `datetime` (for example, in `toPlainDate()`, the `year`, `month`, and `day` properties are copied.)
+
+To convert to `Temporal.PlainYearMonth` or `Temporal.PlainMonthDay`, first use `toPlainDate()` and go from there.
 
 Usage example:
 
 ```javascript
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
 dt.toPlainDate(); // => 1995-12-07
-dt.toPlainYearMonth(); // => 1995-12
-dt.toPlainMonthDay(); // => 12-07
 dt.toPlainTime(); // => 03:24:30.0000035
+dt.toPlainDate().toPlainYearMonth(); // => 1995-12
+dt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
 
 ### datetime.**getCalendar**(): object

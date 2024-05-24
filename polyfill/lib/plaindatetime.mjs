@@ -371,18 +371,6 @@ export class PlainDateTime {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDateTimeToDate(this);
   }
-  toPlainYearMonth() {
-    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
-    const fields = ES.PrepareCalendarFields(calendarRec, this, ['monthCode', 'year'], [], []);
-    return ES.CalendarYearMonthFromFields(calendarRec, fields);
-  }
-  toPlainMonthDay() {
-    if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
-    const fields = ES.PrepareCalendarFields(calendarRec, this, ['day', 'monthCode'], [], []);
-    return ES.CalendarMonthDayFromFields(calendarRec, fields);
-  }
   toPlainTime() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
     return ES.TemporalDateTimeToTime(this);

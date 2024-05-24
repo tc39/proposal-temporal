@@ -1290,16 +1290,10 @@ Use `Temporal.ZonedDateTime.compare()` for this, or `zonedDateTime.equals()` for
 > However, unless you perform those operations across a time zone offset transition, it's impossible to notice the difference.
 > Therefore, be very careful when performing this conversion because subsequent results may look correct most of the time while failing around time zone transitions like when DST starts or ends.
 
-### zonedDateTime.**toPlainYearMonth**() : Temporal.PlainYearMonth
-
-**Returns:** a `Temporal.PlainYearMonth` object that is the same as the year and month of `zonedDateTime`.
-
-### zonedDateTime.**toPlainMonthDay**() : Temporal.PlainMonthDay
-
-**Returns:** a `Temporal.PlainMonthDay` object that is the same as the month and day of `zonedDateTime`.
-
-The above six methods can be used to convert `Temporal.ZonedDateTime` into a `Temporal.Instant`, `Temporal.PlainDate`, `Temporal.PlainTime`, `Temporal.PlainDateTime`, `Temporal.PlainYearMonth`, or `Temporal.PlainMonthDay` respectively.
+The above four methods can be used to convert `Temporal.ZonedDateTime` into a `Temporal.Instant`, `Temporal.PlainDate`, `Temporal.PlainTime`, or `Temporal.PlainDateTime`, respectively.
 The converted object carries a copy of all the relevant data of `zonedDateTime` (for example, in `toPlainDate()`, the `year`, `month`, and `day` properties are the same.)
+
+To convert to `Temporal.PlainYearMonth` or `Temporal.PlainMonthDay`, first use `toPlainDate()` and go from there.
 
 Usage example:
 
@@ -1308,9 +1302,9 @@ zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:30+02:00[Africa/Johannesburg
 zdt.toInstant(); // => 1995-12-07T01:24:30Z
 zdt.toPlainDateTime(); // => 1995-12-07T03:24:30
 zdt.toPlainDate(); // => 1995-12-07
-zdt.toPlainYearMonth(); // => 1995-12
-zdt.toPlainMonthDay(); // => 12-07
 zdt.toPlainTime(); // => 03:24:30
+zdt.toPlainDate().toPlainYearMonth(); // => 1995-12
+zdt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
 
 ### zonedDateTime.**getCalendar**(): object
