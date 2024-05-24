@@ -297,47 +297,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.plaintime.prototype.toplaindatetime">
-      <h1>Temporal.PlainTime.prototype.toPlainDateTime ( _temporalDate_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Set _temporalDate_ to ? ToTemporalDate(_temporalDate_).
-        1. Return ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]],
-          _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]],
-          _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]],
-          _temporalDate_.[[Calendar]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.plaintime.prototype.tozoneddatetime">
-      <h1>Temporal.PlainTime.prototype.toZonedDateTime ( _item_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. If _item_ is not an Object, then
-          1. Throw a *TypeError* exception.
-        1. Let _temporalDateLike_ be ? Get(_item_, *"plainDate"*).
-        1. If _temporalDateLike_ is *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Let _temporalDate_ be ? ToTemporalDate(_temporalDateLike_).
-        1. Let _temporalTimeZoneLike_ be ? Get(_item_, *"timeZone"*).
-        1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
-        1. Let _temporalDateTime_ be ? CreateTemporalDateTime(_temporalDate_.[[ISOYear]], _temporalDate_.[[ISOMonth]], _temporalDate_.[[ISODay]], _temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _temporalDate_.[[Calendar]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-        1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _temporalDateTime_, *"compatible"*).
-        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _temporalDate_.[[Calendar]]).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.plaintime.prototype.getisofields">
       <h1>Temporal.PlainTime.prototype.getISOFields ( )</h1>
       <p>
