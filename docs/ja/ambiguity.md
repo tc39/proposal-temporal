@@ -208,10 +208,10 @@ earlier = Temporal.ZonedDateTime.from(props, { disambiguation: 'earlier' });
 later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
   // => 2020-03-08T03:30:00-07:00[America/Los_Angeles]
   // (この例では'later'は'compatible'と同じ挙動)
-later.toPlainDateTime().since(earlier.toPlainDateTime());
+earlier.toPlainDateTime().until(later.toPlainDateTime());
   // => PT2H
   // (clock time上では2時間の差があるように見える...
-later.since(earlier);
+earlier.until(later);
   // => PT1H
   // ... しかし、実際の時刻では1時間の差しかない)
 ```
@@ -236,10 +236,10 @@ earlier = Temporal.ZonedDateTime.from(props, { disambiguation: 'earlier' });
 later = Temporal.ZonedDateTime.from(props, { disambiguation: 'later' });
   // => 2020-11-01T01:30:00-08:00[America/Los_Angeles]
   // 同じclock timeだが一時間遅い結果が返る
-later.toPlainDateTime().since(earlier.toPlainDateTime());
+earlier.toPlainDateTime().until(later.toPlainDateTime());
   // => PT0S
   // (同じ缶のように見えるが...
-later.since(earlier);
+earlier.until(later);
   // => PT1H
   // ... 実際は1時間の差がある
 ```

@@ -203,14 +203,13 @@ export namespace Temporal {
   >;
 
   /**
-   * Options to control the result of `until()` and `since()` methods in
-   * `Temporal` types.
+   * Options to control the result of `until()` methods in `Temporal` types.
    */
   export interface DifferenceOptions<T extends DateTimeUnit> {
     /**
      * The unit to round to. For example, to round to the nearest minute, use
-     * `smallestUnit: 'minute'`. This property is optional for `until()` and
-     * `since()`, because those methods default behavior is not to round.
+     * `smallestUnit: 'minute'`. This property is optional for `until()`,
+     * because those methods default behavior is not to round.
      * However, the same property is required for `round()`.
      */
     smallestUnit?: SmallestUnit<T>;
@@ -226,7 +225,7 @@ export namespace Temporal {
      * `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`,
      * `'nanosecond'` and `'auto'`, although some types may throw an exception
      * if a value is used that would produce an invalid result. For example,
-     * `hours` is not accepted by `Temporal.PlainDate.prototype.since()`.
+     * `hours` is not accepted by `Temporal.PlainDate.prototype.until()`.
      *
      * The default is always `'auto'`, though the meaning of this depends on the
      * type being used.
@@ -272,8 +271,8 @@ export namespace Temporal {
         /**
          * The unit to round to. For example, to round to the nearest minute,
          * use `smallestUnit: 'minute'`. This option is required. Note that the
-         * same-named property is optional when passed to `until` or `since`
-         * methods, because those methods do no rounding by default.
+         * same-named property is optional when passed to `until` methods,
+         * because those methods do no rounding by default.
          */
         smallestUnit: SmallestUnit<T>;
 
@@ -587,10 +586,6 @@ export namespace Temporal {
       other: Temporal.Instant | string,
       options?: DifferenceOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.Duration;
-    since(
-      other: Temporal.Instant | string,
-      options?: DifferenceOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
-    ): Temporal.Duration;
     round(
       roundTo: RoundTo<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.Instant;
@@ -826,10 +821,6 @@ export namespace Temporal {
       other: Temporal.PlainDate | PlainDateLike | string,
       options?: DifferenceOptions<'year' | 'month' | 'week' | 'day'>
     ): Temporal.Duration;
-    since(
-      other: Temporal.PlainDate | PlainDateLike | string,
-      options?: DifferenceOptions<'year' | 'month' | 'week' | 'day'>
-    ): Temporal.Duration;
     toPlainDateTime(temporalTime?: Temporal.PlainTime | PlainTimeLike | string): Temporal.PlainDateTime;
     toZonedDateTime(
       timeZoneAndTime:
@@ -940,12 +931,6 @@ export namespace Temporal {
     withCalendar(calendar: CalendarLike): Temporal.PlainDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDateTime;
     until(
-      other: Temporal.PlainDateTime | PlainDateTimeLike | string,
-      options?: DifferenceOptions<
-        'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'
-      >
-    ): Temporal.Duration;
-    since(
       other: Temporal.PlainDateTime | PlainDateTimeLike | string,
       options?: DifferenceOptions<
         'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'
@@ -1062,10 +1047,6 @@ export namespace Temporal {
     with(timeLike: Temporal.PlainTime | PlainTimeLike, options?: AssignmentOptions): Temporal.PlainTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainTime;
     until(
-      other: Temporal.PlainTime | PlainTimeLike | string,
-      options?: DifferenceOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
-    ): Temporal.Duration;
-    since(
       other: Temporal.PlainTime | PlainTimeLike | string,
       options?: DifferenceOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.Duration;
@@ -1187,10 +1168,6 @@ export namespace Temporal {
       other: Temporal.PlainYearMonth | PlainYearMonthLike | string,
       options?: DifferenceOptions<'year' | 'month'>
     ): Temporal.Duration;
-    since(
-      other: Temporal.PlainYearMonth | PlainYearMonthLike | string,
-      options?: DifferenceOptions<'year' | 'month'>
-    ): Temporal.Duration;
     toPlainDate(day: { day: number }): Temporal.PlainDate;
     getISOFields(): PlainDateISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -1283,12 +1260,6 @@ export namespace Temporal {
     withTimeZone(timeZone: TimeZoneLike): Temporal.ZonedDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.ZonedDateTime;
     until(
-      other: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
-      options?: Temporal.DifferenceOptions<
-        'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'
-      >
-    ): Temporal.Duration;
-    since(
       other: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
       options?: Temporal.DifferenceOptions<
         'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'

@@ -316,41 +316,6 @@ time.until(Temporal.PlainTime.from('22:39:09.068346205'), { smallestUnit: 'secon
 ```
 <!-- prettier-ignore-end -->
 
-### time.**since**(_other_: Temporal.PlainTime | object | string, _options_?: object) : Temporal.Duration
-
-**Parameters:**
-
-- `other` (`Temporal.PlainTime` or value convertible to one): Another time since when to compute the difference.
-- `options` (optional object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    The default is `'auto'`.
-  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    The default is `'nanosecond'`, i.e., no rounding.
-  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
-    The default is 1.
-  - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
-    The default is `'trunc'`, which truncates any remainder towards zero.
-
-**Returns:** a `Temporal.Duration` representing the elapsed time before `time` and since `other`.
-
-This method computes the difference between the two times represented by `time` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
-If `other` is later than `time` then the resulting duration will be negative.
-
-This method is similar to `Temporal.PlainTime.prototype.until()`, but reversed.
-If using the default `options`, subtracting the returned `Temporal.Duration` from `time` will yield `other`, and `time1.since(time2)` will yield the same result as `time1.until(time2).negated()`.
-
-Usage example:
-
-```javascript
-time = Temporal.PlainTime.from('20:13:20.971398099');
-time.since(Temporal.PlainTime.from('19:39:09.068346205')); // => PT34M11.903051894S
-time.since(Temporal.PlainTime.from('22:39:09.068346205')); // => -PT2H25M48.096948106S
-```
-
 ### time.**round**(_roundTo_: string | object) : Temporal.PlainTime
 
 **Parameters:**

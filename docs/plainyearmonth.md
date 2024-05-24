@@ -421,41 +421,6 @@ ym.toPlainDate({ day: 1 }).until(other.toPlainDate({ day: 1 }), { largestUnit: '
 ```
 <!-- prettier-ignore-end -->
 
-### yearMonth.**since**(_other_: Temporal.PlainYearMonth | object | string, _options_?: object) : Temporal.Duration
-
-**Parameters:**
-
-- `other` (`Temporal.PlainYearMonth` or value convertible to one): Another month since when to compute the difference.
-- `options` (optional object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'year'` and `'month'`.
-    The default is `'auto'`.
-  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'year'` and `'month'`.
-    The default is `'month'`, i.e., no rounding.
-  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
-    The default is 1.
-  - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
-    The default is `'trunc'`, which truncates any remainder towards zero.
-
-**Returns:** a `Temporal.Duration` representing the elapsed time before `yearMonth` and since `other`.
-
-This method computes the difference between the two months represented by `yearMonth` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
-If `other` is later than `yearMonth` then the resulting duration will be negative.
-
-This method is similar to `Temporal.PlainYearMonth.prototype.until()`, but reversed.
-If using the default `options`, subtracting the returned `Temporal.Duration` from `yearMonth` will yield `other`, and `ym1.since(ym2)` will yield the same result as `ym1.until(ym2).negated()`.
-
-Usage example:
-
-```javascript
-ym = Temporal.PlainYearMonth.from('2019-06');
-other = Temporal.PlainYearMonth.from('2006-08');
-ym.since(other); // => P12Y10M
-```
-
 ### yearMonth.**equals**(_other_: Temporal.PlainYearMonth | object | string) : boolean
 
 **Parameters:**

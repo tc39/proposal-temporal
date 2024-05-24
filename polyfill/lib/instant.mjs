@@ -60,11 +60,7 @@ export class Instant {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalInstant('until', this, other, options);
-  }
-  since(other, options = undefined) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalInstant('since', this, other, options);
+    return ES.DifferenceTemporalInstant(this, other, options);
   }
   round(roundTo) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');

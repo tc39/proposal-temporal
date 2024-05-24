@@ -405,13 +405,13 @@ date.toString(); // => '2020-06-28[u-ca=islamic]'
 If either of `one` or `two` are not `Temporal.PlainDate` objects, then they will be converted to one as if they were passed to `Temporal.PlainDate.from()`.
 
 This method does not need to be called directly except in specialized code.
-It is called indirectly when using the `until()` and `since()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainYearMonth`, and `Temporal.ZonedDateTime`.
+It is called indirectly when using the `until()` methods of `Temporal.PlainDateTime`, `Temporal.PlainDate`, `Temporal.PlainYearMonth`, and `Temporal.ZonedDateTime`.
 
 If `one` is later than `two`, then the resulting duration should be negative.
 
 The default `largestUnit` value of `'auto'` is the same as `'day'`.
 
-> **NOTE:** Unlike `Temporal.Calendar.dateAdd()`, the `options` object that this method receives is not always the same object passed to the respective `until()` or `since()` method.
+> **NOTE:** Unlike `Temporal.Calendar.dateAdd()`, the `options` object that this method receives is not always the same object passed to the respective `until()`  method.
 > Depending on the type, a copy may be made of the object.
 
 For example:

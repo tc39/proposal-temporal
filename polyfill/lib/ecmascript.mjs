@@ -877,21 +877,6 @@ export function GetRoundingModeOption(options, fallback) {
   );
 }
 
-export function NegateRoundingMode(roundingMode) {
-  switch (roundingMode) {
-    case 'ceil':
-      return 'floor';
-    case 'floor':
-      return 'ceil';
-    case 'halfCeil':
-      return 'halfFloor';
-    case 'halfFloor':
-      return 'halfCeil';
-    default:
-      return roundingMode;
-  }
-}
-
 export function GetTemporalOffsetOption(options, fallback) {
   if (options === undefined) return fallback;
   return GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
@@ -4455,7 +4440,7 @@ export function DifferenceZonedDateTimeWithRounding(
   );
 }
 
-export function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
+export function GetDifferenceSettings(options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
   const ALLOWED_UNITS = TEMPORAL_UNITS.reduce((allowed, unitInfo) => {
     const p = unitInfo[0];
     const s = unitInfo[1];
@@ -4474,7 +4459,6 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
   const roundingIncrement = GetRoundingIncrementOption(options);
 
   let roundingMode = GetRoundingModeOption(options, 'trunc');
-  if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
 
   const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', group, fallbackSmallest);
   if (Call(ArrayIncludes, disallowed, [smallestUnit])) {
@@ -4500,12 +4484,11 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
   return { largestUnit, roundingIncrement, roundingMode, smallestUnit };
 }
 
-export function DifferenceTemporalInstant(operation, instant, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
+export function DifferenceTemporalInstant(instant, other, options) {
   other = ToTemporalInstant(other);
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
-  const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'second');
+  const settings = GetDifferenceSettings(resolvedOptions, 'time', [], 'nanosecond', 'second');
 
   const onens = GetSlot(instant, EPOCHNANOSECONDS);
   const twons = GetSlot(other, EPOCHNANOSECONDS);
@@ -4521,29 +4504,17 @@ export function DifferenceTemporalInstant(operation, instant, other, options) {
     settings.largestUnit
   );
   const Duration = GetIntrinsic('%Temporal.Duration%');
-  return new Duration(
-    0,
-    0,
-    0,
-    0,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 }
 
-export function DifferenceTemporalPlainDate(operation, plainDate, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
+export function DifferenceTemporalPlainDate(plainDate, other, options) {
   other = ToTemporalDate(other);
   const calendar = GetSlot(plainDate, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
-  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
+  const settings = GetDifferenceSettings(resolvedOptions, 'date', [], 'day', 'day');
 
   const Duration = GetIntrinsic('%Temporal.Duration%');
   if (
@@ -4600,18 +4571,17 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
     ));
   }
 
-  return new Duration(sign * years, sign * months, sign * weeks, sign * days, 0, 0, 0, 0, 0, 0);
+  return new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 }
 
-export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
+export function DifferenceTemporalPlainDateTime(plainDateTime, other, options) {
   other = ToTemporalDateTime(other);
   const calendar = GetSlot(plainDateTime, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
-  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
+  const settings = GetDifferenceSettings(resolvedOptions, 'datetime', [], 'nanosecond', 'day');
 
   const Duration = GetIntrinsic('%Temporal.Duration%');
   const datePartsIdentical =
@@ -4658,26 +4628,14 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
       resolvedOptions
     );
 
-  return new Duration(
-    sign * years,
-    sign * months,
-    sign * weeks,
-    sign * days,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 }
 
-export function DifferenceTemporalPlainTime(operation, plainTime, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
+export function DifferenceTemporalPlainTime(plainTime, other, options) {
   other = ToTemporalTime(other);
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
-  const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
+  const settings = GetDifferenceSettings(resolvedOptions, 'time', [], 'nanosecond', 'hour');
 
   let norm = DifferenceTime(
     GetSlot(plainTime, ISO_HOUR),
@@ -4701,29 +4659,17 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
     settings.largestUnit
   );
   const Duration = GetIntrinsic('%Temporal.Duration%');
-  return new Duration(
-    0,
-    0,
-    0,
-    0,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 }
 
-export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
+export function DifferenceTemporalPlainYearMonth(yearMonth, other, options) {
   other = ToTemporalYearMonth(other);
   const calendar = GetSlot(yearMonth, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between months');
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
-  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
+  const settings = GetDifferenceSettings(resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
 
   const Duration = GetIntrinsic('%Temporal.Duration%');
   if (
@@ -4785,18 +4731,17 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
     ));
   }
 
-  return new Duration(sign * years, sign * months, 0, 0, 0, 0, 0, 0, 0, 0);
+  return new Duration(years, months, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
-export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
+export function DifferenceTemporalZonedDateTime(zonedDateTime, other, options) {
   other = ToTemporalZonedDateTime(other);
   const calendar = GetSlot(zonedDateTime, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
   ThrowIfCalendarsNotEqual(calendar, otherCalendar, 'compute difference between dates');
 
   const resolvedOptions = SnapshotOwnProperties(GetOptionsObject(options), null);
-  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
+  const settings = GetDifferenceSettings(resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
 
   const ns1 = GetSlot(zonedDateTime, EPOCHNANOSECONDS);
   const ns2 = GetSlot(other, EPOCHNANOSECONDS);
@@ -4864,18 +4809,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
       ));
   }
 
-  return new Duration(
-    sign * years,
-    sign * months,
-    sign * weeks,
-    sign * days,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 }
 
 export function AddISODate(year, month, day, years, months, weeks, days, overflow) {

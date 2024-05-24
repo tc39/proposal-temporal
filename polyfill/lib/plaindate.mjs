@@ -128,11 +128,7 @@ export class PlainDate {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalPlainDate('until', this, other, options);
-  }
-  since(other, options = undefined) {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalPlainDate('since', this, other, options);
+    return ES.DifferenceTemporalPlainDate(this, other, options);
   }
   equals(other) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');

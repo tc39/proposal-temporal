@@ -12,7 +12,6 @@ import Pretty from '@pipobscure/demitasse-pretty';
 const { reporter } = Pretty;
 
 import { strict as assert } from 'assert';
-const { equal } = assert;
 
 import * as Temporal from 'proposal-temporal';
 
@@ -76,17 +75,14 @@ function build(name, sone, stwo) {
 function buildSub(one, two, largestUnits) {
   largestUnits.forEach((largestUnit) => {
     describe(`< ${one} : ${two} (${largestUnit})>`, () => {
-      const dif = two.since(one, { largestUnit });
+      const dif = one.until(two, { largestUnit });
       const overflow = 'reject';
       if (largestUnit === 'months' || largestUnit === 'years') {
-        // For months and years, `until` and `since` won't agree because the
+        // For months and years, the guarantee is weaker because the
         // starting point is always `this` and month-aware arithmetic behavior
         // varies based on the starting point.
-        it(`(${two}).add(-${dif}) => ${one}`, () => assert(two.add(dif.negated()).equals(one)));
-        const difUntil = one.until(two, { largestUnit });
-        it(`(${one}).add(${difUntil}) => ${two}`, () => assert(one.add(difUntil).equals(two)));
+        it(`(${one}).add(${dif}) => ${two}`, () => assert(one.add(dif).equals(two)));
       } else {
-        it('until() and since() agree', () => equal(`${dif}`, `${one.until(two, { largestUnit })}`));
         it(`(${one}).add(${dif}) => ${two}`, () => assert(one.add(dif, { overflow }).equals(two)));
         it(`(${two}).add(-${dif}) => ${one}`, () => assert(two.add(dif.negated(), { overflow }).equals(one)));
       }
