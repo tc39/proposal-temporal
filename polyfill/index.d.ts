@@ -1081,11 +1081,6 @@ export namespace Temporal {
     round(
       roundTo: RoundTo<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
     ): Temporal.PlainTime;
-    toPlainDateTime(temporalDate: Temporal.PlainDate | PlainDateLike | string): Temporal.PlainDateTime;
-    toZonedDateTime(timeZoneAndDate: {
-      timeZone: TimeZoneLike;
-      plainDate: Temporal.PlainDate | PlainDateLike | string;
-    }): Temporal.ZonedDateTime;
     getISOFields(): PlainTimeISOFields;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
     toJSON(): string;
