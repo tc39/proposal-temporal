@@ -25,10 +25,6 @@
 
   <emu-clause id="sec-constructor-properties-of-the-temporal-object">
     <h1>Constructor Properties of the Temporal Object</h1>
-    <emu-clause id="sec-temporal-calendar">
-      <h1>Temporal.Calendar ( . . . )</h1>
-      <p>See <emu-xref href="#sec-temporal-calendar-objects"></emu-xref>.</p>
-    </emu-clause>
     <emu-clause id="sec-temporal-instant">
       <h1>Temporal.Instant ( . . . )</h1>
       <p>See <emu-xref href="#sec-temporal-instant-objects"></emu-xref>.</p>
@@ -52,10 +48,6 @@
     <emu-clause id="sec-temporal-plainmonthday">
       <h1>Temporal.PlainMonthDay ( . . . )</h1>
       <p>See <emu-xref href="#sec-temporal-plainmonthday-objects"></emu-xref>.</p>
-    </emu-clause>
-    <emu-clause id="sec-temporal-timezone">
-      <h1>Temporal.TimeZone ( . . . )</h1>
-      <p>See <emu-xref href="#sec-temporal-timezone-objects"></emu-xref>.</p>
     </emu-clause>
     <emu-clause id="sec-temporal-duration">
       <h1>Temporal.Duration ( . . . )</h1>
@@ -258,10 +250,10 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
-          1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
-        1. Let _instant_ be SystemInstant().
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
-        1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, *"iso8601"*).
+          1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_temporalTimeZoneLike_).
+        1. Let _epochNs_ be SystemUTCEpochNanoseconds().
+        1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNs_).
+        1. Return ! CreateTemporalDateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], *"iso8601"*).
       </emu-alg>
     </emu-clause>
 
@@ -279,7 +271,7 @@
         1. If _temporalTimeZoneLike_ is *undefined*, then
           1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
-          1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
+          1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_temporalTimeZoneLike_).
         1. Let _ns_ be SystemUTCEpochNanoseconds().
         1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, *"iso8601"*).
       </emu-alg>

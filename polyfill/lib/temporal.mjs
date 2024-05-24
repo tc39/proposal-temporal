@@ -1,14 +1,13 @@
 /* global __isTest262__ */
 
+import './calendar.mjs';
 export { Instant } from './instant.mjs';
-export { Calendar } from './calendar.mjs';
 export { PlainDate } from './plaindate.mjs';
 export { PlainDateTime } from './plaindatetime.mjs';
 export { Duration } from './duration.mjs';
 export { PlainMonthDay } from './plainmonthday.mjs';
 export { Now } from './now.mjs';
 export { PlainTime } from './plaintime.mjs';
-export { TimeZone } from './timezone.mjs';
 export { PlainYearMonth } from './plainyearmonth.mjs';
 export { ZonedDateTime } from './zoneddatetime.mjs';
 
