@@ -745,7 +745,7 @@
     <h1>
       GetTemporalRelativeToOption (
         _options_: an Object,
-      ): either a normal completion containing a Record with fields [[PlainRelativeTo]] (a Temporal.PlainDate or *undefined*), [[ZonedRelativeTo]] (a Temporal.ZonedDateTime or *undefined*), and [[TimeZoneRec]] (a Time Zone Methods Record or *undefined*), or a throw completion
+      ): either a normal completion containing a Record with fields [[PlainRelativeTo]] (a Temporal.PlainDate or *undefined*) and [[ZonedRelativeTo]] (a Temporal.ZonedDateTime or *undefined*), or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -757,29 +757,22 @@
         If neither of those are possible, it throws a *RangeError*.
       </dd>
     </dl>
-    <p>
-      If the returned Record's [[ZonedRelativeTo]] field is *undefined*, then the [[TimeZoneRec]] field is also *undefined*, and vice versa.
-    </p>
     <emu-alg>
       1. Let _value_ be ? Get(_options_, *"relativeTo"*).
-      1. If _value_ is *undefined*, return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
+      1. If _value_ is *undefined*, return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: *undefined* }.
       1. Let _offsetBehaviour_ be ~option~.
       1. Let _matchBehaviour_ be ~match-exactly~.
       1. If _value_ is an Object, then
         1. If _value_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_value_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-          1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _value_, [[TimeZoneRec]]: _timeZoneRec_ }.
+          1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _value_ }.
         1. If _value_ has an [[InitializedTemporalDate]] internal slot, then
-          1. Return the Record { [[PlainRelativeTo]]: _value_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
+          1. Return the Record { [[PlainRelativeTo]]: _value_, [[ZonedRelativeTo]]: *undefined* }.
         1. If _value_ has an [[InitializedTemporalDateTime]] internal slot, then
           1. Let _plainDate_ be ! CreateTemporalDate(_value_.[[ISOYear]], _value_.[[ISOMonth]], _value_.[[ISODay]], _value_.[[Calendar]]).
-          1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
+          1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
         1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_value_).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-from-fields~, ~fields~ »).
-        1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _value_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, *"timeZone"* », «»).
-        1. Let _dateOptions_ be OrdinaryObjectCreate(*null*).
-        1. Perform ! CreateDataPropertyOrThrow(_dateOptions_, *"overflow"*, *"constrain"*).
-        1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _dateOptions_).
+        1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _value_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, *"timeZone"* », «»).
+        1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, *"constrain"*).
         1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
         1. Let _timeZone_ be ! Get(_fields_, *"timeZone"*).
         1. If _timeZone_ is not *undefined*, then
@@ -806,15 +799,14 @@
         1. Set _calendar_ to CanonicalizeUValue(*"ca"*, _calendar_).
       1. If _timeZone_ is *undefined*, then
         1. Let _plainDate_ be ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
-        1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined*, [[TimeZoneRec]]: *undefined* }.
+        1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
       1. If _offsetBehaviour_ is ~option~, then
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZoneRec_, *"compatible"*, *"reject"*, _matchBehaviour_).
+      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
-      1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_, [[TimeZoneRec]]: _timeZoneRec_ }.
+      1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
     </emu-alg>
   </emu-clause>
 
@@ -2266,7 +2258,7 @@
   <emu-clause id="sec-temporal-preparecalendarfieldsandfieldnames" type="abstract operation">
     <h1>
       PrepareCalendarFieldsAndFieldNames (
-        _calendarRec_: a Calendar Methods Record,
+        _calendar_: a String,
         _fields_: an Object,
         _calendarFieldNames_: a List of property names,
         optional _nonCalendarFieldNames_: a List of property names,
@@ -2283,17 +2275,11 @@
     <emu-alg>
       1. Assert: _calendarFieldNames_ contains zero or one of each of the Strings *"day"*, *"month"*, *"monthCode"*, and *"year"*, in that order.
       1. If _requiredFieldNames_ is not present, set _requiredFieldNames_ to the empty List.
-      1. If CalendarMethodsRecordIsBuiltin(_calendarRec_) is *true*, then
-        1. NOTE: %Temporal.Calendar.prototype.fields% is not called in this clause in order to avoid an unnecessary observable Array iteration.
-        1. Let _fieldNames_ be _calendarFieldNames_.
-        1. If _calendarRec_.[[Receiver]] is not *"iso8601"*, then
-          1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendarRec_.[[Receiver]], _calendarFieldNames_).
-          1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
-            1. Append _desc_.[[Property]] to _fieldNames_.
-      1. Else,
-        1. Let _calendarFieldsArray_ be ? CalendarMethodsRecordCall(_calendarRec_, ~fields~, « CreateArrayFromList(_calendarFieldNames_) »).
-        1. Let _iteratorRecord_ be ? GetIterator(_calendarFieldsArray_, ~sync~).
-        1. Let _fieldNames_ be ? IteratorToListOfType(_iteratorRecord_, « String »).
+      1. Let _fieldNames_ be _calendarFieldNames_.
+      1. If _calendar_ is not *"iso8601"*, then
+        1. Let _extraFieldDescriptors_ be CalendarFieldDescriptors(_calendar_, _calendarFieldNames_).
+        1. For each Calendar Field Descriptor Record _desc_ of _extraFieldDescriptors_, do
+          1. Append _desc_.[[Property]] to _fieldNames_.
       1. If _nonCalendarFieldNames_ is present, set _fieldNames_ to the list-concatenation of _fieldNames_ and _nonCalendarFieldNames_.
       1. Let _fields_ be ? PrepareTemporalFields(_fields_, _fieldNames_, _requiredFieldNames_).
       1. Return the Record { [[Fields]]: _fields_, [[FieldNames]]: _fieldNames_ }.
@@ -2303,7 +2289,7 @@
   <emu-clause id="sec-temporal-preparecalendarfields" type="abstract operation">
     <h1>
       PrepareCalendarFields (
-        _calendarRec_: a Calendar Methods Record,
+        _calendar_: a String,
         _fields_: an Object,
         _calendarFieldNames_: a List of property names,
         _nonCalendarFieldNames_: a List of property names,
@@ -2321,7 +2307,7 @@
       1. Assert: _calendarFieldNames_ contains zero or one of each of the Strings *"day"*, *"month"*, *"monthCode"*, and *"year"*, in that order.
       1. Assert: _nonCalendarFieldNames_ contains zero or one of each of the Strings *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, and *"timeZone"*, in that order.
       1. Assert: _requiredFieldNames_ contains zero or one of each of the elements of _calendarFieldNames_ and _nonCalendarFieldNames_.
-      1. Let _result_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _fields_, _calendarFieldNames_, _nonCalendarFieldNames_, _requiredFieldNames_).
+      1. Let _result_ be ? PrepareCalendarFieldsAndFieldNames(_calendar_, _fields_, _calendarFieldNames_, _nonCalendarFieldNames_, _requiredFieldNames_).
       1. Return _result_.[[Fields]].
     </emu-alg>
   </emu-clause>

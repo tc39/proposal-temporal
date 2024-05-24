@@ -11,13 +11,11 @@ import bigInt from 'big-integer';
 import { readFileSync } from 'fs';
 
 import * as ES from '../lib/ecmascript.mjs';
-import { GetSlot, TIMEZONE_ID } from '../lib/slots.mjs';
-import { TimeZone } from '../lib/timezone.mjs';
 
 describe('ECMAScript', () => {
   describe('GetFormatterParts', () => {
     // https://github.com/tc39/proposal-temporal/issues/575
-    test(1589670000000, GetSlot(TimeZone.from('Europe/London'), TIMEZONE_ID), {
+    test(1589670000000, 'Europe/London', {
       year: 2020,
       month: 5,
       day: 17,

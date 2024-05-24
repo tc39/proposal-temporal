@@ -1,274 +1,15 @@
 <!doctype html>
 <meta charset="utf8">
 
-<emu-clause id="sec-temporal-timezone-objects">
-  <h1>Temporal.TimeZone Objects</h1>
-  <p>A Temporal.TimeZone object is an Object referencing a time zone.</p>
-
-  <emu-clause id="sec-temporal-timezone-constructor">
-    <h1>The Temporal.TimeZone Constructor</h1>
-    <p>The Temporal.TimeZone constructor:</p>
-    <ul>
-      <li>
-        creates and initializes a new Temporal.TimeZone object when called as a constructor.
-      </li>
-      <li>
-        is not intended to be called as a function and will throw an exception when called in that manner.
-      </li>
-      <li>
-        may be used as the value of an `extends` clause of a class definition.
-        Subclass constructors that intend to inherit the specified Temporal.TimeZone behaviour must
-        include a super call to the %Temporal.TimeZone% constructor to create and initialize subclass
-        instances with the necessary internal slots.
-      </li>
-    </ul>
-
-    <emu-clause id="sec-temporal.timezone">
-      <h1>Temporal.TimeZone ( _identifier_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. If _identifier_ is not a String, throw a *TypeError* exception.
-        1. Let _parseResult_ be ? ParseTimeZoneIdentifier(_identifier_).
-        1. If _parseResult_.[[OffsetMinutes]] is not ~empty~, then
-          1. Set _identifier_ to FormatOffsetTimeZoneIdentifier(_parseResult_.[[OffsetMinutes]]).
-        1. Else,
-          1. Let _timeZoneIdentifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_identifier_).
-          1. If _timeZoneIdentifierRecord_ is ~empty~, throw a *RangeError* exception.
-          1. Set _identifier_ to _timeZoneIdentifierRecord_.[[Identifier]].
-        1. Return ? CreateTemporalTimeZone(_identifier_, NewTarget).
-      </emu-alg>
-    </emu-clause>
-  </emu-clause>
-
-  <emu-clause id="sec-properties-of-the-temporal-timezone-constructor">
-    <h1>Properties of the Temporal.TimeZone Constructor</h1>
-    <p>The value of the [[Prototype]] internal slot of the Temporal.TimeZone constructor is the intrinsic object %Function.prototype%.</p>
-    <p>The Temporal.TimeZone constructor has the following properties:</p>
-
-    <emu-clause id="sec-temporal.timezone.prototype">
-      <h1>Temporal.TimeZone.prototype</h1>
-      <p>The initial value of `Temporal.TimeZone.prototype` is %Temporal.TimeZone.prototype%.</p>
-      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.from">
-      <h1>Temporal.TimeZone.from ( _item_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _slotValue_ be ? ToTemporalTimeZoneSlotValue(_item_).
-        1. Return ToTemporalTimeZoneObject(_slotValue_).
-      </emu-alg>
-    </emu-clause>
-  </emu-clause>
-
-  <emu-clause id="sec-properties-of-the-temporal-timezone-prototype-object">
-    <h1>Properties of the Temporal.TimeZone Prototype Object</h1>
-
-    <p>The Temporal.TimeZone prototype object</p>
-    <ul>
-      <li>is itself an ordinary object.</li>
-      <li>is not a Temporal.TimeZone instance and does not have a [[InitializedTemporalTimeZone]] internal slot.</li>
-      <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.</li>
-    </ul>
-
-    <emu-clause id="sec-temporal.timezone.prototype.constructor">
-      <h1>Temporal.TimeZone.prototype.constructor</h1>
-      <p>The initial value of `Temporal.TimeZone.prototype.constructor` is %Temporal.TimeZone%.</p>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype-@@tostringtag">
-      <h1>Temporal.TimeZone.prototype[ @@toStringTag ]</h1>
-      <p>
-        The initial value of the @@toStringTag property is the String value *"Temporal.TimeZone"*.
-      </p>
-      <p>
-        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
-      </p>
-    </emu-clause>
-
-    <emu-clause id="sec-get-temporal.timezone.prototype.id">
-      <h1>get Temporal.TimeZone.prototype.id</h1>
-      <p>
-        `Temporal.TimeZone.prototype.id` is an accessor property whose set accessor function is *undefined*.
-        Its get accessor function performs the following steps:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return FormatOffsetTimeZoneIdentifier(_timeZone_.[[OffsetMinutes]]).
-        1. Return _timeZone_.[[Identifier]].
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.getoffsetnanosecondsfor">
-      <h1>Temporal.TimeZone.prototype.getOffsetNanosecondsFor ( _instant_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _instant_ to ? ToTemporalInstant(_instant_).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return 𝔽(_timeZone_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>)).
-        1. Return 𝔽(GetNamedTimeZoneOffsetNanoseconds(_timeZone_.[[Identifier]], _instant_.[[Nanoseconds]])).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.getoffsetstringfor">
-      <h1>Temporal.TimeZone.prototype.getOffsetStringFor ( _instant_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _instant_ to ? ToTemporalInstant(_instant_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
-        1. Return ? GetOffsetStringFor(_timeZoneRec_, _instant_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.getplaindatetimefor">
-      <h1>Temporal.TimeZone.prototype.getPlainDateTimeFor ( _instant_ [ , _calendarLike_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _instant_ to ? ToTemporalInstant(_instant_).
-        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
-        1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.getinstantfor">
-      <h1>Temporal.TimeZone.prototype.getInstantFor ( _dateTime_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_options_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-        1. Return ? GetInstantFor(_timeZoneRec_, _dateTime_, _disambiguation_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.getpossibleinstantsfor">
-      <h1>Temporal.TimeZone.prototype.getPossibleInstantsFor ( _dateTime_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. Set _dateTime_ to ? ToTemporalDateTime(_dateTime_).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, then
-          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _timeZone_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>)).
-          1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ ».
-        1. Else,
-          1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_.[[Identifier]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
-        1. Let _possibleInstants_ be a new empty List.
-        1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
-          1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
-          1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
-          1. Append _instant_ to _possibleInstants_.
-        1. Return CreateArrayFromList(_possibleInstants_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.tostring">
-      <h1>Temporal.TimeZone.prototype.toString ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return FormatOffsetTimeZoneIdentifier(_timeZone_.[[OffsetMinutes]]).
-        1. Return _timeZone_.[[Identifier]].
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.timezone.prototype.tojson">
-      <h1>Temporal.TimeZone.prototype.toJSON ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _timeZone_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_timeZone_, [[InitializedTemporalTimeZone]]).
-        1. If _timeZone_.[[OffsetMinutes]] is not ~empty~, return FormatOffsetTimeZoneIdentifier(_timeZone_.[[OffsetMinutes]]).
-        1. Return _timeZone_.[[Identifier]].
-      </emu-alg>
-    </emu-clause>
-  </emu-clause>
-
-  <emu-clause id="sec-properties-of-temporal-timezone-instances">
-    <h1>Properties of Temporal.TimeZone Instances</h1>
-
-    <p>
-      Temporal.TimeZone instances are ordinary objects that inherit properties from the %Temporal.TimeZone.prototype% intrinsic object.
-      Temporal.TimeZone instances are initially created with the internal slots described in <emu-xref href="#table-internal-slots-of-temporaltimezone-instances"></emu-xref>.
-    </p>
-    <emu-table id="table-internal-slots-of-temporaltimezone-instances" caption="Internal Slots of Temporal.TimeZone Instances">
-      <table>
-        <tbody>
-          <tr>
-            <th>
-              Internal Slot
-            </th>
-            <th>
-              Description
-            </th>
-          </tr>
-          <tr>
-            <td>
-              [[InitializedTemporalTimeZone]]
-            </td>
-            <td>
-              The only specified use of this slot is for distinguishing Temporal.TimeZone instances from other objects.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[Identifier]]
-            </td>
-            <td>
-              A String value representing the identifier of an available named time zone, or ~empty~ if the instance represents an offset time zone.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[OffsetMinutes]]
-            </td>
-            <td>
-              An integer for minutes representing the constant offset of this time zone relative to UTC, or ~empty~ if the instance represents a named time zone.
-              If not ~empty~, this value must be in the interval from -1440 (exclusive) to 1440 (exclusive) (i.e., strictly less than 24 hours in magnitude).
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </emu-table>
-  </emu-clause>
+<emu-clause id="sec-temporal-timezones">
+  <h1>Time Zones</h1>
 
   <emu-clause id="sec-temporal-timezone-abstract-ops">
     <h1>Abstract Operations</h1>
 
     <emu-note type="editor">
       In ECMA-262, many time-zone-related sections and abstract operations are contained in the <a href="https://tc39.es/ecma262/#sec-date-objects">Date Objects</a> section of the specification.
-      Now that ECMAScript has a built-in %Temporal.TimeZone% object, it may be appropriate to move those sections here, for example:
+      It may be appropriate to move those sections here, for example:
       <ul>
         <li><a href="https://tc39.es/ecma262/#sec-time-zone-identifiers">Time Zone Identifiers</a></li>
         <li>AvailableNamedTimeZoneIdentifiers</li>
@@ -278,166 +19,6 @@
         <li>GetNamedTimeZoneOffsetNanoseconds</li>
       </ul>
     </emu-note>
-
-    <emu-clause id="sec-temporal-time-zone-methods-records">
-      <h1>Time Zone Methods Records</h1>
-      <p>
-        A <dfn variants="Time Zone Methods Records">Time Zone Methods Record</dfn> is a Record value used to store a Temporal.TimeZone object, or an Object implementing the time zone protocol, along with any methods that have been observably looked up on that object during the current operation.
-        Time Zone Methods Records are produced by the abstract operation CreateTimeZoneMethodsRecord.
-      </p>
-      <p>
-        Time Zone Methods Records have the fields listed in <emu-xref href="#table-temporal-time-zone-methods-record-fields"></emu-xref>.
-      </p>
-      <emu-table id="table-temporal-time-zone-methods-record-fields" caption="Time Zone Methods Record Fields">
-        <table class="real-table">
-          <tr>
-            <th>Field Name</th>
-            <th>Value</th>
-            <th>Meaning</th>
-          </tr>
-          <tr>
-            <td>[[Receiver]]</td>
-            <td>a String or Object</td>
-            <td>
-              The time zone object, or a string indicating a built-in time zone.
-            </td>
-          </tr>
-          <tr>
-            <td>[[GetOffsetNanosecondsFor]]</td>
-            <td>a function object or *undefined*</td>
-            <td>
-              The time zone's `getOffsetNanosecondsFor` method.
-              For a built-in time zone this is always %Temporal.TimeZone.prototype.getOffsetNanosecondsFor%.
-            </td>
-          </tr>
-          <tr>
-            <td>[[GetPossibleInstantsFor]]</td>
-            <td>a function object or *undefined*</td>
-            <td>
-              The time zone's `getPossibleInstantsFor` method.
-              For a built-in time zone this is always %Temporal.TimeZone.prototype.getPossibleInstantsFor%.
-            </td>
-          </tr>
-        </table>
-      </emu-table>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-createtimezonemethodsrecord" type="abstract operation">
-      <h1>
-        CreateTimeZoneMethodsRecord (
-          _timeZone_: a String or Object,
-          _methods_: a List of either ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
-        ): either a normal completion containing a Time Zone Methods Record, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It creates a Time Zone Methods Record from the given _timeZone_, looking up the methods given in _methods_.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _record_ be the Time Zone Methods Record {
-            [[Receiver]]: _timeZone_,
-            [[GetOffsetNanosecondsFor]]: *undefined*,
-            [[GetPossibleInstantsFor]]: *undefined*
-          }.
-        1. For each element _methodName_ in _methods_, do
-          1. Perform ? TimeZoneMethodsRecordLookup(_record_, _methodName_).
-        1. Return _record_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-timezonemethodsrecordlookup" type="abstract operation">
-      <h1>
-        TimeZoneMethodsRecordLookup (
-          _timeZoneRec_: a Time Zone Methods Record,
-          _methodName_: ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
-        ): either a normal completion containing ~unused~, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>
-          It looks up the given method on the given time zone.
-          For a built-in time zone, this lookup is unobservable and results in the intrinsic method.
-          If the time zone is an Object, the lookup is observable and may result in a user-code method.
-        </dd>
-      </dl>
-      <emu-alg>
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, _methodName_) is *false*.
-        1. If _methodName_ is ~get-offset-nanoseconds-for~, then
-          1. If _timeZoneRec_.[[Receiver]] is a String, then
-            1. Set _timeZoneRec_.[[GetOffsetNanosecondsFor]] to %Temporal.TimeZone.prototype.getOffsetNanosecondsFor%.
-          1. Else,
-            1. Set _timeZoneRec_.[[GetOffsetNanosecondsFor]] to ? GetMethod(_timeZoneRec_.[[Receiver]], *"getOffsetNanosecondsFor"*).
-            1. If _timeZoneRec_.[[GetOffsetNanosecondsFor]] is *undefined*, throw a *TypeError* exception.
-        1. Else if _methodName_ is ~get-possible-instants-for~, then
-          1. If _timeZoneRec_.[[Receiver]] is a String, then
-            1. Set _timeZoneRec_.[[GetPossibleInstantsFor]] to %Temporal.TimeZone.prototype.getPossibleInstantsFor%.
-          1. Else,
-            1. Set _timeZoneRec_.[[GetPossibleInstantsFor]] to ? GetMethod(_timeZoneRec_.[[Receiver]], *"getPossibleInstantsFor"*).
-            1. If _timeZoneRec_.[[GetPossibleInstantsFor]] is *undefined*, throw a *TypeError* exception.
-        1. Return ~unused~.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-timezonemethodsrecordhaslookedup" type="abstract operation">
-      <h1>
-        TimeZoneMethodsRecordHasLookedUp (
-          _timeZoneRec_: a Time Zone Methods Record,
-          _methodName_: ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
-        ): a Boolean
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It determines whether the given Time Zone Methods Record has already looked up the given method.</dd>
-      </dl>
-      <emu-alg>
-        1. If _methodName_ is ~get-offset-nanoseconds-for~, then
-          1. Let _method_ be _timeZoneRec_.[[GetOffsetNanosecondsFor]].
-        1. Else if _methodName_ is ~get-possible-instants-for~, then
-          1. Let _method_ be _timeZoneRec_.[[GetPossibleInstantsFor]].
-        1. If _method_ is *undefined*, return *false*.
-        1. Return *true*.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-timezonemethodsrecordisbuiltin" type="abstract operation">
-      <h1>
-        TimeZoneMethodsRecordIsBuiltin (
-          _timeZoneRec_: a Time Zone Methods Record,
-        ): a Boolean
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It determines whether the given Time Zone Methods Record represents a built-in time zone (that is never exposed to user code.)</dd>
-      </dl>
-      <emu-alg>
-        1. If _timeZoneRec_.[[Receiver]] is a String, return *true*.
-        1. Return *false*.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-timezonemethodsrecordcall" type="abstract operation">
-      <h1>
-        TimeZoneMethodsRecordCall (
-          _timeZoneRec_: a Time Zone Methods Record,
-          _methodName_: ~get-offset-nanoseconds-for~ or ~get-possible-instants-for~,
-          _arguments_: a List of ECMAScript language values,
-        ): either a normal completion containing an ECMAScript language value, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It calls the method _methodName_ stored in the Time Zone Methods Record, with the stored receiver as the receiver, and the given _arguments_, and returns the result.</dd>
-      </dl>
-      <emu-alg>
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, _methodName_) is *true*.
-        1. Let _receiver_ be _timeZoneRec_.[[Receiver]].
-        1. If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_) is *true*, then
-          1. Set _receiver_ to ! CreateTemporalTimeZone(_timeZoneRec_.[[Receiver]]).
-        1. If _methodName_ is ~get-offset-nanoseconds-for~, then
-          1. Return ? Call(_timeZoneRec_.[[GetOffsetNanosecondsFor]], _receiver_, _arguments_).
-        1. If _methodName_ is ~get-possible-instants-for~, then
-          1. Return ? Call(_timeZoneRec_.[[GetPossibleInstantsFor]], _receiver_, _arguments_).
-      </emu-alg>
-    </emu-clause>
 
     <emu-clause id="sec-temporal-createtemporaltimezone" type="abstract operation">
       <h1>
@@ -717,8 +298,6 @@
         1. If _temporalTimeZoneLike_ is an Object, then
           1. If _temporalTimeZoneLike_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalTimeZoneLike_.[[TimeZone]].
-          1. If ? ObjectImplementsTemporalTimeZoneProtocol(_temporalTimeZoneLike_) is *false*, throw a *TypeError* exception.
-          1. Return _temporalTimeZoneLike_.
         1. If _temporalTimeZoneLike_ is not a String, throw a *TypeError* exception.
         1. Let _parseResult_ be ? ParseTemporalTimeZoneString(_temporalTimeZoneLike_).
         1. Let _offsetMinutes_ be _parseResult_.[[OffsetMinutes]].
@@ -730,82 +309,40 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporaltimezoneidentifier" type="abstract operation">
-      <h1>
-        ToTemporalTimeZoneIdentifier (
-          _timeZoneSlotValue_: a String or Object,
-        ): either a normal completion containing a String, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It obtains the identifier string for a value _timeZoneSlotValue_ stored in a Temporal.ZonedDateTime's [[TimeZone]] internal slot.</dd>
-      </dl>
-      <emu-alg>
-        1. If _timeZoneSlotValue_ is a String, then
-          1. Assert: Either IsOffsetTimeZoneIdentifier(_timeZoneSlotValue_) is *true*, or GetAvailableNamedTimeZoneIdentifier(_timeZoneSlotValue_) is not ~empty~.
-          1. Return _timeZoneSlotValue_.
-        1. Let _identifier_ be ? Get(_timeZoneSlotValue_, *"id"*).
-        1. If _identifier_ is not a String, throw a *TypeError* exception.
-        1. Return _identifier_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporaltimezoneobject" type="abstract operation">
-      <h1>
-        ToTemporalTimeZoneObject (
-          _timeZoneSlotValue_: a String or Object,
-        ): an Object
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It obtains a time zone object for a value _timeZoneSlotValue_ stored in a Temporal.ZonedDateTime's [[TimeZone]] internal slot.</dd>
-      </dl>
-      <emu-alg>
-        1. If _timeZoneSlotValue_ is an Object, return _timeZoneSlotValue_.
-        1. Return ! CreateTemporalTimeZone(_timeZoneSlotValue_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-getoffsetnanosecondsfor" type="abstract operation">
       <h1>
         GetOffsetNanosecondsFor (
-          _timeZoneRec_: a Time Zone Methods Record,
+          _timeZone_: a String,
           _instant_: a Temporal.Instant,
-        ): either a normal completion containing an integer or a throw completion
+        ): an integer in the interval from -86400 &times; 10<sup>9</sup> (exclusive) to 86400 &times; 10<sup>9</sup> (exclusive)
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It determines the UTC offset of an _instant_, in nanoseconds, by calling the `getOffsetNanosecondsFor` method of the given time zone.
+          It determines the UTC offset of an _instant_, in nanoseconds.
         </dd>
       </dl>
       <emu-alg>
-        1. Let _offsetNanoseconds_ be ? TimeZoneMethodsRecordCall(_timeZoneRec_, ~get-offset-nanoseconds-for~, « _instant_ »).
-        1. If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_), return ℝ(_offsetNanoseconds_).
-        1. If _offsetNanoseconds_ is not a Number, throw a *TypeError* exception.
-        1. If IsIntegralNumber(_offsetNanoseconds_) is *false*, throw a *RangeError* exception.
-        1. Set _offsetNanoseconds_ to ℝ(_offsetNanoseconds_).
-        1. If abs(_offsetNanoseconds_) &ge; nsPerDay, throw a *RangeError* exception.
-        1. Return _offsetNanoseconds_.
+        1. Let _parseResult_ be ! ParseTemporalTimeZoneString(_timeZone_).
+        1. If _parseResult_.[[OffsetMinutes]] is not ~empty~, return _parseResult_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>).
+        1. Return GetNamedTimeZoneOffsetNanoseconds(_parseResult_.[[Name]], _instant_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-getoffsetstringfor" type="abstract operation">
       <h1>
         GetOffsetStringFor (
-          _timeZoneRec_: a Time Zone Methods Record,
+          _timeZone_: a String,
           _instant_: a Temporal.Instant,
-        ): either a normal completion containing a String or a throw completion
+        ): a String
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          This operation is the internal implementation of the `Temporal.TimeZone.prototype.getOffsetStringFor` method.
-          If the given time zone is not built-in, it observably calls the time zone's `getOffsetNanosecondsFor` method.
         </dd>
       </dl>
       <emu-alg>
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
+        1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Return FormatUTCOffsetNanoseconds(_offsetNanoseconds_).
       </emu-alg>
     </emu-clause>
@@ -813,23 +350,20 @@
     <emu-clause id="sec-temporal-getplaindatetimefor" type="abstract operation">
       <h1>
         GetPlainDateTimeFor (
-          _timeZoneRec_: a Time Zone Methods Record,
+          _timeZone_: a String,
           _instant_: a Temporal.Instant,
-          _calendar_: a String or Object,
+          _calendar_: a String,
           optional _precalculatedOffsetNanoseconds_: an integer,
-        ): either a normal completion containing a Temporal.PlainDateTime or a throw completion
+        ): a Temporal.PlainDateTime
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          This operation is the internal implementation of the `Temporal.TimeZone.prototype.getPlainDateTimeFor` method.
-          If the given time zone is not built-in, it observably calls _timeZone_'s `getOffsetNanosecondsFor` method unless _precalculatedOffsetNanoseconds_ is supplied.
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: If _precalculatedOffsetNanoseconds_ is not present, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
         1. If _precalculatedOffsetNanoseconds_ is present, let _offsetNanoseconds_ be _precalculatedOffsetNanoseconds_.
-        1. Else, let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
+        1. Else, let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _instant_).
         1. Assert: abs(_offsetNanoseconds_) &lt; nsPerDay.
         1. Let _result_ be GetISOPartsFromEpoch(ℝ(_instant_.[[Nanoseconds]])).
         1. Set _result_ to BalanceISODateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
@@ -840,7 +374,7 @@
     <emu-clause id="sec-temporal-getinstantfor" type="abstract operation">
       <h1>
         GetInstantFor (
-          _timeZoneRec_: a Time Zone Methods Record,
+          _timeZone_: a String,
           _dateTime_: a Temporal.PlainDateTime,
           _disambiguation_: *"compatible"*, *"earlier"*, *"later"*, or *"reject"*,
         ): either a normal completion containing a Temporal.Instant or a throw completion
@@ -848,16 +382,11 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It is the internal implementation of the `Temporal.TimeZone.prototype.getInstantFor` method.
-          It calls the _timeZoneRec_'s `getPossibleInstantsFor` method at least once.
-          If that call returns an empty array and _disambiguation_ is not *"reject"*, it calls _timeZoneRec_'s `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` an additional time.
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-possible-instants-for~) is *true*.
-        1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZoneRec_, _dateTime_).
-        1. Return ? DisambiguatePossibleInstants(_possibleInstants_, _timeZoneRec_, _dateTime_, _disambiguation_).
+        1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
+        1. Return ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
       </emu-alg>
     </emu-clause>
 
@@ -865,7 +394,7 @@
       <h1>
         DisambiguatePossibleInstants (
           _possibleInstants_: a List of Temporal.Instant objects,
-          _timeZoneRec_: a Time Zone Methods Record,
+          _timeZone_: a String,
           _dateTime_: a Temporal.PlainDateTime,
           _disambiguation_: *"compatible"*, *"earlier"*, *"later"*, or *"reject"*,
         ): either a normal completion containing a Temporal.Instant or a throw completion
@@ -874,12 +403,7 @@
         <dt>description</dt>
         <dd>It chooses from a List of possible `Temporal.Instant` instances the one indicated by the _disambiguation_ parameter.</dd>
       </dl>
-      <p>
-        The _possibleInstants_ List may be empty, in which case it calls the time zone's `getOffsetNanosecondsFor` method twice, and `getPossibleInstantsFor` once, if _disambiguation_ is not *"reject"*.
-      </p>
       <emu-alg>
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-possible-instants-for~) is *true*.
-        1. Assert: If _possibleInstants_ is empty, and _disambiguation_ is not *"reject"*, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
         1. Let _n_ be _possibleInstants_'s length.
         1. If _n_ = 1, then
           1. Return _possibleInstants_[0].
@@ -900,8 +424,8 @@
         1. Let _dayAfterNs_ be _epochNanoseconds_ + ℤ(nsPerDay).
         1. If IsValidEpochNanoseconds(_dayAfterNs_) is *false*, throw a *RangeError* exception.
         1. Let _dayAfter_ be ! CreateTemporalInstant(_dayAfterNs_).
-        1. Let _offsetBefore_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _dayBefore_).
-        1. Let _offsetAfter_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _dayAfter_).
+        1. Let _offsetBefore_ be GetOffsetNanosecondsFor(_timeZone_, _dayBefore_).
+        1. Let _offsetAfter_ be GetOffsetNanosecondsFor(_timeZone_, _dayAfter_).
         1. Let _nanoseconds_ be _offsetAfter_ - _offsetBefore_.
         1. If abs(_nanoseconds_) > nsPerDay, throw a *RangeError* exception.
         1. If _disambiguation_ is *"earlier"*, then
@@ -909,7 +433,7 @@
           1. Let _earlierTime_ be AddTime(_dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _norm_).
           1. Let _earlierDate_ be BalanceISODate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]] + _earlierTime_.[[Days]]).
           1. Let _earlierDateTime_ be ! CreateTemporalDateTime(_earlierDate_.[[Year]], _earlierDate_.[[Month]], _earlierDate_.[[Day]], _earlierTime_.[[Hour]], _earlierTime_.[[Minute]], _earlierTime_.[[Second]], _earlierTime_.[[Millisecond]], _earlierTime_.[[Microsecond]], _earlierTime_.[[Nanosecond]], *"iso8601"*).
-          1. Set _possibleInstants_ to ? GetPossibleInstantsFor(_timeZoneRec_, _earlierDateTime_).
+          1. Set _possibleInstants_ to ? GetPossibleInstantsFor(_timeZone_, _earlierDateTime_).
           1. If _possibleInstants_ is empty, throw a *RangeError* exception.
           1. Return _possibleInstants_[0].
         1. Assert: _disambiguation_ is *"compatible"* or *"later"*.
@@ -917,7 +441,7 @@
         1. Let _laterTime_ be AddTime(_dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _norm_).
         1. Let _laterDate_ be BalanceISODate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]] + _laterTime_.[[Days]]).
         1. Let _laterDateTime_ be ! CreateTemporalDateTime(_laterDate_.[[Year]], _laterDate_.[[Month]], _laterDate_.[[Day]], _laterTime_.[[Hour]], _laterTime_.[[Minute]], _laterTime_.[[Second]], _laterTime_.[[Millisecond]], _laterTime_.[[Microsecond]], _laterTime_.[[Nanosecond]], *"iso8601"*).
-        1. Set _possibleInstants_ to ? GetPossibleInstantsFor(_timeZoneRec_, _laterDateTime_).
+        1. Set _possibleInstants_ to ? GetPossibleInstantsFor(_timeZone_, _laterDateTime_).
         1. Set _n_ to _possibleInstants_'s length.
         1. If _n_ = 0, throw a *RangeError* exception.
         1. Return _possibleInstants_[_n_ - 1].
@@ -927,45 +451,37 @@
     <emu-clause id="sec-temporal-getpossibleinstantsfor" type="abstract operation">
       <h1>
         GetPossibleInstantsFor (
-          _timeZoneRec_: a Time Zone Methods Record,
+          _timeZone_: a String,
           _dateTime_: a Temporal.PlainDateTime,
         ): either a normal completion containing a List of Temporal.Instants or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It determines the possible Temporal.Instant exact times that may correspond to _dateTime_, by calling the `getPossibleInstantsFor` method of the given time zone.
+          It determines the possible Temporal.Instant exact times that may correspond to _dateTime_.
         </dd>
       </dl>
       <emu-alg>
-        1. Let _possibleInstants_ be ? TimeZoneMethodsRecordCall(_timeZoneRec_, ~get-possible-instants-for~, « _dateTime_ »).
-        1. If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_), return ! CreateListFromArrayLike(_possibleInstants_, « Object »).
-        1. Let _iteratorRecord_ be ? GetIterator(_possibleInstants_, ~sync~).
-        1. Let _list_ be a new empty List.
-        1. Repeat,
-          1. Let _value_ be ? IteratorStepValue(_iteratorRecord_).
-          1. If _value_ is ~done~, then
-            1. Let _numResults_ be _list_'s length.
-            1. If _numResults_ &gt; 1, then
-              1. Let _epochNs_ be a new empty List.
-              1. For each value _instant_ in _list_, do
-                1. Append _instant_.[[EpochNanoseconds]] to the end of the List _epochNs_.
-              1. Let _min_ be the least element of the List _epochNs_.
-              1. Let _max_ be the greatest element of the List _epochNs_.
-              1. If abs(ℝ(_max_ - _min_)) &gt; nsPerDay, throw a *RangeError* exception.
-            1. Return _list_.
-          1. If _value_ is not an Object or _value_ does not have an [[InitializedTemporalInstant]] internal slot, then
-            1. Let _completion_ be ThrowCompletion(a newly created *TypeError* object).
-            1. Return ? IteratorClose(_iteratorRecord_, _completion_).
-          1. Append _value_ to the end of the List _list_.
+        1. Let _parseResult_ be ! ParseTemporalTimeZoneString(_timeZone_).
+        1. If _parseResult_.[[OffsetMinutes]] is not ~empty~, then
+          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _parseResult_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>)).
+          1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ ».
+        1. Else,
+          1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_parseResult_.[[Name]], _dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
+        1. Let _possibleInstants_ be a new empty List.
+        1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
+          1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
+          1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
+          1. Append _instant_ to _possibleInstants_.
+        1. Return _possibleInstants_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-timezoneequals" type="abstract operation">
       <h1>
         TimeZoneEquals (
-          _one_: a String or Object,
-          _two_: a String or Object,
+          _one_: a String,
+          _two_: a String,
         ): either a normal completion containing a Boolean or a throw completion
       </h1>
       <dl class="header">
@@ -973,15 +489,12 @@
         <dd>It returns *true* if its arguments represent time zones using the same identifier.</dd>
       </dl>
       <emu-alg>
-        1. If _one_ and _two_ are the same Object value, return *true*.
-        1. Let _timeZoneOne_ be ? ToTemporalTimeZoneIdentifier(_one_).
-        1. Let _timeZoneTwo_ be ? ToTemporalTimeZoneIdentifier(_two_).
-        1. If _timeZoneOne_ is _timeZoneTwo_, return *true*.
-        1. Let _offsetMinutesOne_ be ? ParseTimeZoneIdentifier(_timeZoneOne_).[[OffsetMinutes]].
-        1. Let _offsetMinutesTwo_ be ? ParseTimeZoneIdentifier(_timeZoneTwo_).[[OffsetMinutes]].
+        1. If _one_ is _two_, return *true*.
+        1. Let _offsetMinutesOne_ be ? ParseTimeZoneIdentifier(_one_).[[OffsetMinutes]].
+        1. Let _offsetMinutesTwo_ be ? ParseTimeZoneIdentifier(_two_).[[OffsetMinutes]].
         1. If _offsetMinutesOne_ is ~empty~ and _offsetMinutesTwo_ is ~empty~, then
-          1. Let _recordOne_ be GetAvailableNamedTimeZoneIdentifier(_timeZoneOne_).
-          1. Let _recordTwo_ be GetAvailableNamedTimeZoneIdentifier(_timeZoneTwo_).
+          1. Let _recordOne_ be GetAvailableNamedTimeZoneIdentifier(_one_).
+          1. Let _recordTwo_ be GetAvailableNamedTimeZoneIdentifier(_two_).
           1. If _recordOne_ is not ~empty~ and _recordTwo_ is not ~empty~ and _recordOne_.[[PrimaryIdentifier]] is _recordTwo_.[[PrimaryIdentifier]], return *true*.
         1. Else,
           1. If _offsetMinutesOne_ is not ~empty~ and _offsetMinutesTwo_ is not ~empty~ and _offsetMinutesOne_ = _offsetMinutesTwo_, return *true*.
