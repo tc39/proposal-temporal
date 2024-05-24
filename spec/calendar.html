@@ -1020,31 +1020,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-consolidatecalendars" type="abstract operation">
-      <h1>
-        ConsolidateCalendars (
-          _one_: a String or Object,
-          _two_: a String or Object,
-        ): either a normal completion containing either a String or Object, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>
-          It returns the calendar that should take priority when combining two Temporal objects with different calendars, or throws an exception if the calendars cannot be combined.
-          Calendars can be combined when they have the same identifier or exactly one of them has identifier *"iso8601"*, and _calendarTwo_ takes priority in any combination unless it is the calendar with that identifier.
-        </dd>
-      </dl>
-      <emu-alg>
-        1. If _one_ and _two_ are the same Object value, return _two_.
-        1. Let _calendarOne_ be ? ToTemporalCalendarIdentifier(_one_).
-        1. Let _calendarTwo_ be ? ToTemporalCalendarIdentifier(_two_).
-        1. If _calendarOne_ is _calendarTwo_, return _two_.
-        1. If _calendarOne_ is *"iso8601"*, return _two_.
-        1. If _calendarTwo_ is *"iso8601"*, return _one_.
-        1. Throw a *RangeError* exception.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-isodaysinmonth" type="abstract operation">
       <h1>
         ISODaysInMonth (

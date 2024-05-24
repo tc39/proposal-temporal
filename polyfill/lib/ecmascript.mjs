@@ -2266,19 +2266,6 @@ export function ThrowIfCalendarsNotEqual(one, two, errorMessageAction) {
   }
 }
 
-export function ConsolidateCalendars(one, two) {
-  if (one === two) return two;
-  const sOne = ToTemporalCalendarIdentifier(one);
-  const sTwo = ToTemporalCalendarIdentifier(two);
-  if (sOne === sTwo || sOne === 'iso8601') {
-    return two;
-  } else if (sTwo === 'iso8601') {
-    return one;
-  } else {
-    throw new RangeError('irreconcilable calendars');
-  }
-}
-
 export function CalendarDateFromFields(calendarRec, fields, options) {
   const result = calendarRec.dateFromFields(fields, options);
   if (!calendarRec.isBuiltIn() && !IsTemporalDate(result)) throw new TypeError('invalid result');
