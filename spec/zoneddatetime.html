@@ -934,42 +934,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.toplainyearmonth">
-      <h1>Temporal.ZonedDateTime.prototype.toPlainYearMonth ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~fields~, ~year-month-from-fields~ »).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
-        1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _temporalDateTime_, « *"monthCode"*, *"year"* », «», «»).
-        1. Return ? CalendarYearMonthFromFields(_calendarRec_, _fields_).
-        1. NOTE: The call to CalendarYearMonthFromFields is necessary in order to create a PlainYearMonth object with the [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots set correctly.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.toplainmonthday">
-      <h1>Temporal.ZonedDateTime.prototype.toPlainMonthDay ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~fields~, ~month-day-from-fields~ »).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
-        1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _temporalDateTime_, « *"day"*, *"monthCode"* », «», «»).
-        1. Return ? CalendarMonthDayFromFields(_calendarRec_, _fields_).
-        1. NOTE: The call to CalendarMonthDayFromFields is necessary in order to create a PlainMonthDay object with the [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots set correctly.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.zoneddatetime.prototype.getisofields">
       <h1>Temporal.ZonedDateTime.prototype.getISOFields ( )</h1>
       <p>
