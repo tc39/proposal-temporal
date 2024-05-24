@@ -26,7 +26,7 @@
     </ul>
 
     <emu-clause id="sec-temporal.zoneddatetime">
-      <h1>Temporal.ZonedDateTime ( _epochNanoseconds_, _timeZoneLike_ [ , _calendarLike_ ] )</h1>
+      <h1>Temporal.ZonedDateTime ( _epochNanoseconds_, _timeZone_ [ , _calendar_ ] )</h1>
       <p>
         This function performs the following steps when called:
       </p>
@@ -35,8 +35,18 @@
           1. Throw a *TypeError* exception.
         1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
         1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
-        1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_timeZoneLike_).
-        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
+        1. If _timeZone_ is not a String, throw a *TypeError* exception.
+        1. Let _timeZoneParse_ be ? ParseTimeZoneIdentifier(_timeZone_).
+        1. If _timeZoneParse_.[[OffsetMinutes]] is ~empty~, then
+          1. Let _identifierRecord_ be GetAvailableNamedTimeZoneIdentifier(_timeZoneParse_.[[Name]]).
+          1. If _identifierRecord_ is ~empty~, throw a *RangeError* exception.
+          1. Set _timeZone_ to _identifierRecord_.[[Identifier]].
+        1. Else,
+          1. Set _timeZone_ to FormatOffsetTimeZoneIdentifier(_timeZoneParse_.[[OffsetMinutes]]).
+        1. If _calendar_ is *undefined*, set _calendar_ to *"iso8601"*.
+        1. If _calendar_ is not a String, throw a *TypeError* exception.
+        1. Set _calendar_ to the ASCII-lowercase of _calendar_.
+        1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
         1. Return ? CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_, NewTarget).
       </emu-alg>
     </emu-clause>
@@ -60,13 +70,13 @@
       </p>
       <emu-alg>
         1. Set _options_ to ? GetOptionsObject(_options_).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and ToTemporalOverflow reads *"overflow"*).
+        1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_options_).
+        1. Let _offsetOption_ be ? GetTemporalOffsetOption(_options_, *"reject"*).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and ToTemporalOverflow reads *"overflow"*).
-          1. Perform ? GetTemporalDisambiguationOption(_options_).
-          1. Perform ? GetTemporalOffsetOption(_options_, *"reject"*).
-          1. Perform ? GetTemporalOverflowOption(_options_).
           1. Return ! CreateTemporalZonedDateTime(_item_.[[Nanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
-        1. Return ? ToTemporalZonedDateTime(_item_, _options_).
+        1. Return ? ToTemporalZonedDateTime(_item_, _disambiguation_, _offsetOption_, _overflow_).
       </emu-alg>
     </emu-clause>
 
@@ -121,7 +131,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? ToTemporalCalendarIdentifier(_zonedDateTime_.[[Calendar]]).
+        1. Return _zonedDateTime_.[[Calendar]].
       </emu-alg>
     </emu-clause>
 
@@ -134,7 +144,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? ToTemporalTimeZoneIdentifier(_zonedDateTime_.[[TimeZone]]).
+        1. Return _zonedDateTime_.[[TimeZone]].
       </emu-alg>
     </emu-clause>
 
@@ -149,9 +159,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return ? CalendarEra(_calendar_, _plainDateTime_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return ? CalendarEra(_temporalDateTime_).
       </emu-alg>
     </emu-clause>
 
@@ -166,9 +175,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Let _result_ be ? CalendarEraYear(_calendar_, _plainDateTime_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Let _result_ be ? CalendarEraYear(_temporalDateTime_).
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -185,9 +193,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarYear(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarYear(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -202,9 +209,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarMonth(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarMonth(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -219,9 +225,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return ? CalendarMonthCode(_calendar_, _temporalDateTime_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return ? CalendarMonthCode(_temporalDateTime_).
       </emu-alg>
     </emu-clause>
 
@@ -235,10 +240,9 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~day~ »).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
-        1. Return 𝔽(? CalendarDay(_calendarRec_, _temporalDateTime_)).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarDay(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -253,8 +257,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
         1. Return 𝔽(_temporalDateTime_.[[ISOHour]]).
       </emu-alg>
     </emu-clause>
@@ -270,8 +273,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
         1. Return 𝔽(_temporalDateTime_.[[ISOMinute]]).
       </emu-alg>
     </emu-clause>
@@ -287,8 +289,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
         1. Return 𝔽(_temporalDateTime_.[[ISOSecond]]).
       </emu-alg>
     </emu-clause>
@@ -304,8 +305,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
         1. Return 𝔽(_temporalDateTime_.[[ISOMillisecond]]).
       </emu-alg>
     </emu-clause>
@@ -321,8 +321,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
         1. Return 𝔽(_temporalDateTime_.[[ISOMicrosecond]]).
       </emu-alg>
     </emu-clause>
@@ -338,8 +337,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
         1. Return 𝔽(_temporalDateTime_.[[ISONanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -383,9 +381,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarDayOfWeek(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarDayOfWeek(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -400,9 +397,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarDayOfYear(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarDayOfYear(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -417,9 +413,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Let _result_ be ? CalendarWeekOfYear(_calendar_, _temporalDateTime_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Let _result_ be ? CalendarWeekOfYear(_temporalDateTime_).
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -436,9 +431,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Let _result_ be ? CalendarYearOfWeek(_calendar_, _temporalDateTime_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Let _result_ be ? CalendarYearOfWeek(_temporalDateTime_).
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -453,17 +447,17 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, *"iso8601"*).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, *"iso8601"*).
         1. Let _year_ be _temporalDateTime_.[[ISOYear]].
         1. Let _month_ be _temporalDateTime_.[[ISOMonth]].
         1. Let _day_ be _temporalDateTime_.[[ISODay]].
         1. Let _today_ be ? CreateTemporalDateTime(_year_, _month_, _day_, 0, 0, 0, 0, 0, 0, *"iso8601"*).
         1. Let _tomorrowFields_ be BalanceISODate(_year_, _month_, _day_ + 1).
         1. Let _tomorrow_ be ? CreateTemporalDateTime(_tomorrowFields_.[[Year]], _tomorrowFields_.[[Month]], _tomorrowFields_.[[Day]], 0, 0, 0, 0, 0, 0, *"iso8601"*).
-        1. Let _todayInstant_ be ? GetInstantFor(_timeZoneRec_, _today_, *"compatible"*).
-        1. Let _tomorrowInstant_ be ? GetInstantFor(_timeZoneRec_, _tomorrow_, *"compatible"*).
+        1. Let _todayInstant_ be ? GetInstantFor(_timeZone_, _today_, *"compatible"*).
+        1. Let _tomorrowInstant_ be ? GetInstantFor(_timeZone_, _tomorrow_, *"compatible"*).
         1. Let _diff_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_tomorrowInstant_.[[Nanoseconds]], _todayInstant_.[[Nanoseconds]]).
         1. Return 𝔽(DivideNormalizedTimeDuration(_diff_, 3.6 &times; 10<sup>12</sup>)).
       </emu-alg>
@@ -480,9 +474,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarDaysInWeek(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarDaysInWeek(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -497,9 +490,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarDaysInMonth(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarDaysInMonth(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -514,9 +506,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarDaysInYear(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarDaysInYear(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -531,9 +522,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return 𝔽(? CalendarMonthsInYear(_calendar_, _temporalDateTime_)).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return 𝔽(? CalendarMonthsInYear(_temporalDateTime_)).
       </emu-alg>
     </emu-clause>
 
@@ -548,9 +538,8 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
-        1. Return ? CalendarInLeapYear(_calendar_, _temporalDateTime_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_[[TimeZone]], _instant_, _calendar_).
+        1. Return ? CalendarInLeapYear(_temporalDateTime_).
       </emu-alg>
     </emu-clause>
 
@@ -563,9 +552,8 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Return 𝔽(? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_)).
+        1. Return 𝔽(? GetOffsetNanosecondsFor(_zonedDateTime_.[[TimeZone]], _instant_)).
       </emu-alg>
     </emu-clause>
 
@@ -578,9 +566,8 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Return ? GetOffsetStringFor(_timeZoneRec_, _instant_).
+        1. Return ? GetOffsetStringFor(_zonedDateTime_.[[TimeZone]], _instant_).
       </emu-alg>
     </emu-clause>
 
@@ -593,13 +580,13 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. If ? IsPartialTemporalObject(_temporalZonedDateTimeLike_) is *false*, throw a *TypeError* exception.
-        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~date-from-fields~, ~fields~, ~merge-fields~ »).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
-        1. Let _dateTime_ be ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]], _offsetNanoseconds_).
-        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _dateTime_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. Let _dateTime_ be ! GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_, _offsetNanoseconds_).
+        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendar_, _dateTime_, « *"day"*, *"month"*, *"monthCode"*, *"year"* »).
         1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"hour"*, _dateTime_.[[ISOHour]]).
         1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"minute"*, _dateTime_.[[ISOMinute]]).
         1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"second"*, _dateTime_.[[ISOSecond]]).
@@ -609,17 +596,17 @@
         1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"offset"*, FormatUTCOffsetNanoseconds(_offsetNanoseconds_)).
         1. Append *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, and *"second"* to _fieldsResult_.[[FieldNames]].
         1. Let _partialZonedDateTime_ be ? PrepareTemporalFields(_temporalZonedDateTimeLike_, _fieldsResult_.[[FieldNames]], ~partial~).
-        1. Let _fields_ be ? CalendarMergeFields(_calendarRec_, _fieldsResult_.[[Fields]], _partialZonedDateTime_).
+        1. Let _fields_ be ? CalendarMergeFields(_calendar_, _fieldsResult_.[[Fields]], _partialZonedDateTime_).
         1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldsResult_.[[FieldNames]], « *"offset"* »).
-        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
         1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
         1. Let _offset_ be ? GetTemporalOffsetOption(_resolvedOptions_, *"prefer"*).
-        1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _resolvedOptions_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+        1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
         1. Assert: _offsetString_ is a String.
         1. Let _newOffsetNanoseconds_ be ? ParseDateTimeUTCOffset(_offsetString_).
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _newOffsetNanoseconds_, _timeZoneRec_, _disambiguation_, _offset_, ~match-exactly~).
-        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZoneRec_.[[Receiver]], _calendarRec_.[[Receiver]]).
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _newOffsetNanoseconds_, _timeZone_, _disambiguation_, _offset_, ~match-exactly~).
+        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -632,13 +619,13 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _plainTime_ be ? ToTemporalTimeOrMidnight(_plainTimeLike_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _resultPlainDateTime_ be ? CreateTemporalDateTime(_plainDateTime_.[[ISOYear]], _plainDateTime_.[[ISOMonth]], _plainDateTime_.[[ISODay]], _plainTime_.[[ISOHour]], _plainTime_.[[ISOMinute]], _plainTime_.[[ISOSecond]], _plainTime_.[[ISOMillisecond]], _plainTime_.[[ISOMicrosecond]], _plainTime_.[[ISONanosecond]], _calendar_).
-        1. Set _instant_ to ? GetInstantFor(_timeZoneRec_, _resultPlainDateTime_, *"compatible"*).
-        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZoneRec_.[[Receiver]], _calendar_).
+        1. Set _instant_ to ? GetInstantFor(_timeZone_, _resultPlainDateTime_, *"compatible"*).
+        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -722,20 +709,20 @@
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, _inclusive_).
         1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, then
           1. Return ! CreateTemporalZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
-        1. Let _temporalDateTime_ be ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_, _offsetNanoseconds_).
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. Let _temporalDateTime_ be ! GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_, _offsetNanoseconds_).
         1. If _smallestUnit_ is *"day"*, then
           1. Let _dtStart_ be ? CreateTemporalDateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], 0, 0, 0, 0, 0, 0, *"iso8601"*).
           1. Let _dateEnd_ be BalanceISODate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]] + 1).
           1. Let _dtEnd_ be ? CreateTemporalDateTime(_dateEnd_.[[Year]], _dateEnd_.[[Month]], _dateEnd_.[[Day]], 0, 0, 0, 0, 0, 0, *"iso8601"*).
           1. Let _thisNs_ be _zonedDateTime_.[[Nanoseconds]].
-          1. Let _instantStart_ be ? GetInstantFor(_timeZoneRec_, _dtStart_, *"compatible"*).
+          1. Let _instantStart_ be ? GetInstantFor(_timeZone_, _dtStart_, *"compatible"*).
           1. Let _startNs_ be _instantStart_.[[Nanoseconds]].
           1. If _thisNs_ &lt; _startNs_, throw a *RangeError* exception.
-          1. Let _instantEnd_ be ? GetInstantFor(_timeZoneRec_, _dtEnd_, *"compatible"*).
+          1. Let _instantEnd_ be ? GetInstantFor(_timeZone_, _dtEnd_, *"compatible"*).
           1. Let _endNs_ be _instantEnd_.[[Nanoseconds]].
           1. If _thisNs_ &geq; _endNs_, throw a *RangeError* exception.
           1. Let _dayLengthNs_ be ℝ(_endNs_ - _startNs_).
@@ -744,8 +731,8 @@
           1. Let _epochNanoseconds_ be _startNs_ + _roundedDayNs_.[[TotalNanoseconds]].
         1. Else,
           1. Let _roundResult_ be RoundISODateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZoneRec_, *"compatible"*, *"prefer"*, ~match-exactly~).
-        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZoneRec_.[[Receiver]], _calendar_).
+          1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, *"compatible"*, *"prefer"*, ~match-exactly~).
+        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -834,13 +821,13 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. Let _startDateTime_ be ? CreateTemporalDateTime(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], 0, 0, 0, 0, 0, 0, _calendar_).
-        1. Let _startInstant_ be ? GetInstantFor(_timeZoneRec_, _startDateTime_, *"compatible"*).
-        1. Return ! CreateTemporalZonedDateTime(_startInstant_.[[Nanoseconds]], _timeZoneRec_,[[Receiver]], _calendar_).
+        1. Let _startInstant_ be ? GetInstantFor(_timeZone_, _startDateTime_, *"compatible"*).
+        1. Return ! CreateTemporalZonedDateTime(_startInstant_.[[Nanoseconds]], _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -854,8 +841,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. If IsOffsetTimeZoneIdentifier(_timeZone_) is *true* or _timeZone_ is *"UTC"*, return *null*.
-        1. Let _id_ be ? ToTemporalTimeZoneIdentifier(_timeZone_).
-        1. Let _transition_ be GetNamedTimeZoneNextTransition(_id_, _zonedDateTime_.[[Nanoseconds]]).
+        1. Let _transition_ be GetNamedTimeZoneNextTransition(_timeZone_, _zonedDateTime_.[[Nanoseconds]]).
         1. If _transition_ is *null*, return *null*.
         1. Return ! CreateTemporalZonedDateTime(_transition_, _timeZone_, _zonedDateTime_.[[Calendar]]).
       </emu-alg>
@@ -871,8 +857,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. If IsOffsetTimeZoneIdentifier(_timeZone_) is *true* or _timeZone_ is *"UTC"*, return *null*.
-        1. Let _id_ be ? ToTemporalTimeZoneIdentifier(_timeZone_).
-        1. Let _transition_ be GetNamedTimeZonePreviousTransition(_id_, _zonedDateTime_.[[Nanoseconds]]).
+        1. Let _transition_ be GetNamedTimeZonePreviousTransition(_timeZone_, _zonedDateTime_.[[Nanoseconds]]).
         1. If _transition_ is *null*, return *null*.
         1. Return ! CreateTemporalZonedDateTime(_transition_, _timeZone_, _zonedDateTime_.[[Calendar]]).
       </emu-alg>
@@ -900,8 +885,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _calendar_).
         1. Return ! CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -916,8 +900,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _calendar_).
         1. Return ! CreateTemporalTime(_temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -931,8 +914,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _zonedDateTime_.[[Calendar]]).
+        1. Return ? GetPlainDateTimeFor(_zonedDateTime_.[[TimeZone]], _instant_, _zonedDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -947,9 +929,9 @@
         1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
-        1. Let _dateTime_ be ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_, _offsetNanoseconds_).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. Let _dateTime_ be ! GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_, _offsetNanoseconds_).
         1. Let _offset_ be FormatUTCOffsetNanoseconds(_offsetNanoseconds_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_dateTime_.[[ISODay]])).
@@ -962,7 +944,7 @@
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoSecond"*, 𝔽(_dateTime_.[[ISOSecond]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, 𝔽(_dateTime_.[[ISOYear]])).
         1. Perform ! CreateDataPropertyOrThrow(_fields_, *"offset"*, _offset_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"timeZone"*, _timeZoneRec_.[[Receiver]]).
+        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"timeZone"*, _timeZone_).
         1. Return _fields_.
       </emu-alg>
     </emu-clause>
@@ -1039,7 +1021,7 @@
           _nanosecond_: an integer in the inclusive interval from 0 to 999,
           _offsetBehaviour_: one of ~option~, ~exact~, or ~wall~,
           _offsetNanoseconds_: an integer,
-          _timeZoneRec_: a Time Zone Methods Record,
+          _timeZone_: a String,
           _disambiguation_: one of *"earlier"*, *"later"*, *"compatible"*, or *"reject"*,
           _offsetOption_: one of *"ignore"*, *"use"*, *"prefer"*, or *"reject"*,
           _matchBehaviour_: one of ~match-exactly~ or ~match-minutes~,
@@ -1060,11 +1042,9 @@
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-possible-instants-for~) is *true*.
         1. Let _dateTime_ be ? CreateTemporalDateTime(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, *"iso8601"*).
         1. If _offsetBehaviour_ is ~wall~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is *"ignore"*, then
-          1. Let _instant_ be ? GetInstantFor(_timeZoneRec_, _dateTime_, _disambiguation_).
+          1. Let _instant_ be ? GetInstantFor(_timeZone_, _dateTime_, _disambiguation_).
           1. Return _instant_.[[Nanoseconds]].
         1. If _offsetBehaviour_ is ~exact~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is *"use"*, then
           1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _offsetNanoseconds_).
@@ -1072,10 +1052,10 @@
           1. Return _epochNanoseconds_.
         1. Assert: _offsetBehaviour_ is ~option~.
         1. Assert: _offsetOption_ is *"prefer"* or *"reject"*.
-        1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZoneRec_, _dateTime_).
+        1. Let _possibleInstants_ be ? GetPossibleInstantsFor(_timeZone_, _dateTime_).
         1. If _possibleInstants_ is not empty, then
           1. For each element _candidate_ of _possibleInstants_, do
-            1. Let _candidateNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _candidate_).
+            1. Let _candidateNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _candidate_).
             1. If _candidateNanoseconds_ = _offsetNanoseconds_, then
               1. Return _candidate_.[[Nanoseconds]].
             1. If _matchBehaviour_ is ~match-minutes~, then
@@ -1083,7 +1063,7 @@
               1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
                 1. Return _candidate_.[[Nanoseconds]].
         1. If _offsetOption_ is *"reject"*, throw a *RangeError* exception.
-        1. Let _instant_ be ? DisambiguatePossibleInstants(_possibleInstants_, _timeZoneRec_, _dateTime_, _disambiguation_).
+        1. Let _instant_ be ? DisambiguatePossibleInstants(_possibleInstants_, _timeZone_, _dateTime_, _disambiguation_).
         1. Return _instant_.[[Nanoseconds]].
       </emu-alg>
     </emu-clause>
@@ -1092,7 +1072,9 @@
       <h1>
         ToTemporalZonedDateTime (
           _item_: an ECMAScript language value,
-          optional _options_: an Object,
+          optional _disambiguation_: *"earlier"*, *"later"*, *"compatible"*, or *"reject"*,
+          optional _offsetOption_: *"prefer"*, *"use"*, *"ignore"*, or *"reject"*,
+          optional _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing a Temporal.ZonedDateTime, or a throw completion
       </h1>
       <dl class="header">
@@ -1102,26 +1084,20 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _options_ is not present, set _options_ to *undefined*.
-        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(! GetOptionsObject(_options_), *null*).
         1. Let _offsetBehaviour_ be ~option~.
         1. Let _matchBehaviour_ be ~match-exactly~.
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _item_.
           1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
-          1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-from-fields~, ~fields~ »).
-          1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _item_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, *"timeZone"* », « *"timeZone"* »).
+          1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"offset"*, *"second"*, *"timeZone"* », « *"timeZone"* »).
           1. Let _timeZone_ be ! Get(_fields_, *"timeZone"*).
           1. Set _timeZone_ to ? ToTemporalTimeZoneSlotValue(_timeZone_).
           1. Let _offsetString_ be ! Get(_fields_, *"offset"*).
           1. Assert: _offsetString_ is a String or *undefined*.
           1. If _offsetString_ is *undefined*, then
             1. Set _offsetBehaviour_ to ~wall~.
-          1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalDisambiguation reads *"disambiguation"*, ToTemporalOffset reads *"offset"*, and InterpretTemporalDateTimeFields reads *"overflow"*).
-          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
-          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_resolvedOptions_, *"reject"*).
-          1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendarRec_, _fields_, _resolvedOptions_).
+          1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Else,
           1. If _item_ is not a String, throw a *TypeError* exception.
           1. Let _result_ be ? ParseTemporalZonedDateTimeString(_item_).
@@ -1138,14 +1114,10 @@
           1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
           1. Set _calendar_ to the ASCII-lowercase of _calendar_.
           1. Set _matchBehaviour_ to ~match-minutes~.
-          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
-          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_resolvedOptions_, *"reject"*).
-          1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetNanoseconds_ to ? ParseDateTimeUTCOffset(_offsetString_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNanoseconds_, _timeZoneRec_, _disambiguation_, _offsetOption_, _matchBehaviour_).
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_, _matchBehaviour_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -1200,9 +1172,8 @@
         1. Let _ns_ be RoundTemporalInstant(_zonedDateTime_.[[Nanoseconds]], _increment_, _unit_, _roundingMode_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _instant_ be ! CreateTemporalInstant(_ns_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
-        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZoneRec_, _instant_).
-        1. Let _temporalDateTime_ be ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, *"iso8601"*, _offsetNanoseconds_).
+        1. Let _offsetNanoseconds_ be ? GetOffsetNanosecondsFor(_timeZone_, _instant_).
+        1. Let _temporalDateTime_ be ! GetPlainDateTimeFor(_timeZone_, _instant_, *"iso8601"*, _offsetNanoseconds_).
         1. Let _dateTimeString_ be ! TemporalDateTimeToString(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], *"iso8601"*, _precision_, *"never"*).
         1. If _showOffset_ is *"never"*, then
           1. Let _offsetString_ be the empty String.
@@ -1211,9 +1182,8 @@
         1. If _showTimeZone_ is *"never"*, then
           1. Let _timeZoneString_ be the empty String.
         1. Else,
-          1. Let _timeZoneIdentifier_ be ? ToTemporalTimeZoneIdentifier(_timeZone_).
           1. If _showTimeZone_ is *"critical"*, let _flag_ be *"!"*; else let _flag_ be the empty String.
-          1. Let _timeZoneString_ be the string-concatenation of the code unit 0x005B (LEFT SQUARE BRACKET), _flag_, _timeZoneIdentifier_, and the code unit 0x005D (RIGHT SQUARE BRACKET).
+          1. Let _timeZoneString_ be the string-concatenation of the code unit 0x005B (LEFT SQUARE BRACKET), _flag_, _timeZone_, and the code unit 0x005D (RIGHT SQUARE BRACKET).
         1. Let _calendarString_ be ? MaybeFormatCalendarAnnotation(_zonedDateTime_.[[Calendar]], _showCalendar_).
         1. Return the string-concatenation of _dateTimeString_, _offsetString_, _timeZoneString_, and _calendarString_.
       </emu-alg>
@@ -1223,15 +1193,15 @@
       <h1>
         AddZonedDateTime (
           _epochNanoseconds_: a BigInt,
-          _timeZoneRec_: a Time Zone Methods Record,
-          _calendarRec_: a Calendar Methods Record,
+          _timeZone_: a String,
+          _calendar_: a String,
           _years_: an integer,
           _months_: an integer,
           _weeks_: an integer,
           _days_: an integer,
           _norm_: a Normalized Time Duration Record,
           optional _precalculatedPlainDateTime_: a Temporal.PlainDateTime or *undefined*,
-          optional _options_: an Object,
+          optional _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing a BigInt or a throw completion
       </h1>
       <dl class="header">
@@ -1241,30 +1211,24 @@
           As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
         </dd>
       </dl>
-      <p>Unless _precalculatedPlainDateTime_ is supplied, the given _timeZone_'s `getOffsetNanosecondsFor` method will be called to convert _epochNanoseconds_ to a wall-clock time, and _timeZoneRec_ must have looked up `getOffsetNanosecondsFor`. `getPossibleInstantsFor` will always be called and must have been looked up.</p>
       <emu-alg>
-        1. Assert: TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-possible-instants-for~) is *true*.
         1. If _precalculatedPlainDateTime_ is not present, set _precalculatedPlainDateTime_ to *undefined*.
-        1. Assert: If _precalculatedPlainDateTime_ is *undefined*, TimeZoneMethodsRecordHasLookedUp(_timeZoneRec_, ~get-offset-nanoseconds-for~) is *true*.
-        1. If _options_ is not present, set _options_ to *undefined*.
-        1. Assert: _options_ is an Object or *undefined*.
+        1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
         1. If _years_ = 0, _months_ = 0, _weeks_ = 0, and _days_ = 0, then
           1. Return ? AddInstant(_epochNanoseconds_, _norm_).
         1. Let _instant_ be ! CreateTemporalInstant(_epochNanoseconds_).
         1. If _precalculatedPlainDateTime_ is not *undefined*, then
           1. Let _temporalDateTime_ be _precalculatedPlainDateTime_.
         1. Else,
-          1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
+          1. Let _temporalDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
         1. If _years_ = 0, and _months_ = 0, and _weeks_ = 0, then
-          1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
-          1. Let _intermediate_ be ? AddDaysToZonedDateTime(_instant_, _temporalDateTime_, _timeZoneRec_, _calendarRec_.[[Receiver]], _days_, _overflow_).[[EpochNanoseconds]].
+          1. Let _intermediate_ be ? AddDaysToZonedDateTime(_instant_, _temporalDateTime_, _timeZone_, _calendar_, _days_, _overflow_).[[EpochNanoseconds]].
           1. Return ? AddInstant(_intermediate_, _norm_).
-        1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
-        1. Let _datePart_ be ! CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendarRec_.[[Receiver]]).
-        1. Let _dateDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendarRec_, _datePart_, _dateDuration_, _options_).
-        1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendarRec_.[[Receiver]]).
-        1. Let _intermediateInstant_ be ? GetInstantFor(_timeZoneRec_, _intermediateDateTime_, *"compatible"*).
+        1. Let _datePart_ be ! CreateTemporalDate(_temporalDateTime_.[[ISOYear]], _temporalDateTime_.[[ISOMonth]], _temporalDateTime_.[[ISODay]], _calendar_).
+        1. Let _dateDuration_ be CreateDurationRecord(_years_, _months_, _weeks_, _days_, 0, 0, 0, 0, 0, 0).
+        1. Let _addedDate_ be ? CalendarDateAdd(_datePart_, _dateDuration_, _overflow_).
+        1. Let _intermediateDateTime_ be ? CreateTemporalDateTime(_addedDate_.[[ISOYear]], _addedDate_.[[ISOMonth]], _addedDate_.[[ISODay]], _temporalDateTime_.[[ISOHour]], _temporalDateTime_.[[ISOMinute]], _temporalDateTime_.[[ISOSecond]], _temporalDateTime_.[[ISOMillisecond]], _temporalDateTime_.[[ISOMicrosecond]], _temporalDateTime_.[[ISONanosecond]], _calendar_).
+        1. Let _intermediateInstant_ be ? GetInstantFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
         1. Return ? AddInstant(_intermediateInstant_.[[Nanoseconds]], _norm_).
       </emu-alg>
     </emu-clause>
@@ -1274,8 +1238,8 @@
         AddDaysToZonedDateTime (
           _instant_: a Temporal.Instant,
           _dateTime_: a Temporal.PlainDateTime,
-          _timeZoneRec_: a Time Zone Methods Record,
-          _calendar_: a String or Object,
+          _timeZone_: a String,
+          _calendar_: a String,
           _days_: an integer,
           optional _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing a Record with fields [[EpochNanoseconds]] (a BigInt), [[Instant]] (a Temporal.Instant), and [[DateTime]] (a Temporal.PlainDateTime), or a throw completion
@@ -1287,7 +1251,6 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: If TimeZoneMethodsRecordIsBuiltin(_timeZoneRec_) is *true*, _dateTime_'s internal slots are the same as those of the Object returned from ! GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
         1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
         1. If _days_ = 0, then
           1. Return the Record {
@@ -1297,7 +1260,7 @@
             }.
         1. Let _addedDate_ be ? AddISODate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], 0, 0, 0, _days_, _overflow_).
         1. Let _dateTimeResult_ be ? CreateTemporalDateTime(_addedDate_.[[Year]], _addedDate_.[[Month]], _addedDate_.[[Day]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _calendar_).
-        1. Let _instantResult_ be ? GetInstantFor(_timeZoneRec_, _dateTimeResult_, *"compatible"*).
+        1. Let _instantResult_ be ? GetInstantFor(_timeZone_, _dateTimeResult_, *"compatible"*).
         1. Return the Record {
             [[EpochNanoseconds]]: _instantResult_.[[Nanoseconds]],
             [[Instant]]: _instantResult_,
@@ -1311,10 +1274,9 @@
         DifferenceZonedDateTime (
           _ns1_: a BigInt,
           _ns2_: a BigInt,
-          _timeZoneRec_: a Time Zone Methods Record,
-          _calendarRec_: a Calendar Methods Record,
+          _timeZone_: a String,
+          _calendar_: a String,
           _largestUnit_: a String,
-          _options_: an ordinary Object for which the value of the [[Prototype]] internal slot is *null* and every property is a data property,
           _startDateTime_: a Temporal.PlainDateTime,
         ): either a normal completion containing a Normalized Duration Record, or a throw completion
       </h1>
@@ -1324,12 +1286,11 @@
           It computes the difference between two exact times expressed in nanoseconds since the epoch, and balances the result so that there is no non-zero unit larger than _largestUnit_ in the result, taking calendar reckoning and time zone offset changes into account.
         </dd>
       </dl>
-      <p>Unless _ns1_ and _ns2_ are equal, _timeZoneRec_ must have looked up both `getOffsetNanosecondsFor` and `getPossibleInstantsFor`.</p>
       <emu-alg>
         1. If _ns1_ = _ns2_, then
           1. Return ! CreateNormalizedDurationRecord(0, 0, 0, 0, ZeroTimeDuration()).
         1. Let _endInstant_ be ! CreateTemporalInstant(_ns2_).
-        1. Let _endDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _endInstant_, _calendarRec_.[[Receiver]]).
+        1. Let _endDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _endInstant_, _calendar_).
         1. If _ns2_ - _ns1_ &lt; 0, let _sign_ be -1; else let _sign_ be 1.
         1. If _sign_ = 1, let _maxDayCorrection_ be 2; else let _maxDayCorrection_ be 1.
         1. Let _dayCorrection_ be 0.
@@ -1338,24 +1299,20 @@
         1. Let _success_ be *false*.
         1. Repeat, while _dayCorrection_ &le; _maxDayCorrection_ and _success_ is *false*,
           1. Let _intermediateDate_ be BalanceISODate(_endDateTime_.[[ISOYear]], _endDateTime_.[[ISOMonth]], _endDateTime_.[[ISODay]] - _dayCorrection_ &times; _sign_).
-          1. Let _intermediateDateTime_ be ! CreateTemporalDateTime(_intermediateDate_.[[Year]], _intermediateDate_.[[Month]], _intermediateDate_.[[Day]], _startDateTime_.[[ISOHour]], _startDateTime_.[[ISOMinute]], _startDateTime_.[[ISOSecond]], _startDateTime_.[[ISOMillisecond]], _startDateTime_.[[ISOMicrosecond]], _startDateTime_.[[ISONanosecond]], _calendarRec_.[[Receiver]]).
-          1. Let _intermediateInstant_ be ? GetInstantFor(_timeZoneRec_, _intermediateDateTime_, *"compatible"*).
+          1. Let _intermediateDateTime_ be ! CreateTemporalDateTime(_intermediateDate_.[[Year]], _intermediateDate_.[[Month]], _intermediateDate_.[[Day]], _startDateTime_.[[ISOHour]], _startDateTime_.[[ISOMinute]], _startDateTime_.[[ISOSecond]], _startDateTime_.[[ISOMillisecond]], _startDateTime_.[[ISOMicrosecond]], _startDateTime_.[[ISONanosecond]], _calendar_).
+          1. Let _intermediateInstant_ be ? GetInstantFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
           1. Let _intermediateNs_ be _intermediateInstant_.[[Nanoseconds]].
           1. Let _norm_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_ns2_, _intermediateNs_).
           1. Let _timeSign_ be NormalizedTimeDurationSign(_norm_).
           1. If _sign_ &ne; -_timeSign_, then
             1. Set _success_ to *true*.
           1. Set _dayCorrection_ to _dayCorrection_ + 1.
-        1. If _success_ is *true*, then
-          1. Let _date1_ be ! CreateTemporalDate(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], _calendarRec_.[[Receiver]]).
-          1. Let _date2_ be ! CreateTemporalDate(_intermediateDateTime_.[[Year]], _intermediateDateTime_.[[Month]], _intermediateDateTime_.[[Day]], _calendarRec_.[[Receiver]]).
-          1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(_largestUnit_, *"day"*).
-          1. Let _untilOptions_ be ? SnapshotOwnProperties(_options_, *null*).
-          1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, _dateLargestUnit_).
-          1. Let _dateDifference_ be ? DifferenceDate(_calendarRec_, _date1_, _date2_, _untilOptions_).
-          1. Return ? CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], _norm_).
-        1. NOTE: This step is only reached when custom calendar or time zone methods return inconsistent values.
-        1. Throw a *RangeError* exception.
+        1. Assert: _success_ is *true*.
+        1. Let _date1_ be ! CreateTemporalDate(_startDateTime_.[[ISOYear]], _startDateTime_.[[ISOMonth]], _startDateTime_.[[ISODay]], _calendar_).
+        1. Let _date2_ be ! CreateTemporalDate(_intermediateDateTime_.[[Year]], _intermediateDateTime_.[[Month]], _intermediateDateTime_.[[Day]], _calendar_).
+        1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(_largestUnit_, *"day"*).
+        1. Let _dateDifference_ be ? CalendarDateUntil(_date1_, _date2_, _dateLargestUnit_).
+        1. Return ? CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], _norm_).
       </emu-alg>
     </emu-clause>
 
@@ -1364,10 +1321,9 @@
         DifferenceZonedDateTimeWithRounding (
           _ns1_: a BigInt,
           _ns2_: a BigInt,
-          _calendarRec_: a Calendar Methods Record,
-          _timeZoneRec_: a Time Zone Methods Record,
+          _calendar_: a String,
+          _timeZone_: a String,
           _precalculatedPlainDateTime_: a Temporal.PlainDateTime,
-          _resolvedOptions_: an Object with [[Prototype]] slot *null*,
           _largestUnit_: a String,
           _roundingIncrement_: an integer,
           _smallestUnit_: a String,
@@ -1385,7 +1341,7 @@
           1. Let _result_ be ! BalanceTimeDuration(_norm_, _largestUnit_).
           1. Let _durationRecord_ be CreateDurationRecord(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _diffRecord_.[[Total]] }.
-        1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZoneRec_, _calendarRec_, _largestUnit_, _resolvedOptions_, _precalculatedPlainDateTime_).
+        1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_, _precalculatedPlainDateTime_).
         1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
         1. If _roundingGranularityIsNoop_ is *true*, then
           1. Let _timeResult_ be ! BalanceTimeDuration(_difference_.[[NormalizedTime]], *"hour"*).
@@ -1393,7 +1349,7 @@
           1. Let _durationRecord_ be CreateDurationRecord(_difference_.[[Years]], _difference_.[[Months]], _difference_.[[Weeks]], _difference_.[[Days]], _timeResult_.[[Hours]], _timeResult_.[[Minutes]], _timeResult_.[[Seconds]], _timeResult_.[[Milliseconds]], _timeResult_.[[Microseconds]], _timeResult_.[[Nanoseconds]]).
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _total_ }.
         1. Let _dateTime_ be ISO Date-Time Record { [[Year]]: _precalculatedPlainDateTime_.[[ISOYear]], [[Month]]: _precalculatedPlainDateTime_.[[ISOMonth]], [[Day]]: _precalculatedPlainDateTime_.[[ISODay]], [[Hour]]: _precalculatedPlainDateTime_.[[ISOHour]], [[Minute]]: _precalculatedPlainDateTime_.[[ISOMinute]], [[Second]]: _precalculatedPlainDateTime_.[[ISOSecond]], [[Millisecond]]: _precalculatedPlainDateTime_.[[ISOMillisecond]], [[Microsecond]]: _precalculatedPlainDateTime_.[[ISOMicrosecond]], [[Nanosecond]]: _precalculatedPlainDateTime_.[[ISONanosecond]] }.
-        1. Return ? RoundRelativeDuration(_difference_, _ns2_, _dateTime_, _calendarRec_, _timeZoneRec_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Return ? RoundRelativeDuration(_difference_, _ns2_, _dateTime_, _calendar_, _timeZone_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
@@ -1413,7 +1369,7 @@
         1. Set _other_ to ? ToTemporalZonedDateTime(_other_).
         1. If ? CalendarEquals(_zonedDateTime_.[[Calendar]], _other_.[[Calendar]]) is *false*, then
           1. Throw a *RangeError* exception.
-        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _settings_ be ? GetDifferenceSettings(_resolvedOptions_, ~datetime~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
         1. If _settings_.[[LargestUnit]] is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _diffRecord_ be DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
@@ -1425,11 +1381,11 @@
           1. Throw a *RangeError* exception.
         1. If _zonedDateTime_.[[Nanoseconds]] = _other_.[[Nanoseconds]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~date-add~, ~date-until~ »).
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
-        1. Let _precalculatedPlainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
-        1. Let _resultRecord_ be ? DifferenceZonedDateTimeWithRounding(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_, _resolvedOptions_, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
+        1. Let _precalculatedPlainDateTime_ be ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
+        1. Let _resultRecord_ be ? DifferenceZonedDateTimeWithRounding(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _calendar_, _timeZone_, _precalculatedPlainDateTime_, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
         1. Let _result_ be _resultRecord_.[[DurationRecord]].
         1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
@@ -1450,11 +1406,12 @@
       <emu-alg>
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~date-add~ »).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
+        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_, *undefined*, _options_).
-        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZoneRec_.[[Receiver]], _calendarRec_.[[Receiver]]).
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_, *undefined*, _overflow_).
+        1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
   </emu-clause>

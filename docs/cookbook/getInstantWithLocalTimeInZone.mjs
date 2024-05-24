@@ -14,7 +14,7 @@
  *
  * @param {Temporal.PlainDateTime} dateTime - Calendar date and wall-clock time to
  *   convert
- * @param {Temporal.TimeZone} timeZone - Time zone in which to consider the
+ * @param {string} timeZone - IANA identifier of time zone in which to consider the
  *   wall-clock time
  * @param {string} [disambiguation='earlier'] - Disambiguation mode, see description.
  * @returns {Temporal.Instant} Absolute time in timeZone at the time of the
@@ -48,7 +48,6 @@ function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'ear
   throw new RangeError(`invalid disambiguation ${disambiguation}`);
 }
 
-const germany = Temporal.TimeZone.from('Europe/Berlin');
 const nonexistentGermanWallTime = Temporal.PlainDateTime.from('2019-03-31T02:45');
 
 const germanResults = {
@@ -60,12 +59,13 @@ const germanResults = {
 };
 for (const [disambiguation, result] of Object.entries(germanResults)) {
   assert.equal(
-    getInstantWithLocalTimeInZone(nonexistentGermanWallTime, germany, disambiguation).toString({ timeZone: germany }),
+    getInstantWithLocalTimeInZone(nonexistentGermanWallTime, 'Europe/Berlin', disambiguation).toString({
+      timeZone: 'Europe/Berlin'
+    }),
     result
   );
 }
 
-const brazilEast = Temporal.TimeZone.from('America/Sao_Paulo');
 const doubleEasternBrazilianWallTime = Temporal.PlainDateTime.from('2019-02-16T23:45');
 
 const brazilianResults = {
@@ -77,8 +77,8 @@ const brazilianResults = {
 };
 for (const [disambiguation, result] of Object.entries(brazilianResults)) {
   assert.equal(
-    getInstantWithLocalTimeInZone(doubleEasternBrazilianWallTime, brazilEast, disambiguation).toString({
-      timeZone: brazilEast
+    getInstantWithLocalTimeInZone(doubleEasternBrazilianWallTime, 'America/Sao_Paulo', disambiguation).toString({
+      timeZone: 'America/Sao_Paulo'
     }),
     result
   );

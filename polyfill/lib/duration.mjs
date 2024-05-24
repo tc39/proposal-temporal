@@ -2,7 +2,6 @@
 
 import * as ES from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { CalendarMethodRecord } from './methodrecord.mjs';
 import {
   YEARS,
   MONTHS,
@@ -22,7 +21,8 @@ import {
   ISO_DAY,
   CreateSlots,
   GetSlot,
-  SetSlot
+  SetSlot,
+  TIME_ZONE
 } from './slots.mjs';
 import { TimeDuration } from './timeduration.mjs';
 
@@ -248,7 +248,7 @@ export class Duration {
     }
 
     let largestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
-    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.GetTemporalRelativeToOption(roundTo);
+    let { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption(roundTo);
     const roundingIncrement = ES.GetRoundingIncrementOption(roundTo);
     const roundingMode = ES.GetRoundingModeOption(roundTo, 'halfExpand');
     let smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'datetime', undefined);
@@ -311,26 +311,23 @@ export class Duration {
       // if either is needed in one of the operations below, because the
       // conversion is user visible
       precalculatedPlainDateTime = ES.GetPlainDateTimeFor(
-        timeZoneRec,
+        GetSlot(zonedRelativeTo, TIME_ZONE),
         GetSlot(zonedRelativeTo, INSTANT),
         GetSlot(zonedRelativeTo, CALENDAR)
       );
       plainRelativeTo = ES.TemporalDateTimeToDate(precalculatedPlainDateTime);
     }
 
-    const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, [
-      'dateAdd',
-      'dateUntil'
-    ]);
-
     let norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
     if (zonedRelativeTo) {
+      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
       const targetEpochNs = ES.AddZonedDateTime(
         GetSlot(zonedRelativeTo, INSTANT),
-        timeZoneRec,
-        calendarRec,
+        timeZone,
+        calendar,
         years,
         months,
         weeks,
@@ -342,10 +339,9 @@ export class Duration {
         ES.DifferenceZonedDateTimeWithRounding(
           relativeEpochNs,
           targetEpochNs,
-          calendarRec,
-          timeZoneRec,
+          calendar,
+          timeZone,
           precalculatedPlainDateTime,
-          ObjectCreate(null),
           largestUnit,
           roundingIncrement,
           smallestUnit,
@@ -355,9 +351,7 @@ export class Duration {
       let targetTime = ES.AddTime(0, 0, 0, 0, 0, 0, norm);
 
       // Delegate the date part addition to the calendar
-      const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-      const dateDuration = new TemporalDuration(years, months, weeks, days + targetTime.deltaDays, 0, 0, 0, 0, 0, 0);
-      const targetDate = ES.AddDate(calendarRec, plainRelativeTo, dateDuration);
+      const targetDate = ES.AddDate(plainRelativeTo, { years, months, weeks, days: days + targetTime.deltaDays });
 
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         ES.DifferencePlainDateTimeWithRounding(
@@ -377,7 +371,7 @@ export class Duration {
           targetTime.millisecond,
           targetTime.microsecond,
           targetTime.nanosecond,
-          calendarRec,
+          GetSlot(plainRelativeTo, CALENDAR),
           largestUnit,
           roundingIncrement,
           smallestUnit,
@@ -424,7 +418,7 @@ export class Duration {
     } else {
       totalOf = ES.GetOptionsObject(totalOf);
     }
-    let { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.GetTemporalRelativeToOption(totalOf);
+    let { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption(totalOf);
     const unit = ES.GetTemporalUnitValuedOption(totalOf, 'unit', 'datetime', ES.REQUIRED);
 
     let precalculatedPlainDateTime;
@@ -434,25 +428,22 @@ export class Duration {
       // Convert a ZonedDateTime relativeTo to PlainDate only if needed in one
       // of the operations below, because the conversion is user visible
       precalculatedPlainDateTime = ES.GetPlainDateTimeFor(
-        timeZoneRec,
+        GetSlot(zonedRelativeTo, TIME_ZONE),
         GetSlot(zonedRelativeTo, INSTANT),
         GetSlot(zonedRelativeTo, CALENDAR)
       );
       plainRelativeTo = ES.TemporalDateTimeToDate(precalculatedPlainDateTime);
     }
 
-    const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, [
-      'dateAdd',
-      'dateUntil'
-    ]);
-
     let norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
     if (zonedRelativeTo) {
+      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
       const targetEpochNs = ES.AddZonedDateTime(
         GetSlot(zonedRelativeTo, INSTANT),
-        timeZoneRec,
-        calendarRec,
+        timeZone,
+        calendar,
         years,
         months,
         weeks,
@@ -463,10 +454,9 @@ export class Duration {
       const { total } = ES.DifferenceZonedDateTimeWithRounding(
         relativeEpochNs,
         targetEpochNs,
-        calendarRec,
-        timeZoneRec,
+        calendar,
+        timeZone,
         precalculatedPlainDateTime,
-        ObjectCreate(null),
         unit,
         1,
         unit,
@@ -480,9 +470,7 @@ export class Duration {
       let targetTime = ES.AddTime(0, 0, 0, 0, 0, 0, norm);
 
       // Delegate the date part addition to the calendar
-      const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
-      const dateDuration = new TemporalDuration(years, months, weeks, days + targetTime.deltaDays, 0, 0, 0, 0, 0, 0);
-      const targetDate = ES.AddDate(calendarRec, plainRelativeTo, dateDuration);
+      const targetDate = ES.AddDate(plainRelativeTo, { years, months, weeks, days: days + targetTime.deltaDays });
 
       const { total } = ES.DifferencePlainDateTimeWithRounding(
         plainRelativeTo,
@@ -501,7 +489,7 @@ export class Duration {
         targetTime.millisecond,
         targetTime.microsecond,
         targetTime.nanosecond,
-        calendarRec,
+        GetSlot(plainRelativeTo, CALENDAR),
         unit,
         1,
         unit,
@@ -657,22 +645,22 @@ export class Duration {
     ) {
       return 0;
     }
-    const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = ES.GetTemporalRelativeToOption(options);
+    const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption(options);
 
     const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
 
-    const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, ['dateAdd']);
-
     if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
+      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const instant = GetSlot(zonedRelativeTo, INSTANT);
-      const precalculatedPlainDateTime = ES.GetPlainDateTimeFor(timeZoneRec, instant, calendarRec.receiver);
+      const precalculatedPlainDateTime = ES.GetPlainDateTimeFor(timeZone, instant, calendar);
 
       const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
       const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
       const after1 = ES.AddZonedDateTime(
         instant,
-        timeZoneRec,
-        calendarRec,
+        timeZone,
+        calendar,
         y1,
         mon1,
         w1,
@@ -682,8 +670,8 @@ export class Duration {
       );
       const after2 = ES.AddZonedDateTime(
         instant,
-        timeZoneRec,
-        calendarRec,
+        timeZone,
+        calendar,
         y2,
         mon2,
         w2,
@@ -698,8 +686,8 @@ export class Duration {
       if (!plainRelativeTo) {
         throw new RangeError('A starting point is required for years, months, or weeks comparison');
       }
-      d1 = ES.UnbalanceDateDurationRelative(y1, mon1, w1, d1, plainRelativeTo, calendarRec);
-      d2 = ES.UnbalanceDateDurationRelative(y2, mon2, w2, d2, plainRelativeTo, calendarRec);
+      d1 = ES.UnbalanceDateDurationRelative(y1, mon1, w1, d1, plainRelativeTo);
+      d2 = ES.UnbalanceDateDurationRelative(y2, mon2, w2, d2, plainRelativeTo);
     }
     const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1).add24HourDays(d1);
     const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2).add24HourDays(d2);

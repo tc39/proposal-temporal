@@ -1,7 +1,6 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { CalendarMethodRecord, TimeZoneMethodRecord } from './methodrecord.mjs';
 import {
   ISO_YEAR,
   ISO_MONTH,
@@ -22,13 +21,14 @@ export class PlainDate {
     isoYear = ES.ToIntegerWithTruncation(isoYear);
     isoMonth = ES.ToIntegerWithTruncation(isoMonth);
     isoDay = ES.ToIntegerWithTruncation(isoDay);
-    calendar = ES.ToTemporalCalendarSlotValue(calendar);
+    calendar = calendar === undefined ? 'iso8601' : ES.ASCIILowercase(ES.RequireString(calendar));
+    if (!ES.IsBuiltinCalendar(calendar)) throw new RangeError(`unknown calendar ${calendar}`);
 
     ES.CreateTemporalDateSlots(this, isoYear, isoMonth, isoDay, calendar);
   }
   get calendarId() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
+    return GetSlot(this, CALENDAR);
   }
   get era() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -52,8 +52,7 @@ export class PlainDate {
   }
   get day() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['day']);
-    return ES.CalendarDay(calendarRec, this);
+    return ES.CalendarDay(GetSlot(this, CALENDAR), this);
   }
   get dayOfWeek() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -97,20 +96,20 @@ export class PlainDate {
       throw new TypeError('invalid argument');
     }
     ES.RejectTemporalLikeObject(temporalDateLike);
-    const resolvedOptions = ES.SnapshotOwnProperties(ES.GetOptionsObject(options), null);
+    const overflow = ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
 
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-    let { fields, fieldNames } = ES.PrepareCalendarFieldsAndFieldNames(calendarRec, this, [
+    const calendar = GetSlot(this, CALENDAR);
+    let { fields, fieldNames } = ES.PrepareCalendarFieldsAndFieldNames(calendar, this, [
       'day',
       'month',
       'monthCode',
       'year'
     ]);
     const partialDate = ES.PrepareTemporalFields(temporalDateLike, fieldNames, 'partial');
-    fields = ES.CalendarMergeFields(calendarRec, fields, partialDate);
+    fields = ES.CalendarMergeFields(calendar, fields, partialDate);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
 
-    return ES.CalendarDateFromFields(calendarRec, fields, resolvedOptions);
+    return ES.CalendarDateFromFields(calendar, fields, overflow);
   }
   withCalendar(calendar) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -122,9 +121,9 @@ export class PlainDate {
 
     const duration = ES.ToTemporalDuration(temporalDurationLike);
     options = ES.GetOptionsObject(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
 
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateAdd']);
-    return ES.AddDate(calendarRec, this, duration, options);
+    return ES.AddDate(this, duration, overflow);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -169,16 +168,12 @@ export class PlainDate {
 
     let timeZone, temporalTime;
     if (ES.Type(item) === 'Object') {
-      if (ES.IsTemporalTimeZone(item)) {
-        timeZone = item;
+      const timeZoneLike = item.timeZone;
+      if (timeZoneLike === undefined) {
+        timeZone = ES.ToTemporalTimeZoneSlotValue(item);
       } else {
-        let timeZoneLike = item.timeZone;
-        if (timeZoneLike === undefined) {
-          timeZone = ES.ToTemporalTimeZoneSlotValue(item);
-        } else {
-          timeZone = ES.ToTemporalTimeZoneSlotValue(timeZoneLike);
-          temporalTime = item.plainTime;
-        }
+        timeZone = ES.ToTemporalTimeZoneSlotValue(timeZoneLike);
+        temporalTime = item.plainTime;
       }
     } else {
       timeZone = ES.ToTemporalTimeZoneSlotValue(item);
@@ -198,21 +193,20 @@ export class PlainDate {
       GetSlot(temporalTime, ISO_NANOSECOND),
       calendar
     );
-    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
-    const instant = ES.GetInstantFor(timeZoneRec, dt, 'compatible');
+    const instant = ES.GetInstantFor(timeZone, dt, 'compatible');
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
   }
   toPlainYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
-    const fields = ES.PrepareCalendarFields(calendarRec, this, ['monthCode', 'year'], [], []);
-    return ES.CalendarYearMonthFromFields(calendarRec, fields);
+    const calendar = GetSlot(this, CALENDAR);
+    const fields = ES.PrepareCalendarFields(calendar, this, ['monthCode', 'year'], [], []);
+    return ES.CalendarYearMonthFromFields(calendar, fields);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
-    const fields = ES.PrepareCalendarFields(calendarRec, this, ['day', 'monthCode'], [], []);
-    return ES.CalendarMonthDayFromFields(calendarRec, fields);
+    const calendar = GetSlot(this, CALENDAR);
+    const fields = ES.PrepareCalendarFields(calendar, this, ['day', 'monthCode'], [], []);
+    return ES.CalendarMonthDayFromFields(calendar, fields);
   }
   getISOFields() {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
@@ -226,8 +220,8 @@ export class PlainDate {
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);
+    const overflow = ES.GetTemporalOverflowOption(options);
     if (ES.IsTemporalDate(item)) {
-      ES.GetTemporalOverflowOption(options); // validate and ignore
       return ES.CreateTemporalDate(
         GetSlot(item, ISO_YEAR),
         GetSlot(item, ISO_MONTH),
@@ -235,7 +229,7 @@ export class PlainDate {
         GetSlot(item, CALENDAR)
       );
     }
-    return ES.ToTemporalDate(item, options);
+    return ES.ToTemporalDate(item, overflow);
   }
   static compare(one, two) {
     one = ES.ToTemporalDate(one);

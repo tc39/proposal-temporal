@@ -1,7 +1,6 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { CalendarMethodRecord, TimeZoneMethodRecord } from './methodrecord.mjs';
 
 import {
   ISO_YEAR,
@@ -43,7 +42,8 @@ export class PlainDateTime {
     millisecond = millisecond === undefined ? 0 : ES.ToIntegerWithTruncation(millisecond);
     microsecond = microsecond === undefined ? 0 : ES.ToIntegerWithTruncation(microsecond);
     nanosecond = nanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(nanosecond);
-    calendar = ES.ToTemporalCalendarSlotValue(calendar);
+    calendar = calendar === undefined ? 'iso8601' : ES.ASCIILowercase(ES.RequireString(calendar));
+    if (!ES.IsBuiltinCalendar(calendar)) throw new RangeError(`unknown calendar ${calendar}`);
 
     ES.CreateTemporalDateTimeSlots(
       this,
@@ -61,7 +61,7 @@ export class PlainDateTime {
   }
   get calendarId() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.ToTemporalCalendarIdentifier(GetSlot(this, CALENDAR));
+    return GetSlot(this, CALENDAR);
   }
   get year() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -77,8 +77,7 @@ export class PlainDateTime {
   }
   get day() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['day']);
-    return ES.CalendarDay(calendarRec, this);
+    return ES.CalendarDay(GetSlot(this, CALENDAR), this);
   }
   get hour() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -155,9 +154,10 @@ export class PlainDateTime {
     }
     ES.RejectTemporalLikeObject(temporalDateTimeLike);
 
-    const resolvedOptions = ES.SnapshotOwnProperties(ES.GetOptionsObject(options), null);
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateFromFields', 'fields', 'mergeFields']);
-    let { fields, fieldNames } = ES.PrepareCalendarFieldsAndFieldNames(calendarRec, this, [
+    const overflow = ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
+
+    const calendar = GetSlot(this, CALENDAR);
+    let { fields, fieldNames } = ES.PrepareCalendarFieldsAndFieldNames(calendar, this, [
       'day',
       'month',
       'monthCode',
@@ -171,10 +171,10 @@ export class PlainDateTime {
     fields.nanosecond = GetSlot(this, ISO_NANOSECOND);
     ES.Call(ArrayPrototypePush, fieldNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
     const partialDateTime = ES.PrepareTemporalFields(temporalDateTimeLike, fieldNames, 'partial');
-    fields = ES.CalendarMergeFields(calendarRec, fields, partialDateTime);
+    fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);
     fields = ES.PrepareTemporalFields(fields, fieldNames, []);
     const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
-      ES.InterpretTemporalDateTimeFields(calendarRec, fields, resolvedOptions);
+      ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
 
     return ES.CreateTemporalDateTime(
       year,
@@ -186,7 +186,7 @@ export class PlainDateTime {
       millisecond,
       microsecond,
       nanosecond,
-      calendarRec.receiver
+      calendar
     );
   }
   withPlainTime(temporalTime = undefined) {
@@ -356,8 +356,7 @@ export class PlainDateTime {
     const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
     options = ES.GetOptionsObject(options);
     const disambiguation = ES.GetTemporalDisambiguationOption(options);
-    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
-    const instant = ES.GetInstantFor(timeZoneRec, this, disambiguation);
+    const instant = ES.GetInstantFor(timeZone, this, disambiguation);
     return ES.CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
   }
   toPlainDate() {

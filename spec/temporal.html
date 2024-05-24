@@ -25,10 +25,6 @@
 
   <emu-clause id="sec-constructor-properties-of-the-temporal-object">
     <h1>Constructor Properties of the Temporal Object</h1>
-    <emu-clause id="sec-temporal-calendar">
-      <h1>Temporal.Calendar ( . . . )</h1>
-      <p>See <emu-xref href="#sec-temporal-calendar-objects"></emu-xref>.</p>
-    </emu-clause>
     <emu-clause id="sec-temporal-instant">
       <h1>Temporal.Instant ( . . . )</h1>
       <p>See <emu-xref href="#sec-temporal-instant-objects"></emu-xref>.</p>
@@ -52,10 +48,6 @@
     <emu-clause id="sec-temporal-plainmonthday">
       <h1>Temporal.PlainMonthDay ( . . . )</h1>
       <p>See <emu-xref href="#sec-temporal-plainmonthday-objects"></emu-xref>.</p>
-    </emu-clause>
-    <emu-clause id="sec-temporal-timezone">
-      <h1>Temporal.TimeZone ( . . . )</h1>
-      <p>See <emu-xref href="#sec-temporal-timezone-objects"></emu-xref>.</p>
     </emu-clause>
     <emu-clause id="sec-temporal-duration">
       <h1>Temporal.Duration ( . . . )</h1>
@@ -261,8 +253,7 @@
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
         1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
         1. Let _instant_ be SystemInstant().
-        1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
-        1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Return ? GetPlainDateTimeFor(_timeZone_, _instant_, _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -294,7 +285,7 @@
     <p>This function object is %TemporalToJSON%. It performs the following steps when called:</p>
     <emu-alg>
       1. Let _object_ be the *this* value.
-      1. If _object_ does not have an [[InitializedTemporalCalendar]], [[InitializedTemporalDuration]], [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalTimeZone]], or [[InitializedTemporalZonedDateTime]] internal slot, then
+      1. If _object_ does not have an [[InitializedTemporalDuration]], [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], or [[InitializedTemporalZonedDateTime]] internal slot, then
         1. Throw a *TypeError* exception.
       1. Let _toString_ be ? GetMethod(_object_, *"toString"*).
       1. If _toString_ is *null*, or *undefined*, throw a *TypeError* exception.
