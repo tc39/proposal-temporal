@@ -177,7 +177,7 @@ Temporal.PlainDate.from(valid)      // => 2001-09-08
 Temporal.PlainYearMonth.from(valid) // => 2001-09
 Temporal.PlainMonthDay.from(valid)  // => 09-08
 Temporal.PlainTime.from(valid)      // => 18:46:40
-Temporal.TimeZone.from(valid)  // => America/Vancouver
+Temporal.ZonedDateTime.from(valid)  // => 2001-09-08T18:46:40-07:00[America/Vancouver]
 
 Temporal.Instant.from(time24)  // => 2020-04-08T07:00Z
 Temporal.PlainDateTime.from(time24)  // => 2020-04-08T00:00
@@ -185,7 +185,7 @@ Temporal.PlainDate.from(time24)      // => 2020-04-08
 Temporal.PlainYearMonth.from(time24) // => 2020-04
 Temporal.PlainMonthDay.from(time24)  // => 04-08
 Temporal.PlainTime.from(time24)      // => 00:00
-Temporal.TimeZone.from(time24)  // => America/Vancouver
+Temporal.ZonedDateTime.from(time24)  // => 2020-04-08T00:00-07:00[America/Vancouver]
 
 Temporal.Instant.from(invalidZone)  // throws
 Temporal.{everything else}.from(invalidZone)  // => doesn't throw
@@ -198,7 +198,7 @@ Temporal.PlainDate.from(onlyDateTime)      // => 2001-09-09
 Temporal.PlainYearMonth.from(onlyDateTime) // => 2001-09
 Temporal.PlainMonthDay.from(onlyDateTime)  // => 09-09
 Temporal.PlainTime.from(onlyDateTime)      // => 01:46:40
-Temporal.TimeZone.from(onlyDateTime)  // throws
+Temporal.ZonedDateTime.from(onlyDateTime)  // throws
 
 Temporal.Instant.from(onlyDate)  // throws
 Temporal.PlainDateTime.from(onlyDate)  // => 2001-09-09T00:00
@@ -206,7 +206,7 @@ Temporal.PlainDate.from(onlyDate)      // => 2001-09-09
 Temporal.PlainYearMonth.from(onlyDate) // => 2001-09
 Temporal.PlainMonthDay.from(onlyDate)  // => 09-09
 Temporal.PlainTime.from(onlyDate)      // => 00:00
-Temporal.TimeZone.from(onlyDate)  // throws
+Temporal.ZonedDateTime.from(onlyDate)  // throws
 ```
 
 **Use case 2:** Use Temporal.parse(), which returns an object with members containing the portions of the string exactly as they are spelled in the input, that are relevant for each Temporal type.
@@ -247,7 +247,7 @@ Temporal.PlainDate.from(valid)      // throws
 Temporal.PlainYearMonth.from(valid) // throws
 Temporal.PlainMonthDay.from(valid)  // throws
 Temporal.PlainTime.from(valid)      // throws
-Temporal.TimeZone.from(valid)  // throws
+Temporal.ZonedDateTiem.from(valid)  // throws
 
 parsed = Temporal.parse(valid);
 dateTime = Temporal.PlainDateTime.from(parsed.dateTime)  // => 2001-09-08T18:46:40
@@ -255,7 +255,6 @@ dateTime.getDate()                                  // => 2001-09-08
 dateTime.getDate().getYearMonth()                   // => 2001-09
 dateTime.getDate().getMonthDay()                    // => 09-08
 dateTime.getTime()                                  // => 18:46:40
-Temporal.TimeZone.from(parsed.timeZone)             // => America/Vancouver
 
 Temporal.Instant.from(time24)  // => 2020-04-08T07:00Z
 Temporal.PlainDateTime.from(time24)  // throws
@@ -263,7 +262,7 @@ Temporal.PlainDate.from(time24)      // throws
 Temporal.PlainYearMonth.from(time24) // throws
 Temporal.PlainMonthDay.from(time24)  // throws
 Temporal.PlainTime.from(time24)      // throws
-Temporal.TimeZone.from(time24)  // throws
+Temporal.ZonedDateTime.from(time24)  // throws
 
 parsed = Temporal.parse(time24);
 dateTime = Temporal.PlainDateTime.from(parsed.dateTime);  // => 2020-04-08T00:00
@@ -271,7 +270,6 @@ dateTime.getDate()                                   // => 2020-04-08
 dateTime.getDate().getYearMonth()                    // => 2020-04
 dateTime.getDate().getMonthDay()                     // => 04-08
 dateTime.getTime()                                   // => 00:00
-Temporal.TimeZone.from(parsed.timeZone)              // => America/Vancouver
 
 Temporal.*.from(invalidZone)  // throws
 Temporal.*.from(invalidDate)  // throws
@@ -283,7 +281,7 @@ Temporal.PlainDate.from(onlyDateTime)      // throws
 Temporal.PlainYearMonth.from(onlyDateTime) // throws
 Temporal.PlainMonthDay.from(onlyDateTime)  // throws
 Temporal.PlainTime.from(onlyDateTime)      // throws
-Temporal.TimeZone.from(onlyDateTime)  // throws
+Temporal.ZonedDateTime.from(onlyDateTime)  // throws
 
 dateTime.getDate()                 // 2001-09-09
 dateTime.getDate().getYearMonth()  // 2001-09
@@ -296,7 +294,7 @@ Temporal.PlainDate.from(onlyDate)      // => 2001-09-09
 Temporal.PlainYearMonth.from(onlyDate) // throws
 Temporal.PlainMonthDay.from(onlyDate)  // throws
 Temporal.PlainTime.from(onlyDate)      // throws
-Temporal.TimeZone.from(onlyDate)  // throws
+Temporal.ZonedDateTime.from(onlyDate)  // throws
 // No longer possible to get a DateTime with time defaulting to midnight, instead use:
 Temporal.PlainDate.from(onlyDate).withTime(Temporal.PlainTime.from('00:00'))  // => 2001-09-09T00:00
 ```
@@ -305,7 +303,7 @@ Temporal.PlainDate.from(onlyDate).withTime(Temporal.PlainTime.from('00:00'))  //
 
 ## Proposal 3. Irrelevant parts ignored in from()
 
-**Use case 1:** Only Temporal.Instant().from() and Temporal.PlainDateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use Absolute.from(), or Temporal.PlainDateTime.from() with Temporal.TimeZone.from(), depending on whether you need the time zone.
+**Use case 1:** Only Temporal.Instant.from(), Temporal.ZonedDateTime.from() and Temporal.PlainDateTime.from() still have ISO 8601 semantics. To process strings as ISO 8601 requires, use one of those depending on whether you need the time zone.
 
 Temporal.parse() isn't necessary in this scenario.
 
@@ -316,7 +314,7 @@ Temporal.PlainDate.from(valid)      // => 2001-09-08
 Temporal.PlainYearMonth.from(valid) // => 2001-09
 Temporal.PlainMonthDay.from(valid)  // => 09-08
 Temporal.PlainTime.from(valid)      // => 18:46:40
-Temporal.TimeZone.from(valid)  // => America/Vancouver
+Temporal.ZonedDateTime.from(valid)  // => 2001-09-08T18:46:40-07:00[America/Vancouver]
 
 Temporal.Instant.from(time24)              // => 2020-04-08T07:00Z
 dateTime = Temporal.PlainDateTime.from(time24);  // => 2020-04-08T00:00
@@ -324,7 +322,7 @@ dateTime.getDate()                          // => 2020-04-08
 dateTime.getDate().getYearMonth()           // => 2020-04
 dateTime.getDate().getMonthDay()            // => 04-08
 dateTime.getTime()                          // => 00:00
-Temporal.TimeZone.from(time24)              // => America/Vancouver
+Temporal.ZonedDateTime.from(time24)         // => 2020-04-08T00:00-07:00[America/Vancouver]
 
 // Depending on which type you pass them to, it may be difficult to
 // reject strings with mismatching time zones or invalid ISO 8601:
@@ -339,7 +337,7 @@ Temporal.PlainDate.from(onlyDateTime)      // => 2001-09-09
 Temporal.PlainYearMonth.from(onlyDateTime) // => 2001-09
 Temporal.PlainMonthDay.from(onlyDateTime)  // => 09-09
 Temporal.PlainTime.from(onlyDateTime)      // => 01:46:40
-Temporal.TimeZone.from(onlyDateTime)  // throws
+Temporal.ZonedDateTime.from(onlyDateTime)  // throws
 
 Temporal.Instant.from(onlyDate)  // throws
 Temporal.PlainDateTime.from(onlyDate)  // => 2001-09-09T00:00
@@ -347,7 +345,7 @@ Temporal.PlainDate.from(onlyDate)      // => 2001-09-09
 Temporal.PlainYearMonth.from(onlyDate) // => 2001-09
 Temporal.PlainMonthDay.from(onlyDate)  // => 09-09
 Temporal.PlainTime.from(onlyDate)      // => 00:00
-Temporal.TimeZone.from(onlyDate)  // throws
+Temporal.ZonedDateTime.from(onlyDate)  // throws
 ```
 
 **Use case 2:** Now from() is more useful for this case.
@@ -363,12 +361,10 @@ Temporal.PlainDate.from(invalidZone); // => 2001-09-08
 Temporal.PlainYearMonth.from(invalidZone); // => 2001-09
 Temporal.PlainMonthDay.from(invalidZone); // => 09-08
 Temporal.PlainTime.from(invalidZone); // => 18:46:40
-Temporal.TimeZone.from(invalidZone); // => America/Vancouver
 
 Temporal.PlainDate.from(invalidTime); // => 2001-09-08
 Temporal.PlainYearMonth.from(invalidTime); // => 2001-09
 Temporal.PlainMonthDay.from(invalidTime); // => 09-08
-Temporal.TimeZone.from(invalidTime); // => America/Vancouver
 // etc.
 ```
 

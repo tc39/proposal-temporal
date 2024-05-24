@@ -121,7 +121,7 @@ The time zone ID itself follows the rules of the time zone database, usually cal
 > Do not use digits, as that might create an ambiguity with POSIX TZ strings.
 > A file name component must not exceed 14 characters or start with `'-'`.
 
-For more about TZDB, see the [`Temporal.TimeZone` documentation](timezone.md) or the [TZDB documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html).
+For more about TZDB, see the [TZDB documentation](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html).
 
 ### Calendar systems
 
@@ -234,10 +234,6 @@ To determine the `Temporal` class that should be used to parse a string, it's im
   Other than the few use cases detailed in the [`Temporal.PlainDateTime` documentation](plaindatetime.html), most of the time it's better to use a different type.
 - `Temporal.Duration` represents a period of time.
   Its data model is a number of years, months, days, hours, minutes, seconds, milliseconds, microseconds, and nanoseconds.
-- `Temporal.TimeZone` represents a time zone in the [IANA time zone database](https://www.iana.org/time-zones), or (rarely) a numeric offset time zone.
-  Its data model is the identifier of the time zone, like `"Asia/Tokyo"` or `"+06:00"`.
-- `Temporal.Calendar` represents a calendar like Hebrew, Chinese, or the default ISO 8601 calendar.
-  Its data model is the ID of the calendar, e.g. `"iso8601"` or `"hebrew"`.
 
 #### Is there one function I can call to parse any string into the appropriate `Temporal` type?
 
@@ -302,14 +298,14 @@ If timezone-aware results are not needed, then use another type like `Temporal.I
 
 Timestamp strings like `2022-02-28T03:06:00+02:00` or `2022-02-28T03:06:00Z` are normally parsed by `Temporal.Instant`.
 Because the data model of `Temporal.Instant` is limited to the number of nanoseconds since January 1, 1970 UTC), the offset is not stored when parsing a string into a `Temporal.Instant`.
-If the offset of the string is needed, use `Temporal.TimeZone.from`:
+If the offset of the string is needed, use `Temporal.Instant.toZonedDateTime()` with the string as the time zone:
 
 ```javascript
 s = `2022-02-28T03:06:00Z`;
-offset = Temporal.TimeZone.from(s); // => UTC
+offset = Temporal.Instant.from(s).toZonedDateTimeISO(s).timeZoneId; // => UTC
 
 s = `2022-02-28T03:06:00+02:00`;
-offset = Temporal.TimeZone.from(s); // => +02:00
+offset = Temporal.Instant.from(s).toZonedDateTimeISO(s).timeZoneId; // => +02:00
 ```
 
 #### Why can't I parse a UTC "Z" string using `Temporal.PlainXxx` types?
@@ -345,7 +341,7 @@ zdt = Temporal.Instant.from(s).toZonedDateTimeISO(s).toPlainDate(); // => 2022-0
 Yes!
 Temporal parsing methods accept strings that have more information than the type needs.
 Information not needed for that type's data model is ignored.
-This works for all `Temporal.PlainXxx` types, `Temporal.Instant`, and even `Temporal.TimeZone` and `Temporal.Calendar`.
+This works for all Temporal types (except `Temporal.Duration` for which it is irrelevant.)
 
 ```javascript
 s = '2022-02-28T11:06:00.092121729+08:00[Asia/Shanghai]';
@@ -356,8 +352,6 @@ Temporal.PlainDateTime.from(s); // => 2022-02-28T11:06:00.092121729
 Temporal.PlainYearMonth.from(s); // => 2022-02
 Temporal.PlainMonthDay.from(s); // => 02-28
 Temporal.Instant.from(s); // => 2022-02-28T03:06:00.092121729Z
-Temporal.TimeZone.from(s); // => Asia/Shanghai
-Temporal.Calendar.from(s); // => iso8601 (the default calendar when parsing strings)
 ```
 
 <a name="localized-parsing"></a>

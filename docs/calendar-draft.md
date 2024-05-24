@@ -2,7 +2,9 @@
 
 This doc describes a design for first-class support for non-Gregorian [calendars](https://en.wikipedia.org/wiki/Calendar) in Temporal. Although most of this document is based on Temporal.PlainDate, most of this applies to Temporal.PlainDateTime, Temporal.PlainYearMonth, Temporal.PlainMonthDay, and Temporal.PlainTime as well.
 
-The approach described in this document was largely adopted, so this document has been superseded by the [`Temporal.Calendar` documentation](./calendar.md).
+The approach described in this document was largely adopted, but most of
+this document's information is nonetheless obsolete, due to removing the
+Temporal.Calendar interface.
 
 ## Data Model
 

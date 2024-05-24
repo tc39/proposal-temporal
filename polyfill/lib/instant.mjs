@@ -23,8 +23,8 @@ export class Instant {
     SetSlot(this, EPOCHNANOSECONDS, ns);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
-      const dateTime = ES.GetPlainDateTimeFor(undefined, this, 'iso8601', 0);
-      const repr = ES.TemporalDateTimeToString(dateTime, 'auto', 'never') + 'Z';
+      const iso = ES.GetISOPartsFromEpoch(ns);
+      const repr = ES.TemporalDateTimeToString(iso, 'iso8601', 'auto', 'never') + 'Z';
       Object.defineProperty(this, '_repr_', {
         value: `${this[Symbol.toStringTag]} <${repr}>`,
         writable: false,
@@ -101,7 +101,7 @@ export class Instant {
     const smallestUnit = ES.GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
     let timeZone = options.timeZone;
-    if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
+    if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZoneIdentifier(timeZone);
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     const ns = GetSlot(this, EPOCHNANOSECONDS);
     const roundedNs = ES.RoundTemporalInstant(ns, increment, unit, roundingMode);
@@ -121,7 +121,7 @@ export class Instant {
   }
   toZonedDateTimeISO(timeZone) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
+    timeZone = ES.ToTemporalTimeZoneIdentifier(timeZone);
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
   }
 

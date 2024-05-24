@@ -5,7 +5,7 @@
  * @param {Temporal.ZonedDateTime} now - Starting point
  * @param {number} weekday - Weekday event occurs on (Monday=1, Sunday=7)
  * @param {Temporal.PlainTime} eventTime - Time event occurs at
- * @param {Temporal.TimeZone} eventTimeZone - Time zone where event is planned
+ * @param {string} eventTimeZone - Time zone where event is planned
  * @returns {Temporal.ZonedDateTime} Local date and time of next occurrence
  */
 function nextWeeklyOccurrence(now, weekday, eventTime, eventTimeZone) {

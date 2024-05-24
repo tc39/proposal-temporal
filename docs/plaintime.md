@@ -10,8 +10,6 @@ A `Temporal.PlainTime` represents a wall-clock time, with a precision in nanosec
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.
 
 `Temporal.PlainTime` refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use `Temporal.PlainDateTime`.
-A `Temporal.PlainTime` can be converted into a `Temporal.ZonedDateTime` by combining it with a `Temporal.PlainDate` and `Temporal.TimeZone` using the `toZonedDateTime()` method.
-It can also be combined with a `Temporal.PlainDate` to yield a "zoneless" `Temporal.PlainDateTime` using the `toPlainDateTime()` method.
 
 ## Constructor
 

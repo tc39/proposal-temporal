@@ -13,13 +13,13 @@ A `Temporal.PlainYearMonth` can be converted into a `Temporal.PlainDate` by comb
 
 ## Constructor
 
-### **new Temporal.PlainYearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_: string | object = "iso8601", _referenceISODay_: number = 1) : Temporal.PlainYearMonth
+### **new Temporal.PlainYearMonth**(_isoYear_: number, _isoMonth_: number, _calendar_: string = "iso8601", _referenceISODay_: number = 1) : Temporal.PlainYearMonth
 
 **Parameters:**
 
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
-- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): A calendar to project the month into.
+- `calendar` (optional string): A calendar to project the month into.
 - `referenceISODay` (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
   For the ISO 8601 calendar, this parameter will default to 1 if omitted.
   For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.
@@ -40,8 +40,7 @@ Together, `isoYear`, `isoMonth`, and `referenceISODay` must represent a valid da
 The range of allowed values for this type is exactly enough that calling [`toPlainYearMonth()`](./plaindate.md#toPlainYearMonth) on any valid `Temporal.PlainDate` will succeed.
 If `isoYear` and `isoMonth` are outside of this range, then this function will throw a `RangeError`.
 
-Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
-Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
+`calendar` is a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 

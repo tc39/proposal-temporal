@@ -7,7 +7,7 @@
 
 A `Temporal.Instant` is a single point in time (called **"exact time"**), with a precision in nanoseconds.
 No time zone or calendar information is present.
-To obtain local date/time units like year, month, day, or hour, a `Temporal.Instant` must be combined with a `Temporal.TimeZone` instance or a time zone string.
+To obtain local date/time units like year, month, day, or hour, a `Temporal.Instant` must be combined with a time zone identifier.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -20,11 +20,6 @@ instant.year; // => undefined
 zdtTokyo = instant.toZonedDateTimeISO('Asia/Tokyo'); // => 2020-01-01T03:30:00+09:00[Asia/Tokyo]
 zdtTokyo.year; // => 2020
 zdtTokyo.toPlainDate(); // => 2020-01-01
-
-tzLA = Temporal.TimeZone.from('America/Los_Angeles');
-zdtLA = instant.toZonedDateTimeISO(tzLA); // => 2019-12-31T10:30:00-08:00[America/Los_Angeles]
-zdtLA.year; // => 2019
-zdtLA.toPlainDate(); // => 2019-12-31
 ```
 <!-- prettier-ignore-end -->
 
@@ -253,11 +248,7 @@ epochMicros = ns / 1000n + ((ns % 1000n) < 0n ? -1n : 0n);
 
 **Parameters:**
 
-- `timeZone` (object or string): either
-  - a `Temporal.TimeZone` object
-  - an object implementing the [time zone protocol](./timezone.md#custom-time-zones)
-  - a string description of the time zone; either its IANA name or UTC offset
-  - an object with a `timeZone` property whose value is any of the above.
+- `timeZone` (string or `Temporal.ZonedDateTime`): The time zone to use for the conversion. Can be the time zone's string identifier, or a `Temporal.ZonedDateTime` object, whose time zone will be used.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of the ISO 8601 calendar, at the exact time indicated by `instant`.
 
@@ -573,7 +564,7 @@ one.equals(one); // => true
 
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
-  - `timeZone` (string or object): the time zone to express `instant` in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
+  - `timeZone` (string or `Temporal.ZonedDateTime`): the time zone to express `instant` in, as a string identifier, or a `Temporal.ZonedDateTime` object whose time zone will be used.
     The default is to use UTC.
   - `fractionalSecondDigits` (number or string): How many digits to print after the decimal point in the output string.
     Valid values are `'auto'`, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
@@ -604,7 +595,7 @@ Example usage:
 ```js
 instant = Temporal.Instant.fromEpochMilliseconds(1574074321816);
 instant.toString(); // => '2019-11-18T10:52:01.816Z'
-instant.toString({ timeZone: Temporal.TimeZone.from('UTC') });
+instant.toString({ timeZone: 'UTC' });
 // => '2019-11-18T10:52:01.816+00:00'
 instant.toString({ timeZone: 'Asia/Seoul' });
 // => '2019-11-18T19:52:01.816+09:00'
