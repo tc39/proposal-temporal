@@ -1,6 +1,5 @@
 import * as ES from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
-import { TimeZoneMethodRecord } from './methodrecord.mjs';
 
 const instant = () => {
   const Instant = GetIntrinsic('%Temporal.Instant%');
@@ -9,8 +8,7 @@ const instant = () => {
 const plainDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
   const inst = instant();
-  const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor']);
-  return ES.GetPlainDateTimeFor(timeZoneRec, inst, 'iso8601');
+  return ES.GetPlainDateTimeFor(timeZone, inst, 'iso8601');
 };
 const zonedDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);

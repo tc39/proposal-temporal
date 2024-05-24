@@ -192,43 +192,14 @@ Unlike the other Temporal types, the units in `Temporal.Duration` don't naturall
 
 See [Duration balancing](./balancing.md) for more on this topic.
 
-### **Temporal.TimeZone**
+### Calendars
 
-A `Temporal.TimeZone` represents an IANA time zone, a specific UTC offset, or UTC itself.
-Time zones translate from a date/time in UTC to a local date/time.
-Because of this `Temporal.TimeZone` can be used to convert between `Temporal.Instant` and `Temporal.PlainDateTime` as well as finding out the offset at a specific `Temporal.Instant`.
-
-It is also possible to implement your own time zones.
-
-```js
-const timeZone = Temporal.TimeZone.from('Africa/Cairo');
-timeZone.getInstantFor('2000-01-01T00:00'); // => 1999-12-31T22:00:00Z
-timeZone.getPlainDateTimeFor('2000-01-01T00:00Z'); // => 2000-01-01T02:00:00
-timeZone.getPreviousTransition(Temporal.Now.instant()); // => 2014-09-25T21:00:00Z
-timeZone.getNextTransition(Temporal.Now.instant()); // => null
-```
-
-See [Temporal.TimeZone Documentation](./timezone.md) for detailed documentation.
-A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal](./ambiguity.md) is also available.
-
-### **Temporal.Calendar**
-
-A `Temporal.Calendar` represents a calendar system.
+Temporal supports multiple calendar systems.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.
 
-Dates have associated `Temporal.Calendar` objects, to perform calendar-related math.
-Under the hood, this math is done by methods on the calendars.
+Dates have associated calendar IDs, to perform calendar-related math.
 
-It is also possible to implement your own calendars.
-
-```js
-const cal = Temporal.Calendar.from('iso8601');
-const date = cal.dateFromFields({ year: 1999, month: 12, day: 31 }, {});
-date.monthsInYear; // => 12
-date.daysInYear; // => 365
-```
-
-See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
+See [Calendars in Temporal](./calendars.md) for detailed documentation.
 
 ## Object relationship
 

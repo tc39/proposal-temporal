@@ -1,6 +1,5 @@
 import * as ES from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { TimeZoneMethodRecord } from './methodrecord.mjs';
 import {
   CreateSlots,
   GetSlot,
@@ -459,12 +458,8 @@ function extractOverrides(temporalObj, main) {
       nanosecond,
       'iso8601'
     );
-    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
-      'getOffsetNanosecondsFor',
-      'getPossibleInstantsFor'
-    ]);
     return {
-      instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
+      instant: ES.GetInstantFor(GetSlot(main, TZ_CANONICAL), datetime, 'compatible'),
       formatter: getSlotLazy(main, TIME)
     };
   }
@@ -473,7 +468,7 @@ function extractOverrides(temporalObj, main) {
     const isoYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const referenceISODay = GetSlot(temporalObj, ISO_DAY);
-    const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
+    const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== mainCalendar) {
       throw new RangeError(
@@ -481,12 +476,8 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const datetime = ES.CreateTemporalDateTime(isoYear, isoMonth, referenceISODay, 12, 0, 0, 0, 0, 0, calendar);
-    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
-      'getOffsetNanosecondsFor',
-      'getPossibleInstantsFor'
-    ]);
     return {
-      instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
+      instant: ES.GetInstantFor(GetSlot(main, TZ_CANONICAL), datetime, 'compatible'),
       formatter: getSlotLazy(main, YM)
     };
   }
@@ -495,7 +486,7 @@ function extractOverrides(temporalObj, main) {
     const referenceISOYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
-    const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
+    const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== mainCalendar) {
       throw new RangeError(
@@ -503,12 +494,8 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const datetime = ES.CreateTemporalDateTime(referenceISOYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, calendar);
-    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
-      'getOffsetNanosecondsFor',
-      'getPossibleInstantsFor'
-    ]);
     return {
-      instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
+      instant: ES.GetInstantFor(GetSlot(main, TZ_CANONICAL), datetime, 'compatible'),
       formatter: getSlotLazy(main, MD)
     };
   }
@@ -517,36 +504,28 @@ function extractOverrides(temporalObj, main) {
     const isoYear = GetSlot(temporalObj, ISO_YEAR);
     const isoMonth = GetSlot(temporalObj, ISO_MONTH);
     const isoDay = GetSlot(temporalObj, ISO_DAY);
-    const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
+    const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== 'iso8601' && calendar !== mainCalendar) {
       throw new RangeError(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`);
     }
     const datetime = ES.CreateTemporalDateTime(isoYear, isoMonth, isoDay, 12, 0, 0, 0, 0, 0, mainCalendar);
-    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
-      'getOffsetNanosecondsFor',
-      'getPossibleInstantsFor'
-    ]);
     return {
-      instant: ES.GetInstantFor(timeZoneRec, datetime, 'compatible'),
+      instant: ES.GetInstantFor(GetSlot(main, TZ_CANONICAL), datetime, 'compatible'),
       formatter: getSlotLazy(main, DATE)
     };
   }
 
   if (ES.IsTemporalDateTime(temporalObj)) {
-    const calendar = ES.ToTemporalCalendarIdentifier(GetSlot(temporalObj, CALENDAR));
+    const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== 'iso8601' && calendar !== mainCalendar) {
       throw new RangeError(
         `cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(main, TZ_CANONICAL), [
-      'getOffsetNanosecondsFor',
-      'getPossibleInstantsFor'
-    ]);
     return {
-      instant: ES.GetInstantFor(timeZoneRec, temporalObj, 'compatible'),
+      instant: ES.GetInstantFor(GetSlot(main, TZ_CANONICAL), temporalObj, 'compatible'),
       formatter: getSlotLazy(main, DATETIME)
     };
   }
