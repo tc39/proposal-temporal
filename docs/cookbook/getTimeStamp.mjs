@@ -9,5 +9,6 @@ const timeStamp = Temporal.Now.instant();
 
 // Timestamp in Milliseconds
 timeStamp.epochMilliseconds;
+
 // Timestamp in Seconds
-timeStamp.epochSeconds;
+Math.floor(timeStamp.epochMilliseconds / 1000);

@@ -358,29 +358,23 @@ dt.nanosecond;  // => 500
 
 > **NOTE**: The possible values for the `month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
-### zonedDateTime.**epochSeconds**: number
-
 ### zonedDateTime.**epochMilliseconds**: number
-
-### zonedDateTime.**epochMicroseconds**: bigint
 
 ### zonedDateTime.**epochNanoseconds**: bigint
 
-The above read-only properties return the integer number of full seconds, milliseconds, microseconds, or nanoseconds between `zonedDateTime` and 00:00 UTC on 1970-01-01, otherwise known as the [UNIX Epoch](https://en.wikipedia.org/wiki/Unix_time).
+The above two read-only properties give the integer number of milliseconds or nanoseconds (respectively) from the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) of January 1, 1970 at 00:00 UTC until `zonedDateTime`, ignoring leap seconds.
 
-These properties are equivalent to `zonedDateTime.toInstant().epochSeconds`, `zonedDateTime.toInstant().epochMilliseconds`, `zonedDateTime.toInstant().epochMicroseconds`, `zonedDateTime.toInstant().epochNanoseconds`, respectively.
-Any fractional remainders are truncated towards zero.
+These properties are equivalent to `zonedDateTime.toInstant().epochMilliseconds` and `zonedDateTime.toInstant().epochNanoseconds`, respectively.
+Any fractional milliseconds are truncated towards the beginning of time.
 The time zone is irrelevant to these properties, because there is only one epoch, not one per time zone.
 
-Note that the `epochSeconds` and `epochMilliseconds` properties are of type `number` (although only integers are returned) while the `epochMicroseconds` and `epochNanoseconds` are of type `bigint`.
+Note that the `epochMilliseconds` property is of type `number` (although only integers are returned) while the `epochNanoseconds` property is of type `bigint`.
 
 The `epochMilliseconds` property is the easiest way to construct a legacy `Date` object from a `Temporal.ZonedDateTime` instance.
 
 <!-- prettier-ignore-start -->
 ```javascript
 zdt = Temporal.ZonedDateTime.from('2020-02-01T12:30+09:00[Asia/Tokyo]');
-epochSecs = zdt.epochSeconds;
-  // => 1580527800
 epochMs = zdt.epochMilliseconds;
   // => 1580527800000
 zdt.toInstant().epochMilliseconds;
@@ -388,10 +382,18 @@ zdt.toInstant().epochMilliseconds;
 legacyDate = new Date(epochMs);
   // => 2020-02-01T03:30:00.000Z
   // (if the system time zone is America/Los_Angeles)
-epochMicros = zdt.epochMicroseconds;
-  // => 1580527800000000n
 epochNanos = zdt.epochNanoseconds;
   // => 1580527800000000000n
+
+// If you need epoch seconds data:
+epochSecs = Math.floor(zdt.epochMillieconds / 1000); // => 1553906700
+  // => 1580527800
+
+// If you need epoch microseconds data:
+// (Note the extra check for correct floor rounding with bigints)
+ns = zdt.epochNanoseconds;
+epochMicros = ns / 1000n + ((ns % 1000n) < 0n ? -1n : 0n);
+  // => 1580527800000000n
 ```
 <!-- prettier-ignore-end -->
 
