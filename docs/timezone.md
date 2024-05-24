@@ -306,7 +306,7 @@ Example usage:
 
 ```javascript
 // Getting the UTC offset for a time zone at a particular time
-timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+timestamp = Temporal.Instant.fromEpochMilliseconds(1553993100_000);
 tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getOffsetNanosecondsFor(timestamp); // => 3600000000000
 
@@ -347,7 +347,7 @@ Example usage:
 
 ```javascript
 // Getting the UTC offset for a time zone at a particular time
-timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+timestamp = Temporal.Instant.fromEpochMilliseconds(1553993100_000);
 tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getOffsetStringFor(timestamp); // => '+01:00'
 
@@ -381,12 +381,12 @@ Example usage:
 
 ```javascript
 // Converting an exact time to a calendar date / wall-clock time
-timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+timestamp = Temporal.Instant.fromEpochMilliseconds(1553993100_000);
 tz = Temporal.TimeZone.from('Europe/Berlin');
 tz.getPlainDateTimeFor(timestamp); // => 2019-03-31T01:45:00
 
 // What time was the Unix Epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA)?
-epoch = Temporal.Instant.fromEpochSeconds(0);
+epoch = Temporal.Instant.fromEpochMilliseconds(0);
 tz = Temporal.TimeZone.from('America/New_York');
 tz.getPlainDateTimeFor(epoch); // => 1969-12-31T19:00:00
 ```

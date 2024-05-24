@@ -134,29 +134,6 @@ instant === Temporal.Instant.from(instant); // => false
 ```
 <!-- prettier-ignore-end -->
 
-### Temporal.Instant.**fromEpochSeconds**(_epochSeconds_: number) : Temporal.Instant
-
-**Parameters:**
-
-- `epochSeconds` (number): A number of seconds.
-
-**Returns:** a new `Temporal.Instant` object.
-
-This static method creates a new `Temporal.Instant` object with seconds precision.
-`epochSeconds` is the number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and the desired exact time.
-
-The number of seconds since the Unix epoch is a common measure of exact time in many computer systems.
-Use this method if you need to interface with such a system.
-
-Example usage:
-
-```js
-// Same examples as in new Temporal.Instant(), but with seconds precision
-instant = Temporal.Instant.fromEpochSeconds(1553906700);
-epoch = Temporal.Instant.fromEpochSeconds(0); // => 1970-01-01T00:00:00Z
-turnOfTheCentury = Temporal.Instant.fromEpochSeconds(-2208988800); // => 1900-01-01T00:00:00Z
-```
-
 ### Temporal.Instant.**fromEpochMilliseconds**(_epochMilliseconds_: number) : Temporal.Instant
 
 **Parameters:**
@@ -165,7 +142,11 @@ turnOfTheCentury = Temporal.Instant.fromEpochSeconds(-2208988800); // => 1900-01
 
 **Returns:** a new `Temporal.Instant` object.
 
-Same as `Temporal.Instant.fromEpochSeconds()`, but with millisecond (10<sup>&minus;3</sup> second) precision.
+This static method creates a new `Temporal.Instant` object with milliseconds precision.
+`epochMilliseconds` is the number of milliseconds between the Unix epoch (midnight UTC on January 1, 1970) and the desired exact time.
+
+The number of seconds since the Unix epoch is a common measure of exact time in many computer systems.
+Use this method if you need to interface with such a system.
 
 The number of milliseconds since the Unix epoch is also returned from the `getTime()` and `valueOf()` methods of legacy JavaScript `Date` objects, as well as `Date.now()`.
 However, for conversion from legacy `Date` to `Temporal.Instant`, use `Date.prototype.toTemporalInstant`:
@@ -178,17 +159,11 @@ instant = legacyDate.toTemporalInstant(); // recommended
 
 // Use fromEpochMilliseconds, for example, if you have epoch millisecond data stored in a file
 todayMs = Temporal.Instant.fromEpochMilliseconds(msReadFromFile);
+
+// If you have epoch seconds data:
+epochSecs = 1553906700;  // e.g., read from a file
+instant = Temporal.Instant.fromEpochMilliseconds(epochSecs * 1000);
 ```
-
-### Temporal.Instant.**fromEpochMicroseconds**(_epochMicroseconds_ : bigint) : Temporal.Instant
-
-**Parameters:**
-
-- `epochMicroseconds` (bigint): A number of microseconds.
-
-**Returns:** a new `Temporal.Instant` object.
-
-Same as `Temporal.Instant.fromEpochSeconds()`, but with microsecond (10<sup>&minus;6</sup> second) precision.
 
 ### Temporal.Instant.**fromEpochNanoseconds**(_epochNanoseconds_ : bigint) : Temporal.Instant
 
@@ -198,8 +173,14 @@ Same as `Temporal.Instant.fromEpochSeconds()`, but with microsecond (10<sup>&min
 
 **Returns:** a new `Temporal.Instant` object.
 
-Same as `Temporal.Instant.fromEpochSeconds()`, but with nanosecond (10<sup>&minus;9</sup> second) precision.
+Same as `Temporal.Instant.fromEpochMilliseconds()`, but with nanosecond (10<sup>&minus;9</sup> second) precision.
 Also the same as `new Temporal.Instant(epochNanoseconds)`.
+
+If you have epoch microseconds data, you can use this function to create a `Temporal.Instant` from that:
+```js
+epochMicros = 1553906700_000_000n;
+instant = Temporal.Instant.fromEpochNanoseconds(epochMicros * 1000n);
+```
 
 ### Temporal.Instant.**compare**(_one_: Temporal.Instant | string, _two_: Temporal.Instant | string) : number
 
@@ -223,9 +204,9 @@ This function can be used to sort arrays of `Temporal.Instant` objects.
 For example:
 
 ```javascript
-one = Temporal.Instant.fromEpochSeconds(1.0e9);
-two = Temporal.Instant.fromEpochSeconds(1.1e9);
-three = Temporal.Instant.fromEpochSeconds(1.2e9);
+one = Temporal.Instant.fromEpochMilliseconds(1.0e12);
+two = Temporal.Instant.fromEpochMilliseconds(1.1e12);
+three = Temporal.Instant.fromEpochMilliseconds(1.2e12);
 sorted = [three, one, two].sort(Temporal.Instant.compare);
 sorted.join(' ');
 // => '2001-09-09T01:46:40Z 2004-11-09T11:33:20Z 2008-01-10T21:20:00Z'
@@ -233,25 +214,13 @@ sorted.join(' ');
 
 ## Properties
 
-### instant.**epochSeconds** : number
-
-The value of this property is an integer number of seconds between the Unix epoch (midnight UTC on January 1, 1970) and `instant`.
-This number will be negative if `instant` is before 1970.
-The number of seconds is truncated towards zero.
-
-Use this property if you need to interface with some other system that reckons time in seconds since the Unix epoch.
-
-Example usage:
-
-```js
-instant = Temporal.Instant.from('2019-03-30T01:45+01:00');
-instant.epochSeconds; // => 1553906700
-```
-
 ### instant.**epochMilliseconds** : number
 
-Same as `epochSeconds`, but with millisecond (10<sup>&minus;3</sup> second) precision.
-The number of seconds is truncated towards zero.
+The value of this property is an integer number of milliseconds between the Unix epoch (midnight UTC on January 1, 1970) and `instant`.
+This number will be negative if `instant` is before 1970.
+The number of milliseconds is truncated towards the beginning of time.
+
+Use this property if you need to interface with some other system that reckons time in milliseconds since the Unix epoch.
 
 This method can be useful in particular to create an old-style JavaScript `Date` object, if one is needed.
 An example:
@@ -259,18 +228,24 @@ An example:
 ```js
 instant = Temporal.Instant.from('2019-03-30T00:45Z');
 new Date(instant.epochMilliseconds); // => 2019-03-30T00:45:00.000Z
+
+// If you need epoch seconds data:
+epochSecs = Math.floor(instant.epochMillieconds / 1000); // => 1553906700
 ```
-
-### instant.**epochMicroseconds** : bigint
-
-Same as `epochSeconds`, but the value is a bigint with microsecond (10<sup>&minus;6</sup> second) precision.
-The number of seconds is truncated towards zero.
 
 ### instant.**epochNanoseconds** : bigint
 
-Same as `epochSeconds`, but the value is a bigint with nanosecond (10<sup>&minus;9</sup> second) precision.
+Same as `epochMilliseconds`, but the value is a bigint with nanosecond (10<sup>&minus;9</sup> second) precision.
 
 The value of this property is suitable to be passed to `new Temporal.Instant()`.
+
+If you need epoch microseconds data, you can divide the epoch nanoseconds by 1000, but note that bigint division is a truncation, whereas you should use floor rounding to calculate epoch microseconds in the case of a negative value.
+That can be done with bigints like this:
+
+```js
+ns = instant.epochNanoseconds;
+epochMicros = ns / 1000n + ((ns % 1000n) < 0n ? -1n : 0n);
+```
 
 ## Methods
 
@@ -297,7 +272,7 @@ Example usage:
 
 ```js
 // Converting a specific exact time to a calendar date / wall-clock time
-timestamp = Temporal.Instant.fromEpochSeconds(1553993100);
+timestamp = Temporal.Instant.fromEpochMilliseconds(1553993100_000);
 timestamp.toZonedDateTimeISO('Europe/Berlin'); // => 2019-03-31T01:45:00+01:00[Europe/Berlin]
 timestamp.toZonedDateTimeISO('UTC'); // => 2019-03-31T00:45:00+00:00[UTC]
 timestamp.toZonedDateTimeISO('-08:00'); // => 2019-03-30T16:45:00-08:00[-08:00]
@@ -325,7 +300,7 @@ Example usage:
 <!-- prettier-ignore-start -->
 ```js
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?
-epoch = Temporal.Instant.fromEpochSeconds(0);
+epoch = Temporal.Instant.fromEpochMilliseconds(0);
 timeZone = Temporal.TimeZone.from('America/New_York');
 epoch.toZonedDateTime({ timeZone, calendar: 'gregory' });
   // => 1969-12-31T19:00:00-05:00[America/New_York][u-ca=gregory]
@@ -446,8 +421,8 @@ approxMissionLength = startOfMoonMission.until(endOfMoonMission, {
   // => PT195H
 
 // A billion (10^9) seconds since the epoch in different units
-epoch = Temporal.Instant.fromEpochSeconds(0);
-billion = Temporal.Instant.fromEpochSeconds(1e9);
+epoch = Temporal.Instant.fromEpochMilliseconds(0);
+billion = Temporal.Instant.fromEpochMilliseconds(1e9);
 epoch.until(billion);
   // => PT1000000000S
 epoch.until(billion, { largestUnit: 'hour' });
@@ -552,8 +527,8 @@ If `other` is not a `Temporal.Instant` object, then it will be converted to one 
 Example usage:
 
 ```javascript
-one = Temporal.Instant.fromEpochSeconds(1.0e9);
-two = Temporal.Instant.fromEpochSeconds(1.1e9);
+one = Temporal.Instant.fromEpochMilliseconds(1.0e12);
+two = Temporal.Instant.fromEpochMilliseconds(1.1e12);
 one.equals(two); // => false
 one.equals(one); // => true
 ```

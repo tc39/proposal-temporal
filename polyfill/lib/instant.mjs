@@ -34,20 +34,10 @@ export class Instant {
     }
   }
 
-  get epochSeconds() {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const value = GetSlot(this, EPOCHNANOSECONDS);
-    return ES.BigIntFloorDiv(value, 1e9).toJSNumber();
-  }
   get epochMilliseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
     return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
-  }
-  get epochMicroseconds() {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    const value = GetSlot(this, EPOCHNANOSECONDS);
-    return ES.BigIntIfAvailable(ES.BigIntFloorDiv(value, 1e3));
   }
   get epochNanoseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -144,21 +134,9 @@ export class Instant {
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
   }
 
-  static fromEpochSeconds(epochSeconds) {
-    epochSeconds = ES.ToNumber(epochSeconds);
-    const epochNanoseconds = bigInt(epochSeconds).multiply(1e9);
-    ES.ValidateEpochNanoseconds(epochNanoseconds);
-    return new Instant(epochNanoseconds);
-  }
   static fromEpochMilliseconds(epochMilliseconds) {
     epochMilliseconds = ES.ToNumber(epochMilliseconds);
     const epochNanoseconds = bigInt(epochMilliseconds).multiply(1e6);
-    ES.ValidateEpochNanoseconds(epochNanoseconds);
-    return new Instant(epochNanoseconds);
-  }
-  static fromEpochMicroseconds(epochMicroseconds) {
-    epochMicroseconds = ES.ToBigInt(epochMicroseconds);
-    const epochNanoseconds = epochMicroseconds.multiply(1e3);
     ES.ValidateEpochNanoseconds(epochNanoseconds);
     return new Instant(epochNanoseconds);
   }

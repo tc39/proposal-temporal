@@ -61,20 +61,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.instant.fromepochseconds">
-      <h1>Temporal.Instant.fromEpochSeconds ( _epochSeconds_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Set _epochSeconds_ to ? ToNumber(_epochSeconds_).
-        1. Set _epochSeconds_ to ? NumberToBigInt(_epochSeconds_).
-        1. Let _epochNanoseconds_ be _epochSeconds_ &times; ℤ(10<sup>9</sup>).
-        1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
-        1. Return ! CreateTemporalInstant(_epochNanoseconds_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.instant.fromepochmilliseconds">
       <h1>Temporal.Instant.fromEpochMilliseconds ( _epochMilliseconds_ )</h1>
       <p>
@@ -84,19 +70,6 @@
         1. Set _epochMilliseconds_ to ? ToNumber(_epochMilliseconds_).
         1. Set _epochMilliseconds_ to ? NumberToBigInt(_epochMilliseconds_).
         1. Let _epochNanoseconds_ be _epochMilliseconds_ &times; ℤ(10<sup>6</sup>).
-        1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
-        1. Return ! CreateTemporalInstant(_epochNanoseconds_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.instant.fromepochmicroseconds">
-      <h1>Temporal.Instant.fromEpochMicroseconds ( _epochMicroseconds_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Set _epochMicroseconds_ to ? ToBigInt(_epochMicroseconds_).
-        1. Let _epochNanoseconds_ be _epochMicroseconds_ &times; *1000*<sub>ℤ</sub>.
         1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalInstant(_epochNanoseconds_).
       </emu-alg>
@@ -152,21 +125,6 @@
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.instant.prototype.epochseconds">
-      <h1>get Temporal.Instant.prototype.epochSeconds</h1>
-      <p>
-        `Temporal.Instant.prototype.epochSeconds` is an accessor property whose set accessor function is *undefined*.
-        Its get accessor function performs the following steps:
-      </p>
-      <emu-alg>
-        1. Let _instant_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _s_ be floor(ℝ(_ns_) / 10<sup>9</sup>).
-        1. Return 𝔽(_s_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-get-temporal.instant.prototype.epochmilliseconds">
       <h1>get Temporal.Instant.prototype.epochMilliseconds</h1>
       <p>
@@ -179,21 +137,6 @@
         1. Let _ns_ be _instant_.[[Nanoseconds]].
         1. Let _ms_ be floor(ℝ(_ns_) / 10<sup>6</sup>).
         1. Return 𝔽(_ms_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-get-temporal.instant.prototype.epochmicroseconds">
-      <h1>get Temporal.Instant.prototype.epochMicroseconds</h1>
-      <p>
-        `Temporal.Instant.prototype.epochMicroseconds` is an accessor property whose set accessor function is *undefined*.
-        Its get accessor function performs the following steps:
-      </p>
-      <emu-alg>
-        1. Let _instant_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Let _ns_ be _instant_.[[Nanoseconds]].
-        1. Let _µs_ be floor(ℝ(_ns_) / 10<sup>3</sup>).
-        1. Return ℤ(_µs_).
       </emu-alg>
     </emu-clause>
 

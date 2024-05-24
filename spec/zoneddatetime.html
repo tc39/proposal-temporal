@@ -344,21 +344,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.epochseconds">
-      <h1>get Temporal.ZonedDateTime.prototype.epochSeconds</h1>
-      <p>
-        `Temporal.ZonedDateTime.prototype.epochSeconds` is an accessor property whose set accessor function is *undefined*.
-        Its get accessor function performs the following steps:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
-        1. Let _s_ be floor(ℝ(_ns_) / 10<sup>9</sup>).
-        1. Return 𝔽(_s_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-get-temporal.zoneddatetime.prototype.epochmilliseconds">
       <h1>get Temporal.ZonedDateTime.prototype.epochMilliseconds</h1>
       <p>
@@ -371,21 +356,6 @@
         1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
         1. Let _ms_ be floor(ℝ(_ns_) / 10<sup>6</sup>).
         1. Return 𝔽(_ms_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-get-temporal.zoneddatetime.prototype.epochmicroseconds">
-      <h1>get Temporal.ZonedDateTime.prototype.epochMicroseconds</h1>
-      <p>
-        `Temporal.ZonedDateTime.prototype.epochMicroseconds` is an accessor property whose set accessor function is *undefined*.
-        Its get accessor function performs the following steps:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _ns_ be _zonedDateTime_.[[Nanoseconds]].
-        1. Let _µs_ be floor(ℝ(_ns_) / 10<sup>3</sup>).
-        1. Return ℤ(_µs_).
       </emu-alg>
     </emu-clause>
 
