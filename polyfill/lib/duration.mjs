@@ -621,9 +621,6 @@ export class Duration {
       normSeconds
     );
   }
-  valueOf() {
-    ES.ValueOfThrows('Duration');
-  }
   static from(item) {
     if (ES.IsTemporalDuration(item)) {
       return new Duration(
@@ -731,3 +728,11 @@ export class Duration {
 }
 
 MakeIntrinsicClass(Duration, 'Temporal.Duration');
+Object.defineProperties(Duration.prototype, {
+  valueOf: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalValueOf%')
+  }
+});

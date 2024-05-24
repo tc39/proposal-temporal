@@ -1,6 +1,6 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { CalendarMethodRecord } from './methodrecord.mjs';
 import { ISO_MONTH, ISO_DAY, ISO_YEAR, CALENDAR, GetSlot } from './slots.mjs';
 
@@ -77,9 +77,6 @@ export class PlainMonthDay {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
   }
-  valueOf() {
-    ES.ValueOfThrows('PlainMonthDay');
-  }
   toPlainDate(item) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
     if (ES.Type(item) !== 'Object') throw new TypeError('argument should be an object');
@@ -129,3 +126,11 @@ export class PlainMonthDay {
 }
 
 MakeIntrinsicClass(PlainMonthDay, 'Temporal.PlainMonthDay');
+Object.defineProperties(PlainMonthDay.prototype, {
+  valueOf: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalValueOf%')
+  }
+});

@@ -2,7 +2,7 @@
 
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import {
   ISO_HOUR,
@@ -203,9 +203,6 @@ export class PlainTime {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
   }
-  valueOf() {
-    ES.ValueOfThrows('PlainTime');
-  }
 
   getISOFields() {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -255,3 +252,11 @@ export class PlainTime {
 }
 
 MakeIntrinsicClass(PlainTime, 'Temporal.PlainTime');
+Object.defineProperties(PlainTime.prototype, {
+  valueOf: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalValueOf%')
+  }
+});

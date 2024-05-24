@@ -1,6 +1,6 @@
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { CalendarMethodRecord, TimeZoneMethodRecord } from './methodrecord.mjs';
 import {
   ISO_YEAR,
@@ -152,9 +152,6 @@ export class PlainDate {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
   }
-  valueOf() {
-    ES.ValueOfThrows('PlainDate');
-  }
   toPlainDateTime(temporalTime = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     temporalTime = ES.ToTemporalTimeOrMidnight(temporalTime);
@@ -263,3 +260,11 @@ export class PlainDate {
 }
 
 MakeIntrinsicClass(PlainDate, 'Temporal.PlainDate');
+Object.defineProperties(PlainDate.prototype, {
+  valueOf: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalValueOf%')
+  }
+});
