@@ -344,11 +344,15 @@ console.log(zdt.eraYear, zdt.era);
 
 **Parameters:**
 
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to add, or subtract if negative.
 
 **Returns:** a new `Temporal.Instant` object which is the exact time indicated by `instant` plus `duration`.
 
 This method adds `duration` to `instant`.
+If `duration` is positive, this results in a later instant.
+
+Adding a negative duration is equivalent to subtracting the absolute value of that duration, and results in an earlier instant.
+To perform `instant` minus `duration`, use the idiom `instant.add(duration.negated())`.
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
@@ -360,8 +364,6 @@ To add those units, convert the `Temporal.Instant` to a `Temporal.ZonedDateTime`
 
 If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
 
-Adding a negative duration is equivalent to subtracting the absolute value of that duration.
-
 Example usage:
 
 ```js
@@ -369,37 +371,11 @@ Example usage:
 Temporal.Now.instant().add({ hours: 5 });
 fiveHours = Temporal.Duration.from({ hours: 5 });
 Temporal.Now.instant().add(fiveHours);
-```
 
-### instant.**subtract**(_duration_: Temporal.Duration | object | string) : Temporal.Instant
-
-**Parameters:**
-
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
-
-**Returns:** a new `Temporal.Instant` object which is the exact time indicated by `instant` minus `duration`.
-
-This method subtracts `duration` from `instant`.
-
-The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
-If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-The `years`, `months`, `weeks`, and `days` fields of `duration` must be zero.
-`Temporal.Instant` is independent of time zones and calendars, and so years, months, weeks, and days may be different lengths depending on which calendar or time zone they are reckoned in.
-This makes a subtraction with those units ambiguous.
-To subtract those units, convert the `Temporal.Instant` to a `Temporal.ZonedDateTime` by specifying the desired calendar and time zone, subtract the duration, and then convert it back.
-
-If the result is earlier or later than the range that `Temporal.Instant` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), a `RangeError` will be thrown.
-
-Subtracting a negative duration is equivalent to adding the absolute value of that duration.
-
-Example usage:
-
-```js
 // Temporal.Instant representing this time an hour ago
-Temporal.Now.instant().subtract({ hours: 1 });
-oneHour = Temporal.Duration.from({ hours: 1 });
-Temporal.Now.instant().subtract(oneHour);
+Temporal.Now.instant().add({ hours: -1 });
+oneHourAgo = Temporal.Duration.from({ hours: -1 });
+Temporal.Now.instant().add(oneHourAgo);
 ```
 
 ### instant.**until**(_other_: Temporal.Instant | string, _options_?: object) : Temporal.Duration

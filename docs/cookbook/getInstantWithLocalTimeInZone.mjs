@@ -35,7 +35,7 @@ function getInstantWithLocalTimeInZone(dateTime, timeZone, disambiguation = 'ear
     case 'clipEarlier':
       if (possible.length === 0) {
         const before = timeZone.getInstantFor(dateTime, { disambiguation: 'earlier' });
-        return timeZone.getNextTransition(before).subtract({ nanoseconds: 1 });
+        return timeZone.getNextTransition(before).add({ nanoseconds: -1 });
       }
       return possible[0];
     case 'clipLater':

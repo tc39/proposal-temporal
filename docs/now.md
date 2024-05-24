@@ -101,7 +101,7 @@ id = Temporal.Now.timeZoneId();
 now = Temporal.Now.instant();
 tz = Temporal.TimeZone.from(id);
 nextTransition = tz.getNextTransition(now);
-before = tz.getOffsetStringFor(nextTransition.subtract({ nanoseconds: 1 }));
+before = tz.getOffsetStringFor(nextTransition.add({ nanoseconds: -1 }));
 after = tz.getOffsetStringFor(nextTransition.add({ nanoseconds: 1 }));
 console.log(`At ${nextTransition.toZonedDateTimeISO(id)} the offset will change from UTC ${before} to ${after}`);
 // example output:

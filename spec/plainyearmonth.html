@@ -277,19 +277,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainYearMonth(~add~, _yearMonth_, _temporalDurationLike_, _options_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.plainyearmonth.prototype.subtract">
-      <h1>Temporal.PlainYearMonth.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _yearMonth_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainYearMonth(~subtract~, _yearMonth_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToPlainYearMonth(_yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -752,10 +740,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplainyearmonth" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtoplainyearmonth" type="abstract operation">
      <h1>
-        AddDurationToOrSubtractDurationFromPlainYearMonth (
-          _operation_: ~add~ or ~subtract~,
+        AddDurationToPlainYearMonth (
           _yearMonth_: a Temporal.PlainYearMonth,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -763,12 +750,10 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It adds/subtracts _temporalDurationLike_ to/from _yearMonth_, returning a point in time that is in the future/past relative to _yearMonth_.</dd>
+        <dd>It adds _temporalDurationLike_ to _yearMonth_, returning a point in time that is in the future or past relative to _yearMonth_ depending on whether _temporalDurationLike_ is positive or negative.</dd>
       </dl>
       <emu-alg>
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
-        1. If _operation_ is ~subtract~, then
-          1. Set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ! BalanceTimeDuration(_norm_, *"day"*).

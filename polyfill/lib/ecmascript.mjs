@@ -5091,8 +5091,7 @@ export function AddDaysToZonedDateTime(instant, dateTime, timeZoneRec, calendar,
   };
 }
 
-export function AddDurations(operation, duration, other, options) {
-  const sign = operation === 'subtract' ? -1 : 1;
+export function AddDurations(duration, other, options) {
   other = ToTemporalDurationRecord(other);
   options = GetOptionsObject(options);
   const { plainRelativeTo, zonedRelativeTo, timeZoneRec } = GetTemporalRelativeToOption(options);
@@ -5112,16 +5111,16 @@ export function AddDurations(operation, duration, other, options) {
   const ms1 = GetSlot(duration, MILLISECONDS);
   const µs1 = GetSlot(duration, MICROSECONDS);
   const ns1 = GetSlot(duration, NANOSECONDS);
-  const y2 = sign * other.years;
-  const mon2 = sign * other.months;
-  const w2 = sign * other.weeks;
-  const d2 = sign * other.days;
-  const h2 = sign * other.hours;
-  const min2 = sign * other.minutes;
-  const s2 = sign * other.seconds;
-  const ms2 = sign * other.milliseconds;
-  const µs2 = sign * other.microseconds;
-  const ns2 = sign * other.nanoseconds;
+  const y2 = other.years;
+  const mon2 = other.months;
+  const w2 = other.weeks;
+  const d2 = other.days;
+  const h2 = other.hours;
+  const min2 = other.minutes;
+  const s2 = other.seconds;
+  const ms2 = other.milliseconds;
+  const µs2 = other.microseconds;
+  const ns2 = other.nanoseconds;
 
   const largestUnit1 = DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1);
   const largestUnit2 = DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2);
@@ -5214,43 +5213,27 @@ export function AddDurations(operation, duration, other, options) {
   return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 }
 
-export function AddDurationToOrSubtractDurationFromInstant(operation, instant, durationLike) {
-  const sign = operation === 'subtract' ? -1 : 1;
+export function AddDurationToInstant(instant, durationLike) {
   const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ToLimitedTemporalDuration(durationLike, [
     'years',
     'months',
     'weeks',
     'days'
   ]);
-  const norm = TimeDuration.normalize(
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), norm);
   const Instant = GetIntrinsic('%Temporal.Instant%');
   return new Instant(ns);
 }
 
-export function AddDurationToOrSubtractDurationFromPlainDateTime(operation, dateTime, durationLike, options) {
-  const sign = operation === 'subtract' ? -1 : 1;
+export function AddDurationToPlainDateTime(dateTime, durationLike, options) {
   const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
     ToTemporalDurationRecord(durationLike);
   options = GetOptionsObject(options);
 
   const calendarRec = new CalendarMethodRecord(GetSlot(dateTime, CALENDAR), ['dateAdd']);
 
-  const norm = TimeDuration.normalize(
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = AddDateTime(
     GetSlot(dateTime, ISO_YEAR),
     GetSlot(dateTime, ISO_MONTH),
@@ -5262,10 +5245,10 @@ export function AddDurationToOrSubtractDurationFromPlainDateTime(operation, date
     GetSlot(dateTime, ISO_MICROSECOND),
     GetSlot(dateTime, ISO_NANOSECOND),
     calendarRec,
-    sign * years,
-    sign * months,
-    sign * weeks,
-    sign * days,
+    years,
+    months,
+    weeks,
+    days,
     norm,
     options
   );
@@ -5283,17 +5266,9 @@ export function AddDurationToOrSubtractDurationFromPlainDateTime(operation, date
   );
 }
 
-export function AddDurationToOrSubtractDurationFromPlainTime(operation, temporalTime, durationLike) {
-  const sign = operation === 'subtract' ? -1 : 1;
+export function AddDurationToPlainTime(temporalTime, durationLike) {
   const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ToTemporalDurationRecord(durationLike);
-  const norm = TimeDuration.normalize(
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   let { hour, minute, second, millisecond, microsecond, nanosecond } = AddTime(
     GetSlot(temporalTime, ISO_HOUR),
     GetSlot(temporalTime, ISO_MINUTE),
@@ -5316,22 +5291,8 @@ export function AddDurationToOrSubtractDurationFromPlainTime(operation, temporal
   return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
-export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yearMonth, durationLike, options) {
+export function AddDurationToPlainYearMonth(yearMonth, durationLike, options) {
   let duration = ToTemporalDurationRecord(durationLike);
-  if (operation === 'subtract') {
-    duration = {
-      years: -duration.years,
-      months: -duration.months,
-      weeks: -duration.weeks,
-      days: -duration.days,
-      hours: -duration.hours,
-      minutes: -duration.minutes,
-      seconds: -duration.seconds,
-      milliseconds: -duration.milliseconds,
-      microseconds: -duration.microseconds,
-      nanoseconds: -duration.nanoseconds
-    };
-  }
   let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
   options = GetOptionsObject(options);
   const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
@@ -5376,8 +5337,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
   return CalendarYearMonthFromFields(calendarRec, addedDateFields, optionsCopy);
 }
 
-export function AddDurationToOrSubtractDurationFromZonedDateTime(operation, zonedDateTime, durationLike, options) {
-  const sign = operation === 'subtract' ? -1 : 1;
+export function AddDurationToZonedDateTime(zonedDateTime, durationLike, options) {
   const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
     ToTemporalDurationRecord(durationLike);
   options = GetOptionsObject(options);
@@ -5386,22 +5346,15 @@ export function AddDurationToOrSubtractDurationFromZonedDateTime(operation, zone
     'getPossibleInstantsFor'
   ]);
   const calendarRec = new CalendarMethodRecord(GetSlot(zonedDateTime, CALENDAR), ['dateAdd']);
-  const norm = TimeDuration.normalize(
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   const epochNanoseconds = AddZonedDateTime(
     GetSlot(zonedDateTime, INSTANT),
     timeZoneRec,
     calendarRec,
-    sign * years,
-    sign * months,
-    sign * weeks,
-    sign * days,
+    years,
+    months,
+    weeks,
+    days,
     norm,
     undefined,
     options

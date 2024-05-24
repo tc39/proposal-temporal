@@ -361,7 +361,7 @@ This method provides a way to do time arithmetic in the calendar's date reckonin
 If `date` is not a `Temporal.PlainDate` object, or `duration` not a `Temporal.Duration` object, then they will be converted to one as if they were passed to `Temporal.PlainDate.from()` or `Temporal.Duration.from()`, respectively.
 
 This method does not need to be called directly except in specialized code.
-It is called indirectly when using `add()` and `subtract()` of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
+It is called indirectly when using `add()` of `Temporal.PlainDateTime`, `Temporal.PlainDate`, and `Temporal.PlainYearMonth`.
 
 A custom implementation of this method would perform the calendar-specific addition, convert the result to the ISO 8601 calendar, and return an object created using `new Temporal.PlainDate(...isoArgs)`.
 

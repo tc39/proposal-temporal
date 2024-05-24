@@ -193,19 +193,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainTime(~add~, _temporalTime_, _temporalDurationLike_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.plaintime.prototype.subtract">
-      <h1>Temporal.PlainTime.prototype.subtract ( _temporalDurationLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainTime(~subtract~, _temporalTime_, _temporalDurationLike_).
+        1. Return ? AddDurationToPlainTime(_temporalTime_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -1102,22 +1090,20 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaintime" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtoplaintime" type="abstract operation">
       <h1>
-        AddDurationToOrSubtractDurationFromPlainTime (
-          _operation_: ~add~ or ~subtract~,
+        AddDurationToPlainTime (
           _temporalTime_: a Temporal.PlainTime,
           _temporalDurationLike_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.PlainTime or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It adds/subtracts _temporalDurationLike_ to/from _temporalTime_, returning a point in time that is in the future/past relative to _temporalTime_.</dd>
+        <dd>It adds _temporalDurationLike_ to _temporalTime_, returning a point in time that is in the future or past relative to _temporalTime_ depending on whether _temporalDurationLike_ is positive or negative.</dd>
       </dl>
       <emu-alg>
-        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Let _norm_ be NormalizeTimeDuration(_sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
+        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _result_ be AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _norm_).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>

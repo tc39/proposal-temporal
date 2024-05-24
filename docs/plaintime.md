@@ -248,39 +248,21 @@ time.add({ hours: 1 }).with({
 This method adds `duration` to `time`.
 Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to `time`, or even the same time.
 
+Adding a negative duration is equivalent to subtracting the absolute value of that duration.
+
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
-Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
 
 ```javascript
 time = Temporal.PlainTime.from('19:39:09.068346205');
 time.add({ minutes: 5, nanoseconds: 800 }); // => 19:44:09.068347005
-```
 
-### time.**subtract**(_duration_: Temporal.Duration | object | string) : Temporal.PlainTime
-
-**Parameters:**
-
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
-
-**Returns:** a new `Temporal.PlainTime` object which is the time indicated by `time` minus `duration`.
-
-This method subtracts `duration` from `time`.
-Due to times wrapping around when reaching 24 hours, the returned point in time may be either in the future or in the past relative to `time`, or even the same time.
-
-The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
-If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-Subtracting a negative duration is equivalent to adding the absolute value of that duration.
-
-Usage example:
-
-```javascript
+// Subtraction
 time = Temporal.PlainTime.from('19:39:09.068346205');
-time.subtract({ minutes: 5, nanoseconds: 800 }); // => 19:34:09.068345405
+time.add({ minutes: -5, nanoseconds: -800 }); // => 19:34:09.068345405
 ```
 
 ### time.**until**(_other_: Temporal.PlainTime | object | string, _options_?: object) : Temporal.Duration

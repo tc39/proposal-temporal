@@ -415,30 +415,34 @@ date.withCalendar('iso8601'); // => 2006-08-24
 - `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `overflow` (optional string): How to deal with additions that result in out-of-range values.
+  - `overflow` (optional string): How to deal with result values that are out-of-range.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.PlainDate` object which is the date indicated by `date` plus `duration`.
 
-This method adds `duration` to `date`, returning a date that is in the future relative to `date`.
+This method adds `duration` to `date`.
+If `duration` is positive, this returns a date that is in the future relative to `date`.
+
+Adding a negative duration is equivalent to subtracting the absolute value of that duration, and results in an earlier date.
+To perform `date` minus `duration`, use the idiom `date.add(duration.negated())`.
 
 The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a string such as `P5D`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
-If `duration` has any units smaller than `days`, they will be treated as if they are being added to the first moment of the day given by `date`.
-Effectively, this means that adding things like `{ minutes: 5 }` will be ignored.
+If `duration` is positive and has any units smaller than `days`, they will be treated as if they are being added to the first moment of the day given by `date`.
+If negative, they will be treated as if they are being subtracted from the last moment of the day given by `date`.
+Effectively, this means that adding or subtracting durations like "5 minutes" will be ignored.
 
-Some additions may be ambiguous, because months have different lengths.
+Some additions or subtractions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
+Likewise, subtracting one month from July 31 would result in June 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
 
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDate` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
-
-Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
 
@@ -449,49 +453,14 @@ date.add({ years: 20, months: 4 }); // => 2026-12-24
 date = Temporal.PlainDate.from('2019-01-31');
 date.add({ months: 1 }); // => 2019-02-28
 date.add({ months: 1 }, { overflow: 'reject' }); // => throws
-```
 
-### date.**subtract**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.PlainDate
-
-**Parameters:**
-
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
-- `options` (optional object): An object with properties representing options for the subtraction.
-  The following options are recognized:
-  - `overflow` (string): How to deal with subtractions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
-
-**Returns:** a new `Temporal.PlainDate` object which is the date indicated by `date` minus `duration`.
-
-This method subtracts `duration` from `date`, returning a date that is in the past relative to `date`.
-
-The `duration` argument is an object with properties denoting a duration, such as `{ days: 5 }`, or a string such as `P5D`, or a `Temporal.Duration` object.
-If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-If `duration` has any units smaller than `days`, they will be treated as if they are being subtracted from the last moment of the day given by `date`.
-Effectively, this means that subtracting things like `{ minutes: 5 }` will be ignored.
-
-Some subtractions may be ambiguous, because months have different lengths.
-For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
-For these cases, the `overflow` option tells what to do:
-
-- In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
-
-Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDate` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
-
-Subtracting a negative duration is equivalent to adding the absolute value of that duration.
-
-Usage example:
-
-```javascript
+// Subtraction
 date = Temporal.PlainDate.from('2006-08-24');
-date.subtract({ years: 20, months: 4 }); // => 1986-04-24
+date.add({ years: -20, months: -4 }); // => 1986-04-24
 
 date = Temporal.PlainDate.from('2019-03-31');
-date.subtract({ months: 1 }); // => 2019-02-28
-date.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
+date.add({ months: -1 }); // => 2019-02-28
+date.add({ months: -1 }, { overflow: 'reject' }); // => throws
 ```
 
 ### date.**until**(_other_: Temporal.PlainDate | object | string, _options_?: object) : Temporal.Duration

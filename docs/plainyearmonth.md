@@ -324,69 +324,40 @@ ym.with({ month: 12 }); // => 2019-12
 - `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `overflow` (string): How to deal with additions that result in out-of-range values.
+  - `overflow` (string): How to deal with result values that are out-of-range.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.PlainYearMonth` object which is the month indicated by `yearMonth` plus `duration`.
 
-This method adds `duration` to `yearMonth`, returning a month that is in the future relative to `yearMonth`.
+This method adds `duration` to `yearMonth`.
+If `duration` is positive, it returns a month that is in the future relative to `yearMonth`.
+
+Adding a negative duration is equivalent to subtracting the absolute value of that duration, and results in an earlier month.
+To perform `yearMonth` minus `duration`, use the idiom `yearMonth.add(duration.negated())`.
 
 The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a string such as `P5M`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
 If `duration` has any units smaller than `months`, they will be treated as if they are being added to the first moment of the month given by `yearMonth`.
-Effectively, this means that adding things like `{ days: 1 }` will be ignored.
+If negative, they will be treated as if they are being subtracted from the last moment of the month given by `yearMonth`.
+Effectively, this means that adding things like `{ days: 1 }` or `{ days: -1 }` will be ignored.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 The `overflow` option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.PlainYearMonth` does not distinguish days.
 However, `overflow` may have an effect in other calendars where years can be different numbers of months.
-
-Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
 
 ```javascript
 ym = Temporal.PlainYearMonth.from('2019-06');
 ym.add({ years: 20, months: 4 }); // => 2039-10
-```
 
-### yearMonth.**subtract**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.PlainYearMonth
-
-**Parameters:**
-
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
-- `options` (optional object): An object with properties representing options for the subtraction.
-  The following options are recognized:
-  - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
-
-**Returns:** a new `Temporal.PlainYearMonth` object which is the month indicated by `yearMonth` minus `duration`.
-
-This method subtracts `duration` from `yearMonth`, returning a month that is in the future relative to `yearMonth`.
-
-The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a string such as `P5M`, or a `Temporal.Duration` object.
-If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-If `duration` has any units smaller than `months`, they will be treated as if they are being subtracted from the last moment of the month given by `yearMonth`.
-Effectively, this means that subtracting things like `{ days: 1 }` will be ignored.
-
-If the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
-
-The `overflow` option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
-It doesn't matter in this case that years and months can be different numbers of days, as the resolution of `Temporal.PlainYearMonth` does not distinguish days.
-However, `overflow` may have an effect in other calendars where years can be different numbers of months.
-
-Subtracting a negative duration is equivalent to adding the absolute value of that duration.
-
-Usage example:
-
-```javascript
+// Subtraction
 ym = Temporal.PlainYearMonth.from('2019-06');
-ym.subtract({ years: 20, months: 4 }); // => 1999-02
+ym.add({ years: -20, months: -4 }); // => 1999-02
 ```
 
 ### yearMonth.**until**(_other_: Temporal.PlainYearMonth | object | string, _options_?: object) : Temporal.Duration

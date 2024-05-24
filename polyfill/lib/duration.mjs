@@ -211,11 +211,7 @@ export class Duration {
   }
   add(other, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurations('add', this, other, options);
-  }
-  subtract(other, options = undefined) {
-    if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurations('subtract', this, other, options);
+    return ES.AddDurations(this, other, options);
   }
   round(roundTo) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');

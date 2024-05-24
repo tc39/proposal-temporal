@@ -81,11 +81,7 @@ export class PlainYearMonth {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromPlainYearMonth('add', this, temporalDurationLike, options);
-  }
-  subtract(temporalDurationLike, options = undefined) {
-    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromPlainYearMonth('subtract', this, temporalDurationLike, options);
+    return ES.AddDurationToPlainYearMonth(this, temporalDurationLike, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

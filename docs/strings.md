@@ -65,13 +65,12 @@ zdt.withTimeZone('Europe/Paris')
 
 zdt.withTimeZone('Europe/Paris')
   .toPlainDate()
-  .subtract({ years: 3000 })
   .toLocaleString('fr-FR', { calendar: 'gregory', dateStyle: 'long' });
   // => "28 février 2022"
 
 zdt.withTimeZone('America/New_York')
   .toPlainDate()
-  .subtract({ years: 3000 })
+  .add({ years: -3000 })
   .toLocaleString('en-US', { calendar: 'gregory', era: 'short', year: 'numeric', month: 'long', day: 'numeric' });
   // => "February 27, 979 BC"
 ```

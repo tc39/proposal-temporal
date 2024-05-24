@@ -30,9 +30,9 @@ assert.equal(secondTuesday.day, firstTuesdayOfMonth.day + 7);
 
 // And the last Tuesday:
 const lastOfMonth = myMonth.toPlainDate({ day: myMonth.daysInMonth });
-const lastTuesday = lastOfMonth.subtract({ days: [6, 0, 1, 2, 3, 4, 5][lastOfMonth.dayOfWeek - 1] });
+const lastTuesday = lastOfMonth.add({ days: -[6, 0, 1, 2, 3, 4, 5][lastOfMonth.dayOfWeek - 1] });
 assert.equal(lastTuesday.toString(), '2020-02-25');
 assert.equal(lastTuesday.dayOfWeek, 2);
 // or:
-const lastTuesday2 = lastOfMonth.subtract({ days: (7 + lastOfMonth.dayOfWeek - 2) % 7 });
+const lastTuesday2 = lastOfMonth.add({ days: -((7 + lastOfMonth.dayOfWeek - 2) % 7) });
 assert.equal(Temporal.PlainDate.compare(lastTuesday, lastTuesday2), 0);

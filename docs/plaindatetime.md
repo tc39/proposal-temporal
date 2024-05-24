@@ -578,27 +578,30 @@ dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.0000035
 - `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `overflow` (string): How to deal with additions that result in out-of-range values.
+  - `overflow` (string): How to deal with result values that are out-of-range.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
 **Returns:** a new `Temporal.PlainDateTime` object which is the date and time indicated by `datetime` plus `duration`.
 
-This method adds `duration` to `datetime`, returning a point in time that is in the future relative to `datetime`.
+This method adds `duration` to `datetime`.
+If `duration` is positive, it returns a point in time that is in the future relative to `datetime`.
+
+Adding a negative duration is equivalent to subtracting the absolute value of that duration, and results in an earlier point in time.
+To perform `datetime` minus `duration`, use the idiom `datetime.add(duration.negated())`.
 
 The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
 
-Some additions may be ambiguous, because months have different lengths.
+Some additions or subtractions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
+Likewise, subtracting one month from July 31 would result in June 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
 
 - In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
-
-Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
 
@@ -609,46 +612,14 @@ dt.add({ years: 20, months: 4, nanoseconds: 500 }); // => 2016-04-07T03:24:30.00
 dt = Temporal.PlainDateTime.from('2019-01-31T15:30');
 dt.add({ months: 1 }); // => 2019-02-28T15:30:00
 dt.add({ months: 1 }, { overflow: 'reject' }); // => throws
-```
 
-### datetime.**subtract**(_duration_: Temporal.Duration | object | string, _options_?: object) : Temporal.PlainDateTime
-
-**Parameters:**
-
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to subtract.
-- `options` (optional object): An object with properties representing options for the subtraction.
-  The following options are recognized:
-  - `overflow` (string): How to deal with subtractions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
-
-**Returns:** a new `Temporal.PlainDateTime` object which is the time indicated by `datetime` minus `duration`.
-
-This method subtracts `duration` from `datetime`, returning a point in time that is in the past relative to `datetime`.
-
-The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
-If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-Some subtractions may be ambiguous, because months have different lengths.
-For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
-For these cases, the `overflow` option tells what to do:
-
-- In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
-
-Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
-
-Subtracting a negative duration is equivalent to adding the absolute value of that duration.
-
-Usage example:
-
-```javascript
+// Subtraction
 dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
-dt.subtract({ years: 20, months: 4, nanoseconds: 500 }); // => 1975-08-07T03:24:30.000003
+dt.add({ years: -20, months: -4, nanoseconds: -500 }); // => 1975-08-07T03:24:30.000003
 
 dt = Temporal.PlainDateTime.from('2019-03-31T15:30');
-dt.subtract({ months: 1 }); // => 2019-02-28T15:30:00
-dt.subtract({ months: 1 }, { overflow: 'reject' }); // => throws
+dt.add({ months: -1 }); // => 2019-02-28T15:30:00
+dt.add({ months: -1 }, { overflow: 'reject' }); // => throws
 ```
 
 ### datetime.**until**(_other_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.Duration

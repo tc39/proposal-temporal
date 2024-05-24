@@ -131,11 +131,7 @@ export class PlainTime {
   }
   add(temporalDurationLike) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromPlainTime('add', this, temporalDurationLike);
-  }
-  subtract(temporalDurationLike) {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromPlainTime('subtract', this, temporalDurationLike);
+    return ES.AddDurationToPlainTime(this, temporalDurationLike);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
