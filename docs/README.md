@@ -37,12 +37,9 @@ Several important concepts are explained elsewhere: [exact time, wall-clock time
 
 - `Temporal.Now.instant()` - get the current system exact time
 - `Temporal.Now.timeZoneId()` - get the current system time zone
-- `Temporal.Now.zonedDateTime(calendar)` - get the current date and wall-clock time in the system time zone and specified calendar
 - `Temporal.Now.zonedDateTimeISO()` - get the current date and wall-clock time in the system time zone and ISO-8601 calendar
-- `Temporal.Now.plainDate(calendar)` - get the current date in the system time zone and specified calendar
 - `Temporal.Now.plainDateISO()` - get the current date in the system time zone and ISO-8601 calendar
 - `Temporal.Now.plainTimeISO()` - get the current wall-clock time in the system time zone and ISO-8601 calendar
-- `Temporal.Now.plainDateTime(calendar)` - get the current system date/time in the system time zone, but return an object that doesn't remember its time zone so should NOT be used to derive other values (e.g. 12 hours later) in time zones that use Daylight Saving Time (DST).
 - `Temporal.Now.plainDateTimeISO()` - same as above, but return the DateTime in the ISO-8601 calendar
 
 ```js
