@@ -60,7 +60,7 @@ import forEach from 'es-abstract/helpers/forEach.js';
 import OwnPropertyKeys from 'es-abstract/helpers/OwnPropertyKeys.js';
 import some from 'es-abstract/helpers/some.js';
 
-import { GetIntrinsic } from './intrinsicclass.mjs';
+import { DefineIntrinsic, GetIntrinsic } from './intrinsicclass.mjs';
 import {
   ApplyUnsignedRoundingMode,
   FMAPowerOf10,
@@ -5610,23 +5610,46 @@ export function ASCIILowercase(str) {
   return lowercase;
 }
 
-// This function isn't in the spec, but we put it in the polyfill to avoid
-// repeating the same (long) error message in many files.
-export function ValueOfThrows(constructorName) {
-  const compareCode =
-    constructorName === 'PlainMonthDay'
-      ? 'Temporal.PlainDate.compare(obj1.toPlainDate(year), obj2.toPlainDate(year))'
-      : `Temporal.${constructorName}.compare(obj1, obj2)`;
+// %ThrowTypeErrorFromValueOf%
+class DummyValueOf {
+  valueOf() {
+    let constructorName;
+    if (IsTemporalDuration(this)) {
+      constructorName = 'Duration';
+    } else if (IsTemporalInstant(this)) {
+      constructorName = 'Instant';
+    } else if (IsTemporalDate(this)) {
+      constructorName = 'PlainDate';
+    } else if (IsTemporalDateTime(this)) {
+      constructorName = 'PlainDateTime';
+    } else if (IsTemporalMonthDay(this)) {
+      constructorName = 'PlainMonthDay';
+    } else if (IsTemporalTime(this)) {
+      constructorName = 'PlainTime';
+    } else if (IsTemporalYearMonth(this)) {
+      constructorName = 'PlainYearMonth';
+    } else if (IsTemporalZonedDateTime(this)) {
+      constructorName = 'ZonedDateTime';
+    } else {
+      throw new TypeError('invalid receiver');
+    }
 
-  throw new TypeError(
-    'Do not use built-in arithmetic operators with Temporal objects. ' +
-      `When comparing, use ${compareCode}, not obj1 > obj2. ` +
-      "When coercing to strings, use `${obj}` or String(obj), not '' + obj. " +
-      'When coercing to numbers, use properties or methods of the object, not `+obj`. ' +
-      'When concatenating with strings, use `${str}${obj}` or str.concat(obj), not str + obj. ' +
-      'In React, coerce to a string before rendering a Temporal object.'
-  );
+    const compareCode =
+      constructorName === 'PlainMonthDay'
+        ? 'Temporal.PlainDate.compare(obj1.toPlainDate(year), obj2.toPlainDate(year))'
+        : `Temporal.${constructorName}.compare(obj1, obj2)`;
+
+    throw new TypeError(
+      'Do not use built-in arithmetic operators with Temporal objects. ' +
+        `When comparing, use ${compareCode}, not obj1 > obj2. ` +
+        "When coercing to strings, use `${obj}` or String(obj), not '' + obj. " +
+        'When coercing to numbers, use properties or methods of the object, not `+obj`. ' +
+        'When concatenating with strings, use `${str}${obj}` or str.concat(obj), not str + obj. ' +
+        'In React, coerce to a string before rendering a Temporal object.'
+    );
+  }
 }
+DefineIntrinsic('ThrowTypeErrorFromValueOf', DummyValueOf.prototype.valueOf);
 
 const OFFSET = new RegExp(`^${PARSE.offset.source}$`);
 const OFFSET_WITH_PARTS = new RegExp(`^${PARSE.offsetWithParts.source}$`);

@@ -2,7 +2,7 @@
 
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
-import { MakeIntrinsicClass } from './intrinsicclass.mjs';
+import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import bigInt from 'big-integer';
@@ -116,9 +116,6 @@ export class Instant {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
   }
-  valueOf() {
-    ES.ValueOfThrows('Instant');
-  }
   toZonedDateTimeISO(timeZone) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);
@@ -154,3 +151,11 @@ export class Instant {
 }
 
 MakeIntrinsicClass(Instant, 'Temporal.Instant');
+Object.defineProperties(Instant.prototype, {
+  valueOf: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%ThrowTypeErrorFromValueOf%')
+  }
+});

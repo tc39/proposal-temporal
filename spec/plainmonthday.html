@@ -221,11 +221,8 @@
     <emu-clause id="sec-temporal.plainmonthday.prototype.valueof">
       <h1>Temporal.PlainMonthDay.prototype.valueOf ( )</h1>
       <p>
-        This method performs the following steps when called:
+        The value of the `Temporal.PlainMonthDay.prototype.valueOf` property is the function object %ThrowTypeErrorFromValueOf%.
       </p>
-      <emu-alg>
-        1. Throw a *TypeError* exception.
-      </emu-alg>
       <emu-note>
         <p>
           This method always throws, because in the absence of `valueOf()`, expressions with arithmetic operators such as `plainMonthDay1 > plainMonthDay2` would fall back to being equivalent to `plainMonthDay1.toString() > plainMonthDay2.toString()`.

@@ -514,9 +514,6 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return ES.TemporalZonedDateTimeToString(this, 'auto');
   }
-  valueOf() {
-    ES.ValueOfThrows('ZonedDateTime');
-  }
   startOfDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     const timeZoneRec = new TimeZoneMethodRecord(GetSlot(this, TIME_ZONE), [
@@ -612,6 +609,14 @@ export class ZonedDateTime {
 }
 
 MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');
+Object.defineProperties(ZonedDateTime.prototype, {
+  valueOf: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%ThrowTypeErrorFromValueOf%')
+  }
+});
 
 function dateTime(zdt) {
   const timeZoneRec = new TimeZoneMethodRecord(GetSlot(zdt, TIME_ZONE), ['getOffsetNanosecondsFor']);
