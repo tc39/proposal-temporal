@@ -512,50 +512,6 @@ dt.withPlainTime('12:34'); // => 2015-12-07T12:34:00
 dt.add({ days: 2, hours: 22 }).withPlainTime('00:00'); // => 2015-12-10T00:00:00
 ```
 
-### datetime.**withPlainDate**(_plainDate_: object | string) : Temporal.PlainDateTime
-
-**Parameters:**
-
-- `plainDate` (`Temporal.PlainDate` or plain object or string): The calendar date that should replace the current calendar date of `datetime`.
-
-**Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, combined with the date represented by `plainDate`.
-
-Valid input to `withPlainDate` is the same as valid input to `Temporal.PlainDate.from`, including strings like `2000-03-01`, plain object property bags like `{ year: 2020, month: 3, day: 1 }`, or `Temporal` objects that contain a `year`, `month`, and `day` property, including `Temporal.PlainDate`, `Temporal.PlainDateTime`, or `Temporal.ZonedDateTime`.
-
-All three date units (`year`, `month`, and `day`) are required.
-`Temporal.YearMonth` and `Temporal.MonthDay` are not valid input because they lack all date units.
-Both of those types have a `toPlainDate` method that can be used to obtain a `Temporal.PlainDate` which can in turn be used as input to `withPlainDate`.
-
-If `plainDate` contains a non-ISO 8601 calendar, then the result of `withPlainDate` will be the calendar of `plainDate`.
-However, if `datetime.calendar` is already a non-ISO 8601 calendar, then this method will throw a `RangeError`.
-To resolve the error, first convert one of the instances to the same calendar or the ISO 8601 calendar, e.g. using `.withCalendar('iso8601')`.
-
-This method is similar to `with`, but with a few important differences:
-
-- `withPlainDate` accepts strings, Temporal objects, or object property bags.
-  `with` only accepts object property bags and does not accept strings nor `Temporal.PlainDate` objects because they can contain calendar information.
-- `withPlainDate` will update all date units, while `with` only changes individual units that are present in the input, e.g. setting the `day` to `1` while leaving `month` and `year` unchanged.
-
-If `plainDate` is a `Temporal.PlainDate` object, then this method returns the same result as `plainDate.toPlainDateTime(datetime)` but can be easier to use, especially when chained to previous operations that return a `Temporal.PlainDateTime`.
-
-Usage example:
-
-```javascript
-dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30');
-dt.withPlainDate({ year: 2000, month: 6, day: 1 }); // => 2000-06-01T03:24:30
-date = Temporal.PlainDate.from('2020-01-23');
-dt.withPlainDate(date); // => 2020-01-23T03:24:30
-dt.withPlainDate('2018-09-15'); // => 2018-09-15T03:24:30
-
-// easier for chaining
-dt.add({ hours: 12 }).withPlainDate('2000-06-01'); // => 2000-06-01T15:24:30
-
-// result contains a non-ISO calendar if present in the input
-dt.withCalendar('japanese').withPlainDate('2008-09-06'); // => 2008-09-06T03:24:30[u-ca=japanese]
-dt.withPlainDate('2017-09-06[u-ca=japanese]'); // => 2017-09-06T03:24:30[u-ca=japanese]
-/* WRONG */ dt.withCalendar('japanese').withPlainDate('2017-09-06[u-ca=hebrew]'); // => RangeError (calendar conflict)
-```
-
 ### datetime.**withCalendar**(_calendar_: object | string) : Temporal.PlainDateTime
 
 **Parameters:**
