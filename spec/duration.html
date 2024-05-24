@@ -94,29 +94,27 @@
         1. Set _one_ to ? ToTemporalDuration(_one_).
         1. Set _two_ to ? ToTemporalDuration(_two_).
         1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_options_).
         1. If _one_.[[Years]] = _two_.[[Years]], and _one_.[[Months]] = _two_.[[Months]], and _one_.[[Weeks]] = _two_.[[Weeks]], and _one_.[[Days]] = _two_.[[Days]], and _one_.[[Hours]] = _two_.[[Hours]], and _one_.[[Minutes]] = _two_.[[Minutes]], and _one_.[[Seconds]] = _two_.[[Seconds]], and _one_.[[Millieconds]] = _two_.[[Millieconds]], and _one_.[[Microseconds]] = _two_.[[Microseconds]], and _one_.[[Nanoseconds]] = _two_.[[Nanoseconds]], then
           1. Return *+0*<sub>𝔽</sub>.
-        1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_options_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
-        1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
         1. Let _calendarUnitsPresent_ be *false*.
         1. If _one_.[[Years]] ≠ 0, or _two_.[[Years]] ≠ 0, or _one_.[[Months]] ≠ 0, or _two_.[[Months]] ≠ 0, or _one_.[[Weeks]] ≠ 0, or _two_.[[Weeks]] ≠ 0, set _calendarUnitsPresent_ to *true*.
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecordFromRelativeTo(_plainRelativeTo_, _zonedRelativeTo_, « ~date-add~ »).
         1. If _zonedRelativeTo_ is not *undefined*, and either _calendarUnitsPresent_ is *true*, or _one_.[[Days]] ≠ 0, or _two_.[[Days]] ≠ 0, then
-          1. Let _instant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
-          1. Let _precalculatedPlainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
+          1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
+          1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _norm1_ be NormalizeTimeDuration(_one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
           1. Let _norm2_ be NormalizeTimeDuration(_two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
-          1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _norm1_, _precalculatedPlainDateTime_).
-          1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _norm2_, _precalculatedPlainDateTime_).
+          1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _norm1_).
+          1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _norm2_).
           1. If _after1_ &gt; _after2_, return *1*<sub>𝔽</sub>.
           1. If _after1_ &lt; _after2_, return *-1*<sub>𝔽</sub>.
           1. Return *+0*<sub>𝔽</sub>.
         1. If _calendarUnitsPresent_ is *true*, then
           1. If _plainRelativeTo_ is *undefined*, throw a *RangeError* exception.
-          1. Let _days1_ be ? UnbalanceDateDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _plainRelativeTo_, _calendarRec_).
-          1. Let _days2_ be ? UnbalanceDateDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _plainRelativeTo_, _calendarRec_).
+          1. Let _days1_ be ? UnbalanceDateDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _plainRelativeTo_).
+          1. Let _days2_ be ? UnbalanceDateDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _plainRelativeTo_).
         1. Else,
           1. Let _days1_ be _one_.[[Days]].
           1. Let _days2_ be _two_.[[Days]].
@@ -432,7 +430,6 @@
         1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_roundTo_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
-        1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
         1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, *"halfExpand"*).
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~datetime~, *undefined*).
@@ -451,38 +448,25 @@
         1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
         1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
-        1. Let _hoursToDaysConversionMayOccur_ be *false*.
-        1. If _duration_.[[Days]] ≠ 0 and _zonedRelativeTo_ is not *undefined*, set _hoursToDaysConversionMayOccur_ to *true*.
-        1. Else if abs(_duration_.[[Hours]]) ≥ 24, set _hoursToDaysConversionMayOccur_ to *true*.
-        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
-        1. If _duration_.[[Years]] = 0 and _duration_.[[Months]] = 0 and _duration_.[[Weeks]] = 0, let _calendarUnitsPresent_ be *false*; else let _calendarUnitsPresent_ be *true*.
-        1. If _roundingGranularityIsNoop_ is *true*, and _largestUnit_ is _existingLargestUnit_, and _calendarUnitsPresent_ is *false*, and _hoursToDaysConversionMayOccur_ is *false*, and abs(_duration_.[[Minutes]]) &lt; 60, and abs(_duration_.[[Seconds]]) &lt; 60, and abs(_duration_.[[Milliseconds]]) &lt; 1000, and abs(_duration_.[[Microseconds]]) &lt; 1000, and abs(_duration_.[[Nanoseconds]]) &lt; 1000, then
-          1. NOTE: The above conditions mean that the operation will have no effect: the smallest unit and rounding increment will leave the total duration unchanged, and it can be determined without calling a calendar or time zone method that no balancing will take place.
-          1. Return ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _precalculatedPlainDateTime_ be *undefined*.
-        1. If IsCalendarUnit(_largestUnit_) is *true*, or _largestUnit_ is *"day"*, or _calendarUnitsPresent_ is *true*, or _duration_.[[Days]] ≠ 0, let _plainDateTimeOrRelativeToWillBeUsed_ be *true*; else let _plainDateTimeOrRelativeToWillBeUsed_ be *false*.
-        1. If _zonedRelativeTo_ is not *undefined* and _plainDateTimeOrRelativeToWillBeUsed_ is *true*, then
-          1. NOTE: The above conditions mean that the corresponding `Temporal.PlainDateTime` or `Temporal.PlainDate` for _zonedRelativeTo_ will be used in one of the operations below.
-          1. Let _instant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
-          1. Set _precalculatedPlainDateTime_ to ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _zonedRelativeTo_.[[Calendar]]).
-          1. Set _plainRelativeTo_ to ! CreateTemporalDate(_precalculatedPlainDateTime_.[[ISOYear]], _precalculatedPlainDateTime_.[[ISOMonth]], _precalculatedPlainDateTime_.[[ISODay]], _zonedRelativeTo_.[[Calendar]]).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecordFromRelativeTo(_plainRelativeTo_, _zonedRelativeTo_, « ~date-add~, ~date-until~ »).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _emptyOptions_ be OrdinaryObjectCreate(*null*).
         1. If _zonedRelativeTo_ is not *undefined*, then
+          1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
+          1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
-          1. Let _relativeInstant_ be ! CreateTemporalInstant(_relativeEpochNs_).
-          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeInstant_, _timeZoneRec_, _calendarRec_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_, _precalculatedPlainDateTime_).
-          1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_, _emptyOptions_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _calendar_, _timeZone_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _norm_).
-          1. Let _dateDuration_ be ? CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0).
-          1. Let _targetDate_ be ? AddDate(_calendarRec_, _plainRelativeTo_, _dateDuration_).
-          1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_plainRelativeTo_.[[ISOYear]], _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]], 0, 0, 0, 0, 0, 0, _targetDate_.[[ISOYear]], _targetDate_.[[ISOMonth]], _targetDate_.[[ISODay]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendarRec_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_, _emptyOptions_).
+          1. If IsValidDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0) is *false*, throw a *RangeError* exception.
+          1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
+          1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
+          1. Let _dateDuration_ be CreateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0).
+          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, *"constrain"*).
+          1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
         1. Else,
-          1. If _calendarUnitsPresent_ is *true*, or IsCalendarUnit(_largestUnit_) is *true*, throw a *RangeError* exception.
+          1. If _duration_.[[Years]] ≠ 0, or _duration_.[[Months]] ≠ 0, or _duration_.[[Weeks]] ≠ 0, or IsCalendarUnit(_largestUnit_) is *true*, throw a *RangeError* exception.
           1. Assert: IsCalendarUnit(_smallestUnit_) is *false*.
           1. Let _roundRecord_ be ? RoundTimeDuration(_duration_.[[Days]], _norm_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_roundRecord_.[[NormalizedDuration]].[[NormalizedTime]], _roundRecord_.[[NormalizedDuration]].[[Days]]).
@@ -511,28 +495,22 @@
         1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_totalOf_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
-        1. Let _timeZoneRec_ be _relativeToRecord_.[[TimeZoneRec]].
         1. Let _unit_ be ? GetTemporalUnitValuedOption(_totalOf_, *"unit"*, ~datetime~, ~required~).
-        1. Let _precalculatedPlainDateTime_ be *undefined*.
-        1. If IsCalendarUnit(_unit_) is *true*, or _unit_ is *"day"*, or _duration_.[[Years]] ≠ 0, or _duration_.[[Months]] ≠ 0, or _duration_.[[Weeks]] ≠ 0, or _duration_.[[Days]] ≠ 0, let _plainDateTimeOrRelativeToWillBeUsed_ be *true*; else let _plainDateTimeOrRelativeToWillBeUsed_ be *false*.
-        1. If _zonedRelativeTo_ is not *undefined* and _plainDateTimeOrRelativeToWillBeUsed_ is *true*, then
-          1. NOTE: The above conditions mean that the corresponding `Temporal.PlainDateTime` or `Temporal.PlainDate` for _zonedRelativeTo_ will be used in one of the operations below.
-          1. Let _instant_ be ! CreateTemporalInstant(_zonedRelativeTo_.[[Nanoseconds]]).
-          1. Set _precalculatedPlainDateTime_ to ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _zonedRelativeTo_.[[Calendar]]).
-          1. Set _plainRelativeTo_ to ! CreateTemporalDate(_precalculatedPlainDateTime_.[[ISOYear]], _precalculatedPlainDateTime_.[[ISOMonth]], _precalculatedPlainDateTime_.[[ISODay]], _zonedRelativeTo_.[[Calendar]]).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecordFromRelativeTo(_plainRelativeTo_, _zonedRelativeTo_, « ~date-add~, ~date-until~ »).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _emptyOptions_ be OrdinaryObjectCreate(*null*).
         1. If _zonedRelativeTo_ is not *undefined*, then
+          1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
+          1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
-          1. Let _relativeInstant_ be ! CreateTemporalInstant(_relativeEpochNs_).
-          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeInstant_, _timeZoneRec_, _calendarRec_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_, _precalculatedPlainDateTime_).
-          1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_, _emptyOptions_, _unit_, 1, _unit_, *"trunc"*).
+          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _calendar_, _timeZone_, _unit_, 1, _unit_, *"trunc"*).
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _norm_).
-          1. Let _dateDuration_ be ? CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0).
-          1. Let _targetDate_ be ? AddDate(_calendarRec_, _plainRelativeTo_, _dateDuration_).
-          1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_plainRelativeTo_.[[ISOYear]], _plainRelativeTo_.[[ISOMonth]], _plainRelativeTo_.[[ISODay]], 0, 0, 0, 0, 0, 0, _targetDate_.[[ISOYear]], _targetDate_.[[ISOMonth]], _targetDate_.[[ISODay]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendarRec_, _unit_, 1, _unit_, *"trunc"*, _emptyOptions_).
+          1. If IsValidDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0) is *false*, throw a *RangeError* exception.
+          1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
+          1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
+          1. Let _dateDuration_ be CreateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0).
+          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, *"constrain"*).
+          1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendar_, _unit_, 1, _unit_, *"trunc"*).
         1. Else,
           1. If _duration_.[[Years]] ≠ 0, or _duration_.[[Months]] ≠ 0, or _duration_.[[Weeks]] ≠ 0, or IsCalendarUnit(_unit_) is *true*, throw a *RangeError* exception.
           1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_norm_, _duration_.[[Days]]).
@@ -1689,7 +1667,6 @@
           _weeks_: an integer,
           _days_: an integer,
           _plainRelativeTo_: a Temporal.PlainDate,
-          _calendarRec_: a Calendar Methods Record,
         ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
@@ -1698,30 +1675,13 @@
       </dl>
       <emu-alg>
         1. If _years_ = 0 and _months_ = 0 and _weeks_ = 0, return _days_.
-        1. Assert: CalendarMethodsRecordHasLookedUp(_calendarRec_, ~date-add~) is *true*.
-        1. Let _yearsMonthsWeeksDuration_ be ! CreateTemporalDuration(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _later_ be ? CalendarDateAdd(_calendarRec_, _plainRelativeTo_, _yearsMonthsWeeksDuration_).
-        1. Let _yearsMonthsWeeksInDays_ be DaysUntil(_plainRelativeTo_, _later_).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
+        1. Let _yearsMonthsWeeksDuration_ be CreateDurationRecord(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
+        1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _isoDate_, _yearsMonthsWeeksDuration_, *"constrain"*).
+        1. Let _epochDays1_ be ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]]).
+        1. Let _epochDays2_ be ISODateToEpochDays(_later_.[[Year]], _later_.[[Month]] - 1, _later_.[[Day]]).
+        1. Let _yearsMonthsWeeksInDays_ be _epochDays2_ - _epochDays1_.
         1. Return _days_ + _yearsMonthsWeeksInDays_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-daysuntil" type="abstract operation">
-      <h1>
-        DaysUntil (
-          _earlier_: a Temporal.PlainDate,
-          _later_: a Temporal.PlainDate,
-        ): an integer
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>The returned value is the number of days elapsed between the calendar dates of two Temporal.PlainDate instances _earlier_ and _later_.
-        If _earlier_ is later than _later_, then the result is negative.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _epochDaysEarlier_ be ISODateToEpochDays(_earlier_.[[ISOYear]], _earlier_.[[ISOMonth]] - 1, _earlier_.[[ISODay]]).
-        1. Let _epochDaysLater_ be ISODateToEpochDays(_later_.[[ISOYear]], _later_.[[ISOMonth]] - 1, _later_.[[ISODay]]).
-        1. Return _epochDaysLater_ - _epochDaysEarlier_.
       </emu-alg>
     </emu-clause>
 
@@ -1815,8 +1775,8 @@
           _duration_: a Normalized Duration Record,
           _destEpochNs_: a BigInt,
           _dateTime_: an ISO Date-Time Record,
-          _calendarRec_: a Calendar Method Record,
-          _timeZoneRec_: a Time Zone Method Record or ~unset~,
+          _calendar_: a String,
+          _timeZone_: a String or ~unset~,
           _increment_: a positive integer,
           _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
@@ -1842,13 +1802,9 @@
           1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r1_, 0, 0).
           1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r2_, 0, 0).
         1. Else if _unit_ is *"week"*, then
-          1. Let _isoResult1_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]]).
-          1. Let _isoResult2_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]] + _duration_.[[Days]]).
-          1. Let _weeksStart_ be ! CreateTemporalDate(_isoResult1_.[[Year]], _isoResult1_.[[Month]], _isoResult1_.[[Day]], _calendarRec_.[[Receiver]]).
-          1. Let _weeksEnd_ be ! CreateTemporalDate(_isoResult2_.[[Year]], _isoResult2_.[[Month]], _isoResult2_.[[Day]], _calendarRec_.[[Receiver]]).
-          1. Let _untilOptions_ be OrdinaryObjectCreate(*null*).
-          1. Perform ! CreateDataPropertyOrThrow(_untilOptions_, *"largestUnit"*, *"week"*).
-          1. Let _untilResult_ be ? DifferenceDate(_calendarRec_, _weeksStart_, _weeksEnd_, _untilOptions_).
+          1. Let _weeksStart_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]]).
+          1. Let _weeksEnd_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]] + _duration_.[[Days]]).
+          1. Let _untilResult_ be CalendarDateUntil(_calendar_, _weeksStart_, _weeksEnd_, *"week"*).
           1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Weeks]] + _untilResult_.[[Weeks]], _increment_, *"trunc"*).
           1. Let _r1_ be _weeks_.
           1. Let _r2_ be _weeks_ + _increment_ × _sign_.
@@ -1863,25 +1819,20 @@
           1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
         1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ &gt; _r2_.
-        1. Let _startDate_ be ! CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _calendarRec_.[[Receiver]]).
-        1. Let _start_ be ? AddDate(_calendarRec_, _startDate_, ! CreateTemporalDuration(_startDuration_.[[Years]], _startDuration_.[[Months]], _startDuration_.[[Weeks]], _startDuration_.[[Days]], 0, 0, 0, 0, 0, 0)).
-        1. Let _endDate_ be ! CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _calendarRec_.[[Receiver]]).
-        1. Let _end_ be ? AddDate(_calendarRec_, _endDate_, ! CreateTemporalDuration(_endDuration_.[[Years]], _endDuration_.[[Months]], _endDuration_.[[Weeks]], _endDuration_.[[Days]], 0, 0, 0, 0, 0, 0)).
-        1. If _timeZoneRec_ is ~unset~, then
-          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
-          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[ISOYear]], _end_.[[ISOMonth]], _end_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+        1. Let _startDate_ be ISODateTimeToDateRecord(_dateTime_).
+        1. Let _start_ be ? CalendarDateAdd(_calendar_, _startDate_, _startDuration_, *"constrain"*).
+        1. Let _end_ be ? CalendarDateAdd(_calendar_, _startDate_, _endDuration_, *"constrain"*).
+        1. If _timeZone_ is ~unset~, then
+          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
         1. Else,
-          1. Let _startDateTime_ be ! CreateTemporalDateTime(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
-          1. Let _startInstant_ be ? GetInstantFor(_timeZoneRec_, _startDateTime_, *"compatible"*).
-          1. Let _startEpochNs_ be _startInstant_.[[Nanoseconds]].
-          1. Let _endDateTime_ be ! CreateTemporalDateTime(_end_.[[ISOYear]], _end_.[[ISOMonth]], _end_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
-          1. Let _endInstant_ be ? GetInstantFor(_timeZoneRec_, _endDateTime_, *"compatible"*).
-          1. Let _endEpochNs_ be _endInstant_.[[Nanoseconds]].
+          1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
+          1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, *"compatible"*).
+          1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
+          1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
         1. If _sign_ is 1, then
-          1. If _startEpochNs_ &gt; _destEpochNs_ or _destEpochNs_ ≥ _endEpochNs_, throw a *RangeError* exception.
           1. Assert: _startEpochNs_ ≤ _destEpochNs_ &lt; _endEpochNs_.
         1. Else,
-          1. If _endEpochNs_ ≥ _destEpochNs_ or _destEpochNs_ &gt; _startEpochNs_, throw a *RangeError* exception.
           1. Assert: _endEpochNs_ &lt; _destEpochNs_ ≤ _startEpochNs_.
         1. Assert: _startEpochNs_ ≠ _endEpochNs_.
         1. Let _progress_ be (_destEpochNs_ - _startEpochNs_) / (_endEpochNs_ - _startEpochNs_).
@@ -1915,8 +1866,8 @@
           _sign_: -1 or 1,
           _duration_: a Normalized Duration Record,
           _dateTime_: an ISO Date-Time Record,
-          _calendarRec_: a Calendar Method Record,
-          _timeZoneRec_: a Time Zone Method Record,
+          _calendar_: a String,
+          _timeZone_: a String,
           _increment_: a positive integer,
           _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
@@ -1930,15 +1881,14 @@
       </dl>
       <emu-alg>
         1. Assert: The value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_, is ~time~.
-        1. Let _date_ be ! CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _calendarRec_.[[Receiver]]).
-        1. Let _start_ be ? AddDate(_calendarRec_, _date_, ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], 0, 0, 0, 0, 0, 0)).
-        1. Let _startDateTime_ be ! CreateTemporalDateTime(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
+        1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
+        1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
+        1. Let _start_ be ? CalendarDateAdd(_calendar_, _date_, _dateDuration_, *"constrain"*).
+        1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
         1. Let _endDate_ be BalanceISODate(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]] + _sign_).
-        1. Let _endDateTime_ be ? CreateTemporalDateTime(_endDate_.[[Year]], _endDate_.[[Month]], _endDate_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
-        1. Let _startInstant_ be ? GetInstantFor(_timeZoneRec_, _startDateTime_, *"compatible"*).
-        1. Let _startEpochNs_ be _startInstant_.[[Nanoseconds]].
-        1. Let _endInstant_ be ? GetInstantFor(_timeZoneRec_, _endDateTime_, *"compatible"*).
-        1. Let _endEpochNs_ be _endInstant_.[[Nanoseconds]].
+        1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _dateTime_).
+        1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, *"compatible"*).
+        1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
         1. Let _daySpan_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_endEpochNs_, _startEpochNs_).
         1. Assert: NormalizedTimeDurationSign(_daySpan_) = _sign_.
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
@@ -2005,8 +1955,8 @@
           _duration_: a Normalized Duration Record,
           _nudgedEpochNs_: a BigInt,
           _dateTime_: an ISO Date-Time Record,
-          _calendarRec_: a Calendar Method Record,
-          _timeZoneRec_: a Time Zone Method Record or ~unset~,
+          _calendar_: a String,
+          _timeZone_: a String or ~unset~,
           _largestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _smallestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
         ): either a normal completion containing a Normalized Duration Record or a throw completion
@@ -2041,14 +1991,13 @@
               1. Assert: _unit_ is *"day"*.
               1. Let _days_ be _duration_.[[Days]] + _sign_.
               1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_).
-            1. Let _date_ be ! CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _calendarRec_.[[Receiver]]).
-            1. Let _end_ be ? AddDate(_calendarRec_, _date_, ! CreateTemporalDuration(_endDuration_.[[Years]], _endDuration_.[[Months]], _endDuration_.[[Weeks]], _endDuration_.[[Days]], 0, 0, 0, 0, 0, 0)).
-            1. If _timeZoneRec_ is ~unset~, then
-              1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[ISOYear]], _end_.[[ISOMonth]], _end_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+            1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
+            1. Let _end_ be ? CalendarDateAdd(_calendar_, _date_, _endDuration_, *"constrain"*).
+            1. If _timeZone_ is ~unset~, then
+              1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
             1. Else,
-              1. Let _endDateTime_ be ! CreateTemporalDateTime(_end_.[[ISOYear]], _end_.[[ISOMonth]], _end_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
-              1. Let _endInstant_ be ? GetInstantFor(_timeZoneRec_, _endDateTime_, *"compatible"*).
-              1. Let _endEpochNs_ be _endInstant_.[[Nanoseconds]].
+              1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
+              1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ &gt; 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
             1. If _beyondEndSign_ ≠ -_sign_, then
@@ -2066,8 +2015,8 @@
           _duration_: a Normalized Duration Record,
           _destEpochNs_: a BigInt,
           _dateTime_: an ISO Date-Time Record,
-          _calendarRec_: a Calendar Method Record,
-          _timeZoneRec_: a Time Zone Method Record or ~unset~,
+          _calendar_: a String,
+          _timeZone_: a String or ~unset~,
           _largestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _increment_: a positive integer,
           _smallestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
@@ -2084,18 +2033,18 @@
       <emu-alg>
         1. Let _irregularLengthUnit_ be *false*.
         1. If IsCalendarUnit(_smallestUnit_) is *true*, set _irregularLengthUnit_ to *true*.
-        1. If _timeZoneRec_ is not ~unset~ and _smallestUnit_ is *"day"*, set _irregularLengthUnit_ to *true*.
+        1. If _timeZone_ is not ~unset~ and _smallestUnit_ is *"day"*, set _irregularLengthUnit_ to *true*.
         1. If DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], NormalizedTimeDurationSign(_duration_.[[NormalizedTime]]), 0, 0, 0, 0, 0) &lt; 0, let _sign_ be -1; else let _sign_ be 1.
         1. If _irregularLengthUnit_ is *true*, then
-          1. Let _nudgeResult_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _dateTime_, _calendarRec_, _timeZoneRec_, _increment_, _smallestUnit_, _roundingMode_).
-        1. Else if _timeZoneRec_ is not ~unset~, then
-          1. Let _nudgeResult_ be ? NudgeToZonedTime(_sign_, _duration_, _dateTime_, _calendarRec_, _timeZoneRec_, _increment_, _smallestUnit_, _roundingMode_).
+          1. Let _nudgeResult_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _dateTime_, _calendar_, _timeZone_, _increment_, _smallestUnit_, _roundingMode_).
+        1. Else if _timeZone_ is not ~unset~, then
+          1. Let _nudgeResult_ be ? NudgeToZonedTime(_sign_, _duration_, _dateTime_, _calendar_, _timeZone_, _increment_, _smallestUnit_, _roundingMode_).
         1. Else,
           1. Let _nudgeResult_ be ? NudgeToDayOrTime(_duration_, _destEpochNs_, _largestUnit_, _increment_, _smallestUnit_, _roundingMode_).
         1. Set _duration_ to _nudgeResult_.[[Duration]].
         1. If _nudgeResult_.[[DidExpandCalendarUnit]] is *true* and _smallestUnit_ is not *"week"*, then
           1. Let _startUnit_ be LargerOfTwoTemporalUnits(_smallestUnit_, *"day"*).
-          1. Set _duration_ to ? BubbleRelativeDuration(_sign_, _duration_, _nudgeResult_.[[NudgedEpochNs]], _dateTime_, _calendarRec_, _timeZoneRec_, _largestUnit_, _startUnit_).
+          1. Set _duration_ to ? BubbleRelativeDuration(_sign_, _duration_, _nudgeResult_.[[NudgedEpochNs]], _dateTime_, _calendar_, _timeZone_, _largestUnit_, _startUnit_).
         1. If IsCalendarUnit(_largestUnit_) is *true* or _largestUnit_ is *"day"*, then
           1. Set _largestUnit_ to *"hour"*.
         1. Let _balanceResult_ be ? BalanceTimeDuration(_duration_.[[NormalizedTime]], _largestUnit_).

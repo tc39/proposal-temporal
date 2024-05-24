@@ -54,10 +54,9 @@ In Temporal:
 
 - The [`Temporal.Instant`](./instant.md) type represents exact time only.
 - The [`Temporal.PlainDateTime`](./plaindatetime.md) type represents calendar date and wall-clock time, as do other narrower types: [`Temporal.PlainDate`](./plaindate.md), [`Temporal.PlainTime`](./plaintime.md), [`Temporal.PlainYearMonth`](./plainyearmonth.md), and [`Temporal.PlainMonthDay`](./plainmonthday.md).
-  These types all carry a calendar system, which by default is `'iso8601'` (the ISO 8601 calendar) but can be overridden for other [calendars](./calendar.md) like `'islamic'` or `'japanese'`.
-- The [`Temporal.TimeZone`](./timezone.md) represents a time zone function that converts between exact time and wall-clock time and vice-versa.
-  It also includes helper functions, e.g. to fetch the current time zone offset for a particular exact time.
-- The [`Temporal.ZonedDateTime`](./zoneddatetime.md) type encapsulates all of the types above: an exact time (like a [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like a [`Temporal.PlainDateTime`](./plaindatetime.md)), and the time zone that links the two (like a [`Temporal.TimeZone`](./timezone.md)).
+  These types all carry a calendar system, which by default is `'iso8601'` (the ISO 8601 calendar) but can be overridden for other calendars like `'islamic'` or `'japanese'`.
+- The time zone identifier represents a time zone function that converts between exact time and wall-clock time and vice-versa.
+- The [`Temporal.ZonedDateTime`](./zoneddatetime.md) type encapsulates all of the types above: an exact time (like a [`Temporal.Instant`](./instant.md)), its wall-clock equivalent (like a [`Temporal.PlainDateTime`](./plaindatetime.md)), and the time zone that links the two.
 
 There are two ways to get a human-readable calendar date and clock time from a `Temporal` type that stores exact time.
 
@@ -83,10 +82,10 @@ zdt.toLocaleString('en-us', { ...formatOptions, calendar: zdt.calendar });
   // => 'Sep 3, 2019 AD, 5:34:05 PM'
 zdt.year;
   // => 2019
-zdt = instant.toZonedDateTime({timeZone: 'Asia/Tokyo', calendar: 'iso8601'}).toLocaleString('ja-jp', formatOptions);
+zdt.toLocaleString('ja-jp', formatOptions);
   // => '西暦2019年9月3日 17:34:05'
 
-zdt = instant.toZonedDateTime({timeZone: 'Asia/Tokyo', calendar: 'japanese'});
+zdt = zdt.withCalendar('japanese');
   // => 2019-09-03T17:34:05+09:00[Asia/Tokyo][u-ca=japanese]
 zdt.toLocaleString('en-us', { ...formatOptions, calendar: zdt.calendar });
   // => 'Sep 3, 1 Reiwa, 5:34:05 PM'
@@ -202,7 +201,6 @@ Methods where this option is present include:
 - [`Temporal.ZonedDateTime.from` with object argument](./zoneddatetime.md#from)
 - [`Temporal.ZonedDateTime.prototype.with`](./zoneddatetime.md#with)
 - [`Temporal.PlainDateTime.prototype.toZonedDateTime`](./plaindatetime.md#toZonedDateTime)
-- [`Temporal.TimeZone.prototype.getInstantFor`](./timezone.md#getInstantFor).
 
 ## Examples: DST Disambiguation
 

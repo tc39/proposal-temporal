@@ -82,17 +82,6 @@ Legacy `Date` represents an exact time, so it's straightforward to convert a `Te
 
 ## Construction
 
-### Time zone object from name
-
-`Temporal.TimeZone.from()` can convert an IANA time zone name into a `Temporal.TimeZone` object, if you need to call `Temporal.TimeZone` methods.
-Usually this is not necessary.
-
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getTimeZoneObjectFromIanaName.mjs}}
-```
-<!-- prettier-ignore-end -->
-
 ### Calendar input element
 
 You can use `Temporal` objects to set properties on a calendar control.
@@ -254,7 +243,7 @@ Similar to the previous recipe, calculate the exact times of a daily occurrence 
 
 ### UTC offset for a zoned event, as a string
 
-Use `Temporal.TimeZone.getOffsetStringFor()` or `Temporal.ZonedDateTime.offset` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that exact time in that time zone, as a string.
+Use `Temporal.Instant.toZonedDateTimeISO()` and `Temporal.ZonedDateTime.offset` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that exact time in that time zone, as a string.
 
 <!-- prettier-ignore-start -->
 ```javascript
@@ -264,7 +253,7 @@ Use `Temporal.TimeZone.getOffsetStringFor()` or `Temporal.ZonedDateTime.offset` 
 
 ### UTC offset for a zoned event, as a number of seconds
 
-Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thing for the offset as a number of seconds.
+Similarly, use `Temporal.Instant.toZonedDateTimeISO()` and `Temporal.ZonedDateTime.offsetNanoseconds` to do the same thing for the offset as a number of seconds.
 (Remember to divide by 10<sup>9</sup> to convert nanoseconds to seconds.)
 
 <!-- prettier-ignore-start -->
@@ -275,7 +264,7 @@ Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thin
 
 ### Offset between two time zones at an exact time
 
-Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Instant` instance and two time zones into the signed difference of UTC offsets between those time zones at that exact time, as a number of seconds.
+Also using `Temporal.Instant.toZonedDateTimeISO()` and `Temporal.ZonedDateTime.offsetNanoseconds`, we can map a `Temporal.Instant` instance and two time zones into the signed difference of UTC offsets between those time zones at that exact time, as a number of seconds.
 
 <!-- prettier-ignore-start -->
 ```javascript

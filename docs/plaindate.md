@@ -10,21 +10,21 @@ A `Temporal.PlainDate` represents a calendar date.
 For example, it could be used to represent an event on a calendar which happens during the whole day no matter which time zone it's happening in.
 
 `Temporal.PlainDate` refers to the whole of a specific day; if you need to refer to a specific time on that day, use `Temporal.PlainDateTime`.
-A `Temporal.PlainDate` can be converted into a `Temporal.ZonedDateTime` by combining it with a `Temporal.PlainTime` and `Temporal.TimeZone` using the `toZonedDateTime()` method.
+A `Temporal.PlainDate` can be converted into a `Temporal.ZonedDateTime` by combining it with a `Temporal.PlainTime` and time zone identifier using the `toZonedDateTime()` method.
 It can also be combined with a `Temporal.PlainTime` to yield a "zoneless" `Temporal.PlainDateTime` using the `toPlainDateTime()` method.
 
 `Temporal.PlainYearMonth` and `Temporal.PlainMonthDay` carry less information than `Temporal.PlainDate` and should be used when complete information is not required.
 
 ## Constructor
 
-### **new Temporal.PlainDate**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_: string | object = "iso8601") : Temporal.PlainDate
+### **new Temporal.PlainDate**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _calendar_: string = "iso8601") : Temporal.PlainDate
 
 **Parameters:**
 
 - `isoYear` (number): A year.
 - `isoMonth` (number): A month, ranging between 1 and 12 inclusive.
 - `isoDay` (number): A day of the month, ranging between 1 and 31 inclusive.
-- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): A calendar to project the date into.
+- `calendar` (optional string): A calendar to project the date into.
 
 **Returns:** a new `Temporal.PlainDate` object.
 
@@ -37,8 +37,7 @@ Together, `isoYear`, `isoMonth`, and `isoDay` must represent a valid date in tha
 The range of allowed values for this type is exactly enough that calling [`toPlainDate()`](./plaindatetime.md#toPlainDate) on any valid `Temporal.PlainDateTime` will succeed.
 If `isoYear`, `isoMonth`, and `isoDay` form a date outside of this range, then this function will throw a `RangeError`.
 
-Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
-Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
+`calendar` is a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -397,7 +396,7 @@ nextMonthDate.with({ day: nextMonthDate.daysInMonth }); // => 2006-02-28
 
 **Parameters:**
 
-- `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `date`.
+- `calendar` (object or string): The calendar into which to project `date`.
 
 **Returns:** a new `Temporal.PlainDate` object which is the date indicated by `date`, projected into `calendar`.
 
@@ -563,11 +562,11 @@ earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 
 
 newyear = Temporal.PlainDate.from('2020-01-01');
 newyear.until('2020-01-15', { smallestUnit: 'month', roundingMode: 'halfExpand' });
-  // => PT0S 
+  // => PT0S
 newyear.until('2020-01-16', { smallestUnit: 'month', roundingMode: 'halfExpand' });
   // => PT0S (mid-month dates rounded down to match `Temporal.PlainDateTime` behavior)
 newyear.until('2020-01-17', { smallestUnit: 'month', roundingMode: 'halfExpand' });
-  // => PT1M 
+  // => PT1M
 ```
 <!-- prettier-ignore-end -->
 
@@ -731,7 +730,7 @@ Use `Temporal.PlainDate.compare()` for this, or `date.equals()` for equality.
 
 - `item` (object): an object with properties to be added to `date`. The following properties are recognized:
   - `plainTime` (optional `Temporal.PlainTime` or value convertible to one): a time of day on `date` used to merge into a `Temporal.ZonedDateTime`.
-  - `timeZone` (required `Temporal.TimeZone` or value convertible to one, or an object implementing the [time zone protocol](./timezone.md#custom-time-zones)): the time zone in which to interpret `date` and `plainTime`.
+  - `timeZone` (required string or `Temporal.ZonedDateTime`): the time zone in which to interpret `date` and `plainTime`, as a time zone identifier, or a `Temporal.ZonedDateTime` object whose time zone will be used.
 
 **Returns:** a `Temporal.ZonedDateTime` object that represents the wall-clock time `plainTime` on the calendar date `date` projected into `timeZone`.
 

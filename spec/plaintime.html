@@ -61,11 +61,11 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalTime]] internal slot, then
+          1. Set _options_ to ? GetOptionsObject(_options_).
+          1. Perform ? GetTemporalOverflowOption(_options_).
           1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
-        1. Return ? ToTemporalTime(_item_, _overflow_).
+        1. Return ? ToTemporalTime(_item_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -218,8 +218,6 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. If ? IsPartialTemporalObject(_temporalTimeLike_) is *false*, throw a *TypeError* exception.
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _partialTime_ be ? ToTemporalTimeRecord(_temporalTimeLike_, ~partial~).
         1. If _partialTime_.[[Hour]] is not *undefined*, then
           1. Let _hour_ be _partialTime_.[[Hour]].
@@ -245,6 +243,8 @@
           1. Let _nanosecond_ be _partialTime_.[[Nanosecond]].
         1. Else,
           1. Let _nanosecond_ be _temporalTime_.[[ISONanosecond]].
+        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
@@ -583,7 +583,7 @@
       <h1>
         ToTemporalTime (
           _item_: an ECMAScript language value,
-          optional _overflow_: *"constrain"* or *"reject"*,
+          optional _options_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.PlainTime or a throw Completion
       </h1>
       <dl class="header">
@@ -591,23 +591,31 @@
         <dd>It returns its argument _item_ if it is already a Temporal.PlainTime instance, converts _item_ to a new Temporal.PlainTime instance if possible, and throws otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
+        1. If _options_ is not present, set _options_ to *undefined*.
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
+            1. Set _options_ to ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_options_).
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Let _instant_ be ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
-            1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_item_.[[TimeZone]], « ~get-offset-nanoseconds-for~ »).
-            1. Let _plainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _item_.[[Calendar]]).
-            1. Return ! CreateTemporalTime(_plainDateTime_.[[ISOHour]], _plainDateTime_.[[ISOMinute]], _plainDateTime_.[[ISOSecond]], _plainDateTime_.[[ISOMillisecond]], _plainDateTime_.[[ISOMicrosecond]], _plainDateTime_.[[ISONanosecond]]).
+            1. Let _isoDateTime_ be GetISODateTimeFor(_item_.[[TimeZone]], _item_.[[Nanoseconds]]).
+            1. Set _options_ to ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_options_).
+            1. Return ! CreateTemporalTime(_isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]).
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
+            1. Set _options_ to ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_options_).
             1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
           1. Let _result_ be ? ToTemporalTimeRecord(_item_).
+          1. Set _options_ to ? GetOptionsObject(_options_).
+          1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
           1. Set _result_ to ? RegulateTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _overflow_).
         1. Else,
           1. If _item_ is not a String, throw a *TypeError* exception.
           1. Let _result_ be ? ParseTemporalTimeString(_item_).
           1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
+          1. Set _options_ to ? GetOptionsObject(_options_).
+          1. Perform ? GetTemporalOverflowOption(_options_).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -1051,7 +1059,7 @@
       <emu-alg>
         1. If _operation_ is ~since~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalTime(_other_).
-        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, « », *"nanosecond"*, *"hour"*).
         1. Let _norm_ be DifferenceTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
         1. If _settings_.[[SmallestUnit]] is not *"nanosecond"* or _settings_.[[RoundingIncrement]] ≠ 1, then

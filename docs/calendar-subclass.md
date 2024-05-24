@@ -1,6 +1,6 @@
 # Subclass-based Temporal Calendar API
 
-[calendar-draft.md](calendar.md) documents the design for calendar support in Temporal based on a single shared Temporal.PlainDate type with a Temporal.Calendar. This document discusses an alternative approach based on subclassing of Temporal.PlainDate types. This idea was not pursued further due to the drawbacks discussed in this document.
+[calendar-draft.md](calendar-draft.md) documents the design for calendar support in Temporal based on a single shared Temporal.PlainDate type with a Temporal.Calendar. This document discusses an alternative approach based on subclassing of Temporal.PlainDate types. This idea was not pursued further due to the drawbacks discussed in this document.
 
 In this document, the _Temporal.Calendar Approach_ refers to the solution proposed in [calendar-draft.md](calendar-draft.md), and the _Temporal.PlainDate Subclassing Approach_ refers to the alternative, but eliminated, solution proposed in this document.
 

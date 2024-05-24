@@ -24,7 +24,7 @@
     </ul>
 
     <emu-clause id="sec-temporal.plainyearmonth">
-      <h1>Temporal.PlainYearMonth ( _isoYear_, _isoMonth_ [ , _calendarLike_ [ , _referenceISODay_ ] ] )</h1>
+      <h1>Temporal.PlainYearMonth ( _isoYear_, _isoMonth_ [ , _calendar_ [ , _referenceISODay_ ] ] )</h1>
       <p>
         This function performs the following steps when called:
       </p>
@@ -35,7 +35,10 @@
           1. Set _referenceISODay_ to *1*<sub>𝔽</sub>.
         1. Let _y_ be ? ToIntegerWithTruncation(_isoYear_).
         1. Let _m_ be ? ToIntegerWithTruncation(_isoMonth_).
-        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
+        1. If _calendar_ is *undefined*, set _calendar_ to *"iso8601"*.
+        1. If _calendar_ is not a String, throw a *TypeError* exception.
+        1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
+        1. Set _calendar_ to CanonicalizeUValue(*"ca"*, _calendar_).
         1. Let _ref_ be ? ToIntegerWithTruncation(_referenceISODay_).
         1. Return ? CreateTemporalYearMonth(_y_, _m_, _calendar_, _ref_, NewTarget).
       </emu-alg>
@@ -59,8 +62,8 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Set _options_ to ? GetOptionsObject(_options_).
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
+          1. Set _options_ to ? GetOptionsObject(_options_).
           1. Perform ? GetTemporalOverflowOption(_options_).
           1. Return ! CreateTemporalYearMonth(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
         1. Return ? ToTemporalYearMonth(_item_, _options_).
@@ -118,7 +121,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? ToTemporalCalendarIdentifier(_yearMonth_.[[Calendar]]).
+        1. Return _yearMonth_.[[Calendar]].
       </emu-alg>
     </emu-clause>
 
@@ -131,8 +134,8 @@
       <emu-alg>
         1. Let _plainYearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _plainYearMonth_.[[Calendar]].
-        1. Return ? CalendarEra(_calendar_, _plainYearMonth_).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainYearMonth_).
+        1. Return CalendarEra(_plainYearMonth_.[[Calendar]], _isoDate_).
       </emu-alg>
     </emu-clause>
 
@@ -145,8 +148,8 @@
       <emu-alg>
         1. Let _plainYearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _plainYearMonth_.[[Calendar]].
-        1. Let _result_ be ? CalendarEraYear(_calendar_, _plainYearMonth_).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainYearMonth_).
+        1. Let _result_ be CalendarEraYear(_plainYearMonth_.[[Calendar]], _isoDate_).
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -161,8 +164,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return 𝔽(? CalendarYear(_calendar_, _yearMonth_)).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
+        1. Return 𝔽(CalendarYear(_yearMonth_.[[Calendar]], _isoDate_)).
       </emu-alg>
     </emu-clause>
 
@@ -175,8 +178,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return 𝔽(? CalendarMonth(_calendar_, _yearMonth_)).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
+        1. Return 𝔽(CalendarMonth(_yearMonth_.[[Calendar]], _isoDate_)).
       </emu-alg>
     </emu-clause>
 
@@ -189,8 +192,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return ? CalendarMonthCode(_calendar_, _yearMonth_).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
+        1. Return CalendarMonthCode(_yearMonth_.[[Calendar]], _isoDate_).
       </emu-alg>
     </emu-clause>
 
@@ -203,8 +206,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return 𝔽(? CalendarDaysInYear(_calendar_, _yearMonth_)).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
+        1. Return 𝔽(CalendarDaysInYear(_yearMonth_.[[Calendar]], _isoDate_)).
       </emu-alg>
     </emu-clause>
 
@@ -217,8 +220,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return 𝔽(? CalendarDaysInMonth(_calendar_, _yearMonth_)).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
+        1. Return 𝔽(CalendarDaysInMonth(_yearMonth_.[[Calendar]], _isoDate_)).
       </emu-alg>
     </emu-clause>
 
@@ -231,8 +234,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return 𝔽(? CalendarMonthsInYear(_calendar_, _yearMonth_)).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
+        1. Return 𝔽(CalendarMonthsInYear(_yearMonth_.[[Calendar]], _isoDate_)).
       </emu-alg>
     </emu-clause>
 
@@ -245,8 +248,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Return ? CalendarInLeapYear(_calendar_, _yearMonth_).
+        1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
+        1. Return CalendarInLeapYear(_yearMonth_.[[Calendar]], _isoDate_).
       </emu-alg>
     </emu-clause>
 
@@ -259,13 +262,14 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. If ? IsPartialTemporalObject(_temporalYearMonthLike_) is *false*, throw a *TypeError* exception.
-        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~fields~, ~merge-fields~, ~year-month-from-fields~ »).
-        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _yearMonth_, « *"month"*, *"monthCode"*, *"year"* »).
-        1. Let _partialYearMonth_ be ? PrepareTemporalFields(_temporalYearMonthLike_, _fieldsResult_.[[FieldNames]], ~partial~).
-        1. Let _fields_ be ? CalendarMergeFields(_calendarRec_, _fieldsResult_.[[Fields]], _partialYearMonth_).
-        1. Set _fields_ to ? PrepareTemporalFields(_fields_, _fieldsResult_.[[FieldNames]], «»).
-        1. Return ? CalendarYearMonthFromFields(_calendarRec_, _fields_, _resolvedOptions_).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
+        1. Let _partialYearMonth_ be ? PrepareCalendarFields(_calendar_, _temporalYearMonthLike_, « ~month~, ~month-code~, ~year~ », « », ~partial~).
+        1. Set _fields_ to CalendarMergeFields(_calendar_, _fields_, _partialYearMonth_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
+        1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _fields_, _overflow_).
+        1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -329,7 +333,7 @@
         1. If _yearMonth_.[[ISOYear]] ≠ _other_.[[ISOYear]], return *false*.
         1. If _yearMonth_.[[ISOMonth]] ≠ _other_.[[ISOMonth]], return *false*.
         1. If _yearMonth_.[[ISODay]] ≠ _other_.[[ISODay]], return *false*.
-        1. Return ? CalendarEquals(_yearMonth_.[[Calendar]], _other_.[[Calendar]]).
+        1. Return CalendarEquals(_yearMonth_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -343,7 +347,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
-        1. Return ? TemporalYearMonthToString(_yearMonth_, _showCalendar_).
+        1. Return TemporalYearMonthToString(_yearMonth_, _showCalendar_).
       </emu-alg>
     </emu-clause>
 
@@ -362,7 +366,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? TemporalYearMonthToString(_yearMonth_, *"auto"*).
+        1. Return TemporalYearMonthToString(_yearMonth_, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -374,7 +378,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? TemporalYearMonthToString(_yearMonth_, *"auto"*).
+        1. Return TemporalYearMonthToString(_yearMonth_, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -405,13 +409,12 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. If _item_ is not an Object, then
           1. Throw a *TypeError* exception.
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~date-from-fields~, ~fields~, ~merge-fields~ »).
-        1. Let _receiverFieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _yearMonth_, « *"monthCode"*, *"year"* »).
-        1. Let _inputFieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _item_, « *"day"* »).
-        1. Let _mergedFields_ be ? CalendarMergeFields(_calendarRec_, _receiverFieldsResult_.[[Fields]], _inputFieldsResult_.[[Fields]]).
-        1. Let _concatenatedFieldNames_ be the list-concatenation of _receiverFieldsResult_.[[FieldNames]] and _inputFieldsResult_.[[FieldNames]].
-        1. Set _mergedFields_ to ? PrepareTemporalFields(_mergedFields_, _concatenatedFieldNames_, «», «», ~ignore~).
-        1. Return ? CalendarDateFromFields(_calendarRec_, _mergedFields_).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
+        1. Let _inputFields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~ », « », « »).
+        1. Let _mergedFields_ be CalendarMergeFields(_calendar_, _fields_, _inputFields_).
+        1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _mergedFields_, *"constrain"*).
+        1. Return ! CreateTemporalDate(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -488,7 +491,7 @@
               [[Calendar]]
             </td>
             <td>
-              A String or Object representing the calendar.
+              A String representing the calendar.
             </td>
           </tr>
         </tbody>
@@ -536,7 +539,7 @@
       <h1>
         ToTemporalYearMonth (
           _item_: an ECMAScript language value,
-          optional _options_: an Object or *undefined*,
+          optional _options_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.PlainYearMonth, or a throw completion
       </h1>
       <dl class="header">
@@ -545,25 +548,30 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. If _options_ is not *undefined*, set _options_ to ? SnapshotOwnProperties(! GetOptionsObject(_options_), *null*).
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
+            1. Set _options_ to ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_options_).
             1. Return _item_.
-          1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
-          1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~fields~, ~year-month-from-fields~ »).
-          1. Let _fields_ be ? PrepareCalendarFields(_calendarRec_, _item_, « *"month"*, *"monthCode"*, *"year"* », «», «»).
-          1. Return ? CalendarYearMonthFromFields(_calendarRec_, _fields_, _options_).
+          1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
+          1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~month~, ~month-code~, ~year~ », «», «»).
+          1. Set _options_ to ? GetOptionsObject(_options_).
+          1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+          1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _fields_, _overflow_).
+          1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
         1. If _item_ is not a String, throw a *TypeError* exception.
         1. Let _result_ be ? ParseTemporalYearMonthString(_item_).
         1. Let _calendar_ be _result_.[[Calendar]].
         1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
         1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
         1. Set _calendar_ to CanonicalizeUValue(*"ca"*, _calendar_).
+        1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Set _result_ to ISODateToFields(_calendar_, _isoDate_, ~year-month~).
+        1. NOTE: The following operation is called with *"constrain"* regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Perform ? GetTemporalOverflowOption(_options_).
-        1. Set _result_ to ? CreateTemporalYearMonth(_result_.[[Year]], _result_.[[Month]], _calendar_, _result_.[[Day]]).
-        1. NOTE: The following operation is called without _options_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~year-month-from-fields~ »).
-        1. Return ? CalendarYearMonthFromFields(_calendarRec_, _result_).
+        1. Set _isoDate_ to ? CalendarYearMonthFromFields(_calendar_, _result_, *"constrain"*).
+        1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -680,7 +688,7 @@
         TemporalYearMonthToString (
           _yearMonth_: a Temporal.PlainYearMonth,
           _showCalendar_: *"auto"*, *"always"*, *"never"*, or *"critical"*,
-        ): either a normal completion containing a String or a throw completion
+        ): a String
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -690,11 +698,10 @@
         1. Let _year_ be PadISOYear(_yearMonth_.[[ISOYear]]).
         1. Let _month_ be ToZeroPaddedDecimalString(_yearMonth_.[[ISOMonth]], 2).
         1. Let _result_ be the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), and _month_.
-        1. Let _calendarIdentifier_ be ? ToTemporalCalendarIdentifier(_yearMonth_.[[Calendar]]).
-        1. If _showCalendar_ is one of *"always"* or *"critical"*, or if _calendarIdentifier_ is not *"iso8601"*, then
+        1. If _showCalendar_ is one of *"always"* or *"critical"*, or if _yearMonth_.[[Calendar]] is not *"iso8601"*, then
           1. Let _day_ be ToZeroPaddedDecimalString(_yearMonth_.[[ISODay]], 2).
           1. Set _result_ to the string-concatenation of _result_, the code unit 0x002D (HYPHEN-MINUS), and _day_.
-        1. Let _calendarString_ be FormatCalendarAnnotation(_calendarIdentifier_, _showCalendar_).
+        1. Let _calendarString_ be FormatCalendarAnnotation(_yearMonth_.[[Calendar]], _showCalendar_).
         1. Set _result_ to the string-concatenation of _result_ and _calendarString_.
         1. Return _result_.
       </emu-alg>
@@ -717,25 +724,24 @@
         1. If _operation_ is ~since~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalYearMonth(_other_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. If ? CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
-        1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
+        1. If CalendarEquals(_calendar_, _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~date~, « *"week"*, *"day"* », *"month"*, *"year"*).
         1. If _yearMonth_.[[ISOYear]] = _other_.[[ISOYear]] and _yearMonth_.[[ISOMonth]] = _other_.[[ISOMonth]] and _yearMonth_.[[ISODay]] = _other_.[[ISODay]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_calendar_, « ~date-add~, ~date-from-fields~, ~date-until~, ~fields~ »).
-        1. Let _thisFieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _yearMonth_, « *"monthCode"*, *"year"* »).
-        1. Perform ! CreateDataPropertyOrThrow(_thisFieldsResult_.[[Fields]], *"day"*, *1*<sub>𝔽</sub>).
-        1. Let _thisDate_ be ? CalendarDateFromFields(_calendarRec_, _thisFieldsResult_.[[Fields]]).
-        1. Let _otherFields_ be ? PrepareTemporalFields(_other_, _thisFieldsResult_.[[FieldNames]], «»).
-        1. Perform ! CreateDataPropertyOrThrow(_otherFields_, *"day"*, *1*<sub>𝔽</sub>).
-        1. Let _otherDate_ be ? CalendarDateFromFields(_calendarRec_, _otherFields_).
-        1. Perform ! CreateDataPropertyOrThrow(_resolvedOptions_, *"largestUnit"*, _settings_.[[LargestUnit]]).
-        1. Let _result_ be ? CalendarDateUntil(_calendarRec_, _thisDate_, _otherDate_, _resolvedOptions_).
+        1. Let _thisFields_ be TemporalObjectToFields(_yearMonth_).
+        1. Set _thisFields_.[[Day]] to 1.
+        1. Let _thisDate_ be ? CalendarDateFromFields(_calendar_, _thisFields_, *"constrain"*).
+        1. Let _otherFields_ be TemporalObjectToFields(_other_).
+        1. Set _otherFields_.[[Day]] to 1.
+        1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_, *"constrain"*).
+        1. Let _result_ be CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _settings_.[[LargestUnit]]).
         1. Let _duration_ be ! CreateNormalizedDurationRecord(_result_.[[Years]], _result_.[[Months]], 0, 0, ZeroTimeDuration()).
         1. If _settings_.[[SmallestUnit]] is not *"month"* or _settings_.[[RoundingIncrement]] ≠ 1, then
-          1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_otherDate_.[[ISOYear]], _otherDate_.[[ISOMonth]], _otherDate_.[[ISODay]], 0, 0, 0, 0, 0, 0).
-          1. Let _dateTime_ be ISO Date-Time Record { [[Year]]: _thisDate_.[[ISOYear]], [[Month]]: _thisDate_.[[ISOMonth]], [[Day]]: _thisDate_.[[ISODay]], [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Set _duration_ to ? RoundRelativeDuration(_duration_, _destEpochNs_, _dateTime_, _calendarRec_, ~unset~, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
+          1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_otherDate_.[[Year]], _otherDate_.[[Month]], _otherDate_.[[Day]], 0, 0, 0, 0, 0, 0).
+          1. Let _midnight_ be a Time Record with all fields set to 0.
+          1. Let _dateTime_ be CombineISODateAndTimeRecord(_thisDate_, _midnight_).
+          1. Set _duration_ to ? RoundRelativeDuration(_duration_, _destEpochNs_, _dateTime_, _calendar_, ~unset~, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
         1. Return ! CreateTemporalDuration(_sign_ × _duration_.[[Years]], _sign_ × _duration_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
@@ -758,30 +764,29 @@
         1. If _operation_ is ~subtract~, then
           1. Set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ! BalanceTimeDuration(_norm_, *"day"*).
         1. Let _days_ be _duration_.[[Days]] + _balanceResult_.[[Days]].
         1. Let _sign_ be DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, 0, 0, 0, 0, 0, 0).
-        1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_yearMonth_.[[Calendar]], « ~date-add~, ~date-from-fields~, ~day~, ~fields~, ~year-month-from-fields~ »).
-        1. Let _fieldsResult_ be ? PrepareCalendarFieldsAndFieldNames(_calendarRec_, _yearMonth_, « *"monthCode"*, *"year"* »).
-        1. Let _fieldsCopy_ be ! SnapshotOwnProperties(_fieldsResult_.[[Fields]], *null*).
-        1. Perform ! CreateDataPropertyOrThrow(_fieldsResult_.[[Fields]], *"day"*, *1*<sub>𝔽</sub>).
-        1. Let _intermediateDate_ be ? CalendarDateFromFields(_calendarRec_, _fieldsResult_.[[Fields]]).
+        1. Let _calendar_ be _yearMonth_.[[Calendar]].
+        1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
+        1. Set _fields_.[[Day]] to 1.
+        1. Let _intermediateDate_ be ? CalendarDateFromFields(_calendar_, _fields_, *"constrain"*).
         1. If _sign_ &lt; 0, then
-          1. Let _oneMonthDuration_ be ! CreateTemporalDuration(0, 1, 0, 0, 0, 0, 0, 0, 0, 0).
-          1. Let _nextMonth_ be ? CalendarDateAdd(_calendarRec_, _intermediateDate_, _oneMonthDuration_).
-          1. Let _endOfMonthISO_ be BalanceISODate(_nextMonth_.[[ISOYear]], _nextMonth_.[[ISOMonth]], _nextMonth_.[[ISODay]] - 1).
-          1. Let _endOfMonth_ be ? CreateTemporalDate(_endOfMonthISO_.[[Year]], _endOfMonthISO_.[[Month]], _endOfMonthISO_.[[Day]], _calendarRec_.[[Receiver]]).
-          1. Let _day_ be ? CalendarDay(_calendarRec_, _endOfMonth_).
-          1. Perform ! CreateDataPropertyOrThrow(_fieldsCopy_, *"day"*, _day_).
-          1. Let _date_ be ? CalendarDateFromFields(_calendarRec_, _fieldsCopy_).
+          1. Let _oneMonthDuration_ be ! CreateDateDurationRecord(0, 1, 0, 0).
+          1. Let _nextMonth_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _oneMonthDuration_, *"constrain"*).
+          1. Let _endOfMonth_ be BalanceISODate(_nextMonth_.[[Year]], _nextMonth_.[[Month]], _nextMonth_.[[Day]] - 1).
+          1. Assert: ISODateWithinLimits(_endOfMonth_.[[Year]], _endOfMonth_.[[Month]], _endOfMonth_.[[Day]]) is *true*.
+          1. Set _fields_.[[Day]] to CalendarDay(_calendar_, _endOfMonth_).
+          1. Let _date_ be ? CalendarDateFromFields(_calendar_, _fields_, *"constrain"*).
         1. Else,
           1. Let _date_ be _intermediateDate_.
-        1. Let _durationToAdd_ be ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, 0, 0, 0, 0, 0, 0).
-        1. Let _optionsCopy_ be ? SnapshotOwnProperties(_options_, *null*).
-        1. Let _addedDate_ be ? AddDate(_calendarRec_, _date_, _durationToAdd_, _options_).
-        1. Let _addedDateFields_ be ? PrepareTemporalFields(_addedDate_, _fieldsResult_.[[FieldNames]], «»).
-        1. Return ? CalendarYearMonthFromFields(_calendarRec_, _addedDateFields_, _optionsCopy_).
+        1. Let _durationToAdd_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_).
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _overflow_).
+        1. Let _addedDateFields_ be ISODateToFields(_calendar_, _addedDate_, ~year-month~).
+        1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _overflow_).
+        1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>

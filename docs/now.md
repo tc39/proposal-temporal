@@ -17,7 +17,7 @@ The `Temporal.Now` object has several methods which give information about the c
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
+- `timeZone` (optional string or `Temporal.ZonedDateTime`): The time zone to get the current date and time in, as a time zone identifier, or a `Temporal.ZonedDateTime` object whose time zone will be used.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.ZonedDateTime` object representing the current system date, time, time zone, and time zone offset.
@@ -82,23 +82,22 @@ This will usually be a named [IANA time zone](https://www.iana.org/time-zones), 
 Example usage:
 
 ```js
-// When is the next daylight saving change from now, in the current location?
+// When is the first daylight saving change in 2025, in the current location?
 id = Temporal.Now.timeZoneId();
-now = Temporal.Now.instant();
-tz = Temporal.TimeZone.from(id);
-nextTransition = tz.getNextTransition(now);
-before = tz.getOffsetStringFor(nextTransition.subtract({ nanoseconds: 1 }));
-after = tz.getOffsetStringFor(nextTransition.add({ nanoseconds: 1 }));
-console.log(`At ${nextTransition.toZonedDateTimeISO(id)} the offset will change from UTC ${before} to ${after}`);
+start2025 = Temporal.ZonedDateTime.from({ year: 2025, month: 1, day: 1, timeZone: id });
+nextTransition = start2025.getTimeZoneTransition('next');
+before = nextTransition.subtract({ nanoseconds: 1 }).offset;
+after = nextTransition.add({ nanoseconds: 1 }).offset;
+console.log(`At ${nextTransition} the offset will change from UTC ${before} to ${after}`);
 // example output:
-// At 2021-03-14T03:00:00-07:00[America/Los_Angeles] the offset will change from UTC -08:00 to -07:00
+// At 2025-03-09T03:00:00-07:00[America/Los_Angeles] the offset will change from UTC -08:00 to -07:00
 ```
 
 ### Temporal.Now.**plainDateTimeISO**(_timeZone_: object | string = Temporal.Now.timeZone()) : Temporal.PlainDateTime
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
+- `timeZone` (optional string or `Temporal.ZonedDateTime`): The time zone to get the current date and time in, as a time zone identifier, or a `Temporal.ZonedDateTime` object whose time zone will be used.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainDateTime` object representing the current system date and time in the reckoning of the ISO 8601 calendar.
@@ -134,7 +133,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
+- `timeZone` (optional string or `Temporal.ZonedDateTime`): The time zone to get the current date and time in, as a time zone identifier, or a `Temporal.ZonedDateTime` object whose time zone will be used.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainDate` object representing the current system date in the reckoning of the ISO 8601 calendar.
@@ -161,7 +160,7 @@ if (date.month === 1 && date.day === 1) console.log('New year!');
 
 **Parameters:**
 
-- `timeZone` (optional object or string): The time zone to get the current date and time in, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
+- `timeZone` (optional string or `Temporal.ZonedDateTime`): The time zone to get the current date and time in, as a time zone identifier, or a `Temporal.ZonedDateTime` object whose time zone will be used.
   If not given, the current system time zone will be used.
 
 **Returns:** a `Temporal.PlainTime` object representing the current system time in the reckoning of the ISO 8601 calendar.

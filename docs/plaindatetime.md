@@ -8,7 +8,7 @@
 A `Temporal.PlainDateTime` represents a calendar date and wall-clock time, with a precision in nanoseconds, and without any time zone.
 
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using [`Temporal.ZonedDateTime`](./zoneddatetime.md) instead because that type automatically adjusts for Daylight Saving Time.
-A `Temporal.PlainDateTime` can be converted to a `Temporal.ZonedDateTime` using a `Temporal.TimeZone`.
+A `Temporal.PlainDateTime` can be converted to a `Temporal.ZonedDateTime` using a time zone identifier.
 
 `Temporal.PlainDate`, `Temporal.PlainTime`, `Temporal.PlainYearMonth`, and `Temporal.PlainMonthDay` all carry less information and should be used when complete information is not required.
 
@@ -36,7 +36,7 @@ To learn more about time zones and DST best practices, visit [Time Zones and Res
 
 ## Constructor
 
-### **new Temporal.PlainDateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_: string | object = "iso8601") : Temporal.PlainDateTime
+### **new Temporal.PlainDateTime**(_isoYear_: number, _isoMonth_: number, _isoDay_: number, _isoHour_: number = 0, _isoMinute_: number = 0, _isoSecond_: number = 0, _isoMillisecond_: number = 0, _isoMicrosecond_: number = 0, _isoNanosecond_: number = 0, _calendar_: string = "iso8601") : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -49,7 +49,7 @@ To learn more about time zones and DST best practices, visit [Time Zones and Res
 - `isoMillisecond` (optional number): A number of milliseconds, ranging between 0 and 999 inclusive.
 - `isoMicrosecond` (optional number): A number of microseconds, ranging between 0 and 999 inclusive.
 - `isoNanosecond` (optional number): A number of nanoseconds, ranging between 0 and 999 inclusive.
-- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): A calendar to project the datetime into.
+- `calendar` (optional string): A calendar to project the datetime into.
 
 **Returns:** a new `Temporal.PlainDateTime` object.
 
@@ -67,8 +67,7 @@ Because the magnitude of built-in time zones' UTC offset will always be less tha
 Note that the reverse conversion is not guaranteed to succeed; a valid `Temporal.PlainDateTime` at the edge of its range may, for some built-in time zones, be out of range of `Temporal.Instant`.
 If the parameters passed in to this constructor are out of range, then this function will throw a `RangeError`.
 
-Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
-Use an object if you need to supply [custom calendar behaviour](./calendar.md#custom-calendars).
+`calendar` is a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
 
 > **NOTE**: The `isoMonth` argument ranges from 1 to 12, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -516,7 +515,7 @@ dt.add({ days: 2, hours: 22 }).withPlainTime('00:00'); // => 2015-12-10T00:00:00
 
 **Parameters:**
 
-- `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `datetime`.
+- `calendar` (object or string): The calendar into which to project `datetime`.
 
 **Returns:** a new `Temporal.PlainDateTime` object which is the date indicated by `datetime`, projected into `calendar`.
 
@@ -951,7 +950,7 @@ Use `Temporal.PlainDateTime.compare()` for this, or `datetime.equals()` for equa
 
 **Parameters:**
 
-- `timeZone` (optional string or object): The time zone in which to interpret `dateTime`, as a `Temporal.TimeZone` object, an object implementing the [time zone protocol](./timezone.md#custom-time-zones), or a string.
+ - `timeZone` (string or `Temporal.ZonedDateTime`): the time zone in which to interpret `dateTime`, as a time zone identifier, or a `Temporal.ZonedDateTime` object whose time zone will be used.
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `disambiguation` (string): How to disambiguate if the date and time given by `dateTime` does not exist in the time zone, or exists more than once.

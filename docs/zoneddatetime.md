@@ -6,7 +6,7 @@
 </details>
 
 A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant from the perspective of a particular region on Earth.
-As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.TimeZone`, `Temporal.Instant`, and `Temporal.PlainDateTime` (which includes `Temporal.Calendar`).
+As the broadest `Temporal` type, `Temporal.ZonedDateTime` can be considered a combination of `Temporal.Instant`, `Temporal.PlainDateTime`, and a time zone.
 
 As the only `Temporal` type that persists a time zone, `Temporal.ZonedDateTime` is optimized for use cases that require a time zone:
 
@@ -23,15 +23,60 @@ A `Temporal.ZonedDateTime` instance can be losslessly converted into every other
 
 The `Temporal.ZonedDateTime` API is a superset of `Temporal.PlainDateTime`, which makes it easy to port code back and forth between the two types as needed. Because `Temporal.PlainDateTime` is not aware of time zones, in use cases where the time zone is known it's recommended to use `Temporal.ZonedDateTime` which will automatically adjust for DST and can convert easily to `Temporal.Instant` without having to re-specify the time zone.
 
+
+## Time zone identifiers
+
+Time zones in `Temporal` are represented by string identifiers from the IANA Time Zone Database (like `Asia/Tokyo`, `America/Los_Angeles`, or `UTC`) or by a fixed UTC offset like `+05:30`.
+For example:
+
+```javascript
+inBerlin = Temporal.ZonedDateTime.from('2022-01-28T19:53+01:00[Europe/Berlin]');
+inTokyo = inBerlin.withTimeZone('Asia/Tokyo');
+```
+
+## Handling changes to the IANA Time Zone Database
+
+Time zone identifiers are occasionally renamed or merged in the IANA Time Zone Database.
+For example, `Asia/Calcutta` was renamed to `Asia/Kolkata`, and `America/Montreal` was merged into `America/Toronto` because both identifiers are in the same country and share the same time zone rules since 1970.
+
+Identifiers that have been renamed or merged are considered equivalent by ECMAScript.
+Equivalence can be tested using `Temporal.ZonedDateTime.prototype.equals`.
+
+```javascript
+function areTimeZoneIdentifiersEquivalent(id1, id2) {
+  return new Temporal.ZonedDateTime(0n, id1).equals(new Temporal.ZonedDateTime(0n, id2));
+  // DON'T DO THIS: return id1 === id2;
+}
+areTimeZoneIdentifiersEquivalent('Asia/Calcutta', 'ASIA/KOLKATA'); // => true
+areTimeZoneIdentifiersEquivalent('Asia/Calcutta', '+05:30'); // => false
+areTimeZoneIdentifiersEquivalent('UTC', '+00:00'); // => false
+```
+
+Time zones that resolve to different Zones in the IANA Time Zone Database are not equivalent, even if those Zones use the same offsets.
+Similarly, a numeric-offset identifier is never equivalent to an IANA time zone identifier, even if they always represent the same offset.
+
+In any set of equivalent identifiers, only one identifier will be considered canonical.
+To avoid redundancy, the output of `Intl.supportedValuesOf('timeZone')` and `Temporal.Now.timeZoneId()` are limited to canonical identifiers.
+Other than those cases, canonicalization is not observable in ECMAScript code, which ensures that changes to the IANA Time Zone Database will have minimal impact on the behavior of existing applications.
+
+## Variation between ECMAScript and other consumers of the IANA Time Zone Database
+
+The IANA Time Zone Database can be built with different options that can change which time zones are equivalent.
+ECMAScript implementations generally use build options that guarantee at least one canonical identifier for every <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha-2</a> country code, and that ensure that identifiers for different country codes are never equivalent.
+This behavior avoids the risk that future political changes in one country can affect the behavior of ECMAScript code using a different country's time zones.
+
+For example, the default build options consider Europe/Oslo, Europe/Stockholm, Europe/Copenhagen, and Europe/Berlin to be equivalent.
+However, ECMAScript implementations generally do not treat those as equivalent.
+
 ## Constructor
 
-### **new Temporal.ZonedDateTime**(_epochNanoseconds_: bigint, _timeZone_: string | object, _calendar_: string | object = "iso8601") : Temporal.ZonedDateTime
+### **new Temporal.ZonedDateTime**(_epochNanoseconds_: bigint, _timeZone_: string, _calendar_: string = "iso8601") : Temporal.ZonedDateTime
 
 **Parameters:**
 
 - `epochNanoseconds` (bigint): A number of nanoseconds.
-- `timeZone` (string, `Temporal.TimeZone` instance, or plain object): The time zone in which the event takes place.
-- `calendar` (optional string, `Temporal.Calendar` instance, or plain object): Calendar used to interpret dates and times.
+- `timeZone` (string): The time zone in which the event takes place.
+- `calendar` (optional string): Calendar used to interpret dates and times.
 
 **Returns:** a new `Temporal.ZonedDateTime` object.
 
@@ -41,9 +86,10 @@ Instead of the constructor, `Temporal.ZonedDateTime.from()` is preferred instead
 The range of allowed values for this type is the same as the old-style JavaScript `Date`: 100 million (10<sup>8</sup>) days before or after the Unix epoch.
 This range covers approximately half a million years. If `epochNanoseconds` is outside of this range, a `RangeError` will be thrown.
 
-Usually `timeZone` will be a string containing the identifier of a built-in time zone, such as `'UTC'`, `'Europe/Madrid'`, or `'+05:30'`.
-Usually `calendar` will be a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
-Use an object if you need to supply [custom calendar](./calendar.md#custom-calendars) or [custom time zone](./timezone.md#custom-time-zones) behaviour.
+`timeZone` is a string containing the identifier of a built-in time zone, such as `'UTC'`, `'Europe/Madrid'`, or `'+05:30'`.
+
+`calendar` is a string containing the identifier of a built-in calendar, such as `'islamic'` or `'gregory'`.
+If omitted, the ISO 8601 calendar will be used, which is identical to the Gregorian calendar except negative years are used instead of eras like BC/BCE or AD/CE.
 
 Usage examples:
 
@@ -400,7 +446,6 @@ epochMicros = ns / 1000n + ((ns % 1000n) < 0n ? -1n : 0n);
 ### zonedDateTime.**calendarId** : object
 
 The `calendarId` read-only property gives the identifier of the calendar used to calculate date/time field values.
-If the date was created with a custom calendar object, this gives the `id` property of that object.
 
 Calendar-sensitive values are used in most places, including:
 
@@ -420,7 +465,6 @@ Calendar-specific date/time values are NOT used in only a few places:
 ### zonedDateTime.**timeZoneId** : string
 
 The `timeZoneId` read-only property is the identifier of the persistent time zone of `zonedDateTime`.
-If `zonedDateTime` was created with a custom time zone object, this gives the `id` property of that object.
 
 By storing its time zone, `Temporal.ZonedDateTime` is able to use that time zone when deriving other values, e.g. to automatically perform DST adjustment when adding or subtracting time.
 
@@ -792,7 +836,7 @@ zdt.add({ days: 2, hours: 22 }).withPlainTime('00:00'); // => 2015-12-10T00:00:0
 
 **Parameters:**
 
-- `timeZone` (`Temporal.TimeZone` or plain object or string): The time zone into which to project `zonedDateTime`.
+- `timeZone` (object or string): The time zone into which to project `zonedDateTime`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object which is the date indicated by `zonedDateTime`, projected into `timeZone`.
 
@@ -808,7 +852,7 @@ zdt.withTimeZone('Africa/Accra').toString(); // => '1995-12-06T18:24:30+00:00[Af
 
 **Parameters:**
 
-- `calendar` (`Temporal.Calendar` or plain object or string): The calendar into which to project `zonedDateTime`.
+- `calendar` (object or string): The calendar into which to project `zonedDateTime`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object which is the date indicated by `zonedDateTime`, projected into `calendar`.
 
@@ -984,7 +1028,7 @@ To calculate the difference between calendar dates only, use `.toPlainDate().unt
 To calculate the difference between clock times only, use `.toPlainTime().until(other.toPlainTime())`.
 
 If the other `Temporal.ZonedDateTime` is in a different time zone, then the same days can be different lengths in each time zone, e.g. if only one of them observes DST.
-Therefore, a `RangeError` will be thrown if `largestUnit` is `'day'` or larger and the two instances' time zones are not equal, using the same equality algorithm as `Temporal.TimeZone.prototype.equals`.
+Therefore, a `RangeError` will be thrown if `largestUnit` is `'day'` or larger and the two instances' time zones are not equal, using the same equality algorithm as `Temporal.ZonedDateTime.prototype.equals`.
 To work around this same-time-zone requirement, transform one of the instances to the other's time zone using `.withTimeZone(other.timeZone)` and then calculate the same-timezone difference.
 Because of the complexity and ambiguity involved in cross-timezone calculations involving days or larger units, `'hour'` is the default for `largestUnit`.
 
