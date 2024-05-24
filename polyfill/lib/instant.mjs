@@ -119,23 +119,6 @@ export class Instant {
   valueOf() {
     ES.ValueOfThrows('Instant');
   }
-  toZonedDateTime(item) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    if (ES.Type(item) !== 'Object') {
-      throw new TypeError('invalid argument in toZonedDateTime');
-    }
-    const calendarLike = item.calendar;
-    if (calendarLike === undefined) {
-      throw new TypeError('missing calendar property in toZonedDateTime');
-    }
-    const calendar = ES.ToTemporalCalendarSlotValue(calendarLike);
-    const temporalTimeZoneLike = item.timeZone;
-    if (temporalTimeZoneLike === undefined) {
-      throw new TypeError('missing timeZone property in toZonedDateTime');
-    }
-    const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
-    return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
-  }
   toZonedDateTimeISO(timeZone) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
     timeZone = ES.ToTemporalTimeZoneSlotValue(timeZone);

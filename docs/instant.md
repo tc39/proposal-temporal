@@ -264,9 +264,8 @@ epochMicros = ns / 1000n + ((ns % 1000n) < 0n ? -1n : 0n);
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
 
-This method is one way to convert a `Temporal.Instant` to a `Temporal.ZonedDateTime`.
-It is the same as `toZonedDateTime()`, but always uses the ISO 8601 calendar.
-Use this method if you are not doing computations in other calendars.
+This method always returns a `Temporal.ZonedDateTime` with the ISO 8601 calendar.
+Remember to use `withCalendar()` on the result if you need to do computations in other calendars.
 
 Example usage:
 
@@ -276,39 +275,14 @@ timestamp = Temporal.Instant.fromEpochMilliseconds(1553993100_000);
 timestamp.toZonedDateTimeISO('Europe/Berlin'); // => 2019-03-31T01:45:00+01:00[Europe/Berlin]
 timestamp.toZonedDateTimeISO('UTC'); // => 2019-03-31T00:45:00+00:00[UTC]
 timestamp.toZonedDateTimeISO('-08:00'); // => 2019-03-30T16:45:00-08:00[-08:00]
-```
 
-### instant.**toZonedDateTime**(_item_: object) : Temporal.ZonedDateTime
-
-**Parameters:**
-
-- `item` (object): an object with properties to be combined with `instant`. The following properties are recognized:
-  - `calendar` (required calendar identifier string, `Temporal.Calendar` object, or object implementing the calendar protocol): the calendar in which to interpret `instant`.
-  - `timeZone` (required time zone identifier string, `Temporal.TimeZone` object, or object implementing the [time zone protocol](./timezone.md#custom-time-zones)): the time zone in which to interpret `instant`.
-
-**Returns:** a `Temporal.ZonedDateTime` object representing the calendar date, wall-clock time, time zone offset, and `timeZone`, according to the reckoning of `calendar`, at the exact time indicated by `instant`.
-
-For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
-A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.
-
-For a list of calendar identifiers, see the documentation for [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#Parameters).
-
-If you only want to use the ISO 8601 calendar, use `toZonedDateTimeISO()`.
-
-Example usage:
-
-<!-- prettier-ignore-start -->
-```js
 // What time was the Unix epoch (timestamp 0) in Bell Labs (Murray Hill, New Jersey, USA) in the Gregorian calendar?
 epoch = Temporal.Instant.fromEpochMilliseconds(0);
-timeZone = Temporal.TimeZone.from('America/New_York');
-epoch.toZonedDateTime({ timeZone, calendar: 'gregory' });
+epoch.toZonedDateTimeISO('America/New_York').withCalendar('gregory');
   // => 1969-12-31T19:00:00-05:00[America/New_York][u-ca=gregory]
 
 // What time was the Unix epoch in Tokyo in the Japanese calendar?
-timeZone = Temporal.TimeZone.from('Asia/Tokyo');
-calendar = Temporal.Calendar.from('japanese');
-zdt = epoch.toZonedDateTime({ timeZone, calendar });
+zdt = epoch.toZonedDateTimeISO('Asia/Tokyo').withCalendar('japanese');
   // => 1970-01-01T09:00:00+09:00[Asia/Tokyo][u-ca=japanese]
 console.log(zdt.eraYear, zdt.era);
   // => '45 showa'

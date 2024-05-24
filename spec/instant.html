@@ -327,28 +327,6 @@
       </emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.instant.prototype.tozoneddatetime">
-      <h1>Temporal.Instant.prototype.toZonedDateTime ( _item_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _instant_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. If _item_ is not an Object, then
-          1. Throw a *TypeError* exception.
-        1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
-        1. If _calendarLike_ is *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
-        1. Let _temporalTimeZoneLike_ be ? Get(_item_, *"timeZone"*).
-        1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Throw a *TypeError* exception.
-        1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
-        1. Return ! CreateTemporalZonedDateTime(_instant_.[[Nanoseconds]], _timeZone_, _calendar_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetimeiso">
       <h1>Temporal.Instant.prototype.toZonedDateTimeISO ( _timeZone_ )</h1>
       <p>
