@@ -56,11 +56,7 @@ export class Instant {
 
   add(temporalDurationLike) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromInstant('add', this, temporalDurationLike);
-  }
-  subtract(temporalDurationLike) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromInstant('subtract', this, temporalDurationLike);
+    return ES.AddDurationToOrSubtractDurationFromInstant(this, temporalDurationLike);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');

@@ -393,19 +393,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ? AddDurations(~add~, _duration_, _other_, _options_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.duration.prototype.subtract">
-      <h1>Temporal.Duration.prototype.subtract ( _other_ [ , _options_ ] )</h1>
-      <p>
-        The `Temporal.Duration.prototype.subtract` method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _duration_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return ? AddDurations(~subtract~, _duration_, _other_, _options_).
+        1. Return ? AddDurations(_duration_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -2138,7 +2126,6 @@
     <emu-clause id="sec-temporal-adddurations" type="abstract operation">
       <h1>
         AddDurations (
-          _operation_: ~add~ or ~subtract~,
           _duration_: a Temporal.Duration,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -2152,7 +2139,6 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalDurationRecord(_other_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_options_).
@@ -2170,16 +2156,16 @@
         1. Let _ms1_ be _duration_.[[Milliseconds]].
         1. Let _mus1_ be _duration_.[[Microseconds]].
         1. Let _ns1_ be _duration_.[[Nanoseconds]].
-        1. Let _y2_ be _sign_ &times; _other_.[[Years]].
-        1. Let _mon2_ be _sign_ &times; _other_.[[Months]].
-        1. Let _w2_ be _sign_ &times; _other_.[[Weeks]].
-        1. Let _d2_ be _sign_ &times; _other_.[[Days]].
-        1. Let _h2_ be _sign_ &times; _other_.[[Hours]].
-        1. Let _min2_ be _sign_ &times; _other_.[[Minutes]].
-        1. Let _s2_ be _sign_ &times; _other_.[[Seconds]].
-        1. Let _ms2_ be _sign_ &times; _other_.[[Milliseconds]].
-        1. Let _mus2_ be _sign_ &times; _other_.[[Microseconds]].
-        1. Let _ns2_ be _sign_ &times; _other_.[[Nanoseconds]].
+        1. Let _y2_ be _other_.[[Years]].
+        1. Let _mon2_ be _other_.[[Months]].
+        1. Let _w2_ be _other_.[[Weeks]].
+        1. Let _d2_ be _other_.[[Days]].
+        1. Let _h2_ be _other_.[[Hours]].
+        1. Let _min2_ be _other_.[[Minutes]].
+        1. Let _s2_ be _other_.[[Seconds]].
+        1. Let _ms2_ be _other_.[[Milliseconds]].
+        1. Let _mus2_ be _other_.[[Microseconds]].
+        1. Let _ns2_ be _other_.[[Nanoseconds]].
         1. Let _largestUnit1_ be DefaultTemporalLargestUnit(_y1_, _mon1_, _w1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_).
         1. Let _largestUnit2_ be DefaultTemporalLargestUnit(_y2_, _mon2_, _w2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_).
         1. Let _largestUnit_ be LargerOfTwoTemporalUnits(_largestUnit1_, _largestUnit2_).

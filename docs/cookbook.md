@@ -296,7 +296,7 @@ The graph always starts at midnight in the tank's location, but the graph labels
 <script type="text/javascript">
 {
 // Generate fictitious "data"
-const start = Temporal.Now.instant().subtract({ hours: 24 });
+const start = Temporal.Now.instant().add({ hours: -24 });
 const blank = Array(24 * 12);
 const tankDataX = Array.from(blank, (_, ix) => start.add({ minutes: ix * 5 }));
 const tankDataY = Array.from(blank);

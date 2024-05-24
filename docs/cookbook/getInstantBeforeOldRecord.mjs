@@ -9,7 +9,7 @@
  *  breaking the record
  */
 function getInstantBeforeOldRecord(start, previousRecord, noticeWindow) {
-  return start.add(previousRecord).subtract(noticeWindow);
+  return start.add(previousRecord).add(noticeWindow.negated());
 }
 
 // Start of the men's 10000 meters at the Rio de Janeiro 2016 Olympic Games

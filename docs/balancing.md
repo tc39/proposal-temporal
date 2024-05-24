@@ -88,9 +88,9 @@ d.round({ largestUnit: 'day', relativeTo: '2020-03-08T00:00-08:00[America/Los_An
 
 ## Balancing in Duration Arithmetic
 
-In addition to `round()` as described above, `add()` and `subtract()` also balance their output into either a fully-balanced or a top-heavy duration depending on the `largestUnit` option.
+In addition to `round()` as described above, `add()` also balances its output into either a fully-balanced or a top-heavy duration depending on the `largestUnit` option.
 
-By default, `add()` and `subtract()` on `Temporal.Duration` instances will only balance up to the largest unit in either input duration.
+By default, `add()` on `Temporal.Duration` instances will only balance up to the largest unit in either input duration.
 
 ```javascript
 d1 = Temporal.Duration.from({ hours: 26, minutes: 45 }); // => PT26H45M

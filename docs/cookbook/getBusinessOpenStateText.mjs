@@ -39,7 +39,7 @@ function getBusinessOpenStateText(now, businessHours, soonWindow) {
     const close = closeDate.toZonedDateTime({ plainTime: closeTime, timeZone });
 
     if (inRange(now, open, close)) {
-      return compare(now, close.subtract(soonWindow)) >= 0 ? 'closing soon' : 'open';
+      return compare(now, close.add(soonWindow.negated())) >= 0 ? 'closing soon' : 'open';
     }
     if (inRange(now.add(soonWindow), open, close)) return 'opening soon';
   }

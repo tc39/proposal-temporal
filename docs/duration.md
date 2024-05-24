@@ -8,7 +8,7 @@
 A `Temporal.Duration` represents a duration of time which can be used in date/time arithmetic.
 
 `Temporal.Duration` can be constructed directly or returned from `Temporal.Duration.from()`.
-It can also be obtained from the `since()` method of any other `Temporal` type that supports arithmetic, and is used in those types' `add()` and `subtract()` methods.
+It can also be obtained from the `since()` method of any other `Temporal` type that supports arithmetic, and is used in those types' `add()` methods.
 
 When printed, a `Temporal.Duration` produces a string according to the ISO 8601 notation for durations.
 The examples in this page use this notation extensively.
@@ -260,14 +260,18 @@ duration = duration.with({ years, months });
 
 **Parameters:**
 
-- `other` (`Temporal.Duration` or value convertible to one): The duration to add.
-- `options` (optional object): An object with properties representing options for the addition.
+- `other` (`Temporal.Duration` or value convertible to one): The duration to add, or subtract if negative.
+- `options` (optional object): An object with properties representing options for the addition or subtraction.
   The following option is recognized:
-  - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
+  - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding or subtracting years, months, weeks, and days.
 
 **Returns:** a new `Temporal.Duration` object which represents the sum of the durations of `duration` and `other`.
 
-This method adds `other` to `duration`, resulting in a longer duration.
+This method adds `other` to `duration`.
+If `other` is positive, this results in a longer duration.
+
+Adding a negative duration is equivalent to subtracting the absolute value of that duration, and results in a shorter duration.
+To perform `a` minus `b`, use the idiom `a.add(b.negated())`.
 
 The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
 If `other` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
@@ -282,8 +286,6 @@ The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zon
 
 If `relativeTo` is neither a `Temporal.PlainDate` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDate.from()`.
 This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDate`.
-
-Adding a negative duration is equivalent to subtracting the absolute value of that duration.
 
 Usage example:
 
@@ -307,56 +309,22 @@ oneAndAHalfMonth = Temporal.Duration.from({ months: 1, days: 15 });
 /* WRONG */ oneAndAHalfMonth.add(oneAndAHalfMonth); // => throws
 oneAndAHalfMonth.add(oneAndAHalfMonth, { relativeTo: '2000-02-01' }); // => P3M
 oneAndAHalfMonth.add(oneAndAHalfMonth, { relativeTo: '2000-03-01' }); // => P2M30D
-```
 
-<!-- prettier-ignore-start -->
-
-### duration.**subtract**(_other_: Temporal.Duration | object | string, _options_?: object) : Temporal.Duration
-
-**Parameters:**
-
-- `other` (`Temporal.Duration` or value convertible to one): The duration to subtract.
-- `options` (optional object): An object with properties representing options for the subtraction.
-  The following option is recognized:
-  - `relativeTo` (`Temporal.PlainDate`, `Temporal.ZonedDateTime`, or value convertible to one of those): The starting point to use when adding years, months, weeks, and days.
-
-**Returns:** a new `Temporal.Duration` object which represents the duration of `duration` less the duration of `other`.
-
-This method subtracts `other` from `duration`, resulting in a shorter duration.
-
-The `other` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a string such as `PT5H30M`, or a `Temporal.Duration` object.
-If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-In order to be valid, the resulting duration must not have fields with mixed signs, and so the result is balanced.
-For usage examples and a more complete explanation of how balancing works and why it is necessary, see [Duration balancing](./balancing.md#duration-arithmetic).
-
-By default, you cannot subtract durations with years, months, or weeks, as that could be ambiguous depending on the start date.
-To do this, you must provide a start date using the `relativeTo` option.
-
-The `relativeTo` option may be a `Temporal.ZonedDateTime` in which case time zone offset changes will be taken into account when converting between days and hours. If `relativeTo` is omitted or is a `Temporal.PlainDate`, then days are always considered equal to 24 hours.
-
-If `relativeTo` is neither a `Temporal.PlainDate` nor a `Temporal.ZonedDateTime`, then it will be converted to one of the two, as if it were first attempted with `Temporal.ZonedDateTime.from()` and then with `Temporal.PlainDate.from()`.
-This means that an ISO 8601 string with a time zone name annotation in it, or a property bag with a `timeZone` property, will be converted to a `Temporal.ZonedDateTime`, and an ISO 8601 string without a time zone name or a property bag without a `timeZone` property will be converted to a `Temporal.PlainDate`.
-
-Subtracting a negative duration is equivalent to adding the absolute value of that duration.
-
-Usage example:
-
-```javascript
+// Example of subtraction:
 hourAndAHalf = Temporal.Duration.from('PT1H30M');
-hourAndAHalf.subtract({ hours: 1 }); // => PT30M
+hourAndAHalf.add({ hours: -1 }); // => PT30M
 
 one = Temporal.Duration.from({ minutes: 180 });
 two = Temporal.Duration.from({ seconds: 30 });
-one.subtract(two); // => PT179M30S
-one.subtract(two).round({ largestUnit: 'hour' }); // => PT2H59M30S
+one.add(two.negated()); // => PT179M30S
+one.add(two.negated()).round({ largestUnit: 'hour' }); // => PT2H59M30S
 
 // Example of converting ambiguous units relative to a start date
 threeMonths = Temporal.Duration.from({ months: 3 });
-oneAndAHalfMonth = Temporal.Duration.from({ months: 1, days: 15 });
-/* WRONG */ threeMonths.subtract(oneAndAHalfMonth); // => throws
-threeMonths.subtract(oneAndAHalfMonth, { relativeTo: '2000-02-01' }); // => P1M16D
-threeMonths.subtract(oneAndAHalfMonth, { relativeTo: '2000-03-01' }); // => P1M15D
+oneAndAHalfMonthNegated = Temporal.Duration.from({ months: -1, days: -15 });
+/* WRONG */ threeMonths.add(oneAndAHalfMonthNegated); // => throws
+threeMonths.add(oneAndAHalfMonthNegated, { relativeTo: '2000-02-01' }); // => P1M16D
+threeMonths.add(oneAndAHalfMonthNegated, { relativeTo: '2000-03-01' }); // => P1M15D
 ```
 
 ### duration.**negated**() : Temporal.Duration

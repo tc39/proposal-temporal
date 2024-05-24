@@ -32,7 +32,7 @@ export namespace Temporal {
   /**
    * Options for assigning fields using `Duration.prototype.with()` or entire
    * objects with `Duration.from()`, and for arithmetic with
-   * `Duration.prototype.add()` and `Duration.prototype.subtract()`.
+   * `Duration.prototype.add()`.
    * */
   export type DurationOptions = {
     /**
@@ -119,7 +119,7 @@ export namespace Temporal {
   >;
 
   /**
-   * Options for arithmetic operations like `add()` and `subtract()`
+   * Options for arithmetic operations like `add()`
    * */
   export type ArithmeticOptions = {
     /**
@@ -463,8 +463,7 @@ export namespace Temporal {
       };
 
   /**
-   * Options to control behavior of `Duration.compare()`, `Duration.add()`, and
-   * `Duration.subtract()`
+   * Options to control behavior of `Duration.compare()`, `Duration.add()`
    */
   export interface DurationArithmeticOptions {
     /**
@@ -545,7 +544,6 @@ export namespace Temporal {
     abs(): Temporal.Duration;
     with(durationLike: DurationLike): Temporal.Duration;
     add(other: Temporal.Duration | DurationLike | string, options?: DurationArithmeticOptions): Temporal.Duration;
-    subtract(other: Temporal.Duration | DurationLike | string, options?: DurationArithmeticOptions): Temporal.Duration;
     round(roundTo: DurationRoundTo): Temporal.Duration;
     total(totalOf: DurationTotalOf): number;
     toLocaleString(locales?: string | string[], options?: Intl.DateTimeFormatOptions): string;
@@ -583,9 +581,6 @@ export namespace Temporal {
     readonly epochNanoseconds: bigint;
     equals(other: Temporal.Instant | string): boolean;
     add(
-      durationLike: Omit<Temporal.Duration | DurationLike, 'years' | 'months' | 'weeks' | 'days'> | string
-    ): Temporal.Instant;
-    subtract(
       durationLike: Omit<Temporal.Duration | DurationLike, 'years' | 'months' | 'weeks' | 'days'> | string
     ): Temporal.Instant;
     until(
@@ -827,7 +822,6 @@ export namespace Temporal {
     with(dateLike: PlainDateLike, options?: AssignmentOptions): Temporal.PlainDate;
     withCalendar(calendar: CalendarLike): Temporal.PlainDate;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDate;
-    subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDate;
     until(
       other: Temporal.PlainDate | PlainDateLike | string,
       options?: DifferenceOptions<'year' | 'month' | 'week' | 'day'>
@@ -945,10 +939,6 @@ export namespace Temporal {
     withPlainDate(dateLike: Temporal.PlainDate | PlainDateLike | string): Temporal.PlainDateTime;
     withCalendar(calendar: CalendarLike): Temporal.PlainDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainDateTime;
-    subtract(
-      durationLike: Temporal.Duration | DurationLike | string,
-      options?: ArithmeticOptions
-    ): Temporal.PlainDateTime;
     until(
       other: Temporal.PlainDateTime | PlainDateTimeLike | string,
       options?: DifferenceOptions<
@@ -1071,7 +1061,6 @@ export namespace Temporal {
     equals(other: Temporal.PlainTime | PlainTimeLike | string): boolean;
     with(timeLike: Temporal.PlainTime | PlainTimeLike, options?: AssignmentOptions): Temporal.PlainTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainTime;
-    subtract(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainTime;
     until(
       other: Temporal.PlainTime | PlainTimeLike | string,
       options?: DifferenceOptions<'hour' | 'minute' | 'second' | 'millisecond' | 'microsecond' | 'nanosecond'>
@@ -1194,10 +1183,6 @@ export namespace Temporal {
     equals(other: Temporal.PlainYearMonth | PlainYearMonthLike | string): boolean;
     with(yearMonthLike: PlainYearMonthLike, options?: AssignmentOptions): Temporal.PlainYearMonth;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.PlainYearMonth;
-    subtract(
-      durationLike: Temporal.Duration | DurationLike | string,
-      options?: ArithmeticOptions
-    ): Temporal.PlainYearMonth;
     until(
       other: Temporal.PlainYearMonth | PlainYearMonthLike | string,
       options?: DifferenceOptions<'year' | 'month'>
@@ -1297,10 +1282,6 @@ export namespace Temporal {
     withCalendar(calendar: CalendarLike): Temporal.ZonedDateTime;
     withTimeZone(timeZone: TimeZoneLike): Temporal.ZonedDateTime;
     add(durationLike: Temporal.Duration | DurationLike | string, options?: ArithmeticOptions): Temporal.ZonedDateTime;
-    subtract(
-      durationLike: Temporal.Duration | DurationLike | string,
-      options?: ArithmeticOptions
-    ): Temporal.ZonedDateTime;
     until(
       other: Temporal.ZonedDateTime | ZonedDateTimeLike | string,
       options?: Temporal.DifferenceOptions<

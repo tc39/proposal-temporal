@@ -82,16 +82,12 @@ function buildSub(one, two, largestUnits) {
         // For months and years, `until` and `since` won't agree because the
         // starting point is always `this` and month-aware arithmetic behavior
         // varies based on the starting point.
-        it(`(${two}).subtract(${dif}) => ${one}`, () => assert(two.subtract(dif).equals(one)));
         it(`(${two}).add(-${dif}) => ${one}`, () => assert(two.add(dif.negated()).equals(one)));
         const difUntil = one.until(two, { largestUnit });
-        it(`(${one}).subtract(-${difUntil}) => ${two}`, () => assert(one.subtract(difUntil.negated()).equals(two)));
         it(`(${one}).add(${difUntil}) => ${two}`, () => assert(one.add(difUntil).equals(two)));
       } else {
         it('until() and since() agree', () => equal(`${dif}`, `${one.until(two, { largestUnit })}`));
         it(`(${one}).add(${dif}) => ${two}`, () => assert(one.add(dif, { overflow }).equals(two)));
-        it(`(${two}).subtract(${dif}) => ${one}`, () => assert(two.subtract(dif, { overflow }).equals(one)));
-        it(`(${one}).subtract(-${dif}) => ${two}`, () => assert(one.subtract(dif.negated(), { overflow }).equals(two)));
         it(`(${two}).add(-${dif}) => ${one}`, () => assert(two.add(dif.negated(), { overflow }).equals(one)));
       }
     });

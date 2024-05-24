@@ -12,7 +12,7 @@ function getInstantOfNearestOffsetTransitionToInstant(instant, timeZone, inclusi
   let nearest;
   if (inclusive) {
     // In case instant itself is the exact time of a transition:
-    nearest = timeZone.getNextTransition(instant.subtract({ nanoseconds: 1 }));
+    nearest = timeZone.getNextTransition(instant.add({ nanoseconds: -1 }));
   } else {
     nearest = timeZone.getNextTransition(instant);
   }

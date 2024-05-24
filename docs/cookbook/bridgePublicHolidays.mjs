@@ -15,7 +15,7 @@ function bridgePublicHolidays(holiday, year) {
     case 5: // Fri
       return [date];
     case 2: // Tue; take Monday off
-      return [date.subtract({ days: 1 }), date];
+      return [date.add({ days: -1 }), date];
     case 4: // Thu; take Friday off
       return [date, date.add({ days: 1 })];
     case 6: // Sat

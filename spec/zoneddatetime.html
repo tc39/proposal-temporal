@@ -725,19 +725,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~add~, _zonedDateTime_, _temporalDurationLike_, _options_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.subtract">
-      <h1>Temporal.ZonedDateTime.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~subtract~, _zonedDateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(_zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1547,7 +1535,6 @@
     <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromzoneddatetime" type="abstract operation">
      <h1>
         AddDurationToOrSubtractDurationFromZonedDateTime (
-          _operation_: ~add~ or ~subtract~,
           _zonedDateTime_: a Temporal.ZonedDateTime,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -1558,13 +1545,12 @@
         <dd>It adds/subtracts _temporalDurationLike_ to/from _zonedDateTime_.</dd>
       </dl>
       <emu-alg>
-        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_zonedDateTime_.[[TimeZone]], « ~get-offset-nanoseconds-for~, ~get-possible-instants-for~ »).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_zonedDateTime_.[[Calendar]], « ~date-add~ »).
-        1. Let _norm_ be NormalizeTimeDuration(_sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
-        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _sign_ &times; _duration_.[[Years]], _sign_ &times; _duration_.[[Months]], _sign_ &times; _duration_.[[Weeks]], _sign_ &times; _duration_.[[Days]], _norm_, *undefined*, _options_).
+        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZoneRec_, _calendarRec_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_, *undefined*, _options_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZoneRec_.[[Receiver]], _calendarRec_.[[Receiver]]).
       </emu-alg>
     </emu-clause>

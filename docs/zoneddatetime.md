@@ -405,7 +405,7 @@ Calendar-sensitive values are used in most places, including:
 - Accessing properties like `.year` or `.month`
 - Setting properties using `.from()` or `.with()`.
 - Creating `Temporal.Duration` instances with `.since()`
-- Interpreting `Temporal.Duration` instances with `.add()` or `.subtract()`
+- Interpreting `Temporal.Duration` instances with `.add()`
 - Localized formatting with `toLocaleString()`, although if the calendar is ISO then the calendar can be overridden via an option
 - All other places where date/time values are read or written, except as noted below
 
@@ -870,7 +870,7 @@ zdt.withCalendar('gregory').eraYear; // => 1995
 
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object which may have some or all of the following properties:
-  - `overflow` (string): How to deal with additions that result in out-of-range values.
+  - `overflow` (string): How to deal with additions or subtractions that result in out-of-range values.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -899,6 +899,7 @@ These rules make arithmetic with `Temporal.ZonedDateTime` "DST-safe", which mean
 
 Some arithmetic operations may be ambiguous, e.g. because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
+Likewise, subtracting one month from October 31 would result in September 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
 
 - In `'constrain'` mode (the default), out-of-range values are clamped to the nearest in-range value.
@@ -924,50 +925,18 @@ laterHours = zdt.add({ hours: 24 });
   // Adding time units doesn't adjust for DST. Result is 1:00AM: 24 real-world
   // hours later because a clock hour was skipped by DST.
 laterHours.since(zdt, { largestUnit: 'hour' }).hours; // => 24
-```
-<!-- prettier-ignore-end -->
 
-### zonedDateTime.**subtract**(_duration_: object, _options_?: object) : Temporal.ZonedDateTime
-
-**Parameters:**
-
-- `duration` (object): A `Temporal.Duration` object or a duration-like object.
-- `options` (optional object): An object which may have some or all of the following properties:
-  - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
-
-**Returns:** a new `Temporal.ZonedDateTime` object representing the result of `zonedDateTime` minus `duration`.
-
-This method subtracts a `duration` from `zonedDateTime`.
-
-The `duration` argument is an object with properties denoting a duration, such as `{ hours: 5, minutes: 30 }`, or a `Temporal.Duration` object. Subtracting a negative duration like `{ hours: -5, minutes: -30 }` is equivalent to adding the absolute value of that duration.
-
-Addition and subtraction are performed according to rules defined in [RFC 5545 (iCalendar)](https://tools.ietf.org/html/rfc5545), as described above in `add()`.
-
-Some arithmetic operations may be ambiguous, e.g. because months have different lengths.
-For example, subtracting one month from October 31 would result in September 31, which doesn't exist.
-For these cases, the `overflow` option tells what to do:
-
-- In `'constrain'` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `'reject'` mode, a result that would be out of range causes a `RangeError` to be thrown.
-
-Additionally, if the result is earlier or later than the range of dates that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
-
-Usage example:
-
-<!-- prettier-ignore-start -->
-```javascript
+// Subtraction
 zdt = Temporal.ZonedDateTime.from('2020-03-09T00:00-07:00[America/Los_Angeles]');
 // Add a day to get midnight on the day after DST starts
-earlierDay = zdt.subtract({ days: 1 });
+earlierDay = zdt.add({ days: -1 });
   // => 2020-03-08T00:00:00-08:00[America/Los_Angeles]
   // Note that the new offset is different, indicating the result is adjusted for DST.
 earlierDay.since(zdt, { largestUnit: 'hour' }).hours;
   // => -23
   // because one clock hour lost to DST
 
-earlierHours = zdt.subtract({ hours: 24 });
+earlierHours = zdt.add({ hours: -24 });
   // => 2020-03-07T23:00:00-08:00[America/Los_Angeles]
   // Subtracting time units doesn't adjust for DST. Result is 11:00PM: 24 real-world
   // hours earlier because a clock hour was skipped by DST.

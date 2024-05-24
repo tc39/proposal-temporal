@@ -126,15 +126,6 @@ export class PlainDate {
     const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateAdd']);
     return ES.AddDate(calendarRec, this, duration, options);
   }
-  subtract(temporalDurationLike, options = undefined) {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-
-    const duration = ES.CreateNegatedTemporalDuration(ES.ToTemporalDuration(temporalDurationLike));
-    options = ES.GetOptionsObject(options);
-
-    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['dateAdd']);
-    return ES.AddDate(calendarRec, this, duration, options);
-  }
   until(other, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return ES.DifferenceTemporalPlainDate('until', this, other, options);
