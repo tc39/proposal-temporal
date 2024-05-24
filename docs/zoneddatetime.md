@@ -404,7 +404,7 @@ Calendar-sensitive values are used in most places, including:
 
 - Accessing properties like `.year` or `.month`
 - Setting properties using `.from()` or `.with()`.
-- Creating `Temporal.Duration` instances with `.since()`
+- Creating `Temporal.Duration` instances with `.until()`
 - Interpreting `Temporal.Duration` instances with `.add()`
 - Localized formatting with `toLocaleString()`, although if the calendar is ISO then the calendar can be overridden via an option
 - All other places where date/time values are read or written, except as noted below
@@ -916,7 +916,7 @@ zdt = Temporal.ZonedDateTime.from('2020-03-08T00:00-08:00[America/Los_Angeles]')
 laterDay = zdt.add({ days: 1 });
   // => 2020-03-09T00:00:00-07:00[America/Los_Angeles]
   // Note that the new offset is different, indicating the result is adjusted for DST.
-laterDay.since(zdt, { largestUnit: 'hour' }).hours;
+zdt.until(laterDay, { largestUnit: 'hour' }).hours;
   // => 23
   // because one clock hour lost to DST
 
@@ -924,7 +924,7 @@ laterHours = zdt.add({ hours: 24 });
   // => 2020-03-09T01:00:00-07:00[America/Los_Angeles]
   // Adding time units doesn't adjust for DST. Result is 1:00AM: 24 real-world
   // hours later because a clock hour was skipped by DST.
-laterHours.since(zdt, { largestUnit: 'hour' }).hours; // => 24
+zdt.until(laterHours, { largestUnit: 'hour' }).hours; // => 24
 
 // Subtraction
 zdt = Temporal.ZonedDateTime.from('2020-03-09T00:00-07:00[America/Los_Angeles]');
@@ -932,7 +932,7 @@ zdt = Temporal.ZonedDateTime.from('2020-03-09T00:00-07:00[America/Los_Angeles]')
 earlierDay = zdt.add({ days: -1 });
   // => 2020-03-08T00:00:00-08:00[America/Los_Angeles]
   // Note that the new offset is different, indicating the result is adjusted for DST.
-earlierDay.since(zdt, { largestUnit: 'hour' }).hours;
+zdt.until(earlierDay, { largestUnit: 'hour' }).hours;
   // => -23
   // because one clock hour lost to DST
 
@@ -940,7 +940,7 @@ earlierHours = zdt.add({ hours: -24 });
   // => 2020-03-07T23:00:00-08:00[America/Los_Angeles]
   // Subtracting time units doesn't adjust for DST. Result is 11:00PM: 24 real-world
   // hours earlier because a clock hour was skipped by DST.
-earlierHours.since(zdt, { largestUnit: 'hour' }).hours; // => -24
+zdt.until(earlierHours, { largestUnit: 'hour' }).hours; // => -24
 ```
 <!-- prettier-ignore-end -->
 
@@ -1039,40 +1039,6 @@ feb1.until(mar1, { largestUnit: 'month' }); // => P1M
 jan1.until(mar1, { largestUnit: 'day' }); // => P60D
 ```
 <!-- prettier-ignore-end -->
-
-### zonedDateTime.**since**(_other_: Temporal.ZonedDateTime, _options_?: object) : Temporal.Duration
-
-**Parameters:**
-
-- `other` (`Temporal.LocalZonedDateTime`): Another date/time since when to compute the difference.
-- `options` (optional object): An object which may have some or all of the following properties:
-  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    The default is `'auto'`.
-  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    The default is `'nanosecond'`, i.e., no rounding.
-  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
-    The default is 1.
-  - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
-    The default is `'trunc'`, which truncates any remainder towards zero.
-
-**Returns:** a `Temporal.Duration` representing the elapsed time before `zonedDateTime` and since `other`.
-
-This method computes the difference between the two times represented by `zonedDateTime` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
-If `other` is later than `zonedDateTime` then the resulting duration will be negative.
-
-This method is similar to `Temporal.ZonedDateTime.prototype.until()`, but reversed.
-If using the default `options`, subtracting the returned `Temporal.Duration` from `zonedDateTime` will yield `other`, and `zdt1.since(zdt2)` will yield the same result as `zdt1.until(zdt2).negated()`.
-
-Usage example:
-
-```javascript
-zdt1 = Temporal.ZonedDateTime.from('1995-12-07T03:24:30.000003500+05:30[Asia/Kolkata]');
-zdt2 = Temporal.ZonedDateTime.from('2019-01-31T15:30+05:30[Asia/Kolkata]');
-zdt2.since(zdt1); // => PT202956H5M29.9999965S
-```
 
 ### zonedDateTime.**round**(_roundTo_: string | object) : Temporal.ZonedDateTime
 

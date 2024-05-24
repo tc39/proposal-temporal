@@ -737,19 +737,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? DifferenceTemporalZonedDateTime(~until~, _zonedDateTime_, _other_, _options_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.since">
-      <h1>Temporal.ZonedDateTime.prototype.since ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? DifferenceTemporalZonedDateTime(~since~, _zonedDateTime_, _other_, _options_).
+        1. Return ? DifferenceTemporalZonedDateTime(_zonedDateTime_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1495,7 +1483,6 @@
     <emu-clause id="sec-temporal-differencetemporalzoneddatetime" type="abstract operation">
       <h1>
         DifferenceTemporalZonedDateTime (
-          _operation_: ~until~ or ~since~,
           _zonedDateTime_: a Temporal.ZonedDateTime,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -1506,17 +1493,16 @@
         <dd>It computes the difference between the two times represented by _zonedDateTime_ and _other_, optionally rounds it, and returns it as a Temporal.Duration object.</dd>
       </dl>
       <emu-alg>
-        1. If _operation_ is ~since~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalZonedDateTime(_other_).
         1. If ? CalendarEquals(_zonedDateTime_.[[Calendar]], _other_.[[Calendar]]) is *false*, then
           1. Throw a *RangeError* exception.
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
-        1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
+        1. Let _settings_ be ? GetDifferenceSettings(_resolvedOptions_, ~datetime~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
         1. If _settings_.[[LargestUnit]] is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _diffRecord_ be DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
           1. Let _norm_ be _diffRecord_.[[NormalizedTimeDuration]].
           1. Let _result_ be ! BalanceTimeDuration(_norm_, _settings_.[[LargestUnit]]).
-          1. Return ! CreateTemporalDuration(0, 0, 0, 0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]]).
+          1. Return ! CreateTemporalDuration(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
         1. NOTE: To calculate differences in two different time zones, _settings_.[[LargestUnit]] must be *"hour"* or smaller, because day lengths can vary between time zones due to DST and other UTC offset shifts.
         1. If ? TimeZoneEquals(_zonedDateTime_.[[TimeZone]], _other_.[[TimeZone]]) is *false*, then
           1. Throw a *RangeError* exception.
@@ -1528,7 +1514,7 @@
         1. Let _precalculatedPlainDateTime_ be ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendarRec_.[[Receiver]]).
         1. Let _resultRecord_ be ? DifferenceZonedDateTimeWithRounding(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _calendarRec_, _timeZoneRec_, _precalculatedPlainDateTime_, _resolvedOptions_, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
         1. Let _result_ be _resultRecord_.[[DurationRecord]].
-        1. Return ! CreateTemporalDuration(_sign_ &times; _result_.[[Years]], _sign_ &times; _result_.[[Months]], _sign_ &times; _result_.[[Weeks]], _sign_ &times; _result_.[[Days]], _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 

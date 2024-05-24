@@ -468,42 +468,6 @@ epoch.toZonedDateTimeISO('UTC').until(
 ```
 <!-- prettier-ignore-end -->
 
-### instant.**since**(_other_: Temporal.Instant | string, _options_?: object) : Temporal.Duration
-
-**Parameters:**
-
-- `other` (`Temporal.Instant` or value convertible to one): Another exact time since when to compute the difference.
-- `options` (optional object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `largestUnit` (string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, `'microsecond'`, and `'nanosecond'`.
-    The default is `'auto'`.
-  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are the same as for `largestUnit`.
-    The default is `'nanosecond'`, i.e., no rounding.
-  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
-    The default is 1.
-  - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
-    The default is `'trunc'`, which truncates any remainder towards zero.
-
-**Returns:** a `Temporal.Duration` representing the difference between `instant` and `other`.
-
-This method computes the elapsed time before the exact time represented by `instant` and since the exact time represented by `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
-If `other` is later than `instant` then the resulting duration will be negative.
-
-This method does the same thing as the `Temporal.Instant.prototype.until()` method, but reversed.
-The outcome of `instant1.since(instant2)` is the same as `instant1.until(instant2).negated()`.
-
-Example usage:
-
-```js
-// A billion (10^9) seconds since the epoch in different units
-epoch = Temporal.Instant.fromEpochSeconds(0);
-billion = Temporal.Instant.fromEpochSeconds(1e9);
-billion.since(epoch); // => PT1000000000S
-```
-
 ### instant.**round**(_roundTo_: string | object) : Temporal.Instant
 
 **Parameters:**

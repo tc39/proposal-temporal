@@ -540,41 +540,6 @@ newyear.until('2020-01-17', { smallestUnit: 'month', roundingMode: 'halfExpand' 
 ```
 <!-- prettier-ignore-end -->
 
-### date.**since**(_other_: Temporal.PlainDate | object | string, _options_?: object) : Temporal.Duration
-
-**Parameters:**
-
-- `other` (`Temporal.PlainDate` or value convertible to one): Another date since when to compute the difference.
-- `options` (optional object): An object with properties representing options for the operation.
-  The following options are recognized:
-  - `largestUnit` (optional string): The largest unit of time to allow in the resulting `Temporal.Duration` object.
-    Valid values are `'auto'`, `'year'`, `'month'`, `'week'`, and `'day'`.
-    The default is `'auto'`.
-  - `smallestUnit` (string): The smallest unit of time to round to in the resulting `Temporal.Duration` object.
-    Valid values are `'year'`, `'month'`, `'week'`, `'day'`.
-    The default is `'day'`, i.e., no rounding.
-  - `roundingIncrement` (number): The granularity to round to, of the unit given by `smallestUnit`.
-    The default is 1.
-  - `roundingMode` (string): How to handle the remainder, if rounding.
-    Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
-    The default is `'trunc'`, which truncates any remainder towards zero.
-
-**Returns:** a `Temporal.Duration` representing the time elapsed before `date` and since `other`.
-
-This method computes the difference between the two dates represented by `date` and `other`, optionally rounds it, and returns it as a `Temporal.Duration` object.
-If `other` is later than `date` then the resulting duration will be negative.
-
-This method is similar to `Temporal.PlainDate.prototype.until()`, but reversed.
-If using the default `options`, subtracting the returned `Temporal.Duration` from `date` will yield `other`, and `date1.since(date2)` will yield the same result as `date1.until(date2).negated()`.
-
-Usage example:
-
-```javascript
-earlier = Temporal.PlainDate.from('2006-08-24');
-later = Temporal.PlainDate.from('2019-01-31');
-later.since(earlier); // => P4543D
-```
-
 ### date.**equals**(_other_: Temporal.PlainDate | object | string) : boolean
 
 **Parameters:**

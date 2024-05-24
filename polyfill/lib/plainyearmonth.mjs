@@ -85,11 +85,7 @@ export class PlainYearMonth {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalPlainYearMonth('until', this, other, options);
-  }
-  since(other, options = undefined) {
-    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalPlainYearMonth('since', this, other, options);
+    return ES.DifferenceTemporalPlainYearMonth(this, other, options);
   }
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');

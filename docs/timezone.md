@@ -475,7 +475,7 @@ Example usage:
 tz = Temporal.Now.timeZone();
 now = Temporal.Now.instant();
 nextTransition = tz.getNextTransition(now);
-duration = nextTransition.since(now);
+duration = now.until(nextTransition);
 duration.toLocaleString(); // output will vary
 ```
 
@@ -508,7 +508,7 @@ Example usage:
 tz = Temporal.Now.timeZone();
 now = Temporal.Now.instant();
 previousTransition = tz.getPreviousTransition(now);
-duration = now.since(previousTransition);
+duration = previousTransition.until(now);
 duration.toLocaleString(); // output will vary
 ```
 

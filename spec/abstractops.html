@@ -435,25 +435,6 @@
     </emu-table>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-negateroundingmode" type="abstract operation">
-    <h1>
-      NegateRoundingMode (
-        _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
-      ): a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd>It returns the correct rounding mode to use when rounding the negative of a value that was originally given with _roundingMode_</dd>
-    </dl>
-    <emu-alg>
-      1. If _roundingMode_ is *"ceil"*, return *"floor"*.
-      1. If _roundingMode_ is *"floor"*, return *"ceil"*.
-      1. If _roundingMode_ is *"halfCeil"*, return *"halfFloor"*.
-      1. If _roundingMode_ is *"halfFloor"*, return *"halfCeil"*.
-      1. Return _roundingMode_.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-gettemporaloffsetoption" type="abstract operation">
     <h1>
       GetTemporalOffsetOption (
@@ -2191,7 +2172,6 @@
   <emu-clause id="sec-temporal-getdifferencesettings" type="abstract operation">
     <h1>
       GetDifferenceSettings (
-        _operation_: ~since~ or ~until~,
         _options_: an Object,
         _unitGroup_: ~date~, ~time~, or ~datetime~,
         _disallowedUnits_: a List of Strings,
@@ -2209,8 +2189,6 @@
       1. If _disallowedUnits_ contains _largestUnit_, throw a *RangeError* exception.
       1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_options_).
       1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
-      1. If _operation_ is ~since~, then
-        1. Set _roundingMode_ to NegateRoundingMode(_roundingMode_).
       1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, _unitGroup_, _fallbackSmallestUnit_).
       1. If _disallowedUnits_ contains _smallestUnit_, throw a *RangeError* exception.
       1. Let _defaultLargestUnit_ be LargerOfTwoTemporalUnits(_smallestLargestDefaultUnit_, _smallestUnit_).

@@ -337,11 +337,7 @@ export class ZonedDateTime {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalZonedDateTime('until', this, other, options);
-  }
-  since(other, options = undefined) {
-    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalZonedDateTime('since', this, other, options);
+    return ES.DifferenceTemporalZonedDateTime(this, other, options);
   }
   round(roundTo) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');

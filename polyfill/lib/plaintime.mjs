@@ -135,11 +135,7 @@ export class PlainTime {
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalPlainTime('until', this, other, options);
-  }
-  since(other, options = undefined) {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return ES.DifferenceTemporalPlainTime('since', this, other, options);
+    return ES.DifferenceTemporalPlainTime(this, other, options);
   }
   round(roundTo) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
