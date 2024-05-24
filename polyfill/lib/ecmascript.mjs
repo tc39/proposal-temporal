@@ -5616,6 +5616,29 @@ class DummyValueOf {
 }
 DefineIntrinsic('TemporalValueOf', DummyValueOf.prototype.valueOf);
 
+class DummyToJSON {
+  toJSON() {
+    if (
+      !IsTemporalCalendar(this) &&
+      !IsTemporalDuration(this) &&
+      !IsTemporalInstant(this) &&
+      !IsTemporalDate(this) &&
+      !IsTemporalDateTime(this) &&
+      !IsTemporalMonthDay(this) &&
+      !IsTemporalTime(this) &&
+      !IsTemporalTimeZone(this) &&
+      !IsTemporalYearMonth(this) &&
+      !IsTemporalZonedDateTime(this)
+    ) {
+      throw new TypeError('invalid receiver');
+    }
+    const toString = GetMethod(this, 'toString');
+    if (!toString) throw new TypeError('toString was deleted or overridden');
+    return Call(toString, this, []);
+  }
+}
+DefineIntrinsic('TemporalToJSON', DummyToJSON.prototype.toJSON);
+
 const OFFSET = new RegExp(`^${PARSE.offset.source}$`);
 const OFFSET_WITH_PARTS = new RegExp(`^${PARSE.offsetWithParts.source}$`);
 

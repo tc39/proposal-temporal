@@ -2279,13 +2279,8 @@
     <emu-clause id="sec-temporal.calendar.prototype.tojson">
       <h1>Temporal.Calendar.prototype.toJSON ( )</h1>
       <p>
-        The `Temporal.Calendar.prototype.toJSON` method performs the following steps when called:
+        The value of the `Temporal.Calendar.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _calendar_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_calendar_, [[InitializedTemporalCalendar]]).
-        1. Return _calendar_.[[Identifier]].
-      </emu-alg>
     </emu-clause>
   </emu-clause>
 

@@ -277,13 +277,8 @@
     <emu-clause id="sec-temporal.instant.prototype.tojson">
       <h1>Temporal.Instant.prototype.toJSON ( )</h1>
       <p>
-        This method performs the following steps when called:
+        The value of the `Temporal.Instant.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _instant_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Return ? TemporalInstantToString(_instant_, *undefined*, *"auto"*).
-      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.instant.prototype.valueof">

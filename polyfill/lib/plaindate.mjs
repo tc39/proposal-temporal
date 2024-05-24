@@ -144,10 +144,6 @@ export class PlainDate {
     const showCalendar = ES.GetTemporalShowCalendarNameOption(options);
     return ES.TemporalDateToString(this, showCalendar);
   }
-  toJSON() {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return ES.TemporalDateToString(this);
-  }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
@@ -261,6 +257,12 @@ export class PlainDate {
 
 MakeIntrinsicClass(PlainDate, 'Temporal.PlainDate');
 Object.defineProperties(PlainDate.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  },
   valueOf: {
     enumerable: false,
     writable: true,

@@ -154,10 +154,6 @@ export class TimeZone {
     if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
     return GetSlot(this, TIMEZONE_ID);
   }
-  toJSON() {
-    if (!ES.IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-    return GetSlot(this, TIMEZONE_ID);
-  }
   static from(item) {
     const timeZoneSlotValue = ES.ToTemporalTimeZoneSlotValue(item);
     return ES.ToTemporalTimeZoneObject(timeZoneSlotValue);
@@ -165,5 +161,13 @@ export class TimeZone {
 }
 
 MakeIntrinsicClass(TimeZone, 'Temporal.TimeZone');
+Object.defineProperties(TimeZone.prototype, {
+  toJSON: {
+    enumerable: false,
+    writable: true,
+    configurable: true,
+    value: GetIntrinsic('%TemporalToJSON%')
+  }
+});
 DefineIntrinsic('Temporal.TimeZone.prototype.getOffsetNanosecondsFor', TimeZone.prototype.getOffsetNanosecondsFor);
 DefineIntrinsic('Temporal.TimeZone.prototype.getPossibleInstantsFor', TimeZone.prototype.getPossibleInstantsFor);

@@ -593,13 +593,8 @@
     <emu-clause id="sec-temporal.plaindatetime.prototype.tojson">
       <h1>Temporal.PlainDateTime.prototype.toJSON ( )</h1>
       <p>
-        This method performs the following steps when called:
+        The value of the `Temporal.PlainDateTime.prototype.toJSON` property is the function object %TemporalToJSON%.
       </p>
-      <emu-alg>
-        1. Let _dateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _dateTime_.[[Calendar]], *"auto"*, *"auto"*).
-      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.valueof">
