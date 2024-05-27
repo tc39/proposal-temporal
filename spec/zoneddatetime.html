@@ -888,37 +888,6 @@
         1. Return ! CreateTemporalDateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _zonedDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
-
-    <emu-clause id="sec-temporal.zoneddatetime.prototype.getisofields">
-      <h1>Temporal.ZonedDateTime.prototype.getISOFields ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _zonedDateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Let _epochNs_ be _zonedDateTime_.[[Nanoseconds]].
-        1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
-        1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-        1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _epochNs_).
-        1. Let _dateTime_ be GetISODateTimeFor(_timeZone_, _epochNs_).
-        1. Let _offset_ be FormatUTCOffsetNanoseconds(_offsetNanoseconds_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _calendar_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_dateTime_.[[Day]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_dateTime_.[[Hour]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMicrosecond"*, 𝔽(_dateTime_.[[Microsecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMillisecond"*, 𝔽(_dateTime_.[[Millisecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMinute"*, 𝔽(_dateTime_.[[Minute]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_dateTime_.[[Month]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoNanosecond"*, 𝔽(_dateTime_.[[Nanosecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoSecond"*, 𝔽(_dateTime_.[[Second]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, 𝔽(_dateTime_.[[Year]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"offset"*, _offset_).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"timeZone"*, _timeZone_).
-        1. Return _fields_.
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-zoneddatetime-instances">

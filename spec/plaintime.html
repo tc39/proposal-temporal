@@ -321,25 +321,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.plaintime.prototype.getisofields">
-      <h1>Temporal.PlainTime.prototype.getISOFields ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_temporalTime_.[[ISOHour]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMicrosecond"*, 𝔽(_temporalTime_.[[ISOMicrosecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMillisecond"*, 𝔽(_temporalTime_.[[ISOMillisecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMinute"*, 𝔽(_temporalTime_.[[ISOMinute]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoNanosecond"*, 𝔽(_temporalTime_.[[ISONanosecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoSecond"*, 𝔽(_temporalTime_.[[ISOSecond]])).
-        1. Return _fields_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.plaintime.prototype.tostring">
       <h1>Temporal.PlainTime.prototype.toString ( [ _options_ ] )</h1>
       <p>
