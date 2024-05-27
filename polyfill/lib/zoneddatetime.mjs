@@ -575,26 +575,6 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
     return dateTime(this);
   }
-  getISOFields() {
-    if (!ES.IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-    const timeZone = GetSlot(this, TIME_ZONE);
-    const offsetNanoseconds = ES.GetOffsetNanosecondsFor(timeZone, GetSlot(this, INSTANT));
-    const dt = ES.GetPlainDateTimeFor(timeZone, GetSlot(this, INSTANT), GetSlot(this, CALENDAR), offsetNanoseconds);
-    return {
-      calendar: GetSlot(this, CALENDAR),
-      isoDay: GetSlot(dt, ISO_DAY),
-      isoHour: GetSlot(dt, ISO_HOUR),
-      isoMicrosecond: GetSlot(dt, ISO_MICROSECOND),
-      isoMillisecond: GetSlot(dt, ISO_MILLISECOND),
-      isoMinute: GetSlot(dt, ISO_MINUTE),
-      isoMonth: GetSlot(dt, ISO_MONTH),
-      isoNanosecond: GetSlot(dt, ISO_NANOSECOND),
-      isoSecond: GetSlot(dt, ISO_SECOND),
-      isoYear: GetSlot(dt, ISO_YEAR),
-      offset: ES.FormatUTCOffsetNanoseconds(offsetNanoseconds),
-      timeZone: timeZone
-    };
-  }
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);

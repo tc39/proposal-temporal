@@ -229,15 +229,6 @@ export class PlainDate {
     const fields = ES.PrepareCalendarFields(calendar, this, ['day', 'monthCode'], [], []);
     return ES.CalendarMonthDayFromFields(calendar, fields);
   }
-  getISOFields() {
-    if (!ES.IsTemporalDate(this)) throw new TypeError('invalid receiver');
-    return {
-      calendar: GetSlot(this, CALENDAR),
-      isoDay: GetSlot(this, ISO_DAY),
-      isoMonth: GetSlot(this, ISO_MONTH),
-      isoYear: GetSlot(this, ISO_YEAR)
-    };
-  }
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);
