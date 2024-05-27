@@ -568,17 +568,3 @@ JSON.parse(str, reviver);
 This method overrides `Object.prototype.valueOf()` and always throws an exception.
 This is because it's not possible to compare `Temporal.PlainTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.PlainTime.compare()` for this, or `time.equals()` for equality.
-
-### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number }
-
-**Returns:** a plain object with properties expressing `time` in the ISO 8601 calendar.
-
-This method is present for forward compatibility with custom calendars.
-
-Usage example:
-
-```javascript
-time = Temporal.PlainTime.from('03:20:00');
-f = time.getISOFields();
-f.isoHour; // => 3
-```

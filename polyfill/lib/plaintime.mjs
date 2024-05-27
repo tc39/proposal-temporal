@@ -214,18 +214,6 @@ export class PlainTime {
     ES.ValueOfThrows('PlainTime');
   }
 
-  getISOFields() {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return {
-      isoHour: GetSlot(this, ISO_HOUR),
-      isoMicrosecond: GetSlot(this, ISO_MICROSECOND),
-      isoMillisecond: GetSlot(this, ISO_MILLISECOND),
-      isoMinute: GetSlot(this, ISO_MINUTE),
-      isoNanosecond: GetSlot(this, ISO_NANOSECOND),
-      isoSecond: GetSlot(this, ISO_SECOND)
-    };
-  }
-
   static from(item, options = undefined) {
     if (ES.IsTemporalTime(item)) {
       ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));

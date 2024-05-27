@@ -63,8 +63,8 @@ class ExpandedPlainDate extends Temporal.PlainDate {
 
   static _convert(plainDate, expandedYear) {
     if (plainDate instanceof ExpandedPlainDate) return plainDate;
-    const f = plainDate.getISOFields();
-    return new ExpandedPlainDate(expandedYear, f.isoMonth, f.isoDay);
+    const iso = plainDate.withCalendar('iso8601');
+    return new ExpandedPlainDate(expandedYear, iso.month, iso.day);
   }
 
   static from(item) {
@@ -92,9 +92,9 @@ class ExpandedPlainDate extends Temporal.PlainDate {
 
   toString() {
     const year = formatExpandedYear(this.year);
-    const { isoMonth, isoDay } = this.getISOFields();
-    const month = `${isoMonth}`.padStart(2, '0');
-    const day = `${isoDay}`.padStart(2, '0');
+    const iso = this.withCalendar('iso8601');
+    const month = `${iso.month}`.padStart(2, '0');
+    const day = `${iso.day}`.padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
 }
@@ -109,17 +109,17 @@ class ExpandedPlainDateTime extends Temporal.PlainDateTime {
 
   static _convert(plainDateTime, expandedYear) {
     if (plainDateTime instanceof ExpandedPlainDateTime) return plainDateTime;
-    const f = plainDateTime.getISOFields();
+    const iso = plainDateTime.withCalendar('iso8601');
     return new ExpandedPlainDateTime(
       expandedYear,
-      f.isoMonth,
-      f.isoDay,
-      f.isoHour,
-      f.isoMinute,
-      f.isoSecond,
-      f.isoMillisecond,
-      f.isoMicrosecond,
-      f.isoNanosecond
+      iso.month,
+      iso.day,
+      plainDateTime.hour,
+      plainDateTime.minute,
+      plainDateTime.second,
+      plainDateTime.millisecond,
+      plainDateTime.microsecond,
+      plainDateTime.nanosecond
     );
   }
 

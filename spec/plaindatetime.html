@@ -686,29 +686,6 @@
         1. Return ! CreateTemporalTime(_dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
       </emu-alg>
     </emu-clause>
-
-    <emu-clause id="sec-temporal.plaindatetime.prototype.getisofields">
-      <h1>Temporal.PlainDateTime.prototype.getISOFields ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _dateTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _dateTime_.[[Calendar]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_dateTime_.[[ISODay]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoHour"*, 𝔽(_dateTime_.[[ISOHour]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMicrosecond"*, 𝔽(_dateTime_.[[ISOMicrosecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMillisecond"*, 𝔽(_dateTime_.[[ISOMillisecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMinute"*, 𝔽(_dateTime_.[[ISOMinute]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_dateTime_.[[ISOMonth]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoNanosecond"*, 𝔽(_dateTime_.[[ISONanosecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoSecond"*, 𝔽(_dateTime_.[[ISOSecond]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, 𝔽(_dateTime_.[[ISOYear]])).
-        1. Return _fields_.
-      </emu-alg>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-temporal-plaindatetime-instances">
