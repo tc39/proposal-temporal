@@ -745,29 +745,3 @@ date = Temporal.PlainDate.from('2006-08-24');
 date.toPlainYearMonth(); // => 2006-08
 date.toPlainMonthDay(); // => 08-24
 ```
-
-### date.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
-
-**Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `date` is reckoned.
-
-This method is mainly useful if you are implementing a custom calendar.
-Most code will not need to use it.
-
-Usage example:
-
-```javascript
-date = Temporal.PlainDate.from('2006-08-24');
-f = date.getISOFields();
-f.isoDay; // => 24
-// Fields correspond exactly to constructor arguments:
-date2 = new Temporal.PlainDate(f.isoYear, f.isoMonth, f.isoDay, f.calendar);
-date.equals(date2); // => true
-
-// Date in other calendar
-date = date.withCalendar('hebrew');
-date.day; // => 30
-date.getISOFields().isoDay; // => 24
-
-// Most likely what you need is this:
-date.withCalendar('iso8601').day; // => 24
-```

@@ -200,18 +200,6 @@ export class PlainTime {
     return new DateTimeFormat(locales, options).format(this);
   }
 
-  getISOFields() {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return {
-      isoHour: GetSlot(this, ISO_HOUR),
-      isoMicrosecond: GetSlot(this, ISO_MICROSECOND),
-      isoMillisecond: GetSlot(this, ISO_MILLISECOND),
-      isoMinute: GetSlot(this, ISO_MINUTE),
-      isoNanosecond: GetSlot(this, ISO_NANOSECOND),
-      isoSecond: GetSlot(this, ISO_SECOND)
-    };
-  }
-
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);
     const overflow = ES.GetTemporalOverflowOption(options);

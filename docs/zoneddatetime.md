@@ -1446,24 +1446,3 @@ zdt.toPlainTime(); // => 03:24:30
 zdt.toPlainDate().toPlainYearMonth(); // => 1995-12
 zdt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
-
-### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: string | object, calendar: string | object }
-
-**Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `offset` property, and the calendar and time zone (which are usually strings, but may be objects) in which `zonedDateTime` is reckoned.
-
-This is an advanced method that's mainly useful if you are implementing a custom calendar.
-Most developers will not need to use it.
-
-Usage example:
-
-```javascript
-// get a Temporal.ZonedDateTime in `hebrew` calendar system
-zdt = Temporal.ZonedDateTime.from('2019-02-23T03:24:30.000003500[Europe/Rome]').withCalendar('hebrew');
-
-// Month in Hebrew calendar is month 6 of leap year 5779
-zdt.month; // => 6
-zdt.getISOFields().isoMonth; // => 2
-
-// Instead of calling getISOFields, the pattern below is recommended for most use cases
-zdt.withCalendar('iso8601').month; // => 2
-```

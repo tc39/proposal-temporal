@@ -115,15 +115,6 @@ export class PlainYearMonth {
     mergedFields = ES.PrepareTemporalFields(mergedFields, concatenatedFieldNames, [], [], 'ignore');
     return ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');
   }
-  getISOFields() {
-    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return {
-      calendar: GetSlot(this, CALENDAR),
-      isoDay: GetSlot(this, ISO_DAY),
-      isoMonth: GetSlot(this, ISO_MONTH),
-      isoYear: GetSlot(this, ISO_YEAR)
-    };
-  }
 
   static from(item, options = undefined) {
     options = ES.GetOptionsObject(options);

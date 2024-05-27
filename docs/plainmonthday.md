@@ -388,19 +388,3 @@ md = Temporal.PlainMonthDay.from({
 
 date = md.toPlainDate({ era: 'reiwa', eraYear: 2 }); // => 2020-01-01[u-ca=japanese]
 ```
-
-### monthDay.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
-
-**Returns:** a plain object with properties expressing `monthDay` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `monthDay` is reckoned.
-
-This method is mainly useful if you are implementing a custom calendar.
-Most code will not need to use it.
-
-The value of the `isoYear` property will be equal to the `referenceISOYear` constructor argument passed when `monthDay` was constructed.
-
-Usage example:
-
-```javascript
-md = Temporal.PlainMonthDay.from('08-24');
-md.getISOFields().isoDay; // => 24
-```

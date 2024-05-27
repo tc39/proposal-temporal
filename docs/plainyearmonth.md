@@ -576,19 +576,3 @@ Usage example:
 ym = Temporal.PlainYearMonth.from('2019-06');
 ym.toPlainDate({ day: 24 }); // => 2019-06-24
 ```
-
-### yearMonth.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
-
-**Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) that `yearMonth` is reckoned in.
-
-This method is mainly useful if you are implementing a custom calendar.
-Most code will not need to use it.
-
-The value of the `isoDay` property will be equal to the `referenceISODay` constructor argument passed when `yearMonth` was constructed.
-
-Usage example:
-
-```javascript
-ym = Temporal.PlainYearMonth.from('2019-06');
-ym.getISOFields().isoYear; // => 2019
-```
