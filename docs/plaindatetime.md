@@ -1003,32 +1003,3 @@ dt.toPlainTime(); // => 03:24:30.0000035
 dt.toPlainDate().toPlainYearMonth(); // => 1995-12
 dt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
-
-### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: string | object }
-
-**Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `datetime` is reckoned.
-
-This method is mainly useful if you are implementing a custom calendar.
-Most code will not need to use it.
-
-Usage example:
-
-<!-- prettier-ignore-start -->
-```javascript
-dt = Temporal.PlainDateTime.from('1995-12-07T03:24:30.000003500');
-f = dt.getISOFields();
-f.isoDay; // => 7
-// Fields correspond exactly to constructor arguments:
-dt2 = new Temporal.PlainDateTime(f.isoYear, f.isoMonth, f.isoDay, f.isoHour, f.isoMinute,
-  f.isoSecond, f.isoMillisecond, f.isoMicrosecond, f.isoNanosecond, f.calendar);
-dt.equals(dt2); // => true
-
-// Date in other calendar
-dt = dt.withCalendar('hebrew');
-dt.day; // => 14
-dt.getISOFields().isoDay; // => 7
-
-// Most likely what you need is this:
-dt.withCalendar('iso8601').day; // => 7
-```
-<!-- prettier-ignore-end -->
