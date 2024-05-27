@@ -137,15 +137,6 @@ export class PlainYearMonth {
     const { year, month, day } = ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');
     return ES.CreateTemporalDate(year, month, day, calendar);
   }
-  getISOFields() {
-    if (!ES.IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-    return {
-      calendar: GetSlot(this, CALENDAR),
-      isoDay: GetSlot(this, ISO_DAY),
-      isoMonth: GetSlot(this, ISO_MONTH),
-      isoYear: GetSlot(this, ISO_YEAR)
-    };
-  }
 
   static from(item, options = undefined) {
     if (ES.IsTemporalYearMonth(item)) {

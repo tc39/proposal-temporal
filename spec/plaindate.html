@@ -375,23 +375,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal.plaindate.prototype.getisofields">
-      <h1>Temporal.PlainDate.prototype.getISOFields ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
-      <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _fields_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"calendar"*, _temporalDate_.[[Calendar]]).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoDay"*, 𝔽(_temporalDate_.[[ISODay]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoMonth"*, 𝔽(_temporalDate_.[[ISOMonth]])).
-        1. Perform ! CreateDataPropertyOrThrow(_fields_, *"isoYear"*, 𝔽(_temporalDate_.[[ISOYear]])).
-        1. Return _fields_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal.plaindate.prototype.add">
       <h1>Temporal.PlainDate.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>
