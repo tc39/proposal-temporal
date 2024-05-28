@@ -27,15 +27,11 @@ The `Temporal.ZonedDateTime` API is a superset of `Temporal.PlainDateTime`, whic
 ## Time zone identifiers
 
 Time zones in `Temporal` are represented by string identifiers from the IANA Time Zone Database (like `Asia/Tokyo`, `America/Los_Angeles`, or `UTC`) or by a fixed UTC offset like `+05:30`.
-
-A string identifier can be used in place of a `Temporal.TimeZone` object when passing parameters to ECMAScript methods.
-Furthermore, string identifiers allow ECMAScript implementations to perform optimizations that are not possible when passing time zone objects.
-Therefore, it's recommended to always pass string identifiers instead of time zone objects whenever this is convenient.
 For example:
 
 ```javascript
 inBerlin = Temporal.ZonedDateTime.from('2022-01-28T19:53+01:00[Europe/Berlin]');
-inTokyo = inBerlin.withTimeZone('Asia/Tokyo'); // May be faster and/or use less RAM
+inTokyo = inBerlin.withTimeZone('Asia/Tokyo');
 ```
 
 ## Handling changes to the IANA Time Zone Database
