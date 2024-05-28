@@ -113,10 +113,11 @@ dateTime = Temporal.PlainDateTime.from('2019-12-17T07:48');
 zdt = dateTime.toZonedDateTime('Asia/Tokyo');
   // => 2019-12-17T07:48:00+09:00[Asia/Tokyo]
 
-// Get the exact time in milliseconds or nanoseconds since the UNIX epoch.
+// Get the exact time in seconds, milliseconds or nanoseconds since the UNIX epoch.
 inst = zdt.toInstant();
 epochNano = inst.epochNanoseconds; // => 1576536480000000000n
 epochMilli = inst.epochMilliseconds; // => 1576536480000
+epochSecs = Math.floor(inst.epochMilliseconds / 1000); // => 1576536480
 ```
 <!-- prettier-ignore-end -->
 

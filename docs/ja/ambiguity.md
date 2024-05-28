@@ -101,7 +101,7 @@ zdt = dateTime.toZonedDateTime('Asia/Tokyo');
 inst = zdt.toInstant();
 epochNano = inst.epochNanoseconds; // => 1576536480000000000n
 epochMilli = inst.epochMilliseconds; // => 1576536480000
-epochSecs = inst.epochSeconds; // => 1576536480
+epochSecs = Math.floor(inst.epochMilliseconds / 1000); // => 1576536480
 ```
 <!-- prettier-ignore-end -->
 
