@@ -25,8 +25,8 @@ However the same calendar date and wall-clock time India would have an offset of
 
 Temporal has two types that store exact time: `Temporal.Instant` (which only stores exact time and no other information) and `Temporal.ZonedDateTime` which stores exact time, a time zone, and a calendar system
 
-Another way to represent exact time is using a single number representing the amount of time after or before [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (midnight UTC on January 1, 1970).
-For example, `Temporal.Instant` (an exact-time type) can be constructed using only a `BigInt` value of nanoseconds since epoch.
+Another way to represent exact time is using a single number representing temporal distance from the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) of January 1, 1970 at 00:00 UTC.
+For example, `Temporal.Instant` (an exact-time type) can be constructed using only a `BigInt` value of nanoseconds since epoch, ignoring leap seconds.
 
 Another term developers often encounter is "timestamp".
 This most often refers to an exact time represented by the number of seconds since Unix epoch.
