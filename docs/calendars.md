@@ -51,7 +51,7 @@ The following "invariants" (statements that are always true) hold for all built-
 Here are best practices for writing code that will work regardless of the calendar used:
 
 - Validate or coerce the calendar of all external input.
-  If your code receives a Temporal object from an external source, you should check that its calendar is what you expect, and if you are not prepared to handle other calendars, convert it to the ISO 8601 calendar using `withCalendar('iso8601')`.
+  If your code receives a Temporal object from an external source, you should check that its calendar is what you expect, and if you are not prepared to handle other calendars, convert it to the ISO 8601 calendar using `obj.withCalendar('iso8601')`.
   Otherwise, you may end up with unexpected behavior in your app or introduce security or performance issues by introducing an unexpected calendar.
 - Use `compare` methods (e.g. `Temporal.PlainDate.compare(date1, '2000-01-01')`) instead of manually comparing individual properties (e.g. `date.year > 2000`) whose meaning may vary across calendars.
 - Never compare field values in different calendars.
@@ -60,20 +60,20 @@ Here are best practices for writing code that will work regardless of the calend
 - When comparing dates for equality that might be in different calendars, convert them both to the same calendar using `withCalendar`.
   The same ISO date in different calendars will return `false` from the `equals` method because the calendars are not equal.
 - When looping through all months in a year, use `monthsInYear` as the upper bound instead of assuming that every year has 12 months.
-- Don't assume that `date.month===12` is the last month of the year.
-  Instead, use `date.month===date.monthsInYear`.
+- Don't assume that `date.month === 12` is the last month of the year.
+  Instead, use `date.month === date.monthsInYear`.
 - Use `until` or `since` to count years, months, or days between dates.
-  Manually calculating differences (e.g. `Math.floor(months/12)`) will fail for some calendars.
+  Manually calculating differences (e.g. `Math.floor(months / 12)`) will fail for some calendars.
 - Use `daysInMonth` instead of assuming that each month has the same number of days in every year.
 - Days in a month are not always continuous.
   There can be gaps due to political changes in calendars.
-  For this reason, instead of looping through a month from 1 to `date.daysInMonth`, it's better to start a loop with the first day of the month (`.with({day: 1})`) and `add` one day at a time until the `month` property returns a different value.
+  For this reason, instead of looping through a month from 1 to `date.daysInMonth`, it's better to start a loop with the first day of the month (`date.with({day: 1})`) and `add` one day at a time until the `month` property returns a different value.
 - Use `daysInYear` instead of assuming that every year has 365 days (366 in a leap year).
-- Don't assume that `inLeapYear===true` implies that the year is one day longer than a regular year.
+- Don't assume that `inLeapYear === true` implies that the year is one day longer than a regular year.
   Some calendars add leap months, making the year 29 or 30 days longer than a normal year!
 - Use `toLocaleString` to format dates to users.
   DO NOT localize manually with code like `${month}/${day}/${year}`.
-- Don't assume that `month` has the same name in every year.\
+- Don't assume that `month` has the same name in every year.
   Some calendars like Hebrew or Chinese have leap months that cause months to vary across years.
 - Use the correct property to refer to months.
   If you care about the order of the month in a particular year (e.g. when looping through all the months in a year) use `month`.

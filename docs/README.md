@@ -198,7 +198,6 @@ Temporal supports multiple calendar systems.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.
 
 Dates have associated calendar IDs, to perform calendar-related math.
-Under the hood, this math is done by methods on the calendars.
 
 See [Calendars in Temporal](./calendars.md) for detailed documentation.
 
