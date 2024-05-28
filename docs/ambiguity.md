@@ -31,7 +31,7 @@ For example, `Temporal.Instant` (an exact-time type) can be constructed using on
 Another term developers often encounter is "timestamp".
 This most often refers to an exact time represented by the number of seconds since Unix epoch.
 Temporal avoids using this terminology, however, because of historical ambiguity surrounding the term "timestamp".
-For example, many databases have a type called `TIMESTAMP`, but its meaning varies: in [MySQL](https://dev.mysql.com/doc/refman/8.0/en/datetime.html), it is an exact time; in [Oracle Database](https://docs.oracle.com/cd/B19306_01/server.102/b14225/ch4datetime.htm#i1006050), it is the number of seconds since the *wall-clock time* January 1, 1970 (a quantity one might call a "local timestamp"); and in [Microsoft SQL Server](https://docs.microsoft.com/en-us/answers/questions/238819/purpose-to-use-timestamp-datatype-in-sql-server.html), it is a monotonically increasing value unrelated to date and time.
+For example, many databases have a type called `TIMESTAMP`, but its meaning varies: in [MySQL](https://dev.mysql.com/doc/refman/8.0/en/datetime.html), it is an exact time; in [Oracle Database](https://docs.oracle.com/cd/B19306_01/server.102/b14225/ch4datetime.htm#i1006050), it is the number of seconds since the *wall-clock time* 00:00 on January 1, 1970 (a quantity one might call a "local timestamp"); and in [Microsoft SQL Server](https://docs.microsoft.com/en-us/answers/questions/238819/purpose-to-use-timestamp-datatype-in-sql-server.html), it is a monotonically increasing value unrelated to date and time.
 
 ## Understanding Time Zones, Offset Changes, and DST
 
