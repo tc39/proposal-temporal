@@ -406,9 +406,9 @@ dt.nanosecond;  // => 500
 
 ### zonedDateTime.**epochNanoseconds**: bigint
 
-The above two read-only properties give the integer number of milliseconds or nanoseconds between `zonedDateTime` and 00:00 UTC on 1970-01-01, otherwise known as the [UNIX Epoch](https://en.wikipedia.org/wiki/Unix_time).
+The above two read-only properties give the integer number of milliseconds or nanoseconds (respectively) from the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) of January 1, 1970 at 00:00 UTC until `zonedDateTime`, ignoring leap seconds.
 
-These properties are equivalent to `zonedDateTime.toInstant().epochMilliseconds`, and `zonedDateTime.toInstant().epochNanoseconds`, respectively.
+These properties are equivalent to `zonedDateTime.toInstant().epochMilliseconds` and `zonedDateTime.toInstant().epochNanoseconds`, respectively.
 Any fractional milliseconds are truncated towards the beginning of time.
 The time zone is irrelevant to these properties, because there is only one epoch, not one per time zone.
 
