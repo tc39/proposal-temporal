@@ -1227,8 +1227,6 @@ The time zones of _zonedDateTime_ and _other_ are considered equivalent by the f
   If any of the following conditions are true, then the time zones are equivalent:
   - Both string identifiers are Zone or Link names in the [IANA Time Zone Database](https://www.iana.org/time-zones), and they resolve to the same Zone name.
     This resolution is case-insensitive.
-  - Both string identifiers are custom time zone identifiers that are equal according to `===`.
-    This comparison is case-sensitive and does not normalize different Unicode characters.
   - Both identifiers are numeric offset time zone identifiers like "+05:30", and they represent the same offset.
 - Otherwise, the time zones are not equivalent.
 
