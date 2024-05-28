@@ -530,10 +530,10 @@ dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.0000035
 
 **Parameters:**
 
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to add, or subtract if negative.
-- `options` (optional object): An object with properties representing options for the addition or subtraction.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
+- `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
-  - `overflow` (string): How to deal with additions or subtractions that result in out-of-range values.
+  - `overflow` (string): How to deal with result values that are out-of-range.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 

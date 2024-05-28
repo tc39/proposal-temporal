@@ -241,7 +241,7 @@ time.add({ hours: 1 }).with({
 
 **Parameters:**
 
-- `duration` (`Temporal.Duration` or value convertible to one): The duration to add, or subtract if negative.
+- `duration` (`Temporal.Duration` or value convertible to one): The duration to add.
 
 **Returns:** a new `Temporal.PlainTime` object which is the time indicated by `time` plus `duration`.
 

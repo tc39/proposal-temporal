@@ -875,7 +875,7 @@ zdt.withCalendar('gregory').eraYear; // => 1995
 
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object which may have some or all of the following properties:
-  - `overflow` (string): How to deal with additions or subtractions that result in out-of-range values.
+  - `overflow` (string): How to deal with result values that are out-of-range.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
