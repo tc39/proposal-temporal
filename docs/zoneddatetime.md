@@ -56,9 +56,8 @@ Time zones that resolve to different Zones in the IANA Time Zone Database are no
 Similarly, a numeric-offset identifier is never equivalent to an IANA time zone identifier, even if they always represent the same offset.
 
 In any set of equivalent identifiers, only one identifier will be considered canonical.
-To avoid redundancy, only canonical identifiers are returned by `Intl.supportedValuesOf('timeZone')`.
-Furthermore, only canonical identifiers are output methods that returns the system's current time zone, such as `Temporal.Now.timeZoneId()`.
-Other than those few cases, canonicalization is not observable in ECMAScript code, which ensures that changes to the IANA Time Zone Database will have minimal impact on the behavior of existing applications.
+To avoid redundancy, the output of `Intl.supportedValuesOf('timeZone')` and `Temporal.Now.timeZoneId()` are limited to canonical identifiers.
+Other than those cases, canonicalization is not observable in ECMAScript code, which ensures that changes to the IANA Time Zone Database will have minimal impact on the behavior of existing applications.
 
 ## Variation between ECMAScript and other consumers of the IANA Time Zone Database
 
