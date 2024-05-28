@@ -444,7 +444,6 @@ epochMicros = ns / 1000n + ((ns % 1000n) < 0n ? -1n : 0n);
 ### zonedDateTime.**calendarId** : object
 
 The `calendarId` read-only property gives the identifier of the calendar used to calculate date/time field values.
-If the date was created with a custom calendar object, this gives the `id` property of that object.
 
 Calendar-sensitive values are used in most places, including:
 
@@ -464,7 +463,6 @@ Calendar-specific date/time values are NOT used in only a few places:
 ### zonedDateTime.**timeZoneId** : string
 
 The `timeZoneId` read-only property is the identifier of the persistent time zone of `zonedDateTime`.
-If `zonedDateTime` was created with a custom time zone object, this gives the `id` property of that object.
 
 By storing its time zone, `Temporal.ZonedDateTime` is able to use that time zone when deriving other values, e.g. to automatically perform DST adjustment when adding or subtracting time.
 
