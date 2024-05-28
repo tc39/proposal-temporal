@@ -142,10 +142,10 @@ instant === Temporal.Instant.from(instant); // => false
 
 **Returns:** a new `Temporal.Instant` object.
 
-This static method creates a new `Temporal.Instant` object with milliseconds precision.
-`epochMilliseconds` is the number of milliseconds between the Unix epoch (midnight UTC on January 1, 1970) and the desired exact time.
+This static method creates a new `Temporal.Instant` object with milliseconds precision (i.e., zero values in all units smaller than a millisecond).
+`epochMilliseconds` is the number of milliseconds from the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) of January 1, 1970 at 00:00 UTC until the desired exact time, ignoring leap seconds.
 
-The number of seconds since the Unix epoch is a common measure of exact time in many computer systems.
+The number of seconds or milliseconds since the Unix epoch is a common measure of exact time in many computer systems.
 Use this method if you need to interface with such a system.
 
 The number of milliseconds since the Unix epoch is also returned from the `getTime()` and `valueOf()` methods of legacy JavaScript `Date` objects, as well as `Date.now()`.
@@ -216,7 +216,7 @@ sorted.join(' ');
 
 ### instant.**epochMilliseconds** : number
 
-The value of this property is an integer number of milliseconds between the Unix epoch (midnight UTC on January 1, 1970) and `instant`.
+The value of this property is an integer number of milliseconds from the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) of January 1, 1970 at 00:00 UTC until `instant`, ignoring leap seconds.
 This number will be negative if `instant` is before 1970.
 The number of milliseconds is truncated towards the beginning of time.
 
