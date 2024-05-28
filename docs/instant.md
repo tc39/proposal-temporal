@@ -28,7 +28,7 @@ zdtLA.toPlainDate(); // => 2019-12-31
 ```
 <!-- prettier-ignore-end -->
 
-`Temporal.Instant` stores a count of integer nanoseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time): midnight UTC on January 1, 1970.
+`Temporal.Instant` stores an integer count of nanoseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) of January 1, 1970 at 00:00 UTC, ignoring leap seconds.
 For interoperability with `Date` and other APIs, `Temporal.Instant` also offers conversion properties and methods for seconds, milliseconds, or microseconds since epoch.
 A `Temporal.Instant` can also be created from an ISO 8601 / RFC 3339 string like `'2020-01-23T17:04:36.491865121-08:00'` or `'2020-01-24T01:04Z'`.
 
@@ -85,7 +85,7 @@ For discussion and code examples about picking the correct time zone, and also a
 
 Creates a new `Temporal.Instant` object that represents an exact time.
 
-`epochNanoseconds` is the number of nanoseconds (10<sup>&minus;9</sup> seconds) between the Unix epoch (midnight UTC on January 1, 1970) and the desired exact time.
+`epochNanoseconds` is the number of nanoseconds (10<sup>&minus;9</sup> seconds) from the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) of January 1, 1970 at 00:00 UTC until the desired exact time, ignoring leap seconds.
 
 Use this constructor directly if you know the precise number of nanoseconds already and have it in bigint form, for example from a database.
 Otherwise, `Temporal.Instant.from()`, which accepts more kinds of input, is probably more convenient.
