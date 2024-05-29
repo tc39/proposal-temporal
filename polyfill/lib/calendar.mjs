@@ -1322,6 +1322,14 @@ const helperIslamic = ObjectAssign({}, nonIsoHelperBase, {
   DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
   DAYS_PER_ISO_YEAR: 365.2425,
   constantEra: 'ah',
+  reviseIntlEra(calendarDate /*, isoDate*/) {
+    let { era, eraYear } = calendarDate;
+    // Chrome for Android as of v 142.0.6367.179 mishandled the era option in Intl.DateTimeFormat
+    // and returned 'bc' instead of 'ah'. This code corrects that.
+    // see https://issues.chromium.org/issues/40856332
+    if (era === 'before-christ' || era === 'bc' || era === 'b') era = 'ah';
+    return { era, eraYear };
+  },
   estimateIsoDate(calendarDate) {
     const { year } = this.adjustCalendarDate(calendarDate);
     return { year: MathFloor((year * this.DAYS_PER_ISLAMIC_YEAR) / this.DAYS_PER_ISO_YEAR) + 622, month: 1, day: 1 };
