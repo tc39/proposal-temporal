@@ -16157,6 +16157,15 @@
 	  DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
 	  DAYS_PER_ISO_YEAR: 365.2425,
 	  constantEra: 'ah',
+	  reviseIntlEra(calendarDate /*, isoDate*/) {
+	    // Chrome for Android as of v 142.0.6367.179 mishandled the era option in Intl.DateTimeFormat
+	    // and returned 'bc' instead of 'ah'. This code corrects that and any possible future errors.
+	    // see https://issues.chromium.org/issues/40856332
+	    return {
+	      ...calendarDate,
+	      era: 'ah'
+	    };
+	  },
 	  estimateIsoDate(calendarDate) {
 	    const {
 	      year
