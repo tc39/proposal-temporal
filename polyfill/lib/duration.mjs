@@ -365,7 +365,9 @@ export class Duration {
 
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         ES.DifferencePlainDateTimeWithRounding(
-          plainRelativeTo,
+          GetSlot(plainRelativeTo, ISO_YEAR),
+          GetSlot(plainRelativeTo, ISO_MONTH),
+          GetSlot(plainRelativeTo, ISO_DAY),
           0,
           0,
           0,
@@ -489,7 +491,9 @@ export class Duration {
       const targetDate = ES.AddDate(calendarRec, plainRelativeTo, dateDuration);
 
       const { total } = ES.DifferencePlainDateTimeWithRounding(
-        plainRelativeTo,
+        GetSlot(plainRelativeTo, ISO_YEAR),
+        GetSlot(plainRelativeTo, ISO_MONTH),
+        GetSlot(plainRelativeTo, ISO_DAY),
         0,
         0,
         0,
