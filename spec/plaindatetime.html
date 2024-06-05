@@ -1306,7 +1306,7 @@
         1. Let _dateDifference_ be ? DifferenceDate(_calendarRec_, _date1_, _date2_, _untilOptions_).
         1. Let _days_ be _dateDifference_.[[Days]].
         1. If _largestUnit_ is not _dateLargestUnit_, then
-          1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_dateDifference_.[[Days]], _timeDuration_).
+          1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
           1. Set _days_ to 0.
         1. Return ? CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _days_, _timeDuration_).
       </emu-alg>
