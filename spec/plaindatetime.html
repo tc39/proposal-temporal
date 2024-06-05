@@ -1315,7 +1315,9 @@
     <emu-clause id="sec-temporal-differenceplaindatetimewithrounding" type="abstract operation">
       <h1>
         DifferencePlainDateTimeWithRounding (
-          _plainDate1_: a Temporal.PlainDate,
+          _y1_: an integer,
+          _mon1_: an integer,
+          _d1_: an integer,
           _h1_: an integer in the inclusive interval from 0 to 23,
           _min1_: an integer in the inclusive interval from 0 to 59,
           _s1_: an integer in the inclusive interval from 0 to 59,
@@ -1344,10 +1346,8 @@
         <dd></dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidISODate(_y1_, _mon1_, _d1_) is *true*.
         1. Assert: IsValidISODate(_y2_, _mon2_, _d2_) is *true*.
-        1. Let _y1_ be _plainDate1_.[[ISOYear]].
-        1. Let _mon1_ be _plainDate1_.[[ISOMonth]].
-        1. Let _d1_ be _plainDate1_.[[ISODay]].
         1. If CompareISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_) = 0, then
           1. Let _durationRecord_ be CreateDurationRecord(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: 0 }.
@@ -1388,9 +1388,8 @@
           1. Set _datePartsIdentical_ to *true*.
         1. If _datePartsIdentical_ is *true*, and _dateTime_.[[ISOHour]] = _other_.[[ISOHour]], and _dateTime_.[[ISOMinute]] = _other_.[[ISOMinute]], and _dateTime_.[[ISOSecond]] = _other_.[[ISOSecond]], and _dateTime_.[[ISOMillisecond]] = _other_.[[ISOMillisecond]], and _dateTime_.[[ISOMicrosecond]] = _other_.[[ISOMicrosecond]], and _dateTime_.[[ISONanosecond]] = _other_.[[ISONanosecond]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _plainDate_ be ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
         1. Let _calendarRec_ be ? CreateCalendarMethodsRecord(_dateTime_.[[Calendar]], « ~date-add~, ~date-until~ »).
-        1. Let _resultRecord_ be ? DifferencePlainDateTimeWithRounding(_plainDate_, _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]], _calendarRec_, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _resolvedOptions_).
+        1. Let _resultRecord_ be ? DifferencePlainDateTimeWithRounding(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]], _calendarRec_, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]], _resolvedOptions_).
         1. Let _result_ be _resultRecord_.[[DurationRecord]].
         1. Return ? CreateTemporalDuration(_sign_ &times; _result_.[[Years]], _sign_ &times; _result_.[[Months]], _sign_ &times; _result_.[[Weeks]], _sign_ &times; _result_.[[Days]], _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]]).
       </emu-alg>
