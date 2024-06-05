@@ -1100,15 +1100,15 @@
     <emu-alg>
       1. Let _quotient_ be _x_ / _increment_.
       1. If _quotient_ &lt; 0, then
-        1. Let _isNegative_ be *true*.
+        1. Let _isNegative_ be ~negative~.
         1. Set _quotient_ to -_quotient_.
       1. Else,
-        1. Let _isNegative_ be *false*.
+        1. Let _isNegative_ be ~positive~.
       1. Let _unsignedRoundingMode_ be GetUnsignedRoundingMode(_roundingMode_, _isNegative_).
       1. Let _r1_ be the largest integer such that _r1_ ≤ _quotient_.
       1. Let _r2_ be the smallest integer such that _r2_ &gt; _quotient_.
       1. Let _rounded_ be ApplyUnsignedRoundingMode(_quotient_, _r1_, _r2_, _unsignedRoundingMode_).
-      1. If _isNegative_ is *true*, set _rounded_ to -_rounded_.
+      1. If _isNegative_ is ~negative~, set _rounded_ to -_rounded_.
       1. Return _rounded_ &times; _increment_.
     </emu-alg>
   </emu-clause>
