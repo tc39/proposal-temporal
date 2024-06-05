@@ -398,7 +398,7 @@ export class Duration {
         throw new RangeError(`a starting point is required for ${largestUnit}s balancing`);
       }
       if (ES.IsCalendarUnit(smallestUnit)) {
-        throw new RangeError(`a starting point is required for ${smallestUnit}s rounding`);
+        throw new Error('assertion failed: smallestUnit was larger than largestUnit');
       }
       ({ days, norm } = ES.RoundTimeDuration(days, norm, roundingIncrement, smallestUnit, roundingMode));
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceTimeDuration(
