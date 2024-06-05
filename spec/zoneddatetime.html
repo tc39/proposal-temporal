@@ -1289,7 +1289,7 @@
           _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
           _showTimeZone_: one of *"auto"*, *"never"*, or *"critical"*,
           _showOffset_: one of *"auto"* or *"never"*,
-          optional _increment_: an integer,
+          optional _increment_: a positive integer,
           optional _unit_: one of *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
           optional _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): either a normal completion containing a String or a throw completion
@@ -1476,7 +1476,7 @@
           _precalculatedPlainDateTime_: a Temporal.PlainDateTime,
           _resolvedOptions_: an Object with [[Prototype]] slot *null*,
           _largestUnit_: a String,
-          _roundingIncrement_: an integer,
+          _roundingIncrement_: a positive integer,
           _smallestUnit_: a String,
           _roundingMode_: a String,
         ): either a normal completion containing a Record with fields [[DurationRecord]] (a Duration Record) and [[Total]] (a mathematical value), or a throw completion

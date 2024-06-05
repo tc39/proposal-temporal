@@ -1510,7 +1510,7 @@
       <h1>
         RoundNormalizedTimeDurationToIncrement (
           _d_: a Normalized Time Duration Record,
-          _increment_: an integer,
+          _increment_: a positive integer,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): either a normal completion containing a Normalized Time Duration Record or a throw completion
       </h1>
@@ -1729,7 +1729,7 @@
         RoundTimeDuration (
           _days_: an integer,
           _norm_: a Normalized Time Duration Record,
-          _increment_: an integer,
+          _increment_: a positive integer,
           _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): either a normal completion containing a Record with fields [[NormalizedDuration]] (a Normalized Duration Record) and [[Total]] (a mathematical value), or a throw completion
@@ -1816,7 +1816,7 @@
           _dateTime_: an ISO Date-Time Record,
           _calendarRec_: a Calendar Method Record,
           _timeZoneRec_: a Time Zone Method Record or ~unset~,
-          _increment_: an integer,
+          _increment_: a positive integer,
           _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): either a normal completion containing a Duration Nudge Result Record or a throw completion
@@ -1900,7 +1900,7 @@
           _dateTime_: an ISO Date-Time Record,
           _calendarRec_: a Calendar Method Record,
           _timeZoneRec_: a Time Zone Method Record,
-          _increment_: an integer,
+          _increment_: a positive integer,
           _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): either a normal completion containing a Duration Nudge Result Record or a throw completion
@@ -1946,7 +1946,7 @@
           _duration_: a Normalized Duration Record,
           _destEpochNs_: a BigInt,
           _largestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
-          _increment_: an integer,
+          _increment_: a positive integer,
           _smallestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): either a normal completion containing a Duration Nudge Result Record or a throw completion
@@ -2051,7 +2051,7 @@
           _calendarRec_: a Calendar Method Record,
           _timeZoneRec_: a Time Zone Method Record or ~unset~,
           _largestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
-          _increment_: an integer,
+          _increment_: a positive integer,
           _smallestUnit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): either a normal completion containing a Record with fields [[Duration]] (a Duration Record) and [[Total]] (a mathematical value or ~unset~), or a throw completion
