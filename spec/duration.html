@@ -1833,14 +1833,14 @@
           1. Let _years_ be RoundNumberToIncrement(_duration_.[[Years]], _increment_, *"trunc"*).
           1. Let _r1_ be _years_.
           1. Let _r2_ be _years_ + _increment_ &times; _sign_.
-          1. Let _startDuration_ be ? CreateNormalizedDurationRecord(_r1_, 0, 0, 0, ZeroTimeDuration()).
-          1. Let _endDuration_ be ? CreateNormalizedDurationRecord(_r2_, 0, 0, 0, ZeroTimeDuration()).
+          1. Let _startDuration_ be ? CreateDateDurationRecord(_r1_, 0, 0, 0).
+          1. Let _endDuration_ be ? CreateDateDurationRecord(_r2_, 0, 0, 0).
         1. Else if _unit_ is *"month"*, then
           1. Let _months_ be RoundNumberToIncrement(_duration_.[[Months]], _increment_, *"trunc"*).
           1. Let _r1_ be _months_.
           1. Let _r2_ be _months_ + _increment_ &times; _sign_.
-          1. Let _startDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _r1_, 0, 0, ZeroTimeDuration()).
-          1. Let _endDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _r2_, 0, 0, ZeroTimeDuration()).
+          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r1_, 0, 0).
+          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r2_, 0, 0).
         1. Else if _unit_ is *"week"*, then
           1. Let _isoResult1_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]]).
           1. Let _isoResult2_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]] + _duration_.[[Days]]).
@@ -1852,19 +1852,19 @@
           1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Weeks]] + _untilResult_.[[Weeks]], _increment_, *"trunc"*).
           1. Let _r1_ be _weeks_.
           1. Let _r2_ be _weeks_ + _increment_ &times; _sign_.
-          1. Let _startDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _r1_, 0, ZeroTimeDuration()).
-          1. Let _endDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _r2_, 0, ZeroTimeDuration()).
+          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _r1_, 0).
+          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _r2_, 0).
         1. Else,
           1. Assert: _unit_ is *"day"*.
           1. Let _days_ be RoundNumberToIncrement(_duration_.[[Days]], _increment_, *"trunc"*).
           1. Let _r1_ be _days_.
           1. Let _r2_ be _days_ + _increment_ &times; _sign_.
-          1. Let _startDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r1_, ZeroTimeDuration()).
-          1. Let _endDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r2_, ZeroTimeDuration()).
+          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r1_).
+          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ &ge; 0 and _r1_ &lt; _r2_.
         1. Assert: If _sign_ is -1, _r1_ &le; 0 and _r1_ &gt; _r2_.
-        1. Let _start_ be ? AddDateTime(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_, _startDuration_.[[Years]], _startDuration_.[[Months]], _startDuration_.[[Weeks]], _startDuration_.[[Days]], _startDuration_.[[NormalizedTime]], *undefined*).
-        1. Let _end_ be ? AddDateTime(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_, _endDuration_.[[Years]], _endDuration_.[[Months]], _endDuration_.[[Weeks]], _endDuration_.[[Days]], _endDuration_.[[NormalizedTime]], *undefined*).
+        1. Let _start_ be ? AddDateTime(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_, _startDuration_.[[Years]], _startDuration_.[[Months]], _startDuration_.[[Weeks]], _startDuration_.[[Days]], ZeroTimeDuration(), *undefined*).
+        1. Let _end_ be ? AddDateTime(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_, _endDuration_.[[Years]], _endDuration_.[[Months]], _endDuration_.[[Weeks]], _endDuration_.[[Days]], ZeroTimeDuration(), *undefined*).
         1. If _timeZoneRec_ is ~unset~, then
           1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _start_.[[Hour]], _start_.[[Minute]], _start_.[[Second]], _start_.[[Millisecond]], _start_.[[Microsecond]], _start_.[[Nanosecond]]).
           1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _end_.[[Hour]], _end_.[[Minute]], _end_.[[Second]], _end_.[[Millisecond]], _end_.[[Microsecond]], _end_.[[Nanosecond]]).
@@ -1898,6 +1898,7 @@
           1. Let _didExpandCalendarUnit_ be *false*.
           1. Let _resultDuration_ be _startDuration_.
           1. Let _nudgedEpochNs_ be _startEpochNs_.
+        1. Set _resultDuration_ to ! CombineDateAndNormalizedTimeDuration(_resultDuration_, ZeroTimeDuration()).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[Total]]: _total_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandCalendarUnit_ }.
       </emu-alg>
     </emu-clause>
