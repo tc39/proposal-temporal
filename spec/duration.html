@@ -1863,16 +1863,18 @@
           1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ &ge; 0 and _r1_ &lt; _r2_.
         1. Assert: If _sign_ is -1, _r1_ &le; 0 and _r1_ &gt; _r2_.
-        1. Let _start_ be ? AddDateTime(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_, _startDuration_.[[Years]], _startDuration_.[[Months]], _startDuration_.[[Weeks]], _startDuration_.[[Days]], ZeroTimeDuration(), *undefined*).
-        1. Let _end_ be ? AddDateTime(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_, _endDuration_.[[Years]], _endDuration_.[[Months]], _endDuration_.[[Weeks]], _endDuration_.[[Days]], ZeroTimeDuration(), *undefined*).
+        1. Let _startDate_ be ! CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _calendarRec_.[[Receiver]]).
+        1. Let _start_ be ? AddDate(_calendarRec_, _startDate_, ! CreateTemporalDuration(_startDuration_.[[Years]], _startDuration_.[[Months]], _startDuration_.[[Weeks]], _startDuration_.[[Days]], 0, 0, 0, 0, 0, 0)).
+        1. Let _endDate_ be ! CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _calendarRec_.[[Receiver]]).
+        1. Let _end_ be ? AddDate(_calendarRec_, _endDate_, ! CreateTemporalDuration(_endDuration_.[[Years]], _endDuration_.[[Months]], _endDuration_.[[Weeks]], _endDuration_.[[Days]], 0, 0, 0, 0, 0, 0)).
         1. If _timeZoneRec_ is ~unset~, then
-          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
-          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[ISOYear]], _end_.[[ISOMonth]], _end_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
         1. Else,
-          1. Let _startDateTime_ be ! CreateTemporalDateTime(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
+          1. Let _startDateTime_ be ! CreateTemporalDateTime(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
           1. Let _startInstant_ be ? GetInstantFor(_timeZoneRec_, _startDateTime_, *"compatible"*).
           1. Let _startEpochNs_ be _startInstant_.[[Nanoseconds]].
-          1. Let _endDateTime_ be ! CreateTemporalDateTime(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
+          1. Let _endDateTime_ be ! CreateTemporalDateTime(_end_.[[ISOYear]], _end_.[[ISOMonth]], _end_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
           1. Let _endInstant_ be ? GetInstantFor(_timeZoneRec_, _endDateTime_, *"compatible"*).
           1. Let _endEpochNs_ be _endInstant_.[[Nanoseconds]].
         1. If _sign_ is 1, then
