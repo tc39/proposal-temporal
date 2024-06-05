@@ -1926,10 +1926,11 @@
       </dl>
       <emu-alg>
         1. Assert: The value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_, is ~time~.
-        1. Let _start_ be ? AddDateTime(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_, _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], ZeroTimeDuration(), *undefined*).
-        1. Let _startDateTime_ be ! CreateTemporalDateTime(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _start_.[[Hour]], _start_.[[Minute]], _start_.[[Second]], _start_.[[Millisecond]], _start_.[[Microsecond]], _start_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
-        1. Let _endDate_ be BalanceISODate(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]] + _sign_).
-        1. Let _endDateTime_ be ? CreateTemporalDateTime(_endDate_.[[Year]], _endDate_.[[Month]], _endDate_.[[Day]], _start_.[[Hour]], _start_.[[Minute]], _start_.[[Second]], _start_.[[Millisecond]], _start_.[[Microsecond]], _start_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
+        1. Let _date_ be ! CreateTemporalDate(_dateTime_.[[Year]], _dateTime_.[[Month]], _dateTime_.[[Day]], _calendarRec_.[[Receiver]]).
+        1. Let _start_ be ? AddDate(_calendarRec_, _date_, ! CreateTemporalDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], 0, 0, 0, 0, 0, 0)).
+        1. Let _startDateTime_ be ! CreateTemporalDateTime(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
+        1. Let _endDate_ be BalanceISODate(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]] + _sign_).
+        1. Let _endDateTime_ be ? CreateTemporalDateTime(_endDate_.[[Year]], _endDate_.[[Month]], _endDate_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]], _calendarRec_.[[Receiver]]).
         1. Let _startInstant_ be ? GetInstantFor(_timeZoneRec_, _startDateTime_, *"compatible"*).
         1. Let _startEpochNs_ be _startInstant_.[[Nanoseconds]].
         1. Let _endInstant_ be ? GetInstantFor(_timeZoneRec_, _endDateTime_, *"compatible"*).
