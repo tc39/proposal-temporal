@@ -359,10 +359,8 @@ The last month of every year has <code>month</code> equal to the <code>monthsInY
 <li><code>monthCode</code> is a calendar-specific string that identifies the month in a year-independent way.
 For common (non-leap) months, <code>monthCode</code> should be <code>`M${month}`</code>, where <code>month</code> is zero padded up to two digits.
 For uncommon (leap) months in lunisolar calendars like Hebrew or Chinese, the month code is the previous month&#39;s code with an &quot;L&quot; suffix appended.
-Examples: <code>&#39;M02&#39;</code> =&gt; February; <code>&#39;M08L&#39;</code> =&gt; repeated 8th month in the Chinese calendar; <code>&#39;M05L&#39;</code> =&gt; Adar I in the Hebrew calendar.<ul>
+Examples: <code>&#39;M02&#39;</code> =&gt; February; <code>&#39;M08L&#39;</code> =&gt; repeated 8th month in the Chinese calendar; <code>&#39;M05L&#39;</code> =&gt; Adar I in the Hebrew calendar.</li>
 <li><code>day</code> is a positive integer representing the day of the month.</li>
-</ul>
-</li>
 </ul>
 <p>Either <code>month</code> or <code>monthCode</code> can be used in <code>from</code> or <code>with</code> to refer to the month.
 Similarly, in calendars that user eras an <code>era</code>/<code>eraYear</code> pair can be used in place of <code>year</code> when calling <code>from</code> or <code>with</code>.</p>
