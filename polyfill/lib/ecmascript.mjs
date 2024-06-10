@@ -2686,6 +2686,33 @@ export function TemporalMonthDayToString(monthDay, showCalendar = 'auto') {
   return resultString;
 }
 
+export function TemporalTimeToString(time, precision, options = undefined) {
+  let hour = GetSlot(time, ISO_HOUR);
+  let minute = GetSlot(time, ISO_MINUTE);
+  let second = GetSlot(time, ISO_SECOND);
+  let millisecond = GetSlot(time, ISO_MILLISECOND);
+  let microsecond = GetSlot(time, ISO_MICROSECOND);
+  let nanosecond = GetSlot(time, ISO_NANOSECOND);
+
+  if (options) {
+    const { unit, increment, roundingMode } = options;
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = RoundTime(
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      increment,
+      unit,
+      roundingMode
+    ));
+  }
+
+  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+  return FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
+}
+
 export function TemporalYearMonthToString(yearMonth, showCalendar = 'auto') {
   const year = ISOYearString(GetSlot(yearMonth, ISO_YEAR));
   const month = ISODateTimePartString(GetSlot(yearMonth, ISO_MONTH));
@@ -5653,23 +5680,35 @@ DefineIntrinsic('ThrowTypeErrorFromValueOf', DummyValueOf.prototype.valueOf);
 
 class DummyToJSON {
   toJSON() {
-    if (
-      !IsTemporalCalendar(this) &&
-      !IsTemporalDuration(this) &&
-      !IsTemporalInstant(this) &&
-      !IsTemporalDate(this) &&
-      !IsTemporalDateTime(this) &&
-      !IsTemporalMonthDay(this) &&
-      !IsTemporalTime(this) &&
-      !IsTemporalTimeZone(this) &&
-      !IsTemporalYearMonth(this) &&
-      !IsTemporalZonedDateTime(this)
-    ) {
-      throw new TypeError('invalid receiver');
+    if (IsTemporalCalendar(this)) return GetSlot(this, CALENDAR_ID);
+    if (IsTemporalDuration(this)) {
+      const normSeconds = TimeDuration.normalize(
+        0,
+        0,
+        GetSlot(this, SECONDS),
+        GetSlot(this, MILLISECONDS),
+        GetSlot(this, MICROSECONDS),
+        GetSlot(this, NANOSECONDS)
+      );
+      return TemporalDurationToString(
+        GetSlot(this, YEARS),
+        GetSlot(this, MONTHS),
+        GetSlot(this, WEEKS),
+        GetSlot(this, DAYS),
+        GetSlot(this, HOURS),
+        GetSlot(this, MINUTES),
+        normSeconds
+      );
     }
-    const toString = GetMethod(this, 'toString');
-    if (!toString) throw new TypeError('toString was deleted or overridden');
-    return Call(toString, this, []);
+    if (IsTemporalInstant(this)) return TemporalInstantToString(this, undefined, 'auto');
+    if (IsTemporalDate(this)) return TemporalDateToString(this);
+    if (IsTemporalDateTime(this)) return TemporalDateTimeToString(this, 'auto');
+    if (IsTemporalMonthDay(this)) return TemporalMonthDayToString(this);
+    if (IsTemporalTime(this)) return TemporalTimeToString(this, 'auto');
+    if (IsTemporalYearMonth(this)) return TemporalYearMonthToString(this);
+    if (IsTemporalTimeZone(this)) return GetSlot(this, TIMEZONE_ID);
+    if (IsTemporalZonedDateTime(this)) return TemporalZonedDateTimeToString(this, 'auto');
+    throw new TypeError('invalid receiver');
   }
 }
 DefineIntrinsic('TemporalToJSON', DummyToJSON.prototype.toJSON);

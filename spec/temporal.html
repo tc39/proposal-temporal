@@ -295,11 +295,29 @@
     <p>This function object is %TemporalToJSON%. It performs the following steps when called:</p>
     <emu-alg>
       1. Let _object_ be the *this* value.
-      1. If _object_ does not have an [[InitializedTemporalCalendar]], [[InitializedTemporalDuration]], [[InitializedTemporalInstant]], [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalTime]], [[InitializedTemporalYearMonth]], [[InitializedTemporalTimeZone]], or [[InitializedTemporalZonedDateTime]] internal slot, then
-        1. Throw a *TypeError* exception.
-      1. Let _toString_ be ? GetMethod(_object_, *"toString"*).
-      1. If _toString_ is *null*, or *undefined*, throw a *TypeError* exception.
-      1. Return ? Call(_toString_, _object_, « »).
+      1. If _object_ has an [[InitializedTemporalCalendar]] internal slot, then
+        1. Return _object_.[[Identifier]].
+      1. If _object_ has an [[InitializedTemporalDuration]] internal slot, then
+        1. Let _normSeconds_ be NormalizeTimeDuration(0, 0, _object_.[[Seconds]], _object_.[[Milliseconds]], _object_.[[Microseconds]], _object_.[[Nanoseconds]]).
+        1. Return TemporalDurationToString(_object_.[[Years]], _object_.[[Months]], _object_.[[Weeks]], _object_.[[Days]], _object_.[[Hours]], _object_.[[Minutes]], _normSeconds_, *"auto"*).
+      1. If _object_ has an [[InitializedTemporalInstant]] internal slot, then
+        1. Return ? TemporalInstantToString(_object_, *undefined*, *"auto"*).
+      1. If _object_ has an [[InitializedTemporalDate]] internal slot, then
+        1. Return ? TemporalDateToString(_object_, *"auto"*).
+      1. If _object_ has an [[InitializedTemporalDateTime]] internal slot, then
+        1. Return ? TemporalDateTimeToString(_object_.[[ISOYear]], _object_.[[ISOMonth]], _object_.[[ISODay]], _object_.[[ISOHour]], _object_.[[ISOMinute]], _object_.[[ISOSecond]], _object_.[[ISOMillisecond]], _object_.[[ISOMicrosecond]], _object_.[[ISONanosecond]], _object_.[[Calendar]], *"auto"*, *"auto"*).
+      1. If _object_ has an [[InitializedTemporalMonthDay]] internal slot, then
+        1. Return ? TemporalMonthDayToString(_object_, *"auto"*).
+      1. If _object_ has an [[InitializedTemporalTime]] internal slot, then
+        1. Return TemporalTimeToString(_object_.[[ISOHour]], _object_.[[ISOMinute]], _object_.[[ISOSecond]], _object_.[[ISOMillisecond]], _object_.[[ISOMicrosecond]], _object_.[[ISONanosecond]], *"auto"*).
+      1. If _object_ has an [[InitializedTemporalYearMonth]] internal slot, then
+        1. Return ? TemporalYearMonthToString(_object_, *"auto"*).
+      1. If _object_ has an [[InitializedTemporalTimeZone]] internal slot, then
+        1. If _object_.[[OffsetMinutes]] is not ~empty~, return FormatOffsetTimeZoneIdentifier(_object_.[[OffsetMinutes]]).
+        1. Return _object_.[[Identifier]].
+      1. If _object_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+        1. Return ? TemporalZonedDateTimeToString(_object_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
+      1. Throw a *TypeError* exception.
     </emu-alg>
   </emu-clause>
 </emu-clause>

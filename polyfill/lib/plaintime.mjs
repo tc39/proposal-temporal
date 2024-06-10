@@ -19,33 +19,6 @@ import {
 const ObjectAssign = Object.assign;
 const ObjectCreate = Object.create;
 
-function TemporalTimeToString(time, precision, options = undefined) {
-  let hour = GetSlot(time, ISO_HOUR);
-  let minute = GetSlot(time, ISO_MINUTE);
-  let second = GetSlot(time, ISO_SECOND);
-  let millisecond = GetSlot(time, ISO_MILLISECOND);
-  let microsecond = GetSlot(time, ISO_MICROSECOND);
-  let nanosecond = GetSlot(time, ISO_NANOSECOND);
-
-  if (options) {
-    const { unit, increment, roundingMode } = options;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      increment,
-      unit,
-      roundingMode
-    ));
-  }
-
-  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
-  return ES.FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
-}
-
 export class PlainTime {
   constructor(isoHour = 0, isoMinute = 0, isoSecond = 0, isoMillisecond = 0, isoMicrosecond = 0, isoNanosecond = 0) {
     isoHour = isoHour === undefined ? 0 : ES.ToIntegerWithTruncation(isoHour);
@@ -66,7 +39,7 @@ export class PlainTime {
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${TemporalTimeToString(this, 'auto')}>`,
+        value: `${this[Symbol.toStringTag]} <${ES.TemporalTimeToString(this, 'auto')}>`,
         writable: false,
         enumerable: false,
         configurable: false
@@ -201,7 +174,7 @@ export class PlainTime {
     const smallestUnit = ES.GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
-    return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
+    return ES.TemporalTimeToString(this, precision, { unit, increment, roundingMode });
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
