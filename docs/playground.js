@@ -13289,16 +13289,9 @@
 	    epochNs: GetSlot(instantResult, EPOCHNANOSECONDS)
 	  };
 	}
-	function AddDurations(operation, duration, other, options) {
+	function AddDurations(operation, duration, other) {
 	  const sign = operation === 'subtract' ? -1 : 1;
 	  other = ToTemporalDurationRecord(other);
-	  options = GetOptionsObject(options);
-	  const {
-	    plainRelativeTo,
-	    zonedRelativeTo,
-	    timeZoneRec
-	  } = GetTemporalRelativeToOption(options);
-	  const calendarRec = CalendarMethodRecord.CreateFromRelativeTo(plainRelativeTo, zonedRelativeTo, ['dateAdd', 'dateUntil']);
 	  const y1 = GetSlot(duration, YEARS);
 	  const mon1 = GetSlot(duration, MONTHS);
 	  const w1 = GetSlot(duration, WEEKS);
@@ -13325,87 +13318,19 @@
 	  const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
 	  const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
-	  if (!zonedRelativeTo && !plainRelativeTo) {
-	    if (IsCalendarUnit(largestUnit)) {
-	      throw new RangeError('relativeTo is required for years, months, or weeks arithmetic');
-	    }
-	    const {
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = BalanceTimeDuration(norm1.add(norm2).add24HourDays(d1 + d2), largestUnit);
-	    return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-	  }
-	  if (plainRelativeTo) {
-	    const dateDuration1 = new Duration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
-	    const dateDuration2 = new Duration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
-	    const intermediate = AddDate(calendarRec, plainRelativeTo, dateDuration1);
-	    const end = AddDate(calendarRec, intermediate, dateDuration2);
-	    const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-	    const differenceOptions = ObjectCreate$7(null);
-	    differenceOptions.largestUnit = dateLargestUnit;
-	    const untilResult = DifferenceDate(calendarRec, plainRelativeTo, end, differenceOptions);
-	    const years = GetSlot(untilResult, YEARS);
-	    const months = GetSlot(untilResult, MONTHS);
-	    const weeks = GetSlot(untilResult, WEEKS);
-	    let days = GetSlot(untilResult, DAYS);
-	    // Signs of date part and time part may not agree; balance them together
-	    let hours, minutes, seconds, milliseconds, microseconds, nanoseconds;
-	    ({
-	      days,
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = BalanceTimeDuration(norm1.add(norm2).add24HourDays(days), largestUnit));
-	    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-	  }
-
-	  // zonedRelativeTo is defined
-	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-	  const calendar = GetSlot(zonedRelativeTo, CALENDAR);
-	  const startInstant = GetSlot(zonedRelativeTo, INSTANT);
-	  let startDateTime;
-	  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
-	    startDateTime = GetPlainDateTimeFor(timeZoneRec, startInstant, calendar);
-	  }
-	  const intermediateNs = AddZonedDateTime(startInstant, timeZoneRec, calendarRec, y1, mon1, w1, d1, norm1, startDateTime);
-	  const endNs = AddZonedDateTime(new TemporalInstant(intermediateNs), timeZoneRec, calendarRec, y2, mon2, w2, d2, norm2);
-	  if (largestUnit !== 'year' && largestUnit !== 'month' && largestUnit !== 'week' && largestUnit !== 'day') {
-	    // The user is only asking for a time difference, so return difference of instants.
-	    const norm = TimeDuration.fromEpochNsDiff(endNs, GetSlot(zonedRelativeTo, EPOCHNANOSECONDS));
-	    const {
-	      hours,
-	      minutes,
-	      seconds,
-	      milliseconds,
-	      microseconds,
-	      nanoseconds
-	    } = BalanceTimeDuration(norm, largestUnit);
-	    return new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+	  if (IsCalendarUnit(largestUnit)) {
+	    throw new RangeError('For years, months, or weeks arithmetic, use date arithmetic relative to a starting point');
 	  }
 	  const {
-	    years,
-	    months,
-	    weeks,
 	    days,
-	    norm
-	  } = DifferenceZonedDateTime(GetSlot(zonedRelativeTo, EPOCHNANOSECONDS), endNs, timeZoneRec, calendarRec, largestUnit, ObjectCreate$7(null), startDateTime);
-	  const {
 	    hours,
 	    minutes,
 	    seconds,
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = BalanceTimeDuration(norm, 'hour');
-	  return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+	  } = BalanceTimeDuration(norm1.add(norm2).add24HourDays(d1 + d2), largestUnit);
+	  return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	}
 	function AddDurationToOrSubtractDurationFromInstant(operation, instant, durationLike) {
 	  const sign = operation === 'subtract' ? -1 : 1;
@@ -18122,14 +18047,12 @@
 	    return new Duration(Math.abs(GetSlot(this, YEARS)), Math.abs(GetSlot(this, MONTHS)), Math.abs(GetSlot(this, WEEKS)), Math.abs(GetSlot(this, DAYS)), Math.abs(GetSlot(this, HOURS)), Math.abs(GetSlot(this, MINUTES)), Math.abs(GetSlot(this, SECONDS)), Math.abs(GetSlot(this, MILLISECONDS)), Math.abs(GetSlot(this, MICROSECONDS)), Math.abs(GetSlot(this, NANOSECONDS)));
 	  }
 	  add(other) {
-	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-	    return AddDurations('add', this, other, options);
+	    return AddDurations('add', this, other);
 	  }
 	  subtract(other) {
-	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-	    return AddDurations('subtract', this, other, options);
+	    return AddDurations('subtract', this, other);
 	  }
 	  round(roundTo) {
 	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
