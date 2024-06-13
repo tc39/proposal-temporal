@@ -147,19 +147,13 @@
 <ul>
 <li><a href="#zonedDateTimeISO">zonedDateTimeISO</a>
 </li>
-<li><a href="#zonedDateTime">zonedDateTime</a>
-</li>
 <li><a href="#instant">instant</a>
 </li>
 <li><a href="#timeZoneId">timeZoneId</a>
 </li>
 <li><a href="#plainDateTimeISO">plainDateTimeISO</a>
 </li>
-<li><a href="#plainDateTime">plainDateTime</a>
-</li>
 <li><a href="#plainDateISO">plainDateISO</a>
-</li>
-<li><a href="#plainDate">plainDate</a>
 </li>
 <li><a href="#plainTimeISO">plainTimeISO</a>
 </li>
@@ -183,7 +177,8 @@ If not given, the current system time zone will be used.</li>
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the current system date, time, time zone, and time zone offset.</p>
 <p>This method gets the current date, time, time zone, and time zone offset according to the system settings, in the reckoning of the ISO 8601 calendar system.
 Optionally a time zone can be given in which the time is computed, instead of the current system time zone.</p>
-<p>This method is the same as <code>zonedDateTime()</code>, but always uses the ISO 8601 calendar.</p>
+<p>This method always returns a <code>Temporal.ZonedDateTime</code> with the ISO 8601 calendar.
+Remember to use <code>withCalendar()</code> on the result if you need to do computations in other calendars.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">financialCentres <span class="token operator">=</span> <span class="token punctuation">{</span>
   <span class="token string-property property">'New York'</span><span class="token operator">:</span> <span class="token string">'America/New_York'</span><span class="token punctuation">,</span>
@@ -198,17 +193,7 @@ Object<span class="token punctuation">.</span><span class="token function">entri
 <span class="token comment">// Here: 2020-09-18T01:17:48.431957915-07:00[America/Los_Angeles]</span>
 <span class="token comment">// New York: 2020-09-18T04:17:48.435068431-04:00[America/New_York]</span>
 <span class="token comment">// London: 2020-09-18T09:17:48.438068435+01:00[Europe/London]</span>
-<span class="token comment">// Tokyo: 2020-09-18T17:17:48.441068438+09:00[Asia/Tokyo]</span></code></pre><h3 id="zonedDateTime"><a class="heading-link" href="#zonedDateTime"></a>Temporal.Now.<strong>zonedDateTime</strong>(<em>calendar</em>: object | string, <em>timeZone</em>: object | string = Temporal.Now.timeZone()) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
-<ul>
-<li><code>calendar</code> (<code>Temporal.Calendar</code>, plain object, or string): The calendar system to get the current date and time in.</li>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
-If not given, the current system time zone will be used.</li>
-</ul>
-<p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the current system date, time, time zone, and time zone offset.</p>
-<p>This method gets the current date, time, time zone, and time zone offset according to the system settings, in the reckoning of the given calendar system.
-Optionally a time zone can be given in which the time is computed, instead of the current system time zone.</p>
-<p>If you only want to use the ISO 8601 calendar, use <code>Temporal.Now.zonedDateTimeISO()</code>.</p>
-<h3 id="instant"><a class="heading-link" href="#instant"></a>Temporal.Now.<strong>instant</strong>() : Temporal.Instant</h3><p><strong>Returns:</strong> a <code>Temporal.Instant</code> object representing the current system time.</p>
+<span class="token comment">// Tokyo: 2020-09-18T17:17:48.441068438+09:00[Asia/Tokyo]</span></code></pre><h3 id="instant"><a class="heading-link" href="#instant"></a>Temporal.Now.<strong>instant</strong>() : Temporal.Instant</h3><p><strong>Returns:</strong> a <code>Temporal.Instant</code> object representing the current system time.</p>
 <p>This method gets the current exact system time, without regard to calendar or time zone.
 This is a good way to get a timestamp for an event, for example.
 It works like the old-style JavaScript <code>Date.now()</code>, but with nanosecond accuracy instead of milliseconds.</p>
@@ -245,7 +230,8 @@ If not given, the current system time zone will be used.</li>
 <p><strong>Returns:</strong> a <code>Temporal.PlainDateTime</code> object representing the current system date and time in the reckoning of the ISO 8601 calendar.</p>
 <p>This method gets the current calendar date and wall-clock time according to the system settings.
 Optionally a time zone can be given in which the time is computed, instead of the current system time zone.</p>
-<p>This method is the same as <code>dateTime()</code>, but always uses the ISO 8601 calendar.</p>
+<p>This method always returns a <code>Temporal.PlainDateTime</code> with the ISO 8601 calendar.
+Remember to use <code>withCalendar()</code> on the result if you need to do computations in other calendars.</p>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
 <pre class="language-js"><code class="language-js">financialCentres <span class="token operator">=</span> <span class="token punctuation">{</span>
@@ -263,16 +249,6 @@ Object<span class="token punctuation">.</span><span class="token function">entri
 <span class="token comment">// London: 2020-01-25T05:52:14.758534756</span>
 <span class="token comment">// Tokyo: 2020-01-25T14:52:14.759534758</span></code></pre><!-- prettier-ignore-end -->
 
-<h3 id="plainDateTime"><a class="heading-link" href="#plainDateTime"></a>Temporal.Now.<strong>plainDateTime</strong>(<em>calendar</em>: object | string, <em>timeZone</em>: object | string = Temporal.Now.timeZone()) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
-<ul>
-<li><code>calendar</code> (<code>Temporal.Calendar</code>, plain object, or string): The calendar system to get the current date and time in.</li>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
-If not given, the current system time zone will be used.</li>
-</ul>
-<p><strong>Returns:</strong> a <code>Temporal.PlainDateTime</code> object representing the current system date and time in the reckoning of the given calendar system.</p>
-<p>This method gets the current calendar date and wall-clock time according to the system settings.
-Optionally a time zone can be given in which the time is computed, instead of the current system time zone.</p>
-<p>If you only want to use the ISO 8601 calendar, use <code>Temporal.Now.plainDateTimeISO()</code>.</p>
 <h3 id="plainDateISO"><a class="heading-link" href="#plainDateISO"></a>Temporal.Now.<strong>plainDateISO</strong>(<em>timeZone</em>: object | string = Temporal.Now.timeZone()) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
@@ -281,22 +257,15 @@ If not given, the current system time zone will be used.</li>
 <p><strong>Returns:</strong> a <code>Temporal.PlainDate</code> object representing the current system date in the reckoning of the ISO 8601 calendar.</p>
 <p>This method gets the current calendar date according to the system settings.
 Optionally a time zone can be given in which the time is computed, instead of the current system time zone.</p>
-<p>This method is the same as <code>date()</code>, but always uses the ISO 8601 calendar.</p>
+<p>This method always returns a <code>Temporal.PlainDate</code> with the ISO 8601 calendar.
+Remember to use <code>withCalendar()</code> on the result if you need to do computations in other calendars.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js"><span class="token comment">// Is it New Year in the ISO 8601 calendar?</span>
 date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDateISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>month <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> date<span class="token punctuation">.</span>day <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'New year!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="plainDate"><a class="heading-link" href="#plainDate"></a>Temporal.Now.<strong>plainDate</strong>(<em>calendar</em>: object | string, <em>timeZone</em>: object | string = Temporal.Now.timeZone()) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
-<ul>
-<li><code>calendar</code> (<code>Temporal.Calendar</code>, plain object, or string): The calendar system to get the current date and time in.</li>
-<li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
-If not given, the current system time zone will be used.</li>
-</ul>
-<p><strong>Returns:</strong> a <code>Temporal.PlainDate</code> object representing the current system date in the reckoning of the given calendar.</p>
-<p>This method gets the current calendar date according to the system settings.
-Optionally a time zone can be given in which the time is computed, instead of the current system time zone.</p>
-<p>If you only want to use the ISO 8601 calendar, use <code>Temporal.Now.plainDateISO()</code>.</p>
-<pre class="language-js"><code class="language-js"><span class="token comment">// Is it Nowruz (New Year in the Persian calendar)?</span>
-date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDate</span><span class="token punctuation">(</span><span class="token string">'persian'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>month <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> date<span class="token punctuation">.</span>day <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'New year!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Is it Nowruz (New Year in the Persian calendar)?</span>
+date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">plainDateISO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'persian'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">if</span> <span class="token punctuation">(</span>date<span class="token punctuation">.</span>month <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> date<span class="token punctuation">.</span>day <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'New year!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="plainTimeISO"><a class="heading-link" href="#plainTimeISO"></a>Temporal.Now.<strong>plainTimeISO</strong>(<em>timeZone</em>: object | string = Temporal.Now.timeZone()) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>timeZone</code> (optional object or string): The time zone to get the current date and time in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.

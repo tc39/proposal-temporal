@@ -176,8 +176,9 @@ If you want both, use <code>Temporal.PlainDateTime</code>.</p>
 
 <span class="token comment">// Timestamp in Milliseconds</span>
 timeStamp<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span>
+
 <span class="token comment">// Timestamp in Seconds</span>
-timeStamp<span class="token punctuation">.</span>epochSeconds<span class="token punctuation">;</span>
+Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span>timeStamp<span class="token punctuation">.</span>epochMilliseconds <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
 <h2 id="converting-between-temporal-types-and-legacy-date"><a class="heading-link" href="#converting-between-temporal-types-and-legacy-date"></a>Converting between <code>Temporal</code> types and legacy <code>Date</code></h3><h3 id="legacy-date--temporalinstant-andor-temporalzoneddatetime"><a class="heading-link" href="#legacy-date--temporalinstant-andor-temporalzoneddatetime"></a>Legacy <code>Date</code> =&gt; <code>Temporal.Instant</code> and/or <code>Temporal.ZonedDateTime</code></h3><p>Here&#39;s how to convert legacy ECMAScript <code>Date</code> into a <code>Temporal.Instant</code> or <code>Temporal.ZonedDateTime</code> instance corresponding to the same instant in exact time.</p>

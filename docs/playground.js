@@ -10937,18 +10937,6 @@
 	    throw new RangeError(`cannot ${errorMessageAction} of ${cal1} and ${cal2} calendars`);
 	  }
 	}
-	function ConsolidateCalendars(one, two) {
-	  if (one === two) return two;
-	  const sOne = ToTemporalCalendarIdentifier(one);
-	  const sTwo = ToTemporalCalendarIdentifier(two);
-	  if (sOne === sTwo || sOne === 'iso8601') {
-	    return two;
-	  } else if (sTwo === 'iso8601') {
-	    return one;
-	  } else {
-	    throw new RangeError('irreconcilable calendars');
-	  }
-	}
 	function CalendarDateFromFields(calendarRec, fields, options) {
 	  const result = calendarRec.dateFromFields(fields, options);
 	  if (!calendarRec.isBuiltIn() && !IsTemporalDate(result)) throw new TypeError('invalid result');
@@ -14336,20 +14324,10 @@
 	      });
 	    }
 	  }
-	  get epochSeconds() {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return BigIntFloorDiv(value, 1e9).toJSNumber();
-	  }
 	  get epochMilliseconds() {
 	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
 	    return BigIntFloorDiv(value, 1e6).toJSNumber();
-	  }
-	  get epochMicroseconds() {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return BigIntIfAvailable(BigIntFloorDiv(value, 1e3));
 	  }
 	  get epochNanoseconds() {
 	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
@@ -14439,43 +14417,14 @@
 	  valueOf() {
 	    ValueOfThrows('Instant');
 	  }
-	  toZonedDateTime(item) {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-	    if (Type$c(item) !== 'Object') {
-	      throw new TypeError('invalid argument in toZonedDateTime');
-	    }
-	    const calendarLike = item.calendar;
-	    if (calendarLike === undefined) {
-	      throw new TypeError('missing calendar property in toZonedDateTime');
-	    }
-	    const calendar = ToTemporalCalendarSlotValue(calendarLike);
-	    const temporalTimeZoneLike = item.timeZone;
-	    if (temporalTimeZoneLike === undefined) {
-	      throw new TypeError('missing timeZone property in toZonedDateTime');
-	    }
-	    const timeZone = ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
-	    return CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, calendar);
-	  }
 	  toZonedDateTimeISO(timeZone) {
 	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
 	    timeZone = ToTemporalTimeZoneSlotValue(timeZone);
 	    return CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
 	  }
-	  static fromEpochSeconds(epochSeconds) {
-	    epochSeconds = ToNumber$1(epochSeconds);
-	    const epochNanoseconds = bigInt(epochSeconds).multiply(1e9);
-	    ValidateEpochNanoseconds(epochNanoseconds);
-	    return new Instant(epochNanoseconds);
-	  }
 	  static fromEpochMilliseconds(epochMilliseconds) {
 	    epochMilliseconds = ToNumber$1(epochMilliseconds);
 	    const epochNanoseconds = bigInt(epochMilliseconds).multiply(1e6);
-	    ValidateEpochNanoseconds(epochNanoseconds);
-	    return new Instant(epochNanoseconds);
-	  }
-	  static fromEpochMicroseconds(epochMicroseconds) {
-	    epochMicroseconds = ToBigInt(epochMicroseconds);
-	    const epochNanoseconds = epochMicroseconds.multiply(1e3);
 	    ValidateEpochNanoseconds(epochNanoseconds);
 	    return new Instant(epochNanoseconds);
 	  }
@@ -17726,22 +17675,6 @@
 	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
 	    return CreateTemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(temporalTime, ISO_HOUR), GetSlot(temporalTime, ISO_MINUTE), GetSlot(temporalTime, ISO_SECOND), GetSlot(temporalTime, ISO_MILLISECOND), GetSlot(temporalTime, ISO_MICROSECOND), GetSlot(temporalTime, ISO_NANOSECOND), GetSlot(this, CALENDAR));
 	  }
-	  withPlainDate(temporalDate) {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-	    temporalDate = ToTemporalDate(temporalDate);
-	    const year = GetSlot(temporalDate, ISO_YEAR);
-	    const month = GetSlot(temporalDate, ISO_MONTH);
-	    const day = GetSlot(temporalDate, ISO_DAY);
-	    let calendar = GetSlot(temporalDate, CALENDAR);
-	    const hour = GetSlot(this, ISO_HOUR);
-	    const minute = GetSlot(this, ISO_MINUTE);
-	    const second = GetSlot(this, ISO_SECOND);
-	    const millisecond = GetSlot(this, ISO_MILLISECOND);
-	    const microsecond = GetSlot(this, ISO_MICROSECOND);
-	    const nanosecond = GetSlot(this, ISO_NANOSECOND);
-	    calendar = ConsolidateCalendars(GetSlot(this, CALENDAR), calendar);
-	    return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-	  }
 	  withCalendar(calendar) {
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 	    calendar = ToTemporalCalendarSlotValue(calendar);
@@ -17871,18 +17804,6 @@
 	  toPlainDate() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
 	    return TemporalDateTimeToDate(this);
-	  }
-	  toPlainYearMonth() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
-	    const fields = PrepareCalendarFields(calendarRec, this, ['monthCode', 'year'], [], []);
-	    return CalendarYearMonthFromFields(calendarRec, fields);
-	  }
-	  toPlainMonthDay() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
-	    const fields = PrepareCalendarFields(calendarRec, this, ['day', 'monthCode'], [], []);
-	    return CalendarMonthDayFromFields(calendarRec, fields);
 	  }
 	  toPlainTime() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
@@ -18511,14 +18432,6 @@
 	  const Instant = GetIntrinsic('%Temporal.Instant%');
 	  return new Instant(SystemUTCEpochNanoSeconds());
 	};
-	const plainDateTime = function (calendarLike) {
-	  let temporalTimeZoneLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DefaultTimeZone();
-	  const timeZone = ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
-	  const calendar = ToTemporalCalendarSlotValue(calendarLike);
-	  const inst = instant();
-	  const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor']);
-	  return GetPlainDateTimeFor(timeZoneRec, inst, calendar);
-	};
 	const plainDateTimeISO = function () {
 	  let temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DefaultTimeZone();
 	  const timeZone = ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
@@ -18526,19 +18439,10 @@
 	  const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor']);
 	  return GetPlainDateTimeFor(timeZoneRec, inst, 'iso8601');
 	};
-	const zonedDateTime = function (calendarLike) {
-	  let temporalTimeZoneLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DefaultTimeZone();
-	  const timeZone = ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
-	  const calendar = ToTemporalCalendarSlotValue(calendarLike);
-	  return CreateTemporalZonedDateTime(SystemUTCEpochNanoSeconds(), timeZone, calendar);
-	};
 	const zonedDateTimeISO = function () {
 	  let temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DefaultTimeZone();
-	  return zonedDateTime('iso8601', temporalTimeZoneLike);
-	};
-	const plainDate = function (calendarLike) {
-	  let temporalTimeZoneLike = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DefaultTimeZone();
-	  return TemporalDateTimeToDate(plainDateTime(calendarLike, temporalTimeZoneLike));
+	  const timeZone = ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
+	  return CreateTemporalZonedDateTime(SystemUTCEpochNanoSeconds(), timeZone, 'iso8601');
 	};
 	const plainDateISO = function () {
 	  let temporalTimeZoneLike = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DefaultTimeZone();
@@ -18553,13 +18457,10 @@
 	};
 	const Now = {
 	  instant,
-	  plainDateTime,
 	  plainDateTimeISO,
-	  plainDate,
 	  plainDateISO,
 	  plainTimeISO,
 	  timeZoneId,
-	  zonedDateTime,
 	  zonedDateTimeISO
 	};
 	Object.defineProperty(Now, Symbol.toStringTag, {
@@ -18780,51 +18681,6 @@
 	  }
 	  valueOf() {
 	    ValueOfThrows('PlainTime');
-	  }
-	  toPlainDateTime(temporalDate) {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
-	    temporalDate = ToTemporalDate(temporalDate);
-	    const year = GetSlot(temporalDate, ISO_YEAR);
-	    const month = GetSlot(temporalDate, ISO_MONTH);
-	    const day = GetSlot(temporalDate, ISO_DAY);
-	    const calendar = GetSlot(temporalDate, CALENDAR);
-	    const hour = GetSlot(this, ISO_HOUR);
-	    const minute = GetSlot(this, ISO_MINUTE);
-	    const second = GetSlot(this, ISO_SECOND);
-	    const millisecond = GetSlot(this, ISO_MILLISECOND);
-	    const microsecond = GetSlot(this, ISO_MICROSECOND);
-	    const nanosecond = GetSlot(this, ISO_NANOSECOND);
-	    return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-	  }
-	  toZonedDateTime(item) {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
-	    if (Type$c(item) !== 'Object') {
-	      throw new TypeError('invalid argument');
-	    }
-	    const dateLike = item.plainDate;
-	    if (dateLike === undefined) {
-	      throw new TypeError('missing date property');
-	    }
-	    const temporalDate = ToTemporalDate(dateLike);
-	    const timeZoneLike = item.timeZone;
-	    if (timeZoneLike === undefined) {
-	      throw new TypeError('missing timeZone property');
-	    }
-	    const timeZone = ToTemporalTimeZoneSlotValue(timeZoneLike);
-	    const year = GetSlot(temporalDate, ISO_YEAR);
-	    const month = GetSlot(temporalDate, ISO_MONTH);
-	    const day = GetSlot(temporalDate, ISO_DAY);
-	    const calendar = GetSlot(temporalDate, CALENDAR);
-	    const hour = GetSlot(this, ISO_HOUR);
-	    const minute = GetSlot(this, ISO_MINUTE);
-	    const second = GetSlot(this, ISO_SECOND);
-	    const millisecond = GetSlot(this, ISO_MILLISECOND);
-	    const microsecond = GetSlot(this, ISO_MICROSECOND);
-	    const nanosecond = GetSlot(this, ISO_NANOSECOND);
-	    const dt = CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-	    const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
-	    const instant = GetInstantFor(timeZoneRec, dt, 'compatible');
-	    return CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZone, calendar);
 	  }
 	  getISOFields() {
 	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
@@ -19214,20 +19070,10 @@
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    return CalendarEraYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
-	  get epochSeconds() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return BigIntFloorDiv(value, 1e9).toJSNumber();
-	  }
 	  get epochMilliseconds() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
 	    return BigIntFloorDiv(value, 1e6).toJSNumber();
-	  }
-	  get epochMicroseconds() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    const value = GetSlot(this, EPOCHNANOSECONDS);
-	    return BigIntIfAvailable(BigIntFloorDiv(value, 1e3));
 	  }
 	  get epochNanoseconds() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
@@ -19337,26 +19183,6 @@
 	    const newOffsetNs = ParseDateTimeUTCOffset(fields.offset);
 	    const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', newOffsetNs, timeZoneRec, disambiguation, offset, /* matchMinute = */false);
 	    return CreateTemporalZonedDateTime(epochNanoseconds, timeZoneRec.receiver, calendarRec.receiver);
-	  }
-	  withPlainDate(temporalDate) {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    temporalDate = ToTemporalDate(temporalDate);
-	    const year = GetSlot(temporalDate, ISO_YEAR);
-	    const month = GetSlot(temporalDate, ISO_MONTH);
-	    const day = GetSlot(temporalDate, ISO_DAY);
-	    let calendar = GetSlot(temporalDate, CALENDAR);
-	    const timeZoneRec = new TimeZoneMethodRecord(GetSlot(this, TIME_ZONE), ['getOffsetNanosecondsFor', 'getPossibleInstantsFor']);
-	    const thisDt = GetPlainDateTimeFor(timeZoneRec, GetSlot(this, INSTANT), GetSlot(this, CALENDAR));
-	    const hour = GetSlot(thisDt, ISO_HOUR);
-	    const minute = GetSlot(thisDt, ISO_MINUTE);
-	    const second = GetSlot(thisDt, ISO_SECOND);
-	    const millisecond = GetSlot(thisDt, ISO_MILLISECOND);
-	    const microsecond = GetSlot(thisDt, ISO_MICROSECOND);
-	    const nanosecond = GetSlot(thisDt, ISO_NANOSECOND);
-	    calendar = ConsolidateCalendars(GetSlot(this, CALENDAR), calendar);
-	    const dt = CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
-	    const instant = GetInstantFor(timeZoneRec, dt, 'compatible');
-	    return CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZoneRec.receiver, calendar);
 	  }
 	  withPlainTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
@@ -19584,20 +19410,6 @@
 	  toPlainDateTime() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    return dateTime(this);
-	  }
-	  toPlainYearMonth() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'yearMonthFromFields']);
-	    const dt = dateTime(this);
-	    const fields = PrepareCalendarFields(calendarRec, dt, ['monthCode', 'year'], [], []);
-	    return CalendarYearMonthFromFields(calendarRec, fields);
-	  }
-	  toPlainMonthDay() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    const calendarRec = new CalendarMethodRecord(GetSlot(this, CALENDAR), ['fields', 'monthDayFromFields']);
-	    const dt = dateTime(this);
-	    const fields = PrepareCalendarFields(calendarRec, dt, ['day', 'monthCode'], [], []);
-	    return CalendarMonthDayFromFields(calendarRec, fields);
 	  }
 	  getISOFields() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
