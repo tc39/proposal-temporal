@@ -12189,12 +12189,14 @@
 	  let timeDuration = DifferenceTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2);
 	  const timeSign = timeDuration.sign();
 	  const dateSign = CompareISODate(y2, mon2, d2, y1, mon1, d1);
+
+	  // back-off a day from date2 so that the signs of the date a time diff match
 	  if (dateSign === -timeSign) {
 	    ({
-	      year: y1,
-	      month: mon1,
-	      day: d1
-	    } = BalanceISODate(y1, mon1, d1 - timeSign));
+	      year: y2,
+	      month: mon2,
+	      day: d2
+	    } = BalanceISODate(y2, mon2, d2 + timeSign));
 	    timeDuration = timeDuration.add24HourDays(-timeSign);
 	  }
 	  const date1 = CreateTemporalDate(y1, mon1, d1, calendarRec.receiver);
