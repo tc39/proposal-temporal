@@ -24,6 +24,7 @@ import './getUtcOffsetStringAtInstant.mjs';
 import './getWeeklyDaysInMonth.mjs';
 import './localTimeForFutureEvents.mjs';
 import './makeExpandedTemporal.mjs';
+import './nepaliCalendar.mjs';
 import './nextWeeklyOccurrence.mjs';
 import './noonOnDate.mjs';
 import './plusAndRoundToMonthStart.mjs';

@@ -567,3 +567,11 @@ Extend `Temporal` to support arbitrarily-large years (e.g., **+635427810-02-02**
 Extend `Temporal` to support adjustment days for the Hijri calendars, which are sometimes required when the start of the month is based on astronomical observations.
 
 → [Adjustable Hijri calendar](hijri-days-adjustments.md)
+
+### Nepali calendar
+
+Implementation of the Nepali calendar in userspace.
+This calendar is currently not built in to JS environments.
+This serves as an example of how to build support for calendars that are not widespread in browsers.
+
+→ [Nepali calendar](cookbook-nepali-calendar.md)
