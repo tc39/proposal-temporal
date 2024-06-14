@@ -219,7 +219,7 @@ zdtLA <span class="token operator">=</span> instant<span class="token punctuatio
 zdtLA<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 2019</span>
 zdtLA<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-12-31</span></code></pre><!-- prettier-ignore-end -->
 
-<p><code>Temporal.Instant</code> stores a count of integer nanoseconds since the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>: midnight UTC on January 1, 1970.
+<p><code>Temporal.Instant</code> stores an integer count of nanoseconds since the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> of January 1, 1970 at 00:00 UTC, ignoring leap seconds.
 For interoperability with <code>Date</code> and other APIs, <code>Temporal.Instant</code> also offers conversion properties and methods for seconds, milliseconds, or microseconds since epoch.
 A <code>Temporal.Instant</code> can also be created from an ISO 8601 / RFC 3339 string like <code>&#39;2020-01-23T17:04:36.491865121-08:00&#39;</code> or <code>&#39;2020-01-24T01:04Z&#39;</code>.</p>
 <p>Like Unix time, <code>Temporal.Instant</code> ignores leap seconds.</p>
@@ -256,7 +256,7 @@ But if the <code>Date</code> had been initialized with a string like <code>&#39;
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
 <p>Creates a new <code>Temporal.Instant</code> object that represents an exact time.</p>
-<p><code>epochNanoseconds</code> is the number of nanoseconds (10<sup>&minus;9</sup> seconds) between the Unix epoch (midnight UTC on January 1, 1970) and the desired exact time.</p>
+<p><code>epochNanoseconds</code> is the number of nanoseconds (10<sup>&minus;9</sup> seconds) from the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> of January 1, 1970 at 00:00 UTC until the desired exact time, ignoring leap seconds.</p>
 <p>Use this constructor directly if you know the precise number of nanoseconds already and have it in bigint form, for example from a database.
 Otherwise, <code>Temporal.Instant.from()</code>, which accepts more kinds of input, is probably more convenient.</p>
 <p>The range of allowed values for this type is the same as the old-style JavaScript <code>Date</code>, 100 million (10<sup>8</sup>) days before or after the Unix epoch.

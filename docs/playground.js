@@ -12693,10 +12693,7 @@
 	    total: nudgeResult.total
 	  };
 	}
-	function DifferencePlainDateTimeWithRounding(plainDate1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2, calendarRec, largestUnit, roundingIncrement, smallestUnit, roundingMode, resolvedOptions) {
-	  const y1 = GetSlot(plainDate1, ISO_YEAR);
-	  const mon1 = GetSlot(plainDate1, ISO_MONTH);
-	  const d1 = GetSlot(plainDate1, ISO_DAY);
+	function DifferencePlainDateTimeWithRounding(y1, mon1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2, calendarRec, largestUnit, roundingIncrement, smallestUnit, roundingMode, resolvedOptions) {
 	  if (CompareISODateTime(y1, mon1, d1, h1, min1, s1, ms1, µs1, ns1, y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2) == 0) {
 	    return {
 	      years: 0,
@@ -12972,7 +12969,6 @@
 	  if (datePartsIdentical && GetSlot(plainDateTime, ISO_HOUR) == GetSlot(other, ISO_HOUR) && GetSlot(plainDateTime, ISO_MINUTE) == GetSlot(other, ISO_MINUTE) && GetSlot(plainDateTime, ISO_SECOND) == GetSlot(other, ISO_SECOND) && GetSlot(plainDateTime, ISO_MILLISECOND) == GetSlot(other, ISO_MILLISECOND) && GetSlot(plainDateTime, ISO_MICROSECOND) == GetSlot(other, ISO_MICROSECOND) && GetSlot(plainDateTime, ISO_NANOSECOND) == GetSlot(other, ISO_NANOSECOND)) {
 	    return new Duration();
 	  }
-	  const plainDate1 = TemporalDateTimeToDate(plainDateTime);
 	  const calendarRec = new CalendarMethodRecord(calendar, ['dateAdd', 'dateUntil']);
 	  const {
 	    years,
@@ -12985,7 +12981,7 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = DifferencePlainDateTimeWithRounding(plainDate1, GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendarRec, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, resolvedOptions);
+	  } = DifferencePlainDateTimeWithRounding(GetSlot(plainDateTime, ISO_YEAR), GetSlot(plainDateTime, ISO_MONTH), GetSlot(plainDateTime, ISO_DAY), GetSlot(plainDateTime, ISO_HOUR), GetSlot(plainDateTime, ISO_MINUTE), GetSlot(plainDateTime, ISO_SECOND), GetSlot(plainDateTime, ISO_MILLISECOND), GetSlot(plainDateTime, ISO_MICROSECOND), GetSlot(plainDateTime, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND), calendarRec, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode, resolvedOptions);
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
 	}
 	function DifferenceTemporalPlainTime(operation, plainTime, other, options) {
@@ -18085,7 +18081,7 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = DifferencePlainDateTimeWithRounding(plainRelativeTo, 0, 0, 0, 0, 0, 0, GetSlot(targetDate, ISO_YEAR), GetSlot(targetDate, ISO_MONTH), GetSlot(targetDate, ISO_DAY), targetTime.hour, targetTime.minute, targetTime.second, targetTime.millisecond, targetTime.microsecond, targetTime.nanosecond, calendarRec, largestUnit, roundingIncrement, smallestUnit, roundingMode));
+	      } = DifferencePlainDateTimeWithRounding(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY), 0, 0, 0, 0, 0, 0, GetSlot(targetDate, ISO_YEAR), GetSlot(targetDate, ISO_MONTH), GetSlot(targetDate, ISO_DAY), targetTime.hour, targetTime.minute, targetTime.second, targetTime.millisecond, targetTime.microsecond, targetTime.nanosecond, calendarRec, largestUnit, roundingIncrement, smallestUnit, roundingMode));
 	    } else {
 	      // No reference date to calculate difference relative to
 	      if (calendarUnitsPresent) {
@@ -18095,7 +18091,7 @@
 	        throw new RangeError(`a starting point is required for ${largestUnit}s balancing`);
 	      }
 	      if (IsCalendarUnit(smallestUnit)) {
-	        throw new RangeError(`a starting point is required for ${smallestUnit}s rounding`);
+	        throw new Error('assertion failed: smallestUnit was larger than largestUnit');
 	      }
 	      ({
 	        days,
@@ -18167,7 +18163,7 @@
 	      const targetDate = AddDate(calendarRec, plainRelativeTo, dateDuration);
 	      const {
 	        total
-	      } = DifferencePlainDateTimeWithRounding(plainRelativeTo, 0, 0, 0, 0, 0, 0, GetSlot(targetDate, ISO_YEAR), GetSlot(targetDate, ISO_MONTH), GetSlot(targetDate, ISO_DAY), targetTime.hour, targetTime.minute, targetTime.second, targetTime.millisecond, targetTime.microsecond, targetTime.nanosecond, calendarRec, unit, 1, unit, 'trunc');
+	      } = DifferencePlainDateTimeWithRounding(GetSlot(plainRelativeTo, ISO_YEAR), GetSlot(plainRelativeTo, ISO_MONTH), GetSlot(plainRelativeTo, ISO_DAY), 0, 0, 0, 0, 0, 0, GetSlot(targetDate, ISO_YEAR), GetSlot(targetDate, ISO_MONTH), GetSlot(targetDate, ISO_DAY), targetTime.hour, targetTime.minute, targetTime.second, targetTime.millisecond, targetTime.microsecond, targetTime.nanosecond, calendarRec, unit, 1, unit, 'trunc');
 	      if (NumberIsNaN(total)) throw new Error('assertion failed: total hit unexpected code path');
 	      return total;
 	    }
