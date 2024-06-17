@@ -140,7 +140,7 @@ export namespace Temporal {
   /**
    * When the name of a unit is provided to a Temporal API as a string, it is
    * usually singular, e.g. 'day' or 'hour'. But plural unit names like 'days'
-   * or 'hours' are also accepted too.
+   * or 'hours' are also accepted.
    * */
   export type PluralUnit<T extends DateTimeUnit> = {
     year: 'years';
