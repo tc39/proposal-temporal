@@ -5363,7 +5363,10 @@
 	    if (typeof window !== 'undefined' && obj === window) {
 	        return '{ [object Window] }';
 	    }
-	    if (obj === commonjsGlobal) {
+	    if (
+	        (typeof globalThis !== 'undefined' && obj === globalThis)
+	        || (typeof commonjsGlobal !== 'undefined' && obj === commonjsGlobal)
+	    ) {
 	        return '{ [object globalThis] }';
 	    }
 	    if (!isDate$1(obj) && !isRegExp(obj)) {
@@ -12396,6 +12399,9 @@
 	    default:
 	      throw new Error('assert not reached');
 	  }
+	  if (sign === 1 && (r1 < 0 || r1 >= r2) || sign === -1 && (r1 > 0 || r1 <= r2)) {
+	    throw new Error('assertion failed: ordering of r1, r2 according to sign');
+	  }
 
 	  // Apply to origin, output PlainDateTimes
 	  const start = AddDateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec, startDuration.years, startDuration.months, startDuration.weeks, startDuration.days, startDuration.norm);
@@ -12414,22 +12420,28 @@
 	  }
 
 	  // Round the smallestUnit within the epoch-nanosecond span
-	  if (endEpochNs.equals(startEpochNs)) {
+	  if (sign === 1 && (startEpochNs.gt(destEpochNs) || destEpochNs.geq(endEpochNs)) || sign === -1 && (endEpochNs.geq(destEpochNs) || destEpochNs.gt(startEpochNs))) {
 	    throw new RangeError(`custom calendar reported a ${unit} that is 0 days long`);
+	  }
+	  if (endEpochNs.equals(startEpochNs)) {
+	    throw new Error('assertion failed: startEpochNs ≠ endEpochNs');
 	  }
 	  const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
 	  const denominator = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
 	  const unsignedRoundingMode = GetUnsignedRoundingMode(roundingMode, sign < 0 ? 'negative' : 'positive');
 	  const cmp = numerator.add(numerator).abs().subtract(denominator.abs()).sign();
-	  const even = r1 / (increment * sign) % 2 === 0;
-	  const roundedUnit = numerator.isZero() ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	  const even = MathAbs$2(r1) / increment % 2 === 0;
+	  const roundedUnit = numerator.isZero() ? MathAbs$2(r1) : ApplyUnsignedRoundingMode(MathAbs$2(r1), MathAbs$2(r2), cmp, even, unsignedRoundingMode);
 
 	  // Trick to minimize rounding error, due to the lack of fma() in JS
 	  const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
 	  const total = fakeNumerator.fdiv(denominator.totalNs);
+	  if (MathAbs$2(total) < MathAbs$2(r1) || MathAbs$2(total) >= MathAbs$2(r2)) {
+	    throw new Error('assertion failed: r1 ≤ total < r2');
+	  }
 
 	  // Determine whether expanded or contracted
-	  const didExpandCalendarUnit = MathSign(roundedUnit - total) === sign;
+	  const didExpandCalendarUnit = roundedUnit === MathAbs$2(r2);
 	  duration = didExpandCalendarUnit ? endDuration : startDuration;
 	  return {
 	    duration,
