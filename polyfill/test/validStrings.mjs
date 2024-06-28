@@ -189,7 +189,7 @@ function seq(...productions) {
 // Grammar productions, based on the grammar in RFC 3339
 
 // characters
-const temporalSign = character('+-−');
+const asciiSign = character('+-');
 const dateSeparator = (extended) => (extended ? character('-') : empty);
 const timeSeparator = (extended) => (extended ? character(':') : empty);
 const hour = zeroPaddedInclusive(0, 23, 2);
@@ -213,15 +213,10 @@ const temporalDecimalFraction = seq(temporalDecimalSeparator, between(1, 9, digi
 
 const dateFourDigitYear = repeat(4, digit());
 
-const dateExtendedYear = withSyntaxConstraints(seq(temporalSign, repeat(6, digit())), (result) => {
-  if (result === '-000000' || result === '−000000') {
-    throw new SyntaxError('Negative zero extended year');
-  }
+const dateExtendedYear = withSyntaxConstraints(seq(asciiSign, repeat(6, digit())), (result) => {
+  if (result === '-000000') throw new SyntaxError('Negative zero extended year');
 });
-const dateYear = withCode(
-  choice(dateFourDigitYear, dateExtendedYear),
-  (data, result) => (data.year = +result.replace('\u2212', '-'))
-);
+const dateYear = withCode(choice(dateFourDigitYear, dateExtendedYear), (data, result) => (data.year = +result));
 const dateMonth = withCode(zeroPaddedInclusive(1, 12, 2), (data, result) => (data.month = +result));
 const dateDay = withCode(zeroPaddedInclusive(1, 31, 2), (data, result) => (data.day = +result));
 
@@ -235,7 +230,7 @@ function saveOffset(data, result) {
   data.offset = ES.ParseDateTimeUTCOffset(result);
 }
 const utcOffset = (subMinutePrecision) =>
-  seq(temporalSign, hour, [
+  seq(asciiSign, hour, [
     choice(
       seq(
         timeSeparator(true),
@@ -325,7 +320,7 @@ const annotatedTime = choice(
       if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
         throw new SyntaxError('valid PlainMonthDay');
       }
-      if (/^(?![−-]000000)(?:[0-9]{4}|[+−-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
+      if (/^(?!-000000)(?:[0-9]{4}|[+-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
         throw new SyntaxError('valid PlainYearMonth');
       }
     }),
@@ -432,7 +427,7 @@ const durationDate = seq(choice(durationYearsPart, durationMonthsPart, durationW
 ]);
 const duration = withSyntaxConstraints(
   seq(
-    withCode([temporalSign], (data, result) => (data.factor = result === '-' || result === '\u2212' ? -1 : 1)),
+    withCode([asciiSign], (data, result) => (data.factor = result === '-' ? -1 : 1)),
     durationDesignator,
     choice(durationDate, durationTime)
   ),
