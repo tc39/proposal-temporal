@@ -483,7 +483,6 @@ export function ParseISODateTime(isoString) {
   if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
   const calendar = processAnnotations(match[16]);
   let yearString = match[1];
-  if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
   if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
   const year = +yearString;
   const month = +(match[2] ?? match[4] ?? 1);
@@ -590,7 +589,6 @@ export function ParseTemporalYearMonthString(isoString) {
   if (match) {
     calendar = processAnnotations(match[3]);
     let yearString = match[1];
-    if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
     if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
     year = +yearString;
     month = +match[2];
@@ -682,7 +680,7 @@ export function ParseTemporalDurationString(isoString) {
   if (match.slice(2).every((element) => element === undefined)) {
     throw new RangeError(`invalid duration: ${isoString}`);
   }
-  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : 1;
+  const sign = match[1] === '-' ? -1 : 1;
   const years = match[2] === undefined ? 0 : ToIntegerWithTruncation(match[2]) * sign;
   const months = match[3] === undefined ? 0 : ToIntegerWithTruncation(match[3]) * sign;
   const weeks = match[4] === undefined ? 0 : ToIntegerWithTruncation(match[4]) * sign;
@@ -2744,7 +2742,7 @@ export function ParseDateTimeUTCOffset(string) {
   if (!match) {
     throw new RangeError(`invalid time zone offset: ${string}`);
   }
-  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
+  const sign = match[1] === '-' ? -1 : +1;
   const hours = +match[2];
   const minutes = +(match[3] || 0);
   const seconds = +(match[4] || 0);
