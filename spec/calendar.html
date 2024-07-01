@@ -39,21 +39,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-availablecalendars" type="implementation-defined abstract operation">
+    <emu-clause id="sec-availablecalendars" type="implementation-defined abstract operation">
       <h1>
         AvailableCalendars (
         ): a List of Strings
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>Each element in the returned List represents a calendar type supported by the implementation.</dd>
+        <dd>The returned List is sorted according to lexicographic code unit order, and contains unique calendar types in canonical form (<emu-xref href="#sec-calendar-types"></emu-xref>) identifying the calendars for which the implementation provides the functionality of Intl.DateTimeFormat objects, including their aliases (e.g., either both or neither of *"islamicc"* and *"islamic-civil"*). The List must include *"iso8601"*.</dd>
       </dl>
-      <emu-alg>
-        1. Let _calendars_ be the List of String values representing calendar types supported by the implementation, sorted according to lexicographic code unit order.
-        1. Assert: _calendars_ contains *"iso8601"*.
-        1. [declared="S"] Assert: _calendars_ does not contain any element _S_ for which the ASCII-lowercase of _S_ is not _S_.
-        1. Assert: _calendars_ does not contain any element that does not identify a calendar type in the <a href="https://cldr.unicode.org/">Unicode Common Locale Data Repository (CLDR)</a>.
-      </emu-alg>
     </emu-clause>
   </emu-clause>
 
