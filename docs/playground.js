@@ -12326,8 +12326,7 @@
 	          years: r1,
 	          months: 0,
 	          weeks: 0,
-	          days: 0,
-	          norm: TimeDuration.ZERO
+	          days: 0
 	        };
 	        endDuration = {
 	          ...startDuration,
@@ -12341,11 +12340,10 @@
 	        r1 = months;
 	        r2 = months + increment * sign;
 	        startDuration = {
-	          ...duration,
+	          years: duration.years,
 	          months: r1,
 	          weeks: 0,
-	          days: 0,
-	          norm: TimeDuration.ZERO
+	          days: 0
 	        };
 	        endDuration = {
 	          ...startDuration,
@@ -12369,10 +12367,10 @@
 	        r1 = weeks;
 	        r2 = weeks + increment * sign;
 	        startDuration = {
-	          ...duration,
+	          years: duration.years,
+	          months: duration.months,
 	          weeks: r1,
-	          days: 0,
-	          norm: TimeDuration.ZERO
+	          days: 0
 	        };
 	        endDuration = {
 	          ...startDuration,
@@ -12386,9 +12384,10 @@
 	        r1 = days;
 	        r2 = days + increment * sign;
 	        startDuration = {
-	          ...duration,
-	          days: r1,
-	          norm: TimeDuration.ZERO
+	          years: duration.years,
+	          months: duration.months,
+	          weeks: duration.weeks,
+	          days: r1
 	        };
 	        endDuration = {
 	          ...startDuration,
@@ -12404,19 +12403,23 @@
 	  }
 
 	  // Apply to origin, output PlainDateTimes
-	  const start = AddDateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec, startDuration.years, startDuration.months, startDuration.weeks, startDuration.days, startDuration.norm);
-	  const end = AddDateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec, endDuration.years, endDuration.months, endDuration.weeks, endDuration.days, endDuration.norm);
+	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+	  const startDate = CreateTemporalDate(dateTime.year, dateTime.month, dateTime.day, calendarRec.receiver);
+	  const start = AddDate(calendarRec, startDate, new TemporalDuration(startDuration.years, startDuration.months, startDuration.weeks, startDuration.days));
+	  // TODO: Eliminate this extra PlainDate object when removing calendar user calls
+	  const endDate = CreateTemporalDate(dateTime.year, dateTime.month, dateTime.day, calendarRec.receiver);
+	  const end = AddDate(calendarRec, endDate, new TemporalDuration(endDuration.years, endDuration.months, endDuration.weeks, endDuration.days));
 
 	  // Convert to epoch-nanoseconds
 	  let startEpochNs, endEpochNs;
 	  if (timeZoneRec) {
-	    const startDateTime = CreateTemporalDateTime(start.year, start.month, start.day, start.hour, start.minute, start.second, start.millisecond, start.microsecond, start.nanosecond, calendarRec.receiver);
+	    const startDateTime = CreateTemporalDateTime(GetSlot(start, ISO_YEAR), GetSlot(start, ISO_MONTH), GetSlot(start, ISO_DAY), dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec.receiver);
 	    startEpochNs = GetSlot(GetInstantFor(timeZoneRec, startDateTime, 'compatible'), EPOCHNANOSECONDS);
-	    const endDateTime = CreateTemporalDateTime(end.year, end.month, end.day, end.hour, end.minute, end.second, end.millisecond, end.microsecond, end.nanosecond, calendarRec.receiver);
+	    const endDateTime = CreateTemporalDateTime(GetSlot(end, ISO_YEAR), GetSlot(end, ISO_MONTH), GetSlot(end, ISO_DAY), dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec.receiver);
 	    endEpochNs = GetSlot(GetInstantFor(timeZoneRec, endDateTime, 'compatible'), EPOCHNANOSECONDS);
 	  } else {
-	    startEpochNs = GetUTCEpochNanoseconds(start.year, start.month, start.day, start.hour, start.minute, start.second, start.millisecond, start.microsecond, start.nanosecond);
-	    endEpochNs = GetUTCEpochNanoseconds(end.year, end.month, end.day, end.hour, end.minute, end.second, end.millisecond, end.microsecond, end.nanosecond);
+	    startEpochNs = GetUTCEpochNanoseconds(GetSlot(start, ISO_YEAR), GetSlot(start, ISO_MONTH), GetSlot(start, ISO_DAY), dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
+	    endEpochNs = GetUTCEpochNanoseconds(GetSlot(end, ISO_YEAR), GetSlot(end, ISO_MONTH), GetSlot(end, ISO_DAY), dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond);
 	  }
 
 	  // Round the smallestUnit within the epoch-nanosecond span
@@ -12442,7 +12445,10 @@
 
 	  // Determine whether expanded or contracted
 	  const didExpandCalendarUnit = roundedUnit === MathAbs$2(r2);
-	  duration = didExpandCalendarUnit ? endDuration : startDuration;
+	  duration = {
+	    ...(didExpandCalendarUnit ? endDuration : startDuration),
+	    norm: TimeDuration.ZERO
+	  };
 	  return {
 	    duration,
 	    total,
@@ -12458,10 +12464,12 @@
 	  // unit must be hour or smaller
 
 	  // Apply to origin, output start/end of the day as PlainDateTimes
-	  const start = AddDateTime(dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec, duration.years, duration.months, duration.weeks, duration.days, TimeDuration.ZERO);
-	  const startDateTime = CreateTemporalDateTime(start.year, start.month, start.day, start.hour, start.minute, start.second, start.millisecond, start.microsecond, start.nanosecond, calendarRec.receiver);
-	  const endDate = BalanceISODate(start.year, start.month, start.day + sign);
-	  const endDateTime = CreateTemporalDateTime(endDate.year, endDate.month, endDate.day, start.hour, start.minute, start.second, start.millisecond, start.microsecond, start.nanosecond, calendarRec.receiver);
+	  const date = CreateTemporalDate(dateTime.year, dateTime.month, dateTime.day, calendarRec.receiver);
+	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+	  const start = AddDate(calendarRec, date, new TemporalDuration(duration.years, duration.months, duration.weeks, duration.days));
+	  const startDateTime = CreateTemporalDateTime(GetSlot(start, ISO_YEAR), GetSlot(start, ISO_MONTH), GetSlot(start, ISO_DAY), dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec.receiver);
+	  const endDate = BalanceISODate(GetSlot(start, ISO_YEAR), GetSlot(start, ISO_MONTH), GetSlot(start, ISO_DAY) + sign);
+	  const endDateTime = CreateTemporalDateTime(endDate.year, endDate.month, endDate.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.millisecond, dateTime.microsecond, dateTime.nanosecond, calendarRec.receiver);
 
 	  // Compute the epoch-nanosecond start/end of the final whole-day interval
 	  // If duration has negative sign, startEpochNs will be after endEpochNs
@@ -12581,8 +12589,7 @@
 	            years,
 	            months: 0,
 	            weeks: 0,
-	            days: 0,
-	            norm: TimeDuration.ZERO
+	            days: 0
 	          };
 	          break;
 	        }
@@ -12590,11 +12597,10 @@
 	        {
 	          const months = duration.months + sign;
 	          endDuration = {
-	            ...duration,
+	            years: duration.years,
 	            months,
 	            weeks: 0,
-	            days: 0,
-	            norm: TimeDuration.ZERO
+	            days: 0
 	          };
 	          break;
 	        }
@@ -12602,10 +12608,10 @@
 	        {
 	          const weeks = duration.weeks + sign;
 	          endDuration = {
-	            ...duration,
+	            years: duration.years,
+	            months: duration.months,
 	            weeks,
-	            days: 0,
-	            norm: TimeDuration.ZERO
+	            days: 0
 	          };
 	          break;
 	        }
@@ -12613,9 +12619,10 @@
 	        {
 	          const days = duration.days + sign;
 	          endDuration = {
-	            ...duration,
-	            days,
-	            norm: TimeDuration.ZERO
+	            years: duration.years,
+	            months: duration.months,
+	            weeks: duration.weeks,
+	            days
 	          };
 	          break;
 	        }
@@ -12624,20 +12631,25 @@
 	    }
 
 	    // Compute end-of-unit in epoch-nanoseconds
-	    const end = AddDateTime(plainDateTime.year, plainDateTime.month, plainDateTime.day, plainDateTime.hour, plainDateTime.minute, plainDateTime.second, plainDateTime.millisecond, plainDateTime.microsecond, plainDateTime.nanosecond, calendarRec, endDuration.years, endDuration.months, endDuration.weeks, endDuration.days, TimeDuration.ZERO);
+	    const date = CreateTemporalDate(plainDateTime.year, plainDateTime.month, plainDateTime.day, calendarRec.receiver);
+	    const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+	    const end = AddDate(calendarRec, date, new TemporalDuration(endDuration.years, endDuration.months, endDuration.weeks, endDuration.days));
 	    let endEpochNs;
 	    if (timeZoneRec) {
-	      const endDateTime = CreateTemporalDateTime(end.year, end.month, end.day, end.hour, end.minute, end.second, end.millisecond, end.microsecond, end.nanosecond, calendarRec.receiver);
+	      const endDateTime = CreateTemporalDateTime(GetSlot(end, ISO_YEAR), GetSlot(end, ISO_MONTH), GetSlot(end, ISO_DAY), plainDateTime.hour, plainDateTime.minute, plainDateTime.second, plainDateTime.millisecond, plainDateTime.microsecond, plainDateTime.nanosecond, calendarRec.receiver);
 	      endEpochNs = GetSlot(GetInstantFor(timeZoneRec, endDateTime, 'compatible'), EPOCHNANOSECONDS);
 	    } else {
-	      endEpochNs = GetUTCEpochNanoseconds(end.year, end.month, end.day, end.hour, end.minute, end.second, end.millisecond, end.microsecond, end.nanosecond);
+	      endEpochNs = GetUTCEpochNanoseconds(GetSlot(end, ISO_YEAR), GetSlot(end, ISO_MONTH), GetSlot(end, ISO_DAY), plainDateTime.hour, plainDateTime.minute, plainDateTime.second, plainDateTime.millisecond, plainDateTime.microsecond, plainDateTime.nanosecond);
 	    }
 	    const didExpandToEnd = nudgedEpochNs.compare(endEpochNs) !== -sign;
 
 	    // Is nudgedEpochNs at the end-of-unit? This means it should bubble-up to
 	    // the next highest unit (and possibly further...)
 	    if (didExpandToEnd) {
-	      duration = endDuration;
+	      duration = {
+	        ...endDuration,
+	        norm: TimeDuration.ZERO
+	      };
 	    } else {
 	      // NOT at end-of-unit. Stop looking for bubbling
 	      break;
