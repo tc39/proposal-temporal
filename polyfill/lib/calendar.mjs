@@ -73,7 +73,7 @@ export class Calendar {
     let stringId = ES.RequireString(id);
     if (!ES.IsBuiltinCalendar(stringId)) throw new RangeError(`invalid calendar identifier ${stringId}`);
     CreateSlots(this);
-    stringId = ES.ASCIILowercase(stringId);
+    stringId = ES.CanonicalizeCalendar(stringId);
     SetSlot(this, CALENDAR_ID, stringId);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
