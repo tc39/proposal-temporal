@@ -8889,18 +8889,18 @@
 	  }
 	}
 
-	const offsetIdentifierNoCapture = /(?:[+\u2212-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
+	const offsetIdentifierNoCapture = /(?:[+-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
 	const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
 	const timeZoneID = new RegExp(`(?:${offsetIdentifierNoCapture.source}|(?:${tzComponent.source})(?:\\/(?:${tzComponent.source}))*)`);
-	const yearpart = /(?:[+\u2212-]\d{6}|\d{4})/;
+	const yearpart = /(?:[+-]\d{6}|\d{4})/;
 	const monthpart = /(?:0[1-9]|1[0-2])/;
 	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
 	const datesplit = new RegExp(`(${yearpart.source})(?:-(${monthpart.source})-(${daypart.source})|(${monthpart.source})(${daypart.source}))`);
 	const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-	const offsetWithParts = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-	const offset = /((?:[+\u2212-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
+	const offsetWithParts = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
+	const offset = /((?:[+-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
 	const offsetpart = new RegExp(`([zZ])|${offset.source}?`);
-	const offsetIdentifier = /([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
+	const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
 	const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
 	const zoneddatetime = new RegExp([`^${datesplit.source}`, `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`, `(?:\\[!?(${timeZoneID.source})\\])?`, `((?:${annotation.source})*)$`].join(''));
 	const time = new RegExp([`^[tT]?${timesplit.source}`, `(?:${offsetpart.source})?`, `(?:\\[!?${timeZoneID.source}\\])?`, `((?:${annotation.source})*)$`].join(''));
@@ -8920,7 +8920,7 @@
 	const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
 	const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
 	const durationTime = new RegExp(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
-	const duration = new RegExp(`^([+\u2212-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
+	const duration = new RegExp(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
 
 	/* global true */
 
@@ -9185,7 +9185,6 @@
 	  if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
 	  const calendar = processAnnotations(match[16]);
 	  let yearString = match[1];
-	  if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
 	  if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
 	  const year = +yearString;
 	  const month = +(match[2] ?? match[4] ?? 1);
@@ -9315,7 +9314,6 @@
 	  if (match) {
 	    calendar = processAnnotations(match[3]);
 	    let yearString = match[1];
-	    if (yearString[0] === '\u2212') yearString = `-${yearString.slice(1)}`;
 	    if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
 	    year = +yearString;
 	    month = +match[2];
@@ -9443,7 +9441,7 @@
 	  if (match.slice(2).every(element => element === undefined)) {
 	    throw new RangeError(`invalid duration: ${isoString}`);
 	  }
-	  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : 1;
+	  const sign = match[1] === '-' ? -1 : 1;
 	  const years = match[2] === undefined ? 0 : ToIntegerWithTruncation(match[2]) * sign;
 	  const months = match[3] === undefined ? 0 : ToIntegerWithTruncation(match[3]) * sign;
 	  const weeks = match[4] === undefined ? 0 : ToIntegerWithTruncation(match[4]) * sign;
@@ -11361,7 +11359,7 @@
 	  if (!match) {
 	    throw new RangeError(`invalid time zone offset: ${string}`);
 	  }
-	  const sign = match[1] === '-' || match[1] === '\u2212' ? -1 : +1;
+	  const sign = match[1] === '-' ? -1 : +1;
 	  const hours = +match[2];
 	  const minutes = +(match[3] || 0);
 	  const seconds = +(match[4] || 0);
