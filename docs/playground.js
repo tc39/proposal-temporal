@@ -8975,7 +8975,7 @@
 	const YEAR_MAX = 275760;
 	const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
-	const BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
+	const BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'ethiopic-amete-alem', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
 	const ICU_LEGACY_TIME_ZONE_IDS = new Set(['ACT', 'AET', 'AGT', 'ART', 'AST', 'BET', 'BST', 'CAT', 'CNT', 'CST', 'CTT', 'EAT', 'ECT', 'IET', 'IST', 'JST', 'MIT', 'NET', 'NST', 'PLT', 'PNT', 'PRT', 'PST', 'SST', 'VST']);
 	function ToIntegerWithTruncation(value) {
 	  const number = ToNumber$1(value);
@@ -9905,7 +9905,7 @@
 	    }
 	    if (!calendar) calendar = 'iso8601';
 	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
-	    calendar = ASCIILowercase(calendar);
+	    calendar = CanonicalizeCalendar(calendar);
 	  }
 	  if (timeZone === undefined) return {
 	    plainRelativeTo: CreateTemporalDate(year, month, day, calendar)
@@ -10078,7 +10078,7 @@
 	  if (z) throw new RangeError('Z designator not supported for PlainDate');
 	  if (!calendar) calendar = 'iso8601';
 	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
-	  calendar = ASCIILowercase(calendar);
+	  calendar = CanonicalizeCalendar(calendar);
 	  GetTemporalOverflowOption(options); // validate and ignore
 	  return CreateTemporalDate(year, month, day, calendar);
 	}
@@ -10165,7 +10165,7 @@
 	    RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	    if (!calendar) calendar = 'iso8601';
 	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
-	    calendar = ASCIILowercase(calendar);
+	    calendar = CanonicalizeCalendar(calendar);
 	    GetTemporalOverflowOption(resolvedOptions); // validate and ignore
 	  }
 	  return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
@@ -10241,7 +10241,7 @@
 	  } = ParseTemporalMonthDayString(RequireString(item));
 	  if (calendar === undefined) calendar = 'iso8601';
 	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
-	  calendar = ASCIILowercase(calendar);
+	  calendar = CanonicalizeCalendar(calendar);
 	  GetTemporalOverflowOption(options); // validate and ignore
 
 	  if (referenceISOYear === undefined) {
@@ -10320,7 +10320,7 @@
 	  } = ParseTemporalYearMonthString(RequireString(item));
 	  if (calendar === undefined) calendar = 'iso8601';
 	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
-	  calendar = ASCIILowercase(calendar);
+	  calendar = CanonicalizeCalendar(calendar);
 	  GetTemporalOverflowOption(options); // validate and ignore
 
 	  const result = CreateTemporalYearMonth(year, month, calendar, referenceISODay);
@@ -10426,7 +10426,7 @@
 	    }
 	    if (!calendar) calendar = 'iso8601';
 	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
-	    calendar = ASCIILowercase(calendar);
+	    calendar = CanonicalizeCalendar(calendar);
 	    matchMinute = true; // ISO strings may specify offset with less precision
 	    disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
 	    offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
@@ -10879,7 +10879,7 @@
 	    return calendarLike;
 	  }
 	  const identifier = RequireString(calendarLike);
-	  if (IsBuiltinCalendar(identifier)) return ASCIILowercase(identifier);
+	  if (IsBuiltinCalendar(identifier)) return CanonicalizeCalendar(identifier);
 	  let calendar;
 	  try {
 	    ({
@@ -10898,7 +10898,7 @@
 	  }
 	  if (!calendar) calendar = 'iso8601';
 	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
-	  return ASCIILowercase(calendar);
+	  return CanonicalizeCalendar(calendar);
 	}
 	function GetTemporalCalendarSlotValueWithISODefault(item) {
 	  if (HasSlot(item, CALENDAR)) return GetSlot(item, CALENDAR);
@@ -13759,6 +13759,27 @@
 	function IsBuiltinCalendar(id) {
 	  return Call$3(ArrayIncludes$1, BUILTIN_CALENDAR_IDS, [ASCIILowercase(id)]);
 	}
+
+	// This is a temporary implementation. Ideally we'd rely on Intl.DateTimeFormat
+	// here, to provide the latest CLDR alias data, when implementations catch up to
+	// the ECMA-402 change. The aliases below are taken from
+	// https://github.com/unicode-org/cldr/blob/main/common/bcp47/calendar.xml
+	function CanonicalizeCalendar(id) {
+	  id = ASCIILowercase(id);
+	  switch (id) {
+	    case 'ethiopic-amete-alem':
+	      // May need to be removed in the future.
+	      // See https://github.com/tc39/ecma402/issues/285
+	      return 'ethioaa';
+	    // case 'gregorian':
+	    // (Skip 'gregorian'. It isn't a valid identifier as it's a single
+	    // subcomponent longer than 8 letters. It can only be used with the old
+	    // @key=value syntax.)
+	    case 'islamicc':
+	      return 'islamic-civil';
+	  }
+	  return id;
+	}
 	function ASCIILowercase(str) {
 	  // The spec defines this operation distinct from String.prototype.lowercase,
 	  // so we'll follow the spec here. Note that nasty security issues that can
@@ -14516,7 +14537,7 @@
 	    let stringId = RequireString(id);
 	    if (!IsBuiltinCalendar(stringId)) throw new RangeError(`invalid calendar identifier ${stringId}`);
 	    CreateSlots(this);
-	    stringId = ASCIILowercase(stringId);
+	    stringId = CanonicalizeCalendar(stringId);
 	    SetSlot(this, CALENDAR_ID, stringId);
 	    {
 	      Object.defineProperty(this, '_repr_', {
