@@ -751,20 +751,15 @@
       <h1>
         ToTemporalCalendarIdentifier (
           _temporalCalendarLike_: an ECMAScript value,
-          optional _default_: a String,
         ): either a normal completion containing a String or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
           It attempts to derive a value from _temporalCalendarLike_ that is a calendar identifier according to IsBuiltinCalendar, and returns that value if found or throws an exception if not.
-          An optional _default_ built-in calendar identifier may be provided, which is returned if _temporalCalendarLike_ is *undefined*.
         </dd>
       </dl>
       <emu-alg>
-        1. If _temporalCalendarLike_ is *undefined* and _default_ is present, then
-          1. Assert: IsBuiltinCalendar(_default_) is *true*.
-          1. Return _default_.
         1. If _temporalCalendarLike_ is an Object, then
           1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return _temporalCalendarLike_.[[Calendar]].
@@ -792,7 +787,9 @@
         1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _item_.[[Calendar]].
         1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
-        1. Return ? ToTemporalCalendarIdentifier(_calendarLike_, *"iso8601"*).
+        1. If _calendarLike_ is *undefined*, then
+          1. Return *"iso8601"*.
+        1. Return ? ToTemporalCalendarIdentifier(_calendarLike_).
       </emu-alg>
     </emu-clause>
 
