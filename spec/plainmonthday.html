@@ -343,11 +343,7 @@
             1. Set _options_ to ? GetOptionsObject(_options_).
             1. Perform ? GetTemporalOverflowOption(_options_).
             1. Return _item_.
-          1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Let _calendar_ be _item_.[[Calendar]].
-          1. Else,
-            1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
-            1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_calendarLike_, *"iso8601"*).
+          1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », «», «»).
           1. Set _options_ to ? GetOptionsObject(_options_).
           1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
