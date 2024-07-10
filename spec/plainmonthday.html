@@ -340,11 +340,7 @@
         1. If _item_ is a Object, then
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Return _item_.
-          1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Let _calendar_ be _item_.[[Calendar]].
-          1. Else,
-            1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
-            1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_, *"iso8601"*).
+          1. Let _calendar_ be ? GetTemporalCalendarSlotValueWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « *"day"*, *"month"*, *"monthCode"*, *"year"* », «», «»).
           1. Return ? CalendarMonthDayFromFields(_calendar_, _fields_, _overflow_).
         1. If _item_ is not a String, throw a *TypeError* exception.
