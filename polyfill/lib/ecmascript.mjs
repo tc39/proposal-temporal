@@ -35,18 +35,13 @@ const StringPrototypeSlice = String.prototype.slice;
 import bigInt from 'big-integer';
 import callBound from 'call-bind/callBound';
 import Call from 'es-abstract/2024/Call.js';
-import CompletionRecord from 'es-abstract/2024/CompletionRecord.js';
 import CreateDataPropertyOrThrow from 'es-abstract/2024/CreateDataPropertyOrThrow.js';
 import Get from 'es-abstract/2024/Get.js';
-import GetIterator from 'es-abstract/2024/GetIterator.js';
 import GetMethod from 'es-abstract/2024/GetMethod.js';
 import HasOwnProperty from 'es-abstract/2024/HasOwnProperty.js';
 import IsArray from 'es-abstract/2024/IsArray.js';
 import IsIntegralNumber from 'es-abstract/2024/IsIntegralNumber.js';
 import IsPropertyKey from 'es-abstract/2024/IsPropertyKey.js';
-import IteratorClose from 'es-abstract/2024/IteratorClose.js';
-import IteratorStep from 'es-abstract/2024/IteratorStep.js';
-import IteratorValue from 'es-abstract/2024/IteratorValue.js';
 import SameValue from 'es-abstract/2024/SameValue.js';
 import ToNumber from 'es-abstract/2024/ToNumber.js';
 import ToObject from 'es-abstract/2024/ToObject.js';
@@ -289,22 +284,7 @@ const DURATION_FIELDS = [
 
 import * as PARSE from './regex.mjs';
 
-export {
-  Call,
-  CompletionRecord,
-  GetIterator,
-  GetMethod,
-  HasOwnProperty,
-  IsIntegralNumber,
-  IteratorClose,
-  IteratorStep,
-  IteratorValue,
-  ToNumber,
-  ToObject,
-  ToPrimitive,
-  ToString,
-  Type
-};
+export { Call, GetMethod, HasOwnProperty, ToNumber, ToObject, ToString, Type };
 
 const IntlDateTimeFormatEnUsCache = new Map();
 
