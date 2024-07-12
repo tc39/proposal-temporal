@@ -1,5 +1,15 @@
 /* global __debug__ */
 
+import Call from 'es-abstract/2024/Call.js';
+import CompletionRecord from 'es-abstract/2024/CompletionRecord.js';
+import GetIterator from 'es-abstract/2024/GetIterator.js';
+import IteratorClose from 'es-abstract/2024/IteratorClose.js';
+import IteratorStep from 'es-abstract/2024/IteratorStep.js';
+import IteratorValue from 'es-abstract/2024/IteratorValue.js';
+import ToObject from 'es-abstract/2024/ToObject.js';
+import ToString from 'es-abstract/2024/ToString.js';
+import Type from 'es-abstract/2024/Type.js';
+
 import * as ES from './ecmascript.mjs';
 import { GetIntrinsic, MakeIntrinsicClass, DefineIntrinsic } from './intrinsicclass.mjs';
 import {
@@ -49,19 +59,19 @@ const SymbolIterator = Symbol.iterator;
 const WeakMapPrototypeGet = WeakMap.prototype.get;
 const WeakMapPrototypeSet = WeakMap.prototype.set;
 
-const MapIterator = ES.Call(MapPrototypeEntries, new Map(), []);
+const MapIterator = Call(MapPrototypeEntries, new Map(), []);
 const MapIteratorPrototypeNext = MapIterator.next;
-const SetIterator = ES.Call(SetPrototypeValues, new Set(), []);
+const SetIterator = Call(SetPrototypeValues, new Set(), []);
 const SetIteratorPrototypeNext = SetIterator.next;
 
 function arrayFromSet(src) {
-  const valuesIterator = ES.Call(SetPrototypeValues, src, []);
+  const valuesIterator = Call(SetPrototypeValues, src, []);
   return ArrayFrom({
     [SymbolIterator]() {
       return this;
     },
     next() {
-      return ES.Call(SetIteratorPrototypeNext, valuesIterator, []);
+      return Call(SetIteratorPrototypeNext, valuesIterator, []);
     }
   });
 }
@@ -91,21 +101,21 @@ export class Calendar {
   }
   dateFromFields(fields, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
+    if (Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.GetOptionsObject(options);
     const id = GetSlot(this, CALENDAR_ID);
     return impl[id].dateFromFields(fields, options, id);
   }
   yearMonthFromFields(fields, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
+    if (Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.GetOptionsObject(options);
     const id = GetSlot(this, CALENDAR_ID);
     return impl[id].yearMonthFromFields(fields, options, id);
   }
   monthDayFromFields(fields, options = undefined) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    if (ES.Type(fields) !== 'Object') throw new TypeError('invalid fields');
+    if (Type(fields) !== 'Object') throw new TypeError('invalid fields');
     options = ES.GetOptionsObject(options);
     const id = GetSlot(this, CALENDAR_ID);
     return impl[id].monthDayFromFields(fields, options, id);
@@ -114,30 +124,30 @@ export class Calendar {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
     const fieldsArray = [];
     const allowed = new OriginalSet(['year', 'month', 'monthCode', 'day']);
-    const iteratorRecord = ES.GetIterator(fields, 'SYNC');
+    const iteratorRecord = GetIterator(fields, 'SYNC');
     const abort = (err) => {
-      const completion = new ES.CompletionRecord('throw', err);
-      return ES.IteratorClose(iteratorRecord, completion)['?']();
+      const completion = new CompletionRecord('throw', err);
+      return IteratorClose(iteratorRecord, completion)['?']();
     };
     let next = true;
     while (next !== false) {
-      next = ES.IteratorStep(iteratorRecord);
+      next = IteratorStep(iteratorRecord);
       if (next !== false) {
-        let name = ES.IteratorValue(next);
-        if (ES.Type(name) !== 'String') return abort(new TypeError('invalid fields'));
-        if (!ES.Call(SetPrototypeHas, allowed, [name])) {
+        let name = IteratorValue(next);
+        if (Type(name) !== 'String') return abort(new TypeError('invalid fields'));
+        if (!Call(SetPrototypeHas, allowed, [name])) {
           return abort(new RangeError(`invalid or duplicate field name ${name}`));
         }
-        ES.Call(SetPrototypeDelete, allowed, [name]);
-        ES.Call(ArrayPrototypePush, fieldsArray, [name]);
+        Call(SetPrototypeDelete, allowed, [name]);
+        Call(ArrayPrototypePush, fieldsArray, [name]);
       }
     }
     return impl[GetSlot(this, CALENDAR_ID)].fields(fieldsArray);
   }
   mergeFields(fields, additionalFields) {
     if (!ES.IsTemporalCalendar(this)) throw new TypeError('invalid receiver');
-    const fieldsCopy = ES.SnapshotOwnProperties(ES.ToObject(fields), null, [], [undefined]);
-    const additionalFieldsCopy = ES.SnapshotOwnProperties(ES.ToObject(additionalFields), null, [], [undefined]);
+    const fieldsCopy = ES.SnapshotOwnProperties(ToObject(fields), null, [], [undefined]);
+    const additionalFieldsCopy = ES.SnapshotOwnProperties(ToObject(additionalFields), null, [], [undefined]);
     const additionalKeys = ReflectOwnKeys(additionalFieldsCopy);
     const overriddenKeys = impl[GetSlot(this, CALENDAR_ID)].fieldKeysToIgnore(additionalKeys);
     const merged = ObjectCreate(null);
@@ -145,7 +155,7 @@ export class Calendar {
     for (let ix = 0; ix < fieldsKeys.length; ix++) {
       const key = fieldsKeys[ix];
       let propValue = undefined;
-      if (ES.Call(ArrayIncludes, overriddenKeys, [key])) propValue = additionalFieldsCopy[key];
+      if (Call(ArrayIncludes, overriddenKeys, [key])) propValue = additionalFieldsCopy[key];
       else propValue = fieldsCopy[key];
       if (propValue !== undefined) merged[key] = propValue;
     }
@@ -388,11 +398,11 @@ impl['iso8601'] = {
     const result = new OriginalSet();
     for (let ix = 0; ix < keys.length; ix++) {
       const key = keys[ix];
-      ES.Call(SetPrototypeAdd, result, [key]);
+      Call(SetPrototypeAdd, result, [key]);
       if (key === 'month') {
-        ES.Call(SetPrototypeAdd, result, ['monthCode']);
+        Call(SetPrototypeAdd, result, ['monthCode']);
       } else if (key === 'monthCode') {
-        ES.Call(SetPrototypeAdd, result, ['month']);
+        Call(SetPrototypeAdd, result, ['month']);
       }
     }
     return arrayFromSet(result);
@@ -537,17 +547,17 @@ class OneObjectCache {
     this.misses = 0;
     if (cacheToClone !== undefined) {
       let i = 0;
-      const entriesIterator = ES.Call(MapPrototypeEntries, cacheToClone.map, []);
+      const entriesIterator = Call(MapPrototypeEntries, cacheToClone.map, []);
       for (;;) {
-        const iterResult = ES.Call(MapIteratorPrototypeNext, entriesIterator, []);
+        const iterResult = Call(MapIteratorPrototypeNext, entriesIterator, []);
         if (iterResult.done) break;
         if (++i > OneObjectCache.MAX_CACHE_ENTRIES) break;
-        ES.Call(MapPrototypeSet, this.map, iterResult.value);
+        Call(MapPrototypeSet, this.map, iterResult.value);
       }
     }
   }
   get(key) {
-    const result = ES.Call(MapPrototypeGet, this.map, [key]);
+    const result = Call(MapPrototypeGet, this.map, [key]);
     if (result) {
       this.hits++;
       this.report();
@@ -556,7 +566,7 @@ class OneObjectCache {
     return result;
   }
   set(key, value) {
-    ES.Call(MapPrototypeSet, this.map, [key, value]);
+    Call(MapPrototypeSet, this.map, [key, value]);
     this.misses++;
     this.report();
   }
@@ -569,8 +579,8 @@ class OneObjectCache {
     */
   }
   setObject(obj) {
-    if (ES.Call(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError('object already cached');
-    ES.Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
+    if (Call(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError('object already cached');
+    Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
     this.report();
   }
 }
@@ -583,10 +593,10 @@ OneObjectCache.MAX_CACHE_ENTRIES = 1000;
  * @param obj - object to associate with the cache
  */
 OneObjectCache.getCacheForObject = function (obj) {
-  let cache = ES.Call(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj]);
+  let cache = Call(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj]);
   if (!cache) {
     cache = new OneObjectCache();
-    ES.Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, cache]);
+    Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, cache]);
   }
   return cache;
 };
@@ -739,7 +749,7 @@ const nonIsoHelperBase = {
     if (day === undefined) throw new RangeError('Missing day');
     if (monthCode !== undefined) {
       if (typeof monthCode !== 'string') {
-        throw new RangeError(`monthCode must be a string, not ${ES.Type(monthCode).toLowerCase()}`);
+        throw new RangeError(`monthCode must be a string, not ${Type(monthCode).toLowerCase()}`);
       }
       if (!/^M([01]?\d)(L?)$/.test(monthCode)) throw new RangeError(`Invalid monthCode: ${monthCode}`);
     }
@@ -1526,7 +1536,7 @@ function adjustEras(eras) {
   // Ensure that the latest epoch is first in the array. This lets us try to
   // match eras in index order, with the last era getting the remaining older
   // years. Any reverse-signed era must be at the end.
-  ES.Call(ArrayPrototypeSort, eras, [
+  Call(ArrayPrototypeSort, eras, [
     (e1, e2) => {
       if (e1.reverseOf) return 1;
       if (e2.reverseOf) return -1;
@@ -1649,7 +1659,7 @@ const makeHelperGregorian = (id, originalEras) => {
       if (month === undefined) calendarDate = { ...calendarDate, month: monthCodeNumberPart(monthCode) };
       this.validateCalendarDate(calendarDate);
       calendarDate = this.completeEraYear(calendarDate);
-      calendarDate = ES.Call(nonIsoHelperBase.adjustCalendarDate, this, [calendarDate, cache, overflow]);
+      calendarDate = Call(nonIsoHelperBase.adjustCalendarDate, this, [calendarDate, cache, overflow]);
       return calendarDate;
     },
     estimateIsoDate(calendarDate) {
@@ -2005,7 +2015,7 @@ const nonIsoGeneralImpl = {
     let fieldDescriptors = [];
     if (type !== 'month-day') {
       fieldDescriptors = [
-        { property: 'era', conversion: ES.ToString, required: false },
+        { property: 'era', conversion: ToString, required: false },
         { property: 'eraYear', conversion: ES.ToIntegerWithTruncation, required: false }
       ];
     }
@@ -2048,8 +2058,8 @@ const nonIsoGeneralImpl = {
     return result;
   },
   fields(fields) {
-    if (ES.Call(ArrayIncludes, fields, ['year'])) {
-      ES.Call(ArrayPrototypePush, fields, ['era', 'eraYear']);
+    if (Call(ArrayIncludes, fields, ['year'])) {
+      Call(ArrayPrototypePush, fields, ['era', 'eraYear']);
     }
     return fields;
   },
@@ -2057,39 +2067,39 @@ const nonIsoGeneralImpl = {
     const result = new OriginalSet();
     for (let ix = 0; ix < keys.length; ix++) {
       const key = keys[ix];
-      ES.Call(SetPrototypeAdd, result, [key]);
+      Call(SetPrototypeAdd, result, [key]);
       switch (key) {
         case 'era':
-          ES.Call(SetPrototypeAdd, result, ['eraYear']);
-          ES.Call(SetPrototypeAdd, result, ['year']);
+          Call(SetPrototypeAdd, result, ['eraYear']);
+          Call(SetPrototypeAdd, result, ['year']);
           break;
         case 'eraYear':
-          ES.Call(SetPrototypeAdd, result, ['era']);
-          ES.Call(SetPrototypeAdd, result, ['year']);
+          Call(SetPrototypeAdd, result, ['era']);
+          Call(SetPrototypeAdd, result, ['year']);
           break;
         case 'year':
-          ES.Call(SetPrototypeAdd, result, ['era']);
-          ES.Call(SetPrototypeAdd, result, ['eraYear']);
+          Call(SetPrototypeAdd, result, ['era']);
+          Call(SetPrototypeAdd, result, ['eraYear']);
           break;
         case 'month':
-          ES.Call(SetPrototypeAdd, result, ['monthCode']);
+          Call(SetPrototypeAdd, result, ['monthCode']);
           // See https://github.com/tc39/proposal-temporal/issues/1784
           if (this.helper.erasBeginMidYear) {
-            ES.Call(SetPrototypeAdd, result, ['era']);
-            ES.Call(SetPrototypeAdd, result, ['eraYear']);
+            Call(SetPrototypeAdd, result, ['era']);
+            Call(SetPrototypeAdd, result, ['eraYear']);
           }
           break;
         case 'monthCode':
-          ES.Call(SetPrototypeAdd, result, ['month']);
+          Call(SetPrototypeAdd, result, ['month']);
           if (this.helper.erasBeginMidYear) {
-            ES.Call(SetPrototypeAdd, result, ['era']);
-            ES.Call(SetPrototypeAdd, result, ['eraYear']);
+            Call(SetPrototypeAdd, result, ['era']);
+            Call(SetPrototypeAdd, result, ['eraYear']);
           }
           break;
         case 'day':
           if (this.helper.erasBeginMidYear) {
-            ES.Call(SetPrototypeAdd, result, ['era']);
-            ES.Call(SetPrototypeAdd, result, ['eraYear']);
+            Call(SetPrototypeAdd, result, ['era']);
+            Call(SetPrototypeAdd, result, ['eraYear']);
           }
           break;
       }
