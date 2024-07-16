@@ -1605,7 +1605,8 @@ export function InterpretISODateTimeOffset(
       : typeof timeZoneRec.receiver === 'string'
         ? timeZoneRec.receiver
         : 'time zone';
-    throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZoneString}`);
+    const dtStr = TemporalDateTimeToString(dt, 'auto');
+    throw new RangeError(`Offset ${offsetStr} is invalid for ${dtStr} in ${timeZoneString}`);
   }
   // fall through: offsetOpt === 'prefer', but the offset doesn't match
   // so fall back to use the time zone instead.
