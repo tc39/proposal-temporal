@@ -1557,7 +1557,8 @@ export function InterpretISODateTimeOffset(
   // zone and date/time.
   if (offsetOpt === 'reject') {
     const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
-    throw new RangeError(`Offset ${offsetStr} is invalid for ${dt} in ${timeZone}`);
+    const dtStr = TemporalDateTimeToString(dt, 'auto');
+    throw new RangeError(`Offset ${offsetStr} is invalid for ${dtStr} in ${timeZone}`);
   }
   // fall through: offsetOpt === 'prefer', but the offset doesn't match
   // so fall back to use the time zone instead.
