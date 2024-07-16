@@ -447,8 +447,12 @@
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Assert: IsValidISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
-        1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
-        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
+        1. If _result_.[[Time]] is ~start-of-day~, then
+          1. Let _time_ be Time Record { [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+        1. Else,
+          1. Let _time_ be _result_.[[Time]].
+        1. Assert: IsValidTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]) is *true*.
+        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]], _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -950,7 +954,7 @@
           _calendar_: a String,
           _fields_: a Calendar Fields Record,
           _overflow_: *"constrain"* or *"reject"*,
-        ): either a normal completion containing an ISO Date-Time Record or a throw completion
+        ): either a normal completion containing a Record with fields [[Year]], [[Month]], [[Day]] (as in ISO Date-Time Record) and [[Time]] (a Time Record), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -959,7 +963,7 @@
       <emu-alg>
         1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _fields_, _overflow_).
         1. Let _time_ be ? RegulateTime(_fields_.[[Hour]], _fields_.[[Minute]], _fields_.[[Second]], _fields_.[[Millisecond]], _fields_.[[Microsecond]], _fields_.[[Nanosecond]], _overflow_).
-        1. Return CombineISODateAndTimeRecord(_isoDate_, _time_).
+        1. Return the Record { [[Year]]: _isoDate_.[[Year]], [[Month]]: _isoDate_.[[Month]], [[Day]]: _isoDate_.[[Day]], [[Time]]: _time_ }.
       </emu-alg>
     </emu-clause>
 
@@ -998,15 +1002,16 @@
         1. Else,
           1. If _item_ is not a String, throw a *TypeError* exception.
           1. Let _result_ be ? ParseTemporalDateTimeString(_item_).
+          1. If _result_.[[Time]] is ~start-of-day~, set _result_.[[Time]] to Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
           1. Assert: IsValidISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
-          1. Assert: IsValidTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *true*.
+          1. Assert: IsValidTime(_result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]]) is *true*.
           1. Let _calendar_ be _result_.[[Calendar]].
           1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
           1. If IsBuiltinCalendar(_calendar_) is *false*, throw a *RangeError* exception.
           1. Set _calendar_ to CanonicalizeUValue(*"ca"*, _calendar_).
           1. Set _options_ to ? GetOptionsObject(_options_).
           1. Perform ? GetTemporalOverflowOption(_options_).
-        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _calendar_).
+        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]], _calendar_).
       </emu-alg>
     </emu-clause>
 

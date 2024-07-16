@@ -416,12 +416,10 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _zonedDateTime_.[[Nanoseconds]]).
-        1. Let _midnight_ be a Time Record with all fields set to 0.
-        1. Let _today_ be CombineISODateAndTimeRecord(_isoDateTime_, _midnight_).
-        1. Let _tomorrowISODate_ be BalanceISODate(_today_.[[Year]], _today_.[[Month]], _today_.[[Day]] + 1).
-        1. Let _tomorrow_ be CombineISODateAndTimeRecord(_tomorrowISODate_, _midnight_).
-        1. Let _todayNs_ be ? GetEpochNanosecondsFor(_timeZone_, _today_, *"compatible"*).
-        1. Let _tomorrowNs_ be ? GetEpochNanosecondsFor(_timeZone_, _tomorrow_, *"compatible"*).
+        1. Let _today_ be CreateISODateRecord(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]]).
+        1. Let _tomorrow_ be BalanceISODate(_today_.[[Year]], _today_.[[Month]], _today_.[[Day]] + 1).
+        1. Let _todayNs_ be ? GetStartOfDay(_timeZone_, _today_).
+        1. Let _tomorrowNs_ be ? GetStartOfDay(_timeZone_, _tomorrow_).
         1. Let _diff_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_tomorrowNs_, _todayNs_).
         1. Return 𝔽(DivideNormalizedTimeDuration(_diff_, 3.6 × 10<sup>12</sup>)).
       </emu-alg>
@@ -554,7 +552,7 @@
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Let _newOffsetNanoseconds_ be ? ParseDateTimeUTCOffset(_fields_.[[OffsetString]]).
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Hour]], _dateTimeResult_.[[Minute]], _dateTimeResult_.[[Second]], _dateTimeResult_.[[Millisecond]], _dateTimeResult_.[[Microsecond]], _dateTimeResult_.[[Nanosecond]], ~option~, _newOffsetNanoseconds_, _timeZone_, _disambiguation_, _offset_, ~match-exactly~).
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Time]], ~option~, _newOffsetNanoseconds_, _timeZone_, _disambiguation_, _offset_, ~match-exactly~).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -567,13 +565,17 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Let _plainTime_ be ? ToTemporalTimeOrMidnight(_plainTimeLike_).
-        1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: _plainTime_.[[ISOHour]], [[Minute]]: _plainTime_.[[ISOMinute]], [[Second]]: _plainTime_.[[ISOSecond]], [[Millisecond]]: _plainTime_.[[ISOMillisecond]], [[Microsecond]]: _plainTime_.[[ISOMicrosecond]], [[Nanosecond]]: _plainTime_.[[ISONanosecond]] }.
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _zonedDateTime_.[[Nanoseconds]]).
-        1. Let _resultISODateTime_ be CombineISODateAndTimeRecord(_isoDateTime_, _time_).
-        1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _resultISODateTime_, *"compatible"*).
+        1. If _plainTimeLike_ is *undefined*, then
+          1. Let _isoDate_ be CreateISODateRecord(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]]).
+          1. Let _epochNs_ be ? GetStartOfDay(_timeZone_, _isoDate_).
+        1. Else,
+          1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
+          1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: _plainTime_.[[ISOHour]], [[Minute]]: _plainTime_.[[ISOMinute]], [[Second]]: _plainTime_.[[ISOSecond]], [[Millisecond]]: _plainTime_.[[ISOMillisecond]], [[Microsecond]]: _plainTime_.[[ISOMicrosecond]], [[Nanosecond]]: _plainTime_.[[ISONanosecond]] }.
+          1. Let _resultISODateTime_ be CombineISODateAndTimeRecord(_isoDateTime_, _time_).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _resultISODateTime_, *"compatible"*).
         1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -687,13 +689,11 @@
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _thisNs_).
         1. If _smallestUnit_ is *"day"*, then
-          1. Let _midnight_ be a Time Record with all fields set to 0.
-          1. Let _dtStart_ be CombineISODateAndTimeRecord(_isoDateTime_, _midnight_).
+          1. Let _dateStart_ be CreateISODateRecord(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]]).
           1. Let _dateEnd_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + 1).
-          1. Let _dtEnd_ be CombineISODateAndTimeRecord(_dateEnd_, _midnight_).
-          1. Let _startNs_ be ? GetEpochNanosecondsFor(_timeZone_, _dtStart_, *"compatible"*).
+          1. Let _startNs_ be ? GetStartOfDay(_timeZone_, _dateStart_).
           1. Assert: _thisNs_ ≥ _startNs_.
-          1. Let _endNs_ be ? GetEpochNanosecondsFor(_timeZone_, _dtEnd_, *"compatible"*).
+          1. Let _endNs_ be ? GetStartOfDay(_timeZone_, _dateEnd_).
           1. Assert: _thisNs_ &lt; _endNs_.
           1. Let _dayLengthNs_ be ℝ(_endNs_ - _startNs_).
           1. Let _dayProgressNs_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_thisNs_, _startNs_).
@@ -702,7 +702,8 @@
         1. Else,
           1. Let _roundResult_ be RoundISODateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _thisNs_).
-          1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], ~option~, _offsetNanoseconds_, _timeZone_, *"compatible"*, *"prefer"*, ~match-exactly~).
+          1. Let _time_ be Time Record { [[Hour]]: _roundResult_.[[Hour]], [[Minute]]: _roundResult_.[[Minute]], [[Second]]: _roundResult_.[[Second]], [[Millisecond]]: _roundResult_.[[Millisecond]], [[Microsecond]]: _roundResult_.[[Microsecond]], [[Nanosecond]]: _roundResult_.[[Nanosecond]] }.
+          1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _time_, ~option~, _offsetNanoseconds_, _timeZone_, *"compatible"*, *"prefer"*, ~match-exactly~).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -803,9 +804,8 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _zonedDateTime_.[[Nanoseconds]]).
-        1. Let _midnight_ be a Time Record with all fields set to 0.
-        1. Let _startDateTime_ be CombineISODateAndTimeRecord(_isoDateTime_, _midnight_).
-        1. Let _epochNanoseconds_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, *"compatible"*).
+        1. Let _isoDate_ be CreateISODateRecord(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]]).
+        1. Let _epochNanoseconds_ be ? GetStartOfDay(_timeZone_, _isoDate_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -953,12 +953,7 @@
           _year_: an integer,
           _month_: an integer,
           _day_: an integer,
-          _hour_: an integer in the inclusive interval from 0 to 23,
-          _minute_: an integer in the inclusive interval from 0 to 59,
-          _second_: an integer in the inclusive interval from 0 to 59,
-          _millisecond_: an integer in the inclusive interval from 0 to 999,
-          _microsecond_: an integer in the inclusive interval from 0 to 999,
-          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+          _time_: a Time Record or ~start-of-day~,
           _offsetBehaviour_: one of ~option~, ~exact~, or ~wall~,
           _offsetNanoseconds_: an integer,
           _timeZone_: a String,
@@ -981,12 +976,16 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: _year_, [[Month]]: _month_, [[Day]]: _day_, [[Hour]]: _hour_, [[Minute]]: _minute_, [[Second]]: _second_, [[Millisecond]]: _millisecond_, [[Microsecond]]: _microsecond_, [[Nanosecond]]: _nanosecond_ }.
+        1. Let _isoDate_ be CreateISODateRecord(_year_, _month_, _day_).
+        1. If _time_ is ~start-of-day~, then
+          1. Assert: _offsetBehaviour_ is ~wall~.
+          1. Assert: _offsetNanoseconds_ is 0.
+          1. Return ? GetStartOfDay(_timeZone_, _isoDate_).
+        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
         1. If _offsetBehaviour_ is ~wall~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is *"ignore"*, then
           1. Return ? GetEpochNanosecondsFor(_timeZone_, _isoDateTime_, _disambiguation_).
         1. If _offsetBehaviour_ is ~exact~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is *"use"*, then
-          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _offsetNanoseconds_).
+          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_year_, _month_, _day_, _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]], _offsetNanoseconds_).
           1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
           1. Return _epochNanoseconds_.
         1. Assert: _offsetBehaviour_ is ~option~.
@@ -1065,7 +1064,7 @@
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetNanoseconds_ to ? ParseDateTimeUTCOffset(_offsetString_).
-        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_, _matchBehaviour_).
+        1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]], _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_, _matchBehaviour_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>

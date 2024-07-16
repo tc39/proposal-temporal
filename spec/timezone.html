@@ -379,6 +379,28 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-getstartofday" type="abstract operation">
+      <h1>
+        GetStartOfDay (
+          _timeZone_: a String,
+          _isoDate_: an ISO Date Record,
+        ): either a normal completion containing a BigInt or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It determines the exact time that corresponds to the first valid wall-clock time in the calendar date _isoDate_ in _timeZone_.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: _isoDate_.[[Year]], [[Month]]: _isoDate_.[[Month]], [[Day]]: _isoDate_.[[Day]], [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+        1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
+        1. If _possibleEpochNs_ is not empty, return _possibleEpochNs_[0].
+        1. Assert: IsOffsetTimeZoneIdentifier(_timeZone_) is *false*.
+        1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_.[[Year]], _isoDateTimeAfter_.[[Month]], _isoDateTimeAfter_.[[Day]], _isoDateTimeAfter_.[[Hour]], _isoDateTimeAfter_.[[Minute]], _isoDateTimeAfter_.[[Second]], _isoDateTimeAfter_.[[Millisecond]], _isoDateTimeAfter_.[[Microsecond]], _isoDateTimeAfter_.[[Nanosecond]]), where _isoDateTimeAfter_ is the ISO Date-Time Record for which ! DifferenceISODateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _isoDateTimeAfter_.[[Year]], _isoDateTimeAfter_.[[Month]], _isoDateTimeAfter_.[[Day]], _isoDateTimeAfter_.[[Hour]], _isoDateTimeAfter_.[[Minute]], _isoDateTimeAfter_.[[Second]], _isoDateTimeAfter_.[[Millisecond]], _isoDateTimeAfter_.[[Microsecond]], _isoDateTimeAfter_.[[Nanosecond]], *"iso8601"*, *"hour"*).[[Norm]] is the smallest possible value &gt; 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
+        1. Assert: _possibleEpochNsAfter_'s length = 1.
+        1. Return _possibleEpochNsAfter_[0].
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-timezoneequals" type="abstract operation">
       <h1>
         TimeZoneEquals (

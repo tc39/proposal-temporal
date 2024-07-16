@@ -427,13 +427,7 @@ export function ParseISODateTime(isoString) {
     year,
     month,
     day,
-    hasTime,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
+    time: hasTime ? { hour, minute, second, millisecond, microsecond, nanosecond } : 'start-of-day',
     tzAnnotation,
     offset,
     z,
@@ -476,10 +470,10 @@ export function ParseTemporalTimeString(isoString) {
     nanosecond = +fraction.slice(6, 9);
     if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
   } else {
-    let z, hasTime;
-    ({ hasTime, hour, minute, second, millisecond, microsecond, nanosecond, z } = ParseISODateTime(isoString));
-    if (!hasTime) throw new RangeError(`time is missing in string: ${isoString}`);
+    const { time, z } = ParseISODateTime(isoString);
+    if (time === 'start-of-day') throw new RangeError(`time is missing in string: ${isoString}`);
     if (z) throw new RangeError('Z designator not supported for PlainTime');
+    ({ hour, minute, second, millisecond, microsecond, nanosecond } = time);
   }
   // if it's a date-time string, OK
   if (/[tT ][0-9][0-9]/.test(isoString)) {
@@ -979,7 +973,7 @@ export function GetTemporalRelativeToOption(options) {
 
   let offsetBehaviour = 'option';
   let matchMinutes = false;
-  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
+  let year, month, day, time, calendar, timeZone, offset;
   if (Type(relativeTo) === 'Object') {
     if (IsTemporalZonedDateTime(relativeTo)) {
       return { zonedRelativeTo: relativeTo };
@@ -994,32 +988,14 @@ export function GetTemporalRelativeToOption(options) {
       ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'],
       []
     );
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = InterpretTemporalDateTimeFields(
-      calendar,
-      fields,
-      'constrain'
-    ));
+    ({ year, month, day, time } = InterpretTemporalDateTimeFields(calendar, fields, 'constrain'));
     offset = fields.offset;
     if (offset === undefined) offsetBehaviour = 'wall';
     timeZone = fields.timeZone;
     if (timeZone !== undefined) timeZone = ToTemporalTimeZoneIdentifier(timeZone);
   } else {
     let tzAnnotation, z;
-    ({
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      calendar,
-      tzAnnotation,
-      offset,
-      z
-    } = ParseISODateTime(RequireString(relativeTo)));
+    ({ year, month, day, time, calendar, tzAnnotation, offset, z } = ParseISODateTime(RequireString(relativeTo)));
     if (tzAnnotation) {
       timeZone = ToTemporalTimeZoneIdentifier(tzAnnotation);
       if (z) {
@@ -1043,12 +1019,7 @@ export function GetTemporalRelativeToOption(options) {
     year,
     month,
     day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
+    time,
     offsetBehaviour,
     offsetNs,
     timeZone,
@@ -1212,11 +1183,11 @@ export function InterpretTemporalDateTimeFields(calendar, fields, overflow) {
     fields.nanosecond,
     overflow
   );
-  return CombineISODateAndTimeRecord(isoDate, time);
+  return { ...isoDate, time };
 }
 
 export function ToTemporalDateTime(item, options = undefined) {
-  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
+  let year, month, day, time, calendar;
 
   if (Type(item) === 'Object') {
     if (IsTemporalDateTime(item)) {
@@ -1264,22 +1235,31 @@ export function ToTemporalDateTime(item, options = undefined) {
       []
     );
     const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = InterpretTemporalDateTimeFields(
-      calendar,
-      fields,
-      overflow
-    ));
+    ({ year, month, day, time } = InterpretTemporalDateTimeFields(calendar, fields, overflow));
   } else {
     let z;
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, z } =
-      ParseTemporalDateTimeString(RequireString(item)));
+    ({ year, month, day, time, calendar, z } = ParseTemporalDateTimeString(RequireString(item)));
     if (z) throw new RangeError('Z designator not supported for PlainDateTime');
-    RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+    if (time === 'start-of-day') {
+      time = { hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+    }
+    RejectDateTime(
+      year,
+      month,
+      day,
+      time.hour,
+      time.minute,
+      time.second,
+      time.millisecond,
+      time.microsecond,
+      time.nanosecond
+    );
     if (!calendar) calendar = 'iso8601';
     if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
     calendar = CanonicalizeCalendar(calendar);
     GetTemporalOverflowOption(GetOptionsObject(options));
   }
+  const { hour, minute, second, millisecond, microsecond, nanosecond } = time;
   return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 }
 
@@ -1311,8 +1291,15 @@ export function ToTemporalInstant(item) {
     }
     item = ToPrimitive(item, StringCtor);
   }
-  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offset, z } =
-    ParseTemporalInstantString(RequireString(item));
+  const { year, month, day, time, offset, z } = ParseTemporalInstantString(RequireString(item));
+  const {
+    hour = 0,
+    minute = 0,
+    second = 0,
+    millisecond = 0,
+    microsecond = 0,
+    nanosecond = 0
+  } = time === 'start-of-day' ? {} : time;
 
   // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
@@ -1457,12 +1444,7 @@ export function InterpretISODateTimeOffset(
   year,
   month,
   day,
-  hour,
-  minute,
-  second,
-  millisecond,
-  microsecond,
-  nanosecond,
+  time,
   offsetBehaviour,
   offsetNs,
   timeZone,
@@ -1470,17 +1452,17 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
-  const dt = {
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  };
+  // start-of-day signifies that we had a string such as YYYY-MM-DD[Zone]. It is
+  // grammatically not possible to specify a UTC offset in that string, so the
+  // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
+  if (time === 'start-of-day') {
+    if (offsetBehaviour !== 'wall' || offsetNs !== 0) {
+      throw new Error('assertion failure: offset cannot be provided in YYYY-MM-DD[Zone] string');
+    }
+    return GetStartOfDay(timeZone, { year, month, day });
+  }
+
+  const dt = CombineISODateAndTimeRecord({ year, month, day }, time);
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
@@ -1497,12 +1479,12 @@ export function InterpretISODateTimeOffset(
       year,
       month,
       day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
+      time.hour,
+      time.minute,
+      time.second,
+      time.millisecond,
+      time.microsecond,
+      time.nanosecond,
       offsetNs
     );
     ValidateEpochNanoseconds(epochNs);
@@ -1535,7 +1517,7 @@ export function InterpretISODateTimeOffset(
 }
 
 export function ToTemporalZonedDateTime(item, options = undefined) {
-  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZone, offset, calendar;
+  let year, month, day, time, timeZone, offset, calendar;
   let matchMinute = false;
   let offsetBehaviour = 'option';
   let disambiguation, offsetOpt;
@@ -1564,28 +1546,12 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     disambiguation = GetTemporalDisambiguationOption(options);
     offsetOpt = GetTemporalOffsetOption(options, 'reject');
     const overflow = GetTemporalOverflowOption(options);
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = InterpretTemporalDateTimeFields(
-      calendar,
-      fields,
-      overflow
-    ));
+    ({ year, month, day, time } = InterpretTemporalDateTimeFields(calendar, fields, overflow));
   } else {
     let tzAnnotation, z;
-    ({
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      tzAnnotation,
-      offset,
-      z,
-      calendar
-    } = ParseTemporalZonedDateTimeString(RequireString(item)));
+    ({ year, month, day, time, tzAnnotation, offset, z, calendar } = ParseTemporalZonedDateTimeString(
+      RequireString(item)
+    ));
     timeZone = ToTemporalTimeZoneIdentifier(tzAnnotation);
     if (z) {
       offsetBehaviour = 'exact';
@@ -1607,12 +1573,7 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     year,
     month,
     day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
+    time,
     offsetBehaviour,
     offsetNs,
     timeZone,
@@ -2071,17 +2032,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 }
 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
-  const {
-    year,
-    month,
-    day,
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millisecond = 0,
-    microsecond = 0,
-    nanosecond = 0
-  } = isoDateTime;
+  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = isoDateTime;
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
   if (offsetMinutes !== undefined) {
     return [
@@ -2112,6 +2063,24 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
     microsecond,
     nanosecond
   );
+}
+
+export function GetStartOfDay(timeZone, isoDate) {
+  const isoDateTime = { ...isoDate, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
+  // If not a DST gap, return the single or earlier epochNs
+  if (possibleEpochNs.length) return possibleEpochNs[0];
+
+  // Otherwise, 00:00:00 lies within a DST gap. Compute an epochNs that's
+  // guaranteed to be before the transition
+  if (IsOffsetTimeZoneIdentifier(timeZone)) {
+    throw new Error('assertion failure: should only be reached with named time zone');
+  }
+
+  const utcns = GetUTCEpochNanoseconds(isoDate.year, isoDate.month, isoDate.day, 0, 0, 0, 0, 0, 0);
+  const dayBefore = utcns.minus(DAY_NANOS);
+  ValidateEpochNanoseconds(dayBefore);
+  return GetNamedTimeZoneNextTransition(timeZone, dayBefore);
 }
 
 export function ISOYearString(year) {
