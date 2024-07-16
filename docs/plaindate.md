@@ -736,7 +736,7 @@ Use `Temporal.PlainDate.compare()` for this, or `date.equals()` for equality.
 
 This method can be used to convert `Temporal.PlainDate` into a `Temporal.ZonedDateTime`, by supplying the time zone and time of day.
 The default `plainTime`, if it's not provided, is the first valid local time in `timeZone` on the calendar date `date`.
-Usually this is midnight (`00:00`), but may be a different time in rare circumstances like DST starting at midnight or calendars like `ethiopic` where each day doesn't start at midnight.
+Usually this is midnight (`00:00`), but may be a different time in rare circumstances like DST skipping midnight.
 
 For a list of IANA time zone names, see the current version of the [IANA time zone database](https://www.iana.org/time-zones).
 A convenient list is also available [on Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), although it might not reflect the latest official status.

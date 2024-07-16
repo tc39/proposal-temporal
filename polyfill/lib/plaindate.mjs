@@ -206,19 +206,27 @@ export class PlainDate {
     }
 
     const calendar = GetSlot(this, CALENDAR);
-    temporalTime = ES.ToTemporalTimeOrMidnight(temporalTime);
-    const dt = {
-      year: GetSlot(this, ISO_YEAR),
-      month: GetSlot(this, ISO_MONTH),
-      day: GetSlot(this, ISO_DAY),
-      hour: GetSlot(temporalTime, ISO_HOUR),
-      minute: GetSlot(temporalTime, ISO_MINUTE),
-      second: GetSlot(temporalTime, ISO_SECOND),
-      millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
-      microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
-      nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
-    };
-    const epochNs = ES.GetEpochNanosecondsFor(timeZone, dt, 'compatible');
+    const year = GetSlot(this, ISO_YEAR);
+    const month = GetSlot(this, ISO_MONTH);
+    const day = GetSlot(this, ISO_DAY);
+    let epochNs;
+    if (temporalTime === undefined) {
+      epochNs = ES.GetStartOfDay(timeZone, { year, month, day });
+    } else {
+      temporalTime = ES.ToTemporalTime(temporalTime);
+      const dt = {
+        year,
+        month,
+        day,
+        hour: GetSlot(temporalTime, ISO_HOUR),
+        minute: GetSlot(temporalTime, ISO_MINUTE),
+        second: GetSlot(temporalTime, ISO_SECOND),
+        millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
+        microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
+        nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
+      };
+      epochNs = ES.GetEpochNanosecondsFor(timeZone, dt, 'compatible');
+    }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
   }
   toPlainYearMonth() {

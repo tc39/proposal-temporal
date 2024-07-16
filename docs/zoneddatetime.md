@@ -803,11 +803,13 @@ zdt.with({ year: 2015, minute: 31 }); // => 2015-12-07T03:31:00-06:00[America/Ch
 **Parameters:**
 
 - `plainTime` (optional `Temporal.PlainTime` or plain object or string): The clock time that should replace the current clock time of `zonedDateTime`.
-  If omitted, the clock time of the result will be `00:00:00`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object which replaces the clock time of `zonedDateTime` with the clock time represented by `plainTime`.
 
-Valid input to `withPlainTime` is the same as valid input to `Temporal.PlainTime.from`, including strings like `12:15:36`, plain object property bags like `{ hour: 20, minute: 30 }`, or `Temporal` objects that contain time fields: `Temporal.PlainTime`, `Temporal.ZonedDateTime`, or `Temporal.PlainDateTime`.
+The default `plainTime`, if it's not provided, is the first valid local time in `zonedDateTime`'s time zone on its calendar date.
+Usually this is midnight (`00:00`), but may be a different time in rare circumstances like DST skipping midnight.
+
+If provided, valid input to `withPlainTime` is the same as valid input to `Temporal.PlainTime.from`, including strings like `12:15:36`, plain object property bags like `{ hour: 20, minute: 30 }`, or `Temporal` objects that contain time fields: `Temporal.PlainTime`, `Temporal.ZonedDateTime`, or `Temporal.PlainDateTime`.
 
 This method is similar to `with`, but with a few important differences:
 
@@ -1179,7 +1181,7 @@ zdt.round({ roundingIncrement: 30, smallestUnit: 'minute', roundingMode: 'floor'
 **Returns:** A new `Temporal.ZonedDateTime` instance representing the earliest valid local clock time during the current calendar day and time zone of `zonedDateTime`.
 
 This method returns a new `Temporal.ZonedDateTime` indicating the start of the day.
-The local time of the result is almost always `00:00`, but in rare cases it could be a later time e.g. if DST starts at midnight in a time zone. For example:
+The local time of the result is almost always `00:00`, but in rare cases it could be a later time e.g. if DST skips midnight in a time zone. For example:
 
 ```javascript
 const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
