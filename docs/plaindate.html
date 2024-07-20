@@ -225,8 +225,6 @@
 </li>
 <li><a href="#toPlainMonthDay">toPlainMonthDay</a>
 </li>
-<li><a href="#getCalendar">getCalendar</a>
-</li>
 <li><a href="#getISOFields">getISOFields</a>
 </li>
 </ul>
@@ -767,10 +765,7 @@ The converted object carries a copy of all the relevant fields of <code>date</co
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">toPlainYearMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08</span>
-date<span class="token punctuation">.</span><span class="token function">toPlainMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 08-24</span></code></pre><h3 id="getCalendar"><a class="heading-link" href="#getCalendar"></a>date.<strong>getCalendar</strong>(): object</h3><p><strong>Returns:</strong> a <code>Temporal.Calendar</code> instance or plain object representing the calendar in which <code>date</code> is reckoned.</p>
-<p>This method is mainly useful if you need an object on which to call calendar methods.
-Most code will not need to use it.</p>
-<h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>date.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>date</code> in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which <code>date</code> is reckoned.</p>
+date<span class="token punctuation">.</span><span class="token function">toPlainMonthDay</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 08-24</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>date.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>date</code> in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which <code>date</code> is reckoned.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.</p>
 <p>Usage example:</p>

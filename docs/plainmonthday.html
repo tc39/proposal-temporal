@@ -181,8 +181,6 @@
 </li>
 <li><a href="#toPlainDate">toPlainDate</a>
 </li>
-<li><a href="#getCalendar">getCalendar</a>
-</li>
 <li><a href="#getISOFields">getISOFields</a>
 </li>
 </ul>
@@ -466,10 +464,7 @@ md<span class="token punctuation">.</span><span class="token function">toPlainDa
   <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">1</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-date <span class="token operator">=</span> md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">era</span><span class="token operator">:</span> <span class="token string">'reiwa'</span><span class="token punctuation">,</span> <span class="token literal-property property">eraYear</span><span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-01-01[u-ca=japanese]</span></code></pre><h3 id="getCalendar"><a class="heading-link" href="#getCalendar"></a>monthDay.<strong>getCalendar</strong>(): object</h3><p><strong>Returns:</strong> a <code>Temporal.Calendar</code> instance or plain object representing the calendar in which <code>monthDay</code> is reckoned.</p>
-<p>This method is mainly useful if you need an object on which to call calendar methods.
-Most code will not need to use it.</p>
-<h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>monthDay.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>monthDay</code> in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which <code>monthDay</code> is reckoned.</p>
+date <span class="token operator">=</span> md<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">era</span><span class="token operator">:</span> <span class="token string">'reiwa'</span><span class="token punctuation">,</span> <span class="token literal-property property">eraYear</span><span class="token operator">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-01-01[u-ca=japanese]</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>monthDay.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>monthDay</code> in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which <code>monthDay</code> is reckoned.</p>
 <p>This method is mainly useful if you are implementing a custom calendar.
 Most code will not need to use it.</p>
 <p>The value of the <code>isoYear</code> property will be equal to the <code>referenceISOYear</code> constructor argument passed when <code>monthDay</code> was constructed.</p>

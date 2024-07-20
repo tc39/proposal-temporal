@@ -9686,6 +9686,9 @@
 	function GetTemporalShowOffsetOption(options) {
 	  return GetOption(options, 'offset', ['auto', 'never'], 'auto');
 	}
+	function GetDirectionOption(options) {
+	  return GetOption(options, 'direction', ['next', 'previous'], REQUIRED);
+	}
 	function GetRoundingIncrementOption(options) {
 	  let increment = options.roundingIncrement;
 	  if (increment === undefined) return 1;
@@ -13754,6 +13757,7 @@
 	    }
 	    return value;
 	  }
+	  if (fallback === REQUIRED) throw new RangeError(`${property} option is required`);
 	  return fallback;
 	}
 	function IsBuiltinCalendar(id) {
@@ -17539,10 +17543,6 @@
 	      isoYear: GetSlot(this, ISO_YEAR)
 	    };
 	  }
-	  getCalendar() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
-	    return ToTemporalCalendarObject(GetSlot(this, CALENDAR));
-	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
@@ -17862,10 +17862,6 @@
 	      isoSecond: GetSlot(this, ISO_SECOND),
 	      isoYear: GetSlot(this, ISO_YEAR)
 	    };
-	  }
-	  getCalendar() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-	    return ToTemporalCalendarObject(GetSlot(this, CALENDAR));
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -18451,10 +18447,6 @@
 	      isoYear: GetSlot(this, ISO_YEAR)
 	    };
 	  }
-	  getCalendar() {
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-	    return ToTemporalCalendarObject(GetSlot(this, CALENDAR));
-	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    options = GetOptionsObject(options);
@@ -18777,11 +18769,6 @@
 	    if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
 	    return GetSlot(this, TIMEZONE_ID);
 	  }
-	  equals(other) {
-	    if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-	    const timeZoneSlotValue = ToTemporalTimeZoneSlotValue(other);
-	    return TimeZoneEquals(this, timeZoneSlotValue);
-	  }
 	  getOffsetNanosecondsFor(instant) {
 	    if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
 	    instant = ToTemporalInstant(instant);
@@ -18825,34 +18812,6 @@
 	    }
 	    const possibleEpochNs = GetNamedTimeZoneEpochNanoseconds(id, GetSlot(dateTime, ISO_YEAR), GetSlot(dateTime, ISO_MONTH), GetSlot(dateTime, ISO_DAY), GetSlot(dateTime, ISO_HOUR), GetSlot(dateTime, ISO_MINUTE), GetSlot(dateTime, ISO_SECOND), GetSlot(dateTime, ISO_MILLISECOND), GetSlot(dateTime, ISO_MICROSECOND), GetSlot(dateTime, ISO_NANOSECOND));
 	    return possibleEpochNs.map(ns => new Instant(ns));
-	  }
-	  getNextTransition(startingPoint) {
-	    if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-	    startingPoint = ToTemporalInstant(startingPoint);
-	    const id = GetSlot(this, TIMEZONE_ID);
-
-	    // Offset time zones or UTC have no transitions
-	    if (IsOffsetTimeZoneIdentifier(id) || id === 'UTC') {
-	      return null;
-	    }
-	    let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-	    const Instant = GetIntrinsic('%Temporal.Instant%');
-	    epochNanoseconds = GetNamedTimeZoneNextTransition(id, epochNanoseconds);
-	    return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
-	  }
-	  getPreviousTransition(startingPoint) {
-	    if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
-	    startingPoint = ToTemporalInstant(startingPoint);
-	    const id = GetSlot(this, TIMEZONE_ID);
-
-	    // Offset time zones or UTC have no transitions
-	    if (IsOffsetTimeZoneIdentifier(id) || id === 'UTC') {
-	      return null;
-	    }
-	    let epochNanoseconds = GetSlot(startingPoint, EPOCHNANOSECONDS);
-	    const Instant = GetIntrinsic('%Temporal.Instant%');
-	    epochNanoseconds = GetNamedTimeZonePreviousTransition(id, epochNanoseconds);
-	    return epochNanoseconds === null ? null : new Instant(epochNanoseconds);
 	  }
 	  toString() {
 	    if (!IsTemporalTimeZone(this)) throw new TypeError('invalid receiver');
@@ -19013,10 +18972,6 @@
 	      isoMonth: GetSlot(this, ISO_MONTH),
 	      isoYear: GetSlot(this, ISO_YEAR)
 	    };
-	  }
-	  getCalendar() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-	    return ToTemporalCalendarObject(GetSlot(this, CALENDAR));
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -19433,6 +19388,29 @@
 	    const instant = GetInstantFor(timeZoneRec, dtStart, 'compatible');
 	    return CreateTemporalZonedDateTime(GetSlot(instant, EPOCHNANOSECONDS), timeZoneRec.receiver, calendar);
 	  }
+	  getTimeZoneTransition(directionParam) {
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    const timeZone = GetSlot(this, TIME_ZONE);
+	    const id = ToTemporalTimeZoneIdentifier(timeZone);
+	    if (directionParam === undefined) throw new TypeError('options parameter is required');
+	    if (Type$c(directionParam) === 'String') {
+	      const stringParam = directionParam;
+	      directionParam = ObjectCreate(null);
+	      directionParam.direction = stringParam;
+	    } else {
+	      directionParam = GetOptionsObject(directionParam);
+	    }
+	    const direction = GetDirectionOption(directionParam);
+	    if (direction === undefined) throw new TypeError('direction option is required');
+
+	    // Offset time zones or UTC have no transitions
+	    if (IsOffsetTimeZoneIdentifier(id) || id === 'UTC') {
+	      return null;
+	    }
+	    const thisEpochNanoseconds = GetSlot(this, EPOCHNANOSECONDS);
+	    const epochNanoseconds = direction === 'next' ? GetNamedTimeZoneNextTransition(id, thisEpochNanoseconds) : GetNamedTimeZonePreviousTransition(id, thisEpochNanoseconds);
+	    return epochNanoseconds === null ? null : new ZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
+	  }
 	  toInstant() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
 	    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
@@ -19469,14 +19447,6 @@
 	      offset: FormatUTCOffsetNanoseconds(offsetNanoseconds),
 	      timeZone: timeZoneRec.receiver
 	    };
-	  }
-	  getCalendar() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    return ToTemporalCalendarObject(GetSlot(this, CALENDAR));
-	  }
-	  getTimeZone() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    return ToTemporalTimeZoneObject(GetSlot(this, TIME_ZONE));
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
