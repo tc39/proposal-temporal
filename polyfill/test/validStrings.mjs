@@ -501,6 +501,10 @@ function fuzzMode(mode) {
     try {
       const parsingMethod = ES[`ParseTemporal${mode}StringRaw`] ?? ES[`ParseTemporal${mode}String`];
       const parsed = parsingMethod(fuzzed);
+      if (parsed.time === 'start-of-day') {
+        parsed.time = { hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+      }
+      if (parsed.time) Object.assign(parsed, parsed.time);
       for (let prop of comparisonItems[mode]) {
         let expected = generatedData[prop];
         if (!['tzAnnotation', 'offset', 'calendar'].includes(prop)) expected ??= prop === 'z' ? false : 0;
