@@ -311,12 +311,12 @@
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
         1. Set _other_ to ? ToTemporalTime(_other_).
-        1. If _temporalTime_.[[ISOHour]] &ne; _other_.[[ISOHour]], return *false*.
-        1. If _temporalTime_.[[ISOMinute]] &ne; _other_.[[ISOMinute]], return *false*.
-        1. If _temporalTime_.[[ISOSecond]] &ne; _other_.[[ISOSecond]], return *false*.
-        1. If _temporalTime_.[[ISOMillisecond]] &ne; _other_.[[ISOMillisecond]], return *false*.
-        1. If _temporalTime_.[[ISOMicrosecond]] &ne; _other_.[[ISOMicrosecond]], return *false*.
-        1. If _temporalTime_.[[ISONanosecond]] &ne; _other_.[[ISONanosecond]], return *false*.
+        1. If _temporalTime_.[[ISOHour]] ≠ _other_.[[ISOHour]], return *false*.
+        1. If _temporalTime_.[[ISOMinute]] ≠ _other_.[[ISOMinute]], return *false*.
+        1. If _temporalTime_.[[ISOSecond]] ≠ _other_.[[ISOSecond]], return *false*.
+        1. If _temporalTime_.[[ISOMillisecond]] ≠ _other_.[[ISOMillisecond]], return *false*.
+        1. If _temporalTime_.[[ISOMicrosecond]] ≠ _other_.[[ISOMicrosecond]], return *false*.
+        1. If _temporalTime_.[[ISONanosecond]] ≠ _other_.[[ISONanosecond]], return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -508,7 +508,7 @@
           </tr>
           <tr>
             <td>[[Days]]</td>
-            <td>an integer &ge; 0</td>
+            <td>an integer ≥ 0</td>
             <td>A number of overflow days.</td>
           </tr>
           <tr>
@@ -909,7 +909,7 @@
         <dd>It formats the given time as an ISO 8601 string, to the precision specified by _precision_.</dd>
       </dl>
       <emu-alg>
-        1. Let _subSecondNanoseconds_ be _millisecond_ &times; 10<sup>6</sup> + _microsecond_ &times; 10<sup>3</sup> + _nanosecond_.
+        1. Let _subSecondNanoseconds_ be _millisecond_ × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
         1. Return FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
       </emu-alg>
     </emu-clause>
@@ -995,20 +995,20 @@
       </dl>
       <emu-alg>
         1. If _unit_ is *"day"* or *"hour"*, then
-          1. Let _quantity_ be ((((_hour_ &times; 60 + _minute_) &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
+          1. Let _quantity_ be ((((_hour_ × 60 + _minute_) × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
         1. Else if _unit_ is *"minute"*, then
-          1. Let _quantity_ be (((_minute_ &times; 60 + _second_) &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
+          1. Let _quantity_ be (((_minute_ × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
         1. Else if _unit_ is *"second"*, then
-          1. Let _quantity_ be ((_second_ &times; 1000 + _millisecond_) &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
+          1. Let _quantity_ be ((_second_ × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
         1. Else if _unit_ is *"millisecond"*, then
-          1. Let _quantity_ be (_millisecond_ &times; 1000 + _microsecond_) &times; 1000 + _nanosecond_.
+          1. Let _quantity_ be (_millisecond_ × 1000 + _microsecond_) × 1000 + _nanosecond_.
         1. Else if _unit_ is *"microsecond"*, then
-          1. Let _quantity_ be _microsecond_ &times; 1000 + _nanosecond_.
+          1. Let _quantity_ be _microsecond_ × 1000 + _nanosecond_.
         1. Else,
           1. Assert: _unit_ is *"nanosecond"*.
           1. Let _quantity_ be _nanosecond_.
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
-        1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_ &times; _unitLength_, _roundingMode_) / _unitLength_.
+        1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_ × _unitLength_, _roundingMode_) / _unitLength_.
         1. If _unit_ is *"day"*, then
           1. Return Time Record {
               [[Days]]: _result_,
@@ -1051,13 +1051,13 @@
         1. If _operation_ is ~since~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Set _other_ to ? ToTemporalTime(_other_).
         1. Let _resolvedOptions_ be ? SnapshotOwnProperties(? GetOptionsObject(_options_), *null*).
-        1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, &laquo; &raquo;, *"nanosecond"*, *"hour"*).
+        1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, « », *"nanosecond"*, *"hour"*).
         1. Let _norm_ be DifferenceTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
-        1. If _settings_.[[SmallestUnit]] is not *"nanosecond"* or _settings_.[[RoundingIncrement]] &ne; 1, then
+        1. If _settings_.[[SmallestUnit]] is not *"nanosecond"* or _settings_.[[RoundingIncrement]] ≠ 1, then
           1. Let _roundRecord_ be ! RoundTimeDuration(0, _norm_, _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
           1. Set _norm_ to _roundRecord_.[[NormalizedDuration]].[[NormalizedTime]].
         1. Let _result_ be ! BalanceTimeDuration(_norm_, _settings_.[[LargestUnit]]).
-        1. Return ! CreateTemporalDuration(0, 0, 0, 0, _sign_ &times; _result_.[[Hours]], _sign_ &times; _result_.[[Minutes]], _sign_ &times; _result_.[[Seconds]], _sign_ &times; _result_.[[Milliseconds]], _sign_ &times; _result_.[[Microseconds]], _sign_ &times; _result_.[[Nanoseconds]]).
+        1. Return ! CreateTemporalDuration(0, 0, 0, 0, _sign_ × _result_.[[Hours]], _sign_ × _result_.[[Minutes]], _sign_ × _result_.[[Seconds]], _sign_ × _result_.[[Milliseconds]], _sign_ × _result_.[[Microseconds]], _sign_ × _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
@@ -1076,7 +1076,7 @@
       <emu-alg>
         1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Let _norm_ be NormalizeTimeDuration(_sign_ &times; _duration_.[[Hours]], _sign_ &times; _duration_.[[Minutes]], _sign_ &times; _duration_.[[Seconds]], _sign_ &times; _duration_.[[Milliseconds]], _sign_ &times; _duration_.[[Microseconds]], _sign_ &times; _duration_.[[Nanoseconds]]).
+        1. Let _norm_ be NormalizeTimeDuration(_sign_ × _duration_.[[Hours]], _sign_ × _duration_.[[Minutes]], _sign_ × _duration_.[[Seconds]], _sign_ × _duration_.[[Milliseconds]], _sign_ × _duration_.[[Microseconds]], _sign_ × _duration_.[[Nanoseconds]]).
         1. Let _result_ be AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _norm_).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
