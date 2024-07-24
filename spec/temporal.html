@@ -125,7 +125,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Return ? SystemDateTime(_temporalTimeZoneLike_, *"iso8601"*).
+        1. Return ? SystemDateTime(_temporalTimeZoneLike_).
       </emu-alg>
     </emu-clause>
 
@@ -135,7 +135,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_, *"iso8601"*).
+        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_).
       </emu-alg>
     </emu-clause>
 
@@ -145,7 +145,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, *"iso8601"*).
+        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
         1. Return ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], *"iso8601"*).
       </emu-alg>
     </emu-clause>
@@ -156,7 +156,7 @@
         This function performs the following steps when called:
       </p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_, *"iso8601"*).
+        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
         1. Return ! CreateTemporalTime(_dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -248,7 +248,6 @@
       <h1>
         SystemDateTime (
           _temporalTimeZoneLike_: an ECMAScript language value,
-          _calendarLike_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.PlainDateTime or a throw completion
       </h1>
       <dl class="header">
@@ -260,10 +259,9 @@
           1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
-        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
         1. Let _instant_ be SystemInstant().
         1. Let _timeZoneRec_ be ? CreateTimeZoneMethodsRecord(_timeZone_, « ~get-offset-nanoseconds-for~ »).
-        1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, _calendar_).
+        1. Return ? GetPlainDateTimeFor(_timeZoneRec_, _instant_, *"iso8601"*).
       </emu-alg>
     </emu-clause>
 
@@ -271,7 +269,6 @@
       <h1>
         SystemZonedDateTime (
           _temporalTimeZoneLike_: an ECMAScript language value,
-          _calendarLike_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
       </h1>
       <dl class="header">
@@ -283,9 +280,8 @@
           1. Let _timeZone_ be SystemTimeZoneIdentifier().
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneSlotValue(_temporalTimeZoneLike_).
-        1. Let _calendar_ be ? ToTemporalCalendarSlotValue(_calendarLike_).
         1. Let _ns_ be SystemUTCEpochNanoseconds().
-        1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, _calendar_).
+        1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, *"iso8601"*).
       </emu-alg>
     </emu-clause>
   </emu-clause>
