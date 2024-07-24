@@ -631,11 +631,11 @@
       </dl>
 
       <emu-alg>
-        1. Let _dateTimeFormat_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.DateTimeFormat.prototype%"*, &laquo; [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[HourCycle]], [[DateStyle]], [[TimeStyle]], [[DateTimeFormat]], <ins>[[TemporalPlainDateFormat]], [[TemporalPlainYearMonthFormat]], [[TemporalPlainMonthDayFormat]], [[TemporalPlainTimeFormat]], [[TemporalPlainDateTimeFormat]], [[TemporalInstantFormat]], </ins>[[BoundFormat]] &raquo;).
+        1. Let _dateTimeFormat_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.DateTimeFormat.prototype%"*, « [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[HourCycle]], [[DateStyle]], [[TimeStyle]], [[DateTimeFormat]], <ins>[[TemporalPlainDateFormat]], [[TemporalPlainYearMonthFormat]], [[TemporalPlainMonthDayFormat]], [[TemporalPlainTimeFormat]], [[TemporalPlainDateTimeFormat]], [[TemporalInstantFormat]], </ins>[[BoundFormat]] »).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. Set _options_ to ? CoerceOptionsToObject(_options_).
         1. Let _opt_ be a new Record.
-        1. Let _matcher_ be ? GetOption(_options_, *"localeMatcher"*, ~string~, &laquo; *"lookup"*, *"best fit"* &raquo;, *"best fit"*).
+        1. Let _matcher_ be ? GetOption(_options_, *"localeMatcher"*, ~string~, « *"lookup"*, *"best fit"* », *"best fit"*).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
         1. Let _calendar_ be ? GetOption(_options_, *"calendar"*, ~string~, ~empty~, *undefined*).
         1. If _calendar_ is not *undefined*, then
@@ -646,7 +646,7 @@
           1. If _numberingSystem_ cannot be matched by the <code>type</code> Unicode locale nonterminal, throw a *RangeError* exception.
         1. Set _opt_.[[nu]] to _numberingSystem_.
         1. Let _hour12_ be ? GetOption(_options_, *"hour12"*, ~boolean~, ~empty~, *undefined*).
-        1. Let _hourCycle_ be ? GetOption(_options_, *"hourCycle"*, ~string~, &laquo; *"h11"*, *"h12"*, *"h23"*, *"h24"* &raquo;, *undefined*).
+        1. Let _hourCycle_ be ? GetOption(_options_, *"hourCycle"*, ~string~, « *"h11"*, *"h12"*, *"h23"*, *"h24"* », *undefined*).
         1. If _hour12_ is not *undefined*, then
           1. Set _hourCycle_ to *null*.
         1. Set _opt_.[[hc]] to _hourCycle_.
@@ -704,10 +704,10 @@
           1. Set _formatOptions_.[[&lt;_prop_&gt;]] to _value_.
           1. If _value_ is not *undefined*, then
             1. Set _hasExplicitFormatComponents_ to *true*.
-        1. Let _formatMatcher_ be ? GetOption(_options_, *"formatMatcher"*, ~string~, &laquo; *"basic"*, *"best fit"* &raquo;, *"best fit"*).
-        1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, ~string~, &laquo; *"full"*, *"long"*, *"medium"*, *"short"* &raquo;, *undefined*).
+        1. Let _formatMatcher_ be ? GetOption(_options_, *"formatMatcher"*, ~string~, « *"basic"*, *"best fit"* », *"best fit"*).
+        1. Let _dateStyle_ be ? GetOption(_options_, *"dateStyle"*, ~string~, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
-        1. Let _timeStyle_ be ? GetOption(_options_, *"timeStyle"*, ~string~, &laquo; *"full"*, *"long"*, *"medium"*, *"short"* &raquo;, *undefined*).
+        1. Let _timeStyle_ be ? GetOption(_options_, *"timeStyle"*, ~string~, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[TimeStyle]] to _timeStyle_.
         1. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
           1. If _hasExplicitFormatComponents_ is *true*, then
@@ -735,18 +735,18 @@
         1. Else,
           1. <del>Let _needDefaults_ be *true*.</del>
           1. <del>If _required_ is ~date~ or ~any~, then</del>
-            1. <del>For each property name _prop_ of &laquo; *"weekday"*, *"year"*, *"month"*, *"day"* &raquo;, do</del>
+            1. <del>For each property name _prop_ of « *"weekday"*, *"year"*, *"month"*, *"day"* », do</del>
               1. <del>Let _value_ be _formatOptions_.[[&lt;_prop_&gt;]].</del>
               1. <del>If _value_ is not *undefined*, set _needDefaults_ to *false*.</del>
           1. <del>If _required_ is ~time~ or ~any~, then</del>
-            1. <del>For each property name _prop_ of &laquo; *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* &raquo;, do</del>
+            1. <del>For each property name _prop_ of « *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* », do</del>
               1. <del>Let _value_ be _formatOptions_.[[&lt;_prop_&gt;]].</del>
               1. <del>If _value_ is not *undefined*, set _needDefaults_ to *false*.</del>
           1. <del>If _needDefaults_ is *true* and _defaults_ is either ~date~ or ~all~, then</del>
-            1. <del>For each property name _prop_ of &laquo; *"year"*, *"month"*, *"day"* &raquo;, do</del>
+            1. <del>For each property name _prop_ of « *"year"*, *"month"*, *"day"* », do</del>
               1. <del>Set _formatOptions_.[[&lt;_prop_&gt;]] to *"numeric"*.</del>
           1. <del>If _needDefaults_ is *true* and _defaults_ is either ~time~ or ~all~, then</del>
-            1. <del>For each property name _prop_ of &laquo; *"hour"*, *"minute"*, *"second"* &raquo;, do</del>
+            1. <del>For each property name _prop_ of « *"hour"*, *"minute"*, *"second"* », do</del>
               1. <del>Set _formatOptions_.[[&lt;_prop_&gt;]] to *"numeric"*.</del>
           1. Let _formats_ be _resolvedLocaleData_.[[formats]].[[&lt;_resolvedCalendar_&gt;]].
           1. <del>If _formatMatcher_ is *"basic"*, then</del>
@@ -790,7 +790,7 @@
             [[LocaleData]].[[&lt;_locale_&gt;]].[[nu]] must be a List that does not include the values *"native"*, *"traditio"*, or *"finance"*.
           </li>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]].[[hc]] must be &laquo; *null*, *"h11"*, *"h12"*, *"h23"*, *"h24"* &raquo;.
+            [[LocaleData]].[[&lt;_locale_&gt;]].[[hc]] must be « *null*, *"h11"*, *"h12"*, *"h23"*, *"h24"* ».
           </li>
           <li>
             [[LocaleData]].[[&lt;_locale_&gt;]].[[hourCycle]] must be one of the String values *"h11"*, *"h12"*, *"h23"*, or *"h24"*.
@@ -845,27 +845,27 @@
         </dl>
         <emu-alg>
           1. If _required_ is ~date~, then
-            1. Let _requiredOptions_ be &laquo; *"weekday"*, *"year"*, *"month"*, *"day"* &raquo;.
+            1. Let _requiredOptions_ be « *"weekday"*, *"year"*, *"month"*, *"day"* ».
           1. Else if _required_ is ~time~, then
-            1. Let _requiredOptions_ be &laquo; *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* &raquo;.
+            1. Let _requiredOptions_ be « *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* ».
           1. Else if _required_ is ~year-month~, then
-            1. Let _requiredOptions_ be &laquo; *"year"*, *"month"* &raquo;.
+            1. Let _requiredOptions_ be « *"year"*, *"month"* ».
           1. Else if _required_ is ~month-day~, then
-            1. Let _requiredOptions_ be &laquo; *"month"*, *"day"* &raquo;.
+            1. Let _requiredOptions_ be « *"month"*, *"day"* ».
           1. Else,
             1. Assert: _required_ is ~any~.
-            1. Let _requiredOptions_ be &laquo; *"weekday"*, *"year"*, *"month"*, *"day"*, *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* &raquo;.
+            1. Let _requiredOptions_ be « *"weekday"*, *"year"*, *"month"*, *"day"*, *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* ».
           1. If _defaults_ is ~date~, then
-            1. Let _defaultOptions_ be &laquo; *"year"*, *"month"*, *"day"* &raquo;.
+            1. Let _defaultOptions_ be « *"year"*, *"month"*, *"day"* ».
           1. Else if _defaults_ is ~time~, then
-            1. Let _defaultOptions_ be &laquo; *"hour"*, *"minute"*, *"second"* &raquo;.
+            1. Let _defaultOptions_ be « *"hour"*, *"minute"*, *"second"* ».
           1. Else if _defaults_ is ~year-month~, then
-            1. Let _defaultOptions_ be &laquo; *"year"*, *"month"* &raquo;.
+            1. Let _defaultOptions_ be « *"year"*, *"month"* ».
           1. Else if _defaults_ is ~month-day~, then
-            1. Let _defaultOptions_ be &laquo; *"month"*, *"day"* &raquo;.
+            1. Let _defaultOptions_ be « *"month"*, *"day"* ».
           1. Else,
             1. Assert: _defaults_ is ~zoned-date-time~ or ~all~.
-            1. Let _defaultOptions_ be &laquo; *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* &raquo;.
+            1. Let _defaultOptions_ be « *"year"*, *"month"*, *"day"*, *"hour"*, *"minute"*, *"second"* ».
           1. If _inherit_ is ~all~, then
             1. Let _formatOptions_ be a copy of _options_.
           1. Else,
@@ -935,18 +935,18 @@
         1. Let _locale_ be _dateTimeFormat_.[[Locale]].
         1. Let _nfOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
-        1. Let _nf_ be ! Construct(%Intl.NumberFormat%, &laquo; _locale_, _nfOptions_ &raquo;).
+        1. Let _nf_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nfOptions_ »).
         1. Let _nf2Options_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, *2*<sub>𝔽</sub>).
         1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
-        1. Let _nf2_ be ! Construct(%Intl.NumberFormat%, &laquo; _locale_, _nf2Options_ &raquo;).
+        1. Let _nf2_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nf2Options_ »).
         1. If _format_ has a field [[fractionalSecondDigits]], then
           1. Let _fractionalSecondDigits_ be _format_.[[fractionalSecondDigits]].
           1. Let _nf3Options_ be OrdinaryObjectCreate(*null*).
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, 𝔽(_fractionalSecondDigits_)).
           1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
-          1. Let _nf3_ be ! Construct(%Intl.NumberFormat%, &laquo; _locale_, _nf3Options_ &raquo;).
-        1. Let _tm_ be ToLocalTime(<del>ℤ(ℝ(_x_) &times; 10<sup>6</sup>)</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+          1. Let _nf3_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nf3Options_ »).
+        1. Let _tm_ be ToLocalTime(<del>ℤ(ℝ(_x_) × 10<sup>6</sup>)</del><ins>_epochNanoseconds_</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
         1. Let _patternParts_ be PartitionPattern(_pattern_).
         1. Let _result_ be a new empty List.
         1. For each Record { [[Type]], [[Value]] } _patternPart_ of _patternParts_, do
@@ -956,7 +956,7 @@
           1. Else if _p_ is *"fractionalSecondDigits"*, then
             1. Assert: _format_ has a field [[fractionalSecondDigits]].
             1. Let _v_ be _tm_.[[Millisecond]].
-            1. Set _v_ to floor(_v_ &times; 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+            1. Set _v_ to floor(_v_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
             1. Let _fv_ be FormatNumeric(_nf3_, _v_).
             1. Append the Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _fv_ } to _result_.
           1. Else if _p_ is *"dayPeriod"*, then
@@ -974,7 +974,7 @@
             1. Assert: _format_ has a field [[&lt;_p_&gt;]].
             1. Let _f_ be _format_.[[&lt;_p_&gt;]].
             1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
-            1. If _p_ is *"year"* and _v_ &le; 0, set _v_ to 1 - _v_.
+            1. If _p_ is *"year"* and _v_ ≤ 0, set _v_ to 1 - _v_.
             1. If _p_ is *"month"*, set _v_ to _v_ + 1.
             1. If _p_ is *"hour"* and _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
               1. Set _v_ to _v_ modulo 12.
@@ -990,7 +990,7 @@
               1. If _count_ > 2, then
                 1. Let _tens_ be _codePoints_[_count_ - 2].
                 1. Let _ones_ be _codePoints_[_count_ - 1].
-                1. Set _fv_ to CodePointsToString(&laquo; _tens_, _ones_ &raquo;).
+                1. Set _fv_ to CodePointsToString(« _tens_, _ones_ »).
             1. Else if _f_ is *"narrow"*, *"short"*, or *"long"*, then
               1. Let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is *"month"*, then the String value may also depend on whether _format_.[[day]] is present. If the implementation does not have a localized representation of _f_, then use the String value of _v_ itself.
             1. Append the Record { [[Type]]: _p_, [[Value]]: _fv_ } to _result_.
@@ -1106,8 +1106,8 @@
           1. <ins>If SameTemporalType(_x_, _y_) is *false*, throw a *TypeError* exception.</ins>
         1. <ins>Let _xFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
         1. <ins>Let _yFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _y_).</ins>
-        1. Let _tm1_ be ToLocalTime(<del>ℤ(ℝ(_x_) &times; 10<sup>6</sup>)</del><ins>_xFormatRecord_.[[EpochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
-        1. Let _tm2_ be ToLocalTime(<del>ℤ(ℝ(_y_) &times; 10<sup>6</sup>)</del><ins>_yFormatRecord_.[[EpochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _tm1_ be ToLocalTime(<del>ℤ(ℝ(_x_) × 10<sup>6</sup>)</del><ins>_xFormatRecord_.[[EpochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _tm2_ be ToLocalTime(<del>ℤ(ℝ(_y_) × 10<sup>6</sup>)</del><ins>_yFormatRecord_.[[EpochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
         1. <del>Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].</del>
         1. <ins>Let _format_ be _xFormatRecord_.[[Format]].</ins>
         1. <ins>Assert: _format_ is equal to _yFormatRecord_.[[Format]].</ins>
@@ -1139,8 +1139,8 @@
               1. If _fractionalSecondDigits_ is *undefined*, then
                 1. Set _fractionalSecondDigits_ to 3.
               1. Let _exp_ be _fractionalSecondDigits_ - 3.
-              1. Let _v1_ be floor(_tm1_.[[Millisecond]] &times; 10<sup>_exp_</sup>).
-              1. Let _v2_ be floor(_tm2_.[[Millisecond]] &times; 10<sup>_exp_</sup>).
+              1. Let _v1_ be floor(_tm1_.[[Millisecond]] × 10<sup>_exp_</sup>).
+              1. Let _v2_ be floor(_tm2_.[[Millisecond]] × 10<sup>_exp_</sup>).
             1. Else,
               1. Let _v1_ be _tm1_'s field whose name is _fieldName_.
               1. Let _v2_ be _tm2_'s field whose name is _fieldName_.
@@ -1448,7 +1448,7 @@
       <emu-alg>
       1. Set _x_ to TimeClip(_x_).
       1. If _x_ is *NaN*, throw a *RangeError* exception.
-      1. Let _epochNanoseconds_ be ℤ(ℝ(_x_) &times; 10<sup>6</sup>).
+      1. Let _epochNanoseconds_ be ℤ(ℝ(_x_) × 10<sup>6</sup>).
       1. Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].
       1. Return Value Format Record {
           [[Format]]: _format_,
