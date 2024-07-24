@@ -4000,7 +4000,7 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
 
   // Determine if whole days expanded
   const { quotient: wholeDays } = norm.divmod(DAY_NANOS);
-  const { quotient: roundedWholeDays, remainder: roundedDaysRemainder } = roundedNorm.divmod(DAY_NANOS);
+  const { quotient: roundedWholeDays } = roundedNorm.divmod(DAY_NANOS);
   const didExpandDays = MathSign(roundedWholeDays - wholeDays) === norm.sign();
 
   const nudgedEpochNs = diffNorm.addToEpochNs(destEpochNs);
@@ -4009,7 +4009,7 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
   let remainder = roundedNorm;
   if (LargerOfTwoTemporalUnits(largestUnit, 'day') === largestUnit) {
     days = roundedWholeDays;
-    remainder = roundedDaysRemainder;
+    remainder = roundedNorm.subtract(TimeDuration.normalize(roundedWholeDays * 24, 0, 0, 0, 0, 0));
   }
 
   duration = { ...duration, days, norm: remainder };

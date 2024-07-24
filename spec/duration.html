@@ -1983,8 +1983,7 @@
         1. Let _roundedNorm_ be ? RoundNormalizedTimeDurationToIncrement(_norm_, _unitLength_ × _increment_, _roundingMode_).
         1. Let _diffNorm_ be ! SubtractNormalizedTimeDuration(_roundedNorm_, _norm_).
         1. Let _wholeDays_ be truncate(DivideNormalizedTimeDuration(_norm_, nsPerDay)).
-        1. Let _roundedFractionalDays_ be DivideNormalizedTimeDuration(_roundedNorm_, nsPerDay).
-        1. Let _roundedWholeDays_ be truncate(_roundedFractionalDays_).
+        1. Let _roundedWholeDays_ be truncate(DivideNormalizedTimeDuration(_roundedNorm_, nsPerDay)).
         1. Let _dayDelta_ be _roundedWholeDays_ - _wholeDays_.
         1. If _dayDelta_ &lt; 0, let _dayDeltaSign_ be -1; else if _dayDelta_ &gt; 0, let _dayDeltaSign_ be 1; else let _dayDeltaSign_ be 0.
         1. If _dayDeltaSign_ = NormalizedTimeDurationSign(_norm_), let _didExpandDays_ be *true*; else let _didExpandDays_ be *false*.
@@ -1993,7 +1992,7 @@
         1. Let _remainder_ be _roundedNorm_.
         1. If LargerOfTwoTemporalUnits(_largestUnit_, *"day"*) is _largestUnit_, then
           1. Set _days_ to _roundedWholeDays_.
-          1. Set _remainder_ to remainder(_roundedFractionalDays_, 1) × nsPerDay.
+          1. Set _remainder_ to ! SubtractNormalizedTimeDuration(_roundedNorm_, NormalizeTimeDuration(_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
         1. Let _resultDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, _remainder_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[Total]]: _total_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandDays_ }.
       </emu-alg>
