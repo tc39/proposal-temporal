@@ -3297,8 +3297,8 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, calendar, ti
 
   // Round the smallestUnit within the epoch-nanosecond span
   if (
-    (sign === 1 && (startEpochNs.gt(destEpochNs) || destEpochNs.geq(endEpochNs))) ||
-    (sign === -1 && (endEpochNs.geq(destEpochNs) || destEpochNs.gt(startEpochNs)))
+    (sign === 1 && (startEpochNs.gt(destEpochNs) || destEpochNs.gt(endEpochNs))) ||
+    (sign === -1 && (endEpochNs.gt(destEpochNs) || destEpochNs.gt(startEpochNs)))
   ) {
     throw new RangeError(`custom calendar reported a ${unit} that is 0 days long`);
   }
@@ -3317,7 +3317,7 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, calendar, ti
   // Trick to minimize rounding error, due to the lack of fma() in JS
   const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
   const total = fakeNumerator.fdiv(denominator.totalNs);
-  if (MathAbs(total) < MathAbs(r1) || MathAbs(total) >= MathAbs(r2)) {
+  if (MathAbs(total) < MathAbs(r1) || MathAbs(total) > MathAbs(r2)) {
     throw new Error('assertion failed: r1 ≤ total < r2');
   }
 
