@@ -1452,8 +1452,8 @@ export function ToTemporalMonthDay(item, options) {
     if (calendar !== 'iso8601') {
       throw new Error(`assertion failed: missing year with non-"iso8601" calendar identifier ${calendar}`);
     }
-    RejectISODate(1972, month, day);
-    return CreateTemporalMonthDay(month, day, calendar);
+    const isoCalendarReferenceYear = 1972; // First leap year after Unix epoch
+    return CreateTemporalMonthDay(month, day, calendar, isoCalendarReferenceYear);
   }
   const result = CreateTemporalMonthDay(month, day, calendar, referenceISOYear);
   const calendarRec = new CalendarMethodRecord(calendar, ['monthDayFromFields']);
@@ -1797,7 +1797,7 @@ export function CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, 
   }
 }
 
-export function CreateTemporalMonthDay(isoMonth, isoDay, calendar = 'iso8601', referenceISOYear = 1972) {
+export function CreateTemporalMonthDay(isoMonth, isoDay, calendar, referenceISOYear) {
   const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
   const result = ObjectCreate(TemporalPlainMonthDay.prototype);
   CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, referenceISOYear);
@@ -1831,7 +1831,7 @@ export function CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar
   }
 }
 
-export function CreateTemporalYearMonth(isoYear, isoMonth, calendar = 'iso8601', referenceISODay = 1) {
+export function CreateTemporalYearMonth(isoYear, isoMonth, calendar, referenceISODay) {
   const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
   const result = ObjectCreate(TemporalPlainYearMonth.prototype);
   CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar, referenceISODay);
