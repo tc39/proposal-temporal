@@ -42,14 +42,12 @@ function copy(target, source) {
 // Work around https://github.com/babel/babel/issues/2025.
 const types = [
   globalThis.Temporal.Instant,
-  globalThis.Temporal.Calendar,
   globalThis.Temporal.PlainDate,
   globalThis.Temporal.PlainDateTime,
   globalThis.Temporal.Duration,
   globalThis.Temporal.PlainMonthDay,
   // globalThis.Temporal.Now, // plain object (not a constructor), so no `prototype`
   globalThis.Temporal.PlainTime,
-  globalThis.Temporal.TimeZone,
   globalThis.Temporal.PlainYearMonth,
   globalThis.Temporal.ZonedDateTime
 ];

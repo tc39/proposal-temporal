@@ -105,13 +105,12 @@ export class PlainTime {
       throw new TypeError('invalid argument');
     }
     ES.RejectTemporalLikeObject(temporalTimeLike);
-    options = ES.GetOptionsObject(options);
-    const overflow = ES.GetTemporalOverflowOption(options);
 
     const partialTime = ES.ToTemporalTimeRecord(temporalTimeLike, 'partial');
 
     const fields = ES.ToTemporalTimeRecord(this);
     let { hour, minute, second, millisecond, microsecond, nanosecond } = ObjectAssign(fields, partialTime);
+    const overflow = ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RegulateTime(
       hour,
       minute,
@@ -215,22 +214,9 @@ export class PlainTime {
     ES.ValueOfThrows('PlainTime');
   }
 
-  getISOFields() {
-    if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
-    return {
-      isoHour: GetSlot(this, ISO_HOUR),
-      isoMicrosecond: GetSlot(this, ISO_MICROSECOND),
-      isoMillisecond: GetSlot(this, ISO_MILLISECOND),
-      isoMinute: GetSlot(this, ISO_MINUTE),
-      isoNanosecond: GetSlot(this, ISO_NANOSECOND),
-      isoSecond: GetSlot(this, ISO_SECOND)
-    };
-  }
-
   static from(item, options = undefined) {
-    options = ES.GetOptionsObject(options);
-    const overflow = ES.GetTemporalOverflowOption(options);
     if (ES.IsTemporalTime(item)) {
+      ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
       return new PlainTime(
         GetSlot(item, ISO_HOUR),
         GetSlot(item, ISO_MINUTE),
@@ -240,7 +226,7 @@ export class PlainTime {
         GetSlot(item, ISO_NANOSECOND)
       );
     }
-    return ES.ToTemporalTime(item, overflow);
+    return ES.ToTemporalTime(item, options);
   }
   static compare(one, two) {
     one = ES.ToTemporalTime(one);

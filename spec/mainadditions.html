@@ -69,7 +69,7 @@
   <emu-clause id="sec-mathematical-operations">
     <h1>Mathematical Operations</h1>
     <p>[...]</p>
-    <p>The notation &ldquo;<emu-eqn id="eqn-modulo" aoid="modulo">_x_ modulo _y_</emu-eqn>&rdquo; (_y_ must be finite and non-zero) computes a value _k_ of the same sign as _y_ (or zero) such that <emu-eqn>abs(_k_) &lt; abs(_y_) and _x_ - _k_ = _q_ &times; _y_</emu-eqn> for some integer _q_.</p>
+    <p>The notation “<emu-eqn id="eqn-modulo" aoid="modulo">_x_ modulo _y_</emu-eqn>” (_y_ must be finite and non-zero) computes a value _k_ of the same sign as _y_ (or zero) such that <emu-eqn>abs(_k_) &lt; abs(_y_) and _x_ - _k_ = _q_ × _y_</emu-eqn> for some integer _q_.</p>
     <p><ins>The mathematical function <emu-eqn id="eqn-remainder" aoid="remainder">remainder(_x_, _y_)</emu-eqn> produces the mathematical value whose sign is the sign of _x_ and whose magnitude is <emu-eqn>abs(_x_) modulo _y_</emu-eqn>.</ins></p>
     <p>[...]</p>
     <p>Mathematical functions min, max, abs, <ins>remainder,</ins> floor, and truncate are not defined for Numbers and BigInts, and any usage of those methods that have non-mathematical value arguments would be an editorial error in this specification.</p>
@@ -568,7 +568,7 @@
           1. Let _dateObject_ be the *this* value.
           1. Perform ? RequireInternalSlot(_dateObject_, [[DateValue]]).
           1. Let _t_ be _dateObject_.[[DateValue]].
-          1. Let _ns_ be ? NumberToBigInt(_t_) &times; ℤ(10<sup>6</sup>).
+          1. Let _ns_ be ? NumberToBigInt(_t_) × ℤ(10<sup>6</sup>).
           1. Return ! CreateTemporalInstant(_ns_).
         </emu-alg>
       </emu-clause>

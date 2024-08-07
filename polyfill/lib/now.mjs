@@ -1,19 +1,28 @@
 import * as ES from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
-import { TimeZoneMethodRecord } from './methodrecord.mjs';
 
 const instant = () => {
   const Instant = GetIntrinsic('%Temporal.Instant%');
   return new Instant(ES.SystemUTCEpochNanoSeconds());
 };
 const plainDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
-  const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
-  const inst = instant();
-  const timeZoneRec = new TimeZoneMethodRecord(timeZone, ['getOffsetNanosecondsFor']);
-  return ES.GetPlainDateTimeFor(timeZoneRec, inst, 'iso8601');
+  const timeZone = ES.ToTemporalTimeZoneIdentifier(temporalTimeZoneLike);
+  const iso = ES.GetISODateTimeFor(timeZone, ES.SystemUTCEpochNanoSeconds());
+  return ES.CreateTemporalDateTime(
+    iso.year,
+    iso.month,
+    iso.day,
+    iso.hour,
+    iso.minute,
+    iso.second,
+    iso.millisecond,
+    iso.microsecond,
+    iso.nanosecond,
+    'iso8601'
+  );
 };
 const zonedDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
-  const timeZone = ES.ToTemporalTimeZoneSlotValue(temporalTimeZoneLike);
+  const timeZone = ES.ToTemporalTimeZoneIdentifier(temporalTimeZoneLike);
   return ES.CreateTemporalZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, 'iso8601');
 };
 const plainDateISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {

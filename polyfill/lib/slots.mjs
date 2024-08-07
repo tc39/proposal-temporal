@@ -1,9 +1,6 @@
 // Instant
 export const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
 
-// TimeZone
-export const TIMEZONE_ID = 'slot-timezone-identifier';
-
 // DateTime, Date, Time, YearMonth, MonthDay
 export const ISO_YEAR = 'slot-year';
 export const ISO_MONTH = 'slot-month';
@@ -21,7 +18,6 @@ export const YEAR_MONTH_BRAND = 'slot-year-month-brand';
 export const MONTH_DAY_BRAND = 'slot-month-day-brand';
 
 // ZonedDateTime
-export const INSTANT = 'slot-cached-instant';
 export const TIME_ZONE = 'slot-time-zone';
 
 // Duration
@@ -35,9 +31,6 @@ export const SECONDS = 'slot-seconds';
 export const MILLISECONDS = 'slot-milliseconds';
 export const MICROSECONDS = 'slot-microseconds';
 export const NANOSECONDS = 'slot-nanoseconds';
-
-// Calendar
-export const CALENDAR_ID = 'slot-calendar-identifier';
 
 const slots = new WeakMap();
 export function CreateSlots(container) {
