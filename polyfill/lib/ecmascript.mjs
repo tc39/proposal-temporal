@@ -3874,7 +3874,7 @@ function NudgeToCalendarUnit(
   const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
   const total = fakeNumerator.fdiv(denominator.totalNs);
   if (MathAbs(total) < MathAbs(r1) || MathAbs(total) > MathAbs(r2)) {
-    throw new Error('assertion failed: r1 ≤ total < r2');
+    throw new Error('assertion failed: r1 ≤ total ≤ r2');
   }
 
   // Determine whether expanded or contracted
