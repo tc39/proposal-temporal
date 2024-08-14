@@ -3868,7 +3868,9 @@ function NudgeToCalendarUnit(
   const even = (MathAbs(r1) / increment) % 2 === 0;
   const roundedUnit = numerator.isZero()
     ? MathAbs(r1)
-    : ApplyUnsignedRoundingMode(MathAbs(r1), MathAbs(r2), cmp, even, unsignedRoundingMode);
+    : !numerator.cmp(denominator) // equal?
+      ? MathAbs(r2)
+      : ApplyUnsignedRoundingMode(MathAbs(r1), MathAbs(r2), cmp, even, unsignedRoundingMode);
 
   // Trick to minimize rounding error, due to the lack of fma() in JS
   const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
