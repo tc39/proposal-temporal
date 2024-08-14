@@ -1831,18 +1831,21 @@
           1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
           1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
         1. If _sign_ is 1, then
-          1. Assert: _startEpochNs_ ≤ _destEpochNs_ &lt; _endEpochNs_.
+          1. Assert: _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_.
         1. Else,
-          1. Assert: _endEpochNs_ &lt; _destEpochNs_ ≤ _startEpochNs_.
+          1. Assert: _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_.
         1. Assert: _startEpochNs_ ≠ _endEpochNs_.
         1. Let _progress_ be (_destEpochNs_ - _startEpochNs_) / (_endEpochNs_ - _startEpochNs_).
         1. Let _total_ be _r1_ + _progress_ × _increment_ × _sign_.
         1. NOTE: The above two steps cannot be implemented directly using floating-point arithmetic. This division can be implemented as if constructing Normalized Time Duration Records for the denominator and numerator of _total_ and performing one division operation with a floating-point result.
-        1. Assert: 0 ≤ _progress_ &lt; 1.
+        1. Assert: 0 ≤ _progress_ ≤ 1.
         1. If _sign_ &lt; 0, let _isNegative_ be ~negative~; else let _isNegative_ be ~positive~.
         1. Let _unsignedRoundingMode_ be GetUnsignedRoundingMode(_roundingMode_, _isNegative_).
-        1. Assert: abs(_r1_) ≤ abs(_total_) &lt; abs(_r2_).
-        1. Let _roundedUnit_ be ApplyUnsignedRoundingMode(abs(_total_), abs(_r1_), abs(_r2_), _unsignedRoundingMode_).
+        1. If _progress_ = 1, then
+          1. Let _roundedUnit_ be abs(_r2_).
+        1. Else,
+          1. Assert: abs(_r1_) ≤ abs(_total_) &lt; abs(_r2_).
+          1. Let _roundedUnit_ be ApplyUnsignedRoundingMode(abs(_total_), abs(_r1_), abs(_r2_), _unsignedRoundingMode_).
         1. If _roundedUnit_ is abs(_r2_), then
           1. Let _didExpandCalendarUnit_ be *true*.
           1. Let _resultDuration_ be _endDuration_.
