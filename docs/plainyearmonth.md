@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 A `Temporal.PlainYearMonth` represents a particular month on the calendar.
@@ -642,7 +643,7 @@ ym = Temporal.PlainYearMonth.from('2019-06');
 ym.toPlainDate({ day: 24 }); // => 2019-06-24
 ```
 
-### yearMonth.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
+### yearMonth.**getISOFields**(): \{ isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `yearMonth` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) that `yearMonth` is reckoned in.
 

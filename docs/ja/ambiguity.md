@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 ## Clock Time と Exact Time の違いを理解する
@@ -37,7 +38,7 @@ TZ データベースは世界の政治的な変化によって年に数回ア�
 Temporal では：
 
 - [`Temporal.Instant`](../instant.md)タイプは exact time のみを表します
-- [`Temporal.PlainDateTime`](../plaindatetime.md)はカレンダー上の日付と wall-clock time を表します。これは次のような、より狭いタイプでも同様です：[`Temporal.PlainDate`](../plaindate.md)、[`Temporal.PlainTime`](../plaintime.md)、[`Temporal.PlainYearMonth`](../plainyearmonth.md)、[`Temporal.PlainMonthDay`](../plainmonthday.md)。  
+- [`Temporal.PlainDateTime`](../plaindatetime.md)はカレンダー上の日付と wall-clock time を表します。これは次のような、より狭いタイプでも同様です：[`Temporal.PlainDate`](../plaindate.md)、[`Temporal.PlainTime`](../plaintime.md)、[`Temporal.PlainYearMonth`](../plainyearmonth.md)、[`Temporal.PlainMonthDay`](../plainmonthday.md)。
   これらのタイプは特定のカレンダーシステムを持っており、デフォルトでは`'iso8601'`（ISO 8601 のカレンダー）です。これは他の`'islamic'`や`'japanese'`といった[カレンダー](../calendar.md)で上書きすることもできます。
 - [`Temporal.TimeZone`](../timezone.md)は、exact time と wall-clock を相互に変換するタイムゾーン関数を表します。また、これにはヘルパー関数も含まれます。例：特定の exact time におけるタイムゾーンオフセットを取得する
 - [`Temporal.ZonedDateTime`](../zoneddatetime.md)は、上記のタイプすべてをカプセル化します：exact time（[`Temporal.Instant`](../instant.md)など）、自身の wall-clock（[`Temporal.PlainDateTime`](../plaindatetime.md)など）、そしてそれら 2 つを関連付けるタイムゾーン（[`Temporal.TimeZone`](../timezone.md)など）

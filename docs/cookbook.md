@@ -2,7 +2,14 @@
 
 ## Overview
 
-<!-- toc -->
+[[toc]]
+
+<script setup>
+import CookbookCalendarInput from './examples/CookbookCalendarInput.vue'
+import CookbookStorageTank from './examples/CookbookStorageTank.vue'
+import CookbookMeetingPlanner from './examples/CookbookMeetingPlanner.vue'
+import CookbookFutureDateForm from './examples/CookbookFutureDateForm.vue'
+</script>
 
 ## Running the cookbook files
 
@@ -17,11 +24,7 @@ Here's how they would look using `Temporal`.
 
 How to get the current date and time in the local time zone?
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getCurrentDate.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getCurrentDate.mjs{js}
 
 Note that if you just want the date and not the time, you should use `Temporal.PlainDate`.
 If you want both, use `Temporal.PlainDateTime`.
@@ -30,11 +33,7 @@ If you want both, use `Temporal.PlainDateTime`.
 
 How to get a Unix timestamp?
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getTimeStamp.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getTimeStamp.mjs{js}
 
 ## Converting between `Temporal` types and legacy `Date`
 
@@ -42,11 +41,7 @@ How to get a Unix timestamp?
 
 Here's how to convert legacy ECMAScript `Date` into a `Temporal.Instant` or `Temporal.ZonedDateTime` instance corresponding to the same instant in exact time.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/fromLegacyDate.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/fromLegacyDate.mjs{js}
 
 ### Date-only values: legacy `Date` => `Temporal.PlainDate`
 
@@ -64,21 +59,13 @@ For example, `new Date(2000, 0, 1)` uses the caller's time zone, while `new Date
 
 To correctly convert a date-only `Date` to a `Temporal.PlainDate` without being vulnerable to off-by-one-day bugs, you must determine which time zone's midnight was used to construct the `Date`, and then use that same time zone when converting from `Temporal.Instant` to `Temporal.PlainDate`.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/fromLegacyDateOnly.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/fromLegacyDateOnly.mjs{js}
 
 ### `Temporal` types => legacy `Date`
 
 Legacy `Date` represents an exact time, so it's straightforward to convert a `Temporal.Instant` or `Temporal.ZonedDateTime` instance into a legacy `Date` instance that corresponds to it.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/toLegacyDate.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/toLegacyDate.mjs{js}
 
 ## Construction
 
@@ -87,29 +74,16 @@ Legacy `Date` represents an exact time, so it's straightforward to convert a `Te
 `Temporal.TimeZone.from()` can convert an IANA time zone name into a `Temporal.TimeZone` object, if you need to call `Temporal.TimeZone` methods.
 Usually this is not necessary.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getTimeZoneObjectFromIanaName.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getTimeZoneObjectFromIanaName.mjs{js}
 
 ### Calendar input element
 
 You can use `Temporal` objects to set properties on a calendar control.
 Here is an example using an HTML `<input type="date">` element with any day beyond “today” disabled and not selectable.
 
-<input type="date" id="calendar-input">
+<CookbookCalendarInput />
 
-<!-- prettier-ignore-start -->
-<script type="text/javascript">
-{
-{{cookbook/calendarInput.js}}
-}
-</script>
-
-```javascript
-{{cookbook/calendarInput.js}}
-```
+<<< @/cookbook/calendarInput.js{js}
 <!-- prettier-ignore-end -->
 
 ## Converting between types
@@ -118,21 +92,13 @@ Here is an example using an HTML `<input type="date">` element with any day beyo
 
 An example of combining a calendar date (`Temporal.PlainDate`) and a wall-clock time (`Temporal.PlainTime`) into a `Temporal.PlainDateTime`.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/noonOnDate.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/noonOnDate.mjs{js}
 
 ### Birthday in 2030
 
 An example of combining a day on the calendar (`Temporal.PlainMonthDay`) and a year into a `Temporal.PlainDate`.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/birthdayIn2030.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/birthdayIn2030.mjs{js}
 
 ## Serialization
 
@@ -146,11 +112,7 @@ If you need your string to include a UTC offset, then use the `timeZone` option 
 This loses the information about which time zone the string was in, because it only preserves the UTC offset from the time zone at that particular exact time.
 If you need your string to include the time zone name, use `Temporal.ZonedDateTime` instead, which retains this information.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getParseableZonedStringAtInstant.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getParseableZonedStringAtInstant.mjs{js}
 
 ## Sorting
 
@@ -161,21 +123,13 @@ Each `Temporal` type has a `compare()` static method, which can be passed to `Ar
 Sort a list of `Temporal.PlainDateTime`s, for example in order to get a conference schedule in the correct order.
 Sorting other `Temporal` types would work exactly the same way.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getSortedLocalDateTimes.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getSortedLocalDateTimes.mjs{js}
 
 ### Sort ISO date/time strings
 
 Sort a list of ISO 8601 date/time strings, for example to place log entries in order.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/sortExactTimeStrings.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/sortExactTimeStrings.mjs{js}
 
 ## Rounding
 
@@ -184,11 +138,7 @@ Sort a list of ISO 8601 date/time strings, for example to place log entries in o
 Use the `round()` method of each `Temporal` type if you want to round the time fields.
 Here's an example of rounding a time _down_ to the previously occurring whole hour:
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/roundDownToWholeHours.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/roundDownToWholeHours.mjs{js}
 
 ### Round a date to the nearest start of the month
 
@@ -197,11 +147,7 @@ Rounding a date field can be ambiguous, so date-only types such as `Temporal.Pla
 If you need to round a date to the nearest month, for example, then you must explicitly pick what kind of rounding you want.
 Here is an example of rounding to the nearest start of a month, rounding up in case of a tie:
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/roundToNearestMonth.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/roundToNearestMonth.mjs{js}
 
 See also [Push back a launch date](#push-back-a-launch-date) for an easier way to round up unconditionally to the _next_ start of a month.
 
@@ -212,22 +158,14 @@ See also [Push back a launch date](#push-back-a-launch-date) for an easier way t
 Map a zoneless date and time of day into a `Temporal.Instant` instance at which the local date and time of day in a specified time zone matches it.
 This is easily done with `dateTime.toZonedDateTime(timeZone).toInstant()`, but here is an example of implementing different disambiguation behaviors than the `'compatible'`, `'earlier'`, `'later'`, and `'reject'` ones built in to `Temporal`.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getInstantWithLocalTimeInZone.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getInstantWithLocalTimeInZone.mjs{js}
 
 ### Preserving exact time
 
 Map a zoned date and time of day into another zoned date and time of day in a target time zone at the corresponding exact time.
 This could be used when converting user-input date-time values between time zones.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/zonedDateTimeInOtherZone.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/zonedDateTimeInOtherZone.mjs{js}
 
 Here is another example similar to the previous one, using the time zone for future events.
 The times and locations of a series of future meetings are stored as a pair of strings: one for the calendar date and wall-clock time, and one for the time zone.
@@ -236,151 +174,49 @@ So if the time zone rules changed, the event's exact time would change.
 
 This example calculates the starting times of all the Ecma TC39 meetings in 2019, in local time in Tokyo.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/localTimeForFutureEvents.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/localTimeForFutureEvents.mjs{js}
 
 ### Daily occurrence in local time
 
 Similar to the previous recipe, calculate the exact times of a daily occurrence that happens at a particular local time in a particular time zone.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/calculateDailyOccurrence.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/calculateDailyOccurrence.mjs{js}
 
 ### UTC offset for a zoned event, as a string
 
 Use `Temporal.TimeZone.getOffsetStringFor()` or `Temporal.ZonedDateTime.offset` to map a `Temporal.Instant` instance and a time zone into the UTC offset at that exact time in that time zone, as a string.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getUtcOffsetStringAtInstant.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getUtcOffsetStringAtInstant.mjs{js}
 
 ### UTC offset for a zoned event, as a number of seconds
 
 Similarly, use `Temporal.TimeZone.getOffsetNanosecondsFor()` to do the same thing for the offset as a number of seconds.
 (Remember to divide by 10<sup>9</sup> to convert nanoseconds to seconds.)
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getUtcOffsetSecondsAtInstant.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getUtcOffsetSecondsAtInstant.mjs{js}
 
 ### Offset between two time zones at an exact time
 
 Also using `Temporal.TimeZone.getOffsetNanosecondsFor()`, we can map a `Temporal.Instant` instance and two time zones into the signed difference of UTC offsets between those time zones at that exact time, as a number of seconds.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getUtcOffsetDifferenceSecondsAtInstant.mjs{js}
 
 ### Dealing with dates and times in a fixed location
 
 Here is an example of `Temporal` used in a graph, showing fictitious activity for a storage tank in a fixed location (Stockholm, Sweden).
 The graph always starts at midnight in the tank's location, but the graph labels are in the viewer's time zone.
 
-<!-- prettier-ignore-start -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<CookbookStorageTank />
 
-<canvas id="storage-tank" width="600" height="400"></canvas>
-
-<script type="text/javascript">
-{
-// Generate fictitious "data"
-const start = Temporal.Now.instant().subtract({ hours: 24 });
-const blank = Array(24 * 12);
-const tankDataX = Array.from(blank, (_, ix) => start.add({ minutes: ix * 5 }));
-const tankDataY = Array.from(blank);
-tankDataY[0] = 25;
-for (let ix = 1; ix < tankDataY.length; ix++) {
-  tankDataY[ix] = Math.max(0, tankDataY[ix - 1] + 3 * (Math.random() - 0.5));
-}
-
-{{cookbook/storageTank.js}}
-}
-</script>
-
-```javascript
-{{cookbook/storageTank.js}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/storageTank.js{js}
 
 ### Book a meeting across time zones
 
 Across the web there are several tools for finding meeting times that are appropriate for all the participants' time zones, such as [World Time Buddy](https://www.worldtimebuddy.com/), [World Clock Meeting Planner](https://www.timeanddate.com/worldclock/meeting.html), and built into various calendar software.
 
-<style>
-  #meeting-planner {
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    font-size: 0.6rem;
-    text-align: center;
-  }
+<CookbookMeetingPlanner />
 
-  /* https://materializecss.com/color.html */
-  .time-0, .time-1, .time-2, .time-3, .time-4, .time-5,
-  .time-22, .time-23 {
-    background-color: #ef9a9a;  /* red lighten-3 */
-    border-color: #e57373;  /* red lighten-2 */
-    border-style: solid;
-    border-width: 0 1px;
-  }
-  .time-6, .time-7, .time-18, .time-19, .time-20, .time-21 {
-    background-color: #fff59d;  /* yellow lighten-3 */
-    border-color: #ffd54f;  /* amber lighten-2 */
-    border-style: solid;
-    border-width: 0 1px;
-  }
-  .time-8, .time-9, .time-10, .time-11, .time-12, .time-13,
-  .time-14, .time-15, .time-16, .time-17 {
-    background-color: #a5d6a7;  /* green lighten-3 */
-    border-color: #81c784;  /* green lighten-2 */
-    border-style: solid;
-    border-width: 0 1px;
-  }
-
-  .time-0 {
-    border-bottom-left-radius: 12px;
-    border-left-color: white;
-    border-left-width: 2px;
-    border-top-left-radius: 12px;
-    font-weight: bold;
-  }
-  .time-23 {
-    border-bottom-right-radius: 12px;
-    border-right-color: white;
-    border-right-width: 2px;
-    border-top-right-radius: 12px;
-  }
-
-  .time-current {
-    border: 2px solid black;
-  }
-</style>
-
-<table id="meeting-planner">
-</table>
-
-<!-- prettier-ignore-start -->
-<script type="text/javascript" id="meeting-planner-source">
-{
-{{cookbook/meetingPlanner.js}}
-}
-</script>
-
-```javascript
-{{cookbook/meetingPlanner.js}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/meetingPlanner.js{js}
 
 ## Arithmetic
 
@@ -388,94 +224,44 @@ Across the web there are several tools for finding meeting times that are approp
 
 An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/date/durationresult.html) on timeanddate.com:
 
-<form action="#how-many-days-until-a-future-date">
-  <label>
-    Enter future date:
-    <input type="date" name="futuredate">
-  </label>
-  <button>Submit</button>
-</form>
+<CookbookFutureDateForm />
 
-<div id="futuredate-results"></div>
-
-<script type="text/javascript">
-{
-  // Do initialization that doesn't necessarily need to be included in
-  // the example; see 'Calendar input element'
-  const futureDatePicker = document.querySelector('input[name="futuredate"]');
-  const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-  const today = Temporal.Now.plainDate(browserCalendar);
-  futureDatePicker.min = today;
-  futureDatePicker.value = today.add({ months: 1 });
-
-{{cookbook/futureDateForm.js}}
-}
-</script>
-
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/futureDateForm.js}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/futureDateForm.js{js}
 
 ### Unit-constrained duration between now and a past/future zoned event
 
 Take the difference between two `Temporal.Instant` instances as a `Temporal.Duration` instance (positive or negative), representing the duration between the two instants without using units coarser than specified (e.g., for presenting a meaningful countdown with vs. without using months or days).
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getElapsedDurationSinceInstant.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getElapsedDurationSinceInstant.mjs{js}
 
 ### Next offset transition in a time zone
 
 Map a `Temporal.ZonedDateTime` instance into another `Temporal.ZonedDateTime` instance representing the nearest following exact time at which there is an offset transition in the time zone (e.g., for setting reminders).
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getNextOffsetTransitionFromExactTime.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getNextOffsetTransitionFromExactTime.mjs{js}
 
 ### Comparison of an exact time to business hours
 
 This example takes a roster of wall-clock opening and closing times for a business, and maps an exact time into a time-sensitive state indicator ("opening soon" vs. "open" vs. "closing soon" vs. "closed").
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getBusinessOpenStateText.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getBusinessOpenStateText.mjs{js}
 
 ### Flight arrival/departure/duration
 
 Map localized trip departure and arrival times into trip duration in units no larger than hours.
 (By default, differences between ZonedDateTime instances are exact differences in time units.)
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getTripDurationInHrMinSec.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getTripDurationInHrMinSec.mjs{js}
 
 Given a departure time with time zone and a flight duration, get an arrival time in the destination time zone, using time zone-aware math.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getLocalizedArrival.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getLocalizedArrival.mjs{js}
 
 ### Push back a launch date
 
 Add the number of days it took to get an approval, and advance to the start of the following month.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/plusAndRoundToMonthStart.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/plusAndRoundToMonthStart.mjs{js}
 
 ### Schedule a reminder ahead of matching a record-setting duration
 
@@ -485,47 +271,27 @@ It returns the exact time at which a notification could be sent, for example "Ke
 
 This could be used for workout tracking, racing (including _long_ and potentially time-zone-crossing races like the Bullrun Rally, Iditarod, Self-Transcendence 3100, and Clipper Round The World), or even open-ended analogs like event-every-day "streaks".
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getInstantBeforeOldRecord.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getInstantBeforeOldRecord.mjs{js}
 
 ### Nth weekday of the month
 
 Example of getting a `Temporal.PlainDate` representing the first Tuesday of the given `Temporal.PlainYearMonth`, adaptable to other weekdays.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getFirstTuesdayOfMonth.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getFirstTuesdayOfMonth.mjs{js}
 
 Given a `Temporal.PlainYearMonth` instance and an ISO 8601 ordinal calendar day of the week ranging from 1 (Monday) to 7 (Sunday), return a chronologically ordered array of `Temporal.PlainDate` instances corresponding with every day in the month that is the specified day of the week (of which there will always be either four or five).
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/getWeeklyDaysInMonth.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/getWeeklyDaysInMonth.mjs{js}
 
 Given a `Temporal.PlainDate` instance, return the count of preceding days in its month that share its day of the week.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/countPrecedingWeeklyDaysInMonth.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/countPrecedingWeeklyDaysInMonth.mjs{js}
 
 ### Manipulating the day of the month
 
 Here are some examples of taking an existing date, and adjusting the day of the month.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/adjustDayOfMonth.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/adjustDayOfMonth.mjs{js}
 
 ### Same date in another month
 
@@ -533,32 +299,20 @@ Likewise, here are some examples of taking an existing date and adjusting the mo
 
 Depending on the behavior you want, you will need to pick the right `overflow` option, but the default of `"constrain"` should be correct for most cases.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/adjustMonth.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/adjustMonth.mjs{js}
 
 ### Next weekly occurrence
 
 From a `Temporal.ZonedDateTime` instance, get a `Temporal.ZonedDateTime` representing the next occurrence of a weekly event that is scheduled on a particular weekday and time in a particular time zone. (For example, "weekly on Thursdays at 08:45 California time").
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/nextWeeklyOccurrence.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/nextWeeklyOccurrence.mjs{js}
 
 ### Weekday of yearly occurrence
 
 In some countries, when a public holiday falls on a Tuesday or Thursday, an extra "bridge" public holiday is observed on Monday or Friday in order to give workers a long weekend off.
 The following example calculates this.
 
-<!-- prettier-ignore-start -->
-```javascript
-{{cookbook/bridgePublicHolidays.mjs}}
-```
-<!-- prettier-ignore-end -->
+<<< @/cookbook/bridgePublicHolidays.mjs{js}
 
 ## Advanced use cases
 

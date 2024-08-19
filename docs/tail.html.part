@@ -1,9 +1,0 @@
-    <footer>
-      <p>
-        This page includes a script which loads an implementation of Temporal in your browser.
-        You can open a console in your browser's developer tools and try it out directly!
-      </p>
-      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
-    </footer>
-  </body>
-</html>

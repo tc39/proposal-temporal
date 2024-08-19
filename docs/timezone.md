@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 A `Temporal.TimeZone` is a representation of a time zone:

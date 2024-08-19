@@ -2,10 +2,11 @@
   "name": "tc39-temporal-playground",
   "version": "1.0.0",
   "description": "Temporal Proposal Playground",
-  "main": "index.js",
   "private": true,
   "scripts": {
-    "build": "node buildDocs.js"
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
   },
   "repository": {
     "type": "git",
@@ -23,8 +24,8 @@
   },
   "homepage": "https://github.com/tc39/proposal-temporal#readme",
   "devDependencies": {
-    "marked": "^5.0.4",
-    "mkdirp": "^3.0.1",
-    "prismjs": "^1.29.0"
+    "@mdit-vue/shared": "^2.1.3",
+    "vitepress": "^1.3.3",
+    "vue": "^3.4.38"
   }
 }

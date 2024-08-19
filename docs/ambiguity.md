@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 ## Understanding Clock Time vs. Exact Time

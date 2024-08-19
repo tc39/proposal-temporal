@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 A `Temporal.PlainDate` represents a calendar date.
@@ -563,11 +564,11 @@ earlier.toPlainDateTime(noon).until(later.toPlainDateTime(noon), { largestUnit: 
 
 newyear = Temporal.PlainDate.from('2020-01-01');
 newyear.until('2020-01-15', { smallestUnit: 'month', roundingMode: 'halfExpand' });
-  // => PT0S 
+  // => PT0S
 newyear.until('2020-01-16', { smallestUnit: 'month', roundingMode: 'halfExpand' });
   // => PT0S (mid-month dates rounded down to match `Temporal.PlainDateTime` behavior)
 newyear.until('2020-01-17', { smallestUnit: 'month', roundingMode: 'halfExpand' });
-  // => PT1M 
+  // => PT1M
 ```
 <!-- prettier-ignore-end -->
 
@@ -813,7 +814,7 @@ date.toPlainYearMonth(); // => 2006-08
 date.toPlainMonthDay(); // => 08-24
 ```
 
-### date.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
+### date.**getISOFields**(): \{ isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `date` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `date` is reckoned.
 

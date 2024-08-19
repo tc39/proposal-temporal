@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 A `Temporal.PlainTime` represents a wall-clock time, with a precision in nanoseconds, and without any time zone.
@@ -571,7 +572,7 @@ This method overrides `Object.prototype.valueOf()` and always throws an exceptio
 This is because it's not possible to compare `Temporal.PlainTime` objects with the relational operators `<`, `<=`, `>`, or `>=`.
 Use `Temporal.PlainTime.compare()` for this, or `time.equals()` for equality.
 
-### time.**getISOFields**(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number }
+### time.**getISOFields**(): \{ isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number }
 
 **Returns:** a plain object with properties expressing `time` in the ISO 8601 calendar.
 

@@ -295,7 +295,7 @@ An additional type, `Temporal.EpochDays`, could be added as an analog of `Tempor
 
 Here is an illustrated version of this option:
 
-![Potential Temporal Data Types](assets/new-data-types.svg)
+![Potential Temporal Data Types](./new-data-types.svg)
 
 ### New Factory Methods (Option 6)
 

@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 ## Introduction
@@ -232,7 +233,7 @@ See [Temporal.Calendar Documentation](./calendar.md) for detailed documentation.
 
 ## Object relationship
 
-<img src="object-model.svg">
+<img src="./object-model.svg">
 
 ## String persistence, parsing, and formatting
 
@@ -240,7 +241,7 @@ All `Temporal` types have a string representation for persistence and interopera
 The correspondence between types and machine-readable strings is shown below.
 For more information about string parsing, serialization, and formatting in `Temporal` (including how Temporal is using industry standards like ISO 8601 and RFC 3339), see [String Parsing, Serialization, and Formatting](./strings.md).
 
-<img src="persistence-model.svg">
+<img src="./persistence-model.svg">
 
 ## Other documentation
 

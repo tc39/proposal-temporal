@@ -42,7 +42,7 @@ export default [
     input: 'lib/shim.mjs',
     output: {
       name: libName,
-      file: '../out/docs/playground.js',
+      file: './dist/playground.js',
       format: 'umd',
       sourcemap: true
     },

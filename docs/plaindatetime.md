@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 A `Temporal.PlainDateTime` represents a calendar date and wall-clock time, with a precision in nanoseconds, and without any time zone.
@@ -1005,7 +1006,7 @@ dt.toPlainDate().toPlainYearMonth(); // => 1995-12
 dt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
 
-### datetime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: string | object }
+### datetime.**getISOFields**(): \{ isoYear: number, isoMonth: number, isoDay: number, isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `datetime` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `datetime` is reckoned.
 

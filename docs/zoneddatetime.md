@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 A `Temporal.ZonedDateTime` is a timezone-aware, calendar-aware date/time type that represents a real event that has happened (or will happen) at a particular instant from the perspective of a particular region on Earth.
@@ -1446,7 +1447,7 @@ zdt.toPlainDate().toPlainYearMonth(); // => 1995-12
 zdt.toPlainDate().toPlainMonthDay(); // => 12-07
 ```
 
-### zonedDateTime.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: string | object, calendar: string | object }
+### zonedDateTime.**getISOFields**(): \{ isoYear: number, isoMonth: number, isoDay: number, hour: number, minute: number, second: number, millisecond: number, microsecond: number, nanosecond: number, offset: string, timeZone: string | object, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `zonedDateTime` in the ISO 8601 calendar, including all date/time fields as well as the `offset` property, and the calendar and time zone (which are usually strings, but may be objects) in which `zonedDateTime` is reckoned.
 

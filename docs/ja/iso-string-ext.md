@@ -22,7 +22,7 @@ Joda Time（現在は java.time）のような、ブラケットを用いてタ�
 
 ISO-8601 も RFC 3339 も、この記法については言及していませんが、`Temporal`ではこれらを事実上の業界標準として採用します。
 
-タイムゾーンの文字列は、タイムゾーンデータベースのルールにしたがって書かれます。（詳しくは[timezone.md](timezone.md)を参照）ルールに関する詳しい情報は[こちらのドキュメント](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html)を参照してください。
+タイムゾーンの文字列は、タイムゾーンデータベースのルールにしたがって書かれます。（詳しくは[timezone.md](../timezone.md)を参照）ルールに関する詳しい情報は[こちらのドキュメント](https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html)を参照してください。
 
 > 有効な POSIX ファイル名のみを用いる（つまり、`'/'`以外の部分を用いる）。
 > `'.'`と`'..'`を用いてはいけない。

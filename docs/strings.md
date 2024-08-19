@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 ## Machine-readable vs. human-readable string formats
@@ -85,7 +86,7 @@ Unlike machine-readable strings, human-readable strings cannot be parsed by Temp
 All `Temporal` types have a machine-readable string representation for persistence and interoperability.
 These representations are based on existing industry standards, with a few standards-track extensions noted below.
 
-<img src="persistence-model.svg">
+<img src="./persistence-model.svg">
 
 ## Industry standards for machine-readable date/time strings
 

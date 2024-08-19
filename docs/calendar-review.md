@@ -241,7 +241,7 @@ This approach would have the advantage of avoiding the Unexpected Calendar Probl
 - Chaining multiple operations (e.g. `.add({months: 2}).with({day: 1})`) gets less ergonomic and more bug-prone because the same calendar value must be used in all chained calls.
 - The `Temporal.PlainMonthDay` type would become challenging to reason about without a calendar attached because month/day values like birthdays and holidays are inherently calendar-specific and have no ISO counterpart.
   This is especially true in lunisolar calendars like Hebrew and Chinese where ordinal month numbers vary from year to year for the same month.
-  (Current Temporal uses a string [`monthCode`](./docs/plaindate.md#monthCode) field to describe year-independent months.)
+  (Current Temporal uses a string [`monthCode`](./plaindate.md#monthCode) field to describe year-independent months.)
   For example, a birthday on 12 Adar I in the Hebrew calendar is currently modelled as
 
   ```javascript

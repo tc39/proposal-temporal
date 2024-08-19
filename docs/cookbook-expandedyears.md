@@ -10,6 +10,4 @@ For example, arithmetic will not work correctly in this example.
 > **NOTE**: This is a very specialized use of Temporal and is not something you would normally need to do.
 > A dedicated third-party library might be a better solution to this problem.
 
-```javascript
-{{cookbook/makeExpandedTemporal.mjs}}
-```
+<<< @/cookbook/makeExpandedTemporal.mjs{js}

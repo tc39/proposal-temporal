@@ -2,7 +2,8 @@
 
 <details>
   <summary><strong>Table of Contents</strong></summary>
-<!-- toc -->
+
+[[toc]]
 </details>
 
 A `Temporal.PlainMonthDay` represents a particular day on the calendar, but without a year.
@@ -390,7 +391,7 @@ md = Temporal.PlainMonthDay.from({
 date = md.toPlainDate({ era: 'reiwa', eraYear: 2 }); // => 2020-01-01[u-ca=japanese]
 ```
 
-### monthDay.**getISOFields**(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
+### monthDay.**getISOFields**(): \{ isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }
 
 **Returns:** a plain object with properties expressing `monthDay` in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) in which `monthDay` is reckoned.
 
