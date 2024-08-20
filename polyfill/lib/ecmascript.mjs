@@ -229,16 +229,6 @@ const BUILTIN_CASTS = new Map([
   ['millisecond', ToIntegerWithTruncation],
   ['microsecond', ToIntegerWithTruncation],
   ['nanosecond', ToIntegerWithTruncation],
-  ['years', ToIntegerIfIntegral],
-  ['months', ToIntegerIfIntegral],
-  ['weeks', ToIntegerIfIntegral],
-  ['days', ToIntegerIfIntegral],
-  ['hours', ToIntegerIfIntegral],
-  ['minutes', ToIntegerIfIntegral],
-  ['seconds', ToIntegerIfIntegral],
-  ['milliseconds', ToIntegerIfIntegral],
-  ['microseconds', ToIntegerIfIntegral],
-  ['nanoseconds', ToIntegerIfIntegral],
   ['offset', ToPrimitiveAndRequireString]
 ]);
 
