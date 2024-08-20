@@ -23,7 +23,6 @@ const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
 const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
 const ObjectEntries = Object.entries;
-const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 const SetPrototypeHas = Set.prototype.has;
 const StringCtor = String;
 const StringFromCharCode = String.fromCharCode;
@@ -1136,8 +1135,7 @@ export function PrepareTemporalFields(
   fields,
   requiredFields,
   extraFieldDescriptors = [],
-  duplicateBehaviour = 'throw',
-  { emptySourceErrorMessage = 'no supported properties found' } = {}
+  duplicateBehaviour = 'throw'
 ) {
   const result = ObjectCreate(null);
   let any = false;
@@ -1186,7 +1184,7 @@ export function PrepareTemporalFields(
     previousProperty = property;
   }
   if (requiredFields === 'partial' && !any) {
-    throw new TypeError(emptySourceErrorMessage);
+    throw new TypeError('no supported properties found');
   }
   return result;
 }
@@ -1232,19 +1230,19 @@ export function PrepareCalendarFields(calendarRec, bag, calendarFieldNames, nonC
 
 export function ToTemporalTimeRecord(bag, completeness = 'complete') {
   const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
-  const partial = PrepareTemporalFields(bag, fields, 'partial', undefined, undefined, {
-    emptySourceErrorMessage: 'invalid time-like'
-  });
-  const result = {};
+  let any = false;
+  const result = ObjectCreate(null);
   for (let index = 0; index < fields.length; index++) {
     const field = fields[index];
-    const valueDesc = ObjectGetOwnPropertyDescriptor(partial, field);
-    if (valueDesc !== undefined) {
-      result[field] = valueDesc.value;
+    const value = bag[field];
+    if (value !== undefined) {
+      result[field] = ToIntegerWithTruncation(value);
+      any = true;
     } else if (completeness === 'complete') {
       result[field] = 0;
     }
   }
+  if (!any) throw new TypeError('invalid time-like');
   return result;
 }
 
