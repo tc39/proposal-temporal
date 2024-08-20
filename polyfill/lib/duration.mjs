@@ -160,23 +160,8 @@ export class Duration {
   }
   with(durationLike) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    const partialDuration = ES.PrepareTemporalFields(
-      durationLike,
-      [
-        'days',
-        'hours',
-        'microseconds',
-        'milliseconds',
-        'minutes',
-        'months',
-        'nanoseconds',
-        'seconds',
-        'weeks',
-        'years'
-      ],
-      'partial'
-    );
-    let {
+    const partialDuration = ES.ToTemporalPartialDurationRecord(durationLike);
+    const {
       years = GetSlot(this, YEARS),
       months = GetSlot(this, MONTHS),
       weeks = GetSlot(this, WEEKS),
