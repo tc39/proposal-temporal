@@ -5376,15 +5376,17 @@ export function RoundTime(hour, minute, second, millisecond, microsecond, nanose
 }
 
 export function DaysUntil(earlier, later) {
-  return DifferenceISODate(
+  const epochDaysEarlier = ISODateToEpochDays(
     GetSlot(earlier, ISO_YEAR),
     GetSlot(earlier, ISO_MONTH),
-    GetSlot(earlier, ISO_DAY),
+    GetSlot(earlier, ISO_DAY)
+  );
+  const epochDaysLater = ISODateToEpochDays(
     GetSlot(later, ISO_YEAR),
     GetSlot(later, ISO_MONTH),
-    GetSlot(later, ISO_DAY),
-    'day'
-  ).days;
+    GetSlot(later, ISO_DAY)
+  );
+  return epochDaysLater - epochDaysEarlier;
 }
 
 export function RoundTimeDuration(days, norm, increment, unit, roundingMode) {
