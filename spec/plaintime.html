@@ -816,35 +816,36 @@
       </dl>
       <emu-alg>
         1. If _completeness_ is not present, set _completeness_ to ~complete~.
-        1. Let _partial_ be ? PrepareTemporalFields(_temporalTimeLike_, « *"hour"*, *"microsecond"*, *"millisecond"*, *"minute"*, *"nanosecond"*, *"second"* », ~partial~).
         1. If _completeness_ is ~complete~, then
           1. Let _result_ be a new TemporalTimeLike Record with each field set to 0.
         1. Else,
-          1. Let _result_ be a new TemporalTimeLike Record with each field set to *undefined*.
-        1. Let _hourDesc_ be OrdinaryGetOwnProperty(_partial_, *"hour"*).
-        1. If _hourDesc_ is not *undefined*, then
-          1. Assert: _hourDesc_ is a data Property Descriptor.
-          1. Set _result_.[[Hour]] to ℝ(_hourDesc_.[[Value]]).
-        1. Let _minuteDesc_ be OrdinaryGetOwnProperty(_partial_, *"minute"*).
-        1. If _minuteDesc_ is not *undefined*, then
-          1. Assert: _minuteDesc_ is a data Property Descriptor.
-          1. Set _result_.[[Minute]] to ℝ(_minuteDesc_.[[Value]]).
-        1. Let _secondDesc_ be OrdinaryGetOwnProperty(_partial_, *"second"*).
-        1. If _secondDesc_ is not *undefined*, then
-          1. Assert: _secondDesc_ is a data Property Descriptor.
-          1. Set _result_.[[Second]] to ℝ(_secondDesc_.[[Value]]).
-        1. Let _millisecondDesc_ be OrdinaryGetOwnProperty(_partial_, *"millisecond"*).
-        1. If _millisecondDesc_ is not *undefined*, then
-          1. Assert: _millisecondDesc_ is a data Property Descriptor.
-          1. Set _result_.[[Millisecond]] to ℝ(_millisecondDesc_.[[Value]]).
-        1. Let _microsecondDesc_ be OrdinaryGetOwnProperty(_partial_, *"microsecond"*).
-        1. If _microsecondDesc_ is not *undefined*, then
-          1. Assert: _microsecondDesc_ is a data Property Descriptor.
-          1. Set _result_.[[Microsecond]] to ℝ(_microsecondDesc_.[[Value]]).
-        1. Let _nanosecondDesc_ be OrdinaryGetOwnProperty(_partial_, *"nanosecond"*).
-        1. If _nanosecondDesc_ is not *undefined*, then
-          1. Assert: _nanosecondDesc_ is a data Property Descriptor.
-          1. Set _result_.[[Nanosecond]] to ℝ(_nanosecondDesc_.[[Value]]).
+          1. Let _result_ be a new TemporalTimeLike Record with each field set to ~unset~.
+        1. Let _any_ be *false*.
+        1. Let _hour_ be ? Get(_temporalTimeLike_, *"hour"*).
+        1. If _hour_ is not *undefined*, then
+          1. Set _result_.[[Hour]] to ? ToIntegerWithTruncation(_hour_).
+          1. Set _any_ to *true*.
+        1. Let _microsecond_ be ? Get(_temporalTimeLike_, *"microsecond"*).
+        1. If _microsecond_ is not *undefined*, then
+          1. Set _result_.[[Microsecond]] to ? ToIntegerWithTruncation(_microsecond_).
+          1. Set _any_ to *true*.
+        1. Let _millisecond_ be ? Get(_temporalTimeLike_, *"millisecond"*).
+        1. If _millisecond_ is not *undefined*, then
+          1. Set _result_.[[Millisecond]] to ? ToIntegerWithTruncation(_millisecond_).
+          1. Set _any_ to *true*.
+        1. Let _minute_ be ? Get(_temporalTimeLike_, *"minute"*).
+        1. If _minute_ is not *undefined*, then
+          1. Set _result_.[[Minute]] to ? ToIntegerWithTruncation(_minute_).
+          1. Set _any_ to *true*.
+        1. Let _nanosecond_ be ? Get(_temporalTimeLike_, *"nanosecond"*).
+        1. If _nanosecond_ is not *undefined*, then
+          1. Set _result_.[[Nanosecond]] to ? ToIntegerWithTruncation(_nanosecond_).
+          1. Set _any_ to *true*.
+        1. Let _second_ be ? Get(_temporalTimeLike_, *"second"*).
+        1. If _second_ is not *undefined*, then
+          1. Set _result_.[[Second]] to ? ToIntegerWithTruncation(_second_).
+          1. Set _any_ to *true*.
+        1. If _any_ is *false*, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
 
