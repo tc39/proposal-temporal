@@ -3854,12 +3854,10 @@ function NudgeToCalendarUnit(
   // Round the smallestUnit within the epoch-nanosecond span
   if (
     (sign === 1 && (startEpochNs.gt(destEpochNs) || destEpochNs.gt(endEpochNs))) ||
-    (sign === -1 && (endEpochNs.gt(destEpochNs) || destEpochNs.gt(startEpochNs)))
+    (sign === -1 && (endEpochNs.gt(destEpochNs) || destEpochNs.gt(startEpochNs))) ||
+    endEpochNs.equals(startEpochNs)
   ) {
     throw new RangeError(`custom calendar reported a ${unit} that is 0 days long`);
-  }
-  if (endEpochNs.equals(startEpochNs)) {
-    throw new Error('assertion failed: startEpochNs ≠ endEpochNs');
   }
   const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
   const denominator = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);

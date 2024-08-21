@@ -1883,7 +1883,7 @@
         1. Else,
           1. If _endEpochNs_ &gt; _destEpochNs_ or _destEpochNs_ &gt; _startEpochNs_, throw a *RangeError* exception.
           1. Assert: _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_.
-        1. Assert: _startEpochNs_ ≠ _endEpochNs_.
+        1. If _endEpochNs_ = _startEpochNs_, throw a *RangeError* exception.
         1. Let _progress_ be (_destEpochNs_ - _startEpochNs_) / (_endEpochNs_ - _startEpochNs_).
         1. Let _total_ be _r1_ + _progress_ × _increment_ × _sign_.
         1. NOTE: The above two steps cannot be implemented directly using floating-point arithmetic. This division can be implemented as if constructing Normalized Time Duration Records for the denominator and numerator of _total_ and performing one division operation with a floating-point result.
