@@ -7897,7 +7897,6 @@
 	const ObjectCreate$7 = Object.create;
 	const ObjectDefineProperty$1 = Object.defineProperty;
 	const ObjectEntries$1 = Object.entries;
-	const ObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 	const SetPrototypeHas$1 = Set.prototype.has;
 	const StringCtor = String;
 	const StringFromCharCode = String.fromCharCode;
@@ -7971,7 +7970,7 @@
 	  value = ToPrimitive$2(value, StringCtor);
 	  return RequireString(value);
 	}
-	const BUILTIN_CASTS = new Map([['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToPrimitiveAndRequireString], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['years', ToIntegerIfIntegral], ['months', ToIntegerIfIntegral], ['weeks', ToIntegerIfIntegral], ['days', ToIntegerIfIntegral], ['hours', ToIntegerIfIntegral], ['minutes', ToIntegerIfIntegral], ['seconds', ToIntegerIfIntegral], ['milliseconds', ToIntegerIfIntegral], ['microseconds', ToIntegerIfIntegral], ['nanoseconds', ToIntegerIfIntegral], ['offset', ToPrimitiveAndRequireString]]);
+	const BUILTIN_CASTS = new Map([['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToPrimitiveAndRequireString], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['offset', ToPrimitiveAndRequireString]]);
 	const BUILTIN_DEFAULTS = new Map([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
 
 	// each item is [plural, singular, category, (length in ns)]
@@ -8901,9 +8900,6 @@
 	function PrepareTemporalFields(bag, fields, requiredFields) {
 	  let extraFieldDescriptors = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 	  let duplicateBehaviour = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'throw';
-	  let {
-	    emptySourceErrorMessage = 'no supported properties found'
-	  } = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 	  const result = ObjectCreate$7(null);
 	  let any = false;
 	  if (extraFieldDescriptors) {
@@ -8949,7 +8945,7 @@
 	    previousProperty = property;
 	  }
 	  if (requiredFields === 'partial' && !any) {
-	    throw new TypeError(emptySourceErrorMessage);
+	    throw new TypeError('no supported properties found');
 	  }
 	  return result;
 	}
@@ -8988,19 +8984,19 @@
 	function ToTemporalTimeRecord(bag) {
 	  let completeness = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'complete';
 	  const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
-	  const partial = PrepareTemporalFields(bag, fields, 'partial', undefined, undefined, {
-	    emptySourceErrorMessage: 'invalid time-like'
-	  });
-	  const result = {};
+	  let any = false;
+	  const result = ObjectCreate$7(null);
 	  for (let index = 0; index < fields.length; index++) {
 	    const field = fields[index];
-	    const valueDesc = ObjectGetOwnPropertyDescriptor(partial, field);
-	    if (valueDesc !== undefined) {
-	      result[field] = valueDesc.value;
+	    const value = bag[field];
+	    if (value !== undefined) {
+	      result[field] = ToIntegerWithTruncation(value);
+	      any = true;
 	    } else if (completeness === 'complete') {
 	      result[field] = 0;
 	    }
 	  }
+	  if (!any) throw new TypeError('invalid time-like');
 	  return result;
 	}
 	function ToTemporalDate(item, options) {
@@ -12551,7 +12547,9 @@
 	  }
 	}
 	function DaysUntil(earlier, later) {
-	  return DifferenceISODate(GetSlot(earlier, ISO_YEAR), GetSlot(earlier, ISO_MONTH), GetSlot(earlier, ISO_DAY), GetSlot(later, ISO_YEAR), GetSlot(later, ISO_MONTH), GetSlot(later, ISO_DAY), 'day').days;
+	  const epochDaysEarlier = ISODateToEpochDays(GetSlot(earlier, ISO_YEAR), GetSlot(earlier, ISO_MONTH), GetSlot(earlier, ISO_DAY));
+	  const epochDaysLater = ISODateToEpochDays(GetSlot(later, ISO_YEAR), GetSlot(later, ISO_MONTH), GetSlot(later, ISO_DAY));
+	  return epochDaysLater - epochDaysEarlier;
 	}
 	function RoundTimeDuration(days, norm, increment, unit, roundingMode) {
 	  // unit must not be a calendar unit
@@ -17975,8 +17973,8 @@
 	  }
 	  with(durationLike) {
 	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-	    const partialDuration = PrepareTemporalFields(durationLike, ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'], 'partial');
-	    let {
+	    const partialDuration = ToTemporalPartialDurationRecord(durationLike);
+	    const {
 	      years = GetSlot(this, YEARS),
 	      months = GetSlot(this, MONTHS),
 	      weeks = GetSlot(this, WEEKS),
