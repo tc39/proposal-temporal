@@ -6,6 +6,7 @@ let tocMap = new Map<string, string>()
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   outDir: '../out/docs',
+  base: '/proposal-temporal/docs/',
 
   title: "Temporal Documentation",
   themeConfig: {
