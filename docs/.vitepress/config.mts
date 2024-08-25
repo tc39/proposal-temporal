@@ -11,13 +11,9 @@ export default defineConfig({
   title: "Temporal Documentation",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    // nav: [
-    //   { text: 'Home', link: '/' },
-    //   { text: 'Examples', link: '/markdown-examples' }
-    // ],
 
     search: {
-      provider: 'local'
+      provider: 'local',
     },
 
     sidebar: [
@@ -27,7 +23,8 @@ export default defineConfig({
       { text: 'Cookbook', link: '/cookbook' },
       {
         text: 'API',
-        items: ['Temporal.Now',
+        items: [
+          'Temporal.Now',
           'Temporal.Instant',
           'Temporal.ZonedDateTime',
           'Temporal.PlainDate',
@@ -37,10 +34,11 @@ export default defineConfig({
           'Temporal.PlainMonthDay',
           'Temporal.Duration',
           'Temporal.TimeZone',
-          'Temporal.Calendar'].map(text => ({
-            text,
-            link: '/' + text.split('.').at(-1).toLowerCase()
-          })),
+          'Temporal.Calendar'
+        ].map(text => ({
+          text,
+          link: '/' + text.split('.').at(-1).toLowerCase()
+        })),
       },
       {
         text: 'Drafts',
@@ -48,14 +46,14 @@ export default defineConfig({
           { text: 'Calendar', link: '/calendar-draft' },
           { text: 'Parse', link: '/parse-draft' },
           { text: 'Timezone', link: '/timezone-draft' },
-        ]
-      }
+        ],
+      },
     ],
 
     outline: false,
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/tc39/proposal-temporal/issues' }
+      { icon: 'github', link: 'https://github.com/tc39/proposal-temporal/issues' },
     ],
 
     docFooter: {
@@ -77,6 +75,7 @@ export default defineConfig({
           if (token.type === 'strong_open') {
             inStrong = true;
           } else if (inStrong && token.type === 'text') {
+            // Method headers should only show the method name in the TOC
             tocMap.set(htmlEscape(base), token.content)
             return token.content.replace(/[^a-zA-Z]/g, '-');
           }
@@ -92,7 +91,7 @@ export default defineConfig({
     toc: {
       format (s) {
         return tocMap.get(s) || s;
-      }
-    }
+      },
+    },
   },
 })
