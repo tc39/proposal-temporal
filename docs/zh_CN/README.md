@@ -29,7 +29,7 @@ Temporal 为日期、时间和其它的有限情况提供了单独的 ECMAScript
 Temporal 的接口遵循惯例，使用以 "Plain" 开头的类型名（如 `Temporal.PlainDate`，`Temporal.PlainTime`，和 `Temporal.PlainDateTime`）表示没有与之关联时区的对象。
 由于时区和夏令时的关系，在这种类型和精确时间类型（`Temporal.Instant` 和 `Temporal.ZonedDateTime`）之间转换可能存在歧义，Temporal API 允许开发者来配置如何解决这种歧义。
 
-几个重要的概念将在其它地方解释：[精确时间，钟表时间，时区，夏令时，处理歧义等](../ambiguity.md)。
+几个重要的概念将在其它地方解释：[精确时间，钟表时间，时区，夏令时，处理歧义等](../timezone.md)。
 
 ### **Temporal.Now**
 
@@ -208,7 +208,7 @@ timeZone.getNextTransition(Temporal.Now.instant()); // => null
 
 更多详细内容参见 [Temporal.TimeZone 文档](../timezone.md)。
 
-有关时区，夏令时，解决歧义的概念解释，见[此文档](../ambiguity.md)。
+有关时区，夏令时，解决歧义的概念解释，见[此文档](../timezone.md)。
 
 ### **Temporal.Calendar**
 
@@ -242,6 +242,6 @@ date.daysInYear; // => 365
 
 ### **主要概念**
 
-- [Ambiguity](../ambiguity.md) &mdash; 解释由于夏令时和时区变化造成的时间缺失和时间重复。
+- [Time Zones and Resolving Ambiguity](../timezone.md) &mdash; 解释由于夏令时和时区变化造成的时间缺失和时间重复。
 - [Balancing](../balancing.md) &mdash; 解释什么时候 `Temporal.Duration` 的单位会自然转换，什么时候不会。
 - [Why do Temporal instances have a Calendar?](../calendar-review.md) &mdash; 关于为什么像 `Temporal.PlainDate` 或 `Temporal.ZonedDateTime` 类型包含日历系统。这些扩展正在与 IETF 积极合作以使其进入标准化流程。
