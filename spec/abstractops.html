@@ -2080,7 +2080,7 @@
     </dl>
     <emu-alg>
       1. Let _number_ be ? ToNumber(_argument_).
-      1. If IsIntegralNumber(_number_) is *false*, throw a *RangeError* exception.
+      1. If _number_ is not an integral Number, throw a *RangeError* exception.
       1. Return ℝ(_number_).
     </emu-alg>
   </emu-clause>
