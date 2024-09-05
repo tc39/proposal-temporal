@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -140,7 +138,7 @@
       This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
       <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
     </div>
-<p>This document has been superseded by the documentation of <a href="./timezone.html">Temporal.TimeZone</a>.
+<p>This document is obsolete.
 It&#39;s kept here for future reference if needed.</p>
 <h1 id="draft-design-of-custom-time-zone-api"><a class="heading-link" href="#draft-design-of-custom-time-zone-api"></a>Draft design of custom time zone API</h3><h2 id="why"><a class="heading-link" href="#why"></a>Why?</h3><p>Currently, <code>Temporal.TimeZone</code> objects can only be obtained by passing an identifier to the constructor or to <code>Temporal.TimeZone.from()</code>.
 These identifiers can be:</p>

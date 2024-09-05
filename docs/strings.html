@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -284,7 +282,7 @@ Within a file name component, use only ASCII letters, <code>&#39;.&#39;</code>, 
 Do not use digits, as that might create an ambiguity with POSIX TZ strings.
 A file name component must not exceed 14 characters or start with <code>&#39;-&#39;</code>.</p>
 </blockquote>
-<p>For more about TZDB, see the <a href="timezone.html"><code>Temporal.TimeZone</code> documentation</a> or the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html">TZDB documentation</a>.</p>
+<p>For more about TZDB, see the <a href="https://htmlpreview.github.io/?https://github.com/eggert/tz/blob/master/theory.html">TZDB documentation</a>.</p>
 <h3 id="calendar-systems"><a class="heading-link" href="#calendar-systems"></a>Calendar systems</h3><p>In order to achieve round-trip persistence for <code>Temporal</code> objects using non-ISO calendar systems, a calendar system identifier can be added.</p>
 <p>Therefore, we are proposing the following extension:
 <em>Calendar-specific dates are expressed as their equivalent date in the ISO 8601 calendar system, with a suffix signifying the calendar system into which the ISO date should be converted when read by a computer.</em></p>
@@ -364,10 +362,6 @@ If you care about the exact time and the time zone, then use <code>Temporal.Zone
 Other than the few use cases detailed in the <a href="plaindatetime.html"><code>Temporal.PlainDateTime</code> documentation</a>, most of the time it&#39;s better to use a different type.</li>
 <li><code>Temporal.Duration</code> represents a period of time.
 Its data model is a number of years, months, days, hours, minutes, seconds, milliseconds, microseconds, and nanoseconds.</li>
-<li><code>Temporal.TimeZone</code> represents a time zone in the <a href="https://www.iana.org/time-zones">IANA time zone database</a>, or (rarely) a numeric offset time zone.
-Its data model is the identifier of the time zone, like <code>&quot;Asia/Tokyo&quot;</code> or <code>&quot;+06:00&quot;</code>.</li>
-<li><code>Temporal.Calendar</code> represents a calendar like Hebrew, Chinese, or the default ISO 8601 calendar.
-Its data model is the ID of the calendar, e.g. <code>&quot;iso8601&quot;</code> or <code>&quot;hebrew&quot;</code>.</li>
 </ul>
 <h4 id="is-there-one-function-i-can-call-to-parse-any-string-into-the-appropriate-temporal-type"><a class="heading-link" href="#is-there-one-function-i-can-call-to-parse-any-string-into-the-appropriate-temporal-type"></a>Is there one function I can call to parse any string into the appropriate <code>Temporal</code> type?</h3><p>No.
 To parse a string into a <code>Temporal</code> type, you must know ahead of time what type to use, because the same string can be used to parse many different <code>Temporal</code> types.
@@ -412,12 +406,12 @@ This is a good outcome because whether the time zone is part of the string or ca
 If timezone-aware results are not needed, then use another type like <code>Temporal.Instant</code>.</p>
 <h4 id="how-can-i-parse-the-offset-of-timestamp-strings-like-2022-02-28t0306000200-or-2022-02-28t030600z"><a class="heading-link" href="#how-can-i-parse-the-offset-of-timestamp-strings-like-2022-02-28t0306000200-or-2022-02-28t030600z"></a>How can I parse the offset of timestamp strings like <code>2022-02-28T03:06:00+02:00</code> or <code>2022-02-28T03:06:00Z</code>?</h3><p>Timestamp strings like <code>2022-02-28T03:06:00+02:00</code> or <code>2022-02-28T03:06:00Z</code> are normally parsed by <code>Temporal.Instant</code>.
 Because the data model of <code>Temporal.Instant</code> is limited to the number of nanoseconds since January 1, 1970 UTC), the offset is not stored when parsing a string into a <code>Temporal.Instant</code>.
-If the offset of the string is needed, use <code>Temporal.TimeZone.from</code>:</p>
+If the offset of the string is needed, use <code>Temporal.Instant.toZonedDateTime()</code> with the string as the time zone:</p>
 <pre class="language-javascript"><code class="language-javascript">s <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">2022-02-28T03:06:00Z</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
-offset <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => UTC</span>
+offset <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">.</span>timeZoneId<span class="token punctuation">;</span> <span class="token comment">// => UTC</span>
 
 s <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">2022-02-28T03:06:00+02:00</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
-offset <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => +02:00</span></code></pre><h4 id="why-cant-i-parse-a-utc-z-string-using-temporalplainxxx-types"><a class="heading-link" href="#why-cant-i-parse-a-utc-z-string-using-temporalplainxxx-types"></a>Why can&#39;t I parse a UTC &quot;Z&quot; string using <code>Temporal.PlainXxx</code> types?</h3><p>One of the most common date/time-related bugs is treating a UTC timestamp as if it were a local date and time.
+offset <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">.</span>timeZoneId<span class="token punctuation">;</span> <span class="token comment">// => +02:00</span></code></pre><h4 id="why-cant-i-parse-a-utc-z-string-using-temporalplainxxx-types"><a class="heading-link" href="#why-cant-i-parse-a-utc-z-string-using-temporalplainxxx-types"></a>Why can&#39;t I parse a UTC &quot;Z&quot; string using <code>Temporal.PlainXxx</code> types?</h3><p>One of the most common date/time-related bugs is treating a UTC timestamp as if it were a local date and time.
 For example, <code>2022-02-01T00:00Z</code> is 1:00AM on February 1 in Paris but 7:00PM on January 31 in New York.
 If a program assumes that <code>2022-02-01</code> is a local-timezone date, then that program will be wrong in half the world.</p>
 <p>Another, more subtle version of this bug is when an external data source switches its format for storing or sending timestamps.
@@ -436,7 +430,7 @@ Temporal<span class="token punctuation">.</span>PlainDate<span class="token punc
 zdt <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2022-02-01</span></code></pre><h4 id="can-i-parse-a-subset-of-data-in-a-string"><a class="heading-link" href="#can-i-parse-a-subset-of-data-in-a-string"></a>Can I parse a subset of data in a string?</h3><p>Yes!
 Temporal parsing methods accept strings that have more information than the type needs.
 Information not needed for that type&#39;s data model is ignored.
-This works for all <code>Temporal.PlainXxx</code> types, <code>Temporal.Instant</code>, and even <code>Temporal.TimeZone</code> and <code>Temporal.Calendar</code>.</p>
+This works for all Temporal types (except <code>Temporal.Duration</code> for which it is irrelevant.)</p>
 <pre class="language-javascript"><code class="language-javascript">s <span class="token operator">=</span> <span class="token string">'2022-02-28T11:06:00.092121729+08:00[Asia/Shanghai]'</span><span class="token punctuation">;</span>
 Temporal<span class="token punctuation">.</span>ZonedDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2022-02-28T11:06:00.092121729+08:00[Asia/Shanghai]</span>
 Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 11:06:00.092121729</span>
@@ -444,9 +438,7 @@ Temporal<span class="token punctuation">.</span>PlainDate<span class="token punc
 Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2022-02-28T11:06:00.092121729</span>
 Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2022-02</span>
 Temporal<span class="token punctuation">.</span>PlainMonthDay<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 02-28</span>
-Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2022-02-28T03:06:00.092121729Z</span>
-Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => Asia/Shanghai</span>
-Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => iso8601 (the default calendar when parsing strings)</span></code></pre><p><a name="localized-parsing"></a></p>
+Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2022-02-28T03:06:00.092121729Z</span></code></pre><p><a name="localized-parsing"></a></p>
 <h4 id="why-doesnt-temporal-support-parsing-localized-formats-like-mmddyy"><a class="heading-link" href="#why-doesnt-temporal-support-parsing-localized-formats-like-mmddyy"></a>Why doesn&#39;t <code>Temporal</code> support parsing localized formats like <code>MM/DD/YY</code>?</h3><p>Parsing of localized date/time formats is notoriously difficult and brittle.
 For example, here&#39;s what MDN has to say about <a href=""><code>Date.parse</code></a></p>
 <blockquote>

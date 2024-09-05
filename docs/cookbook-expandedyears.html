@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -213,8 +211,8 @@ A dedicated third-party library might be a better solution to this problem.</p>
 
   <span class="token keyword">static</span> <span class="token function">_convert</span><span class="token punctuation">(</span><span class="token parameter">plainDate<span class="token punctuation">,</span> expandedYear</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>plainDate <span class="token keyword">instanceof</span> <span class="token class-name">ExpandedPlainDate</span><span class="token punctuation">)</span> <span class="token keyword">return</span> plainDate<span class="token punctuation">;</span>
-    <span class="token keyword">const</span> f <span class="token operator">=</span> plainDate<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ExpandedPlainDate</span><span class="token punctuation">(</span>expandedYear<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoMonth<span class="token punctuation">,</span> f<span class="token punctuation">.</span>isoDay<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> iso <span class="token operator">=</span> plainDate<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ExpandedPlainDate</span><span class="token punctuation">(</span>expandedYear<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>month<span class="token punctuation">,</span> iso<span class="token punctuation">.</span>day<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
   <span class="token keyword">static</span> <span class="token function">from</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -242,9 +240,9 @@ A dedicated third-party library might be a better solution to this problem.</p>
 
   <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> year <span class="token operator">=</span> <span class="token function">formatExpandedYear</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>year<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> <span class="token punctuation">{</span> isoMonth<span class="token punctuation">,</span> isoDay <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> month <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>isoMonth<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> day <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>isoDay<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> iso <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> month <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>iso<span class="token punctuation">.</span>month<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> day <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>iso<span class="token punctuation">.</span>day<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">.</span><span class="token function">padStart</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>year<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>month<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">-</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>day<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -259,17 +257,17 @@ A dedicated third-party library might be a better solution to this problem.</p>
 
   <span class="token keyword">static</span> <span class="token function">_convert</span><span class="token punctuation">(</span><span class="token parameter">plainDateTime<span class="token punctuation">,</span> expandedYear</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>plainDateTime <span class="token keyword">instanceof</span> <span class="token class-name">ExpandedPlainDateTime</span><span class="token punctuation">)</span> <span class="token keyword">return</span> plainDateTime<span class="token punctuation">;</span>
-    <span class="token keyword">const</span> f <span class="token operator">=</span> plainDateTime<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> iso <span class="token operator">=</span> plainDateTime<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ExpandedPlainDateTime</span><span class="token punctuation">(</span>
       expandedYear<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoMonth<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoDay<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoHour<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoMinute<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoSecond<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoMillisecond<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoMicrosecond<span class="token punctuation">,</span>
-      f<span class="token punctuation">.</span>isoNanosecond
+      iso<span class="token punctuation">.</span>month<span class="token punctuation">,</span>
+      iso<span class="token punctuation">.</span>day<span class="token punctuation">,</span>
+      plainDateTime<span class="token punctuation">.</span>hour<span class="token punctuation">,</span>
+      plainDateTime<span class="token punctuation">.</span>minute<span class="token punctuation">,</span>
+      plainDateTime<span class="token punctuation">.</span>second<span class="token punctuation">,</span>
+      plainDateTime<span class="token punctuation">.</span>millisecond<span class="token punctuation">,</span>
+      plainDateTime<span class="token punctuation">.</span>microsecond<span class="token punctuation">,</span>
+      plainDateTime<span class="token punctuation">.</span>nanosecond
     <span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 

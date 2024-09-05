@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -202,7 +200,7 @@
 
 <p>A <code>Temporal.Instant</code> is a single point in time (called <strong>&quot;exact time&quot;</strong>), with a precision in nanoseconds.
 No time zone or calendar information is present.
-To obtain local date/time units like year, month, day, or hour, a <code>Temporal.Instant</code> must be combined with a <code>Temporal.TimeZone</code> instance or a time zone string.</p>
+To obtain local date/time units like year, month, day, or hour, a <code>Temporal.Instant</code> must be combined with a time zone identifier.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-01-01T00:00+05:30'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-12-31T18:30:00Z</span>
 instant<span class="token punctuation">.</span>epochNanoseconds<span class="token punctuation">;</span> <span class="token comment">// => 1577817000000000000n</span>
@@ -212,12 +210,7 @@ instant<span class="token punctuation">.</span>year<span class="token punctuatio
 
 zdtTokyo <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span><span class="token string">'Asia/Tokyo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-01-01T03:30:00+09:00[Asia/Tokyo]</span>
 zdtTokyo<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 2020</span>
-zdtTokyo<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-01-01</span>
-
-tzLA <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'America/Los_Angeles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-zdtLA <span class="token operator">=</span> instant<span class="token punctuation">.</span><span class="token function">toZonedDateTimeISO</span><span class="token punctuation">(</span>tzLA<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-12-31T10:30:00-08:00[America/Los_Angeles]</span>
-zdtLA<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 2019</span>
-zdtLA<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-12-31</span></code></pre><!-- prettier-ignore-end -->
+zdtTokyo<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-01-01</span></code></pre><!-- prettier-ignore-end -->
 
 <p><code>Temporal.Instant</code> stores an integer count of nanoseconds since the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a> of January 1, 1970 at 00:00 UTC, ignoring leap seconds.
 For interoperability with <code>Date</code> and other APIs, <code>Temporal.Instant</code> also offers conversion properties and methods for seconds, milliseconds, or microseconds since epoch.
@@ -354,13 +347,7 @@ That can be done with bigints like this:</p>
 <pre class="language-js"><code class="language-js">ns <span class="token operator">=</span> instant<span class="token punctuation">.</span>epochNanoseconds<span class="token punctuation">;</span>
 epochMicros <span class="token operator">=</span> ns <span class="token operator">/</span> <span class="token number">1000n</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>ns <span class="token operator">%</span> <span class="token number">1000n</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0n</span> <span class="token operator">?</span> <span class="token operator">-</span><span class="token number">1n</span> <span class="token operator">:</span> <span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="toZonedDateTimeISO"><a class="heading-link" href="#toZonedDateTimeISO"></a>instant.<strong>toZonedDateTimeISO</strong>(<em>timeZone</em>: object | string) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>timeZone</code> (object or string): either<ul>
-<li>a <code>Temporal.TimeZone</code> object</li>
-<li>an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a></li>
-<li>a string description of the time zone; either its IANA name or UTC offset</li>
-<li>an object with a <code>timeZone</code> property whose value is any of the above.</li>
-</ul>
-</li>
+<li><code>timeZone</code> (string or <code>Temporal.ZonedDateTime</code>): The time zone to use for the conversion. Can be the time zone&#39;s string identifier, or a <code>Temporal.ZonedDateTime</code> object, whose time zone will be used.</li>
 </ul>
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object representing the calendar date, wall-clock time, time zone offset, and <code>timeZone</code>, according to the reckoning of the ISO 8601 calendar, at the exact time indicated by <code>instant</code>.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
@@ -600,7 +587,7 @@ one<span class="token punctuation">.</span><span class="token function">equals</
 <ul>
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
-<li><code>timeZone</code> (string or object): the time zone to express <code>instant</code> in, as a <code>Temporal.TimeZone</code> object, an object implementing the <a href="./timezone.html#custom-time-zones">time zone protocol</a>, or a string.
+<li><code>timeZone</code> (string or <code>Temporal.ZonedDateTime</code>): the time zone to express <code>instant</code> in, as a string identifier, or a <code>Temporal.ZonedDateTime</code> object whose time zone will be used.
 The default is to use UTC.</li>
 <li><code>fractionalSecondDigits</code> (number or string): How many digits to print after the decimal point in the output string.
 Valid values are <code>&#39;auto&#39;</code>, 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
@@ -626,7 +613,7 @@ However, if the <code>timeZone</code> option is given, then the string will expr
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">fromEpochMilliseconds</span><span class="token punctuation">(</span><span class="token number">1574074321816</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '2019-11-18T10:52:01.816Z'</span>
-instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">timeZone</span><span class="token operator">:</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'UTC'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">timeZone</span><span class="token operator">:</span> <span class="token string">'UTC'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// => '2019-11-18T10:52:01.816+00:00'</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">timeZone</span><span class="token operator">:</span> <span class="token string">'Asia/Seoul'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">// => '2019-11-18T19:52:01.816+09:00'</span>

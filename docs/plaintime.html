@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -197,8 +195,6 @@
 </li>
 <li><a href="#valueOf">valueOf</a>
 </li>
-<li><a href="#getISOFields">getISOFields</a>
-</li>
 </ul>
 </li>
 </ul>
@@ -207,9 +203,7 @@
 <p>A <code>Temporal.PlainTime</code> represents a wall-clock time, with a precision in nanoseconds, and without any time zone.
 &quot;Wall-clock time&quot; refers to the concept of a time as expressed in everyday usage &mdash; the time that you read off the clock on the wall.
 For example, it could be used to represent an event that happens daily at a certain time, no matter what time zone.</p>
-<p><code>Temporal.PlainTime</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.PlainDateTime</code>.
-A <code>Temporal.PlainTime</code> can be converted into a <code>Temporal.ZonedDateTime</code> by combining it with a <code>Temporal.PlainDate</code> and <code>Temporal.TimeZone</code> using the <code>toZonedDateTime()</code> method.
-It can also be combined with a <code>Temporal.PlainDate</code> to yield a &quot;zoneless&quot; <code>Temporal.PlainDateTime</code> using the <code>toPlainDateTime()</code> method.</p>
+<p><code>Temporal.PlainTime</code> refers to a time with no associated calendar date; if you need to refer to a specific time on a specific day, use <code>Temporal.PlainDateTime</code>.</p>
 <h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-PlainTime"><a class="heading-link" href="#new-Temporal-PlainTime"></a><strong>new Temporal.PlainTime</strong>(<em>isoHour</em>: number = 0, <em>isoMinute</em>: number = 0, <em>isoSecond</em>: number = 0, <em>isoMillisecond</em>: number = 0, <em>isoMicrosecond</em>: number = 0, <em>isoNanosecond</em>: number = 0) : Temporal.PlainTime</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoHour</code> (optional number): An hour of the day, ranging between 0 and 23 inclusive.</li>
@@ -613,12 +607,7 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> reviver<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="valueOf"><a class="heading-link" href="#valueOf"></a>time.<strong>valueOf</strong>()</h3><p>This method overrides <code>Object.prototype.valueOf()</code> and always throws an exception.
 This is because it&#39;s not possible to compare <code>Temporal.PlainTime</code> objects with the relational operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, or <code>&gt;=</code>.
 Use <code>Temporal.PlainTime.compare()</code> for this, or <code>time.equals()</code> for equality.</p>
-<h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>time.<strong>getISOFields</strong>(): { isoHour: number, isoMinute: number, isoSecond: number, isoMillisecond: number, isoMicrosecond: number, isoNanosecond: number }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>time</code> in the ISO 8601 calendar.</p>
-<p>This method is present for forward compatibility with custom calendars.</p>
-<p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">time <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'03:20:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-f <span class="token operator">=</span> time<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-f<span class="token punctuation">.</span>isoHour<span class="token punctuation">;</span> <span class="token comment">// => 3</span></code></pre>    <footer>
+    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!

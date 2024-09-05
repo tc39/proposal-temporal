@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -204,7 +202,7 @@
 <h2 id="cookbook"><a class="heading-link" href="#cookbook"></a>Cookbook</h3><p><a href="../cookbook.html">cookbook</a> 可以帮助你开始了解和学习 Temporal 的工作原理。</p>
 <h2 id="api-文档"><a class="heading-link" href="#api-文档"></a>API 文档</h3><p>Temporal 的接口遵循惯例，使用以 &quot;Plain&quot; 开头的类型名（如 <code>Temporal.PlainDate</code>，<code>Temporal.PlainTime</code>，和 <code>Temporal.PlainDateTime</code>）表示没有与之关联时区的对象。
 由于时区和夏令时的关系，在这种类型和精确时间类型（<code>Temporal.Instant</code> 和 <code>Temporal.ZonedDateTime</code>）之间转换可能存在歧义，Temporal API 允许开发者来配置如何解决这种歧义。</p>
-<p>几个重要的概念将在其它地方解释：<a href="../ambiguity.html">精确时间，钟表时间，时区，夏令时，处理歧义等</a>。</p>
+<p>几个重要的概念将在其它地方解释：<a href="../timezone.html">精确时间，钟表时间，时区，夏令时，处理歧义等</a>。</p>
 <h3 id="Temporal-Now"><a class="heading-link" href="#Temporal-Now"></a><strong>Temporal.Now</strong></h3><ul>
 <li><code>Temporal.Now.instant()</code> - 获取自<a href="https://en.wikipedia.org/wiki/Unix_time">Unix 时间</a>以来的精确时间</li>
 <li><code>Temporal.Now.timeZone()</code> - 获取当前系统时区</li>
@@ -295,7 +293,7 @@ timeZone<span class="token punctuation">.</span><span class="token function">get
 timeZone<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2000-01-01T02:00:00</span>
 timeZone<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2014-09-25T21:00:00Z</span>
 timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span></code></pre><p>更多详细内容参见 <a href="../timezone.html">Temporal.TimeZone 文档</a>。</p>
-<p>有关时区，夏令时，解决歧义的概念解释，见<a href="../ambiguity.html">此文档</a>。</p>
+<p>有关时区，夏令时，解决歧义的概念解释，见<a href="../timezone.html">此文档</a>。</p>
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p><code>Temporal.Calendar</code> 代表一个日历系统。大多数代码使用 ISO 8601 格式，但其它的日历系统同样支持。</p>
 <p>日期与用于执行日历系统相关操作的 <code>Temporal.Calendar</code> 对象相关联。在内部，这些日期操作是由这个日历对象上的方法来完成的。</p>
 <p>也可以实现你自己的日历系统。</p>
@@ -310,7 +308,7 @@ date<span class="token punctuation">.</span>daysInYear<span class="token punctua
 <img src="../persistence-model.svg">
 
 <h2 id="其它文档"><a class="heading-link" href="#其它文档"></a>其它文档</h3><h3 id="----"><a class="heading-link" href="#----"></a><strong>主要概念</strong></h3><ul>
-<li><a href="../ambiguity.html">Ambiguity</a> &mdash; 解释由于夏令时和时区变化造成的时间缺失和时间重复。</li>
+<li><a href="../timezone.html">Time Zones and Resolving Ambiguity</a> &mdash; 解释由于夏令时和时区变化造成的时间缺失和时间重复。</li>
 <li><a href="../balancing.html">Balancing</a> &mdash; 解释什么时候 <code>Temporal.Duration</code> 的单位会自然转换，什么时候不会。</li>
 <li><a href="../calendar-review.html">Why do Temporal instances have a Calendar?</a> &mdash; 关于为什么像 <code>Temporal.PlainDate</code> 或 <code>Temporal.ZonedDateTime</code> 类型包含日历系统。这些扩展正在与 IETF 积极合作以使其进入标准化流程。</li>
 </ul>

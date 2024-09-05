@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -205,7 +203,7 @@
 <p>Temporal は、日付のみ、時間のみ、およびその他の限定的なユースケースのための個別のクラスを提供します。これにより、コードの可読性が向上し、タイムゾーンが不明な時間に対して間違ったオフセット情報を与えるといったバグを防ぎます。</p>
 <h2 id="cookbook"><a class="heading-link" href="#cookbook"></a>Cookbook</h3><p><a href="../cookbook.html">Cookbook</a>は、Temporal に入門したり、その仕組みについて理解したりするために役立ちます。</p>
 <h2 id="api-ドキュメント"><a class="heading-link" href="#api-ドキュメント"></a>API ドキュメント</h3><p>Temporal の API では、タイムゾーンが関連付けられていない日付を表すオブジェクトは、「Plain」から始まる名前を持ちます。（例：<code>Temporal.PlainDate</code>、<code>Temporal.PlainTime</code>、<code>Temporal.PlainDateTime</code>）。このようなオブジェクトと exact time（カレンダーや場所によらない特定の時点での時刻）の変換は、タイムゾーンとサマータイムのために曖昧になることがあります。そして、Temporal の API は開発者にこの曖昧さを解決する方法を提供します。</p>
-<p>いくつかの重要なコンセプトについては次のドキュメントを参照してください：<a href="./ambiguity.html">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</a></p>
+<p>いくつかの重要なコンセプトについては次のドキュメントを参照してください：<a href="./timezone.html">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</a></p>
 <h3 id="Temporal-now"><a class="heading-link" href="#Temporal-now"></a><strong>Temporal.now</strong></h3><ul>
 <li><code>Temporal.Now.instant()</code> - Unix epoch からの exact time を得る</li>
 <li><code>Temporal.Now.timeZone()</code> - システムのタイムゾーンを得る</li>
@@ -291,7 +289,7 @@ duration<span class="token punctuation">.</span><span class="token function">tot
 timeZone<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T22:00:00Z</span>
 timeZone<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2000-01-01T02:00:00</span>
 timeZone<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2014-09-25T21:00:00Z</span>
-timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span></code></pre><p>より詳しくは<a href="../timezone.html">Temporal.TimeZone Documentation</a>を参照してください。また、これらのコンセプトを説明した<a href="./ambiguity.html">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</a>もご覧ください。</p>
+timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span></code></pre><p>より詳しくは<a href="../timezone.html">Temporal.TimeZone Documentation</a>を参照してください。また、これらのコンセプトを説明した<a href="./timezone.html">Temporal におけるタイムゾーンとサマータイム、曖昧性の解決</a>もご覧ください。</p>
 <h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p><code>Temporal.Calendar</code>はカレンダーシステムを表します。ISO 8601 のカレンダーを使用するアプリケーションが多いと思いますが、国際化や地域化のために他のカレンダーシステムを利用することもできます。</p>
 <p>日付には、カレンダーシステム関連の演算を行うために、<code>Temporal.Calendar</code>オブジェクトが関連付けられています。内部的には、これらの日付の演算は、このカレンダーオブジェクトのメソッドによって実行されます。</p>
 <p>また、独自のカレンダーシステムを実装することも可能です。</p>
@@ -305,7 +303,7 @@ date<span class="token punctuation">.</span>daysInYear<span class="token punctua
 <img src="../persistence-model.svg">
 
 <h2 id="その他のドキュメント"><a class="heading-link" href="#その他のドキュメント"></a>その他のドキュメント</h3><h3 id="-------"><a class="heading-link" href="#-------"></a><strong>キーコンセプト</strong></h3><ul>
-<li><a href="./ambiguity.html">曖昧性</a> &mdash; 時間に関する情報が欠落して曖昧さを引き起こす仕組み、2 つのタイプの時間オブジェクトが必要な理由、サマータイムやタイムゾーンの定義変更による影響</li>
+<li><a href="./timezone.html">曖昧性</a> &mdash; 時間に関する情報が欠落して曖昧さを引き起こす仕組み、2 つのタイプの時間オブジェクトが必要な理由、サマータイムやタイムゾーンの定義変更による影響</li>
 <li><a href="./balancing.html">バランシング</a> &mdash; <code>Temporal.Duration</code>の単位が、いつ繰り上げされる（またはされない）のかについての説明</li>
 <li><a href="./calendar-review.html">なぜ Temporal インスタンスはカレンダーの情報を持っているのか？</a> &mdash; <code>Temporal.PlainDate</code>や<code>Temporal.ZonedDateTime</code>がカレンダーシステムを保持している理由と背景</li>
 </ul>

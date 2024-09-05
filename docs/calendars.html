@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temporal documentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css">
+    <script type="application/javascript" src="./playground.js"></script>
+    <link rel="stylesheet" type="text/css" href="./prism.css">
+    <script>
+      Temporal = { ...temporal.Temporal };
+      Object.assign(Intl, temporal.Intl);
+
+      // Customize output of Temporal objects for Chrome DevTools
+      if (!window.devtoolsFormatters)
+        window.devtoolsFormatters = [];
+      window.devtoolsFormatters.push({
+        header(x) {
+          for (const type of [
+            Temporal.Instant,
+            Temporal.PlainDate,
+            Temporal.PlainDateTime,
+            Temporal.Duration,
+            Temporal.PlainMonthDay,
+            Temporal.PlainTime,
+            Temporal.PlainYearMonth
+          ]) {
+            if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
+          }
+          return null;
+        },
+        hasBody(x) {
+          return x instanceof Temporal.Duration;
+        },
+        body(x) {
+          const out = ['ol', { style: 'list-style-type: none;' }];
+          for (const prop of [
+            'years',
+            'months',
+            'weeks',
+            'days',
+            'hours',
+            'minutes',
+            'seconds',
+            'milliseconds',
+            'microseconds',
+            'nanoseconds'
+          ]) {
+            if (x[prop] !== 0) out.push([
+              'li',
+              {},
+              ['span', { style: 'color: purple;' }, prop],
+              `: `,
+              ['span', { style: 'color: blue;' }, x[prop]]
+            ]);
+          }
+          return out;
+        }
+      });
+    </script>
+    <style>
+      /* https://github.com/kognise/water.css/blob/master/src/variables-light.css */
+      :root {
+        --background: #efefef;
+        --text-muted: #999999;
+        --text-bright: #000000;
+        --text-width: 900px;
+        --variable: #39a33c;
+      }
+      body {
+        font-size: 18px;
+        max-width: var(--text-width);
+        padding-top: 40px;  /* extra padding for banner */
+        line-height: 1.5;
+      }
+      pre { border-left: 4px solid var(--variable); }
+      code {
+        padding: 1px 5px 2px 5px;
+        line-height: 1.1;
+        display: inline-block;
+      }
+      a code { color: inherit; }
+      a code:hover { text-decoration: underline; }
+      pre code { line-height: 1.4; }
+      pre code[class*="language-"] { font-size: 0.85em; }
+      pre[class*="language-"] { padding: 0.5em; }
+      h1 { margin-top: 13px; }
+      h2 { border-bottom: 2px solid var(--text-muted); margin-top: 2em; }
+      h3 {
+        border-bottom: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        font-weight: normal;
+      }
+      h3 em { font-weight: bold; }
+      h3 strong { color: var(--text-bright); }
+      :not(h2) + h3 { margin-top: 2em; }
+      footer {
+        border-top: 1px solid var(--background);
+        color: var(--text-muted);
+        font-size: 0.8em;
+        margin-top: 2em;
+        padding-top: 10px;
+      }
+      .heading-link {
+        left: calc((100vw - var(--text-width)) / 2 - 1.5em);
+        opacity: 0;
+        position: absolute;
+        transition: opacity 150ms;
+      }
+      .heading-link:hover { text-decoration: none; }
+      .heading-link::before { content: '¶'; }
+      h2:hover .heading-link, h3:hover .heading-link, h4:hover .heading-link, h5:hover .heading-link { opacity: 0.75; }
+      .banner {
+        /* Gradient from https://joshnh.com/weblog/how-to-make-an-alert-bar/ */
+        background-color: #fce94f;
+        background-image: linear-gradient(135deg,
+                                          transparent,
+                                          transparent 25%,
+                                          rgba(0, 0, 0, .05) 25%,
+                                          rgba(0, 0, 0, .05) 50%,
+                                          transparent 50%,
+                                          transparent 75%,
+                                          rgba(0, 0, 0, .05) 75%,
+                                          rgba(0, 0, 0, .05));
+        background-size: 20px 20px;
+        box-shadow: 0 5px 0 rgba(0, 0, 0, .1);
+        left: 0;
+        padding: 0.4em 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      This Stage 3 proposal is <strong><a href="https://blogs.igalia.com/compilers/2020/06/23/dates-and-times-in-javascript/">experimental.</a></strong>
+      <strong>Do</strong> try it and <a href="https://github.com/tc39/proposal-temporal/issues">report bugs</a>; <strong>don't</strong> use it in production!
+    </div>
+<h1 id="calendars-in-temporal"><a class="heading-link" href="#calendars-in-temporal"></a>Calendars in Temporal</h3><details>
+  <summary><strong>Table of Contents</strong></summary>
+<ul>
+<li><a href="#when-to-use-calendars-in-temporal">When to use calendars in Temporal</a>
+</li>
+<li><a href="#invariants-across-calendars">Invariants Across Calendars</a>
+</li>
+<li><a href="#writing-cross-calendar-code">Writing Cross-Calendar Code</a>
+</li>
+<li><a href="#handling-unusual-dates-leap-days-leap-months-and-skipped-or-repeated-periods">Handling unusual dates: leap days, leap months, and skipped or repeated periods</a>
+</li>
+</ul>
+</details>
+
+<p>Much of the world uses the <a href="https://en.wikipedia.org/wiki/Gregorian_calendar">Gregorian calendar</a>, which was invented in 1582 C.E.
+The ISO 8601 standard extends the Gregorian date reckoning backwards (&quot;proleptically&quot;) to cover the period of history before its invention, to allow designating dates before 1582.
+The ISO 8601 calendar is the system most often used in computing, on the modern Internet.</p>
+<p>A significant number of places in the world use another calendar system as the main calendar, or use the Gregorian calendar alongside another calendar system as a commonly-used civil or religious calendar.
+Even places that use almost exclusively the Gregorian calendar today, often use a different calendar to denote dates before the invention or adoption of the Gregorian calendar.</p>
+<h3 id="when-to-use-calendars-in-temporal"><a class="heading-link" href="#when-to-use-calendars-in-temporal"></a>When to use calendars in Temporal</h3><p>It is best practice to specify a calendar system when performing calendar-sensitive operations, which are those involving arithmetic or other calculation in months or years.</p>
+<p>For example, to add a month to a date in the Hebrew calendar:</p>
+<pre class="language-javascript"><code class="language-javascript">date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span><span class="token string">'hebrew'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">months</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Temporal types&#39; <code>toLocaleString()</code> methods use the user&#39;s preferred calendar, without needing to call <code>withCalendar()</code>.
+To perform arithmetic consistently with the <code>toLocaleString()</code> calendar system:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> calendar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>DateTimeFormat</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resolvedOptions</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>calendar<span class="token punctuation">;</span>
+date<span class="token punctuation">.</span><span class="token function">withCalendar</span><span class="token punctuation">(</span>calendar<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">months</span><span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3 id="invariants-across-calendars"><a class="heading-link" href="#invariants-across-calendars"></a>Invariants Across Calendars</h3><p>The following &quot;invariants&quot; (statements that are always true) hold for all built-in calendars:</p>
+<ul>
+<li>Any date can be serialized to an object using only four properties: <code>{ year, month, day, calendar }</code></li>
+<li><code>year</code> is always an integer (which may be zero or negative) that increases as time goes forward</li>
+<li><code>month</code> and <code>day</code> are always positive integers that increase as time goes forward, except they reset at the boundary of a year or month, respectively</li>
+<li><code>month</code> is always continuous (no gaps)</li>
+<li><code>date.month === 1</code> during the first month of any year, because <code>month</code> always represents the order of months in that year.</li>
+<li><code>obj.with({ day: 1 })</code> will always return the first day of the object&#39;s month, even if the resulting <code>day</code> is not 1.</li>
+<li><code>obj.with({ day: Number.MAX_VALUE })</code> will always return the last day of the object&#39;s month.</li>
+<li><code>obj.with({ month: 1, day: 1 })</code> will always return the first day of the object&#39;s year.</li>
+<li><code>obj.with({ month: obj.monthsInYear, day: Number.MAX_VALUE })</code> will always return the last day of the object&#39;s year.</li>
+<li><code>obj.month === obj.monthsInYear</code> during the last month of any year</li>
+<li><code>dayOfWeek</code>, <code>dayOfYear</code>, and <code>weekOfYear</code> are 1-based positive integers, that increase consecutively as time goes forward, except they reset at the boundary of a week or year, respectively</li>
+</ul>
+<h3 id="writing-cross-calendar-code"><a class="heading-link" href="#writing-cross-calendar-code"></a>Writing Cross-Calendar Code</h3><p>Here are best practices for writing code that will work regardless of the calendar used:</p>
+<ul>
+<li>Validate or coerce the calendar of all external input.
+If your code receives a Temporal object from an external source, you should check that its calendar is what you expect, and if you are not prepared to handle other calendars, convert it to the ISO 8601 calendar using <code>obj.withCalendar(&#39;iso8601&#39;)</code>.
+Otherwise, you may end up with unexpected behavior in your app or introduce security or performance issues by introducing an unexpected calendar.</li>
+<li>Use <code>compare</code> methods (e.g. <code>Temporal.PlainDate.compare(date1, &#39;2000-01-01&#39;)</code>) instead of manually comparing individual properties (e.g. <code>date.year &gt; 2000</code>) whose meaning may vary across calendars.</li>
+<li>Never compare field values in different calendars.
+A <code>month</code> or <code>year</code> in one calendar is unrelated to the same property values in another calendar.
+To compare dates across calendars, use the <code>compare</code> method.</li>
+<li>When comparing dates for equality that might be in different calendars, convert them both to the same calendar using <code>withCalendar</code>.
+The same ISO date in different calendars will return <code>false</code> from the <code>equals</code> method because the calendars are not equal.</li>
+<li>When looping through all months in a year, use <code>monthsInYear</code> as the upper bound instead of assuming that every year has 12 months.</li>
+<li>Don&#39;t assume that <code>date.month === 12</code> is the last month of the year.
+Instead, use <code>date.month === date.monthsInYear</code>.</li>
+<li>Use <code>until</code> or <code>since</code> to count years, months, or days between dates.
+Manually calculating differences (e.g. <code>Math.floor(months / 12)</code>) will fail for some calendars.</li>
+<li>Use <code>daysInMonth</code> instead of assuming that each month has the same number of days in every year.</li>
+<li>Days in a month are not always continuous.
+There can be gaps due to political changes in calendars.
+For this reason, instead of looping through a month from 1 to <code>date.daysInMonth</code>, it&#39;s better to start a loop with the first day of the month (<code>date.with({day: 1})</code>) and <code>add</code> one day at a time until the <code>month</code> property returns a different value.</li>
+<li>Use <code>daysInYear</code> instead of assuming that every year has 365 days (366 in a leap year).</li>
+<li>Don&#39;t assume that <code>inLeapYear === true</code> implies that the year is one day longer than a regular year.
+Some calendars add leap months, making the year 29 or 30 days longer than a normal year!</li>
+<li>Use <code>toLocaleString</code> to format dates to users.
+DO NOT localize manually with code like <code>${month}/${day}/${year}</code>.</li>
+<li>Don&#39;t assume that <code>month</code> has the same name in every year.
+Some calendars like Hebrew or Chinese have leap months that cause months to vary across years.</li>
+<li>Use the correct property to refer to months.
+If you care about the order of the month in a particular year (e.g. when looping through all the months in a year) use <code>month</code>.
+If you care about the name of the month regardless of what year it is (e.g. storing a birthday), use the <code>monthCode</code> string property.</li>
+<li>When using the <code>Temporal.PlainMonthDay</code> type (e.g. for birthdays or holidays), use its <code>monthCode</code> property only.
+The <code>month</code> property is not present on this type because some calendars&#39; month indexes vary from year to year.</li>
+<li>When calling <code>Temporal.PlainMonthDay.prototype.toPlainDate(year)</code>, be prepared for the resulting date to have a different day of the month and/or a different month, because leap days and leap months are not present in every year.</li>
+<li>Use <code>toLocaleString</code> to fetch month names instead of caching an array of names.
+Example: <code>date.toLocaleString(&#39;en-US&#39;, { calendar: date.calendar, month: &#39;long&#39; })</code>.
+If you absolutely must cache month names, a string key like <code>${date.calendar.id}|{date.monthCode}|{date.inLeapYear}</code> will work for all built-in calendars.</li>
+<li>Don&#39;t assume that <code>era</code> or <code>eraYear</code> properties are always present.
+They are not present in some calendars.</li>
+<li><code>era</code> and <code>eraYear</code> should always be used as a pair.
+Don&#39;t use one property without also using the other.</li>
+<li>Don&#39;t combine <code>month</code> and <code>monthCode</code> in the same property bag.
+Pick one month representation and use it consistently.</li>
+<li>Don&#39;t combine <code>year</code> and <code>era</code>/<code>eraYear</code> in the same property bag.
+Pick one year representation and use it consistently.</li>
+<li>Read the documentation of your calendar to determine the meaning of <code>monthCode</code> and <code>era</code>.</li>
+<li>Don&#39;t show <code>monthCode</code> and <code>era</code> values in a UI.
+Instead, use <code>toLocaleString</code> to convert these values into localized strings.</li>
+<li>Don&#39;t assume that the year before <code>{ eraYear: 1 }</code> is the last year of the previous era.
+Some calendars have a &quot;year zero&quot;, and the oldest era in era-using calendars typically allows negative <code>eraYear</code> values.</li>
+</ul>
+<h3 id="handling-unusual-dates-leap-days-leap-months-and-skipped-or-repeated-periods"><a class="heading-link" href="#handling-unusual-dates-leap-days-leap-months-and-skipped-or-repeated-periods"></a>Handling unusual dates: leap days, leap months, and skipped or repeated periods</h3><p>Calendars can vary from year to year.
+<a href="https://en.wikipedia.org/wiki/Solar_calendar">Solar calendars</a> like <code>&#39;gregory&#39;</code> use leap days.
+<a href="https://en.wikipedia.org/wiki/Lunar_calendar">Lunar calendars</a> like <code>&#39;islamic&#39;</code> adjust month lengths to lunar cycles.
+<a href="https://en.wikipedia.org/wiki/Lunisolar_calendar">Lunisolar calendars</a> like <code>&#39;hebrew&#39;</code> or <code>&#39;chinese&#39;</code> have &quot;leap months&quot;: extra months added every few years.</p>
+<p>Calendars may also have one-time changes.
+The built-in <code>&#39;gregory&#39;</code> calendar in ECMAScript doesn&#39;t skip days because it&#39;s a <a href="https://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar">proleptic Gregorian calendar</a>, but other calendars may skip days, months, or even years.
+For example, a non-proleptic custom calendar for France would have 4 October 1582 (the last day of the <a href="https://en.wikipedia.org/wiki/Julian_calendar">Julian calendar</a>) directly followed by 15 October 1582 (the first day of the <a href="https://en.wikipedia.org/wiki/Gregorian_calendar">Gregorian calendar</a>), skipping 10 calendar days.</p>
+<p>Calendar variation across years means that programs may encounter historical dates that are valid in one year but invalid in another.
+A common example is calling <code>toPlainDate</code> on a <code>Temporal.PlainMonthDay</code> object to convert a birthday or anniversary that originally fell on a leap day, leap month, or other skipped period.
+Temporal types&#39; <code>with</code> or <code>from</code> methods can run into the same issue.</p>
+<p>When Temporal encounters inputs representing a month and/or day that doesn&#39;t exist in the desired calendar year, by default (overridable in <code>with</code> or <code>from</code> via the <code>overflow</code> option) the inputs will be adjusted using the following algorithm:</p>
+<ul>
+<li>First, pick the closest <code>day</code> in the same month.
+If there are two equally-close dates in that month, pick the later one.</li>
+<li>If the month is a leap month that doesn&#39;t exist in the desired year, then pick another date according to the cultural conventions of that calendar&#39;s users.
+Usually this will result in the same <code>day</code> in the month before or the month after where that month would normally fall in a leap year.</li>
+<li>Otherwise, pick the closest date to the provided date that is still in the same year.
+If there are two equally-close dates, pick the later one.</li>
+<li>If the entire year doesn&#39;t exist, then pick the closest date to the provided date.
+If there are two equally-close dates, pick the later one.</li>
+</ul>
+<p>Finally, just like calendars can sometimes skip days or months, it is possible for real-world calendars to repeat dates, for example when a country transitions from one calendar system to another.
+No current built-in calendar repeats dates, but may in the future.</p>
+    <footer>
+      <p>
+        This page includes a script which loads an implementation of Temporal in your browser.
+        You can open a console in your browser's developer tools and try it out directly!
+      </p>
+      <p>View this or help contribute on <a href="https://github.com/tc39/proposal-temporal">GitHub</a>.</p>
+    </footer>
+  </body>
+</html>

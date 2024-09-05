@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -205,8 +203,6 @@
 </li>
 <li><a href="#toPlainDate">toPlainDate</a>
 </li>
-<li><a href="#getISOFields">getISOFields</a>
-</li>
 </ul>
 </li>
 </ul>
@@ -216,11 +212,11 @@
 For example, it could be used to represent a particular instance of a monthly recurring event, like &quot;the June 2019 meeting&quot;.</p>
 <p><code>Temporal.PlainYearMonth</code> refers to the whole of a specific month; if you need to refer to a calendar event on a certain day, use <code>Temporal.PlainDate</code> or even <code>Temporal.PlainDateTime</code>.
 A <code>Temporal.PlainYearMonth</code> can be converted into a <code>Temporal.PlainDate</code> by combining it with a day of the month, using the <code>toPlainDate()</code> method.</p>
-<h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-PlainYearMonth"><a class="heading-link" href="#new-Temporal-PlainYearMonth"></a><strong>new Temporal.PlainYearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>: string | object = &quot;iso8601&quot;, <em>referenceISODay</em>: number = 1) : Temporal.PlainYearMonth</h3><p><strong>Parameters:</strong></p>
+<h2 id="constructor"><a class="heading-link" href="#constructor"></a>Constructor</h3><h3 id="new-Temporal-PlainYearMonth"><a class="heading-link" href="#new-Temporal-PlainYearMonth"></a><strong>new Temporal.PlainYearMonth</strong>(<em>isoYear</em>: number, <em>isoMonth</em>: number, <em>calendar</em>: string = &quot;iso8601&quot;, <em>referenceISODay</em>: number = 1) : Temporal.PlainYearMonth</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>isoYear</code> (number): A year.</li>
 <li><code>isoMonth</code> (number): A month, ranging between 1 and 12 inclusive.</li>
-<li><code>calendar</code> (optional string, <code>Temporal.Calendar</code> instance, or plain object): A calendar to project the month into.</li>
+<li><code>calendar</code> (optional string): A calendar to project the month into.</li>
 <li><code>referenceISODay</code> (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
 For the ISO 8601 calendar, this parameter will default to 1 if omitted.
 For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.</li>
@@ -240,8 +236,7 @@ For other calendars, use <code>Temporal.PlainYearMonth.from()</code> which will 
 Together, <code>isoYear</code>, <code>isoMonth</code>, and <code>referenceISODay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
 <p>The range of allowed values for this type is exactly enough that calling <a href="./plaindate.html#toPlainYearMonth"><code>toPlainYearMonth()</code></a> on any valid <code>Temporal.PlainDate</code> will succeed.
 If <code>isoYear</code> and <code>isoMonth</code> are outside of this range, then this function will throw a <code>RangeError</code>.</p>
-<p>Usually <code>calendar</code> will be a string containing the identifier of a built-in calendar, such as <code>&#39;islamic&#39;</code> or <code>&#39;gregory&#39;</code>.
-Use an object if you need to supply <a href="./calendar.html#custom-calendars">custom calendar behaviour</a>.</p>
+<p><code>calendar</code> is a string containing the identifier of a built-in calendar, such as <code>&#39;islamic&#39;</code> or <code>&#39;gregory&#39;</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: The <code>isoMonth</code> argument ranges from 1 to 12, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
@@ -647,13 +642,7 @@ Use <code>Temporal.PlainYearMonth.compare()</code> for this, or <code>yearMonth.
 The converted object carries a copy of all the relevant fields of <code>yearMonth</code>.</p>
 <p>Usage example:</p>
 <pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-06-24</span></code></pre><h3 id="getISOFields"><a class="heading-link" href="#getISOFields"></a>yearMonth.<strong>getISOFields</strong>(): { isoYear: number, isoMonth: number, isoDay: number, calendar: string | object }</h3><p><strong>Returns:</strong> a plain object with properties expressing <code>yearMonth</code> in the ISO 8601 calendar, as well as the calendar (usually a string, but may be an object) that <code>yearMonth</code> is reckoned in.</p>
-<p>This method is mainly useful if you are implementing a custom calendar.
-Most code will not need to use it.</p>
-<p>The value of the <code>isoDay</code> property will be equal to the <code>referenceISODay</code> constructor argument passed when <code>yearMonth</code> was constructed.</p>
-<p>Usage example:</p>
-<pre class="language-javascript"><code class="language-javascript">ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-06'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-ym<span class="token punctuation">.</span><span class="token function">getISOFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>isoYear<span class="token punctuation">;</span> <span class="token comment">// => 2019</span></code></pre>    <footer>
+ym<span class="token punctuation">.</span><span class="token function">toPlainDate</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2019-06-24</span></code></pre>    <footer>
       <p>
         This page includes a script which loads an implementation of Temporal in your browser.
         You can open a console in your browser's developer tools and try it out directly!

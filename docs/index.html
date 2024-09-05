@@ -18,13 +18,11 @@
         header(x) {
           for (const type of [
             Temporal.Instant,
-            Temporal.Calendar,
             Temporal.PlainDate,
             Temporal.PlainDateTime,
             Temporal.Duration,
             Temporal.PlainMonthDay,
             Temporal.PlainTime,
-            Temporal.TimeZone,
             Temporal.PlainYearMonth
           ]) {
             if (x instanceof type) return ['span', {}, `${x[Symbol.toStringTag]} <${x}>`];
@@ -171,9 +169,9 @@
 </li>
 </ul>
 </li>
-<li><a href="#Temporal-TimeZone">Temporal.TimeZone</a>
+<li><a href="#time-zones">Time Zones</a>
 </li>
-<li><a href="#Temporal-Calendar">Temporal.Calendar</a>
+<li><a href="#calendars">Calendars</a>
 </li>
 </ul>
 </li>
@@ -202,7 +200,7 @@ For a detailed look at some of the problems with <code>Date</code>, and the moti
 <h2 id="cookbook"><a class="heading-link" href="#cookbook"></a>Cookbook</h3><p>A cookbook to help you get started and learn the ins and outs of Temporal is available <a href="./cookbook.html">here</a>.</p>
 <h2 id="api-documentation"><a class="heading-link" href="#api-documentation"></a>API Documentation</h3><p>The Temporal API follows a convention of using types whose names start with &quot;Plain&quot; (like <code>Temporal.PlainDate</code>, <code>Temporal.PlainTime</code>, and <code>Temporal.PlainDateTime</code>) for objects which do not have an associated time zone.
 Converting between such types and exact time types (<code>Temporal.Instant</code> and <code>Temporal.ZonedDateTime</code>) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.</p>
-<p>Several important concepts are explained elsewhere: <a href="./ambiguity.html">exact time, wall-clock time, time zones, DST, handling ambiguity, and more</a>.</p>
+<p>Several important concepts are explained elsewhere: <a href="./timezone.html">exact time, wall-clock time, time zones, DST, handling ambiguity, and more</a>.</p>
 <h3 id="Temporal-Now"><a class="heading-link" href="#Temporal-Now"></a><strong>Temporal.Now</strong></h3><ul>
 <li><code>Temporal.Now.instant()</code> - get the current system exact time</li>
 <li><code>Temporal.Now.timeZoneId()</code> - get the current system time zone</li>
@@ -215,7 +213,7 @@ Converting between such types and exact time types (<code>Temporal.Instant</code
 <span class="token comment">// example output:</span>
 <span class="token comment">// Initialization complete 2021-01-13T20:57:01.500944804Z</span></code></pre><p>See <a href="./now.html">Temporal.Now Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-Instant"><a class="heading-link" href="#Temporal-Instant"></a><strong>Temporal.Instant</strong></h3><p>A <code>Temporal.Instant</code> represents a fixed point in time (called <strong>&quot;exact time&quot;</strong>), without regard to calendar or location, e.g. July 20, 1969, at 20:17 UTC.
-For a human-readable local calendar date or clock time, use a <code>Temporal.TimeZone</code> and <code>Temporal.Calendar</code> to obtain a <code>Temporal.ZonedDateTime</code> or <code>Temporal.PlainDateTime</code>.</p>
+For a human-readable local calendar date or clock time, use a time zone and calendar identifier to obtain a <code>Temporal.ZonedDateTime</code> or <code>Temporal.PlainDateTime</code>.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> instant <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'1969-07-20T20:17Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '1969-07-20T20:17:00Z'</span>
 instant<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">;</span> <span class="token comment">// => -14182980000</span></code></pre><p>See <a href="./instant.html">Temporal.Instant Documentation</a> for detailed documentation.</p>
@@ -232,7 +230,7 @@ This type is optimized for use cases that require a time zone, including DST-saf
   <span class="token literal-property property">millisecond</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token literal-property property">microsecond</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
   <span class="token literal-property property">nanosecond</span><span class="token operator">:</span> <span class="token number">500</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.0000035-08:00[America/Los_Angeles]</span></code></pre><p>As the broadest <code>Temporal</code> type, <code>Temporal.ZonedDateTime</code> can be considered a combination of <code>Temporal.TimeZone</code>, <code>Temporal.Instant</code>, and <code>Temporal.PlainDateTime</code> (which includes <code>Temporal.Calendar</code>).</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1995-12-07T03:24:30.0000035-08:00[America/Los_Angeles]</span></code></pre><p>As the broadest <code>Temporal</code> type, <code>Temporal.ZonedDateTime</code> can be considered a combination of <code>Temporal.Instant</code> and <code>Temporal.PlainDateTime</code> with a time zone identifier.</p>
 <p>See <a href="./zoneddatetime.html">Temporal.ZonedDateTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainDate"><a class="heading-link" href="#Temporal-PlainDate"></a><strong>Temporal.PlainDate</strong></h3><p>A <code>Temporal.PlainDate</code> object represents a calendar date that is not associated with a particular time or time zone, e.g. August 24th, 2006.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">2006</span><span class="token punctuation">,</span> <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">24</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2006-08-24</span>
@@ -253,7 +251,7 @@ date<span class="token punctuation">.</span><span class="token function">toStrin
 time<span class="token punctuation">.</span>second<span class="token punctuation">;</span> <span class="token comment">// => 9</span>
 time<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '19:39:09.068346205'</span></code></pre><p>See <a href="./plaintime.html">Temporal.PlainTime Documentation</a> for detailed documentation.</p>
 <h3 id="Temporal-PlainDateTime"><a class="heading-link" href="#Temporal-PlainDateTime"></a><strong>Temporal.PlainDateTime</strong></h3><p>A <code>Temporal.PlainDateTime</code> represents a calendar date and wall-clock time that does not carry time zone information, e.g. December 7th, 1995 at 3:00 PM (in the Gregorian calendar).</p>
-<p>It can be converted to a <code>Temporal.ZonedDateTime</code> using a <code>Temporal.TimeZone</code>.
+<p>It can be converted to a <code>Temporal.ZonedDateTime</code> using time zone identifier.
 For use cases that require a time zone, especially using arithmetic or other derived values, consider using <code>Temporal.ZonedDateTime</code> instead because that type automatically adjusts for Daylight Saving Time.</p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> dateTime <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDateTime<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">1995</span><span class="token punctuation">,</span>
@@ -285,25 +283,17 @@ This is used for date/time arithmetic and for measuring differences between <cod
 duration<span class="token punctuation">.</span><span class="token function">total</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">unit</span><span class="token operator">:</span> <span class="token string">'second'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 469200</span></code></pre><p>See <a href="./duration.html">Temporal.Duration Documentation</a> for detailed documentation.</p>
 <h4 id="balancing"><a class="heading-link" href="#balancing"></a>Balancing</h3><p>Unlike the other Temporal types, the units in <code>Temporal.Duration</code> don&#39;t naturally wrap around to 0: you may want to have a duration of &quot;90 minutes,&quot; and you don&#39;t want it to unexpectedly turn into &quot;1 hour and 30 minutes.&quot;</p>
 <p>See <a href="./balancing.html">Duration balancing</a> for more on this topic.</p>
-<h3 id="Temporal-TimeZone"><a class="heading-link" href="#Temporal-TimeZone"></a><strong>Temporal.TimeZone</strong></h3><p>A <code>Temporal.TimeZone</code> represents an IANA time zone, a specific UTC offset, or UTC itself.
-Time zones translate from a date/time in UTC to a local date/time.
-Because of this <code>Temporal.TimeZone</code> can be used to convert between <code>Temporal.Instant</code> and <code>Temporal.PlainDateTime</code> as well as finding out the offset at a specific <code>Temporal.Instant</code>.</p>
-<p>It is also possible to implement your own time zones.</p>
-<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> timeZone <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>TimeZone<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'Africa/Cairo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-timeZone<span class="token punctuation">.</span><span class="token function">getInstantFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1999-12-31T22:00:00Z</span>
-timeZone<span class="token punctuation">.</span><span class="token function">getPlainDateTimeFor</span><span class="token punctuation">(</span><span class="token string">'2000-01-01T00:00Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2000-01-01T02:00:00</span>
-timeZone<span class="token punctuation">.</span><span class="token function">getPreviousTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2014-09-25T21:00:00Z</span>
-timeZone<span class="token punctuation">.</span><span class="token function">getNextTransition</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => null</span></code></pre><p>See <a href="./timezone.html">Temporal.TimeZone Documentation</a> for detailed documentation.
-A conceptual explanation of handling <a href="./ambiguity.html">time zones, DST, and ambiguity in Temporal</a> is also available.</p>
-<h3 id="Temporal-Calendar"><a class="heading-link" href="#Temporal-Calendar"></a><strong>Temporal.Calendar</strong></h3><p>A <code>Temporal.Calendar</code> represents a calendar system.
+<h3 id="time-zones"><a class="heading-link" href="#time-zones"></a>Time Zones</h3><p>A time zone in ECMAScript is usually represented by an IANA Time Zone Database identifier such as <code>&#39;America/Los_Angeles&#39;</code>, <code>&#39;Asia/Tokyo&#39;</code>, or <code>&#39;UTC&#39;</code>.
+Fixed-offset time zone identifiers like <code>&#39;+05:30&#39;</code> may also be used, although this usage is discouraged because offsets for a particular location may change in response to political changes.</p>
+<p>Time zones translate between a date/time in UTC to a local calendar date and wall clock time.
+<code>Temporal.ZonedDateTime</code> provides built-in support for time-zone-aware applications.
+A time zone is required to convert from <code>Temporal.Instant</code> or <code>Temporal.PlainDateTime</code> to <code>Temporal.ZonedDateTime</code>.</p>
+<p>See <a href="./zoneddatetime.html"><code>Temporal.ZonedDateTime</code> Documentation</a> for more information.
+A conceptual explanation of handling <a href="./timezone.html">time zones, DST, and ambiguity in Temporal</a> is also available.</p>
+<h3 id="calendars"><a class="heading-link" href="#calendars"></a>Calendars</h3><p>Temporal supports multiple calendar systems.
 Most code will use the ISO 8601 calendar, but other calendar systems are available.</p>
-<p>Dates have associated <code>Temporal.Calendar</code> objects, to perform calendar-related math.
-Under the hood, this math is done by methods on the calendars.</p>
-<p>It is also possible to implement your own calendars.</p>
-<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> cal <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Calendar<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'iso8601'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> date <span class="token operator">=</span> cal<span class="token punctuation">.</span><span class="token function">dateFromFields</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">year</span><span class="token operator">:</span> <span class="token number">1999</span><span class="token punctuation">,</span> <span class="token literal-property property">month</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span> <span class="token literal-property property">day</span><span class="token operator">:</span> <span class="token number">31</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-date<span class="token punctuation">.</span>monthsInYear<span class="token punctuation">;</span> <span class="token comment">// => 12</span>
-date<span class="token punctuation">.</span>daysInYear<span class="token punctuation">;</span> <span class="token comment">// => 365</span></code></pre><p>See <a href="./calendar.html">Temporal.Calendar Documentation</a> for detailed documentation.</p>
+<p>Dates have associated calendar IDs, to perform calendar-related math.</p>
+<p>See <a href="./calendars.html">Calendars in Temporal</a> for detailed documentation.</p>
 <h2 id="object-relationship"><a class="heading-link" href="#object-relationship"></a>Object relationship</h3><img src="object-model.svg">
 
 <h2 id="string-persistence-parsing-and-formatting"><a class="heading-link" href="#string-persistence-parsing-and-formatting"></a>String persistence, parsing, and formatting</h3><p>All <code>Temporal</code> types have a string representation for persistence and interoperability.
@@ -312,7 +302,7 @@ For more information about string parsing, serialization, and formatting in <cod
 <img src="persistence-model.svg">
 
 <h2 id="other-documentation"><a class="heading-link" href="#other-documentation"></a>Other documentation</h3><ul>
-<li><a href="./ambiguity.html">Ambiguity</a> &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.</li>
+<li><a href="./timezone.html">Time Zones and Resolving Ambiguity</a> &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.</li>
 <li><a href="./balancing.html">Balancing</a> &mdash; Explanation of when <code>Temporal.Duration</code> units wrap around to 0 and when they don&#39;t.</li>
 <li><a href="./calendar-review.html">Why do Temporal instances have a Calendar?</a> &mdash; Background about why types like <code>Temporal.PlainDate</code> or <code>Temporal.ZonedDateTime</code> contain a calendar.
 These extensions are being actively worked on with IETF to get them on a standards track.</li>
