@@ -78,7 +78,7 @@
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-replace": "^5.0.2",
     "c8": "^7.14.0",
-    "codecov": "^3.8.2",
+    "codecov": "^3.8.3",
     "rollup": "^3.23.1",
     "rollup-plugin-node-polyfills": "^0.2.1"
   },
