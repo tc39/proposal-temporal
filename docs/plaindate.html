@@ -720,7 +720,7 @@ Use <code>Temporal.PlainDate.compare()</code> for this, or <code>date.equals()</
 <p><strong>Returns:</strong> a <code>Temporal.ZonedDateTime</code> object that represents the wall-clock time <code>plainTime</code> on the calendar date <code>date</code> projected into <code>timeZone</code>.</p>
 <p>This method can be used to convert <code>Temporal.PlainDate</code> into a <code>Temporal.ZonedDateTime</code>, by supplying the time zone and time of day.
 The default <code>plainTime</code>, if it&#39;s not provided, is the first valid local time in <code>timeZone</code> on the calendar date <code>date</code>.
-Usually this is midnight (<code>00:00</code>), but may be a different time in rare circumstances like DST starting at midnight or calendars like <code>ethiopic</code> where each day doesn&#39;t start at midnight.</p>
+Usually this is midnight (<code>00:00</code>), but may be a different time in rare circumstances like DST skipping midnight.</p>
 <p>For a list of IANA time zone names, see the current version of the <a href="https://www.iana.org/time-zones">IANA time zone database</a>.
 A convenient list is also available <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">on Wikipedia</a>, although it might not reflect the latest official status.</p>
 <p>In addition to the <code>timeZone</code>, the converted object carries a copy of all the relevant fields of <code>date</code> and <code>plainTime</code>.

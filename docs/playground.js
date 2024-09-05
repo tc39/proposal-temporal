@@ -8133,13 +8133,14 @@
 	    year,
 	    month,
 	    day,
-	    hasTime,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
+	    time: hasTime ? {
+	      hour,
+	      minute,
+	      second,
+	      millisecond,
+	      microsecond,
+	      nanosecond
+	    } : 'start-of-day',
 	    tzAnnotation,
 	    offset,
 	    z,
@@ -8177,19 +8178,20 @@
 	    nanosecond = +fraction.slice(6, 9);
 	    if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
 	  } else {
-	    let z, hasTime;
+	    const {
+	      time,
+	      z
+	    } = ParseISODateTime(isoString);
+	    if (time === 'start-of-day') throw new RangeError(`time is missing in string: ${isoString}`);
+	    if (z) throw new RangeError('Z designator not supported for PlainTime');
 	    ({
-	      hasTime,
 	      hour,
 	      minute,
 	      second,
 	      millisecond,
 	      microsecond,
-	      nanosecond,
-	      z
-	    } = ParseISODateTime(isoString));
-	    if (!hasTime) throw new RangeError(`time is missing in string: ${isoString}`);
-	    if (z) throw new RangeError('Z designator not supported for PlainTime');
+	      nanosecond
+	    } = time);
 	  }
 	  // if it's a date-time string, OK
 	  if (/[tT ][0-9][0-9]/.test(isoString)) {
@@ -8820,7 +8822,7 @@
 	  if (relativeTo === undefined) return {};
 	  let offsetBehaviour = 'option';
 	  let matchMinutes = false;
-	  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar, timeZone, offset;
+	  let year, month, day, time, calendar, timeZone, offset;
 	  if (Type$3(relativeTo) === 'Object') {
 	    if (IsTemporalZonedDateTime(relativeTo)) {
 	      return {
@@ -8839,12 +8841,7 @@
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
+	      time
 	    } = InterpretTemporalDateTimeFields(calendar, fields, 'constrain'));
 	    offset = fields.offset;
 	    if (offset === undefined) offsetBehaviour = 'wall';
@@ -8856,12 +8853,7 @@
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond,
+	      time,
 	      calendar,
 	      tzAnnotation,
 	      offset,
@@ -8886,7 +8878,7 @@
 	    plainRelativeTo: CreateTemporalDate(year, month, day, calendar)
 	  };
 	  const offsetNs = offsetBehaviour === 'option' ? ParseDateTimeUTCOffset(offset) : 0;
-	  const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
+	  const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, time, offsetBehaviour, offsetNs, timeZone, 'compatible', 'reject', matchMinutes);
 	  return {
 	    zonedRelativeTo: CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar)
 	  };
@@ -9026,11 +9018,14 @@
 	function InterpretTemporalDateTimeFields(calendar, fields, overflow) {
 	  const isoDate = CalendarDateFromFields(calendar, fields, overflow);
 	  const time = RegulateTime(fields.hour, fields.minute, fields.second, fields.millisecond, fields.microsecond, fields.nanosecond, overflow);
-	  return CombineISODateAndTimeRecord(isoDate, time);
+	  return {
+	    ...isoDate,
+	    time
+	  };
 	}
 	function ToTemporalDateTime(item) {
 	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar;
+	  let year, month, day, time, calendar;
 	  if (Type$3(item) === 'Object') {
 	    if (IsTemporalDateTime(item)) {
 	      GetTemporalOverflowOption(GetOptionsObject(options));
@@ -9052,12 +9047,7 @@
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
+	      time
 	    } = InterpretTemporalDateTimeFields(calendar, fields, overflow));
 	  } else {
 	    let z;
@@ -9065,22 +9055,35 @@
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond,
+	      time,
 	      calendar,
 	      z
 	    } = ParseTemporalDateTimeString(RequireString(item)));
 	    if (z) throw new RangeError('Z designator not supported for PlainDateTime');
-	    RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+	    if (time === 'start-of-day') {
+	      time = {
+	        hour: 0,
+	        minute: 0,
+	        second: 0,
+	        millisecond: 0,
+	        microsecond: 0,
+	        nanosecond: 0
+	      };
+	    }
+	    RejectDateTime(year, month, day, time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond);
 	    if (!calendar) calendar = 'iso8601';
 	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    GetTemporalOverflowOption(GetOptionsObject(options));
 	  }
+	  const {
+	    hour,
+	    minute,
+	    second,
+	    millisecond,
+	    microsecond,
+	    nanosecond
+	  } = time;
 	  return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 	}
 	function ToTemporalDuration(item) {
@@ -9113,15 +9116,18 @@
 	    year,
 	    month,
 	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond,
+	    time,
 	    offset,
 	    z
 	  } = ParseTemporalInstantString(RequireString(item));
+	  const {
+	    hour = 0,
+	    minute = 0,
+	    second = 0,
+	    millisecond = 0,
+	    microsecond = 0,
+	    nanosecond = 0
+	  } = time === 'start-of-day' ? {} : time;
 
 	  // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
 	  const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
@@ -9277,18 +9283,25 @@
 	  } = CalendarYearMonthFromFields(calendar, result, 'constrain'));
 	  return CreateTemporalYearMonth(year, month, calendar, referenceISODay);
 	}
-	function InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute) {
-	  const dt = {
+	function InterpretISODateTimeOffset(year, month, day, time, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute) {
+	  // start-of-day signifies that we had a string such as YYYY-MM-DD[Zone]. It is
+	  // grammatically not possible to specify a UTC offset in that string, so the
+	  // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
+	  if (time === 'start-of-day') {
+	    if (offsetBehaviour !== 'wall' || offsetNs !== 0) {
+	      throw new Error('assertion failure: offset cannot be provided in YYYY-MM-DD[Zone] string');
+	    }
+	    return GetStartOfDay(timeZone, {
+	      year,
+	      month,
+	      day
+	    });
+	  }
+	  const dt = CombineISODateAndTimeRecord({
 	    year,
 	    month,
-	    day,
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  };
+	    day
+	  }, time);
 	  if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
 	    // Simple case: ISO string without a TZ offset (or caller wants to ignore
 	    // the offset), so just convert DateTime to Instant in the given time zone
@@ -9300,7 +9313,7 @@
 	  // for this timezone and date/time.
 	  if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
 	    // Calculate the instant for the input's date/time and offset
-	    const epochNs = GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNs);
+	    const epochNs = GetUTCEpochNanoseconds(year, month, day, time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond, offsetNs);
 	    ValidateEpochNanoseconds(epochNs);
 	    return epochNs;
 	  }
@@ -9331,7 +9344,7 @@
 	}
 	function ToTemporalZonedDateTime(item) {
 	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	  let year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, timeZone, offset, calendar;
+	  let year, month, day, time, timeZone, offset, calendar;
 	  let matchMinute = false;
 	  let offsetBehaviour = 'option';
 	  let disambiguation, offsetOpt;
@@ -9358,12 +9371,7 @@
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
+	      time
 	    } = InterpretTemporalDateTimeFields(calendar, fields, overflow));
 	  } else {
 	    let tzAnnotation, z;
@@ -9371,12 +9379,7 @@
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond,
+	      time,
 	      tzAnnotation,
 	      offset,
 	      z,
@@ -9399,7 +9402,7 @@
 	  }
 	  let offsetNs = 0;
 	  if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
-	  const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute);
+	  const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, time, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute);
 	  return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
 	}
 	function CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar) {
@@ -9817,18 +9820,42 @@
 	    year,
 	    month,
 	    day,
-	    hour = 0,
-	    minute = 0,
-	    second = 0,
-	    millisecond = 0,
-	    microsecond = 0,
-	    nanosecond = 0
+	    hour,
+	    minute,
+	    second,
+	    millisecond,
+	    microsecond,
+	    nanosecond
 	  } = isoDateTime;
 	  const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
 	  if (offsetMinutes !== undefined) {
 	    return [GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetMinutes * 60e9)];
 	  }
 	  return GetNamedTimeZoneEpochNanoseconds(timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+	}
+	function GetStartOfDay(timeZone, isoDate) {
+	  const isoDateTime = {
+	    ...isoDate,
+	    hour: 0,
+	    minute: 0,
+	    second: 0,
+	    millisecond: 0,
+	    microsecond: 0,
+	    nanosecond: 0
+	  };
+	  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
+	  // If not a DST gap, return the single or earlier epochNs
+	  if (possibleEpochNs.length) return possibleEpochNs[0];
+
+	  // Otherwise, 00:00:00 lies within a DST gap. Compute an epochNs that's
+	  // guaranteed to be before the transition
+	  if (IsOffsetTimeZoneIdentifier(timeZone)) {
+	    throw new Error('assertion failure: should only be reached with named time zone');
+	  }
+	  const utcns = GetUTCEpochNanoseconds(isoDate.year, isoDate.month, isoDate.day, 0, 0, 0, 0, 0, 0);
+	  const dayBefore = utcns.minus(DAY_NANOS);
+	  ValidateEpochNanoseconds(dayBefore);
+	  return GetNamedTimeZoneNextTransition(timeZone, dayBefore);
 	}
 	function ISOYearString(year) {
 	  let yearString;
@@ -15795,19 +15822,31 @@
 	      timeZone = ToTemporalTimeZoneIdentifier(item);
 	    }
 	    const calendar = GetSlot(this, CALENDAR);
-	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
-	    const dt = {
-	      year: GetSlot(this, ISO_YEAR),
-	      month: GetSlot(this, ISO_MONTH),
-	      day: GetSlot(this, ISO_DAY),
-	      hour: GetSlot(temporalTime, ISO_HOUR),
-	      minute: GetSlot(temporalTime, ISO_MINUTE),
-	      second: GetSlot(temporalTime, ISO_SECOND),
-	      millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
-	      microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
-	      nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
-	    };
-	    const epochNs = GetEpochNanosecondsFor(timeZone, dt, 'compatible');
+	    const year = GetSlot(this, ISO_YEAR);
+	    const month = GetSlot(this, ISO_MONTH);
+	    const day = GetSlot(this, ISO_DAY);
+	    let epochNs;
+	    if (temporalTime === undefined) {
+	      epochNs = GetStartOfDay(timeZone, {
+	        year,
+	        month,
+	        day
+	      });
+	    } else {
+	      temporalTime = ToTemporalTime(temporalTime);
+	      const dt = {
+	        year,
+	        month,
+	        day,
+	        hour: GetSlot(temporalTime, ISO_HOUR),
+	        minute: GetSlot(temporalTime, ISO_MINUTE),
+	        second: GetSlot(temporalTime, ISO_SECOND),
+	        millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
+	        microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
+	        nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
+	      };
+	      epochNs = GetEpochNanosecondsFor(timeZone, dt, 'compatible');
+	    }
 	    return CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
 	  }
 	  toPlainYearMonth() {
@@ -15997,13 +16036,16 @@
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
+	      time
 	    } = InterpretTemporalDateTimeFields(calendar, fields, overflow);
+	    const {
+	      hour = 0,
+	      minute = 0,
+	      second = 0,
+	      millisecond = 0,
+	      microsecond = 0,
+	      nanosecond = 0
+	    } = time === 'start-of-day' ? {} : time;
 	    return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 	  }
 	  withPlainTime() {
@@ -17280,8 +17322,8 @@
 	      day
 	    };
 	    const tomorrow = BalanceISODate(year, month, day + 1);
-	    const todayNs = GetEpochNanosecondsFor(timeZone, today, 'compatible');
-	    const tomorrowNs = GetEpochNanosecondsFor(timeZone, tomorrow, 'compatible');
+	    const todayNs = GetStartOfDay(timeZone, today);
+	    const tomorrowNs = GetStartOfDay(timeZone, tomorrow);
 	    const diff = TimeDuration.fromEpochNsDiff(tomorrowNs, todayNs);
 	    return diff.fdiv(3.6e12);
 	  }
@@ -17340,38 +17382,38 @@
 	    const disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
 	    const offset = GetTemporalOffsetOption(resolvedOptions, 'prefer');
 	    const overflow = GetTemporalOverflowOption(resolvedOptions);
-	    let {
+	    const {
 	      year,
 	      month,
 	      day,
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
+	      time
 	    } = InterpretTemporalDateTimeFields(calendar, fields, overflow);
 	    const newOffsetNs = ParseDateTimeUTCOffset(fields.offset);
-	    const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', newOffsetNs, timeZone, disambiguation, offset, /* matchMinute = */false);
+	    const epochNanoseconds = InterpretISODateTimeOffset(year, month, day, time, 'option', newOffsetNs, timeZone, disambiguation, offset, /* matchMinute = */false);
 	    return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
 	  }
 	  withPlainTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
-	    const time = {
-	      hour: GetSlot(temporalTime, ISO_HOUR),
-	      minute: GetSlot(temporalTime, ISO_MINUTE),
-	      second: GetSlot(temporalTime, ISO_SECOND),
-	      millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
-	      microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
-	      nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
-	    };
 	    const timeZone = GetSlot(this, TIME_ZONE);
 	    const calendar = GetSlot(this, CALENDAR);
 	    const iso = GetISODateTimeFor(timeZone, GetSlot(this, EPOCHNANOSECONDS));
-	    const dt = CombineISODateAndTimeRecord(iso, time);
-	    const epochNs = GetEpochNanosecondsFor(timeZone, dt, 'compatible');
+	    let epochNs;
+	    if (temporalTime === undefined) {
+	      epochNs = GetStartOfDay(timeZone, iso);
+	    } else {
+	      temporalTime = ToTemporalTime(temporalTime);
+	      const time = {
+	        hour: GetSlot(temporalTime, ISO_HOUR),
+	        minute: GetSlot(temporalTime, ISO_MINUTE),
+	        second: GetSlot(temporalTime, ISO_SECOND),
+	        millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
+	        microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
+	        nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
+	      };
+	      const dt = CombineISODateAndTimeRecord(iso, time);
+	      epochNs = GetEpochNanosecondsFor(timeZone, dt, 'compatible');
+	    }
 	    return CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
 	  }
 	  withTimeZone(timeZone) {
@@ -17452,11 +17494,11 @@
 	        day
 	      };
 	      const dtEnd = BalanceISODate(year, month, day + 1);
-	      const startNs = GetEpochNanosecondsFor(timeZone, dtStart, 'compatible');
+	      const startNs = GetStartOfDay(timeZone, dtStart);
 	      if (thisNs.lesser(startNs)) {
 	        throw new Error('assertion failure: cannot produce an instant during a day that ' + 'occurs before another instant it deems start-of-day');
 	      }
-	      const endNs = GetEpochNanosecondsFor(timeZone, dtEnd, 'compatible');
+	      const endNs = GetStartOfDay(timeZone, dtEnd);
 	      if (thisNs.greaterOrEquals(endNs)) {
 	        throw new Error('assertion failure: cannot produce an instant during a day that ' + 'occurs on or after another instant it deems end-of-day');
 	      }
@@ -17484,7 +17526,14 @@
 	      // new date/time values. If DST disambiguation is required, the `compatible`
 	      // disambiguation algorithm will be used.
 	      const offsetNs = GetOffsetNanosecondsFor(timeZone, thisNs);
-	      epochNanoseconds = InterpretISODateTimeOffset(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, 'option', offsetNs, timeZone, 'compatible', 'prefer', /* matchMinute = */false);
+	      epochNanoseconds = InterpretISODateTimeOffset(year, month, day, {
+	        hour,
+	        minute,
+	        second,
+	        millisecond,
+	        microsecond,
+	        nanosecond
+	      }, 'option', offsetNs, timeZone, 'compatible', 'prefer', /* matchMinute = */false);
 	    }
 	    return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
 	  }
@@ -17572,11 +17621,11 @@
 	      month,
 	      day
 	    } = GetISODateTimeFor(timeZone, GetSlot(this, EPOCHNANOSECONDS));
-	    const epochNanoseconds = GetEpochNanosecondsFor(timeZone, {
+	    const epochNanoseconds = GetStartOfDay(timeZone, {
 	      year,
 	      month,
 	      day
-	    }, 'compatible');
+	    });
 	    return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
 	  }
 	  getTimeZoneTransition(directionParam) {
