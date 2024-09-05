@@ -202,7 +202,7 @@ If the time zone and offset are in conflict, then the `offset` option is used to
 
 An example of why `offset` is needed is Brazil's abolition of DST in 2019.
 This change meant that previously-stored values for 2020 and beyond might now be ambiguous.
-For details about problems like this and how to solve them with `offset`, see [Ambiguity Caused by Permanent Changes to a Time Zone Definition](./ambiguity.md#ambiguity-caused-by-permanent-changes-to-a-time-zone-definition).
+For details about problems like this and how to solve them with `offset`, see [Ambiguity Caused by Permanent Changes to a Time Zone Definition](./timezone.md#ambiguity-caused-by-permanent-changes-to-a-time-zone-definition).
 
 The `offset` option is ignored if an offset is not present in the input.
 In that case, the time zone and the `disambiguation` option are used to convert date/time values to exact time.
@@ -220,7 +220,7 @@ This mode also matches the behavior of cross-platform standards like [RFC 5545 (
 During "skipped" clock time like the hour after DST starts, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
 This behavior avoids exceptions when converting nonexistent local time values to `Temporal.ZonedDateTime`.
 
-For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving Ambiguity](./ambiguity.md).
+For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Time Zones and Resolving Ambiguity](./timezone.md).
 
 The `disambiguation` option is only used if there is no offset in the input, or if the offset is ignored by using the `offset` option as described above.
 If the offset in the input is used, then there is no ambiguity and the `disambiguation` option is ignored.

@@ -32,7 +32,7 @@ But there are cases where `Temporal.PlainDateTime` is the correct type to use:
 - Performing arithmetic that deliberately ignores DST.
   Example: in a day-planner UI, the visual height of a meeting may be the same even if DST skips or repeats an hour.
 
-To learn more about time zones and DST best practices, visit [Time Zones and Resolving Ambiguity](./ambiguity.md).
+To learn more about time zones and DST best practices, visit [Time Zones and Resolving Ambiguity](./timezone.md).
 
 ## Constructor
 
@@ -977,7 +977,7 @@ This mode also matches the behavior of cross-platform standards like [RFC 5545 (
 During "skipped" clock time like the hour after DST starts in the Spring, this method interprets invalid times using the pre-transition time zone offset if `'compatible'` or `'later'` is used or the post-transition time zone offset if `'earlier'` is used.
 This behavior avoids exceptions when converting nonexistent `Temporal.PlainDateTime` values to `Temporal.ZonedDateTime`, but it also means that values during these periods will result in a different `Temporal.PlainDateTime` in "round-trip" conversions to `Temporal.ZonedDateTime` and back again.
 
-For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Resolving ambiguity](./ambiguity.md).
+For usage examples and a more complete explanation of how this disambiguation works and why it is necessary, see [Time Zones and Resolving Ambiguity](./timezone.md).
 
 If the result is earlier or later than the range that `Temporal.ZonedDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then a `RangeError` will be thrown, no matter the value of `disambiguation`.
 

@@ -31,7 +31,7 @@ A cookbook to help you get started and learn the ins and outs of Temporal is ava
 The Temporal API follows a convention of using types whose names start with "Plain" (like `Temporal.PlainDate`, `Temporal.PlainTime`, and `Temporal.PlainDateTime`) for objects which do not have an associated time zone.
 Converting between such types and exact time types (`Temporal.Instant` and `Temporal.ZonedDateTime`) can be ambiguous because of time zones and daylight saving time, and the Temporal API lets developers configure how this ambiguity is resolved.
 
-Several important concepts are explained elsewhere: [exact time, wall-clock time, time zones, DST, handling ambiguity, and more](./ambiguity.md).
+Several important concepts are explained elsewhere: [exact time, wall-clock time, time zones, DST, handling ambiguity, and more](./timezone.md).
 
 ### **Temporal.Now**
 
@@ -202,7 +202,7 @@ Time zones translate between a date/time in UTC to a local calendar date and wal
 A time zone is required to convert from `Temporal.Instant` or `Temporal.PlainDateTime` to `Temporal.ZonedDateTime`.
 
 See [`Temporal.ZonedDateTime` Documentation](./zoneddatetime.md) for more information.
-A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal](./ambiguity.md) is also available.
+A conceptual explanation of handling [time zones, DST, and ambiguity in Temporal](./timezone.md) is also available.
 
 ### Calendars
 
@@ -227,7 +227,7 @@ For more information about string parsing, serialization, and formatting in `Tem
 
 ## Other documentation
 
-- [Ambiguity](./ambiguity.md) &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.
+- [Time Zones and Resolving Ambiguity](./timezone.md) &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.
 - [Balancing](./balancing.md) &mdash; Explanation of when `Temporal.Duration` units wrap around to 0 and when they don't.
 - [Why do Temporal instances have a Calendar?](./calendar-review.md) &mdash; Background about why types like `Temporal.PlainDate` or `Temporal.ZonedDateTime` contain a calendar.
   These extensions are being actively worked on with IETF to get them on a standards track.
