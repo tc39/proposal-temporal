@@ -10,6 +10,7 @@ const { deepEqual, equal, throws } = assert;
 import bigInt from 'big-integer';
 import { readFileSync } from 'fs';
 
+import 'proposal-temporal';
 import * as ES from '../lib/ecmascript.mjs';
 
 describe('ECMAScript', () => {
