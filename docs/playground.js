@@ -16357,6 +16357,9 @@
 	    };
 	    const maximum = maximumIncrements[smallestUnit];
 	    if (maximum !== undefined) ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
+	    if (roundingIncrement > 1 && (IsCalendarUnit(smallestUnit) || smallestUnit === 'day') && largestUnit !== smallestUnit) {
+	      throw new RangeError('For calendar units with roundingIncrement > 1, use largestUnit = smallestUnit');
+	    }
 	    let norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	    if (zonedRelativeTo) {
 	      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
