@@ -15,4 +15,6 @@ Key features of this implementation:
 
 > **NOTE**: This example is intended for basic Hijri date adjustments and visual alignment. It does not implement comprehensive calendar customization or detailed Hijri calendar variants. For more complex Hijri calendar adjustments or variants, a more sophisticated implementation would be necessary.
 
+```javascript
 {{cookbook/hijriDaysAdjustments.mjs}}
+```

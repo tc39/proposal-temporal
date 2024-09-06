@@ -559,3 +559,9 @@ Since they are generally larger than these cookbook recipes, they're on their ow
 Extend `Temporal` to support arbitrarily-large years (e.g., **+635427810-02-02**) for astronomical purposes.
 
 → [Extra-expanded years](cookbook-expandedyears.md)
+
+### Adjustable Hijri calendar
+
+Extend `Temporal` to support adjustment days for the Hijri calendars, which are sometimes required when the start of the month is based on astronomical observations.
+
+→ [Adjustable Hijri calendar](hijri-days-adjustments.md)
