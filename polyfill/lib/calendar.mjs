@@ -977,9 +977,8 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
     }
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
-    let { year, eraYear, month, monthCode, day, monthExtra } = calendarDate;
-    if (year === undefined) year = eraYear;
-    if (eraYear === undefined) eraYear = year;
+    let { year, month, monthCode, day, monthExtra } = calendarDate;
+    if (year === undefined) throw new TypeError('Missing property: "year"');
     if (fromLegacyDate) {
       // In Pre Node-14 V8, DateTimeFormat.formatToParts `month: 'numeric'`
       // output returns the numeric equivalent of `month` as a string, meaning
@@ -994,8 +993,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
         month = this.inLeapYear({ year }) ? monthInfo.leap : monthInfo.regular;
       }
       monthCode = this.getMonthCode(year, month);
-      const result = { year, month, day, era: undefined, eraYear, monthCode };
-      return result;
+      return { year, month, day, monthCode };
     } else {
       // When called without input coming from legacy Date output, simply ensure
       // that all fields are present.
@@ -1039,7 +1037,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
           }
         }
       }
-      return { ...calendarDate, day, month, monthCode, year, eraYear };
+      return { ...calendarDate, day, month, monthCode, year };
     }
   },
   // All built-in calendars except Chinese/Dangi and Hebrew use an era
@@ -1659,12 +1657,12 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     return { year, month: month >= 12 ? 12 : month + 1, day: 1 };
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
-    let { year, month, monthExtra, day, monthCode, eraYear } = calendarDate;
+    let { year, month, monthExtra, day, monthCode } = calendarDate;
+    if (year === undefined) throw new TypeError('Missing property: "year"');
     if (fromLegacyDate) {
       // Legacy Date output returns a string that's an integer with an optional
       // "bis" suffix used only by the Chinese/Dangi calendar to indicate a leap
       // month. Below we'll normalize the output.
-      year = eraYear;
       if (monthExtra && monthExtra !== 'bis') throw new RangeError(`Unexpected leap month suffix: ${monthExtra}`);
       const monthCode = buildMonthCode(month, monthExtra !== undefined);
       const monthString = `${month}${monthExtra || ''}`;
@@ -1672,13 +1670,11 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       const monthInfo = months[monthString];
       if (monthInfo === undefined) throw new RangeError(`Unmatched month ${monthString} in Chinese year ${year}`);
       month = monthInfo.monthIndex;
-      return { year, month, day, era: undefined, eraYear, monthCode };
+      return { year, month, day, monthCode };
     } else {
       // When called without input coming from legacy Date output,
       // simply ensure that all fields are present.
       this.validateCalendarDate(calendarDate);
-      if (year === undefined) year = eraYear;
-      if (eraYear === undefined) eraYear = year;
       if (month === undefined) {
         const months = this.getMonthList(year, cache);
         let numberPart = monthCode.replace('L', 'bis').slice(1);
@@ -1729,7 +1725,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`);
         }
       }
-      return { ...calendarDate, year, eraYear, month, monthCode, day };
+      return { ...calendarDate, year, month, monthCode, day };
     }
   },
   // All built-in calendars except Chinese/Dangi and Hebrew use an era
