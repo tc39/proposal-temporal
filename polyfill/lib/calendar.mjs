@@ -394,8 +394,13 @@ const nonIsoHelperBase = {
     }
     const result = {};
     for (let { type, value } of parts) {
-      if (type === 'year') result.eraYear = +value;
-      if (type === 'relatedYear') result.eraYear = +value;
+      if (type === 'year' || type === 'relatedYear') {
+        if (this.hasEra) {
+          result.eraYear = +value;
+        } else {
+          result.year = +value;
+        }
+      }
       if (type === 'month') {
         const matches = /^([0-9]*)(.*?)$/.exec(value);
         if (!matches || matches.length != 3 || (!matches[1] && !matches[2])) {
@@ -444,7 +449,7 @@ const nonIsoHelperBase = {
           .toLowerCase();
       }
     }
-    if (result.eraYear === undefined) {
+    if (this.hasEra && result.eraYear === undefined) {
       // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
       // output of Intl.DateTimeFormat.formatToParts.
       throw new RangeError(
