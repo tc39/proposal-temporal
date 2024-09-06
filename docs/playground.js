@@ -245,19 +245,19 @@
 		} catch (e) {}
 	};
 
-	var $gOPD$1 = Object.getOwnPropertyDescriptor;
-	if ($gOPD$1) {
+	var $gOPD = Object.getOwnPropertyDescriptor;
+	if ($gOPD) {
 		try {
-			$gOPD$1({}, '');
+			$gOPD({}, '');
 		} catch (e) {
-			$gOPD$1 = null; // this is IE 8, which has a broken gOPD
+			$gOPD = null; // this is IE 8, which has a broken gOPD
 		}
 	}
 
 	var throwTypeError = function () {
 		throw new $TypeError$9();
 	};
-	var ThrowTypeError = $gOPD$1
+	var ThrowTypeError = $gOPD
 		? (function () {
 			try {
 				// eslint-disable-next-line no-unused-expressions, no-caller, no-restricted-properties
@@ -266,7 +266,7 @@
 			} catch (calleeThrows) {
 				try {
 					// IE 8 throws on Object.getOwnPropertyDescriptor(arguments, '')
-					return $gOPD$1(arguments, 'callee').get;
+					return $gOPD(arguments, 'callee').get;
 				} catch (gOPDthrows) {
 					return throwTypeError;
 				}
@@ -555,8 +555,8 @@
 					}
 					return void undefined$1;
 				}
-				if ($gOPD$1 && (i + 1) >= parts.length) {
-					var desc = $gOPD$1(value, part);
+				if ($gOPD && (i + 1) >= parts.length) {
+					var desc = $gOPD(value, part);
 					isOwn = !!desc;
 
 					// By convention, when a data property is converted to an accessor
@@ -610,27 +610,36 @@
 		return esDefineProperty;
 	}
 
-	var GetIntrinsic$a = getIntrinsic;
+	var gopd$1;
+	var hasRequiredGopd;
 
-	var $gOPD = GetIntrinsic$a('%Object.getOwnPropertyDescriptor%', true);
+	function requireGopd () {
+		if (hasRequiredGopd) return gopd$1;
+		hasRequiredGopd = 1;
 
-	if ($gOPD) {
-		try {
-			$gOPD([], 'length');
-		} catch (e) {
-			// IE 8 has a broken gOPD
-			$gOPD = null;
+		var GetIntrinsic = getIntrinsic;
+
+		var $gOPD = GetIntrinsic('%Object.getOwnPropertyDescriptor%', true);
+
+		if ($gOPD) {
+			try {
+				$gOPD([], 'length');
+			} catch (e) {
+				// IE 8 has a broken gOPD
+				$gOPD = null;
+			}
 		}
-	}
 
-	var gopd$1 = $gOPD;
+		gopd$1 = $gOPD;
+		return gopd$1;
+	}
 
 	var $defineProperty$1 = requireEsDefineProperty();
 
 	var $SyntaxError = syntax;
 	var $TypeError$8 = type;
 
-	var gopd = gopd$1;
+	var gopd = requireGopd();
 
 	/** @type {import('.')} */
 	var defineDataProperty = function defineDataProperty(
@@ -704,7 +713,7 @@
 	var GetIntrinsic$9 = getIntrinsic;
 	var define = defineDataProperty;
 	var hasDescriptors = hasPropertyDescriptors_1();
-	var gOPD = gopd$1;
+	var gOPD = requireGopd();
 
 	var $TypeError$7 = type;
 	var $floor$2 = GetIntrinsic$9('%Math.floor%');
@@ -3277,7 +3286,7 @@
 		if (hasRequiredOrdinaryDefineOwnProperty) return OrdinaryDefineOwnProperty;
 		hasRequiredOrdinaryDefineOwnProperty = 1;
 
-		var $gOPD = gopd$1;
+		var $gOPD = requireGopd();
 		var $SyntaxError = syntax;
 		var $TypeError = type;
 
