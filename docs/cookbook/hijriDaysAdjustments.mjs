@@ -2,7 +2,7 @@
 import * as Temporal from '../../polyfill/lib/temporal.mjs';
 
 /**
- * AdjustableHijriPlainDate: A class for customizing Hijri date display.
+ * AdjustableHijriTemporal: A class for customizing Hijri date display.
  *
  * This class allows for adjustment of Hijri dates by shifting days forward or backward.
  * It's designed to:
