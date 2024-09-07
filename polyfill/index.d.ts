@@ -1178,7 +1178,7 @@ declare namespace Intl {
      * type as `startRange`.
      */
     formatRangeToParts<T extends Formattable>(startDate: T, endDate: T): globalThis.Intl.DateTimeRangeFormatPart[];
-    formatRangeToParts(startDate: Date | number, endDate: Date | number): globalThis.Intl.DateTimeFormatRangePart[];
+    formatRangeToParts(startDate: Date | number, endDate: Date | number): globalThis.Intl.DateTimeRangeFormatPart[];
   }
 
   export const DateTimeFormat: {
