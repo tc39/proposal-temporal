@@ -1978,7 +1978,7 @@
         1. Let _smallestUnitIndex_ be the ordinal index of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _smallestUnit_.
         1. Let _unitIndex_ be _smallestUnitIndex_ - 1.
         1. Let _done_ be *false*.
-        1. Repeat, while _unitIndex_ ≤ _largestUnitIndex_ and _done_ is *false*,
+        1. Repeat, while _unitIndex_ ≥ _largestUnitIndex_ and _done_ is *false*,
           1. Let _unit_ be the value in the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref> in the row whose ordinal index is _unitIndex_.
           1. If _unit_ is not *"week"*, or _largestUnit_ is *"week"*, then
             1. If _unit_ is *"year"*, then
