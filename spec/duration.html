@@ -1800,8 +1800,10 @@
           1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r1_, 0, 0).
           1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r2_, 0, 0).
         1. Else if _unit_ is *"week"*, then
-          1. Let _weeksStart_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]]).
-          1. Let _weeksEnd_ be BalanceISODate(_dateTime_.[[Year]] + _duration_.[[Years]], _dateTime_.[[Month]] + _duration_.[[Months]], _dateTime_.[[Day]] + _duration_.[[Days]]).
+          1. Let _yearsMonths_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], 0, 0).
+          1. Let _isoDate_ be ISODateTimeToDateRecord(_dateTime_).
+          1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDate_, _yearsMonths_, *"constrain"*).
+          1. Let _weeksEnd_ be BalanceISODate(_weeksStart_.[[Year]], _weeksStart_.[[Month]], _weeksStart_.[[Day]] + _duration_.[[Days]]).
           1. Let _untilResult_ be CalendarDateUntil(_calendar_, _weeksStart_, _weeksEnd_, *"week"*).
           1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Weeks]] + _untilResult_.[[Weeks]], _increment_, *"trunc"*).
           1. Let _r1_ be _weeks_.

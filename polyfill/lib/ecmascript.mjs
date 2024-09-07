@@ -3178,11 +3178,9 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, calendar, ti
       break;
     }
     case 'week': {
-      const year = dateTime.year + duration.years;
-      const month = dateTime.month + duration.months;
-      const day = dateTime.day;
-      const weeksStart = BalanceISODate(year, month, day);
-      const weeksEnd = BalanceISODate(year, month, day + duration.days);
+      const yearsMonths = { years: duration.years, months: duration.months };
+      const weeksStart = CalendarDateAdd(calendar, dateTime, yearsMonths, 'constrain');
+      const weeksEnd = BalanceISODate(weeksStart.year, weeksStart.month, weeksStart.day + duration.days);
       const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
       const weeks = RoundNumberToIncrement(duration.weeks + untilResult.weeks, increment, 'trunc');
       r1 = weeks;
