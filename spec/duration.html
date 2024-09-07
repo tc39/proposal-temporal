@@ -1973,7 +1973,7 @@
       <emu-alg>
         1. Assert: The value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _largestUnit_, is ~date~.
         1. Assert: The value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _smallestUnit_, is ~date~.
-        1. If _smallestUnit_ is *"year"*, return _duration_.
+        1. If _smallestUnit_ is _largestUnit_, return _duration_.
         1. Let _largestUnitIndex_ be the ordinal index of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _largestUnit_.
         1. Let _smallestUnitIndex_ be the ordinal index of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _smallestUnit_.
         1. Let _unitIndex_ be _smallestUnitIndex_ - 1.

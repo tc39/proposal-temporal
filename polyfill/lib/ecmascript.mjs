@@ -3395,7 +3395,7 @@ function BubbleRelativeDuration(
 ) {
   // smallestUnit is day or larger
 
-  if (smallestUnit === 'year') return duration;
+  if (smallestUnit === largestUnit) return duration;
 
   // Check to see if nudgedEpochNs has hit the boundary of any units higher than
   // smallestUnit, in which case increment the higher unit and clear smaller
