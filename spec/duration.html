@@ -1987,13 +1987,10 @@
             1. Else if _unit_ is *"month"*, then
               1. Let _months_ be _duration_.[[Months]] + _sign_.
               1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _months_, 0, 0).
-            1. Else if _unit_ is *"week"*, then
+            1. Else,
+              1. Assert: _unit_ is *"week"*.
               1. Let _weeks_ be _duration_.[[Weeks]] + _sign_.
               1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _weeks_, 0).
-            1. Else,
-              1. Assert: _unit_ is *"day"*.
-              1. Let _days_ be _duration_.[[Days]] + _sign_.
-              1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_).
             1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
             1. Let _end_ be ? CalendarDateAdd(_calendar_, _date_, _endDuration_, *"constrain"*).
             1. If _timeZone_ is ~unset~, then

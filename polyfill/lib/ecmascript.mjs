@@ -3432,11 +3432,6 @@ function BubbleRelativeDuration(
         endDuration = { years: duration.years, months: duration.months, weeks, days: 0 };
         break;
       }
-      case 'day': {
-        const days = duration.days + sign;
-        endDuration = { years: duration.years, months: duration.months, weeks: duration.weeks, days };
-        break;
-      }
       default:
         throw new Error('assert not reached');
     }
