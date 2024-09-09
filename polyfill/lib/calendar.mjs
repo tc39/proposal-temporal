@@ -5,6 +5,8 @@ import * as ES from './ecmascript.mjs';
 import { DefineIntrinsic } from './intrinsicclass.mjs';
 
 const ArrayFrom = Array.from;
+const ArrayPrototypeFind = Array.prototype.find;
+const ArrayPrototypeIncludes = Array.prototype.includes;
 const ArrayPrototypeSort = Array.prototype.sort;
 const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
 const MathAbs = Math.abs;
@@ -455,6 +457,11 @@ const nonIsoHelperBase = {
       throw new RangeError(
         `Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`
       );
+    }
+    // Translate old ICU era codes "ERA0" etc. into canonical era names.
+    if (this.hasEra) {
+      const replacement = ES.Call(ArrayPrototypeFind, this.eras, [(e) => result.era === e.genericName]);
+      if (replacement) result.era = replacement.name;
     }
     // Translate eras that may be handled differently by Temporal vs. by Intl
     // (e.g. Japanese pre-Meiji eras). See #526 for details.
@@ -1154,6 +1161,9 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
  *   /** name of the era
  *   name: string;
  *
+ *   // Aliases, see https://tc39.es/proposal-intl-era-monthcode/#table-eras
+ *   aliases: string[];
+ *
  *   // alternate name of the era used in old versions of ICU data
  *   // format is `era{n}` where n is the zero-based index of the era
  *   // with the oldest era being 0.
@@ -1370,8 +1380,10 @@ const makeHelperGregorian = (id, originalEras) => {
         checkField('era', era);
         checkField('eraYear', eraYear);
       } else if (eraYear != null) {
-        const matchingEra =
-          era === undefined ? undefined : this.eras.find((e) => e.name === era || e.genericName === era);
+        if (era === undefined) throw new RangeError('era and eraYear must be provided together');
+        const matchingEra = ES.Call(ArrayPrototypeFind, this.eras, [
+          ({ name, aliases = [] }) => name === era || ES.Call(ArrayPrototypeIncludes, aliases, [era])
+        ]);
         if (!matchingEra) throw new RangeError(`Era ${era} (ISO year ${eraYear}) was not matched by any era`);
         if (eraYear < 1 && matchingEra.reverseOf) {
           throw new RangeError(`Years in ${era} era must be positive, not ${year}`);
@@ -1471,21 +1483,21 @@ const makeHelperOrthodox = (id, originalEras) => {
 //   zero era of ethioaa.
 const helperEthioaa = ObjectAssign({}, makeHelperOrthodox('ethioaa'), { isoEpoch: { year: -5492, month: 7, day: 17 } });
 const helperCoptic = makeHelperOrthodox('coptic', [
-  { name: 'era1', isoEpoch: { year: 284, month: 8, day: 29 } },
-  { name: 'era0', reverseOf: 'era1' }
+  { name: 'coptic', isoEpoch: { year: 284, month: 8, day: 29 } },
+  { name: 'coptic-inverse', reverseOf: 'coptic' }
 ]);
 // Anchor is currently the older era to match ethioaa, but should it be the newer era?
 // See https://github.com/tc39/ecma402/issues/534 for discussion.
 const helperEthiopic = makeHelperOrthodox('ethiopic', [
-  { name: 'era0', isoEpoch: { year: -5492, month: 7, day: 17 } },
-  { name: 'era1', isoEpoch: { year: 8, month: 8, day: 27 }, anchorEpoch: { year: 5501 } }
+  { name: 'ethioaa', aliases: ['ethiopic-amete-alem', 'mundi'], isoEpoch: { year: -5492, month: 7, day: 17 } },
+  { name: 'ethiopic', aliases: ['incar'], isoEpoch: { year: 8, month: 8, day: 27 }, anchorEpoch: { year: 5501 } }
 ]);
 
 const helperRoc = ObjectAssign(
   {},
   makeHelperSameMonthDayAsGregorian('roc', [
-    { name: 'minguo', isoEpoch: { year: 1912, month: 1, day: 1 } },
-    { name: 'before-roc', reverseOf: 'minguo' }
+    { name: 'roc', aliases: ['minguo'], isoEpoch: { year: 1912, month: 1, day: 1 } },
+    { name: 'roc-inverse', aliases: ['before-roc'], reverseOf: 'roc' }
   ])
 );
 
@@ -1496,8 +1508,8 @@ const helperBuddhist = ObjectAssign({}, makeHelperGregorianFixedEpoch('buddhist'
 const helperGregory = ObjectAssign(
   {},
   makeHelperSameMonthDayAsGregorian('gregory', [
-    { name: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
-    { name: 'bce', reverseOf: 'ce' }
+    { name: 'gregory', aliases: ['ad', 'ce'], isoEpoch: { year: 1, month: 1, day: 1 } },
+    { name: 'gregory-inverse', aliases: ['bc', 'bce'], reverseOf: 'gregory' }
   ]),
   {
     reviseIntlEra(calendarDate /*, isoDate*/) {
@@ -1506,8 +1518,8 @@ const helperGregory = ObjectAssign(
       // option mistakenly returns the one-letter (narrow) format instead. The
       // code below handles either the correct or Firefox-buggy format. See
       // https://bugzilla.mozilla.org/show_bug.cgi?id=1752253
-      if (era === 'bc' || era === 'b') era = 'bce';
-      if (era === 'ad' || era === 'a') era = 'ce';
+      if (era === 'b') era = 'gregory-inverse';
+      if (era === 'a') era = 'gregory';
       return { era, eraYear };
     },
     getFirstDayOfWeek() {
@@ -1558,8 +1570,8 @@ const helperJapanese = ObjectAssign(
     { name: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
     { name: 'taisho', isoEpoch: { year: 1912, month: 7, day: 30 }, anchorEpoch: { year: 1912, month: 7, day: 30 } },
     { name: 'meiji', isoEpoch: { year: 1868, month: 9, day: 8 }, anchorEpoch: { year: 1868, month: 9, day: 8 } },
-    { name: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
-    { name: 'bce', reverseOf: 'ce' }
+    { name: 'japanese', aliases: ['gregory', 'ad', 'ce'], isoEpoch: { year: 1, month: 1, day: 1 } },
+    { name: 'japanese-inverse', aliases: ['gregory-inverse', 'bc', 'bce'], reverseOf: 'japanese' }
   ]),
   {
     erasBeginMidYear: true,
@@ -1567,7 +1579,7 @@ const helperJapanese = ObjectAssign(
       const { era, eraYear } = calendarDate;
       const { year: isoYear } = isoDate;
       if (this.eras.find((e) => e.name === era)) return { era, eraYear };
-      return isoYear < 1 ? { era: 'bce', eraYear: 1 - isoYear } : { era: 'ce', eraYear: isoYear };
+      return isoYear < 1 ? { era: 'japanese-inverse', eraYear: 1 - isoYear } : { era: 'japanese', eraYear: isoYear };
     }
   }
 );
