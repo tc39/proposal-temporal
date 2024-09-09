@@ -291,7 +291,6 @@ export class Duration {
       let targetTime = ES.AddTime(0, 0, 0, 0, 0, 0, norm);
 
       // Delegate the date part addition to the calendar
-      ES.RejectDuration(years, months, weeks, days + targetTime.deltaDays, 0, 0, 0, 0, 0, 0);
       const isoRelativeToDate = ES.TemporalObjectToISODateRecord(plainRelativeTo);
       const calendar = GetSlot(plainRelativeTo, CALENDAR);
       const dateDuration = { years, months, weeks, days: days + targetTime.deltaDays };
@@ -397,7 +396,6 @@ export class Duration {
       let targetTime = ES.AddTime(0, 0, 0, 0, 0, 0, norm);
 
       // Delegate the date part addition to the calendar
-      ES.RejectDuration(years, months, weeks, days + targetTime.deltaDays, 0, 0, 0, 0, 0, 0);
       const isoRelativeToDate = ES.TemporalObjectToISODateRecord(plainRelativeTo);
       const calendar = GetSlot(plainRelativeTo, CALENDAR);
       const dateDuration = { years, months, weeks, days: days + targetTime.deltaDays };

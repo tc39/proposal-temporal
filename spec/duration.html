@@ -463,7 +463,6 @@
           1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _norm_).
-          1. If IsValidDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0) is *false*, throw a *RangeError* exception.
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be CreateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0).
@@ -511,7 +510,6 @@
           1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _unit_, 1, _unit_, *"trunc"*).
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _norm_).
-          1. If IsValidDuration(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0) is *false*, throw a *RangeError* exception.
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be CreateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0).
