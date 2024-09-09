@@ -3149,7 +3149,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
 // Epoch-nanosecond bounding technique where the start/end of the calendar-unit
 // interval are converted to epoch-nanosecond times and destEpochNs is nudged to
 // either one.
-function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, calendar, timeZone, increment, unit, roundingMode) {
+function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, calendar, increment, unit, roundingMode) {
   // unit must be day, week, month, or year
   // timeZone may be undefined
 
@@ -3281,7 +3281,7 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, calendar, ti
 // Attempts rounding of time units within a time zone's day, but if the rounding
 // causes time to exceed the total time within the day, rerun rounding in next
 // day.
-function NudgeToZonedTime(sign, duration, dateTime, calendar, timeZone, increment, unit, roundingMode) {
+function NudgeToZonedTime(sign, duration, dateTime, timeZone, calendar, increment, unit, roundingMode) {
   // unit must be hour or smaller
 
   // Apply to origin, output start/end of the day as PlainDateTimes
@@ -3384,8 +3384,8 @@ function BubbleRelativeDuration(
   duration,
   nudgedEpochNs,
   plainDateTime,
-  calendar,
   timeZone,
+  calendar,
   largestUnit,
   smallestUnit
 ) {
@@ -3472,8 +3472,8 @@ function RoundRelativeDuration(
   duration,
   destEpochNs,
   dateTime,
-  calendar,
   timeZone,
+  calendar,
   largestUnit,
   increment,
   smallestUnit,
@@ -3497,8 +3497,8 @@ function RoundRelativeDuration(
       duration,
       destEpochNs,
       dateTime,
-      calendar,
       timeZone,
+      calendar,
       increment,
       smallestUnit,
       roundingMode
@@ -3507,7 +3507,7 @@ function RoundRelativeDuration(
     // Special-case for rounding time units within a zoned day. total() never
     // takes this path because largestUnit is then also a time unit, so
     // DifferenceZonedDateTimeWithRounding uses Instant math
-    nudgeResult = NudgeToZonedTime(sign, duration, dateTime, calendar, timeZone, increment, smallestUnit, roundingMode);
+    nudgeResult = NudgeToZonedTime(sign, duration, dateTime, timeZone, calendar, increment, smallestUnit, roundingMode);
   } else {
     // Rounding uniform-length days/hours/minutes/etc units. Simple nanosecond
     // math. years/months/weeks unchanged
@@ -3524,8 +3524,8 @@ function RoundRelativeDuration(
       duration,
       nudgeResult.nudgedEpochNs, // The destEpochNs after expanding/contracting
       dateTime,
-      calendar,
       timeZone,
+      calendar,
       largestUnit, // where to STOP bubbling
       LargerOfTwoTemporalUnits(smallestUnit, 'day') // where to START bubbling-up from
     );
@@ -3645,8 +3645,8 @@ export function DifferencePlainDateTimeWithRounding(
     { years, months, weeks, days, norm },
     destEpochNs,
     dateTime,
-    calendar,
     null,
+    calendar,
     largestUnit,
     roundingIncrement,
     smallestUnit,
@@ -3657,8 +3657,8 @@ export function DifferencePlainDateTimeWithRounding(
 export function DifferenceZonedDateTimeWithRounding(
   ns1,
   ns2,
-  calendar,
   timeZone,
+  calendar,
   largestUnit,
   roundingIncrement,
   smallestUnit,
@@ -3696,8 +3696,8 @@ export function DifferenceZonedDateTimeWithRounding(
     { years, months, weeks, days, norm },
     ns2,
     dateTime,
-    calendar,
     timeZone,
+    calendar,
     largestUnit,
     roundingIncrement,
     smallestUnit,
@@ -3826,8 +3826,8 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
       { years, months, weeks, days, norm: TimeDuration.ZERO },
       destEpochNs,
       dateTime,
-      calendar,
       null,
+      calendar,
       settings.largestUnit,
       settings.roundingIncrement,
       settings.smallestUnit,
@@ -3996,8 +3996,8 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
       { years, months, weeks: 0, days: 0, norm: TimeDuration.ZERO },
       destEpochNs,
       dateTime,
-      calendar,
       null,
+      calendar,
       settings.largestUnit,
       settings.roundingIncrement,
       settings.smallestUnit,
@@ -4063,8 +4063,8 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
       DifferenceZonedDateTimeWithRounding(
         ns1,
         ns2,
-        calendar,
         timeZone,
+        calendar,
         settings.largestUnit,
         settings.roundingIncrement,
         settings.smallestUnit,

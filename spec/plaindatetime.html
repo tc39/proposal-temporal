@@ -1321,7 +1321,7 @@
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _total_ }.
         1. Let _dateTime_ be ISO Date-TimeRecord { [[Year]]: _y1_, [[Month]]: _mon1_, [[Day]]: _d1_, [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
-        1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _dateTime_, _calendar_, ~unset~, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _dateTime_, ~unset~, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 

@@ -1120,7 +1120,7 @@
         1. If _roundingGranularityIsNoop_ is *false*, then
           1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoOther_.[[Year]], _isoOther_.[[Month]], _isoOther_.[[Day]], 0, 0, 0, 0, 0, 0).
           1. Let _dateTime_ be ISO Date-Time Record { [[Year]]: _isoDate_.[[Year]], [[Month]]: _isoDate_.[[Month]], [[Day]]: _isoDate_.[[Day]], [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Set _duration_ to ? RoundRelativeDuration(_duration_, _destEpochNs_, _dateTime_, _temporalDate_.[[Calendar]], ~unset~, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
+          1. Set _duration_ to ? RoundRelativeDuration(_duration_, _destEpochNs_, _dateTime_, ~unset~, _temporalDate_.[[Calendar]], _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
         1. Return ! CreateTemporalDuration(_sign_ × _duration_.[[Years]], _sign_ × _duration_.[[Months]], _sign_ × _duration_.[[Weeks]], _sign_ × _duration_.[[Days]], 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
