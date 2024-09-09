@@ -724,7 +724,7 @@
           1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_otherDate_.[[Year]], _otherDate_.[[Month]], _otherDate_.[[Day]], 0, 0, 0, 0, 0, 0).
           1. Let _midnight_ be a Time Record with all fields set to 0.
           1. Let _dateTime_ be CombineISODateAndTimeRecord(_thisDate_, _midnight_).
-          1. Set _duration_ to ? RoundRelativeDuration(_duration_, _destEpochNs_, _dateTime_, _calendar_, ~unset~, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
+          1. Set _duration_ to ? RoundRelativeDuration(_duration_, _destEpochNs_, _dateTime_, ~unset~, _calendar_, _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
         1. Return ! CreateTemporalDuration(_sign_ × _duration_.[[Years]], _sign_ × _duration_.[[Months]], 0, 0, 0, 0, 0, 0, 0, 0).
       </emu-alg>
     </emu-clause>
