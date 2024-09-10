@@ -51,14 +51,14 @@ md = new Temporal.PlainMonthDay(2, 29); // => 02-29
 
 ## Static methods
 
-### Temporal.PlainMonthDay.**from**(_thing_: any, _options_?: object) : Temporal.PlainMonthDay
+### Temporal.PlainMonthDay.**from**(_item_: Temporal.PlainMonthDay | object | string, _options_?: object) : Temporal.PlainMonthDay
 
 **Parameters:**
 
-- `thing`: The value representing the desired date.
+- `item`: a value convertible to a `Temporal.PlainMonthDay`.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
-  - `overflow` (string): How to deal with out-of-range values if `thing` is an object.
+  - `overflow` (string): How to deal with out-of-range values if `item` is an object.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -73,7 +73,7 @@ If the value is any other object, it:
   If `month` is used and `calendar` is provided, then `year` must be provided as well because `month` is ambiguous in some calendars without knowing the year.
 - May have a `calendar` property. If omitted, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates) will be used by default.
 
-Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
+If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
 For the ISO 8601 calendar, only the month and day will be parsed from the string.
 For other calendars, the year and calendar are also parsed in addition to month and day.
 Any other parts of the string are optional and will be ignored.
@@ -81,15 +81,15 @@ Any other parts of the string are optional and will be ignored.
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 A `RangeError` will also be thrown for strings that contain a `Z` in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.
 
-The `overflow` option works as follows, if `thing` is an object:
+The `overflow` option works as follows, if `item` is an object:
 
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value, with "nearest" defined by the calendar.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
   If `day`, `month` and `year` are provided, that calendar date must exist in the provided calendar or a `RangeError` will be thrown.
 
-The `overflow` option is ignored if `thing` is a string.
+The `overflow` option is ignored if `item` is a string.
 
-> **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+> **NOTE**: The allowed values for the `item.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Example usage:
 

@@ -40,14 +40,14 @@ time = new Temporal.PlainTime(13, 37); // => 13:37:00
 
 ## Static methods
 
-### Temporal.PlainTime.**from**(_thing_: any, _options_?: object) : Temporal.PlainTime
+### Temporal.PlainTime.**from**(_item_: Temporal.PlainTime | object | string, _options_?: object) : Temporal.PlainTime
 
 **Parameters:**
 
-- `thing`: The value representing the desired time.
+- `item`: a value convertible to a `Temporal.PlainTime`.
 - `options` (optional object): An object with properties representing options for constructing the time.
   The following options are recognized:
-  - `overflow` (optional string): How to deal with out-of-range values if `thing` is an object.
+  - `overflow` (optional string): How to deal with out-of-range values if `item` is an object.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -60,18 +60,18 @@ Any missing ones will be assumed to be 0.
 
 If the `calendar` property is present, it must be the string `'iso8601'` or the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates), for future compatibility.
 
-Any non-object value will be converted to a string, which is expected to be in ISO 8601 format.
+If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
 If the string designates a date, it will be ignored.
 Time zone or UTC offset information will also be ignored, with one exception: if a string contains a `Z` in place of a numeric UTC offset, then a `RangeError` will be thrown because interpreting these strings as a local time is usually a bug. `Temporal.Instant.from` should be used instead to parse these strings, and the result's `toZonedDateTimeISO` method can be used to obtain a timezone-local date and time.
 
-In unusual cases of needing date or time components of `Z`-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone `'UTC'`. For example, the following code returns a "UTC time": `Temporal.Instant.from(thing).toZonedDateTimeISO('UTC').toPlainTime()`.
+In unusual cases of needing date or time components of `Z`-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone `'UTC'`. For example, the following code returns a "UTC time": `Temporal.Instant.from(item).toZonedDateTimeISO('UTC').toPlainTime()`.
 
-The `overflow` option works as follows, if `thing` is an object:
+The `overflow` option works as follows, if `item` is an object:
 
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-The `overflow` option is ignored if `thing` is a string.
+The `overflow` option is ignored if `item` is a string.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, times coming from other software may have a `second` value of 60.
 > In the default `constrain` mode, this will be converted to 59.

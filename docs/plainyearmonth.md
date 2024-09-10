@@ -54,14 +54,14 @@ ym = new Temporal.PlainYearMonth(2019, 6);
 
 ## Static methods
 
-### Temporal.PlainYearMonth.**from**(_thing_: any, _options_?: object) : Temporal.PlainYearMonth
+### Temporal.PlainYearMonth.**from**(_item_: Temporal.PlainYearMonth | object | string, _options_?: object) : Temporal.PlainYearMonth
 
 **Parameters:**
 
-- `thing`: The value representing the desired month.
+- `item`: a value convertible to a `Temporal.PlainYearMonth`.
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
-  - `overflow` (string): How to deal with out-of-range values if `thing` is an object.
+  - `overflow` (string): How to deal with out-of-range values if `item` is an object.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -75,22 +75,22 @@ A `Temporal.PlainYearMonth` will be constructed from these properties.
 If the `calendar` property is not present, it's assumed to be `'iso8601'` (identifying the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates)).
 In this calendar, `era` is ignored.
 
-Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
+If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
 Any parts of the string other than the year and the month are optional and will be ignored.
 
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 A `RangeError` will also be thrown for strings that contain a `Z` in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.
 
-The `overflow` option works as follows, if `thing` is an object:
+The `overflow` option works as follows, if `item` is an object:
 
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-The `overflow` option is ignored if `thing` is a string.
+The `overflow` option is ignored if `item` is a string.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
-> **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+> **NOTE**: The allowed values for the `item.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Example usage:
 
