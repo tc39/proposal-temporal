@@ -21,7 +21,6 @@ const NumberIsSafeInteger = Number.isSafeInteger;
 const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
 const ObjectCreate = Object.create;
 const ObjectDefineProperty = Object.defineProperty;
-const ObjectEntries = Object.entries;
 const SetPrototypeHas = Set.prototype.has;
 const StringCtor = String;
 const StringFromCharCode = String.fromCharCode;
@@ -1030,34 +1029,16 @@ export function GetTemporalRelativeToOption(options) {
   return { zonedRelativeTo: CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar) };
 }
 
-export function DefaultTemporalLargestUnit(
-  years,
-  months,
-  weeks,
-  days,
-  hours,
-  minutes,
-  seconds,
-  milliseconds,
-  microseconds
-) {
-  const entries = ObjectEntries({
-    years,
-    months,
-    weeks,
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds
-  });
-  for (let index = 0; index < entries.length; index++) {
-    const entry = entries[index];
-    const prop = entry[0];
-    const v = entry[1];
-    if (v !== 0) return SINGULAR_FOR.get(prop);
-  }
+export function DefaultTemporalLargestUnit(duration) {
+  if (GetSlot(duration, YEARS) !== 0) return 'year';
+  if (GetSlot(duration, MONTHS) !== 0) return 'month';
+  if (GetSlot(duration, WEEKS) !== 0) return 'week';
+  if (GetSlot(duration, DAYS) !== 0) return 'day';
+  if (GetSlot(duration, HOURS) !== 0) return 'hour';
+  if (GetSlot(duration, MINUTES) !== 0) return 'minute';
+  if (GetSlot(duration, SECONDS) !== 0) return 'second';
+  if (GetSlot(duration, MILLISECONDS) !== 0) return 'millisecond';
+  if (GetSlot(duration, MICROSECONDS) !== 0) return 'microsecond';
   return 'nanosecond';
 }
 
@@ -4220,9 +4201,6 @@ export function AddDurations(operation, duration, other) {
   const sign = operation === 'subtract' ? -1 : 1;
   other = ToTemporalDurationRecord(other);
 
-  const y1 = GetSlot(duration, YEARS);
-  const mon1 = GetSlot(duration, MONTHS);
-  const w1 = GetSlot(duration, WEEKS);
   const d1 = GetSlot(duration, DAYS);
   const h1 = GetSlot(duration, HOURS);
   const min1 = GetSlot(duration, MINUTES);
@@ -4241,13 +4219,13 @@ export function AddDurations(operation, duration, other) {
   const µs2 = sign * other.microseconds;
   const ns2 = sign * other.nanoseconds;
 
-  const largestUnit1 = DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1);
-  const largestUnit2 = DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2);
+  const Duration = GetIntrinsic('%Temporal.Duration%');
+  const largestUnit1 = DefaultTemporalLargestUnit(duration);
+  const largestUnit2 = DefaultTemporalLargestUnit(new Duration(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2));
   const largestUnit = LargerOfTwoTemporalUnits(largestUnit1, largestUnit2);
 
   const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
   const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
-  const Duration = GetIntrinsic('%Temporal.Duration%');
 
   if (IsCalendarUnit(largestUnit)) {
     throw new RangeError('For years, months, or weeks arithmetic, use date arithmetic relative to a starting point');
