@@ -87,6 +87,8 @@ Legacy `Date` represents an exact time, so it's straightforward to convert a `Te
 You can use `Temporal` objects to set properties on a calendar control.
 Here is an example using an HTML `<input type="date">` element with any day beyond “today” disabled and not selectable.
 
+(To get a `Temporal` object back out of the calendar control, see the [Future Date](#how-many-days-until-a-future-date) example.)
+
 <input type="date" id="calendar-input">
 
 <!-- prettier-ignore-start -->
