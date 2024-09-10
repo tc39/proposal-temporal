@@ -1481,7 +1481,7 @@ const makeHelperOrthodox = (id, originalEras) => {
 // - Coptic has a different epoch date
 // - Ethiopic has an additional second era that starts at the same date as the
 //   zero era of ethioaa.
-const helperEthioaa = ObjectAssign({}, makeHelperOrthodox('ethioaa'), { isoEpoch: { year: -5492, month: 7, day: 17 } });
+const helperEthioaa = ObjectAssign(makeHelperOrthodox('ethioaa'), { isoEpoch: { year: -5492, month: 7, day: 17 } });
 const helperCoptic = makeHelperOrthodox('coptic', [
   { name: 'coptic', isoEpoch: { year: 284, month: 8, day: 29 } },
   { name: 'coptic-inverse', reverseOf: 'coptic' }
@@ -1493,20 +1493,16 @@ const helperEthiopic = makeHelperOrthodox('ethiopic', [
   { name: 'ethiopic', aliases: ['incar'], isoEpoch: { year: 8, month: 8, day: 27 }, anchorEpoch: { year: 5501 } }
 ]);
 
-const helperRoc = ObjectAssign(
-  {},
-  makeHelperSameMonthDayAsGregorian('roc', [
-    { name: 'roc', aliases: ['minguo'], isoEpoch: { year: 1912, month: 1, day: 1 } },
-    { name: 'roc-inverse', aliases: ['before-roc'], reverseOf: 'roc' }
-  ])
-);
+const helperRoc = makeHelperSameMonthDayAsGregorian('roc', [
+  { name: 'roc', aliases: ['minguo'], isoEpoch: { year: 1912, month: 1, day: 1 } },
+  { name: 'roc-inverse', aliases: ['before-roc'], reverseOf: 'roc' }
+]);
 
-const helperBuddhist = ObjectAssign({}, makeHelperGregorianFixedEpoch('buddhist'), {
+const helperBuddhist = ObjectAssign(makeHelperGregorianFixedEpoch('buddhist'), {
   isoEpoch: { year: -543, month: 1, day: 1 }
 });
 
 const helperGregory = ObjectAssign(
-  {},
   makeHelperSameMonthDayAsGregorian('gregory', [
     { name: 'gregory', aliases: ['ad', 'ce'], isoEpoch: { year: 1, month: 1, day: 1 } },
     { name: 'gregory-inverse', aliases: ['bc', 'bce'], reverseOf: 'gregory' }
@@ -1532,7 +1528,6 @@ const helperGregory = ObjectAssign(
 );
 
 const helperJapanese = ObjectAssign(
-  {},
   // NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
   // before Meiji 1, the `ce` and `bce` eras are used. Challenges with pre-Meiji
   // eras include:
@@ -1746,7 +1741,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
 });
 
 // Dangi (Korean) calendar has same implementation as Chinese
-const helperDangi = ObjectAssign({}, { ...helperChinese, id: 'dangi' });
+const helperDangi = { ...helperChinese, id: 'dangi' };
 
 /**
  * Common implementation of all non-ISO calendars.
