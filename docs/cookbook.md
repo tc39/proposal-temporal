@@ -393,7 +393,7 @@ An example HTML form inspired by [Days Calculator](https://www.timeanddate.com/d
   // the example; see 'Calendar input element'
   const futureDatePicker = document.querySelector('input[name="futuredate"]');
   const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-  const today = Temporal.Now.plainDate(browserCalendar);
+  const today = Temporal.Now.plainDateISO().withCalendar(browserCalendar);
   futureDatePicker.min = today;
   futureDatePicker.value = today.add({ months: 1 });
 

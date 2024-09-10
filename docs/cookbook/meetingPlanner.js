@@ -1,6 +1,6 @@
 // Display local time zone and three others
 const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
-const now = Temporal.Now.zonedDateTime(browserCalendar);
+const now = Temporal.Now.zonedDateTimeISO().withCalendar(browserCalendar);
 const timeZones = [
   { name: 'Here', tz: now.timeZoneId },
   { name: 'New York', tz: 'America/New_York' },
