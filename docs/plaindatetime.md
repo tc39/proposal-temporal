@@ -80,14 +80,14 @@ datetime = new Temporal.PlainDateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:
 
 ## Static methods
 
-### Temporal.PlainDateTime.**from**(_thing_: any, _options_?: object) : Temporal.PlainDateTime
+### Temporal.PlainDateTime.**from**(_item_: Temporal.PlainDateTime | object | string, _options_?: object) : Temporal.PlainDateTime
 
 **Parameters:**
 
-- `thing`: The value representing the desired date and time.
+- `item`: a value convertible to a `Temporal.PlainDateTime`.
 - `options` (optional object): An object with properties representing options for constructing the date and time.
   The following options are recognized:
-  - `overflow` (string): How to deal with out-of-range values if `thing` is an object.
+  - `overflow` (string): How to deal with out-of-range values if `item` is an object.
     Allowed values are `constrain` and `reject`.
     The default is `constrain`.
 
@@ -103,19 +103,19 @@ Default values for other missing fields are determined by the calendar.
 If the `calendar` property is not present, it's assumed to be `'iso8601'` (identifying the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates)).
 Any other missing properties will be assumed to be 0 (for time fields).
 
-Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
+If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
 Time zone or UTC offset information will be ignored, with one exception: if a string contains a `Z` in place of a numeric UTC offset, then a `RangeError` will be thrown because interpreting these strings as a local date and time is usually a bug. `Temporal.Instant.from` should be used instead to parse these strings, and the result's `toZonedDateTimeISO` method can be used to obtain a timezone-local date and time.
 
-In unusual cases of needing date or time components of `Z`-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone `'UTC'`. For example, the following code returns a "UTC date": `Temporal.Instant.from(thing).toZonedDateTimeISO('UTC').toPlainDate()`.
+In unusual cases of needing date or time components of `Z`-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone `'UTC'`. For example, the following code returns a "UTC date": `Temporal.Instant.from(item).toZonedDateTimeISO('UTC').toPlainDate()`.
 
 If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
-The `overflow` option works as follows, if `thing` is an object:
+The `overflow` option works as follows, if `item` is an object:
 
 - In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-The `overflow` option is ignored if `thing` is a string.
+The `overflow` option is ignored if `item` is a string.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -123,7 +123,7 @@ Additionally, if the result is earlier or later than the range of dates that `Te
 > In the default `constrain` mode and when parsing an ISO 8601 string, this will be converted to 59.
 > In `reject` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
 
-> **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+> **NOTE**: The allowed values for the `item.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Example usage:
 

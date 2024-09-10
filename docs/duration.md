@@ -73,11 +73,11 @@ new Temporal.Duration(); // => PT0S
 
 ## Static methods
 
-### Temporal.Duration.**from**(_thing_: any) : Temporal.Duration
+### Temporal.Duration.**from**(_item_: Temporal.Duration | object | string) : Temporal.Duration
 
 **Parameters:**
 
-- `thing`: A `Duration`-like object or a string from which to create a `Temporal.Duration`.
+- `item`: a value convertible to a `Temporal.Duration`.
 
 **Returns:** a new `Temporal.Duration` object.
 
@@ -89,7 +89,7 @@ Any missing ones will be assumed to be 0.
 All non-zero values must be integers, must have the same sign, and must not be infinite.
 Otherwise, the function will throw a `RangeError`.
 
-Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
+If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
 
 > **NOTE:** This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
 > For example, `P3W1D` is understood to mean three weeks and one day, `-P1Y1M` is a negative duration of one year and one month, and `+P1Y1M` is one year and one month.

@@ -100,18 +100,18 @@ turnOfTheCentury = new Temporal.Instant(-2208988800000000000n); // => 1900-01-01
 
 ## Static methods
 
-### Temporal.Instant.**from**(_thing_: any) : Temporal.Instant
+### Temporal.Instant.**from**(_item_: Temporal.Instant | string) : Temporal.Instant
 
 **Parameters:**
 
-- `thing`: The value representing the desired exact time.
+- `item`: a value convertible to a `Temporal.Instant`.
 
 **Returns:** a new `Temporal.Instant` object.
 
 This static method creates a new `Temporal.Instant` object from another value.
 If the value is another `Temporal.Instant` object, a new object representing the same exact time is returned.
 
-Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
+Otherwise, the value must be a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
 The time zone name, if given, is ignored; only the time zone offset is taken into account.
 
 Example usage:

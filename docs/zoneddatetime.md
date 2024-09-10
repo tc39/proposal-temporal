@@ -106,13 +106,13 @@ new Temporal.ZonedDateTime(0n, 'America/Los_Angeles');
 
 ## Static methods
 
-### Temporal.ZonedDateTime.**from**(_thing_: any, _options_?: object) : Temporal.ZonedDateTime
+### Temporal.ZonedDateTime.**from**(_item_: Temporal.ZonedDateTime | object | string, _options_?: object) : Temporal.ZonedDateTime
 
 **Parameters:**
 
-- `thing`: The value representing the desired date, time, time zone, and calendar.
+- `item`: a value convertible to a `Temporal.ZonedDateTime`.
 - `options` (optional object): An object which may have some or all of the following properties:
-  - `overflow` (string): How to deal with out-of-range values if `thing` is an object.
+  - `overflow` (string): How to deal with out-of-range values if `item` is an object.
     Allowed values are `'constrain'` and `'reject'`.
     The default is `'constrain'`.
   - `disambiguation` (string): How to disambiguate if the date and time given by `zonedDateTime` does not exist in the time zone, or exists more than once.
@@ -136,7 +136,7 @@ Date/time values will be interpreted in context of the provided offset and/or ti
 Date/time values in object inputs will be interpreted in the context of `calendar`.
 However, date/time values in string inputs are always interpreted in the context of the ISO 8601 calendar.
 
-Any non-object value is converted to a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
+If the value is not an object, it must be a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
 For example:
 
 ```
@@ -173,12 +173,12 @@ Note that using `Temporal.ZonedDateTime` with a single-offset time zone will not
 Therefore, using offset time zones with `Temporal.ZonedDateTime` is relatively unusual.
 Instead of using `Temporal.ZonedDateTime` with an offset time zone, it may be easier for most use cases to use `Temporal.PlainDateTime` and/or `Temporal.Instant` instead.
 
-The `overflow` option works as follows, if `thing` is an object:
+The `overflow` option works as follows, if `item` is an object:
 
 - In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value.
 - In `'reject'` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
 
-The `overflow` option is ignored if `thing` is a string.
+The `overflow` option is ignored if `item` is a string.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -225,7 +225,7 @@ For usage examples and a more complete explanation of how this disambiguation wo
 The `disambiguation` option is only used if there is no offset in the input, or if the offset is ignored by using the `offset` option as described above.
 If the offset in the input is used, then there is no ambiguity and the `disambiguation` option is ignored.
 
-> **NOTE**: The allowed values for the `thing.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
+> **NOTE**: The allowed values for the `item.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
 Example usage:
 
