@@ -12001,9 +12001,7 @@
 	    const nextMonth = CalendarDateAdd(calendar, startDate, {
 	      months: 1
 	    }, 'constrain');
-	    const endOfMonth = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
-	    fields.day = CalendarDay(calendar, endOfMonth);
-	    startDate = CalendarDateFromFields(calendar, fields, 'constrain');
+	    startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
 	  }
 	  RejectDateRange(startDate.year, startDate.month, startDate.day);
 	  const addedDate = CalendarDateAdd(calendar, startDate, {
