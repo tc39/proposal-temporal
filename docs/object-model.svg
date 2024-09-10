@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg
-  viewBox="116 540 4040 1484"
+  viewBox="116 540 3390 1800"
   width="100%"
   height="100%"
   fill="none"
@@ -25,40 +25,35 @@
 
   <rect x="116" y="544" width="841" height="1350" fill="#FFFCE4" stroke="#B7B7B7" rx="20" />
   <text x="218" y="658" style="font-size: 80px; fill: #737373; white-space: pre;" >Exact Time Types</text>
-  <rect x="1707" y="544" width="2445" height="1350" fill="#FFFCE4" stroke="#B7B7B7" rx="20" />
-  <path stroke="#595959" d="M 1365 1491 L 1819 1491 L 1819 1367 L 2117 1367"/>
-  <path stroke="#595959" d="M 2407 1374 L 2593 1374 L 2593 929 L 2779 929"/>
-  <text x="2220" y="658" style="font-size: 80px; fill: #737373; white-space: pre;" >Calendar Date / Wall-Clock Time Types</text>
-  <path stroke="#595959" d="M 1365 1214 L 1819 1214 L 1819 1367 L 2117 1367"/>
-  <path stroke="#595959" d="M 722 1336 L 874 1336 L 874 1214 L 1110 1214"/>
-  <path stroke="#595959" d="M 1338 1150 V 1005"/>
-  <rect x="1050" y="1133" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="1172" y="1250">TimeZone</text>
-  <path stroke="#595959" d="M 722 1336 L 875 1336 L 875 1491 L 1110 1491"/>
-  <path stroke="#595959" d="M 521 988 L 521 1126 L 522 1250 C 525 1371 521 1264 523 1264" transform="matrix(-1, 0, 0, -1, 10, 22)"/>
+  <rect x="1055" y="544" width="2445" height="1350" fill="#FFFCE4" stroke="#B7B7B7" rx="20" />
+  <path stroke="#595959" d="m 1755,1374 h 186 V 929 h 186"/>
+  <text x="1568" y="658" style="font-size: 80px; fill: #737373; white-space: pre;" >Calendar Date / Wall-Clock Time Types</text>
+  <path stroke="#595959" d="M 530 1280 V 1020"/>
+  <path stroke="#595959" d="m -511,-966 v -138 l -1,-124 c -3,-121 1,-14 -1,-14"/>
   <rect x="250" y="1250" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
   <text style="fill: #000; white-space: pre;" x="430" y="1370">Instant</text>
-  <path stroke="#595959" d="M 2407 1374 L 2593 1374 L 2593 1595 L 2779 1595"/>
-  <rect x="1930" y="1280" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="1970" y="1390">PlainDateTime</text>
-  <path stroke="#595959" d="M 3167 928 L 3338 928 L 3338 824 L 3508 824"/>
-  <rect x="3420" y="730" fill="#F0EDF7" width="590" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="3475" y="845">PlainMonthDay</text>
-  <path stroke="#595959" d="M 3167 928 L 3338 928 L 3338 1148 L 3508 1148"/>
-  <rect x="2700" y="840" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="2825" y="955">PlainDate</text>
-  <rect x="3420" y="1060" fill="#F0EDF7" width="590" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="3460" y="1175">PlainYearMonth</text>
-  <rect x="2700" y="1500" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="2815" y="1615">PlainTime</text>
-  <rect x="250" y="835" fill="#F0EDF7" width="2250" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="1072" y="950">ZonedDateTime</text>
-  <text x="1800" y="1840" style="font-size: 72px; fill: #737373; white-space: pre;" >These have a calendar (except PlainTime) &amp; know wall-clock time</text>
-  <path d="M 156 1648 L 861 1648 861 1800 156 1800 Z"/>
+  <path stroke="#595959" d="m 1755,1374 h 186 v 221 h 186"/>
+  <rect x="1278" y="1280" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+  <text style="fill: #000; white-space: pre;" x="1318" y="1390">PlainDateTime</text>
+  <path stroke="#595959" d="m 2515,928 h 171 V 824 h 170"/>
+  <rect x="2768" y="730" fill="#F0EDF7" width="590" height="180" stroke="#B4A7D6" rx="35"/>
+  <text style="fill: #000; white-space: pre;" x="2823" y="845">PlainMonthDay</text>
+  <path stroke="#595959" d="m 2515,928 h 171 v 220 h 170"/>
+  <rect x="2048" y="840" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+  <text style="fill: #000; white-space: pre;" x="2173" y="955">PlainDate</text>
+  <rect x="2768" y="1060" fill="#F0EDF7" width="590" height="180" stroke="#B4A7D6" rx="35"/>
+  <text style="fill: #000; white-space: pre;" x="2808" y="1175">PlainYearMonth</text>
+  <rect x="2048" y="1500" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+  <text style="fill: #000; white-space: pre;" x="2163" y="1615">PlainTime</text>
+  <rect x="250" y="835" fill="#F0EDF7" width="1590" height="180" stroke="#B4A7D6" rx="35"/>
+  <text style="fill: #000; white-space: pre;" x="750" y="950">ZonedDateTime</text>
+  <text x="1148" y="1840" style="font-size: 72px; fill: #737373; white-space: pre;" >These have a calendar (except PlainTime) &amp; know wall-clock time</text>
+  <path d="m 156,1648 h 705 v 152 H 156 Z"/>
   <text x="200" y="1740" style="font-size: 80px; fill: #737373; white-space: pre;" >These types know</text>
   <text x="215" y="1840" style="font-size: 80px; fill: #737373; white-space: pre;" >time since Epoch</text>
-  <rect x="1050" y="1670" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="1185" y="1790">Duration</text>
-  <rect x="1050" y="1400" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
-  <text style="fill: #000; white-space: pre;" x="1185" y="1520">Calendar</text>
+  <rect x="116" y="2000" width="3380" height="330" fill="#FFFCE4" stroke="#B7B7B7" rx="20"/>
+  <rect x="250" y="2090" fill="#F0EDF7" width="560" height="180" stroke="#B4A7D6" rx="35"/>
+  <text style="fill: #000; white-space: pre;" x="385" y="2210">Duration</text>
+  <text x="900" y="2200" style="font-size: 72px; fill: #737373; white-space: pre;" >Not a date or time type</text>
+  <path stroke="#595959" d="M 1560,1275 V 1015"/>
 </svg>
