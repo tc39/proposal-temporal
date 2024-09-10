@@ -14,7 +14,7 @@ function englishPlural(n, singular, plural) {
 if (futuredateParam !== null) {
   const browserCalendar = new Intl.DateTimeFormat().resolvedOptions().calendar;
   const futureDate = Temporal.PlainDate.from(futuredateParam).withCalendar(browserCalendar);
-  const today = Temporal.Now.plainDate(browserCalendar);
+  const today = Temporal.Now.plainDateISO().withCalendar(browserCalendar);
   const until = today.until(futureDate, { largestUnit: 'day' });
   const untilMonths = until.round({ largestUnit: 'month', relativeTo: today });
 
