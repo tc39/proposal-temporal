@@ -670,7 +670,7 @@ date.toString(); // => '2006-08-24'
 
 This method overrides `Object.prototype.toLocaleString()` to provide a human-readable, language-sensitive representation of `date`.
 
-The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
+The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters).
 
 Example usage:
 

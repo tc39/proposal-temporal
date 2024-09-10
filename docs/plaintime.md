@@ -511,7 +511,7 @@ time.toString({ fractionalSecondDigits: 5, roundingMode: 'halfExpand' });
 
 This method overrides `Object.prototype.toLocaleString()` to provide a human-readable, language-sensitive representation of `time`.
 
-The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
+The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters).
 
 > **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.md#toLocaleString), `locales.timeZone` will have no effect, because `Temporal.PlainTime` carries no time zone information and is just a wall-clock time.
 

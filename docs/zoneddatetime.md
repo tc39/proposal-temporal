@@ -1388,7 +1388,7 @@ zdt.toString(); // => '2019-12-01T12:00:00+01:00[Africa/Lagos][u-ca=japanese]'
 
 This method overrides `Object.prototype.toLocaleString()` to provide a human-readable, language-sensitive representation of `zonedDateTime`.
 
-The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
+The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters).
 
 `options.timeZone` will be automatically set from the time zone of `zonedDateTime`.
 If a different time zone ID is provided in `options.timeZone`, a RangeError will be thrown.
