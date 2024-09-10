@@ -9321,9 +9321,10 @@
 	  // "prefer" or "reject"
 	  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
 	  if (possibleEpochNs.length > 0) {
+	    const utcEpochNs = GetUTCEpochNanoseconds(year, month, day, time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond);
 	    for (let index = 0; index < possibleEpochNs.length; index++) {
 	      const candidate = possibleEpochNs[index];
-	      const candidateOffset = GetOffsetNanosecondsFor(timeZone, candidate);
+	      const candidateOffset = utcEpochNs - candidate;
 	      const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
 	      if (candidateOffset === offsetNs || matchMinute && roundedCandidateOffset === offsetNs) {
 	        return candidate;
