@@ -621,7 +621,7 @@ instant.toString({ smallestUnit: 'second', roundingMode: 'halfExpand' });
 
 This method overrides `Object.prototype.toLocaleString()` to provide a human-readable, language-sensitive representation of `instant`.
 
-The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
+The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters).
 
 Because `Temporal.Instant` does not carry a time zone, the time zone used for the output will be the `timeZone` property of `options`, if present; and otherwise, the current time zone from the environment, which is usually the system's time zone.
 

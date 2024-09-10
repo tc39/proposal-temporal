@@ -886,7 +886,7 @@ dt.toString({ fractionalSecondDigits: 8, roundingMode: 'halfExpand' });
 
 This method overrides `Object.prototype.toLocaleString()` to provide a human-readable, language-sensitive representation of `datetime`.
 
-The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat).
+The `locales` and `options` arguments are the same as in the constructor to [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters).
 
 > **NOTE**: Unlike in [`Temporal.Instant.prototype.toLocaleString()`](./instant.md#toLocaleString), `options.timeZone` will have no effect, because `Temporal.PlainDateTime` carries no time zone information.
 > It's not always possible to uniquely determine the localized time zone name using the `Temporal.PlainDateTime` instance and the `options.timeZone`.
