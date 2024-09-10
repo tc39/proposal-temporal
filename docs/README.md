@@ -230,4 +230,3 @@ For more information about string parsing, serialization, and formatting in `Tem
 - [Time Zones and Resolving Ambiguity](./timezone.md) &mdash; Explanation of missing times and double times due to daylight saving and time zone changes.
 - [Balancing](./balancing.md) &mdash; Explanation of when `Temporal.Duration` units wrap around to 0 and when they don't.
 - [Why do Temporal instances have a Calendar?](./calendar-review.md) &mdash; Background about why types like `Temporal.PlainDate` or `Temporal.ZonedDateTime` contain a calendar.
-  These extensions are being actively worked on with IETF to get them on a standards track.
