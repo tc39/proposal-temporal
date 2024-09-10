@@ -798,7 +798,7 @@ zdt = Temporal.ZonedDateTime.from('1995-12-07T03:24:00-06:00[America/Chicago]');
 zdt.with({ year: 2015, minute: 31 }); // => 2015-12-07T03:31:00-06:00[America/Chicago]
 ```
 
-### zonedDateTime.**withPlainTime**(_plainTime_?: object | string) : Temporal.PlainDateTime
+### zonedDateTime.**withPlainTime**(_plainTime_?: object | string) : Temporal.ZonedDateTime
 
 **Parameters:**
 
