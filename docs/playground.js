@@ -7915,7 +7915,6 @@
 	const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
 	const ObjectCreate$6 = Object.create;
 	const ObjectDefineProperty$1 = Object.defineProperty;
-	const ObjectEntries$1 = Object.entries;
 	const SetPrototypeHas = Set.prototype.has;
 	const StringCtor = String;
 	const StringFromCharCode = String.fromCharCode;
@@ -8562,15 +8561,6 @@
 	  }
 	  return result;
 	}
-	function ToLimitedTemporalDuration(item, disallowedProperties) {
-	  let record = ToTemporalDurationRecord(item);
-	  for (const property of disallowedProperties) {
-	    if (record[property] !== 0) {
-	      throw new RangeError(`Duration field ${property} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`);
-	    }
-	  }
-	  return record;
-	}
 	function TemporalObjectToISODateRecord(temporalObject) {
 	  return {
 	    year: GetSlot(temporalObject, ISO_YEAR),
@@ -8883,24 +8873,16 @@
 	    zonedRelativeTo: CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar)
 	  };
 	}
-	function DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds) {
-	  const entries = ObjectEntries$1({
-	    years,
-	    months,
-	    weeks,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds
-	  });
-	  for (let index = 0; index < entries.length; index++) {
-	    const entry = entries[index];
-	    const prop = entry[0];
-	    const v = entry[1];
-	    if (v !== 0) return SINGULAR_FOR.get(prop);
-	  }
+	function DefaultTemporalLargestUnit(duration) {
+	  if (GetSlot(duration, YEARS) !== 0) return 'year';
+	  if (GetSlot(duration, MONTHS) !== 0) return 'month';
+	  if (GetSlot(duration, WEEKS) !== 0) return 'week';
+	  if (GetSlot(duration, DAYS) !== 0) return 'day';
+	  if (GetSlot(duration, HOURS) !== 0) return 'hour';
+	  if (GetSlot(duration, MINUTES) !== 0) return 'minute';
+	  if (GetSlot(duration, SECONDS) !== 0) return 'second';
+	  if (GetSlot(duration, MILLISECONDS) !== 0) return 'millisecond';
+	  if (GetSlot(duration, MICROSECONDS) !== 0) return 'microsecond';
 	  return 'nanosecond';
 	}
 	function LargerOfTwoTemporalUnits(unit1, unit2) {
@@ -11793,8 +11775,15 @@
 	  }, overflow);
 	  return CombineISODateAndTimeRecord(addedDate, timeResult);
 	}
-	function AddZonedDateTime(epochNs, timeZone, calendar, years, months, weeks, days, norm) {
-	  let overflow = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 'constrain';
+	function AddZonedDateTime(epochNs, timeZone, calendar, _ref6) {
+	  let {
+	    years,
+	    months,
+	    weeks,
+	    days,
+	    norm
+	  } = _ref6;
+	  let overflow = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'constrain';
 	  // If only time is to be added, then use Instant math. It's not OK to fall
 	  // through to the date/time code below because compatible disambiguation in
 	  // the PlainDateTime=>Instant conversion will change the offset of any
@@ -11824,34 +11813,13 @@
 	  return AddInstant(intermediateNs, norm);
 	}
 	function AddDurations(operation, duration, other) {
-	  const sign = operation === 'subtract' ? -1 : 1;
-	  other = ToTemporalDurationRecord(other);
-	  const y1 = GetSlot(duration, YEARS);
-	  const mon1 = GetSlot(duration, MONTHS);
-	  const w1 = GetSlot(duration, WEEKS);
-	  const d1 = GetSlot(duration, DAYS);
-	  const h1 = GetSlot(duration, HOURS);
-	  const min1 = GetSlot(duration, MINUTES);
-	  const s1 = GetSlot(duration, SECONDS);
-	  const ms1 = GetSlot(duration, MILLISECONDS);
-	  const µs1 = GetSlot(duration, MICROSECONDS);
-	  const ns1 = GetSlot(duration, NANOSECONDS);
-	  const y2 = sign * other.years;
-	  const mon2 = sign * other.months;
-	  const w2 = sign * other.weeks;
-	  const d2 = sign * other.days;
-	  const h2 = sign * other.hours;
-	  const min2 = sign * other.minutes;
-	  const s2 = sign * other.seconds;
-	  const ms2 = sign * other.milliseconds;
-	  const µs2 = sign * other.microseconds;
-	  const ns2 = sign * other.nanoseconds;
-	  const largestUnit1 = DefaultTemporalLargestUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1);
-	  const largestUnit2 = DefaultTemporalLargestUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2);
+	  other = ToTemporalDuration(other);
+	  if (operation === 'subtract') other = CreateNegatedTemporalDuration(other);
+	  const largestUnit1 = DefaultTemporalLargestUnit(duration);
+	  const largestUnit2 = DefaultTemporalLargestUnit(other);
 	  const largestUnit = LargerOfTwoTemporalUnits(largestUnit1, largestUnit2);
-	  const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
-	  const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
-	  const Duration = GetIntrinsic('%Temporal.Duration%');
+	  const norm1 = TimeDuration.normalize(GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS));
+	  const norm2 = TimeDuration.normalize(GetSlot(other, HOURS), GetSlot(other, MINUTES), GetSlot(other, SECONDS), GetSlot(other, MILLISECONDS), GetSlot(other, MICROSECONDS), GetSlot(other, NANOSECONDS));
 	  if (IsCalendarUnit(largestUnit)) {
 	    throw new RangeError('For years, months, or weeks arithmetic, use date arithmetic relative to a starting point');
 	  }
@@ -11863,20 +11831,18 @@
 	    milliseconds,
 	    microseconds,
 	    nanoseconds
-	  } = BalanceTimeDuration(norm1.add(norm2).add24HourDays(d1 + d2), largestUnit);
+	  } = BalanceTimeDuration(norm1.add(norm2).add24HourDays(GetSlot(duration, DAYS) + GetSlot(other, DAYS)), largestUnit);
+	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	}
 	function AddDurationToOrSubtractDurationFromInstant(operation, instant, durationLike) {
-	  const sign = operation === 'subtract' ? -1 : 1;
-	  const {
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = ToLimitedTemporalDuration(durationLike, ['years', 'months', 'weeks', 'days']);
-	  const norm = TimeDuration.normalize(sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
+	  let duration = ToTemporalDuration(durationLike);
+	  if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
+	  const largestUnit = DefaultTemporalLargestUnit(duration);
+	  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
+	    throw new RangeError(`Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`);
+	  }
+	  const norm = TimeDuration.normalize(GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS));
 	  const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), norm);
 	  const Instant = GetIntrinsic('%Temporal.Instant%');
 	  return new Instant(ns);
@@ -12019,25 +11985,21 @@
 	  return CreateTemporalYearMonth(year, month, calendar, day);
 	}
 	function AddDurationToOrSubtractDurationFromZonedDateTime(operation, zonedDateTime, durationLike, options) {
-	  const sign = operation === 'subtract' ? -1 : 1;
-	  const {
-	    years,
-	    months,
-	    weeks,
-	    days,
-	    hours,
-	    minutes,
-	    seconds,
-	    milliseconds,
-	    microseconds,
-	    nanoseconds
-	  } = ToTemporalDurationRecord(durationLike);
+	  let duration = ToTemporalDuration(durationLike);
+	  if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
 	  options = GetOptionsObject(options);
 	  const overflow = GetTemporalOverflowOption(options);
 	  const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
 	  const calendar = GetSlot(zonedDateTime, CALENDAR);
-	  const norm = TimeDuration.normalize(sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
-	  const epochNanoseconds = AddZonedDateTime(GetSlot(zonedDateTime, EPOCHNANOSECONDS), timeZone, calendar, sign * years, sign * months, sign * weeks, sign * days, norm, overflow);
+	  const norm = TimeDuration.normalize(GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS));
+	  const normalized = {
+	    years: GetSlot(duration, YEARS),
+	    months: GetSlot(duration, MONTHS),
+	    weeks: GetSlot(duration, WEEKS),
+	    days: GetSlot(duration, DAYS),
+	    norm
+	  };
+	  const epochNanoseconds = AddZonedDateTime(GetSlot(zonedDateTime, EPOCHNANOSECONDS), timeZone, calendar, normalized, overflow);
 	  return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
 	}
 	function RoundNumberToIncrement(quantity, increment, mode) {
@@ -16354,7 +16316,7 @@
 	    let milliseconds = GetSlot(this, MILLISECONDS);
 	    let microseconds = GetSlot(this, MICROSECONDS);
 	    let nanoseconds = GetSlot(this, NANOSECONDS);
-	    const existingLargestUnit = DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds);
+	    const existingLargestUnit = DefaultTemporalLargestUnit(this);
 	    if (Type$3(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate$2(null);
@@ -16406,7 +16368,13 @@
 	      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
 	      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 	      const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-	      const targetEpochNs = AddZonedDateTime(relativeEpochNs, timeZone, calendar, years, months, weeks, days, norm);
+	      const targetEpochNs = AddZonedDateTime(relativeEpochNs, timeZone, calendar, {
+	        years,
+	        months,
+	        weeks,
+	        days,
+	        norm
+	      });
 	      ({
 	        years,
 	        months,
@@ -16502,7 +16470,13 @@
 	      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
 	      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 	      const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-	      const targetEpochNs = AddZonedDateTime(relativeEpochNs, timeZone, calendar, years, months, weeks, days, norm);
+	      const targetEpochNs = AddZonedDateTime(relativeEpochNs, timeZone, calendar, {
+	        years,
+	        months,
+	        weeks,
+	        days,
+	        norm
+	      });
 	      const {
 	        total
 	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, calendar, timeZone, unit, 1, unit, 'trunc');
@@ -16570,7 +16544,7 @@
 	    let nanoseconds = GetSlot(this, NANOSECONDS);
 	    if (unit !== 'nanosecond' || increment !== 1) {
 	      let norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-	      const largestUnit = DefaultTemporalLargestUnit(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds);
+	      const largestUnit = DefaultTemporalLargestUnit(this);
 	      ({
 	        norm
 	      } = RoundTimeDuration(0, norm, increment, unit, roundingMode));
@@ -16654,9 +16628,23 @@
 	      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 	      const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
 	      const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
+	      const duration1 = {
+	        years: y1,
+	        months: mon1,
+	        weeks: w1,
+	        days: d1,
+	        norm: norm1
+	      };
 	      const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
-	      const after1 = AddZonedDateTime(epochNs, timeZone, calendar, y1, mon1, w1, d1, norm1);
-	      const after2 = AddZonedDateTime(epochNs, timeZone, calendar, y2, mon2, w2, d2, norm2);
+	      const duration2 = {
+	        years: y2,
+	        months: mon2,
+	        weeks: w2,
+	        days: d2,
+	        norm: norm2
+	      };
+	      const after1 = AddZonedDateTime(epochNs, timeZone, calendar, duration1);
+	      const after2 = AddZonedDateTime(epochNs, timeZone, calendar, duration2);
 	      return ComparisonResult(after1.minus(after2).toJSNumber());
 	    }
 	    if (calendarUnitsPresent) {
