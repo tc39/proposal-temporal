@@ -4166,11 +4166,7 @@ export function AddZonedDateTime(
   epochNs,
   timeZone,
   calendar,
-  years,
-  months,
-  weeks,
-  days,
-  norm,
+  { years, months, weeks, days, norm },
   overflow = 'constrain'
 ) {
   // If only time is to be added, then use Instant math. It's not OK to fall
@@ -4394,30 +4390,33 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
 }
 
 export function AddDurationToOrSubtractDurationFromZonedDateTime(operation, zonedDateTime, durationLike, options) {
-  const sign = operation === 'subtract' ? -1 : 1;
-  const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-    ToTemporalDurationRecord(durationLike);
+  let duration = ToTemporalDuration(durationLike);
+  if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
+
   options = GetOptionsObject(options);
   const overflow = GetTemporalOverflowOption(options);
   const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
   const calendar = GetSlot(zonedDateTime, CALENDAR);
   const norm = TimeDuration.normalize(
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
+    GetSlot(duration, HOURS),
+    GetSlot(duration, MINUTES),
+    GetSlot(duration, SECONDS),
+    GetSlot(duration, MILLISECONDS),
+    GetSlot(duration, MICROSECONDS),
+    GetSlot(duration, NANOSECONDS)
   );
+  const normalized = {
+    years: GetSlot(duration, YEARS),
+    months: GetSlot(duration, MONTHS),
+    weeks: GetSlot(duration, WEEKS),
+    days: GetSlot(duration, DAYS),
+    norm
+  };
   const epochNanoseconds = AddZonedDateTime(
     GetSlot(zonedDateTime, EPOCHNANOSECONDS),
     timeZone,
     calendar,
-    sign * years,
-    sign * months,
-    sign * weeks,
-    sign * days,
-    norm,
+    normalized,
     overflow
   );
   return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
