@@ -4198,42 +4198,38 @@ export function AddZonedDateTime(
 }
 
 export function AddDurations(operation, duration, other) {
-  const sign = operation === 'subtract' ? -1 : 1;
-  other = ToTemporalDurationRecord(other);
+  other = ToTemporalDuration(other);
+  if (operation === 'subtract') other = CreateNegatedTemporalDuration(other);
 
-  const d1 = GetSlot(duration, DAYS);
-  const h1 = GetSlot(duration, HOURS);
-  const min1 = GetSlot(duration, MINUTES);
-  const s1 = GetSlot(duration, SECONDS);
-  const ms1 = GetSlot(duration, MILLISECONDS);
-  const µs1 = GetSlot(duration, MICROSECONDS);
-  const ns1 = GetSlot(duration, NANOSECONDS);
-  const y2 = sign * other.years;
-  const mon2 = sign * other.months;
-  const w2 = sign * other.weeks;
-  const d2 = sign * other.days;
-  const h2 = sign * other.hours;
-  const min2 = sign * other.minutes;
-  const s2 = sign * other.seconds;
-  const ms2 = sign * other.milliseconds;
-  const µs2 = sign * other.microseconds;
-  const ns2 = sign * other.nanoseconds;
-
-  const Duration = GetIntrinsic('%Temporal.Duration%');
   const largestUnit1 = DefaultTemporalLargestUnit(duration);
-  const largestUnit2 = DefaultTemporalLargestUnit(new Duration(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2));
+  const largestUnit2 = DefaultTemporalLargestUnit(other);
   const largestUnit = LargerOfTwoTemporalUnits(largestUnit1, largestUnit2);
 
-  const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
-  const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
+  const norm1 = TimeDuration.normalize(
+    GetSlot(duration, HOURS),
+    GetSlot(duration, MINUTES),
+    GetSlot(duration, SECONDS),
+    GetSlot(duration, MILLISECONDS),
+    GetSlot(duration, MICROSECONDS),
+    GetSlot(duration, NANOSECONDS)
+  );
+  const norm2 = TimeDuration.normalize(
+    GetSlot(other, HOURS),
+    GetSlot(other, MINUTES),
+    GetSlot(other, SECONDS),
+    GetSlot(other, MILLISECONDS),
+    GetSlot(other, MICROSECONDS),
+    GetSlot(other, NANOSECONDS)
+  );
 
   if (IsCalendarUnit(largestUnit)) {
     throw new RangeError('For years, months, or weeks arithmetic, use date arithmetic relative to a starting point');
   }
   const { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
-    norm1.add(norm2).add24HourDays(d1 + d2),
+    norm1.add(norm2).add24HourDays(GetSlot(duration, DAYS) + GetSlot(other, DAYS)),
     largestUnit
   );
+  const Duration = GetIntrinsic('%Temporal.Duration%');
   return new Duration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 }
 
