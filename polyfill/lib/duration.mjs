@@ -269,7 +269,13 @@ export class Duration {
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-      const targetEpochNs = ES.AddZonedDateTime(relativeEpochNs, timeZone, calendar, years, months, weeks, days, norm);
+      const targetEpochNs = ES.AddZonedDateTime(relativeEpochNs, timeZone, calendar, {
+        years,
+        months,
+        weeks,
+        days,
+        norm
+      });
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
         ES.DifferenceZonedDateTimeWithRounding(
           relativeEpochNs,
@@ -366,7 +372,13 @@ export class Duration {
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-      const targetEpochNs = ES.AddZonedDateTime(relativeEpochNs, timeZone, calendar, years, months, weeks, days, norm);
+      const targetEpochNs = ES.AddZonedDateTime(relativeEpochNs, timeZone, calendar, {
+        years,
+        months,
+        weeks,
+        days,
+        norm
+      });
       const { total } = ES.DifferenceZonedDateTimeWithRounding(
         relativeEpochNs,
         targetEpochNs,
@@ -588,9 +600,11 @@ export class Duration {
       const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
 
       const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
+      const duration1 = { years: y1, months: mon1, weeks: w1, days: d1, norm: norm1 };
       const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
-      const after1 = ES.AddZonedDateTime(epochNs, timeZone, calendar, y1, mon1, w1, d1, norm1);
-      const after2 = ES.AddZonedDateTime(epochNs, timeZone, calendar, y2, mon2, w2, d2, norm2);
+      const duration2 = { years: y2, months: mon2, weeks: w2, days: d2, norm: norm2 };
+      const after1 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration1);
+      const after2 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration2);
       return ES.ComparisonResult(after1.minus(after2).toJSNumber());
     }
 
