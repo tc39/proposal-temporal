@@ -754,18 +754,6 @@ export function ToTemporalPartialDurationRecord(temporalDurationLike) {
   return result;
 }
 
-export function ToLimitedTemporalDuration(item, disallowedProperties) {
-  let record = ToTemporalDurationRecord(item);
-  for (const property of disallowedProperties) {
-    if (record[property] !== 0) {
-      throw new RangeError(
-        `Duration field ${property} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`
-      );
-    }
-  }
-  return record;
-}
-
 export function TemporalObjectToISODateRecord(temporalObject) {
   return {
     year: GetSlot(temporalObject, ISO_YEAR),
@@ -4230,20 +4218,21 @@ export function AddDurations(operation, duration, other) {
 }
 
 export function AddDurationToOrSubtractDurationFromInstant(operation, instant, durationLike) {
-  const sign = operation === 'subtract' ? -1 : 1;
-  const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ToLimitedTemporalDuration(durationLike, [
-    'years',
-    'months',
-    'weeks',
-    'days'
-  ]);
+  let duration = ToTemporalDuration(durationLike);
+  if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
+  const largestUnit = DefaultTemporalLargestUnit(duration);
+  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
+    throw new RangeError(
+      `Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`
+    );
+  }
   const norm = TimeDuration.normalize(
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
+    GetSlot(duration, HOURS),
+    GetSlot(duration, MINUTES),
+    GetSlot(duration, SECONDS),
+    GetSlot(duration, MILLISECONDS),
+    GetSlot(duration, MICROSECONDS),
+    GetSlot(duration, NANOSECONDS)
   );
   const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), norm);
   const Instant = GetIntrinsic('%Temporal.Instant%');
