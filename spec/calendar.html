@@ -1355,12 +1355,14 @@
         <li>If _type_ is ~date~ or ~month-day~ and ~day~ in the calendar has an interpretation analogous to ISO 8601 and _fields_.[[Day]] is ~unset~.</li>
         <li>If ~month~ and ~month-code~ in the calendar have interpretations analogous to ISO 8601 and either the corresponding values for both are ~unset~ or neither value is ~unset~ but they do not identify the same month.</li>
         <li>If _type_ is ~month-day~ and _fields_.[[MonthCode]] is ~unset~ and a year cannot be determined from _fields_.</li>
-        <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting as represented by ~year~, ~era~, and ~era-year~ (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:<ul>
-          <li>Each of _fields_.[[Year]], _fields_.[[Era]], and _fields_.[[EraYear]] is ~unset~.</li>
-          <li>_fields_.[[Era]] is ~unset~ but _fields_.[[EraYear]] is not.</li>
-          <li>_fields_.[[EraYear]] is ~unset~ but _fields_.[[Era]] is not.</li>
-          <li>None of the three values are ~unset~ but _fields_.[[Era]] and _fields_.[[EraYear]] do not together identify the same year as _fields_.[[Year]].</li>
-        </ul></li>
+        <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting as represented by ~year~, ~era~, and ~era-year~ (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:
+          <ul>
+            <li>Each of _fields_.[[Year]], _fields_.[[Era]], and _fields_.[[EraYear]] is ~unset~.</li>
+            <li>_fields_.[[Era]] is ~unset~ but _fields_.[[EraYear]] is not.</li>
+            <li>_fields_.[[EraYear]] is ~unset~ but _fields_.[[Era]] is not.</li>
+            <li>None of the three values are ~unset~ but _fields_.[[Era]] and _fields_.[[EraYear]] do not together identify the same year as _fields_.[[Year]].</li>
+          </ul>
+        </li>
       </ul>
       <emu-note>
         When _type_ is ~month-day~ and _fields_.[[Month]] is provided without _fields_.[[MonthCode]], it is recommended that all built-in calendars other than the ISO 8601 calendar require a disambiguating year (e.g., either _fields_.[[Year]] or _fields_.[[Era]] and _fields_.[[EraYear]]), including those that always use exactly the same months as the ISO 8601 calendar (which receives special handling in this specification as a default calendar that is permanently stable for automated processing).
