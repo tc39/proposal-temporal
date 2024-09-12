@@ -104,9 +104,7 @@
 
     <emu-clause id="sec-temporal.now.timezoneid">
       <h1>Temporal.Now.timeZoneId ( )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Return SystemTimeZoneIdentifier().
       </emu-alg>
@@ -114,9 +112,7 @@
 
     <emu-clause id="sec-temporal.now.instant">
       <h1>Temporal.Now.instant ( )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Return SystemInstant().
       </emu-alg>
@@ -124,9 +120,7 @@
 
     <emu-clause id="sec-temporal.now.plaindatetimeiso">
       <h1>Temporal.Now.plainDateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Return ? SystemDateTime(_temporalTimeZoneLike_).
       </emu-alg>
@@ -134,9 +128,7 @@
 
     <emu-clause id="sec-temporal.now.zoneddatetimeiso">
       <h1>Temporal.Now.zonedDateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_).
       </emu-alg>
@@ -144,9 +136,7 @@
 
     <emu-clause id="sec-temporal.now.plaindateiso">
       <h1>Temporal.Now.plainDateISO ( [ _temporalTimeZoneLike_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
         1. Return ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], *"iso8601"*).
@@ -155,9 +145,7 @@
 
     <emu-clause id="sec-temporal.now.plaintimeiso">
       <h1>Temporal.Now.plainTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
         1. Return ! CreateTemporalTime(_dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).

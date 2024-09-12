@@ -25,9 +25,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime">
       <h1>Temporal.PlainDateTime ( _isoYear_, _isoMonth_, _isoDay_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _calendar_ ] ] ] ] ] ] ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -62,9 +60,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.from">
       <h1>Temporal.PlainDateTime.from ( _item_ [ , _options_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalDateTime]] internal slot, then
           1. Set _options_ to ? GetOptionsObject(_options_).
@@ -76,9 +72,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.compare">
       <h1>Temporal.PlainDateTime.compare ( _one_, _two_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalDateTime(_one_).
         1. Set _two_ to ? ToTemporalDateTime(_two_).
@@ -109,12 +103,8 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype-%symbol.tostringtag%">
       <h1>Temporal.PlainDateTime.prototype[ %Symbol.toStringTag% ]</h1>
-      <p>
-        The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.PlainDateTime"*.
-      </p>
-      <p>
-        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
-      </p>
+      <p>The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.PlainDateTime"*.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.plaindatetime.prototype.calendarid">
@@ -426,9 +416,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.with">
       <h1>Temporal.PlainDateTime.prototype.with ( _temporalDateTimeLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -458,9 +446,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.withplaintime">
       <h1>Temporal.PlainDateTime.prototype.withPlainTime ( [ _plainTimeLike_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -471,9 +457,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.withcalendar">
       <h1>Temporal.PlainDateTime.prototype.withCalendar ( _calendarLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -484,9 +468,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.add">
       <h1>Temporal.PlainDateTime.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -496,9 +478,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.subtract">
       <h1>Temporal.PlainDateTime.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -508,9 +488,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.until">
       <h1>Temporal.PlainDateTime.prototype.until ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -520,9 +498,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.since">
       <h1>Temporal.PlainDateTime.prototype.since ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -532,9 +508,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.round">
       <h1>Temporal.PlainDateTime.prototype.round ( _roundTo_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -567,9 +541,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.equals">
       <h1>Temporal.PlainDateTime.prototype.equals ( _other_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -582,9 +554,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.tostring">
       <h1>Temporal.PlainDateTime.prototype.toString ( [ _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -608,12 +578,8 @@
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
       </p>
-      <p>
-        The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
-      </p>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.</p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -623,9 +589,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.tojson">
       <h1>Temporal.PlainDateTime.prototype.toJSON ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -635,9 +599,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.valueof">
       <h1>Temporal.PlainDateTime.prototype.valueOf ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Throw a *TypeError* exception.
       </emu-alg>
@@ -652,9 +614,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.tozoneddatetime">
       <h1>Temporal.PlainDateTime.prototype.toZonedDateTime ( _temporalTimeZoneLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -669,9 +629,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.toplaindate">
       <h1>Temporal.PlainDateTime.prototype.toPlainDate ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -681,9 +639,7 @@
 
     <emu-clause id="sec-temporal.plaindatetime.prototype.toplaintime">
       <h1>Temporal.PlainDateTime.prototype.toPlainTime ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -810,9 +766,7 @@
         For any ISO Date-Time Record _r_, IsValidISODate(_r_.[[Year]], _r_.[[Month]], _r_.[[Day]]) must return *true*, and IsValidTime(_r_.[[Hour]], _r_.[[Minute]], _r_.[[Second]], _r_.[[Millisecond]], _r_.[[Microsecond]], _r_.[[Nanosecond]]) must return *true*.
         It is not necessary for ISODateTimeWithinLimits(_r_.[[Year]], _r_.[[Month]], _r_.[[Day]], _r_.[[Hour]], _r_.[[Minute]], _r_.[[Second]], _r_.[[Millisecond]], _r_.[[Microsecond]], _r_.[[Nanosecond]]) to return *true*.
       </p>
-      <p>
-        ISO Date-Time Records have the fields listed in <emu-xref href="#table-temporal-iso-date-time-record-fields"></emu-xref>.
-      </p>
+      <p>ISO Date-Time Records have the fields listed in <emu-xref href="#table-temporal-iso-date-time-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-iso-date-time-record-fields" caption="ISO Date-Time Record Fields">
         <table class="real-table">
           <tr>

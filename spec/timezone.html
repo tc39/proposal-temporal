@@ -43,12 +43,8 @@
           For any _timeZoneIdentifier_, or any value that is an ASCII-case-insensitive match for it, the result of this operation must remain the same for the lifetime of the surrounding agent.
           Specifically, if that result is a Time Zone Identifier Record, its fields must contain the same values.
         </p>
-        <p>
-          Furthermore, time zone identifiers must not dynamically change from primary to non-primary or vice versa during the lifetime of the surrounding agent, meaning that if _timeZoneIdentifier_ is an ASCII-case-insensitive match for the [[PrimaryIdentifier]] field of the result of a previous call to GetAvailableNamedTimeZoneIdentifier, then GetAvailableNamedTimeZoneIdentifier(_timeZoneIdentifier_) must return a record where [[Identifier]] is [[PrimaryIdentifier]].
-        </p>
-        <p>
-          Due to the complexity of supporting these requirements, it is recommended that the result of AvailableNamedTimeZoneIdentifiers (and therefore GetAvailableNamedTimeZoneIdentifier) remains the same for the lifetime of the surrounding agent.
-        </p>
+        <p>Furthermore, time zone identifiers must not dynamically change from primary to non-primary or vice versa during the lifetime of the surrounding agent, meaning that if _timeZoneIdentifier_ is an ASCII-case-insensitive match for the [[PrimaryIdentifier]] field of the result of a previous call to GetAvailableNamedTimeZoneIdentifier, then GetAvailableNamedTimeZoneIdentifier(_timeZoneIdentifier_) must return a record where [[Identifier]] is [[PrimaryIdentifier]].</p>
+        <p>Due to the complexity of supporting these requirements, it is recommended that the result of AvailableNamedTimeZoneIdentifiers (and therefore GetAvailableNamedTimeZoneIdentifier) remains the same for the lifetime of the surrounding agent.</p>
       </emu-note>
     </emu-clause>
 
@@ -107,12 +103,8 @@
         A transition is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
         The returned value _t_ represents the first nanosecond where the new UTC offset is used in this time zone, not the last nanosecond where the previous UTC offset is used.
       </p>
-      <p>
-        Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.
-      </p>
-      <p>
-        The minimum implementation of GetNamedTimeZoneNextTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:
-      </p>
+      <p>Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.</p>
+      <p>The minimum implementation of GetNamedTimeZoneNextTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:</p>
       <emu-alg>
         1. Assert: _timeZoneIdentifier_ is *"UTC"*.
         1. Return *null*.
@@ -136,12 +128,8 @@
         A transition is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
         The returned value _t_ represents the first nanosecond where the new UTC offset is used in this time zone, not the last nanosecond where the previous UTC offset is used.
       </p>
-      <p>
-        Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.
-      </p>
-      <p>
-        The minimum implementation of GetNamedTimeZonePreviousTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:
-      </p>
+      <p>Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.</p>
+      <p>The minimum implementation of GetNamedTimeZonePreviousTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:</p>
       <emu-alg>
         1. Assert: _timeZoneIdentifier_ is *"UTC"*.
         1. Return *null*.

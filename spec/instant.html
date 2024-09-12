@@ -25,9 +25,7 @@
 
     <emu-clause id="sec-temporal.instant">
       <h1>Temporal.Instant ( _epochNanoseconds_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -51,9 +49,7 @@
 
     <emu-clause id="sec-temporal.instant.from">
       <h1>Temporal.Instant.from ( _item_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalInstant]] internal slot, then
           1. Return ! CreateTemporalInstant(_item_.[[Nanoseconds]]).
@@ -63,9 +59,7 @@
 
     <emu-clause id="sec-temporal.instant.fromepochmilliseconds">
       <h1>Temporal.Instant.fromEpochMilliseconds ( _epochMilliseconds_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Set _epochMilliseconds_ to ? ToNumber(_epochMilliseconds_).
         1. Set _epochMilliseconds_ to ? NumberToBigInt(_epochMilliseconds_).
@@ -77,9 +71,7 @@
 
     <emu-clause id="sec-temporal.instant.fromepochnanoseconds">
       <h1>Temporal.Instant.fromEpochNanoseconds ( _epochNanoseconds_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
         1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
@@ -89,9 +81,7 @@
 
     <emu-clause id="sec-temporal.instant.compare">
       <h1>Temporal.Instant.compare ( _one_, _two_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalInstant(_one_).
         1. Set _two_ to ? ToTemporalInstant(_two_).
@@ -117,12 +107,8 @@
 
     <emu-clause id="sec-temporal.instant.prototype-%symbol.tostringtag%">
       <h1>Temporal.Instant.prototype[ %Symbol.toStringTag% ]</h1>
-      <p>
-        The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.Instant"*.
-      </p>
-      <p>
-        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
-      </p>
+      <p>The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.Instant"*.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.instant.prototype.epochmilliseconds">
@@ -156,9 +142,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.add">
       <h1>Temporal.Instant.prototype.add ( _temporalDurationLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -168,9 +152,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.subtract">
       <h1>Temporal.Instant.prototype.subtract ( _temporalDurationLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -180,9 +162,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.until">
       <h1>Temporal.Instant.prototype.until ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -192,9 +172,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.since">
       <h1>Temporal.Instant.prototype.since ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -204,9 +182,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.round">
       <h1>Temporal.Instant.prototype.round ( _roundTo_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -243,9 +219,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.equals">
       <h1>Temporal.Instant.prototype.equals ( _other_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -257,9 +231,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.tostring">
       <h1>Temporal.Instant.prototype.toString ( [ _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -285,12 +257,8 @@
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
       </p>
-      <p>
-        The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
-      </p>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.</p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -300,9 +268,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.tojson">
       <h1>Temporal.Instant.prototype.toJSON ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -312,9 +278,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.valueof">
       <h1>Temporal.Instant.prototype.valueOf ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Throw a *TypeError* exception.
       </emu-alg>
@@ -329,9 +293,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype.tozoneddatetimeiso">
       <h1>Temporal.Instant.prototype.toZonedDateTimeISO ( _timeZone_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -380,12 +342,8 @@
     <emu-clause id="sec-temporal-instant-range">
       <h1>Temporal.Instant range</h1>
 
-      <p>
-        The [[Nanoseconds]] internal slot of a Temporal.Instant object supports a range of exactly -100,000,000 to 100,000,000 days relative to midnight at the beginning of 1 January 1970 UTC, as in <emu-xref href="#sec-time-values-and-time-range"></emu-xref>.
-      </p>
-      <p>
-        The exact moment of midnight at the beginning of 1 January 1970 UTC is represented by the value *0*<sub>ℤ</sub>.
-      </p>
+      <p>The [[Nanoseconds]] internal slot of a Temporal.Instant object supports a range of exactly -100,000,000 to 100,000,000 days relative to midnight at the beginning of 1 January 1970 UTC, as in <emu-xref href="#sec-time-values-and-time-range"></emu-xref>.</p>
+      <p>The exact moment of midnight at the beginning of 1 January 1970 UTC is represented by the value *0*<sub>ℤ</sub>.</p>
 
       <p>The maximum value is ℤ(nsMaxInstant), where</p>
       <emu-eqn id="eqn-nsMaxInstant" aoid="nsMaxInstant">nsMaxInstant = 10<sup>8</sup> × nsPerDay = 8.64 × 10<sup>21</sup></emu-eqn>

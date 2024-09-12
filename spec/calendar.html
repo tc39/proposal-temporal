@@ -55,9 +55,7 @@
         An <dfn variants="Calendar Date Records">Calendar Date Record</dfn> is a Record value used to represent a valid calendar date in a non-ISO 8601 calendar.
         Calendar Date Records are produced by the abstract operation CalendarISOToDate.
       </p>
-      <p>
-        Calendar Date Records have the fields listed in <emu-xref href="#table-temporal-calendar-date-record-fields"></emu-xref>.
-      </p>
+      <p>Calendar Date Records have the fields listed in <emu-xref href="#table-temporal-calendar-date-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-calendar-date-record-fields" caption="Calendar Date Record Fields">
         <table class="real-table">
           <tr>
@@ -135,22 +133,14 @@
             <td>[[WeekOfYear]]</td>
             <td>a Year-Week Record</td>
             <td>
-              <p>
-                The date's <em>calendar week of year</em>, and the corresponding <em>week calendar year</em>.
-              </p>
-              <p>
-                The Year-Week Record's [[Week]] field should be 1-based.
-              </p>
-              <p>
-                The Year-Week Record's [[Year]] field is relative to the first day of a calendar-specific "epoch year", as in the Calendar Date Record's [[Year]] field, not relative to an era as in [[EraYear]].
-              </p>
+              <p>The date's <em>calendar week of year</em>, and the corresponding <em>week calendar year</em>.</p>
+              <p>The Year-Week Record's [[Week]] field should be 1-based.</p>
+              <p>The Year-Week Record's [[Year]] field is relative to the first day of a calendar-specific "epoch year", as in the Calendar Date Record's [[Year]] field, not relative to an era as in [[EraYear]].</p>
               <p>
                 Usually the Year-Week Record's [[Year]] field will contain the same value as the Calendar Date Record's [[Year]] field, but may contain the previous or next year if the week number in the Year-Week Record's [[Week]] field overlaps two different years.
                 See also ToISOWeekOfYear.
               </p>
-              <p>
-                The Year-Week Record contains *undefined* in [[Week]] and [[Year]] field for calendars that do not have a well-defined week calendar system.
-              </p>
+              <p>The Year-Week Record contains *undefined* in [[Week]] and [[Year]] field for calendars that do not have a well-defined week calendar system.</p>
               <emu-note type="editor">
                 <p>
                   More details about this field will be specified in
@@ -200,9 +190,7 @@
         An <dfn variants="Calendar Fields Records">Calendar Fields Record</dfn> is a Record value used to represent full or partial input for a calendar date in a non-ISO 8601 calendar.
         Calendar Fields Records are produced by several abstract operations, such as TemporalObjectToFields and PrepareCalendarFields, and are passed to abstract operations such as CalendarDateFromFields.
       </p>
-      <p>
-        Many of the fields in a Calendar Fields Record have the same meaning as the fields of the same name in Calendar Date Records, but each field in a Calendar Fields Record may additionally be ~unset~ to indicate partial input.
-      </p>
+      <p>Many of the fields in a Calendar Fields Record have the same meaning as the fields of the same name in Calendar Date Records, but each field in a Calendar Fields Record may additionally be ~unset~ to indicate partial input.</p>
       <p>
         Each field has a corresponding property key.
         These property keys correspond to the properties that are read from user input objects to populate the field, in methods such as `Temporal.PlainDate.prototype.with()`.
@@ -211,9 +199,7 @@
         Each field has a corresponding enumeration key.
         Lists of these enumeration keys are passed to abstract operations such as PrepareCalendarFields and ISOFieldKeysToIgnore to denote a subset of fields to operate on.
       </p>
-      <p>
-        Calendar Fields Records have the fields listed in <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>.
-      </p>
+      <p>Calendar Fields Records have the fields listed in <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-calendar-fields-record-fields" caption="Calendar Fields Record Fields">
         <table class="real-table">
           <tr>
@@ -1187,9 +1173,7 @@
           It then returns an ISO Date Record with the corresponding ISO 8601 date.
         </dd>
       </dl>
-      <p>
-        Clamping an invalid date to the correct range when _overflow_ is *"constrain"* is a behaviour specific to each built-in calendar, but all built-in calendars follow this guideline:
-      </p>
+      <p>Clamping an invalid date to the correct range when _overflow_ is *"constrain"* is a behaviour specific to each built-in calendar, but all built-in calendars follow this guideline:</p>
       <ul>
         <li>Pick the closest day in the same month. If there are two equally-close dates in that month, pick the later one.</li>
         <li>If the month is a leap month that doesn't exist in the year, pick another date according to the cultural conventions of that calendar's users. Usually this will result in the same day in the month before or after where that month would normally fall in a leap year.</li>
@@ -1305,9 +1289,7 @@
           A field always invalidates at least itself.
         </dd>
       </dl>
-      <p>
-        This operation is relevant for calendars which accept fields other than the standard set of ISO 8601 calendar fields, in order to implement the Temporal objects' `with()` methods in such a way that the result is free of ambiguity or conflicts.
-      </p>
+      <p>This operation is relevant for calendars which accept fields other than the standard set of ISO 8601 calendar fields, in order to implement the Temporal objects' `with()` methods in such a way that the result is free of ambiguity or conflicts.</p>
       <p>
         For example, given a _calendar_ that uses eras, such as *"gregory"*, a key in _keys_ being any one of ~year~, ~era~, or ~era-year~ would exclude all three.
         Passing any one of the three to a `with()` method might conflict with either of the other two properties on the receiver object, so those properties of the receiver object should be ignored.
@@ -1371,9 +1353,7 @@
           It performs implementation-defined processing to validate that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard properties and removing redundant properties (for example, merging *"month"* and *"monthCode"* into *"month"* and merging *"era"* and *"eraYear"* into *"year"*).
         </dd>
       </dl>
-      <p>
-        The operation throws a *TypeError* exception if the fields of _fields_ are internally inconsistent within the calendar or insufficient to identify a unique instance of _type_ in the calendar. For example:
-      </p>
+      <p>The operation throws a *TypeError* exception if the fields of _fields_ are internally inconsistent within the calendar or insufficient to identify a unique instance of _type_ in the calendar. For example:</p>
       <ul>
         <li>If _type_ is ~date~ or ~month-day~ and ~day~ in the calendar has an interpretation analogous to ISO 8601 and _fields_.[[Day]] is ~unset~.</li>
         <li>If ~month~ and ~month-code~ in the calendar have interpretations analogous to ISO 8601 and either the corresponding values for both are ~unset~ or neither value is ~unset~ but they do not identify the same month.</li>

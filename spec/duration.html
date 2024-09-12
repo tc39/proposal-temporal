@@ -32,9 +32,7 @@
 
     <emu-clause id="sec-temporal.duration">
       <h1>Temporal.Duration ( [ _years_ [ , _months_ [ , _weeks_ [ , _days_ [ , _hours_ [ , _minutes_ [ , _seconds_ [ , _milliseconds_ [ , _microseconds_ [ , _nanoseconds_ ] ] ] ] ] ] ] ] ] ] )</h1>
-      <p>
-        The `Temporal.Duration` function performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration` function performs the following steps when called:</p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -75,9 +73,7 @@
 
     <emu-clause id="sec-temporal.duration.from">
       <h1>Temporal.Duration.from ( _item_ )</h1>
-      <p>
-        The `Temporal.Duration.from` function performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.from` function performs the following steps when called:</p>
       <emu-alg>
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return ! CreateTemporalDuration(_item_.[[Years]], _item_.[[Months]], _item_.[[Weeks]], _item_.[[Days]], _item_.[[Hours]], _item_.[[Minutes]], _item_.[[Seconds]], _item_.[[Milliseconds]], _item_.[[Microseconds]], _item_.[[Nanoseconds]]).
@@ -87,9 +83,7 @@
 
     <emu-clause id="sec-temporal.duration.compare">
       <h1>Temporal.Duration.compare ( _one_, _two_ [ , _options_ ] )</h1>
-      <p>
-        The `Temporal.Duration.compare` function performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.compare` function performs the following steps when called:</p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalDuration(_one_).
         1. Set _two_ to ? ToTemporalDuration(_two_).
@@ -310,9 +304,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.with">
       <h1>Temporal.Duration.prototype.with ( _temporalDurationLike_ )</h1>
-      <p>
-        The `Temporal.Duration.prototype.with` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.with` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -363,9 +355,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.negated">
       <h1>Temporal.Duration.prototype.negated ( )</h1>
-      <p>
-        The `Temporal.Duration.prototype.negated` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.negated` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -375,9 +365,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.abs">
       <h1>Temporal.Duration.prototype.abs ( )</h1>
-      <p>
-        The `Temporal.Duration.prototype.abs` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.abs` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -387,9 +375,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.add">
       <h1>Temporal.Duration.prototype.add ( _other_ )</h1>
-      <p>
-        The `Temporal.Duration.prototype.add` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.add` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -399,9 +385,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.subtract">
       <h1>Temporal.Duration.prototype.subtract ( _other_ )</h1>
-      <p>
-        The `Temporal.Duration.prototype.subtract` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.subtract` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -411,9 +395,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.round">
       <h1>Temporal.Duration.prototype.round ( _roundTo_ )</h1>
-      <p>
-        The `Temporal.Duration.prototype.round` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.round` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -482,9 +464,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.total">
       <h1>Temporal.Duration.prototype.total ( _totalOf_ )</h1>
-      <p>
-        The `Temporal.Duration.prototype.total` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.total` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -526,9 +506,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.tostring">
       <h1>Temporal.Duration.prototype.toString ( [ _options_ ] )</h1>
-      <p>
-        The `Temporal.Duration.prototype.toString` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.toString` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -555,9 +533,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.tojson">
       <h1>Temporal.Duration.prototype.toJSON ( )</h1>
-      <p>
-        The `Temporal.Duration.prototype.toJSON` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.toJSON` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -572,9 +548,7 @@
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement the `Temporal.Duration.prototype.toLocaleString` method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of the `Temporal.Duration.prototype.toLocaleString` method is used.
       </p>
-      <p>
-        The `Temporal.Duration.prototype.toLocaleString` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.toLocaleString` method performs the following steps when called:</p>
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
@@ -585,9 +559,7 @@
 
     <emu-clause id="sec-temporal.duration.prototype.valueof">
       <h1>Temporal.Duration.prototype.valueOf ( )</h1>
-      <p>
-        The `Temporal.Duration.prototype.valueOf` method performs the following steps when called:
-      </p>
+      <p>The `Temporal.Duration.prototype.valueOf` method performs the following steps when called:</p>
       <emu-alg>
         1. Throw a *TypeError* exception.
       </emu-alg>
@@ -725,9 +697,7 @@
         A <dfn variants="Duration Records">Duration Record</dfn> is a Record value used to represent a Temporal.Duration object.
         Duration Records are produced by the abstract operation CreateDurationRecord, among others.
       </p>
-      <p>
-        Duration Records have the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
-      </p>
+      <p>Duration Records have the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-duration-record-fields" caption="Duration Record Fields">
         <table class="real-table">
           <tr>
@@ -826,9 +796,7 @@
         A <dfn variants="Date Duration Records">Date Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with calendar date units.
         Date Duration Records are produced by the abstract operation CreateDateDurationRecord, among others.
       </p>
-      <p>
-        Of the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, Date Duration Records have [[Years]], [[Months]], [[Weeks]], and [[Days]].
-      </p>
+      <p>Of the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, Date Duration Records have [[Years]], [[Months]], [[Weeks]], and [[Days]].</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal-time-duration-records">
@@ -837,16 +805,12 @@
         A <dfn variants="Time Duration Records">Time Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with exact time units.
         Time Duration Records are produced by the abstract operation CreateTimeDurationRecord, among others.
       </p>
-      <p>
-        Of the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, Time Duration Records have [[Days]], [[Hours]], [[Minutes]], [[Seconds]], [[Milliseconds]], [[Microseconds]], and [[Nanoseconds]].
-      </p>
+      <p>Of the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, Time Duration Records have [[Days]], [[Hours]], [[Minutes]], [[Seconds]], [[Milliseconds]], [[Microseconds]], and [[Nanoseconds]].</p>
     </emu-clause>
 
     <emu-clause id="sec-temporal-partial-duration-records">
       <h1>Partial Duration Records</h1>
-      <p>
-        A <dfn variants="partial Duration Records">partial Duration Record</dfn> is a Record value used to represent a portion of a Temporal.Duration object, in which it is not required that all the fields be specified.
-      </p>
+      <p>A <dfn variants="partial Duration Records">partial Duration Record</dfn> is a Record value used to represent a portion of a Temporal.Duration object, in which it is not required that all the fields be specified.</p>
       <p>
         Partial Duration Records have the same fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
         Unlike Duration Records, each field of a partial Duration Record may also have the value *undefined* as long as there is at least one field that is not *undefined*.
@@ -859,9 +823,7 @@
         A <dfn variants="Normalized Time Duration Records">Normalized Time Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with time units, but as a combined value.
         Normalized Time Duration Records are produced by the abstract operation NormalizeTimeDuration, among others.
       </p>
-      <p>
-        Normalized Time Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-time-duration-record-fields"></emu-xref>.
-      </p>
+      <p>Normalized Time Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-time-duration-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-normalized-time-duration-record-fields" caption="Normalized Time Duration Record Fields">
         <table class="real-table">
           <tr>
@@ -891,9 +853,7 @@
         A <dfn variants="Normalized Duration Records">Normalized Duration Record</dfn> is a Record value used to represent the combination of a Date Duration Record with a Normalized Time Duration Record.
         Such Records are used by operations that deal with both date and time portions of durations, such as RoundTimeDuration.
       </p>
-      <p>
-        Normalized Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-duration-record-fields"></emu-xref>.
-      </p>
+      <p>Normalized Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-duration-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-normalized-duration-record-fields" caption="Normalized Duration Record Fields">
         <table class="real-table">
           <tr>
@@ -1717,12 +1677,8 @@
 
     <emu-clause id="sec-temporal-duration-nudge-result-records">
       <h1>Duration Nudge Result Records</h1>
-      <p>
-        A <dfn variants="Duration Nudge Result Records">Duration Nudge Result Record</dfn> is a Record value used to represent the result of rounding a duration up or down to an increment relative to a date-time, as in NudgeToCalendarUnit, NudgeToZonedTime, or NudgeToDayOrTime.
-      </p>
-      <p>
-        Duration Nudge Result Records have the fields listed in <emu-xref href="#table-temporal-duration-nudge-result-record-fields"></emu-xref>.
-      </p>
+      <p>A <dfn variants="Duration Nudge Result Records">Duration Nudge Result Record</dfn> is a Record value used to represent the result of rounding a duration up or down to an increment relative to a date-time, as in NudgeToCalendarUnit, NudgeToZonedTime, or NudgeToDayOrTime.</p>
+      <p>Duration Nudge Result Records have the fields listed in <emu-xref href="#table-temporal-duration-nudge-result-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-duration-nudge-result-record-fields" caption="Duration Nudge Result Record Fields">
         <table class="real-table">
           <tr>
