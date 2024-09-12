@@ -901,15 +901,19 @@
           _pattern_: a Pattern String,
           <del>_x_: a Number,</del>
           <ins>_epochNanoseconds_: a BigInt,</ins>
-        ): either a normal completion containing a List of Records with fields [[Type]] (a String) and [[Value]] (a String), or a throw completion
+        ): a List of Records with fields [[Type]] (a String) and [[Value]] (a String)
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>It <del>interprets _x_ as a time value as specified in es2024, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and</del> creates the corresponding parts <ins>for the epoch time _epochNanoseconds_</ins> according to _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _format_.</dd>
       </dl>
+      <emu-note type="editor">
+        This operation changes to not return a Completion Record.
+        That usage of `&lt;ins>` and `&lt;del>` is <a href="https://github.com/tc39/ecmarkup/issues/609">not currently supported</a> in ecmarkup, so that is not reflected in the text above.
+      </emu-note>
       <emu-alg>
         1. <del>Let _x_ be TimeClip(_x_).</del>
-        1. <del>If _x_ is *NaN*, throw a *RangeError* exception.</del>
+        1. <del>`If _x_ is *NaN*, throw a *RangeError* exception.`</del>
         1. Let _locale_ be _dateTimeFormat_.[[Locale]].
         1. Let _nfOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
@@ -1017,7 +1021,7 @@
           1. Let _pattern_ be _format_.[[pattern12]].
         1. Else,
           1. Let _pattern_ be _format_.[[pattern]].
-        1. Let _result_ be <del>? </del><ins>! </ins>FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, <del>_x_</del><ins>_xFormatRecord_.[[EpochNanoseconds]]</ins>).
+        1. Let _result_ be <del>?</del> FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, <del>_x_</del><ins>_xFormatRecord_.[[EpochNanoseconds]]</ins>).
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -1126,7 +1130,7 @@
               1. Set _relevantFieldsEqual_ to *false*.
         1. If _relevantFieldsEqual_ is *true*, then
           1. Let _collapsedResult_ be a new empty List.
-          1. Let _resultParts_ be ! FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _x_).
+          1. Let _resultParts_ be <del>!</del> FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _x_).
           1. For each Record { [[Type]], [[Value]] } _r_ of _resultParts_, do
             1. Append the Record { [[Type]]: _r_.[[Type]], [[Value]]: _r_.[[Value]], [[Source]]: *"shared"* } to _collapsedResult_.
           1. Return _collapsedResult_.
@@ -1140,7 +1144,7 @@
             1. Let _z_ be _x_.
           1. Else,
             1. Let _z_ be _y_.
-          1. Let _resultParts_ be ! FormatDateTimePattern(_dateTimeFormat_, _selectedRangePattern_, _pattern_, _z_).
+          1. Let _resultParts_ be <del>!</del> FormatDateTimePattern(_dateTimeFormat_, _selectedRangePattern_, _pattern_, _z_).
           1. For each Record { [[Type]], [[Value]] } _r_ of _resultParts_, do
             1. Append the Record { [[Type]]: _r_.[[Type]], [[Value]]: _r_.[[Value]], [[Source]]: _source_ } to _rangeResult_.
         1. Return _rangeResult_.
