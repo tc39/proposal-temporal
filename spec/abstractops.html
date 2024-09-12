@@ -125,77 +125,75 @@
             <th>Length in nanoseconds</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>*"year"*</td>
-            <td>*"years"*</td>
-            <td>~date~</td>
-            <td>calendar-dependent</td>
-          </tr>
+        <tr>
+          <td>*"year"*</td>
+          <td>*"years"*</td>
+          <td>~date~</td>
+          <td>calendar-dependent</td>
+        </tr>
 
-          <tr>
-            <td>*"month"*</td>
-            <td>*"months"*</td>
-            <td>~date~</td>
-            <td>calendar-dependent</td>
-          </tr>
+        <tr>
+          <td>*"month"*</td>
+          <td>*"months"*</td>
+          <td>~date~</td>
+          <td>calendar-dependent</td>
+        </tr>
 
-          <tr>
-            <td>*"week"*</td>
-            <td>*"weeks"*</td>
-            <td>~date~</td>
-            <td>calendar-dependent</td>
-          </tr>
+        <tr>
+          <td>*"week"*</td>
+          <td>*"weeks"*</td>
+          <td>~date~</td>
+          <td>calendar-dependent</td>
+        </tr>
 
-          <tr>
-            <td>*"day"*</td>
-            <td>*"days"*</td>
-            <td>~date~</td>
-            <td>nsPerDay</td>
-          </tr>
+        <tr>
+          <td>*"day"*</td>
+          <td>*"days"*</td>
+          <td>~date~</td>
+          <td>nsPerDay</td>
+        </tr>
 
-          <tr>
-            <td>*"hour"*</td>
-            <td>*"hours"*</td>
-            <td>~time~</td>
-            <td>3.6 × 10<sup>12</sup></td>
-          </tr>
+        <tr>
+          <td>*"hour"*</td>
+          <td>*"hours"*</td>
+          <td>~time~</td>
+          <td>3.6 × 10<sup>12</sup></td>
+        </tr>
 
-          <tr>
-            <td>*"minute"*</td>
-            <td>*"minutes"*</td>
-            <td>~time~</td>
-            <td>6 × 10<sup>10</sup></td>
-          </tr>
+        <tr>
+          <td>*"minute"*</td>
+          <td>*"minutes"*</td>
+          <td>~time~</td>
+          <td>6 × 10<sup>10</sup></td>
+        </tr>
 
-          <tr>
-            <td>*"second"*</td>
-            <td>*"seconds"*</td>
-            <td>~time~</td>
-            <td>10<sup>9</sup></td>
-          </tr>
+        <tr>
+          <td>*"second"*</td>
+          <td>*"seconds"*</td>
+          <td>~time~</td>
+          <td>10<sup>9</sup></td>
+        </tr>
 
-          <tr>
-            <td>*"millisecond"*</td>
-            <td>*"milliseconds"*</td>
-            <td>~time~</td>
-            <td>10<sup>6</sup></td>
-          </tr>
+        <tr>
+          <td>*"millisecond"*</td>
+          <td>*"milliseconds"*</td>
+          <td>~time~</td>
+          <td>10<sup>6</sup></td>
+        </tr>
 
-          <tr>
-            <td>*"microsecond"*</td>
-            <td>*"microseconds"*</td>
-            <td>~time~</td>
-            <td>10<sup>3</sup></td>
-          </tr>
+        <tr>
+          <td>*"microsecond"*</td>
+          <td>*"microseconds"*</td>
+          <td>~time~</td>
+          <td>10<sup>3</sup></td>
+        </tr>
 
-          <tr>
-            <td>*"nanosecond"*</td>
-            <td>*"nanoseconds"*</td>
-            <td>~time~</td>
-            <td>1</td>
-          </tr>
-        </tbody>
+        <tr>
+          <td>*"nanosecond"*</td>
+          <td>*"nanoseconds"*</td>
+          <td>~time~</td>
+          <td>1</td>
+        </tr>
       </table>
     </emu-table>
     <emu-note>
@@ -322,89 +320,87 @@
             <th>1.5</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>*"ceil"*</td>
-            <td>Toward positive infinity</td>
-            <td>⬆️ [-1]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [2]</td>
-          </tr>
-          <tr>
-            <td>*"floor"*</td>
-            <td>Toward negative infinity</td>
-            <td>⬇️ [-2]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [1]</td>
-          </tr>
-          <tr>
-            <td>*"expand"*</td>
-            <td>Away from zero</td>
-            <td>⬇️ [-2]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [2]</td>
-          </tr>
-          <tr>
-            <td>*"trunc"*</td>
-            <td>Toward zero</td>
-            <td>⬆️ [-1]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [1]</td>
-          </tr>
-          <tr>
-            <td>*"halfCeil"*</td>
-            <td>Ties toward positive infinity</td>
-            <td>⬆️ [-1]</td>
-            <td>⬇️ [0]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [2]</td>
-          </tr>
-          <tr>
-            <td>*"halfFloor"*</td>
-            <td>Ties toward negative infinity</td>
-            <td>⬇️ [-2]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [0]</td>
-            <td>⬆️ [1]</td>
-            <td>⬇️ [1]</td>
-          </tr>
-          <tr>
-            <td>*"halfExpand"*</td>
-            <td>Ties away from zero</td>
-            <td>⬇️ [-2]</td>
-            <td>⬇️ [0]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [2]</td>
-          </tr>
-          <tr>
-            <td>*"halfTrunc"*</td>
-            <td>Ties toward zero</td>
-            <td>⬆️ [-1]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [0]</td>
-            <td>⬆️ [1]</td>
-            <td>⬇️ [1]</td>
-          </tr>
-          <tr>
-            <td>*"halfEven"*</td>
-            <td>Ties toward an even rounding increment multiple</td>
-            <td>⬇️ [-2]</td>
-            <td>⬇️ [0]</td>
-            <td>⬇️ [0]</td>
-            <td>⬆️ [1]</td>
-            <td>⬆️ [2]</td>
-          </tr>
-        </tbody>
+        <tr>
+          <td>*"ceil"*</td>
+          <td>Toward positive infinity</td>
+          <td>⬆️ [-1]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [2]</td>
+        </tr>
+        <tr>
+          <td>*"floor"*</td>
+          <td>Toward negative infinity</td>
+          <td>⬇️ [-2]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [1]</td>
+        </tr>
+        <tr>
+          <td>*"expand"*</td>
+          <td>Away from zero</td>
+          <td>⬇️ [-2]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [2]</td>
+        </tr>
+        <tr>
+          <td>*"trunc"*</td>
+          <td>Toward zero</td>
+          <td>⬆️ [-1]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [1]</td>
+        </tr>
+        <tr>
+          <td>*"halfCeil"*</td>
+          <td>Ties toward positive infinity</td>
+          <td>⬆️ [-1]</td>
+          <td>⬇️ [0]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [2]</td>
+        </tr>
+        <tr>
+          <td>*"halfFloor"*</td>
+          <td>Ties toward negative infinity</td>
+          <td>⬇️ [-2]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [0]</td>
+          <td>⬆️ [1]</td>
+          <td>⬇️ [1]</td>
+        </tr>
+        <tr>
+          <td>*"halfExpand"*</td>
+          <td>Ties away from zero</td>
+          <td>⬇️ [-2]</td>
+          <td>⬇️ [0]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [2]</td>
+        </tr>
+        <tr>
+          <td>*"halfTrunc"*</td>
+          <td>Ties toward zero</td>
+          <td>⬆️ [-1]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [0]</td>
+          <td>⬆️ [1]</td>
+          <td>⬇️ [1]</td>
+        </tr>
+        <tr>
+          <td>*"halfEven"*</td>
+          <td>Ties toward an even rounding increment multiple</td>
+          <td>⬇️ [-2]</td>
+          <td>⬇️ [0]</td>
+          <td>⬇️ [0]</td>
+          <td>⬆️ [1]</td>
+          <td>⬆️ [2]</td>
+        </tr>
       </table>
       <emu-note>The examples are illustrative of the unique behaviour of each option. ⬆️ means "resolves toward positive infinity"; ⬇️ means "resolves toward negative infinity".</emu-note>
     </emu-table>

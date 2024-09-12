@@ -590,56 +590,54 @@
     </p>
     <emu-table id="table-internal-slots-of-temporaldate-instances" caption="Internal Slots of Temporal.PlainDate Instances">
       <table>
-        <tbody>
-          <tr>
-            <th>
-              Internal Slot
-            </th>
-            <th>
-              Description
-            </th>
-          </tr>
-          <tr>
-            <td>
-              [[InitializedTemporalDate]]
-            </td>
-            <td>
-              The only specified use of this slot is for distinguishing Temporal.PlainDate instances from other objects.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[ISOYear]]
-            </td>
-            <td>
-              An integer representing the year in the ISO 8601 calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[ISOMonth]]
-            </td>
-            <td>
-              An integer between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[ISODay]]
-            </td>
-            <td>
-              An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[Calendar]]
-            </td>
-            <td>
-              A String representing the calendar.
-            </td>
-          </tr>
-        </tbody>
+        <tr>
+          <th>
+            Internal Slot
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+        <tr>
+          <td>
+            [[InitializedTemporalDate]]
+          </td>
+          <td>
+            The only specified use of this slot is for distinguishing Temporal.PlainDate instances from other objects.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[ISOYear]]
+          </td>
+          <td>
+            An integer representing the year in the ISO 8601 calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[ISOMonth]]
+          </td>
+          <td>
+            An integer between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[ISODay]]
+          </td>
+          <td>
+            An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing the day of the month in the ISO 8601 calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[Calendar]]
+          </td>
+          <td>
+            A String representing the calendar.
+          </td>
+        </tr>
       </table>
     </emu-table>
   </emu-clause>

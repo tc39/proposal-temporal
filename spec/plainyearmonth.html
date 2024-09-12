@@ -427,57 +427,55 @@
     </p>
     <emu-table id="table-internal-slots-of-temporalyearmonth-instances" caption="Internal Slots of Temporal.PlainYearMonth Instances">
       <table>
-        <tbody>
-          <tr>
-            <th>
-              Internal Slot
-            </th>
-            <th>
-              Description
-            </th>
-          </tr>
-          <tr>
-            <td>
-              [[InitializedTemporalYearMonth]]
-            </td>
-            <td>
-              The only specified use of this slot is for distinguishing Temporal.PlainYearMonth instances from other objects.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[ISOYear]]
-            </td>
-            <td>
-              An integer representing the year in the ISO 8601 calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[ISOMonth]]
-            </td>
-            <td>
-              An integer between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[ISODay]]
-            </td>
-            <td>
-              An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing a reference day of the month in the ISO 8601 calendar.
-              This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOYear]] and [[ISOMonth]] slots are not enough to uniquely identify a year and month in that calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              [[Calendar]]
-            </td>
-            <td>
-              A String representing the calendar.
-            </td>
-          </tr>
-        </tbody>
+        <tr>
+          <th>
+            Internal Slot
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+        <tr>
+          <td>
+            [[InitializedTemporalYearMonth]]
+          </td>
+          <td>
+            The only specified use of this slot is for distinguishing Temporal.PlainYearMonth instances from other objects.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[ISOYear]]
+          </td>
+          <td>
+            An integer representing the year in the ISO 8601 calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[ISOMonth]]
+          </td>
+          <td>
+            An integer between 1 and 12, inclusive, representing the month of the year in the ISO 8601 calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[ISODay]]
+          </td>
+          <td>
+            An integer between 1 and ISODaysInMonth([[ISOYear]], [[ISOMonth]]), inclusive, representing a reference day of the month in the ISO 8601 calendar.
+            This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOYear]] and [[ISOMonth]] slots are not enough to uniquely identify a year and month in that calendar.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            [[Calendar]]
+          </td>
+          <td>
+            A String representing the calendar.
+          </td>
+        </tr>
       </table>
     </emu-table>
   </emu-clause>
