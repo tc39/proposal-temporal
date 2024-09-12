@@ -191,7 +191,7 @@
       <h1>
         FormatDateTimeUTCOffsetRounded (
           _offsetNanoseconds_: an integer,
-        ) : a String
+        ): a String
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -320,7 +320,7 @@
         1. Let _offsetBefore_ be GetOffsetNanosecondsFor(_timeZone_, _before_).
         1. Let _offsetAfter_ be GetOffsetNanosecondsFor(_timeZone_, _after_).
         1. Let _nanoseconds_ be _offsetAfter_ - _offsetBefore_.
-        1. Assert: abs(_nanoseconds_) &le; nsPerDay.
+        1. Assert: abs(_nanoseconds_) ≤ nsPerDay.
         1. If _disambiguation_ is *"earlier"*, then
           1. Let _norm_ be NormalizeTimeDuration(0, 0, 0, 0, 0, -_nanoseconds_).
           1. Let _earlierTime_ be AddTime(_isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _norm_).
