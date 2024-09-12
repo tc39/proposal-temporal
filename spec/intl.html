@@ -179,10 +179,7 @@
     </emu-clause>
 
     <emu-clause id="sec-availablecanonicaltimezones" type="implementation-defined abstract operation">
-      <h1>
-        AvailableCanonicalTimeZones (
-        ): a List of Strings
-      </h1>
+      <h1>AvailableCanonicalTimeZones ( ): a List of Strings</h1>
       <dl class="header">
         <dt>description</dt>
         <dd>The returned List is a sorted List of supported Zone and Link names in the IANA Time Zone Database.</dd>
@@ -210,10 +207,7 @@
     <p>This specification identifies calendars using a calendar type as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35 Part 4 Dates, Section 2 Calendar Elements</a>. Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z) with zero or more medial hyphens (U+002D HYPHEN-MINUS).</p>
 
     <emu-clause id="sec-availablecalendars-deleted" type="abstract operation">
-      <h1>
-        AvailableCalendars (
-        ): a List of Strings
-      </h1>
+      <h1>AvailableCalendars ( ): a List of Strings</h1>
       <dl class="header">
         <dt>description</dt>
         <dd>The returned List is sorted according to lexicographic code unit order, and contains unique calendar types in canonical form (<emu-xref href="#sec-calendar-types"></emu-xref>) identifying the calendars for which the implementation provides the functionality of Intl.DateTimeFormat objects, including their aliases (e.g., either both or neither of *"islamicc"* and *"islamic-civil"*). The List must include *"iso8601"*.</dd>
