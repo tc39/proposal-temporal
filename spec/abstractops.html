@@ -1156,248 +1156,248 @@
 
     <emu-grammar type="definition">
       Alpha ::: one of
-          `A` `B` `C` `D` `E` `F` `G` `H` `I` `J` `K` `L` `M` `N` `O` `P` `Q` `R`
-          `S` `T` `U` `V` `W` `X` `Y` `Z` `a` `b` `c` `d` `e` `f` `g` `h` `i` `j`
-          `k` `l` `m` `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z`
+        `A` `B` `C` `D` `E` `F` `G` `H` `I` `J` `K` `L` `M` `N` `O` `P` `Q` `R`
+        `S` `T` `U` `V` `W` `X` `Y` `Z` `a` `b` `c` `d` `e` `f` `g` `h` `i` `j`
+        `k` `l` `m` `n` `o` `p` `q` `r` `s` `t` `u` `v` `w` `x` `y` `z`
 
       LowercaseAlpha ::: one of
-          `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m` `n` `o` `p` `q` `r`
-          `s` `t` `u` `v` `w` `x` `y` `z`
+        `a` `b` `c` `d` `e` `f` `g` `h` `i` `j` `k` `l` `m` `n` `o` `p` `q` `r`
+        `s` `t` `u` `v` `w` `x` `y` `z`
 
       DateSeparator[Extended] :::
-          [+Extended] `-`
-          [~Extended] [empty]
+        [+Extended] `-`
+        [~Extended] [empty]
 
       DaysDesignator ::: one of
-          `D` `d`
+        `D` `d`
 
       HoursDesignator ::: one of
-          `H` `h`
+        `H` `h`
 
       MinutesDesignator ::: one of
-          `M` `m`
+        `M` `m`
 
       MonthsDesignator ::: one of
-          `M` `m`
+        `M` `m`
 
       DurationDesignator ::: one of
-          `P` `p`
+        `P` `p`
 
       SecondsDesignator ::: one of
-          `S` `s`
+        `S` `s`
 
       DateTimeSeparator :::
-          &lt;SP&gt;
-          `T`
-          `t`
+        &lt;SP&gt;
+        `T`
+        `t`
 
       TimeDesignator ::: one of
-          `T` `t`
+        `T` `t`
 
       WeeksDesignator ::: one of
-          `W` `w`
+        `W` `w`
 
       YearsDesignator ::: one of
-          `Y` `y`
+        `Y` `y`
 
       UTCDesignator ::: one of
-          `Z` `z`
+        `Z` `z`
 
       AnnotationCriticalFlag :::
-          `!`
+        `!`
 
       DateYear :::
-          DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-          ASCIISign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+        DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+        ASCIISign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
 
       DateMonth :::
-          `0` NonZeroDigit
-          `10`
-          `11`
-          `12`
+        `0` NonZeroDigit
+        `10`
+        `11`
+        `12`
 
       DateDay :::
-          `0` NonZeroDigit
-          `1` DecimalDigit
-          `2` DecimalDigit
-          `30`
-          `31`
+        `0` NonZeroDigit
+        `1` DecimalDigit
+        `2` DecimalDigit
+        `30`
+        `31`
 
       DateSpecYearMonth :::
-          DateYear DateSeparator[+Extended] DateMonth
-          DateYear DateSeparator[~Extended] DateMonth
+        DateYear DateSeparator[+Extended] DateMonth
+        DateYear DateSeparator[~Extended] DateMonth
 
       DateSpecMonthDay :::
-          `--`? DateMonth DateSeparator[+Extended] DateDay
-          `--`? DateMonth DateSeparator[~Extended] DateDay
+        `--`? DateMonth DateSeparator[+Extended] DateDay
+        `--`? DateMonth DateSeparator[~Extended] DateDay
 
       DateSpec[Extended] :::
-          DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
+        DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
 
       Date :::
-          DateSpec[+Extended]
-          DateSpec[~Extended]
+        DateSpec[+Extended]
+        DateSpec[~Extended]
 
       TimeSecond :::
-          MinuteSecond
-          `60`
+        MinuteSecond
+        `60`
 
       NormalizedUTCOffset :::
-          ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
+        ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
 
       UTCOffset[SubMinutePrecision] :::
-          ASCIISign Hour
-          ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
-          ASCIISign Hour TimeSeparator[~Extended] MinuteSecond
-          [+SubMinutePrecision] ASCIISign Hour TimeSeparator[+Extended] MinuteSecond TimeSeparator[+Extended] MinuteSecond TemporalDecimalFraction?
-          [+SubMinutePrecision] ASCIISign Hour TimeSeparator[~Extended] MinuteSecond TimeSeparator[~Extended] MinuteSecond TemporalDecimalFraction?
+        ASCIISign Hour
+        ASCIISign Hour TimeSeparator[+Extended] MinuteSecond
+        ASCIISign Hour TimeSeparator[~Extended] MinuteSecond
+        [+SubMinutePrecision] ASCIISign Hour TimeSeparator[+Extended] MinuteSecond TimeSeparator[+Extended] MinuteSecond TemporalDecimalFraction?
+        [+SubMinutePrecision] ASCIISign Hour TimeSeparator[~Extended] MinuteSecond TimeSeparator[~Extended] MinuteSecond TemporalDecimalFraction?
 
       DateTimeUTCOffset[Z] :::
-          [+Z] UTCDesignator
-          UTCOffset[+SubMinutePrecision]
+        [+Z] UTCDesignator
+        UTCOffset[+SubMinutePrecision]
 
       TZLeadingChar :::
-          Alpha
-          `.`
-          `_`
+        Alpha
+        `.`
+        `_`
 
       TZChar :::
-          TZLeadingChar
-          DecimalDigit
-          `-`
-          `+`
+        TZLeadingChar
+        DecimalDigit
+        `-`
+        `+`
 
       TimeZoneIANANameComponent :::
-          TZLeadingChar
-          TimeZoneIANANameComponent TZChar
+        TZLeadingChar
+        TimeZoneIANANameComponent TZChar
 
       TimeZoneIANAName :::
-          TimeZoneIANANameComponent
-          TimeZoneIANAName `/` TimeZoneIANANameComponent
+        TimeZoneIANANameComponent
+        TimeZoneIANAName `/` TimeZoneIANANameComponent
 
       TimeZoneIdentifier :::
-          UTCOffset[~SubMinutePrecision]
-          TimeZoneIANAName
+        UTCOffset[~SubMinutePrecision]
+        TimeZoneIANAName
 
       TimeZoneAnnotation :::
-          `[` AnnotationCriticalFlag? TimeZoneIdentifier `]`
+        `[` AnnotationCriticalFlag? TimeZoneIdentifier `]`
 
       AKeyLeadingChar :::
-          LowercaseAlpha
-          `_`
+        LowercaseAlpha
+        `_`
 
       AKeyChar :::
-          AKeyLeadingChar
-          DecimalDigit
-          `-`
+        AKeyLeadingChar
+        DecimalDigit
+        `-`
 
       AnnotationKey :::
-          AKeyLeadingChar
-          AnnotationKey AKeyChar
+        AKeyLeadingChar
+        AnnotationKey AKeyChar
 
       AnnotationValueComponent :::
-          Alpha AnnotationValueComponent?
-          DecimalDigit AnnotationValueComponent?
+        Alpha AnnotationValueComponent?
+        DecimalDigit AnnotationValueComponent?
 
       AnnotationValue :::
-          AnnotationValueComponent
-          AnnotationValueComponent `-` AnnotationValue
+        AnnotationValueComponent
+        AnnotationValueComponent `-` AnnotationValue
 
       Annotation :::
-          `[` AnnotationCriticalFlag? AnnotationKey `=` AnnotationValue `]`
+        `[` AnnotationCriticalFlag? AnnotationKey `=` AnnotationValue `]`
 
       Annotations :::
-          Annotation Annotations?
+        Annotation Annotations?
 
       TimeSpec[Extended] :::
-          Hour
-          Hour TimeSeparator[?Extended] MinuteSecond
-          Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] TimeSecond TemporalDecimalFraction?
+        Hour
+        Hour TimeSeparator[?Extended] MinuteSecond
+        Hour TimeSeparator[?Extended] MinuteSecond TimeSeparator[?Extended] TimeSecond TemporalDecimalFraction?
 
       Time :::
-          TimeSpec[+Extended]
-          TimeSpec[~Extended]
+        TimeSpec[+Extended]
+        TimeSpec[~Extended]
 
       DateTime[Z, TimeRequired] :::
-          [~TimeRequired] Date
-          Date DateTimeSeparator Time DateTimeUTCOffset[?Z]?
+        [~TimeRequired] Date
+        Date DateTimeSeparator Time DateTimeUTCOffset[?Z]?
 
       AnnotatedTime :::
-          TimeDesignator Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
-          Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
+        TimeDesignator Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
+        Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
 
       AnnotatedDateTime[Zoned, TimeRequired] :::
-          [~Zoned] DateTime[~Z, ?TimeRequired] TimeZoneAnnotation? Annotations?
-          [+Zoned] DateTime[+Z, ?TimeRequired] TimeZoneAnnotation Annotations?
+        [~Zoned] DateTime[~Z, ?TimeRequired] TimeZoneAnnotation? Annotations?
+        [+Zoned] DateTime[+Z, ?TimeRequired] TimeZoneAnnotation Annotations?
 
       AnnotatedYearMonth :::
-          DateSpecYearMonth TimeZoneAnnotation? Annotations?
+        DateSpecYearMonth TimeZoneAnnotation? Annotations?
 
       AnnotatedMonthDay :::
-          DateSpecMonthDay TimeZoneAnnotation? Annotations?
+        DateSpecMonthDay TimeZoneAnnotation? Annotations?
 
       DurationSecondsPart :::
-          DecimalDigits[~Sep] TemporalDecimalFraction? SecondsDesignator
+        DecimalDigits[~Sep] TemporalDecimalFraction? SecondsDesignator
 
       DurationMinutesPart :::
-          DecimalDigits[~Sep] TemporalDecimalFraction MinutesDesignator
-          DecimalDigits[~Sep] MinutesDesignator DurationSecondsPart?
+        DecimalDigits[~Sep] TemporalDecimalFraction MinutesDesignator
+        DecimalDigits[~Sep] MinutesDesignator DurationSecondsPart?
 
       DurationHoursPart :::
-          DecimalDigits[~Sep] TemporalDecimalFraction HoursDesignator
-          DecimalDigits[~Sep] HoursDesignator DurationMinutesPart
-          DecimalDigits[~Sep] HoursDesignator DurationSecondsPart?
+        DecimalDigits[~Sep] TemporalDecimalFraction HoursDesignator
+        DecimalDigits[~Sep] HoursDesignator DurationMinutesPart
+        DecimalDigits[~Sep] HoursDesignator DurationSecondsPart?
 
       DurationTime :::
-          TimeDesignator DurationHoursPart
-          TimeDesignator DurationMinutesPart
-          TimeDesignator DurationSecondsPart
+        TimeDesignator DurationHoursPart
+        TimeDesignator DurationMinutesPart
+        TimeDesignator DurationSecondsPart
 
       DurationDaysPart :::
-          DecimalDigits[~Sep] DaysDesignator
+        DecimalDigits[~Sep] DaysDesignator
 
       DurationWeeksPart :::
-          DecimalDigits[~Sep] WeeksDesignator DurationDaysPart?
+        DecimalDigits[~Sep] WeeksDesignator DurationDaysPart?
 
       DurationMonthsPart :::
-          DecimalDigits[~Sep] MonthsDesignator DurationWeeksPart
-          DecimalDigits[~Sep] MonthsDesignator DurationDaysPart?
+        DecimalDigits[~Sep] MonthsDesignator DurationWeeksPart
+        DecimalDigits[~Sep] MonthsDesignator DurationDaysPart?
 
       DurationYearsPart :::
-          DecimalDigits[~Sep] YearsDesignator DurationMonthsPart
-          DecimalDigits[~Sep] YearsDesignator DurationWeeksPart
-          DecimalDigits[~Sep] YearsDesignator DurationDaysPart?
+        DecimalDigits[~Sep] YearsDesignator DurationMonthsPart
+        DecimalDigits[~Sep] YearsDesignator DurationWeeksPart
+        DecimalDigits[~Sep] YearsDesignator DurationDaysPart?
 
       DurationDate :::
-          DurationYearsPart DurationTime?
-          DurationMonthsPart DurationTime?
-          DurationWeeksPart DurationTime?
-          DurationDaysPart DurationTime?
+        DurationYearsPart DurationTime?
+        DurationMonthsPart DurationTime?
+        DurationWeeksPart DurationTime?
+        DurationDaysPart DurationTime?
 
       Duration :::
-          ASCIISign? DurationDesignator DurationDate
-          ASCIISign? DurationDesignator DurationTime
+        ASCIISign? DurationDesignator DurationDate
+        ASCIISign? DurationDesignator DurationTime
 
       TemporalInstantString :::
-          Date DateTimeSeparator Time DateTimeUTCOffset[+Z] TimeZoneAnnotation? Annotations?
+        Date DateTimeSeparator Time DateTimeUTCOffset[+Z] TimeZoneAnnotation? Annotations?
 
       TemporalDateTimeString[Zoned] :::
-          AnnotatedDateTime[?Zoned, ~TimeRequired]
+        AnnotatedDateTime[?Zoned, ~TimeRequired]
 
       TemporalDurationString :::
-          Duration
+        Duration
 
       TemporalMonthDayString :::
-          AnnotatedMonthDay
-          AnnotatedDateTime[~Zoned, ~TimeRequired]
+        AnnotatedMonthDay
+        AnnotatedDateTime[~Zoned, ~TimeRequired]
 
       TemporalTimeString :::
-          AnnotatedTime
-          AnnotatedDateTime[~Zoned, +TimeRequired]
+        AnnotatedTime
+        AnnotatedDateTime[~Zoned, +TimeRequired]
 
       TemporalYearMonthString :::
-          AnnotatedYearMonth
-          AnnotatedDateTime[~Zoned, ~TimeRequired]
+        AnnotatedYearMonth
+        AnnotatedDateTime[~Zoned, ~TimeRequired]
     </emu-grammar>
 
     <emu-clause id="sec-temporal-iso8601grammar-static-semantics-isvalidmonthday" type="sdo">

@@ -127,13 +127,13 @@
         Each available named time zone is associated with exactly one primary time zone identifier and zero or more non-primary time zone identifiers.
       </p>
       <ins class="block">
-      <p>
-        Time zone identifiers are compared using ASCII-case-insensitive comparisons, and are accepted as input in any variation of letter case.
-        Offset time zone identifiers are compared using the number of minutes represented (not as a String), and are accepted as input in any the formats specified by |UTCOffset[~SubMinutePrecision]|.
-        However, ECMAScript built-in objects will only output the <dfn variants="time zone identifier in normalized format,normalized time zone identifier">normalized format of a time zone identifier</dfn>.
-        The normalized format of an available named time zone identifier is the preferred letter case for that identifier.
-        The normalized format of an offset time zone identifier is specified by |NormalizedUTCOffset| and produced by FormatOffsetTimeZoneIdentifier with _style_ either not present or set to ~separated~.
-      </p>
+        <p>
+          Time zone identifiers are compared using ASCII-case-insensitive comparisons, and are accepted as input in any variation of letter case.
+          Offset time zone identifiers are compared using the number of minutes represented (not as a String), and are accepted as input in any the formats specified by |UTCOffset[~SubMinutePrecision]|.
+          However, ECMAScript built-in objects will only output the <dfn variants="time zone identifier in normalized format,normalized time zone identifier">normalized format of a time zone identifier</dfn>.
+          The normalized format of an available named time zone identifier is the preferred letter case for that identifier.
+          The normalized format of an offset time zone identifier is specified by |NormalizedUTCOffset| and produced by FormatOffsetTimeZoneIdentifier with _style_ either not present or set to ~separated~.
+        </p>
       </ins>
       <p>
         ECMAScript implementations must support an available named time zone with the identifier *"UTC"*, which must be the primary time zone identifier for the UTC time zone.
@@ -175,19 +175,19 @@
       <h1>Time Zone Offset String <del>Format</del><ins>Formats</ins></h1>
 
       <del class="block">
-      <p>
-        ECMAScript defines a string interchange format for UTC offsets, derived from ISO 8601.
-        The format is described by the following grammar.
-      </p>
+        <p>
+          ECMAScript defines a string interchange format for UTC offsets, derived from ISO 8601.
+          The format is described by the following grammar.
+        </p>
       </del>
 
       <ins class="block">
-      <p>
-        ECMAScript defines string interchange formats for UTC offsets, derived from ISO 8601.
-        UTC offsets that represent offset time zone identifiers, or that are intended for interoperability with ISO 8601, use only hours and minutes and are specified by |UTCOffset[~SubMinutePrecision]|.
-        UTC offsets that represent the offset of a named or custom time zone can be more precise, and are specified by |UTCOffset[+SubMinutePrecision]|.
-      </p>
-      <p>These formats are described by the ISO String grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>.</p>
+        <p>
+          ECMAScript defines string interchange formats for UTC offsets, derived from ISO 8601.
+          UTC offsets that represent offset time zone identifiers, or that are intended for interoperability with ISO 8601, use only hours and minutes and are specified by |UTCOffset[~SubMinutePrecision]|.
+          UTC offsets that represent the offset of a named or custom time zone can be more precise, and are specified by |UTCOffset[+SubMinutePrecision]|.
+        </p>
+        <p>These formats are described by the ISO String grammar in <emu-xref href="#sec-temporal-iso8601grammar"></emu-xref>.</p>
       </ins>
 
       <p>[...]</p>
@@ -343,18 +343,18 @@
 
     <emu-clause id="sec-isoffsettimezoneidentifier" oldids="sec-istimezoneoffsetstring" type="abstract operation">
       <del class="block">
-      <h1>
-        IsTimeZoneOffsetString (
+        <h1>
+          IsTimeZoneOffsetString (
           _offsetString_: a String,
-        ): a Boolean
-      </h1>
+          ): a Boolean
+        </h1>
       </del>
       <ins class="block">
-      <h1>
-        IsOffsetTimeZoneIdentifier (
+        <h1>
+          IsOffsetTimeZoneIdentifier (
           _offsetString_: a String,
-        ): a Boolean
-      </h1>
+          ): a Boolean
+        </h1>
       </ins>
       <dl class="header">
         <dt>description</dt>
@@ -369,18 +369,18 @@
 
     <emu-clause id="sec-parsedatetimeutcoffset" oldids="sec-parsetimezoneoffsetstring" type="abstract operation">
       <del class="block">
-      <h1>
-        ParseTimeZoneOffsetString (
+        <h1>
+          ParseTimeZoneOffsetString (
           _offsetString_: a String,
-        ): an integer
-      </h1>
+          ): an integer
+        </h1>
       </del>
       <ins class="block">
-      <h1>
-        ParseDateTimeUTCOffset (
+        <h1>
+          ParseDateTimeUTCOffset (
           _offsetString_: a String
-        ): either a normal completion containing an integer or a throw completion
-      </h1>
+          ): either a normal completion containing an integer or a throw completion
+        </h1>
       </ins>
       <dl class="header">
         <dt>description</dt>
