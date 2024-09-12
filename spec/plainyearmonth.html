@@ -580,7 +580,7 @@
             }.
         1. Else,
           1. Assert: _overflow_ is *"reject"*.
-          1. If _month_ &lt; 1 or _month_ &gt; 12, throw a *RangeError* exception.
+          1. If _month_ &lt; 1 or _month_ > 12, throw a *RangeError* exception.
           1. Return ISO Year-Month Record {
               [[Year]]: _year_,
               [[Month]]: _month_
@@ -600,11 +600,11 @@
         <dd>It returns *true* if its arguments represent a month within the range that a Temporal.PlainYearMonth object can represent, and *false* otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If _year_ &lt; -271821 or _year_ &gt; 275760, then
+        1. If _year_ &lt; -271821 or _year_ > 275760, then
           1. Return *false*.
         1. If _year_ = -271821 and _month_ &lt; 4, then
           1. Return *false*.
-        1. If _year_ = 275760 and _month_ &gt; 9, then
+        1. If _year_ = 275760 and _month_ > 9, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>

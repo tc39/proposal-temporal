@@ -110,7 +110,7 @@
           1. Let _duration2_ be ! CreateNormalizedDurationRecord(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _norm2_).
           1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration1_).
           1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration2_).
-          1. If _after1_ &gt; _after2_, return *1*<sub>𝔽</sub>.
+          1. If _after1_ > _after2_, return *1*<sub>𝔽</sub>.
           1. If _after1_ &lt; _after2_, return *-1*<sub>𝔽</sub>.
           1. Return *+0*<sub>𝔽</sub>.
         1. If _calendarUnitsPresent_ is *true*, then
@@ -450,7 +450,7 @@
         1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
         1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
-        1. If _roundingIncrement_ &gt; 1, and _largestUnit_ is not _smallestUnit_, and IsCalendarUnit(_smallestUnit_) is *true* or _smallestUnit_ is *"day"*, then
+        1. If _roundingIncrement_ > 1, and _largestUnit_ is not _smallestUnit_, and IsCalendarUnit(_smallestUnit_) is *true* or _smallestUnit_ is *"day"*, then
           1. Throw a *RangeError* exception.
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. If _zonedRelativeTo_ is not *undefined*, then
@@ -1149,7 +1149,7 @@
       <emu-alg>
         1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
           1. If _v_ &lt; 0, return -1.
-          1. If _v_ &gt; 0, return 1.
+          1. If _v_ > 0, return 1.
         1. Return 0.
       </emu-alg>
     </emu-clause>
@@ -1177,8 +1177,8 @@
         1. Let _sign_ be DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
           1. If 𝔽(_v_) is not finite, return *false*.
-          1. If _v_ &lt; 0 and _sign_ &gt; 0, return *false*.
-          1. If _v_ &gt; 0 and _sign_ &lt; 0, return *false*.
+          1. If _v_ &lt; 0 and _sign_ > 0, return *false*.
+          1. If _v_ > 0 and _sign_ &lt; 0, return *false*.
         1. If abs(_years_) ≥ 2<sup>32</sup>, return *false*.
         1. If abs(_months_) ≥ 2<sup>32</sup>, return *false*.
         1. If abs(_weeks_) ≥ 2<sup>32</sup>, return *false*.
@@ -1364,7 +1364,7 @@
       </dl>
       <emu-alg>
         1. Let _result_ be _one_.[[TotalNanoseconds]] + _two_.[[TotalNanoseconds]].
-        1. If abs(_result_) &gt; maxTimeDuration, throw a *RangeError* exception.
+        1. If abs(_result_) > maxTimeDuration, throw a *RangeError* exception.
         1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _result_ }.
       </emu-alg>
     </emu-clause>
@@ -1385,7 +1385,7 @@
       </dl>
       <emu-alg>
         1. Let _result_ be _d_.[[TotalNanoseconds]] + _days_ × nsPerDay.
-        1. If abs(_result_) &gt; maxTimeDuration, throw a *RangeError* exception.
+        1. If abs(_result_) > maxTimeDuration, throw a *RangeError* exception.
         1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _result_ }.
       </emu-alg>
     </emu-clause>
@@ -1421,7 +1421,7 @@
         <dd>It performs a comparison of two Normalized Time Duration Records.</dd>
       </dl>
       <emu-alg>
-        1. If _one_.[[TotalNanoseconds]] &gt; _two_.[[TotalNanoseconds]], return 1.
+        1. If _one_.[[TotalNanoseconds]] > _two_.[[TotalNanoseconds]], return 1.
         1. If _one_.[[TotalNanoseconds]] &lt; _two_.[[TotalNanoseconds]], return -1.
         1. Return 0.
       </emu-alg>
@@ -1493,7 +1493,7 @@
       </dl>
       <emu-alg>
         1. Let _rounded_ be RoundNumberToIncrement(_d_.[[TotalNanoseconds]], _increment_, _roundingMode_).
-        1. If abs(_rounded_) &gt; maxTimeDuration, throw a *RangeError* exception.
+        1. If abs(_rounded_) > maxTimeDuration, throw a *RangeError* exception.
         1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _rounded_ }.
       </emu-alg>
     </emu-clause>
@@ -1525,7 +1525,7 @@
       </dl>
       <emu-alg>
         1. If _d_.[[TotalNanoseconds]] &lt; 0, return -1.
-        1. If _d_.[[TotalNanoseconds]] &gt; 0, return 1.
+        1. If _d_.[[TotalNanoseconds]] > 0, return 1.
         1. Return 0.
       </emu-alg>
     </emu-clause>
@@ -1558,7 +1558,7 @@
       </dl>
       <emu-alg>
         1. Let _result_ be _one_.[[TotalNanoseconds]] - _two_.[[TotalNanoseconds]].
-        1. If abs(_result_) &gt; maxTimeDuration, throw a *RangeError* exception.
+        1. If abs(_result_) > maxTimeDuration, throw a *RangeError* exception.
         1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _result_ }.
       </emu-alg>
     </emu-clause>
@@ -1814,7 +1814,7 @@
           1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r1_).
           1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
-        1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ &gt; _r2_.
+        1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ > _r2_.
         1. Let _startDate_ be ISODateTimeToDateRecord(_dateTime_).
         1. Let _start_ be ? CalendarDateAdd(_calendar_, _startDate_, _startDuration_, *"constrain"*).
         1. Let _end_ be ? CalendarDateAdd(_calendar_, _startDate_, _endDuration_, *"constrain"*).
@@ -1934,7 +1934,7 @@
         1. Let _wholeDays_ be truncate(DivideNormalizedTimeDuration(_norm_, nsPerDay)).
         1. Let _roundedWholeDays_ be truncate(DivideNormalizedTimeDuration(_roundedNorm_, nsPerDay)).
         1. Let _dayDelta_ be _roundedWholeDays_ - _wholeDays_.
-        1. If _dayDelta_ &lt; 0, let _dayDeltaSign_ be -1; else if _dayDelta_ &gt; 0, let _dayDeltaSign_ be 1; else let _dayDeltaSign_ be 0.
+        1. If _dayDelta_ &lt; 0, let _dayDeltaSign_ be -1; else if _dayDelta_ > 0, let _dayDeltaSign_ be 1; else let _dayDeltaSign_ be 0.
         1. If _dayDeltaSign_ = NormalizedTimeDurationSign(_norm_), let _didExpandDays_ be *true*; else let _didExpandDays_ be *false*.
         1. Let _nudgedEpochNs_ be AddNormalizedTimeDurationToEpochNanoseconds(_diffNorm_, _destEpochNs_).
         1. Let _days_ be 0.
@@ -1995,7 +1995,7 @@
               1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
               1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
-            1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ &gt; 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
+            1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
             1. If _beyondEndSign_ ≠ -_sign_, then
               1. Set _duration_ to ! CombineDateAndNormalizedTimeDuration(_endDuration_, ZeroTimeDuration()).
             1. Else,

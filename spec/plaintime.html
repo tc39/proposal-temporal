@@ -672,17 +672,17 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _hour_ &lt; 0 or _hour_ &gt; 23, then
+        1. If _hour_ &lt; 0 or _hour_ > 23, then
           1. Return *false*.
-        1. If _minute_ &lt; 0 or _minute_ &gt; 59, then
+        1. If _minute_ &lt; 0 or _minute_ > 59, then
           1. Return *false*.
-        1. If _second_ &lt; 0 or _second_ &gt; 59, then
+        1. If _second_ &lt; 0 or _second_ > 59, then
           1. Return *false*.
-        1. If _millisecond_ &lt; 0 or _millisecond_ &gt; 999, then
+        1. If _millisecond_ &lt; 0 or _millisecond_ > 999, then
           1. Return *false*.
-        1. If _microsecond_ &lt; 0 or _microsecond_ &gt; 999, then
+        1. If _microsecond_ &lt; 0 or _microsecond_ > 999, then
           1. Return *false*.
-        1. If _nanosecond_ &lt; 0 or _nanosecond_ &gt; 999, then
+        1. If _nanosecond_ &lt; 0 or _nanosecond_ > 999, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
@@ -922,17 +922,17 @@
         <dd>It compares the two given times and returns -1 if the second comes earlier in the day than the first, 1 if the first comes earlier in the day than the second, and 0 if they are the same.</dd>
       </dl>
       <emu-alg>
-        1. If _h1_ &gt; _h2_, return 1.
+        1. If _h1_ > _h2_, return 1.
         1. If _h1_ &lt; _h2_, return -1.
-        1. If _min1_ &gt; _min2_, return 1.
+        1. If _min1_ > _min2_, return 1.
         1. If _min1_ &lt; _min2_, return -1.
-        1. If _s1_ &gt; _s2_, return 1.
+        1. If _s1_ > _s2_, return 1.
         1. If _s1_ &lt; _s2_, return -1.
-        1. If _ms1_ &gt; _ms2_, return 1.
+        1. If _ms1_ > _ms2_, return 1.
         1. If _ms1_ &lt; _ms2_, return -1.
-        1. If _mus1_ &gt; _mus2_, return 1.
+        1. If _mus1_ > _mus2_, return 1.
         1. If _mus1_ &lt; _mus2_, return -1.
-        1. If _ns1_ &gt; _ns2_, return 1.
+        1. If _ns1_ > _ns2_, return 1.
         1. If _ns1_ &lt; _ns2_, return -1.
         1. Return 0.
       </emu-alg>

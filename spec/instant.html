@@ -411,7 +411,7 @@
         <dd>It returns *true* if its argument is within the allowed range of nanoseconds since the epoch for a Temporal.Instant and Temporal.ZonedDateTime, and *false* otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If ℝ(_epochNanoseconds_) &lt; nsMinInstant or ℝ(_epochNanoseconds_) &gt; nsMaxInstant, then
+        1. If ℝ(_epochNanoseconds_) &lt; nsMinInstant or ℝ(_epochNanoseconds_) > nsMaxInstant, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
@@ -481,7 +481,7 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _epochNanosecondsOne_ &gt; _epochNanosecondsTwo_, return 1.
+        1. If _epochNanosecondsOne_ > _epochNanosecondsTwo_, return 1.
         1. If _epochNanosecondsOne_ &lt; _epochNanosecondsTwo_, return -1.
         1. Return 0.
       </emu-alg>
