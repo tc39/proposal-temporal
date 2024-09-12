@@ -33,6 +33,7 @@
     "build:docs": "cd docs && npm install && npm run build",
     "prebuild:spec": "mkdirp out",
     "build:spec": "ecmarkup --lint-spec --strict --load-biblio @tc39/ecma262-biblio --load-biblio @tc39/ecma402-biblio spec.html out/index.html",
+    "format": "emu-format --write spec.html spec/*.html",
     "prebuild": "mkdirp out/docs/assets",
     "pretty": "eslint . --ext js,mjs,.d.ts --fix",
     "build": "npm run build:polyfill && npm run build:docs && npm run build:spec",
