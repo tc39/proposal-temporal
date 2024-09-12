@@ -3,9 +3,7 @@
 
 <emu-clause id="sec-temporal-zoneddatetime-objects">
   <h1>Temporal.ZonedDateTime Objects</h1>
-  <p>
-    A Temporal.ZonedDateTime object is an Object referencing a fixed point in time with nanoseconds precision, and containing Object values corresponding to a particular time zone and calendar system.
-  </p>
+  <p>A Temporal.ZonedDateTime object is an Object referencing a fixed point in time with nanoseconds precision, and containing Object values corresponding to a particular time zone and calendar system.</p>
 
   <emu-clause id="sec-temporal-zoneddatetime-constructor">
     <h1>The Temporal.ZonedDateTime Constructor</h1>
@@ -27,9 +25,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime">
       <h1>Temporal.ZonedDateTime ( _epochNanoseconds_, _timeZone_ [ , _calendar_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -65,9 +61,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.from">
       <h1>Temporal.ZonedDateTime.from ( _item_ [ , _options_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Set _options_ to ? GetOptionsObject(_options_).
@@ -81,9 +75,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.compare">
       <h1>Temporal.ZonedDateTime.compare ( _one_, _two_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalZonedDateTime(_one_).
         1. Set _two_ to ? ToTemporalZonedDateTime(_two_).
@@ -113,12 +105,8 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype-%symbol.tostringtag%">
       <h1>Temporal.ZonedDateTime.prototype[ %Symbol.toStringTag% ]</h1>
-      <p>
-        The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.ZonedDateTime"*.
-      </p>
-      <p>
-        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
-      </p>
+      <p>The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.ZonedDateTime"*.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.zoneddatetime.prototype.calendarid">
@@ -524,9 +512,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.with">
       <h1>Temporal.ZonedDateTime.prototype.with ( _temporalZonedDateTimeLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -559,9 +545,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withplaintime">
       <h1>Temporal.ZonedDateTime.prototype.withPlainTime ( [ _plainTimeLike_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -582,9 +566,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withtimezone">
       <h1>Temporal.ZonedDateTime.prototype.withTimeZone ( _timeZoneLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -595,9 +577,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.withcalendar">
       <h1>Temporal.ZonedDateTime.prototype.withCalendar ( _calendarLike_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -608,9 +588,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.add">
       <h1>Temporal.ZonedDateTime.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -620,9 +598,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.subtract">
       <h1>Temporal.ZonedDateTime.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -632,9 +608,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.until">
       <h1>Temporal.ZonedDateTime.prototype.until ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -644,9 +618,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.since">
       <h1>Temporal.ZonedDateTime.prototype.since ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -656,9 +628,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.round">
       <h1>Temporal.ZonedDateTime.prototype.round ( _roundTo_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -710,9 +680,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.equals">
       <h1>Temporal.ZonedDateTime.prototype.equals ( _other_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -725,9 +693,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tostring">
       <h1>Temporal.ZonedDateTime.prototype.toString ( [ _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -751,12 +717,8 @@
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
       </p>
-      <p>
-        The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
-      </p>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.</p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -766,9 +728,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.tojson">
       <h1>Temporal.ZonedDateTime.prototype.toJSON ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -778,9 +738,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.valueof">
       <h1>Temporal.ZonedDateTime.prototype.valueOf ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Throw a *TypeError* exception.
       </emu-alg>
@@ -795,9 +753,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.startofday">
       <h1>Temporal.ZonedDateTime.prototype.startOfDay ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -812,9 +768,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.gettimezonetransition">
       <h1>Temporal.ZonedDateTime.prototype.getTimeZoneTransition ( _directionParam_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -840,9 +794,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toinstant">
       <h1>Temporal.ZonedDateTime.prototype.toInstant ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -852,9 +804,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplaindate">
       <h1>Temporal.ZonedDateTime.prototype.toPlainDate ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -865,9 +815,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplaintime">
       <h1>Temporal.ZonedDateTime.prototype.toPlainTime ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
@@ -878,9 +826,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype.toplaindatetime">
       <h1>Temporal.ZonedDateTime.prototype.toPlainDateTime ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).

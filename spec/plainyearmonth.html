@@ -25,9 +25,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth">
       <h1>Temporal.PlainYearMonth ( _isoYear_, _isoMonth_ [ , _calendar_ [ , _referenceISODay_ ] ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If NewTarget is *undefined*, then
           1. Throw a *TypeError* exception.
@@ -58,9 +56,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.from">
       <h1>Temporal.PlainYearMonth.from ( _item_ [ , _options_ ] )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
           1. Set _options_ to ? GetOptionsObject(_options_).
@@ -72,9 +68,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.compare">
       <h1>Temporal.PlainYearMonth.compare ( _one_, _two_ )</h1>
-      <p>
-        This function performs the following steps when called:
-      </p>
+      <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Set _one_ to ? ToTemporalYearMonth(_one_).
         1. Set _two_ to ? ToTemporalYearMonth(_two_).
@@ -104,12 +98,8 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype-%symbol.tostringtag%">
       <h1>Temporal.PlainYearMonth.prototype[ %Symbol.toStringTag% ]</h1>
-      <p>
-        The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.PlainYearMonth"*.
-      </p>
-      <p>
-        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
-      </p>
+      <p>The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.PlainYearMonth"*.</p>
+      <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
     </emu-clause>
 
     <emu-clause id="sec-get-temporal.plainyearmonth.prototype.calendarid">
@@ -255,9 +245,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.with">
       <h1>Temporal.PlainYearMonth.prototype.with ( _temporalYearMonthLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -275,9 +263,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.add">
       <h1>Temporal.PlainYearMonth.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -287,9 +273,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.subtract">
       <h1>Temporal.PlainYearMonth.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -299,9 +283,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.until">
       <h1>Temporal.PlainYearMonth.prototype.until ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -311,9 +293,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.since">
       <h1>Temporal.PlainYearMonth.prototype.since ( _other_ [ , _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -323,9 +303,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.equals">
       <h1>Temporal.PlainYearMonth.prototype.equals ( _other_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -339,9 +317,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.tostring">
       <h1>Temporal.PlainYearMonth.prototype.toString ( [ _options_ ] )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -357,12 +333,8 @@
         An ECMAScript implementation that includes the ECMA-402 Internationalization API must implement this method as specified in the ECMA-402 specification.
         If an ECMAScript implementation does not include the ECMA-402 API the following specification of this method is used.
       </p>
-      <p>
-        The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.
-      </p>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.</p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -372,9 +344,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.tojson">
       <h1>Temporal.PlainYearMonth.prototype.toJSON ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -384,9 +354,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.valueof">
       <h1>Temporal.PlainYearMonth.prototype.valueOf ( )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Throw a *TypeError* exception.
       </emu-alg>
@@ -401,9 +369,7 @@
 
     <emu-clause id="sec-temporal.plainyearmonth.prototype.toplaindate">
       <h1>Temporal.PlainYearMonth.prototype.toPlainDate ( _item_ )</h1>
-      <p>
-        This method performs the following steps when called:
-      </p>
+      <p>This method performs the following steps when called:</p>
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -485,12 +451,8 @@
 
     <emu-clause id="sec-temporal-iso-year-month-records">
       <h1>ISO Year-Month Records</h1>
-      <p>
-        An <dfn variants="ISO Year-Month Records">ISO Year-Month Record</dfn> is a Record value used to represent a valid month in the ISO 8601 calendar, although the year may be outside of the allowed range for Temporal.
-      </p>
-      <p>
-        ISO Year-Month Records have the fields listed in <emu-xref href="#table-temporal-iso-year-month-record-fields"></emu-xref>.
-      </p>
+      <p>An <dfn variants="ISO Year-Month Records">ISO Year-Month Record</dfn> is a Record value used to represent a valid month in the ISO 8601 calendar, although the year may be outside of the allowed range for Temporal.</p>
+      <p>ISO Year-Month Records have the fields listed in <emu-xref href="#table-temporal-iso-year-month-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-iso-year-month-record-fields" caption="ISO Year-Month Record Fields">
         <table class="real-table">
           <tr>

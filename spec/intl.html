@@ -10,9 +10,7 @@
       Text to be added is marked <ins>like this</ins>, and text to be deleted is marked <del>like this</del>.
       Blocks of unmodified text between modified sections are marked by [...].
     </p>
-    <p>
-      This text is based on top of the ECMA-402 spec text from commit <a href="https://github.com/tc39/ecma402/commit/537afda7be28a443b79b3fd7e6c836a16ce4f75f">537afda7be28a443b79b3fd7e6c836a16ce4f75f</a>.
-    </p>
+    <p>This text is based on top of the ECMA-402 spec text from commit <a href="https://github.com/tc39/ecma402/commit/537afda7be28a443b79b3fd7e6c836a16ce4f75f">537afda7be28a443b79b3fd7e6c836a16ce4f75f</a>.</p>
   </emu-note>
 
   <emu-clause id="sup-case-sensitivity-and-case-mapping">
@@ -22,22 +20,14 @@
       <p>These definitions are moved into ECMA-262.</p>
     </emu-note>
 
-    <p>
-      The String values used to identify locales, currencies, scripts, and time zones are interpreted in an ASCII-case-insensitive manner, treating the code units 0x0041 through 0x005A (corresponding to Unicode characters LATIN CAPITAL LETTER A through LATIN CAPITAL LETTER Z) as equivalent to the corresponding code units 0x0061 through 0x007A (corresponding to Unicode characters LATIN SMALL LETTER A through LATIN SMALL LETTER Z), both inclusive. No other case folding equivalences are applied.
-    </p>
+    <p>The String values used to identify locales, currencies, scripts, and time zones are interpreted in an ASCII-case-insensitive manner, treating the code units 0x0041 through 0x005A (corresponding to Unicode characters LATIN CAPITAL LETTER A through LATIN CAPITAL LETTER Z) as equivalent to the corresponding code units 0x0061 through 0x007A (corresponding to Unicode characters LATIN SMALL LETTER A through LATIN SMALL LETTER Z), both inclusive. No other case folding equivalences are applied.</p>
     <emu-note>
       For example, *"ß"* (U+00DF) must not match or be mapped to *"SS"* (U+0053, U+0053). *"ı"* (U+0131) must not match or be mapped to *"I"* (U+0049).
     </emu-note>
     <del class="block">
-      <p>
-        The <em>ASCII-uppercase</em> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) with the corresponding ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units.
-      </p>
-      <p>
-        The <em>ASCII-lowercase</em> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) with the corresponding ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) while preserving all other code units.
-      </p>
-      <p>
-        A String value _A_ is an <em>ASCII-case-insensitive match</em> for String value _B_ if the ASCII-uppercase of _A_ is exactly the same sequence of code units as the ASCII-uppercase of _B_. A sequence of Unicode code points _A_ is an ASCII-case-insensitive match for _B_ if _B_ is an ASCII-case-insensitive match for ! CodePointsToString(_A_).
-      </p>
+      <p>The <em>ASCII-uppercase</em> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) with the corresponding ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) while preserving all other code units.</p>
+      <p>The <em>ASCII-lowercase</em> of a String value _S_ is the String value derived from _S_ by replacing each occurrence of an ASCII uppercase letter code unit (0x0041 through 0x005A, inclusive) with the corresponding ASCII lowercase letter code unit (0x0061 through 0x007A, inclusive) while preserving all other code units.</p>
+      <p>A String value _A_ is an <em>ASCII-case-insensitive match</em> for String value _B_ if the ASCII-uppercase of _A_ is exactly the same sequence of code units as the ASCII-uppercase of _B_. A sequence of Unicode code points _A_ is an ASCII-case-insensitive match for _B_ if _B_ is an ASCII-case-insensitive match for ! CodePointsToString(_A_).</p>
     </del>
   </emu-clause>
 
@@ -145,13 +135,9 @@
   <emu-clause id="sec-time-zone-names-deleted">
     <h1>Time Zone Names</h1>
 
-    <p>
-      This specification identifies time zones using the Zone and Link names of the IANA Time Zone Database. Their canonical form is the corresponding Zone name in the casing used in the IANA Time Zone Database except as specifically overridden by CanonicalizeTimeZoneName.
-    </p>
+    <p>This specification identifies time zones using the Zone and Link names of the IANA Time Zone Database. Their canonical form is the corresponding Zone name in the casing used in the IANA Time Zone Database except as specifically overridden by CanonicalizeTimeZoneName.</p>
 
-    <p>
-      A conforming implementation must recognize *"UTC"* and all other Zone and Link names (and <strong>only</strong> such names), and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations. However, the set of combinations of time zone name and language tag for which localized time zone names are available is implementation dependent.
-    </p>
+    <p>A conforming implementation must recognize *"UTC"* and all other Zone and Link names (and <strong>only</strong> such names), and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations. However, the set of combinations of time zone name and language tag for which localized time zone names are available is implementation dependent.</p>
 
     <emu-clause id="sec-isvalidtimezonename" type="abstract operation">
       <h1>
@@ -221,9 +207,7 @@
   <emu-clause id="sec-calendar-types-deleted">
     <h1>Calendar Types</h1>
 
-    <p>
-      This specification identifies calendars using a calendar type as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35 Part 4 Dates, Section 2 Calendar Elements</a>. Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z) with zero or more medial hyphens (U+002D HYPHEN-MINUS).
-    </p>
+    <p>This specification identifies calendars using a calendar type as defined by <a href="https://unicode.org/reports/tr35/tr35-dates.html#Calendar_Elements">Unicode Technical Standard #35 Part 4 Dates, Section 2 Calendar Elements</a>. Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z) with zero or more medial hyphens (U+002D HYPHEN-MINUS).</p>
 
     <emu-clause id="sec-availablecalendars-deleted" type="abstract operation">
       <h1>
@@ -251,9 +235,7 @@
       <emu-clause id="sec-intl.supportedvaluesof">
         <h1>Intl.supportedValuesOf ( _key_ )</h1>
 
-        <p>
-        When the `supportedValuesOf` method is called with argument _key_ , the following steps are taken:
-        </p>
+        <p>When the `supportedValuesOf` method is called with argument _key_ , the following steps are taken:</p>
 
         <emu-alg>
           1. Let _key_ be ? ToString(_key_).
@@ -786,9 +768,7 @@
 
         <p>[...]</p>
 
-        <p>
-          The value of the [[LocaleData]] internal slot is implementation-defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref> and the following additional constraints, for all locale values _locale_:
-        </p>
+        <p>The value of the [[LocaleData]] internal slot is implementation-defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref> and the following additional constraints, for all locale values _locale_:</p>
 
         <ul>
           <li>
@@ -916,9 +896,7 @@
         1. Return ? FormatDateTime(_dtf_, _x_).
       </emu-alg>
 
-      <p>
-        The *"length"* property of a DateTime format function is *1*<sub>𝔽</sub>.
-      </p>
+      <p>The *"length"* property of a DateTime format function is *1*<sub>𝔽</sub>.</p>
     </emu-clause>
 
     <emu-clause id="sec-formatdatetimepattern" type="abstract operation">
@@ -1281,9 +1259,7 @@
     <emu-clause id="sec-datetimeformat-value-format-records">
       <h1>Value Format Records</h1>
 
-      <p>
-        Each <dfn id="datetimeformat-value-format-record">Value Format Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-value-format-record"></emu-xref>.
-      </p>
+      <p>Each <dfn id="datetimeformat-value-format-record">Value Format Record</dfn> has the fields defined in <emu-xref href="#table-datetimeformat-value-format-record"></emu-xref>.</p>
 
       <emu-table id="table-datetimeformat-value-format-record">
         <emu-caption>Record returned by HandleDateTimeValue</emu-caption>
@@ -1532,9 +1508,7 @@
     <emu-clause id="sec-Intl.DateTimeFormat.prototype.formatToParts">
       <h1>Intl.DateTimeFormat.prototype.formatToParts ( _date_ )</h1>
 
-      <p>
-        When the `formatToParts` method is called with an argument _date_, the following steps are taken:
-      </p>
+      <p>When the `formatToParts` method is called with an argument _date_, the following steps are taken:</p>
 
       <emu-alg>
         1. Let _dtf_ be the *this* value.
@@ -1550,9 +1524,7 @@
     <emu-clause id="sec-intl.datetimeformat.prototype.formatRange">
       <h1>Intl.DateTimeFormat.prototype.formatRange ( _startDate_, _endDate_ )</h1>
 
-      <p>
-        When the `formatRange` method is called with an arguments _startDate_ and _endDate_, the following steps are taken:
-      </p>
+      <p>When the `formatRange` method is called with an arguments _startDate_ and _endDate_, the following steps are taken:</p>
 
       <emu-alg>
         1. Let _dtf_ be *this* value.
@@ -1567,9 +1539,7 @@
     <emu-clause id="sec-Intl.DateTimeFormat.prototype.formatRangeToParts">
       <h1>Intl.DateTimeFormat.prototype.formatRangeToParts ( _startDate_, _endDate_ )</h1>
 
-      <p>
-        When the `formatRangeToParts` method is called with arguments _startDate_ and _endDate_, the following steps are taken:
-      </p>
+      <p>When the `formatRangeToParts` method is called with arguments _startDate_ and _endDate_, the following steps are taken:</p>
 
       <emu-alg>
         1. Let _dtf_ be *this* value.
@@ -1584,9 +1554,7 @@
     <emu-clause id="sec-intl.datetimeformat.prototype.resolvedoptions">
       <h1>Intl.DateTimeFormat.prototype.resolvedOptions ( )</h1>
 
-      <p>
-        This function provides access to the locale and options computed during initialization of the object.
-      </p>
+      <p>This function provides access to the locale and options computed during initialization of the object.</p>
 
       <emu-alg>
         1. Let _dtf_ be the *this* value.
@@ -1621,9 +1589,7 @@
         1. Return _options_.
       </emu-alg>
 
-      <p>
-        For web compatibility reasons, if the property *"hourCycle"* is set, the *"hour12"* property should be set to *true* when *"hourCycle"* is *"h11"* or *"h12"*, or to *false* when *"hourCycle"* is *"h23"* or *"h24"*.
-      </p>
+      <p>For web compatibility reasons, if the property *"hourCycle"* is set, the *"hour12"* property should be set to *true* when *"hourCycle"* is *"h11"* or *"h12"*, or to *false* when *"hourCycle"* is *"h23"* or *"h24"*.</p>
 
       <emu-note>
         In this version of the API, the *"timeZone"* property will be the identifier of the host environment's time zone if no *"timeZone"* property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the *"timeZone"* property *undefined* in this case.
@@ -1638,17 +1604,11 @@
   <emu-clause id="sec-properties-of-intl-datetimeformat-instances">
     <h1><a href="https://tc39.es/ecma402/#sec-properties-of-intl-datetimeformat-instances">Properties of Intl.DateTimeFormat Instances</a></h1>
 
-    <p>
-      Intl.DateTimeFormat instances are ordinary objects that inherit properties from %Intl.DateTimeFormat.prototype%.
-    </p>
+    <p>Intl.DateTimeFormat instances are ordinary objects that inherit properties from %Intl.DateTimeFormat.prototype%.</p>
 
-    <p>
-      Intl.DateTimeFormat instances have an [[InitializedDateTimeFormat]] internal slot.
-    </p>
+    <p>Intl.DateTimeFormat instances have an [[InitializedDateTimeFormat]] internal slot.</p>
 
-    <p>
-      Intl.DateTimeFormat instances also have several internal slots that are computed by the constructor:
-    </p>
+    <p>Intl.DateTimeFormat instances also have several internal slots that are computed by the constructor:</p>
 
     <ul>
       <li>[[Locale]] is a String value with the language tag of the locale whose localization is used for formatting.</li>
@@ -1666,9 +1626,7 @@
       <li><ins>[[TemporalInstantFormat]] is a DateTime Format Records</ins></li>
     </ul>
 
-    <p>
-      Finally, Intl.DateTimeFormat instances have a [[BoundFormat]] internal slot that caches the function returned by the format accessor (<emu-xref href="#sec-intl.datetimeformat.prototype.format"></emu-xref>).
-    </p>
+    <p>Finally, Intl.DateTimeFormat instances have a [[BoundFormat]] internal slot that caches the function returned by the format accessor (<emu-xref href="#sec-intl.datetimeformat.prototype.format"></emu-xref>).</p>
   </emu-clause>
 
   <emu-clause id="locale-sensitive-functions">
@@ -1696,9 +1654,7 @@
         <emu-clause id="sup-temporal.instant.prototype.tolocalestring">
           <h1>Temporal.Instant.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.instant.prototype.tolocalestring"></emu-xref>.</p>
-          <p>
-            This method performs the following steps when called:
-          </p>
+          <p>This method performs the following steps when called:</p>
           <emu-alg>
             1. Let _instant_ be the *this* value.
             1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
@@ -1714,9 +1670,7 @@
         <emu-clause id="sup-temporal.plaindate.prototype.tolocalestring">
           <h1>Temporal.PlainDate.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plaindate.prototype.tolocalestring"></emu-xref>.</p>
-          <p>
-            This method performs the following steps when called:
-          </p>
+          <p>This method performs the following steps when called:</p>
           <emu-alg>
             1. Let _temporalDate_ be the *this* value.
             1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
@@ -1732,9 +1686,7 @@
         <emu-clause id="sup-temporal.plaindatetime.prototype.tolocalestring">
           <h1>Temporal.PlainDateTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plaindatetime.prototype.tolocalestring"></emu-xref>.</p>
-          <p>
-            This method performs the following steps when called:
-          </p>
+          <p>This method performs the following steps when called:</p>
           <emu-alg>
             1. Let _dateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
@@ -1750,9 +1702,7 @@
           <emu-clause id="sup-temporal.plainmonthday.prototype.tolocalestring">
           <h1>Temporal.PlainMonthDay.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plainmonthday.prototype.tolocalestring"></emu-xref>.</p>
-          <p>
-            This method performs the following steps when called:
-          </p>
+          <p>This method performs the following steps when called:</p>
           <emu-alg>
             1. Let _monthDay_ be the *this* value.
             1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
@@ -1768,9 +1718,7 @@
         <emu-clause id="sup-temporal.plaintime.prototype.tolocalestring">
           <h1>Temporal.PlainTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plaintime.prototype.tolocalestring"></emu-xref>.</p>
-          <p>
-            This method performs the following steps when called:
-          </p>
+          <p>This method performs the following steps when called:</p>
           <emu-alg>
             1. Let _temporalTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
@@ -1786,9 +1734,7 @@
         <emu-clause id="sup-temporal.plainyearmonth.prototype.tolocalestring">
           <h1>Temporal.PlainYearMonth.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plainyearmonth.prototype.tolocalestring"></emu-xref>.</p>
-          <p>
-            This method performs the following steps when called:
-          </p>
+          <p>This method performs the following steps when called:</p>
           <emu-alg>
             1. Let _yearMonth_ be the *this* value.
             1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
@@ -1804,9 +1750,7 @@
         <emu-clause id="sup-temporal.zoneddatetime.prototype.tolocalestring">
           <h1>Temporal.ZonedDateTime.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.zoneddatetime.prototype.tolocalestring"></emu-xref>.</p>
-          <p>
-            This method performs the following steps when called:
-          </p>
+          <p>This method performs the following steps when called:</p>
           <emu-alg>
             1. Let _zonedDateTime_ be the *this* value.
             1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
