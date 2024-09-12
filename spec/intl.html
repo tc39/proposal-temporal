@@ -706,7 +706,7 @@
           1. Else,
             1. Let _values_ be a List whose elements are the strings given in the Values column of the row.
             1. Let _value_ be ? GetOption(_options_, _prop_, ~string~, _values_, *undefined*).
-          1. Set _formatOptions_.[[&lt;_prop_&gt;]] to _value_.
+          1. Set _formatOptions_.[[&lt;_prop_>]] to _value_.
           1. If _value_ is not *undefined*, then
             1. Set _hasExplicitFormatComponents_ to *true*.
         1. Let _formatMatcher_ be ? GetOption(_options_, *"formatMatcher"*, ~string~, « *"basic"*, *"best fit"* », *"best fit"*).
@@ -721,7 +721,7 @@
             1. Throw a *TypeError* exception.
           1. If _required_ is ~time~ and _dateStyle_ is not *undefined*, then
             1. Throw a *TypeError* exception.
-          1. Let _styles_ be _resolvedLocaleData_.[[styles]].[[&lt;_resolvedCalendar_&gt;]].
+          1. Let _styles_ be _resolvedLocaleData_.[[styles]].[[&lt;_resolvedCalendar_>]].
           1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _styles_).
           1. <ins>If _dateStyle_ is not *undefined*, then</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to _bestFormat_.</ins>
@@ -741,19 +741,19 @@
           1. <del>Let _needDefaults_ be *true*.</del>
           1. <del>If _required_ is ~date~ or ~any~, then</del>
             1. <del>For each property name _prop_ of « *"weekday"*, *"year"*, *"month"*, *"day"* », do</del>
-              1. <del>Let _value_ be _formatOptions_.[[&lt;_prop_&gt;]].</del>
+              1. <del>Let _value_ be _formatOptions_.[[&lt;_prop_>]].</del>
               1. <del>If _value_ is not *undefined*, set _needDefaults_ to *false*.</del>
           1. <del>If _required_ is ~time~ or ~any~, then</del>
             1. <del>For each property name _prop_ of « *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* », do</del>
-              1. <del>Let _value_ be _formatOptions_.[[&lt;_prop_&gt;]].</del>
+              1. <del>Let _value_ be _formatOptions_.[[&lt;_prop_>]].</del>
               1. <del>If _value_ is not *undefined*, set _needDefaults_ to *false*.</del>
           1. <del>If _needDefaults_ is *true* and _defaults_ is either ~date~ or ~all~, then</del>
             1. <del>For each property name _prop_ of « *"year"*, *"month"*, *"day"* », do</del>
-              1. <del>Set _formatOptions_.[[&lt;_prop_&gt;]] to *"numeric"*.</del>
+              1. <del>Set _formatOptions_.[[&lt;_prop_>]] to *"numeric"*.</del>
           1. <del>If _needDefaults_ is *true* and _defaults_ is either ~time~ or ~all~, then</del>
             1. <del>For each property name _prop_ of « *"hour"*, *"minute"*, *"second"* », do</del>
-              1. <del>Set _formatOptions_.[[&lt;_prop_&gt;]] to *"numeric"*.</del>
-          1. Let _formats_ be _resolvedLocaleData_.[[formats]].[[&lt;_resolvedCalendar_&gt;]].
+              1. <del>Set _formatOptions_.[[&lt;_prop_>]] to *"numeric"*.</del>
+          1. Let _formats_ be _resolvedLocaleData_.[[formats]].[[&lt;_resolvedCalendar_>]].
           1. <del>If _formatMatcher_ is *"basic"*, then</del>
             1. <del>Let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_).</del>
           1. <del>Else,</del>
@@ -792,22 +792,22 @@
 
         <ul>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]].[[nu]] must be a List that does not include the values *"native"*, *"traditio"*, or *"finance"*.
+            [[LocaleData]].[[&lt;_locale_>]].[[nu]] must be a List that does not include the values *"native"*, *"traditio"*, or *"finance"*.
           </li>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]].[[hc]] must be « *null*, *"h11"*, *"h12"*, *"h23"*, *"h24"* ».
+            [[LocaleData]].[[&lt;_locale_>]].[[hc]] must be « *null*, *"h11"*, *"h12"*, *"h23"*, *"h24"* ».
           </li>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]].[[hourCycle]] must be one of the String values *"h11"*, *"h12"*, *"h23"*, or *"h24"*.
+            [[LocaleData]].[[&lt;_locale_>]].[[hourCycle]] must be one of the String values *"h11"*, *"h12"*, *"h23"*, or *"h24"*.
           </li>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]].[[hourCycle12]] must be one of the String values *"h11"* or *"h12"*.
+            [[LocaleData]].[[&lt;_locale_>]].[[hourCycle12]] must be one of the String values *"h11"* or *"h12"*.
           </li>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]].[[hourCycle24]] must be one of the String values *"h23"* or *"h24"*.
+            [[LocaleData]].[[&lt;_locale_>]].[[hourCycle24]] must be one of the String values *"h23"* or *"h24"*.
           </li>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]] must have a [[formats]] field. The value of this [[formats]] field must be a Record with a [[&lt;_calendar_&gt;]] field for each calendar value _calendar_. The value of each [[&lt;_calendar_&gt;]] field must be a List of DateTime Format Records. Multiple Records in such a List may use the same subset of the fields as long as the corresponding values differ for at least one field. The following subsets must be available for each locale:
+            [[LocaleData]].[[&lt;_locale_>]] must have a [[formats]] field. The value of this [[formats]] field must be a Record with a [[&lt;_calendar_>]] field for each calendar value _calendar_. The value of each [[&lt;_calendar_>]] field must be a List of DateTime Format Records. Multiple Records in such a List may use the same subset of the fields as long as the corresponding values differ for at least one field. The following subsets must be available for each locale:
             <ul>
               <li>weekday, year, month, day, hour, minute, second, fractionalSecondDigits</li>
               <li>weekday, year, month, day, hour, minute, second</li>
@@ -825,8 +825,8 @@
             </ul>
           </li>
           <li>
-            [[LocaleData]].[[&lt;_locale_&gt;]] must have a [[styles]] field. The value of this [[styles]] field must be a Record with a [[&lt;_calendar_&gt;]] field for each calendar value _calendar_. The value of each [[&lt;_calendar_&gt;]] field must be a DateTime Styles Record.
-           </li>
+            [[LocaleData]].[[&lt;_locale_>]] must have a [[styles]] field. The value of this [[styles]] field must be a Record with a [[&lt;_calendar_>]] field for each calendar value _calendar_. The value of each [[&lt;_calendar_>]] field must be a DateTime Styles Record.
+          </li>
         </ul>
       </emu-clause>
     </emu-clause>
@@ -882,13 +882,13 @@
               1. Set _formatOptions_.[[hourCycle]] to _options_.[[hourCycle]].
           1. Let _needDefaults_ be *true*.
           1. For each property name _prop_ of _requiredOptions_, do
-            1. Let _value_ be _options_.[[&lt;_prop_&gt;]].
+            1. Let _value_ be _options_.[[&lt;_prop_>]].
             1. If _value_ is not *undefined*, then
-              1. Set _formatOptions_.[[&lt;_prop_&gt;]] to _value_.
+              1. Set _formatOptions_.[[&lt;_prop_>]] to _value_.
               1. Set _needDefaults_ to *false*.
           1. If _needDefaults_ is *true*, then
             1. For each property name _prop_ of _defaultOptions_, do
-              1. Set _formatOptions_.[[&lt;_prop_&gt;]] to *"numeric"*.
+              1. Set _formatOptions_.[[&lt;_prop_>]] to *"numeric"*.
             1. If _defaults_ is ~zoned-date-time~, then
               1. Set _formatOptions_.[[timeZoneName]] to *"short"*.
           1. If _matcher_ is *"basic"*, then
@@ -977,8 +977,8 @@
             1. Let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale of _dateTimeFormat_. The String value may also depend on the value of the [[InDST]] field of _tm_ if _f_ is *"short"*, *"long"*, *"shortOffset"*, or *"longOffset"*. If the implementation does not have such a localized representation of _f_, then use the String value of _v_ itself.
             1. Append the Record { [[Type]]: _p_, [[Value]]: _fv_ } to _result_.
           1. Else if _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
-            1. Assert: _format_ has a field [[&lt;_p_&gt;]].
-            1. Let _f_ be _format_.[[&lt;_p_&gt;]].
+            1. Assert: _format_ has a field [[&lt;_p_>]].
+            1. Let _f_ be _format_.[[&lt;_p_>]].
             1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
             1. If _p_ is *"year"* and _v_ ≤ 0, set _v_ to 1 - _v_.
             1. If _p_ is *"month"*, set _v_ to _v_ + 1.
@@ -1605,8 +1605,8 @@
               1. <ins>Let _v_ be *undefined*.</ins>
           1. Else,
             1. <del>Let _format_ be _dtf_.[[DateTimeFormat]].</del>
-            1. If _format_ has a field [[&lt;_p_&gt;]] and _dtf_.[[DateStyle]] is *undefined* and _dtf_.[[TimeStyle]] is *undefined*, then
-              1. Let _v_ be _format_.[[&lt;_p_&gt;]].
+            1. If _format_ has a field [[&lt;_p_>]] and _dtf_.[[DateStyle]] is *undefined* and _dtf_.[[TimeStyle]] is *undefined*, then
+              1. Let _v_ be _format_.[[&lt;_p_>]].
             1. Else,
               1. Let _v_ be *undefined*.
           1. If _v_ is not *undefined*, then

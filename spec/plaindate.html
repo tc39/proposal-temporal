@@ -940,10 +940,10 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _month_ &lt; 1 or _month_ &gt; 12, then
+        1. If _month_ &lt; 1 or _month_ > 12, then
           1. Return *false*.
         1. Let _daysInMonth_ be ISODaysInMonth(_year_, _month_).
-        1. If _day_ &lt; 1 or _day_ &gt; _daysInMonth_, then
+        1. If _day_ &lt; 1 or _day_ > _daysInMonth_, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
@@ -982,7 +982,7 @@
       <emu-alg>
         1. If _y_ ≥ 0 and _y_ ≤ 9999, then
           1. Return ToZeroPaddedDecimalString(_y_, 4).
-        1. If _y_ &gt; 0, let _yearSign_ be *"+"*; otherwise, let _yearSign_ be *"-"*.
+        1. If _y_ > 0, let _yearSign_ be *"+"*; otherwise, let _yearSign_ be *"-"*.
         1. Let _year_ be ToZeroPaddedDecimalString(abs(_y_), 6).
         1. Return the string-concatenation of _yearSign_ and _year_.
       </emu-alg>
@@ -1079,11 +1079,11 @@
       </dl>
       <emu-alg>
         1. Assert: IsValidISODate(_y2_, _m2_, _d2_) is *true*.
-        1. If _y1_ &gt; _y2_, return 1.
+        1. If _y1_ > _y2_, return 1.
         1. If _y1_ &lt; _y2_, return -1.
-        1. If _m1_ &gt; _m2_, return 1.
+        1. If _m1_ > _m2_, return 1.
         1. If _m1_ &lt; _m2_, return -1.
-        1. If _d1_ &gt; _d2_, return 1.
+        1. If _d1_ > _d2_, return 1.
         1. If _d1_ &lt; _d2_, return -1.
         1. Return 0.
       </emu-alg>
