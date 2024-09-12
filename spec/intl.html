@@ -612,7 +612,7 @@
       </dl>
 
       <emu-alg>
-        1. Let _dateTimeFormat_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.DateTimeFormat.prototype%"*, « [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[HourCycle]], [[DateStyle]], [[TimeStyle]], [[DateTimeFormat]], <ins>[[TemporalPlainDateFormat]], [[TemporalPlainYearMonthFormat]], [[TemporalPlainMonthDayFormat]], [[TemporalPlainTimeFormat]], [[TemporalPlainDateTimeFormat]], [[TemporalInstantFormat]], </ins>[[BoundFormat]] »).
+        1. Let _dateTimeFormat_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Intl.DateTimeFormat.prototype%"*, « [[InitializedDateTimeFormat]], [[Locale]], [[Calendar]], [[NumberingSystem]], [[TimeZone]], [[HourCycle]], [[DateStyle]], [[TimeStyle]], [[DateTimeFormat]], <ins>[[TemporalPlainDateFormat]], [[TemporalPlainYearMonthFormat]], [[TemporalPlainMonthDayFormat]], [[TemporalPlainTimeFormat]], [[TemporalPlainDateTimeFormat]], [[TemporalInstantFormat]],</ins> [[BoundFormat]] »).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. Set _options_ to ? CoerceOptionsToObject(_options_).
         1. Let _opt_ be a new Record.
@@ -1013,7 +1013,7 @@
         1. <del>Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].</del>
         1. <ins>Let _xFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
         1. <ins>Let _format_ be _xFormatRecord_.[[Format]].</ins>
-        1. If <ins>_format_ has a field [[hour]] and </ins>_dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
+        1. If <ins>_format_ has a field [[hour]] and</ins> _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
           1. Let _pattern_ be _format_.[[pattern12]].
         1. Else,
           1. Let _pattern_ be _format_.[[pattern]].
@@ -1089,7 +1089,7 @@
         1. <del>Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].</del>
         1. <ins>Let _format_ be _xFormatRecord_.[[Format]].</ins>
         1. <ins>Assert: _format_ is equal to _yFormatRecord_.[[Format]].</ins>
-        1. If <ins>_format_ has a field [[hour]] and </ins>_dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
+        1. If <ins>_format_ has a field [[hour]] and</ins> _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
           1. Let _pattern_ be _format_.[[pattern12]].
           1. Let _rangePatterns_ be _format_.[[rangePatterns12]].
         1. Else,
