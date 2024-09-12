@@ -8663,11 +8663,7 @@
 	function GetRoundingIncrementOption(options) {
 	  let increment = options.roundingIncrement;
 	  if (increment === undefined) return 1;
-	  increment = ToNumber$2(increment);
-	  if (!NumberIsFinite(increment)) {
-	    throw new RangeError('roundingIncrement must be finite');
-	  }
-	  const integerIncrement = MathTrunc(increment);
+	  const integerIncrement = ToIntegerWithTruncation(increment);
 	  if (integerIncrement < 1 || integerIncrement > 1e9) {
 	    throw new RangeError(`roundingIncrement must be at least 1 and at most 1e9, not ${increment}`);
 	  }
@@ -10910,7 +10906,7 @@
 	// Epoch-nanosecond bounding technique where the start/end of the calendar-unit
 	// interval are converted to epoch-nanosecond times and destEpochNs is nudged to
 	// either one.
-	function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, calendar, timeZone, increment, unit, roundingMode) {
+	function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, calendar, increment, unit, roundingMode) {
 	  // unit must be day, week, month, or year
 	  // timeZone may be undefined
 
@@ -10954,11 +10950,12 @@
 	      }
 	    case 'week':
 	      {
-	        const year = dateTime.year + duration.years;
-	        const month = dateTime.month + duration.months;
-	        const day = dateTime.day;
-	        const weeksStart = BalanceISODate(year, month, day);
-	        const weeksEnd = BalanceISODate(year, month, day + duration.days);
+	        const yearsMonths = {
+	          years: duration.years,
+	          months: duration.months
+	        };
+	        const weeksStart = CalendarDateAdd(calendar, dateTime, yearsMonths, 'constrain');
+	        const weeksEnd = BalanceISODate(weeksStart.year, weeksStart.month, weeksStart.day + duration.days);
 	        const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
 	        const weeks = RoundNumberToIncrement(duration.weeks + untilResult.weeks, increment, 'trunc');
 	        r1 = weeks;
@@ -11055,7 +11052,7 @@
 	// Attempts rounding of time units within a time zone's day, but if the rounding
 	// causes time to exceed the total time within the day, rerun rounding in next
 	// day.
-	function NudgeToZonedTime(sign, duration, dateTime, calendar, timeZone, increment, unit, roundingMode) {
+	function NudgeToZonedTime(sign, duration, dateTime, timeZone, calendar, increment, unit, roundingMode) {
 	  // unit must be hour or smaller
 
 	  // Apply to origin, output start/end of the day as PlainDateTimes
@@ -11157,10 +11154,10 @@
 
 	// Given a potentially bottom-heavy duration, bubble up smaller units to larger
 	// units. Any units smaller than smallestUnit are already zeroed-out.
-	function BubbleRelativeDuration(sign, duration, nudgedEpochNs, plainDateTime, calendar, timeZone, largestUnit, smallestUnit) {
+	function BubbleRelativeDuration(sign, duration, nudgedEpochNs, plainDateTime, timeZone, calendar, largestUnit, smallestUnit) {
 	  // smallestUnit is day or larger
 
-	  if (smallestUnit === 'year') return duration;
+	  if (smallestUnit === largestUnit) return duration;
 
 	  // Check to see if nudgedEpochNs has hit the boundary of any units higher than
 	  // smallestUnit, in which case increment the higher unit and clear smaller
@@ -11214,17 +11211,6 @@
 	          };
 	          break;
 	        }
-	      case 'day':
-	        {
-	          const days = duration.days + sign;
-	          endDuration = {
-	            years: duration.years,
-	            months: duration.months,
-	            weeks: duration.weeks,
-	            days
-	          };
-	          break;
-	        }
 	      default:
 	        throw new Error('assert not reached');
 	    }
@@ -11255,7 +11241,7 @@
 	  }
 	  return duration;
 	}
-	function RoundRelativeDuration(duration, destEpochNs, dateTime, calendar, timeZone, largestUnit, increment, smallestUnit, roundingMode) {
+	function RoundRelativeDuration(duration, destEpochNs, dateTime, timeZone, calendar, largestUnit, increment, smallestUnit, roundingMode) {
 	  // The duration must already be balanced. This should be achieved by calling
 	  // one of the non-rounding since/until internal methods prior. It's okay to
 	  // have a bottom-heavy weeks because weeks don't bubble-up into months. It's
@@ -11267,12 +11253,12 @@
 	  let nudgeResult;
 	  if (irregularLengthUnit) {
 	    // Rounding an irregular-length unit? Use epoch-nanosecond-bounding technique
-	    nudgeResult = NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, calendar, timeZone, increment, smallestUnit, roundingMode);
+	    nudgeResult = NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, calendar, increment, smallestUnit, roundingMode);
 	  } else if (timeZone) {
 	    // Special-case for rounding time units within a zoned day. total() never
 	    // takes this path because largestUnit is then also a time unit, so
 	    // DifferenceZonedDateTimeWithRounding uses Instant math
-	    nudgeResult = NudgeToZonedTime(sign, duration, dateTime, calendar, timeZone, increment, smallestUnit, roundingMode);
+	    nudgeResult = NudgeToZonedTime(sign, duration, dateTime, timeZone, calendar, increment, smallestUnit, roundingMode);
 	  } else {
 	    // Rounding uniform-length days/hours/minutes/etc units. Simple nanosecond
 	    // math. years/months/weeks unchanged
@@ -11285,7 +11271,7 @@
 	  if (nudgeResult.didExpandCalendarUnit && smallestUnit !== 'week') {
 	    duration = BubbleRelativeDuration(sign, duration, nudgeResult.nudgedEpochNs,
 	    // The destEpochNs after expanding/contracting
-	    dateTime, calendar, timeZone, largestUnit,
+	    dateTime, timeZone, calendar, largestUnit,
 	    // where to STOP bubbling
 	    LargerOfTwoTemporalUnits(smallestUnit, 'day') // where to START bubbling-up from
 	    );
@@ -11384,9 +11370,9 @@
 	    weeks,
 	    days,
 	    norm
-	  }, destEpochNs, dateTime, calendar, null, largestUnit, roundingIncrement, smallestUnit, roundingMode);
+	  }, destEpochNs, dateTime, null, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode);
 	}
-	function DifferenceZonedDateTimeWithRounding(ns1, ns2, calendar, timeZone, largestUnit, roundingIncrement, smallestUnit, roundingMode) {
+	function DifferenceZonedDateTimeWithRounding(ns1, ns2, timeZone, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode) {
 	  if (!IsCalendarUnit(largestUnit) && largestUnit !== 'day') {
 	    // The user is only asking for a time difference, so return difference of instants.
 	    const {
@@ -11453,7 +11439,7 @@
 	    weeks,
 	    days,
 	    norm
-	  }, ns2, dateTime, calendar, timeZone, largestUnit, roundingIncrement, smallestUnit, roundingMode);
+	  }, ns2, dateTime, timeZone, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode);
 	}
 	function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
 	  const ALLOWED_UNITS = TEMPORAL_UNITS.reduce((allowed, unitInfo) => {
@@ -11564,7 +11550,7 @@
 	      weeks,
 	      days,
 	      norm: TimeDuration.ZERO
-	    }, destEpochNs, dateTime, calendar, null, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
+	    }, destEpochNs, dateTime, null, calendar, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
 	  }
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, 0, 0, 0, 0, 0, 0);
 	}
@@ -11664,7 +11650,7 @@
 	      weeks: 0,
 	      days: 0,
 	      norm: TimeDuration.ZERO
-	    }, destEpochNs, dateTime, calendar, null, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
+	    }, destEpochNs, dateTime, null, calendar, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
 	  }
 	  return new Duration(sign * years, sign * months, 0, 0, 0, 0, 0, 0, 0, 0);
 	}
@@ -11716,7 +11702,7 @@
 	      milliseconds,
 	      microseconds,
 	      nanoseconds
-	    } = DifferenceZonedDateTimeWithRounding(ns1, ns2, calendar, timeZone, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
+	    } = DifferenceZonedDateTimeWithRounding(ns1, ns2, timeZone, calendar, settings.largestUnit, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode));
 	  }
 	  return new Duration(sign * years, sign * months, sign * weeks, sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
 	}
@@ -12310,6 +12296,8 @@
 	}
 
 	const ArrayFrom = Array.from;
+	const ArrayPrototypeFind = Array.prototype.find;
+	const ArrayPrototypeIncludes = Array.prototype.includes;
 	const ArrayPrototypeSort = Array.prototype.sort;
 	const IntlDateTimeFormat$1 = globalThis.Intl.DateTimeFormat;
 	const MathAbs = Math.abs;
@@ -12804,8 +12792,13 @@
 	      type,
 	      value
 	    } of parts) {
-	      if (type === 'year') result.eraYear = +value;
-	      if (type === 'relatedYear') result.eraYear = +value;
+	      if (type === 'year' || type === 'relatedYear') {
+	        if (this.hasEra) {
+	          result.eraYear = +value;
+	        } else {
+	          result.year = +value;
+	        }
+	      }
 	      if (type === 'month') {
 	        const matches = /^([0-9]*)(.*?)$/.exec(value);
 	        if (!matches || matches.length != 3 || !matches[1] && !matches[2]) {
@@ -12844,10 +12837,15 @@
 	        result.era = value.normalize('NFD').replace(/[^-0-9 \p{L}]/gu, '').replace(' ', '-').toLowerCase();
 	      }
 	    }
-	    if (result.eraYear === undefined) {
+	    if (this.hasEra && result.eraYear === undefined) {
 	      // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
 	      // output of Intl.DateTimeFormat.formatToParts.
 	      throw new RangeError(`Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`);
+	    }
+	    // Translate old ICU era codes "ERA0" etc. into canonical era names.
+	    if (this.hasEra) {
+	      const replacement = Call$1(ArrayPrototypeFind, this.eras, [e => result.era === e.genericName]);
+	      if (replacement) result.era = replacement.name;
 	    }
 	    // Translate eras that may be handled differently by Temporal vs. by Intl
 	    // (e.g. Japanese pre-Meiji eras). See #526 for details.
@@ -12881,7 +12879,6 @@
 	  },
 	  validateCalendarDate(calendarDate) {
 	    const {
-	      era,
 	      month,
 	      year,
 	      day,
@@ -12901,14 +12898,6 @@
 	      }
 	      if (!/^M([01]?\d)(L?)$/.test(monthCode)) throw new RangeError(`Invalid monthCode: ${monthCode}`);
 	    }
-	    if (this.constantEra) {
-	      if (era !== undefined && era !== this.constantEra) {
-	        throw new RangeError(`era must be ${this.constantEra}, not ${era}`);
-	      }
-	      if (eraYear !== undefined && year !== undefined && eraYear !== year) {
-	        throw new RangeError(`eraYear ${eraYear} does not match year ${year}`);
-	      }
-	    }
 	    if (this.hasEra) {
 	      if (calendarDate['era'] === undefined !== (calendarDate['eraYear'] === undefined)) {
 	        throw new TypeError("properties 'era' and 'eraYear' must be provided together");
@@ -12923,27 +12912,12 @@
 	   *
 	   * The base implementation fills in missing values by assuming the simplest
 	   * possible calendar:
-	   * - no eras or a constant era defined in `.constantEra`
+	   * - no eras
 	   * - non-lunisolar calendar (no leap months)
 	   * */
 	  adjustCalendarDate(calendarDate, cache, overflow /*, fromLegacyDate = false */) {
 	    if (this.calendarType === 'lunisolar') throw new RangeError('Override required for lunisolar calendars');
 	    this.validateCalendarDate(calendarDate);
-	    // For calendars that always use the same era, set it here so that derived
-	    // calendars won't need to implement this method simply to set the era.
-	    if (this.constantEra) {
-	      // year and eraYear always match when there's only one possible era
-	      const {
-	        year,
-	        eraYear
-	      } = calendarDate;
-	      calendarDate = {
-	        ...calendarDate,
-	        era: this.constantEra,
-	        year: year !== undefined ? year : eraYear,
-	        eraYear: eraYear !== undefined ? eraYear : year
-	      };
-	    }
 	    const largestMonth = this.monthsInYear(calendarDate, cache);
 	    let {
 	      month,
@@ -13351,8 +13325,8 @@
 	    const duration = DifferenceISODate(oneIso.year, oneIso.month, oneIso.day, twoIso.year, twoIso.month, twoIso.day, 'day');
 	    return duration.days;
 	  },
-	  // All built-in calendars except Chinese/Dangi and Hebrew use an era
-	  hasEra: true,
+	  // Override if calendar uses eras
+	  hasEra: false,
 	  monthDayFromFields(fields, overflow, cache) {
 	    let {
 	      monthCode,
@@ -13569,14 +13543,12 @@
 	    let fromLegacyDate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 	    let {
 	      year,
-	      eraYear,
 	      month,
 	      monthCode,
 	      day,
 	      monthExtra
 	    } = calendarDate;
-	    if (year === undefined) year = eraYear;
-	    if (eraYear === undefined) eraYear = year;
+	    if (year === undefined) throw new TypeError('Missing property: "year"');
 	    if (fromLegacyDate) {
 	      // In Pre Node-14 V8, DateTimeFormat.formatToParts `month: 'numeric'`
 	      // output returns the numeric equivalent of `month` as a string, meaning
@@ -13593,15 +13565,12 @@
 	        }) ? monthInfo.leap : monthInfo.regular;
 	      }
 	      monthCode = this.getMonthCode(year, month);
-	      const result = {
+	      return {
 	        year,
 	        month,
 	        day,
-	        era: undefined,
-	        eraYear,
 	        monthCode
 	      };
-	      return result;
 	    } else {
 	      // When called without input coming from legacy Date output, simply ensure
 	      // that all fields are present.
@@ -13666,13 +13635,10 @@
 	        day,
 	        month,
 	        monthCode,
-	        year,
-	        eraYear
+	        year
 	      };
 	    }
-	  },
-	  // All built-in calendars except Chinese/Dangi and Hebrew use an era
-	  hasEra: false
+	  }
 	});
 
 	/**
@@ -13706,16 +13672,6 @@
 	  maximumMonthLength: (/* calendarDate */) => 30,
 	  DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
 	  DAYS_PER_ISO_YEAR: 365.2425,
-	  constantEra: 'ah',
-	  reviseIntlEra(calendarDate /*, isoDate*/) {
-	    // Chrome for Android as of v 142.0.6367.179 mishandled the era option in Intl.DateTimeFormat
-	    // and returned 'bc' instead of 'ah'. This code corrects that and any possible future errors.
-	    // see https://issues.chromium.org/issues/40856332
-	    return {
-	      ...calendarDate,
-	      era: 'ah'
-	    };
-	  },
 	  estimateIsoDate(calendarDate) {
 	    const {
 	      year
@@ -13756,7 +13712,6 @@
 	    if (month === 12) return 30;
 	    return month <= 6 ? 31 : 30;
 	  },
-	  constantEra: 'ap',
 	  estimateIsoDate(calendarDate) {
 	    const {
 	      year
@@ -13789,7 +13744,6 @@
 	  maximumMonthLength(calendarDate) {
 	    return this.getMonthInfo(calendarDate).length;
 	  },
-	  constantEra: 'saka',
 	  // Indian months always start at the same well-known Gregorian month and
 	  // day. So this conversion is easy and fast. See
 	  // https://en.wikipedia.org/wiki/Indian_national_calendar
@@ -13904,6 +13858,9 @@
 	 *  interface Era {
 	 *   /** name of the era
 	 *   name: string;
+	 *
+	 *   // Aliases, see https://tc39.es/proposal-intl-era-monthcode/#table-eras
+	 *   aliases: string[];
 	 *
 	 *   // alternate name of the era used in old versions of ICU data
 	 *   // format is `era{n}` where n is the zero-based index of the era
@@ -14021,7 +13978,43 @@
 	  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 	}
 
-	/** Base for all Gregorian-like calendars. */
+	/**
+	 * Base for Gregorian-like calendars without eras, but a different year zero.
+	 * Can be further overridden to implement fixed epoch for solar calendars with
+	 * different months/days than Gregorian.
+	 */
+	function makeHelperGregorianFixedEpoch(id) {
+	  return ObjectAssign$2({}, nonIsoHelperBase, {
+	    id,
+	    calendarType: 'solar',
+	    inLeapYear(calendarDate /*, cache */) {
+	      const {
+	        year
+	      } = this.estimateIsoDate(calendarDate);
+	      return isGregorianLeapYear(year);
+	    },
+	    monthsInYear(/* calendarDate */
+	    ) {
+	      return 12;
+	    },
+	    minimumMonthLength(calendarDate) {
+	      const {
+	        month
+	      } = calendarDate;
+	      if (month === 2) return this.inLeapYear(calendarDate) ? 29 : 28;
+	      return [4, 6, 9, 11].indexOf(month) >= 0 ? 30 : 31;
+	    },
+	    maximumMonthLength(calendarDate) {
+	      return this.minimumMonthLength(calendarDate);
+	    },
+	    estimateIsoDate(calendarDate) {
+	      calendarDate = this.adjustCalendarDate(calendarDate);
+	      return RegulateISODate(calendarDate.year + this.isoEpoch.year, calendarDate.month + this.isoEpoch.month, calendarDate.day + this.isoEpoch.day, 'constrain');
+	    }
+	  });
+	}
+
+	/** Base for Gregorian-like calendars with eras. */
 	const makeHelperGregorian = (id, originalEras) => {
 	  const {
 	    eras,
@@ -14029,6 +14022,7 @@
 	  } = adjustEras(originalEras);
 	  return ObjectAssign$2({}, nonIsoHelperBase, {
 	    id,
+	    hasEra: true,
 	    eras,
 	    anchorEra,
 	    calendarType: 'solar',
@@ -14106,7 +14100,14 @@
 	        checkField('era', era);
 	        checkField('eraYear', eraYear);
 	      } else if (eraYear != null) {
-	        const matchingEra = era === undefined ? undefined : this.eras.find(e => e.name === era || e.genericName === era);
+	        if (era === undefined) throw new RangeError('era and eraYear must be provided together');
+	        const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref13 => {
+	          let {
+	            name,
+	            aliases = []
+	          } = _ref13;
+	          return name === era || Call$1(ArrayPrototypeIncludes, aliases, [era]);
+	        }]);
 	        if (!matchingEra) throw new RangeError(`Era ${era} (ISO year ${eraYear}) was not matched by any era`);
 	        if (eraYear < 1 && matchingEra.reverseOf) {
 	          throw new RangeError(`Years in ${era} era must be positive, not ${year}`);
@@ -14196,7 +14197,7 @@
 	  });
 	};
 	const makeHelperOrthodox = (id, originalEras) => {
-	  const base = makeHelperGregorian(id, originalEras);
+	  const base = originalEras ? makeHelperGregorian(id, originalEras) : makeHelperGregorianFixedEpoch(id);
 	  return ObjectAssign$2(base, {
 	    inLeapYear(calendarDate /*, cache */) {
 	      // Leap years happen one year before the Julian leap year. Note that this
@@ -14237,36 +14238,37 @@
 	// - Coptic has a different epoch date
 	// - Ethiopic has an additional second era that starts at the same date as the
 	//   zero era of ethioaa.
-	const helperEthioaa = makeHelperOrthodox('ethioaa', [{
-	  name: 'era0',
+	const helperEthioaa = ObjectAssign$2(makeHelperOrthodox('ethioaa'), {
 	  isoEpoch: {
 	    year: -5492,
 	    month: 7,
 	    day: 17
 	  }
-	}]);
+	});
 	const helperCoptic = makeHelperOrthodox('coptic', [{
-	  name: 'era1',
+	  name: 'coptic',
 	  isoEpoch: {
 	    year: 284,
 	    month: 8,
 	    day: 29
 	  }
 	}, {
-	  name: 'era0',
-	  reverseOf: 'era1'
+	  name: 'coptic-inverse',
+	  reverseOf: 'coptic'
 	}]);
 	// Anchor is currently the older era to match ethioaa, but should it be the newer era?
 	// See https://github.com/tc39/ecma402/issues/534 for discussion.
 	const helperEthiopic = makeHelperOrthodox('ethiopic', [{
-	  name: 'era0',
+	  name: 'ethioaa',
+	  aliases: ['ethiopic-amete-alem', 'mundi'],
 	  isoEpoch: {
 	    year: -5492,
 	    month: 7,
 	    day: 17
 	  }
 	}, {
-	  name: 'era1',
+	  name: 'ethiopic',
+	  aliases: ['incar'],
 	  isoEpoch: {
 	    year: 8,
 	    month: 8,
@@ -14276,36 +14278,38 @@
 	    year: 5501
 	  }
 	}]);
-	const helperRoc = ObjectAssign$2({}, makeHelperSameMonthDayAsGregorian('roc', [{
-	  name: 'minguo',
+	const helperRoc = makeHelperSameMonthDayAsGregorian('roc', [{
+	  name: 'roc',
+	  aliases: ['minguo'],
 	  isoEpoch: {
 	    year: 1912,
 	    month: 1,
 	    day: 1
 	  }
 	}, {
-	  name: 'before-roc',
-	  reverseOf: 'minguo'
-	}]));
-	const helperBuddhist = ObjectAssign$2({}, makeHelperSameMonthDayAsGregorian('buddhist', [{
-	  name: 'be',
-	  hasYearZero: true,
+	  name: 'roc-inverse',
+	  aliases: ['before-roc'],
+	  reverseOf: 'roc'
+	}]);
+	const helperBuddhist = ObjectAssign$2(makeHelperGregorianFixedEpoch('buddhist'), {
 	  isoEpoch: {
 	    year: -543,
 	    month: 1,
 	    day: 1
 	  }
-	}]));
-	const helperGregory = ObjectAssign$2({}, makeHelperSameMonthDayAsGregorian('gregory', [{
-	  name: 'ce',
+	});
+	const helperGregory = ObjectAssign$2(makeHelperSameMonthDayAsGregorian('gregory', [{
+	  name: 'gregory',
+	  aliases: ['ad', 'ce'],
 	  isoEpoch: {
 	    year: 1,
 	    month: 1,
 	    day: 1
 	  }
 	}, {
-	  name: 'bce',
-	  reverseOf: 'ce'
+	  name: 'gregory-inverse',
+	  aliases: ['bc', 'bce'],
+	  reverseOf: 'gregory'
 	}]), {
 	  reviseIntlEra(calendarDate /*, isoDate*/) {
 	    let {
@@ -14316,8 +14320,8 @@
 	    // option mistakenly returns the one-letter (narrow) format instead. The
 	    // code below handles either the correct or Firefox-buggy format. See
 	    // https://bugzilla.mozilla.org/show_bug.cgi?id=1752253
-	    if (era === 'bc' || era === 'b') era = 'bce';
-	    if (era === 'ad' || era === 'a') era = 'ce';
+	    if (era === 'b') era = 'gregory-inverse';
+	    if (era === 'a') era = 'gregory';
 	    return {
 	      era,
 	      eraYear
@@ -14330,7 +14334,7 @@
 	    return 1;
 	  }
 	});
-	const helperJapanese = ObjectAssign$2({},
+	const helperJapanese = ObjectAssign$2(
 	// NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
 	// before Meiji 1, the `ce` and `bce` eras are used. Challenges with pre-Meiji
 	// eras include:
@@ -14424,15 +14428,17 @@
 	    day: 8
 	  }
 	}, {
-	  name: 'ce',
+	  name: 'japanese',
+	  aliases: ['gregory', 'ad', 'ce'],
 	  isoEpoch: {
 	    year: 1,
 	    month: 1,
 	    day: 1
 	  }
 	}, {
-	  name: 'bce',
-	  reverseOf: 'ce'
+	  name: 'japanese-inverse',
+	  aliases: ['gregory-inverse', 'bc', 'bce'],
+	  reverseOf: 'japanese'
 	}]), {
 	  erasBeginMidYear: true,
 	  reviseIntlEra(calendarDate, isoDate) {
@@ -14448,10 +14454,10 @@
 	      eraYear
 	    };
 	    return isoYear < 1 ? {
-	      era: 'bce',
+	      era: 'japanese-inverse',
 	      eraYear: 1 - isoYear
 	    } : {
-	      era: 'ce',
+	      era: 'japanese',
 	      eraYear: isoYear
 	    };
 	  }
@@ -14580,14 +14586,13 @@
 	      month,
 	      monthExtra,
 	      day,
-	      monthCode,
-	      eraYear
+	      monthCode
 	    } = calendarDate;
+	    if (year === undefined) throw new TypeError('Missing property: "year"');
 	    if (fromLegacyDate) {
 	      // Legacy Date output returns a string that's an integer with an optional
 	      // "bis" suffix used only by the Chinese/Dangi calendar to indicate a leap
 	      // month. Below we'll normalize the output.
-	      year = eraYear;
 	      if (monthExtra && monthExtra !== 'bis') throw new RangeError(`Unexpected leap month suffix: ${monthExtra}`);
 	      const monthCode = buildMonthCode(month, monthExtra !== undefined);
 	      const monthString = `${month}${monthExtra || ''}`;
@@ -14599,16 +14604,12 @@
 	        year,
 	        month,
 	        day,
-	        era: undefined,
-	        eraYear,
 	        monthCode
 	      };
 	    } else {
 	      // When called without input coming from legacy Date output,
 	      // simply ensure that all fields are present.
 	      this.validateCalendarDate(calendarDate);
-	      if (year === undefined) year = eraYear;
-	      if (eraYear === undefined) eraYear = year;
 	      if (month === undefined) {
 	        const months = this.getMonthList(year, cache);
 	        let numberPart = monthCode.replace('L', 'bis').slice(1);
@@ -14640,8 +14641,8 @@
 	          month = ConstrainToRange(month, 1, largestMonth);
 	          day = ConstrainToRange(day, 1, this.maximumMonthLength());
 	        }
-	        const matchingMonthEntry = monthEntries.find(_ref13 => {
-	          let [, v] = _ref13;
+	        const matchingMonthEntry = monthEntries.find(_ref14 => {
+	          let [, v] = _ref14;
 	          return v.monthIndex === month;
 	        });
 	        if (matchingMonthEntry === undefined) {
@@ -14662,22 +14663,19 @@
 	      return {
 	        ...calendarDate,
 	        year,
-	        eraYear,
 	        month,
 	        monthCode,
 	        day
 	      };
 	    }
-	  },
-	  // All built-in calendars except Chinese/Dangi and Hebrew use an era
-	  hasEra: false
+	  }
 	});
 
 	// Dangi (Korean) calendar has same implementation as Chinese
-	const helperDangi = ObjectAssign$2({}, {
+	const helperDangi = {
 	  ...helperChinese,
 	  id: 'dangi'
-	});
+	};
 
 	/**
 	 * Common implementation of all non-ISO calendars.
@@ -14758,13 +14756,13 @@
 	    }
 	    return arrayFromSet(result);
 	  },
-	  dateAdd(isoDate, _ref14, overflow) {
+	  dateAdd(isoDate, _ref15, overflow) {
 	    let {
 	      years,
 	      months,
 	      weeks,
 	      days
-	    } = _ref14;
+	    } = _ref15;
 	    const cache = OneObjectCache.getCacheForObject(isoDate);
 	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
 	    const added = this.helper.addCalendar(calendarDate, {
@@ -16386,12 +16384,11 @@
 	        milliseconds,
 	        microseconds,
 	        nanoseconds
-	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, calendar, timeZone, largestUnit, roundingIncrement, smallestUnit, roundingMode));
+	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, timeZone, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode));
 	    } else if (plainRelativeTo) {
 	      let targetTime = AddTime(0, 0, 0, 0, 0, 0, norm);
 
 	      // Delegate the date part addition to the calendar
-	      RejectDuration(years, months, weeks, days + targetTime.deltaDays, 0, 0, 0, 0, 0, 0);
 	      const isoRelativeToDate = TemporalObjectToISODateRecord(plainRelativeTo);
 	      const calendar = GetSlot(plainRelativeTo, CALENDAR);
 	      const dateDuration = {
@@ -16479,7 +16476,7 @@
 	      });
 	      const {
 	        total
-	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, calendar, timeZone, unit, 1, unit, 'trunc');
+	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, timeZone, calendar, unit, 1, unit, 'trunc');
 	      if (NumberIsNaN(total)) throw new Error('assertion failed: total hit unexpected code path');
 	      return total;
 	    }
@@ -16487,7 +16484,6 @@
 	      let targetTime = AddTime(0, 0, 0, 0, 0, 0, norm);
 
 	      // Delegate the date part addition to the calendar
-	      RejectDuration(years, months, weeks, days + targetTime.deltaDays, 0, 0, 0, 0, 0, 0);
 	      const isoRelativeToDate = TemporalObjectToISODateRecord(plainRelativeTo);
 	      const calendar = GetSlot(plainRelativeTo, CALENDAR);
 	      const dateDuration = {
