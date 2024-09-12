@@ -1,0 +1,19 @@
+name: 'enforce format'
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: 'enforce format'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: use node.js v20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+      - run: npm ci
+      # Work around https://github.com/tc39/ecmarkup/pull/607
+      - run: 'if ! npx emu-format --check spec.html; then echo "You need to run \`npm run format\`"; exit 1; fi'
+      - run: 'for file in spec/*.html; do if ! npx emu-format --check $file; then echo "You need to run \`npm run format\`"; exit 1; fi;  done'
