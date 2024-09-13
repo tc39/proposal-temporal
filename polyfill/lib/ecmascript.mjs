@@ -2180,8 +2180,18 @@ function formatAsDecimalNumber(num) {
   return bigInt(num).toString();
 }
 
-export function TemporalDurationToString(years, months, weeks, days, hours, minutes, normSeconds, precision = 'auto') {
-  const sign = DurationSign(years, months, weeks, days, hours, minutes, normSeconds.sec, 0, 0, normSeconds.subsec);
+export function TemporalDurationToString(duration, precision) {
+  const years = GetSlot(duration, YEARS);
+  const months = GetSlot(duration, MONTHS);
+  const weeks = GetSlot(duration, WEEKS);
+  const days = GetSlot(duration, DAYS);
+  const hours = GetSlot(duration, HOURS);
+  const minutes = GetSlot(duration, MINUTES);
+  const s = GetSlot(duration, SECONDS);
+  const ms = GetSlot(duration, MILLISECONDS);
+  const µs = GetSlot(duration, MICROSECONDS);
+  const ns = GetSlot(duration, NANOSECONDS);
+  const sign = DurationSign(years, months, weeks, days, hours, minutes, s, ms, µs, ns);
 
   let datePart = '';
   if (years !== 0) datePart += `${formatAsDecimalNumber(MathAbs(years))}Y`;
@@ -2193,9 +2203,16 @@ export function TemporalDurationToString(years, months, weeks, days, hours, minu
   if (hours !== 0) timePart += `${formatAsDecimalNumber(MathAbs(hours))}H`;
   if (minutes !== 0) timePart += `${formatAsDecimalNumber(MathAbs(minutes))}M`;
 
+  // Keeping sub-second units separate avoids losing precision after resolving
+  // any overflows from rounding
+  const normSeconds = TimeDuration.normalize(0, 0, s, ms, µs, ns);
   if (
     !normSeconds.isZero() ||
-    (years === 0 && months === 0 && weeks === 0 && days === 0 && hours === 0 && minutes === 0) ||
+    Call(
+      ArrayPrototypeIncludes,
+      ['second', 'millisecond', 'microsecond', 'nanosecond'],
+      [DefaultTemporalLargestUnit(duration)]
+    ) ||
     precision !== 'auto'
   ) {
     const secondsPart = formatAsDecimalNumber(MathAbs(normSeconds.sec));

@@ -605,64 +605,64 @@
     <emu-alg>
       1. If _smallestUnit_ is *"minute"*, then
         1. Return the Record {
-            [[Precision]]: *"minute"*,
-            [[Unit]]: *"minute"*,
-            [[Increment]]: 1
+          [[Precision]]: *"minute"*,
+          [[Unit]]: *"minute"*,
+          [[Increment]]: 1
           }.
       1. If _smallestUnit_ is *"second"*, then
         1. Return the Record {
-            [[Precision]]: 0,
-            [[Unit]]: *"second"*,
-            [[Increment]]: 1
+          [[Precision]]: 0,
+          [[Unit]]: *"second"*,
+          [[Increment]]: 1
           }.
       1. If _smallestUnit_ is *"millisecond"*, then
         1. Return the Record {
-            [[Precision]]: 3,
-            [[Unit]]: *"millisecond"*,
-            [[Increment]]: 1
+          [[Precision]]: 3,
+          [[Unit]]: *"millisecond"*,
+          [[Increment]]: 1
           }.
       1. If _smallestUnit_ is *"microsecond"*, then
         1. Return the Record {
-            [[Precision]]: 6,
-            [[Unit]]: *"microsecond"*,
-            [[Increment]]: 1
+          [[Precision]]: 6,
+          [[Unit]]: *"microsecond"*,
+          [[Increment]]: 1
           }.
       1. If _smallestUnit_ is *"nanosecond"*, then
         1. Return the Record {
-            [[Precision]]: 9,
-            [[Unit]]: *"nanosecond"*,
-            [[Increment]]: 1
+          [[Precision]]: 9,
+          [[Unit]]: *"nanosecond"*,
+          [[Increment]]: 1
           }.
       1. Assert: _smallestUnit_ is *undefined*.
       1. If _fractionalDigitCount_ is *"auto"*, then
         1. Return the Record {
-            [[Precision]]: *"auto"*,
-            [[Unit]]: *"nanosecond"*,
-            [[Increment]]: 1
+          [[Precision]]: *"auto"*,
+          [[Unit]]: *"nanosecond"*,
+          [[Increment]]: 1
           }.
       1. If _fractionalDigitCount_ = 0, then
         1. Return the Record {
-            [[Precision]]: 0,
-            [[Unit]]: *"second"*,
-            [[Increment]]: 1
+          [[Precision]]: 0,
+          [[Unit]]: *"second"*,
+          [[Increment]]: 1
           }.
       1. If _fractionalDigitCount_ is in the inclusive interval from 1 to 3, then
         1. Return the Record {
-            [[Precision]]: _fractionalDigitCount_,
-            [[Unit]]: *"millisecond"*,
-            [[Increment]]: 10<sup>3 - _fractionalDigitCount_</sup>
+          [[Precision]]: _fractionalDigitCount_,
+          [[Unit]]: *"millisecond"*,
+          [[Increment]]: 10<sup>3 - _fractionalDigitCount_</sup>
           }.
       1. If _fractionalDigitCount_ is in the inclusive interval from 4 to 6, then
         1. Return the Record {
-            [[Precision]]: _fractionalDigitCount_,
-            [[Unit]]: *"microsecond"*,
-            [[Increment]]: 10<sup>6 - _fractionalDigitCount_</sup>
+          [[Precision]]: _fractionalDigitCount_,
+          [[Unit]]: *"microsecond"*,
+          [[Increment]]: 10<sup>6 - _fractionalDigitCount_</sup>
           }.
       1. Assert: _fractionalDigitCount_ is in the inclusive interval from 7 to 9.
       1. Return the Record {
-          [[Precision]]: _fractionalDigitCount_,
-          [[Unit]]: *"nanosecond"*,
-          [[Increment]]: 10<sup>9 - _fractionalDigitCount_</sup>
+        [[Precision]]: _fractionalDigitCount_,
+        [[Unit]]: *"nanosecond"*,
+        [[Increment]]: 10<sup>9 - _fractionalDigitCount_</sup>
         }.
     </emu-alg>
   </emu-clause>
@@ -1656,12 +1656,12 @@
         1. Let _offset_ be the source text matched by the |UTCOffset[+SubMinutePrecision]| Parse Node contained within _parseResult_.
         1. Set _timeZoneResult_.[[OffsetString]] to CodePointsToString(_offset_).
       1. Return ISO Date-Time Parse Record {
-          [[Year]]: _yearMV_,
-          [[Month]]: _monthMV_,
-          [[Day]]: _dayMV_,
-          [[Time]]: _time_,
-          [[TimeZone]]: _timeZoneResult_,
-          [[Calendar]]: _calendar_
+        [[Year]]: _yearMV_,
+        [[Month]]: _monthMV_,
+        [[Day]]: _dayMV_,
+        [[Time]]: _time_,
+        [[TimeZone]]: _timeZoneResult_,
+        [[Calendar]]: _calendar_
         }.
     </emu-alg>
   </emu-clause>
@@ -2204,10 +2204,10 @@
       1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
       1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
       1. Return the Record {
-          [[SmallestUnit]]: _smallestUnit_,
-          [[LargestUnit]]: _largestUnit_,
-          [[RoundingMode]]: _roundingMode_,
-          [[RoundingIncrement]]: _roundingIncrement_,
+        [[SmallestUnit]]: _smallestUnit_,
+        [[LargestUnit]]: _largestUnit_,
+        [[RoundingMode]]: _roundingMode_,
+        [[RoundingIncrement]]: _roundingIncrement_,
         }.
     </emu-alg>
   </emu-clause>
