@@ -148,74 +148,95 @@ describe('ECMAScript', () => {
   });
 
   describe('GetTemporalRelativeToOption', () => {
+    const expectedISODateTime = {
+      year: 2019,
+      month: 11,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      millisecond: 0,
+      microsecond: 0,
+      nanosecond: 0
+    };
+
     it('bare date-time string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00' });
-      equal(`${plainRelativeTo}`, '2019-11-01');
-      equal(zonedRelativeTo, undefined);
+      const relativeTo = ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00' });
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, null);
     });
 
     it('bare date-time property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
-        relativeTo: { year: 2019, month: 11, day: 1 }
-      });
-      equal(`${plainRelativeTo}`, '2019-11-01');
-      equal(zonedRelativeTo, undefined);
+      const relativeTo = ES.GetTemporalRelativeToOption({ relativeTo: { year: 2019, month: 11, day: 1 } });
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, null);
     });
 
     it('date-time + offset string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
-        relativeTo: '2019-11-01T00:00-07:00'
-      });
-      equal(`${plainRelativeTo}`, '2019-11-01');
-      equal(zonedRelativeTo, undefined);
+      const relativeTo = ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00-07:00' });
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, null);
     });
 
     it('date-time + offset property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
+      const relativeTo = ES.GetTemporalRelativeToOption({
         relativeTo: { year: 2019, month: 11, day: 1, offset: '-07:00' }
       });
-      equal(`${plainRelativeTo}`, '2019-11-01');
-      equal(zonedRelativeTo, undefined);
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, null);
     });
 
     it('date-time + annotation string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
-        relativeTo: '2019-11-01T00:00[-07:00]'
-      });
-      equal(plainRelativeTo, undefined);
-      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00-07:00[-07:00]');
+      const relativeTo = ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00[-07:00]' });
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, '-07:00');
     });
 
     it('date-time + annotation property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
+      const relativeTo = ES.GetTemporalRelativeToOption({
         relativeTo: { year: 2019, month: 11, day: 1, timeZone: '-07:00' }
       });
-      equal(plainRelativeTo, undefined);
-      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00-07:00[-07:00]');
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, '-07:00');
     });
 
     it('date-time + offset + annotation string', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
-        relativeTo: '2019-11-01T00:00+00:00[UTC]'
-      });
-      equal(plainRelativeTo, undefined);
-      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00+00:00[UTC]');
+      const relativeTo = ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00+00:00[UTC]' });
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, 'UTC');
     });
 
     it('date-time + offset + annotation property bag', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
+      const relativeTo = ES.GetTemporalRelativeToOption({
         relativeTo: { year: 2019, month: 11, day: 1, offset: '+00:00', timeZone: 'UTC' }
       });
-      equal(plainRelativeTo, undefined);
-      equal(`${zonedRelativeTo}`, '2019-11-01T00:00:00+00:00[UTC]');
+      deepEqual(relativeTo.isoDateTime, expectedISODateTime);
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, 'UTC');
     });
 
     it('date-time + Z + offset', () => {
-      const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption({
-        relativeTo: '2019-11-01T00:00Z[-07:00]'
+      const relativeTo = ES.GetTemporalRelativeToOption({ relativeTo: '2019-11-01T00:00Z[-07:00]' });
+      deepEqual(relativeTo.isoDateTime, {
+        year: 2019,
+        month: 10,
+        day: 31,
+        hour: 17,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+        microsecond: 0,
+        nanosecond: 0
       });
-      equal(plainRelativeTo, undefined);
-      equal(`${zonedRelativeTo}`, '2019-10-31T17:00:00-07:00[-07:00]');
+      equal(relativeTo.calendar, 'iso8601');
+      equal(relativeTo.timeZone, '-07:00');
     });
 
     it('date-time + Z', () => {
