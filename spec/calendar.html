@@ -1054,9 +1054,9 @@
         1. Let _result_ be ? RegulateISOYearMonth(_year_, _month_, _overflow_).
         1. If ISOYearMonthWithinLimits(_result_.[[Year]], _result_.[[Month]]) is *false*, throw a *RangeError* exception.
         1. Return ISO Date Record {
-            [[Year]]: _result_.[[Year]],
-            [[Month]]: _result_.[[Month]],
-            [[Day]]: 1
+          [[Year]]: _result_.[[Year]],
+          [[Month]]: _result_.[[Month]],
+          [[Day]]: 1
           }.
       </emu-alg>
     </emu-clause>
@@ -1083,9 +1083,9 @@
         1. Else,
           1. Let _result_ be ? RegulateISODate(_year_, _month_, _day_, _overflow_).
         1. Return ISO Date Record {
-            [[Year]]: _referenceISOYear_,
-            [[Month]]: _result_.[[Month]],
-            [[Day]]: _result_.[[Day]]
+          [[Year]]: _referenceISOYear_,
+          [[Month]]: _result_.[[Month]],
+          [[Day]]: _result_.[[Day]]
           }.
       </emu-alg>
     </emu-clause>

@@ -80,17 +80,8 @@ export class Duration {
     SetSlot(this, NANOSECONDS, nanoseconds);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
-      const normSeconds = TimeDuration.normalize(0, 0, seconds, milliseconds, microseconds, nanoseconds);
       ObjectDefineProperty(this, '_repr_', {
-        value: `Temporal.Duration <${ES.TemporalDurationToString(
-          years,
-          months,
-          weeks,
-          days,
-          hours,
-          minutes,
-          normSeconds
-        )}>`,
+        value: `Temporal.Duration <${ES.TemporalDurationToString(this, 'auto')}>`,
         writable: false,
         enumerable: false,
         configurable: false
@@ -468,58 +459,48 @@ export class Duration {
     }
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
 
-    let years = GetSlot(this, YEARS);
-    let months = GetSlot(this, MONTHS);
-    let weeks = GetSlot(this, WEEKS);
-    let days = GetSlot(this, DAYS);
+    if (unit === 'nanosecond' && increment === 1) return ES.TemporalDurationToString(this, precision);
+
+    const years = GetSlot(this, YEARS);
+    const months = GetSlot(this, MONTHS);
+    const weeks = GetSlot(this, WEEKS);
+    const days = GetSlot(this, DAYS);
     let hours = GetSlot(this, HOURS);
     let minutes = GetSlot(this, MINUTES);
     let seconds = GetSlot(this, SECONDS);
     let milliseconds = GetSlot(this, MILLISECONDS);
     let microseconds = GetSlot(this, MICROSECONDS);
     let nanoseconds = GetSlot(this, NANOSECONDS);
-
-    if (unit !== 'nanosecond' || increment !== 1) {
-      let norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-      const largestUnit = ES.DefaultTemporalLargestUnit(this);
-      ({ norm } = ES.RoundTimeDuration(0, norm, increment, unit, roundingMode));
-      let deltaDays;
-      ({
-        days: deltaDays,
-        hours,
-        minutes,
-        seconds,
-        milliseconds,
-        microseconds,
-        nanoseconds
-      } = ES.BalanceTimeDuration(norm, ES.LargerOfTwoTemporalUnits(largestUnit, 'second')));
-      // Keeping sub-second units separate avoids losing precision after
-      // resolving any overflows from rounding
-      days += deltaDays;
-    }
-
-    const normSeconds = TimeDuration.normalize(0, 0, seconds, milliseconds, microseconds, nanoseconds);
-    return ES.TemporalDurationToString(years, months, weeks, days, hours, minutes, normSeconds, precision);
+    let norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+    const largestUnit = ES.DefaultTemporalLargestUnit(this);
+    ({ norm } = ES.RoundTimeDuration(0, norm, increment, unit, roundingMode));
+    let deltaDays;
+    ({
+      days: deltaDays,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    } = ES.BalanceTimeDuration(norm, ES.LargerOfTwoTemporalUnits(largestUnit, 'second')));
+    const roundedDuration = new Duration(
+      years,
+      months,
+      weeks,
+      days + deltaDays,
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds,
+      nanoseconds
+    );
+    return ES.TemporalDurationToString(roundedDuration, precision);
   }
   toJSON() {
     if (!ES.IsTemporalDuration(this)) throw new TypeErrorCtor('invalid receiver');
-    const normSeconds = TimeDuration.normalize(
-      0,
-      0,
-      GetSlot(this, SECONDS),
-      GetSlot(this, MILLISECONDS),
-      GetSlot(this, MICROSECONDS),
-      GetSlot(this, NANOSECONDS)
-    );
-    return ES.TemporalDurationToString(
-      GetSlot(this, YEARS),
-      GetSlot(this, MONTHS),
-      GetSlot(this, WEEKS),
-      GetSlot(this, DAYS),
-      GetSlot(this, HOURS),
-      GetSlot(this, MINUTES),
-      normSeconds
-    );
+    return ES.TemporalDurationToString(this, 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeErrorCtor('invalid receiver');
@@ -527,23 +508,7 @@ export class Duration {
       return new IntlDurationFormat(locales, options).format(this);
     }
     warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
-    const normSeconds = TimeDuration.normalize(
-      0,
-      0,
-      GetSlot(this, SECONDS),
-      GetSlot(this, MILLISECONDS),
-      GetSlot(this, MICROSECONDS),
-      GetSlot(this, NANOSECONDS)
-    );
-    return ES.TemporalDurationToString(
-      GetSlot(this, YEARS),
-      GetSlot(this, MONTHS),
-      GetSlot(this, WEEKS),
-      GetSlot(this, DAYS),
-      GetSlot(this, HOURS),
-      GetSlot(this, MINUTES),
-      normSeconds
-    );
+    return ES.TemporalDurationToString(this, 'auto');
   }
   valueOf() {
     ES.ValueOfThrows('Duration');
