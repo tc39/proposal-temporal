@@ -567,8 +567,10 @@ export class Duration {
       if (!plainRelativeTo) {
         throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
       }
-      d1 = ES.UnbalanceDateDurationRelative(y1, mon1, w1, d1, plainRelativeTo);
-      d2 = ES.UnbalanceDateDurationRelative(y2, mon2, w2, d2, plainRelativeTo);
+      const dateDuration1 = { years: y1, months: mon1, weeks: w1, days: d1 };
+      d1 = ES.UnbalanceDateDurationRelative(dateDuration1, plainRelativeTo);
+      const dateDuration2 = { years: y2, months: mon2, weeks: w2, days: d2 };
+      d2 = ES.UnbalanceDateDurationRelative(dateDuration2, plainRelativeTo);
     }
     const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1).add24HourDays(d1);
     const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2).add24HourDays(d2);
