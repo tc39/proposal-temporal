@@ -1228,6 +1228,10 @@
         For example, when _calendar_ is *"gregory"* and _overflow_ is *"reject"*, _fields_ values of { [[MonthCode]]: *"M01"*, [[Day]]: 32 } and { [[Year]]: 2001, [[Month]]: 2, [[Day]]: 29 } would both cause a *RangeError* to be thrown.
         In the latter case, even though February 29 is a date in leap years of the Gregorian calendar, 2001 was not a leap year and a month code cannot be determined from the nonexistent date 2001-02-29 with the specified month index.
       </p>
+      <p>
+        Also like RegulateISODate, if _overflow_ is *"constrain"* and the date or month and day described by _fields_ does not exist (or does not exist within the year described by fields when there is such a year), the values of those fields are clamped to their respective valid range. As in CalendarDateToISO, such clamping is calendar-specific.
+		For example, when _calendar_ is *"gregory"* and _overflow_ is *"constrain"*, a _fields_ value of { [[MonthCode]]: *"M02"*, [[Day]]: 30 } is clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 29 } (because 29 is the maximum valid day for February) while _fields_ values of { [[Year]]: 2001, [[MonthCode]]: *"M02"*, [[Day]]: 30 } and { [[Era]]: *"ce"*, [[EraYear]]: 2001, [[Month]]: 2, [[Day]]: 30 } (or an equivalent with a supported value for [[Era]] representing the Common Era beginning in ISO 8601 year 1) are clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 28 } (because 28 is the maximum valid day for February 2001, which did not include a leap day).
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardateaddition" type="implementation-defined abstract operation">
