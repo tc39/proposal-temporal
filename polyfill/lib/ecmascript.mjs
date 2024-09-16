@@ -2913,16 +2913,17 @@ export function BalanceTimeDuration(norm, largestUnit) {
   return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
 }
 
-export function UnbalanceDateDurationRelative(years, months, weeks, days, plainRelativeTo) {
-  if (years === 0 && months === 0 && weeks === 0) return days;
+export function UnbalanceDateDurationRelative(dateDuration, plainRelativeTo) {
+  const yearsMonthsWeeksDuration = { ...dateDuration, days: 0 };
+  if (DateDurationSign(yearsMonthsWeeksDuration) === 0) return dateDuration.days;
 
   // balance years, months, and weeks down to days
   const isoDate = TemporalObjectToISODateRecord(plainRelativeTo);
-  const later = CalendarDateAdd(GetSlot(plainRelativeTo, CALENDAR), isoDate, { years, months, weeks }, 'constrain');
+  const later = CalendarDateAdd(GetSlot(plainRelativeTo, CALENDAR), isoDate, yearsMonthsWeeksDuration, 'constrain');
   const epochDaysEarlier = ISODateToEpochDays(isoDate.year, isoDate.month, isoDate.day);
   const epochDaysLater = ISODateToEpochDays(later.year, later.month, later.day);
   const yearsMonthsWeeksInDays = epochDaysLater - epochDaysEarlier;
-  return days + yearsMonthsWeeksInDays;
+  return dateDuration.days + yearsMonthsWeeksInDays;
 }
 
 export function CreateNegatedTemporalDuration(duration) {

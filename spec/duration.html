@@ -109,8 +109,10 @@
           1. Return *+0*<sub>𝔽</sub>.
         1. If _calendarUnitsPresent_ is *true*, then
           1. If _plainRelativeTo_ is *undefined*, throw a *RangeError* exception.
-          1. Let _days1_ be ? UnbalanceDateDurationRelative(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _plainRelativeTo_).
-          1. Let _days2_ be ? UnbalanceDateDurationRelative(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _plainRelativeTo_).
+          1. Let _dateDuration1_ be ! CreateDateDurationRecord(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]]).
+          1. Let _days1_ be ? UnbalanceDateDurationRelative(_dateDuration1_, _plainRelativeTo_).
+          1. Let _dateDuration2_ be ! CreateDateDurationRecord(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]]).
+          1. Let _days2_ be ? UnbalanceDateDurationRelative(_dateDuration2_, _plainRelativeTo_).
         1. Else,
           1. Let _days1_ be _one_.[[Days]].
           1. Let _days2_ be _two_.[[Days]].
@@ -1639,10 +1641,7 @@
     <emu-clause id="sec-temporal-unbalancedatedurationrelative" type="abstract operation">
       <h1>
         UnbalanceDateDurationRelative (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
+          _dateDuration_: a Date Duration Record,
           _plainRelativeTo_: a Temporal.PlainDate,
         ): either a normal completion containing an integer or a throw completion
       </h1>
@@ -1651,14 +1650,14 @@
         <dd>It converts the calendar units of a duration into a number of days, and returns the result.</dd>
       </dl>
       <emu-alg>
-        1. If _years_ = 0 and _months_ = 0 and _weeks_ = 0, return _days_.
+        1. Let _yearsMonthsWeeksDuration_ be ! CreateDateDurationRecord(_dateDuration_.[[Years]], _dateDuration_.[[Months]], _dateDuration_.[[Weeks]], 0).
+        1. If DateDurationSign(_yearsMonthsWeeksDuration_) = 0, return _dateDuration_.[[Days]].
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
-        1. Let _yearsMonthsWeeksDuration_ be CreateDurationRecord(_years_, _months_, _weeks_, 0, 0, 0, 0, 0, 0, 0).
         1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _isoDate_, _yearsMonthsWeeksDuration_, *"constrain"*).
         1. Let _epochDays1_ be ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]]).
         1. Let _epochDays2_ be ISODateToEpochDays(_later_.[[Year]], _later_.[[Month]] - 1, _later_.[[Day]]).
         1. Let _yearsMonthsWeeksInDays_ be _epochDays2_ - _epochDays1_.
-        1. Return _days_ + _yearsMonthsWeeksInDays_.
+        1. Return _dateDuration_.[[Days]] + _yearsMonthsWeeksInDays_.
       </emu-alg>
     </emu-clause>
 
