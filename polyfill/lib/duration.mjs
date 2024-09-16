@@ -130,35 +130,11 @@ export class Duration {
   }
   get sign() {
     if (!ES.IsTemporalDuration(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.DurationSign(
-      GetSlot(this, YEARS),
-      GetSlot(this, MONTHS),
-      GetSlot(this, WEEKS),
-      GetSlot(this, DAYS),
-      GetSlot(this, HOURS),
-      GetSlot(this, MINUTES),
-      GetSlot(this, SECONDS),
-      GetSlot(this, MILLISECONDS),
-      GetSlot(this, MICROSECONDS),
-      GetSlot(this, NANOSECONDS)
-    );
+    return ES.DurationSign(this);
   }
   get blank() {
     if (!ES.IsTemporalDuration(this)) throw new TypeErrorCtor('invalid receiver');
-    return (
-      ES.DurationSign(
-        GetSlot(this, YEARS),
-        GetSlot(this, MONTHS),
-        GetSlot(this, WEEKS),
-        GetSlot(this, DAYS),
-        GetSlot(this, HOURS),
-        GetSlot(this, MINUTES),
-        GetSlot(this, SECONDS),
-        GetSlot(this, MILLISECONDS),
-        GetSlot(this, MICROSECONDS),
-        GetSlot(this, NANOSECONDS)
-      ) === 0
-    );
+    return ES.DurationSign(this) === 0;
   }
   with(durationLike) {
     if (!ES.IsTemporalDuration(this)) throw new TypeErrorCtor('invalid receiver');

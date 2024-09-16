@@ -707,10 +707,10 @@
           1. Set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+        1. Let _sign_ be DurationSign(_duration_).
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ! BalanceTimeDuration(_norm_, *"day"*).
         1. Let _days_ be _duration_.[[Days]] + _balanceResult_.[[Days]].
-        1. Let _sign_ be DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, 0, 0, 0, 0, 0, 0).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
         1. Set _fields_.[[Day]] to 1.
