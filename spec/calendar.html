@@ -1181,12 +1181,15 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It performs implementation-defined processing to convert _fields_, which represents a date or year and month or month and day in the built-in calendar identified by _calendar_, to a corresponding representative date in the ISO 8601 calendar, subject to processing specified by _overflow_.
+          It performs implementation-defined processing to convert _fields_, which represents either a date or a year and month in the built-in calendar identified by _calendar_, to a corresponding representative date in the ISO 8601 calendar, subject to overflow correction specified by _overflow_.
           For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
-          For *"constrain"*, values that do not form a valid date are clamped to the correct range.
-          It then returns an ISO Date Record with the corresponding ISO 8601 date.
+          For *"constrain"*, values that do not form a valid date are clamped to their respective valid range.
         </dd>
       </dl>
+      <p>
+        Like RegulateISODate, the operation throws a *RangeError* exception when _overflow_ is *"reject"* and the date described by _fields_ does not exist.
+        It also throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateWithinLimits.
+      </p>
       <p>
         Clamping an invalid date to the correct range when _overflow_ is *"constrain"* is a behaviour specific to each built-in calendar, but all built-in calendars follow this guideline:
       </p>
@@ -1196,10 +1199,6 @@
         <li>Otherwise, pick the closest date that is still in the same year. If there are two equally-close dates in that year, pick the later one.</li>
         <li>If the entire year doesn't exist, pick the closest date in a different year. If there are two equally-close dates, pick the later one.</li>
       </ul>
-      <p>
-        Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is *"reject"* and the date described by _fields_ does not exist.
-        It also throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateWithinLimits.
-      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarmonthdaytoisoreferencedate" type="implementation-defined abstract operation">
@@ -1213,17 +1212,16 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to processing specified by _overflow_.
+          It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to overflow correction specified by _overflow_.
           For *"reject"*, values that do not form a valid date cause an exception to be thrown.
-          For *"constrain"*, values that do not form a valid date are clamped to the correct range as in CalendarDateToISO.
-          It then returns a Record representing the reference ISO 8601 date.
+          For *"constrain"*, values that do not form a valid date are clamped to their respective valid range as in CalendarDateToISO.
         </dd>
       </dl>
       <p>
-        The fields of the returned Record represent a reference date in the ISO 8601 calendar that, when converted to the built-in calendar identified by _calendar_, corresponds to the month code and day of _fields_ in an arbitrary but deterministically chosen reference year.
+        The fields of the returned ISO Date Record represent a reference date in the ISO 8601 calendar that, when converted to the built-in calendar identified by _calendar_, corresponds to the month code and day of _fields_ in an arbitrary but deterministically chosen reference year.
         The reference date is the latest ISO 8601 date corresponding to the calendar date, that is also earlier than or equal to the ISO 8601 date December 31, 1972.
         If that calendar date never occurs on or before the ISO 8601 date December 31, 1972, then the reference date is the earliest ISO 8601 date corresponding to that calendar date.
-        The reference year is almost always 1972 (the first ISO 8601 leap year after the epoch), with exceptions for calendars where some dates (e.g. leap days or days in leap months) didn't occur during that ISO 8601 year. For example, Hebrew calendar leap month Adar I was a part of calendar years 5730 and 5733 (respectively overlapping ISO 8601 February/March 1970 and February/March 1973), but did not occur between them.
+        The reference year is almost always 1972 (the first ISO 8601 leap year after the epoch), with exceptions for calendars where some dates (e.g. leap days or days in leap months) didn't occur during that ISO 8601 year. For example, Hebrew calendar leap month Adar I occurred in calendar years 5730 and 5733 (respectively overlapping ISO 8601 February/March 1970 and February/March 1973), but did not occur between them, so the reference year for for days of that month is 1970.
       </p>
       <p>
         Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is *"reject"* and the month and day described by _fields_ does not exist.

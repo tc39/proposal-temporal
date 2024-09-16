@@ -908,9 +908,9 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It performs the overflow correction given by _overflow_ on the values _year_, _month_, and _day_, in order to arrive at a valid date in the ISO 8601 calendar, as determined by IsValidISODate.
+          It performs the overflow correction specified by _overflow_ on the values _year_, _month_, and _day_, in order to arrive at a valid date in the ISO 8601 calendar, as determined by IsValidISODate.
           For *"reject"*, values that do not form a valid date cause an exception to be thrown.
-          For *"constrain"*, values that do not form a valid date are clamped to the correct range.
+          For *"constrain"*, values that do not form a valid date are independently clamped to their respective valid range in order of descending unit magnitude.
         </dd>
       </dl>
       <emu-alg>
