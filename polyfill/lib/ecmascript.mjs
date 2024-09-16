@@ -2187,11 +2187,7 @@ export function TemporalDurationToString(duration, precision) {
   const days = GetSlot(duration, DAYS);
   const hours = GetSlot(duration, HOURS);
   const minutes = GetSlot(duration, MINUTES);
-  const s = GetSlot(duration, SECONDS);
-  const ms = GetSlot(duration, MILLISECONDS);
-  const µs = GetSlot(duration, MICROSECONDS);
-  const ns = GetSlot(duration, NANOSECONDS);
-  const sign = DurationSign(years, months, weeks, days, hours, minutes, s, ms, µs, ns);
+  const sign = DurationSign(duration);
 
   let datePart = '';
   if (years !== 0) datePart += `${formatAsDecimalNumber(MathAbs(years))}Y`;
@@ -2205,7 +2201,14 @@ export function TemporalDurationToString(duration, precision) {
 
   // Keeping sub-second units separate avoids losing precision after resolving
   // any overflows from rounding
-  const normSeconds = TimeDuration.normalize(0, 0, s, ms, µs, ns);
+  const normSeconds = TimeDuration.normalize(
+    0,
+    0,
+    GetSlot(duration, SECONDS),
+    GetSlot(duration, MILLISECONDS),
+    GetSlot(duration, MICROSECONDS),
+    GetSlot(duration, NANOSECONDS)
+  );
   if (
     !normSeconds.isZero() ||
     Call(
@@ -2690,13 +2693,39 @@ export function ISODaysInMonth(year, month) {
   return DoM[LeapYear(year) ? 'leapyear' : 'standard'][month - 1];
 }
 
-export function DurationSign(y, mon, w, d, h, min, s, ms, µs, ns) {
-  const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
+export function DurationSign(duration) {
+  const fields = [
+    GetSlot(duration, YEARS),
+    GetSlot(duration, MONTHS),
+    GetSlot(duration, WEEKS),
+    GetSlot(duration, DAYS),
+    GetSlot(duration, HOURS),
+    GetSlot(duration, MINUTES),
+    GetSlot(duration, SECONDS),
+    GetSlot(duration, MILLISECONDS),
+    GetSlot(duration, MICROSECONDS),
+    GetSlot(duration, NANOSECONDS)
+  ];
   for (let index = 0; index < fields.length; index++) {
     const prop = fields[index];
     if (prop !== 0) return prop < 0 ? -1 : 1;
   }
   return 0;
+}
+
+function DateDurationSign(dateDuration) {
+  const fieldNames = ['years', 'months', 'weeks', 'days'];
+  for (let index = 0; index < fieldNames.length; index++) {
+    const prop = dateDuration[fieldNames[index]];
+    if (prop !== 0) return prop < 0 ? -1 : 1;
+  }
+  return 0;
+}
+
+function NormalizedDurationSign({ years, months, weeks, days, norm }) {
+  const dateSign = DateDurationSign({ years, months, weeks, days });
+  if (dateSign !== 0) return dateSign;
+  return norm.sign();
 }
 
 export function BalanceISOYearMonth(year, month) {
@@ -2989,14 +3018,15 @@ export function RejectYearMonthRange(year, month) {
 }
 
 export function RejectDuration(y, mon, w, d, h, min, s, ms, µs, ns) {
-  const sign = DurationSign(y, mon, w, d, h, min, s, ms, µs, ns);
+  let sign = 0;
   const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
   for (let index = 0; index < fields.length; index++) {
     const prop = fields[index];
     if (!NumberIsFinite(prop)) throw new RangeErrorCtor('infinite values not allowed as duration fields');
     const propSign = MathSign(prop);
-    if (propSign !== 0 && propSign !== sign) {
-      throw new RangeErrorCtor('mixed-sign values not allowed as duration fields');
+    if (propSign !== 0) {
+      if (sign !== 0 && propSign !== sign) throw new RangeErrorCtor('mixed-sign values not allowed as duration fields');
+      sign = propSign;
     }
   }
   if (MathAbs(y) >= 2 ** 32 || MathAbs(mon) >= 2 ** 32 || MathAbs(w) >= 2 ** 32) {
@@ -3018,7 +3048,7 @@ function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
 }
 
 function CombineDateAndNormalizedTimeDuration(y, m, w, d, norm) {
-  const dateSign = DurationSign(y, m, w, d, 0, 0, 0, 0, 0, 0);
+  const dateSign = DateDurationSign({ years: y, months: m, weeks: w, days: d });
   const timeSign = norm.sign();
   if (dateSign !== 0 && timeSign !== 0 && dateSign !== timeSign) {
     throw new RangeErrorCtor('mixed-sign values not allowed as duration fields');
@@ -3580,8 +3610,7 @@ function RoundRelativeDuration(
   // >24 hours in its timezone. (should automatically end up like this if using
   // non-rounding since/until internal methods prior)
   const irregularLengthUnit = IsCalendarUnit(smallestUnit) || (timeZone && smallestUnit === 'day');
-  const sign =
-    DurationSign(duration.years, duration.months, duration.weeks, duration.days, duration.norm.sign()) < 0 ? -1 : 1;
+  const sign = NormalizedDurationSign(duration) < 0 ? -1 : 1;
 
   let nudgeResult;
   if (irregularLengthUnit) {
@@ -4240,13 +4269,7 @@ export function AddDateTime(
   return CombineISODateAndTimeRecord(addedDate, timeResult);
 }
 
-export function AddZonedDateTime(
-  epochNs,
-  timeZone,
-  calendar,
-  { years, months, weeks, days, norm },
-  overflow = 'constrain'
-) {
+export function AddZonedDateTime(epochNs, timeZone, calendar, { norm, ...dateDuration }, overflow = 'constrain') {
   // If only time is to be added, then use Instant math. It's not OK to fall
   // through to the date/time code below because compatible disambiguation in
   // the PlainDateTime=>Instant conversion will change the offset of any
@@ -4255,14 +4278,12 @@ export function AddZonedDateTime(
   // not expected and so is avoided below via a fast path for time-only
   // arithmetic.
   // BTW, this behavior is similar in spirit to offset: 'prefer' in `with`.
-  if (DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
-    return AddInstant(epochNs, norm);
-  }
+  if (DateDurationSign(dateDuration) === 0) return AddInstant(epochNs, norm);
 
   // RFC 5545 requires the date portion to be added in calendar days and the
   // time portion to be added in exact time.
   const dt = GetISODateTimeFor(timeZone, epochNs);
-  const addedDate = CalendarDateAdd(calendar, dt, { years, months, weeks, days }, overflow);
+  const addedDate = CalendarDateAdd(calendar, dt, dateDuration, overflow);
   const dtIntermediate = CombineISODateAndTimeRecord(addedDate, dt);
 
   // Note that 'compatible' is used below because this disambiguation behavior
@@ -4432,27 +4453,24 @@ export function AddDurationToOrSubtractDurationFromPlainTime(operation, temporal
 }
 
 export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yearMonth, durationLike, options) {
-  let duration = ToTemporalDurationRecord(durationLike);
-  if (operation === 'subtract') {
-    duration = {
-      years: -duration.years,
-      months: -duration.months,
-      weeks: -duration.weeks,
-      days: -duration.days,
-      hours: -duration.hours,
-      minutes: -duration.minutes,
-      seconds: -duration.seconds,
-      milliseconds: -duration.milliseconds,
-      microseconds: -duration.microseconds,
-      nanoseconds: -duration.nanoseconds
-    };
-  }
-  let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = duration;
+  let duration = ToTemporalDuration(durationLike);
+  if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
+  const years = GetSlot(duration, YEARS);
+  const months = GetSlot(duration, MONTHS);
+  const weeks = GetSlot(duration, WEEKS);
+  let days = GetSlot(duration, DAYS);
   options = GetOptionsObject(options);
   const overflow = GetTemporalOverflowOption(options);
-  const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  const sign = DurationSign(duration);
+  const norm = TimeDuration.normalize(
+    GetSlot(duration, HOURS),
+    GetSlot(duration, MINUTES),
+    GetSlot(duration, SECONDS),
+    GetSlot(duration, MILLISECONDS),
+    GetSlot(duration, MICROSECONDS),
+    GetSlot(duration, NANOSECONDS)
+  );
   days += BalanceTimeDuration(norm, 'day').days;
-  const sign = DurationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
 
   const calendar = GetSlot(yearMonth, CALENDAR);
   const fields = TemporalObjectToFields(yearMonth);

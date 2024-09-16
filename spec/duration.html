@@ -283,7 +283,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return 𝔽(DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]])).
+        1. Return 𝔽(DurationSign(_duration_)).
       </emu-alg>
     </emu-clause>
 
@@ -296,8 +296,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Let _sign_ be DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. If _sign_ = 0, return *true*.
+        1. If DurationSign(_duration_) = 0, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
@@ -1018,7 +1017,7 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Let _dateSign_ be DurationSign(_dateDurationRecord_.[[Years]], _dateDurationRecord_.[[Months]], _dateDurationRecord_.[[Weeks]], _dateDurationRecord_.[[Days]], 0, 0, 0, 0, 0, 0).
+        1. Let _dateSign_ be DateDurationSign(_dateDurationRecord_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_norm_).
         1. If _dateSign_ ≠ 0 and _timeSign_ ≠ 0 and _dateSign_ ≠ _timeSign_, throw a *RangeError* exception.
         1. Return Normalized Duration Record {
@@ -1086,27 +1085,54 @@
     <emu-clause id="sec-temporal-durationsign" type="abstract operation">
       <h1>
         DurationSign (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
-          _nanoseconds_: an integer,
+          _duration_: a Temporal.Duration,
         ): -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns 1 if the most significant non-zero element in its arguments is positive, and -1 if the most significant non-zero element is negative. If all of its arguments are zero, it returns 0.</dd>
+        <dd>It returns 1 if the most significant non-zero field in the _duration_ argument is positive, and -1 if the most significant non-zero field is negative. If all of _duration_'s fields are zero, it returns 0.</dd>
       </dl>
       <emu-alg>
-        1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
+        1. For each value _v_ of « _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]] », do
           1. If _v_ &lt; 0, return -1.
           1. If _v_ > 0, return 1.
         1. Return 0.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-datedurationsign" type="abstract operation">
+      <h1>
+        DateDurationSign (
+          _dateDuration_: a Date Duration Record,
+        ): -1, 0, or 1
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns 1 if the most significant non-zero field in the _dateDuration_ argument is positive, and -1 if the most significant non-zero field is negative. If all of _dateDuration_'s fields are zero, it returns 0.</dd>
+      </dl>
+      <emu-alg>
+        1. For each value _v_ of « _dateDuration_.[[Years]], _dateDuration_.[[Months]], _dateDuration_.[[Weeks]], _dateDuration_.[[Days]] », do
+          1. If _v_ &lt; 0, return -1.
+          1. If _v_ > 0, return 1.
+        1. Return 0.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-normalizeddurationsign" type="abstract operation">
+      <h1>
+        NormalizedDurationSign (
+          _normalizedDuration_: a Normalized Duration Record,
+        ): -1, 0, or 1
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It returns 1 if the most significant non-zero field in the _normalizedDuration_ argument is positive, and -1 if the most significant non-zero field is negative. If all of _normalizedDuration_'s fields are zero, it returns 0.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _dateDuration_ be ! CreateDateDurationRecord(_normalizedDuration_.[[Years]], _normalizedDuration_.[[Months]], _normalizedDuration_.[[Weeks]], _normalizedDuration_.[[Days]]).
+        1. Let _dateSign_ be DateDurationSign(_dateDuration_).
+        1. If _dateSign_ ≠ 0, return _dateSign_.
+        1. Return NormalizedTimeDurationSign(_normalizedDuration_.[[NormalizedTime]]).
       </emu-alg>
     </emu-clause>
 
@@ -1130,11 +1156,15 @@
         <dd>It returns *true* if its arguments form valid input from which to construct a `Temporal.Duration`, and *false* otherwise.</dd>
       </dl>
       <emu-alg>
-        1. Let _sign_ be DurationSign(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Let _sign_ be 0.
         1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
           1. If 𝔽(_v_) is not finite, return *false*.
-          1. If _v_ &lt; 0 and _sign_ > 0, return *false*.
-          1. If _v_ > 0 and _sign_ &lt; 0, return *false*.
+          1. If _v_ &lt; 0, then
+            1. If _sign_ > 0, return *false*.
+            1. Set _sign_ to -1.
+          1. Else if _v_ > 0, then
+            1. If _sign_ &lt; 0, return *false*.
+            1. Set _sign_ to 1.
         1. If abs(_years_) ≥ 2<sup>32</sup>, return *false*.
         1. If abs(_months_) ≥ 2<sup>32</sup>, return *false*.
         1. If abs(_weeks_) ≥ 2<sup>32</sup>, return *false*.
@@ -1979,7 +2009,7 @@
         1. Let _irregularLengthUnit_ be *false*.
         1. If IsCalendarUnit(_smallestUnit_) is *true*, set _irregularLengthUnit_ to *true*.
         1. If _timeZone_ is not ~unset~ and _smallestUnit_ is *"day"*, set _irregularLengthUnit_ to *true*.
-        1. If DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], NormalizedTimeDurationSign(_duration_.[[NormalizedTime]]), 0, 0, 0, 0, 0) &lt; 0, let _sign_ be -1; else let _sign_ be 1.
+        1. If NormalizedDurationSign(_duration_) &lt; 0, let _sign_ be -1; else let _sign_ be 1.
         1. If _irregularLengthUnit_ is *true*, then
           1. Let _nudgeResult_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _dateTime_, _timeZone_, _calendar_, _increment_, _smallestUnit_, _roundingMode_).
         1. Else if _timeZone_ is not ~unset~, then
@@ -2012,7 +2042,7 @@
         <dd>It returns a String which is the ISO 8601 representation of _duration_, with the number of decimal places in the seconds value controlled by _precision_.</dd>
       </dl>
       <emu-alg>
-        1. Let _sign_ be DurationSign(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Let _sign_ be DurationSign(_duration_).
         1. Let _datePart_ be *""*.
         1. If _duration_.[[Years]] ≠ 0, then
           1. Set _datePart_ to the string concatenation of abs(_duration_.[[Years]]) formatted as a decimal number and the code unit 0x0059 (LATIN CAPITAL LETTER Y).

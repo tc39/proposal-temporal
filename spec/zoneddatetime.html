@@ -1100,11 +1100,11 @@
       </dl>
       <emu-alg>
         1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
-        1. If _duration_.[[Years]] = 0, and _duration_.[[Months]] = 0, and _duration_.[[Weeks]] = 0, and _duration_.[[Days]] = 0, then
+        1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
+        1. If DateDurationSign(_dateDuration_) = 0, then
           1. Return ? AddInstant(_epochNanoseconds_, _duration_.[[NormalizedTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNanoseconds_).
         1. Let _datePart_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _dateDuration_, _overflow_).
         1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_addedDate_, _isoDateTime_).
         1. If ISODateTimeWithinLimits(_intermediateDateTime_.[[Year]], _intermediateDateTime_.[[Month]], _intermediateDateTime_.[[Day]], _intermediateDateTime_.[[Hour]], _intermediateDateTime_.[[Minute]], _intermediateDateTime_.[[Second]], _intermediateDateTime_.[[Millisecond]], _intermediateDateTime_.[[Microsecond]], _intermediateDateTime_.[[Nanosecond]]) is *false*, throw a *RangeError* exception.
