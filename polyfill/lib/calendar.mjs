@@ -1399,9 +1399,13 @@ const makeHelperGregorian = (id, originalEras) => {
     },
     /** Fill in missing parts of the (year, era, eraYear) tuple */
     completeEraYear(calendarDate) {
-      const checkField = (name, value) => {
+      const checkField = (name, value, aliases) => {
         const currentValue = calendarDate[name];
-        if (currentValue != null && currentValue != value) {
+        if (
+          currentValue != null &&
+          currentValue != value &&
+          !ES.Call(ArrayPrototypeIncludes, aliases || [], [currentValue])
+        ) {
           throw new RangeErrorCtor(`Input ${name} ${currentValue} doesn't match calculated value ${value}`);
         }
       };
@@ -1432,13 +1436,14 @@ const makeHelperGregorian = (id, originalEras) => {
           }
         ]);
         if (!matchingEra) throw new RangeErrorCtor(`Year ${year} was not matched by any era`);
-        return { eraYear, era: matchingEra.name };
+        return { eraYear, era: matchingEra.name, eraAliases: matchingEra.aliases };
       };
 
       let { year, eraYear, era } = calendarDate;
       if (year != null) {
-        ({ eraYear, era } = eraFromYear(year));
-        checkField('era', era);
+        const matchData = eraFromYear(year);
+        ({ eraYear, era } = matchData);
+        checkField('era', era, matchData?.eraAliases);
         checkField('eraYear', eraYear);
       } else if (eraYear != null) {
         if (era === undefined) throw new RangeErrorCtor('era and eraYear must be provided together');
@@ -1825,18 +1830,30 @@ const nonIsoGeneralImpl = {
   },
   dateFromFields(fields, overflow) {
     const cache = new OneObjectCache();
+    if (this.helper.calendarType !== 'lunisolar') {
+      const largestMonth = this.helper.monthsInYear(fields, cache);
+      resolveNonLunisolarMonth(fields, undefined, largestMonth);
+    }
     const result = this.helper.calendarToIsoDate(fields, overflow, cache);
     cache.setObject(result);
     return result;
   },
   yearMonthFromFields(fields, overflow) {
     const cache = new OneObjectCache();
+    if (this.helper.calendarType !== 'lunisolar') {
+      const largestMonth = this.helper.monthsInYear(fields, cache);
+      resolveNonLunisolarMonth(fields, undefined, largestMonth);
+    }
     const result = this.helper.calendarToIsoDate({ ...fields, day: 1 }, overflow, cache);
     cache.setObject(result);
     return result;
   },
   monthDayFromFields(fields, overflow) {
     const cache = new OneObjectCache();
+    if (this.helper.calendarType !== 'lunisolar') {
+      const largestMonth = this.helper.monthsInYear(fields, cache);
+      resolveNonLunisolarMonth(fields, undefined, largestMonth);
+    }
     // For lunisolar calendars, either `monthCode` or `year` must be provided
     // because `month` is ambiguous without a year or a code.
     const result = this.helper.monthDayFromFields(fields, overflow, cache);
