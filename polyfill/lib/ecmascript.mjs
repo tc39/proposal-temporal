@@ -4199,18 +4199,6 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
   return result;
 }
 
-export function AddISODate(year, month, day, years, months, weeks, days, overflow) {
-  year += years;
-  month += months;
-  ({ year, month } = BalanceISOYearMonth(year, month));
-  ({ year, month, day } = RegulateISODate(year, month, day, overflow));
-  days += 7 * weeks;
-  day += days;
-  ({ year, month, day } = BalanceISODate(year, month, day));
-  RejectDateRange(year, month, day);
-  return { year, month, day };
-}
-
 export function AddTime(hour, minute, second, millisecond, microsecond, nanosecond, norm) {
   second += norm.sec;
   nanosecond += norm.subsec;
