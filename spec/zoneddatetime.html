@@ -1154,7 +1154,7 @@
         1. Let _date2_ be ISODateTimeToDateRecord(_intermediateDateTime_).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(_largestUnit_, *"day"*).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _date1_, _date2_, _dateLargestUnit_).
-        1. Return ? CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], _norm_).
+        1. Return ? CombineDateAndNormalizedTimeDuration(_dateDifference_, _norm_).
       </emu-alg>
     </emu-clause>
 

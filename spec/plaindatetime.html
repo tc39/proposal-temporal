@@ -1218,11 +1218,10 @@
         1. Let _date2_ be _adjustedDate_.
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _date1_, _date2_, _dateLargestUnit_).
-        1. Let _days_ be _dateDifference_.[[Days]].
         1. If _largestUnit_ is not _dateLargestUnit_, then
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
-          1. Set _days_ to 0.
-        1. Return ? CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _days_, _timeDuration_).
+          1. Set _dateDifference_.[[Days]] to 0.
+        1. Return ? CombineDateAndNormalizedTimeDuration(_dateDifference_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
