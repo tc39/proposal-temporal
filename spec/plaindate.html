@@ -1066,7 +1066,7 @@
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalDate_).
         1. Let _isoOther_ be TemporalObjectToISODateRecord(_other_).
         1. Let _dateDifference_ be CalendarDateUntil(_temporalDate_.[[Calendar]], _isoDate_, _isoOther_, _settings_.[[LargestUnit]]).
-        1. Let _duration_ be ! CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], _dateDifference_.[[Weeks]], _dateDifference_.[[Days]], ZeroTimeDuration()).
+        1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(_dateDifference_, ZeroTimeDuration()).
         1. If _settings_.[[SmallestUnit]] is *"day"* and _settings_.[[RoundingIncrement]] = 1, let _roundingGranularityIsNoop_ be *true*; else let _roundingGranularityIsNoop_ be *false*.
         1. If _roundingGranularityIsNoop_ is *false*, then
           1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoOther_.[[Year]], _isoOther_.[[Month]], _isoOther_.[[Day]], 0, 0, 0, 0, 0, 0).
