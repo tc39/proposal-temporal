@@ -1092,14 +1092,13 @@
         <dd>It adds/subtracts _temporalDurationLike_ to/from _temporalDate_, returning a point in time that is in the future/past relative to _temporalDate_.</dd>
       </dl>
       <emu-alg>
-        1. If _operation_ is ~subtract~, let _sign_ be -1. Otherwise, let _sign_ be 1.
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalDate_).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _duration_ be ? ToTemporalDurationRecord(_temporalDurationLike_).
-        1. Let _norm_ be NormalizeTimeDuration(_sign_ × _duration_.[[Hours]], _sign_ × _duration_.[[Minutes]], _sign_ × _duration_.[[Seconds]], _sign_ × _duration_.[[Milliseconds]], _sign_ × _duration_.[[Microseconds]], _sign_ × _duration_.[[Nanoseconds]]).
+        1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
+        1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
+        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Let _balanceResult_ be ! BalanceTimeDuration(_norm_, *"day"*).
-        1. Let _days_ be _sign_ × _duration_.[[Days]] + _balanceResult_.[[Days]].
-        1. Let _dateDuration_ be ? CreateDateDurationRecord(_sign_ × _duration_.[[Years]], _sign_ × _duration_.[[Months]], _sign_ × _duration_.[[Weeks]], _days_).
+        1. Let _dateDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _balanceResult_.[[Days]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _result_ be ? CalendarDateAdd(_calendar_, _isoDate_, _dateDuration_, _overflow_).
