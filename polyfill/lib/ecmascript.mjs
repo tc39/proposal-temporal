@@ -3880,7 +3880,6 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
 }
 
 export function DifferenceTemporalInstant(operation, instant, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalInstant(other);
 
   const resolvedOptions = GetOptionsObject(options);
@@ -3900,22 +3899,12 @@ export function DifferenceTemporalInstant(operation, instant, other, options) {
     settings.largestUnit
   );
   const Duration = GetIntrinsic('%Temporal.Duration%');
-  return new Duration(
-    0,
-    0,
-    0,
-    0,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  let result = new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
+  return result;
 }
 
 export function DifferenceTemporalPlainDate(operation, plainDate, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalDate(other);
   const calendar = GetSlot(plainDate, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
@@ -3964,11 +3953,12 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
     ));
   }
 
-  return new Duration(sign * years, sign * months, sign * weeks, sign * days, 0, 0, 0, 0, 0, 0);
+  let result = new Duration(years, months, weeks, days, 0, 0, 0, 0, 0, 0);
+  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
+  return result;
 }
 
 export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalDateTime(other);
   const calendar = GetSlot(plainDateTime, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
@@ -4021,22 +4011,23 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
       settings.roundingMode
     );
 
-  return new Duration(
-    sign * years,
-    sign * months,
-    sign * weeks,
-    sign * days,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
+  let result = new Duration(
+    years,
+    months,
+    weeks,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
   );
+  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
+  return result;
 }
 
 export function DifferenceTemporalPlainTime(operation, plainTime, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalTime(other);
 
   const resolvedOptions = GetOptionsObject(options);
@@ -4064,22 +4055,12 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
     settings.largestUnit
   );
   const Duration = GetIntrinsic('%Temporal.Duration%');
-  return new Duration(
-    0,
-    0,
-    0,
-    0,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
-  );
+  let result = new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
+  return result;
 }
 
 export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalYearMonth(other);
   const calendar = GetSlot(yearMonth, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
@@ -4134,11 +4115,12 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
     ));
   }
 
-  return new Duration(sign * years, sign * months, 0, 0, 0, 0, 0, 0, 0, 0);
+  let result = new Duration(years, months, 0, 0, 0, 0, 0, 0, 0, 0);
+  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
+  return result;
 }
 
 export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other, options) {
-  const sign = operation === 'since' ? -1 : 1;
   other = ToTemporalZonedDateTime(other);
   const calendar = GetSlot(zonedDateTime, CALENDAR);
   const otherCalendar = GetSlot(other, CALENDAR);
@@ -4201,18 +4183,20 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
       ));
   }
 
-  return new Duration(
-    sign * years,
-    sign * months,
-    sign * weeks,
-    sign * days,
-    sign * hours,
-    sign * minutes,
-    sign * seconds,
-    sign * milliseconds,
-    sign * microseconds,
-    sign * nanoseconds
+  let result = new Duration(
+    years,
+    months,
+    weeks,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
   );
+  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
+  return result;
 }
 
 export function AddISODate(year, month, day, years, months, weeks, days, overflow) {
