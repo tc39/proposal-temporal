@@ -3048,12 +3048,13 @@ function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
   return sign * cmp === 1;
 }
 
-function CombineDateAndNormalizedTimeDuration(y, m, w, d, norm) {
-  const dateSign = DateDurationSign({ years: y, months: m, weeks: w, days: d });
+function CombineDateAndNormalizedTimeDuration(dateDuration, norm) {
+  const dateSign = DateDurationSign(dateDuration);
   const timeSign = norm.sign();
   if (dateSign !== 0 && timeSign !== 0 && dateSign !== timeSign) {
     throw new RangeErrorCtor('mixed-sign values not allowed as duration fields');
   }
+  return { ...dateDuration, norm };
 }
 
 function ISODateToEpochDays(y, m, d) {
@@ -3164,14 +3165,13 @@ export function DifferenceISODateTime(
   const date1 = { year: y1, month: mon1, day: d1 };
   const date2 = { year: y2, month: mon2, day: d2 };
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-  let { years, months, weeks, days } = CalendarDateUntil(calendar, date1, date2, dateLargestUnit);
+  const dateDifference = CalendarDateUntil(calendar, date1, date2, dateLargestUnit);
   if (largestUnit !== dateLargestUnit) {
     // largestUnit < days, so add the days in to the normalized duration
-    timeDuration = timeDuration.add24HourDays(days);
-    days = 0;
+    timeDuration = timeDuration.add24HourDays(dateDifference.days);
+    dateDifference.days = 0;
   }
-  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, timeDuration);
-  return { years, months, weeks, days, norm: timeDuration };
+  return CombineDateAndNormalizedTimeDuration(dateDifference, timeDuration);
 }
 
 export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
@@ -3265,10 +3265,8 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
 
   // Similar to what happens in DifferenceISODateTime with date parts only:
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-  const { years, months, weeks, days } = CalendarDateUntil(calendar, isoDtStart, intermediateDateTime, dateLargestUnit);
-
-  CombineDateAndNormalizedTimeDuration(years, months, weeks, days, norm);
-  return { years, months, weeks, days, norm };
+  const dateDifference = CalendarDateUntil(calendar, isoDtStart, intermediateDateTime, dateLargestUnit);
+  return CombineDateAndNormalizedTimeDuration(dateDifference, norm);
 }
 
 // Epoch-nanosecond bounding technique where the start/end of the calendar-unit
@@ -4637,8 +4635,8 @@ export function RoundTimeDuration(days, norm, increment, unit, roundingMode) {
     total = norm.fdiv(divisor);
     norm = norm.round(divisor * increment, roundingMode);
   }
-  CombineDateAndNormalizedTimeDuration(0, 0, 0, days, norm);
-  return { days, norm, total };
+  const dateDuration = { years: 0, months: 0, weeks: 0, days };
+  return { ...CombineDateAndNormalizedTimeDuration(dateDuration, norm), total };
 }
 
 export function CompareISODate(y1, m1, d1, y2, m2, d2) {
