@@ -1261,10 +1261,10 @@
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: 0 }.
         1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, then
-          1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_diff_.[[NormalizedTime]], _diff_.[[Days]]).
+          1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_diff_.[[NormalizedTime]], _diff_.[[Date]].[[Days]]).
           1. Let _timeResult_ be ! BalanceTimeDuration(_normWithDays_, _largestUnit_).
           1. Let _total_ be NormalizedTimeDurationSeconds(_normWithDays_) × 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_normWithDays_).
-          1. Let _durationRecord_ be CreateDurationRecord(_diff_.[[Years]], _diff_.[[Months]], _diff_.[[Weeks]], _timeResult_.[[Days]], _timeResult_.[[Hours]], _timeResult_.[[Minutes]], _timeResult_.[[Seconds]], _timeResult_.[[Milliseconds]], _timeResult_.[[Microseconds]], _timeResult_.[[Nanoseconds]]).
+          1. Let _durationRecord_ be CreateDurationRecord(_diff_.[[Date]].[[Years]], _diff_.[[Date]].[[Months]], _diff_.[[Date]].[[Weeks]], _timeResult_.[[Days]], _timeResult_.[[Hours]], _timeResult_.[[Minutes]], _timeResult_.[[Seconds]], _timeResult_.[[Milliseconds]], _timeResult_.[[Microseconds]], _timeResult_.[[Nanoseconds]]).
           1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _total_ }.
         1. Let _dateTime_ be ISO Date-TimeRecord { [[Year]]: _y1_, [[Month]]: _mon1_, [[Day]]: _d1_, [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).

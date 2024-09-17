@@ -95,13 +95,15 @@
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _calendarUnitsPresent_ be *false*.
         1. If _one_.[[Years]] ≠ 0, or _two_.[[Years]] ≠ 0, or _one_.[[Months]] ≠ 0, or _two_.[[Months]] ≠ 0, or _one_.[[Weeks]] ≠ 0, or _two_.[[Weeks]] ≠ 0, set _calendarUnitsPresent_ to *true*.
+        1. Let _dateDuration1_ be ! CreateDateDurationRecord(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]]).
+        1. Let _dateDuration2_ be ! CreateDateDurationRecord(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]]).
         1. If _zonedRelativeTo_ is not *undefined*, and either _calendarUnitsPresent_ is *true*, or _one_.[[Days]] ≠ 0, or _two_.[[Days]] ≠ 0, then
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _norm1_ be NormalizeTimeDuration(_one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
-          1. Let _duration1_ be ! CreateNormalizedDurationRecord(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]], _norm1_).
+          1. Let _duration1_ be ! CombineDateAndNormalizedTimeDuration(_dateDuration1_, _norm1_).
           1. Let _norm2_ be NormalizeTimeDuration(_two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
-          1. Let _duration2_ be ! CreateNormalizedDurationRecord(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]], _norm2_).
+          1. Let _duration2_ be ! CombineDateAndNormalizedTimeDuration(_dateDuration2_, _norm2_).
           1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration1_).
           1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration2_).
           1. If _after1_ > _after2_, return *1*<sub>𝔽</sub>.
@@ -109,9 +111,7 @@
           1. Return *+0*<sub>𝔽</sub>.
         1. If _calendarUnitsPresent_ is *true*, then
           1. If _plainRelativeTo_ is *undefined*, throw a *RangeError* exception.
-          1. Let _dateDuration1_ be ! CreateDateDurationRecord(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]]).
           1. Let _days1_ be ? UnbalanceDateDurationRelative(_dateDuration1_, _plainRelativeTo_).
-          1. Let _dateDuration2_ be ! CreateDateDurationRecord(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]]).
           1. Let _days2_ be ? UnbalanceDateDurationRelative(_dateDuration2_, _plainRelativeTo_).
         1. Else,
           1. Let _days1_ be _one_.[[Days]].
@@ -440,7 +440,8 @@
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
-          1. Let _normalizedDuration_ be ! CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
+          1. Let _normalizedDuration_ be ! CombineDateAndNormalizedTimeDuration(_dateDuration_, _norm_).
           1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_).
           1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
@@ -448,7 +449,7 @@
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _norm_).
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _dateDuration_ be CreateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]], 0, 0, 0, 0, 0, 0).
+          1. Let _dateDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, *"constrain"*).
           1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _roundResult_ be _roundRecord_.[[DurationRecord]].
@@ -456,7 +457,7 @@
           1. If _duration_.[[Years]] ≠ 0, or _duration_.[[Months]] ≠ 0, or _duration_.[[Weeks]] ≠ 0, or IsCalendarUnit(_largestUnit_) is *true*, throw a *RangeError* exception.
           1. Assert: IsCalendarUnit(_smallestUnit_) is *false*.
           1. Let _roundRecord_ be ? RoundTimeDuration(_duration_.[[Days]], _norm_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_roundRecord_.[[NormalizedDuration]].[[NormalizedTime]], _roundRecord_.[[NormalizedDuration]].[[Days]]).
+          1. Let _normWithDays_ be ? Add24HourDaysToNormalizedTimeDuration(_roundRecord_.[[NormalizedDuration]].[[NormalizedTime]], _roundRecord_.[[NormalizedDuration]].[[Date]].[[Days]]).
           1. Let _balanceResult_ be ? BalanceTimeDuration(_normWithDays_, _largestUnit_).
           1. Let _roundResult_ be CreateDurationRecord(0, 0, 0, _balanceResult_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
         1. Return ? CreateTemporalDuration(_roundResult_.[[Years]], _roundResult_.[[Months]], _roundResult_.[[Weeks]], _roundResult_.[[Days]], _roundResult_.[[Hours]], _roundResult_.[[Minutes]], _roundResult_.[[Seconds]], _roundResult_.[[Milliseconds]], _roundResult_.[[Microseconds]], _roundResult_.[[Nanoseconds]]).
@@ -486,7 +487,8 @@
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
-          1. Let _normalizedDuration_ be ! CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _norm_).
+          1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
+          1. Let _normalizedDuration_ be ! CombineDateAndNormalizedTimeDuration(_dateDuration_, _norm_).
           1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_).
           1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _unit_, 1, _unit_, *"trunc"*).
         1. Else if _plainRelativeTo_ is not *undefined*, then
@@ -859,31 +861,10 @@
             <th>Meaning</th>
           </tr>
           <tr>
-            <td>[[Years]]</td>
-            <td>a float64-representable integer</td>
+            <td>[[Date]]</td>
+            <td>a Date Duration Record</td>
             <td>
-              The number of years in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Months]]</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of months in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Weeks]]</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of weeks in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Days]]</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of days in the duration.
+              The date portion of the duration.
             </td>
           </tr>
           <tr>
@@ -895,6 +876,19 @@
           </tr>
         </table>
       </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-zeronormalizedduration" type="abstract operation">
+      <h1>ZeroNormalizedDuration ( ): a Normalized Duration Record</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned Record represents a duration with length 0.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _dateDuration_ be ! CreateDateDurationRecord(0, 0, 0, 0).
+        1. Let _timeDuration_ be ZeroTimeDuration().
+        1. Return ! CombineDateAndNormalizedTimeDuration(_dateDuration_, _timeDuration_).
+      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-createdurationrecord" type="abstract operation">
@@ -987,30 +981,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createnormalizeddurationrecord" type="abstract operation">
-      <h1>
-        CreateNormalizedDurationRecord (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _norm_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Duration Record or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd></dd>
-      </dl>
-      <emu-alg>
-        1. Let _dateDurationRecord_ be ? CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
-        1. Return ? CombineDateAndNormalizedTimeDuration(_dateDurationRecord_, _norm_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-combinedateandnormalizedtimeduration" type="abstract operation">
       <h1>
         CombineDateAndNormalizedTimeDuration (
-          _dateDurationRecord_: a Date Duration Record,
+          _dateDuration_: a Date Duration Record,
           _norm_: a Normalized Time Duration Record,
         ): either a normal completion containing a Normalized Duration Record or a throw completion
       </h1>
@@ -1019,14 +993,11 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Let _dateSign_ be DateDurationSign(_dateDurationRecord_).
+        1. Let _dateSign_ be DateDurationSign(_dateDuration_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_norm_).
         1. If _dateSign_ ≠ 0 and _timeSign_ ≠ 0 and _dateSign_ ≠ _timeSign_, throw a *RangeError* exception.
         1. Return Normalized Duration Record {
-          [[Years]]: _dateDurationRecord_.[[Years]],
-          [[Months]]: _dateDurationRecord_.[[Months]],
-          [[Weeks]]: _dateDurationRecord_.[[Weeks]],
-          [[Days]]: _dateDurationRecord_.[[Days]],
+          [[Date]]: _dateDuration_,
           [[NormalizedTime]]: _norm_
           }.
       </emu-alg>
@@ -1131,8 +1102,7 @@
         <dd>It returns 1 if the most significant non-zero field in the _normalizedDuration_ argument is positive, and -1 if the most significant non-zero field is negative. If all of _normalizedDuration_'s fields are zero, it returns 0.</dd>
       </dl>
       <emu-alg>
-        1. Let _dateDuration_ be ! CreateDateDurationRecord(_normalizedDuration_.[[Years]], _normalizedDuration_.[[Months]], _normalizedDuration_.[[Weeks]], _normalizedDuration_.[[Days]]).
-        1. Let _dateSign_ be DateDurationSign(_dateDuration_).
+        1. Let _dateSign_ be DateDurationSign(_normalizedDuration_.[[Date]]).
         1. If _dateSign_ ≠ 0, return _dateSign_.
         1. Return NormalizedTimeDurationSign(_normalizedDuration_.[[NormalizedTime]]).
       </emu-alg>
@@ -1690,8 +1660,9 @@
           1. Let _divisor_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
           1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ × _increment_, _roundingMode_).
+        1. Let _dateDuration_ be ? CreateDateDurationRecord(0, 0, 0, _days_).
         1. Return the Record {
-          [[NormalizedDuration]]: ? CreateNormalizedDurationRecord(0, 0, 0, _days_, _norm_),
+          [[NormalizedDuration]]: ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _norm_),
           [[Total]]: _total_
           }.
       </emu-alg>
@@ -1762,35 +1733,35 @@
       </dl>
       <emu-alg>
         1. If _unit_ is *"year"*, then
-          1. Let _years_ be RoundNumberToIncrement(_duration_.[[Years]], _increment_, *"trunc"*).
+          1. Let _years_ be RoundNumberToIncrement(_duration_.[[Date]].[[Years]], _increment_, *"trunc"*).
           1. Let _r1_ be _years_.
           1. Let _r2_ be _years_ + _increment_ × _sign_.
           1. Let _startDuration_ be ? CreateDateDurationRecord(_r1_, 0, 0, 0).
           1. Let _endDuration_ be ? CreateDateDurationRecord(_r2_, 0, 0, 0).
         1. Else if _unit_ is *"month"*, then
-          1. Let _months_ be RoundNumberToIncrement(_duration_.[[Months]], _increment_, *"trunc"*).
+          1. Let _months_ be RoundNumberToIncrement(_duration_.[[Date]].[[Months]], _increment_, *"trunc"*).
           1. Let _r1_ be _months_.
           1. Let _r2_ be _months_ + _increment_ × _sign_.
-          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r1_, 0, 0).
-          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _r2_, 0, 0).
+          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _r1_, 0, 0).
+          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _r2_, 0, 0).
         1. Else if _unit_ is *"week"*, then
-          1. Let _yearsMonths_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], 0, 0).
+          1. Let _yearsMonths_ be ! CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], 0, 0).
           1. Let _isoDate_ be ISODateTimeToDateRecord(_dateTime_).
           1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDate_, _yearsMonths_, *"constrain"*).
-          1. Let _weeksEnd_ be BalanceISODate(_weeksStart_.[[Year]], _weeksStart_.[[Month]], _weeksStart_.[[Day]] + _duration_.[[Days]]).
+          1. Let _weeksEnd_ be BalanceISODate(_weeksStart_.[[Year]], _weeksStart_.[[Month]], _weeksStart_.[[Day]] + _duration_.[[Date]].[[Days]]).
           1. Let _untilResult_ be CalendarDateUntil(_calendar_, _weeksStart_, _weeksEnd_, *"week"*).
-          1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Weeks]] + _untilResult_.[[Weeks]], _increment_, *"trunc"*).
+          1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Date]].[[Weeks]] + _untilResult_.[[Weeks]], _increment_, *"trunc"*).
           1. Let _r1_ be _weeks_.
           1. Let _r2_ be _weeks_ + _increment_ × _sign_.
-          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _r1_, 0).
-          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _r2_, 0).
+          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _r1_, 0).
+          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _r2_, 0).
         1. Else,
           1. Assert: _unit_ is *"day"*.
-          1. Let _days_ be RoundNumberToIncrement(_duration_.[[Days]], _increment_, *"trunc"*).
+          1. Let _days_ be RoundNumberToIncrement(_duration_.[[Date]].[[Days]], _increment_, *"trunc"*).
           1. Let _r1_ be _days_.
           1. Let _r2_ be _days_ + _increment_ × _sign_.
-          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r1_).
-          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _r2_).
+          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _r1_).
+          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
         1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ > _r2_.
         1. Let _startDate_ be ISODateTimeToDateRecord(_dateTime_).
@@ -1859,8 +1830,7 @@
       <emu-alg>
         1. Assert: The value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_, is ~time~.
         1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
-        1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
-        1. Let _start_ be ? CalendarDateAdd(_calendar_, _date_, _dateDuration_, *"constrain"*).
+        1. Let _start_ be ? CalendarDateAdd(_calendar_, _date_, _duration_.[[Date]], *"constrain"*).
         1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
         1. Let _endDate_ be BalanceISODate(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]] + _sign_).
         1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _dateTime_).
@@ -1880,7 +1850,8 @@
           1. Let _didRoundBeyondDay_ be *false*.
           1. Let _dayDelta_ be 0.
           1. Let _nudgedEpochNs_ be AddNormalizedTimeDurationToEpochNanoseconds(_roundedNorm_, _startEpochNs_).
-        1. Let _resultDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]] + _dayDelta_, _roundedNorm_).
+        1. Let _dateDuration_ be ? CreateDateDurationRecord (_dateDuration_.[[Years]], _dateDuration_.[[Months]], _dateDuration_.[[Weeks]], _dateDuration_.[[Days]] + _dayDelta_).
+        1. Let _resultDuration_ be ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _roundedNorm_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[Total]]: ~unset~, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didRoundBeyondDay_ }.
       </emu-alg>
     </emu-clause>
@@ -1904,7 +1875,7 @@
       </dl>
       <emu-alg>
         1. Assert: If _smallestUnit_ is not *"day"*, the value in the "Category" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _smallestUnit_, is ~time~.
-        1. Let _norm_ be ! Add24HourDaysToNormalizedTimeDuration(_duration_.[[NormalizedTime]], _duration_.[[Days]]).
+        1. Let _norm_ be ! Add24HourDaysToNormalizedTimeDuration(_duration_.[[NormalizedTime]], _duration_.[[Date]].[[Days]]).
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _smallestUnit_.
         1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _unitLength_).
         1. Let _roundedNorm_ be ? RoundNormalizedTimeDurationToIncrement(_norm_, _unitLength_ × _increment_, _roundingMode_).
@@ -1920,7 +1891,8 @@
         1. If LargerOfTwoTemporalUnits(_largestUnit_, *"day"*) is _largestUnit_, then
           1. Set _days_ to _roundedWholeDays_.
           1. Set _remainder_ to ! SubtractNormalizedTimeDuration(_roundedNorm_, NormalizeTimeDuration(_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
-        1. Let _resultDuration_ be ? CreateNormalizedDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_, _remainder_).
+        1. Let _dateDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _days_).
+        1. Let _resultDuration_ be ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _remainder_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[Total]]: _total_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandDays_ }.
       </emu-alg>
     </emu-clause>
@@ -1956,15 +1928,15 @@
           1. Let _unit_ be the value in the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref> in the row whose ordinal index is _unitIndex_.
           1. If _unit_ is not *"week"*, or _largestUnit_ is *"week"*, then
             1. If _unit_ is *"year"*, then
-              1. Let _years_ be _duration_.[[Years]] + _sign_.
+              1. Let _years_ be _duration_.[[Date]].[[Years]] + _sign_.
               1. Let _endDuration_ be ? CreateDateDurationRecord(_years_, 0, 0, 0).
             1. Else if _unit_ is *"month"*, then
-              1. Let _months_ be _duration_.[[Months]] + _sign_.
-              1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _months_, 0, 0).
+              1. Let _months_ be _duration_.[[Date]].[[Months]] + _sign_.
+              1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _months_, 0, 0).
             1. Else,
               1. Assert: _unit_ is *"week"*.
-              1. Let _weeks_ be _duration_.[[Weeks]] + _sign_.
-              1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _weeks_, 0).
+              1. Let _weeks_ be _duration_.[[Date]].[[Weeks]] + _sign_.
+              1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _weeks_, 0).
             1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
             1. Let _end_ be ? CalendarDateAdd(_calendar_, _date_, _endDuration_, *"constrain"*).
             1. If _timeZone_ is ~unset~, then
@@ -2023,7 +1995,7 @@
           1. Set _largestUnit_ to *"hour"*.
         1. Let _balanceResult_ be ? BalanceTimeDuration(_duration_.[[NormalizedTime]], _largestUnit_).
         1. Return the Record {
-          [[Duration]]: CreateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]),
+          [[Duration]]: CreateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _duration_.[[Date]].[[Days]], _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]),
           [[Total]]: _nudgeResult_.[[Total]]
           }.
       </emu-alg>

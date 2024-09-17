@@ -677,7 +677,8 @@
         1. Set _otherFields_.[[Day]] to 1.
         1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_, *"constrain"*).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _settings_.[[LargestUnit]]).
-        1. Let _duration_ be ! CreateNormalizedDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], 0, 0, ZeroTimeDuration()).
+        1. Let _yearsMonthsDifference_ be ! CreateDateDurationRecord(_dateDifference_.[[Years]], _dateDifference_.[[Months]], 0, 0).
+        1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(_yearsMonthsDifference_, ZeroTimeDuration()).
         1. If _settings_.[[SmallestUnit]] is not *"month"* or _settings_.[[RoundingIncrement]] ≠ 1, then
           1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_otherDate_.[[Year]], _otherDate_.[[Month]], _otherDate_.[[Day]], 0, 0, 0, 0, 0, 0).
           1. Let _midnight_ be a Time Record with all fields set to 0.

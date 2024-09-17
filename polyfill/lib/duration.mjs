@@ -253,10 +253,7 @@ export class Duration {
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
       const targetEpochNs = ES.AddZonedDateTime(relativeEpochNs, timeZone, calendar, {
-        years,
-        months,
-        weeks,
-        days,
+        date: { years, months, weeks, days },
         norm
       });
       ({ years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
@@ -316,7 +313,10 @@ export class Duration {
       if (ES.IsCalendarUnit(smallestUnit)) {
         throw new ErrorCtor('assertion failed: smallestUnit was larger than largestUnit');
       }
-      ({ days, norm } = ES.RoundTimeDuration(days, norm, roundingIncrement, smallestUnit, roundingMode));
+      ({
+        date: { days },
+        norm
+      } = ES.RoundTimeDuration(days, norm, roundingIncrement, smallestUnit, roundingMode));
       ({ days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = ES.BalanceTimeDuration(
         norm.add24HourDays(days),
         largestUnit
@@ -355,10 +355,7 @@ export class Duration {
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
       const targetEpochNs = ES.AddZonedDateTime(relativeEpochNs, timeZone, calendar, {
-        years,
-        months,
-        weeks,
-        days,
+        date: { years, months, weeks, days },
         norm
       });
       const { total } = ES.DifferenceZonedDateTimeWithRounding(
@@ -548,6 +545,8 @@ export class Duration {
     }
 
     const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
+    const dateDuration1 = { years: y1, months: mon1, weeks: w1, days: d1 };
+    const dateDuration2 = { years: y2, months: mon2, weeks: w2, days: d2 };
 
     if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
@@ -555,9 +554,9 @@ export class Duration {
       const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
 
       const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
-      const duration1 = { years: y1, months: mon1, weeks: w1, days: d1, norm: norm1 };
+      const duration1 = { date: dateDuration1, norm: norm1 };
       const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
-      const duration2 = { years: y2, months: mon2, weeks: w2, days: d2, norm: norm2 };
+      const duration2 = { date: dateDuration2, norm: norm2 };
       const after1 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration1);
       const after2 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration2);
       return ES.ComparisonResult(after1.minus(after2).toJSNumber());
@@ -567,9 +566,7 @@ export class Duration {
       if (!plainRelativeTo) {
         throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
       }
-      const dateDuration1 = { years: y1, months: mon1, weeks: w1, days: d1 };
       d1 = ES.UnbalanceDateDurationRelative(dateDuration1, plainRelativeTo);
-      const dateDuration2 = { years: y2, months: mon2, weeks: w2, days: d2 };
       d2 = ES.UnbalanceDateDurationRelative(dateDuration2, plainRelativeTo);
     }
     const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1).add24HourDays(d1);
