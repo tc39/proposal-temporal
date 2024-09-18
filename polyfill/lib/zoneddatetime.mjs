@@ -1,3 +1,5 @@
+import { Error as Error, RangeError as RangeError, TypeError as TypeError, ObjectCreate } from './primordials.mjs';
+
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -18,7 +20,6 @@ import { TimeDuration } from './timeduration.mjs';
 import bigInt from 'big-integer';
 
 const customResolvedOptions = DateTimeFormat.prototype.resolvedOptions;
-const ObjectCreate = Object.create;
 
 export class ZonedDateTime {
   constructor(epochNanoseconds, timeZone, calendar = 'iso8601') {

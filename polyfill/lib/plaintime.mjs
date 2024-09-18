@@ -1,5 +1,18 @@
 /* global __debug__ */
 
+import {
+  // error constructors
+  RangeError as RangeError,
+  TypeError as TypeError,
+
+  // class static functions and methods
+  ArrayPrototypeEvery,
+  ObjectAssign,
+  ObjectCreate,
+  ObjectDefineProperty,
+  SymbolToStringTag
+} from './primordials.mjs';
+
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -15,9 +28,6 @@ import {
   GetSlot,
   SetSlot
 } from './slots.mjs';
-
-const ObjectAssign = Object.assign;
-const ObjectCreate = Object.create;
 
 function TemporalTimeToString(time, precision, options = undefined) {
   let hour = GetSlot(time, ISO_HOUR);
@@ -65,8 +75,8 @@ export class PlainTime {
     SetSlot(this, ISO_NANOSECOND, isoNanosecond);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
-      Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${TemporalTimeToString(this, 'auto')}>`,
+      ObjectDefineProperty(this, '_repr_', {
+        value: `${this[SymbolToStringTag]} <${TemporalTimeToString(this, 'auto')}>`,
         writable: false,
         enumerable: false,
         configurable: false
@@ -184,12 +194,11 @@ export class PlainTime {
   equals(other) {
     if (!ES.IsTemporalTime(this)) throw new TypeError('invalid receiver');
     other = ES.ToTemporalTime(other);
-    for (const slot of [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND]) {
-      const val1 = GetSlot(this, slot);
-      const val2 = GetSlot(other, slot);
-      if (val1 !== val2) return false;
-    }
-    return true;
+    return ES.Call(
+      ArrayPrototypeEvery,
+      [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND],
+      [(slot) => GetSlot(this, slot) === GetSlot(other, slot)]
+    );
   }
 
   toString(options = undefined) {

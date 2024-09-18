@@ -1,3 +1,15 @@
+import {
+  WeakMap as WeakMap,
+
+  // class static functions and methods
+  ArrayPrototypeReduce,
+  ObjectCreate,
+  WeakMapPrototypeGet,
+  WeakMapPrototypeSet
+} from './primordials.mjs';
+
+import Call from 'es-abstract/2024/Call.js';
+
 // Instant
 export const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
 
@@ -34,15 +46,15 @@ export const NANOSECONDS = 'slot-nanoseconds';
 
 const slots = new WeakMap();
 export function CreateSlots(container) {
-  slots.set(container, Object.create(null));
+  Call(WeakMapPrototypeSet, slots, [container, ObjectCreate(null)]);
 }
 function GetSlots(container) {
-  return slots.get(container);
+  return Call(WeakMapPrototypeGet, slots, [container]);
 }
 export function HasSlot(container, ...ids) {
   if (!container || 'object' !== typeof container) return false;
   const myslots = GetSlots(container);
-  return !!myslots && ids.reduce((all, id) => all && id in myslots, true);
+  return !!myslots && Call(ArrayPrototypeReduce, ids, [(all, id) => all && id in myslots, true]);
 }
 export function GetSlot(container, id) {
   return GetSlots(container)[id];

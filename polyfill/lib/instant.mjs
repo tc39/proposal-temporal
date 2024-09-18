@@ -1,13 +1,22 @@
 /* global __debug__ */
 
+import {
+  // error constructors
+  RangeError as RangeError,
+  TypeError as TypeError,
+
+  // class static functions and methods
+  ObjectCreate,
+  ObjectDefineProperty,
+  SymbolToStringTag
+} from './primordials.mjs';
+
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import { EPOCHNANOSECONDS, CreateSlots, GetSlot, SetSlot } from './slots.mjs';
 
 import bigInt from 'big-integer';
-
-const ObjectCreate = Object.create;
 
 export class Instant {
   constructor(epochNanoseconds) {
@@ -25,8 +34,8 @@ export class Instant {
     if (typeof __debug__ !== 'undefined' && __debug__) {
       const iso = ES.GetISOPartsFromEpoch(ns);
       const repr = ES.TemporalDateTimeToString(iso, 'iso8601', 'auto', 'never') + 'Z';
-      Object.defineProperty(this, '_repr_', {
-        value: `${this[Symbol.toStringTag]} <${repr}>`,
+      ObjectDefineProperty(this, '_repr_', {
+        value: `${this[SymbolToStringTag]} <${repr}>`,
         writable: false,
         enumerable: false,
         configurable: false

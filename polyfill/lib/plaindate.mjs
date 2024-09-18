@@ -1,3 +1,5 @@
+import { RangeError as RangeError, TypeError as TypeError } from './primordials.mjs';
+
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';

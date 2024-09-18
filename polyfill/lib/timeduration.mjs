@@ -1,11 +1,25 @@
-import bigInt from 'big-integer';
+import {
+  // constructors and similar
+  Number as Number,
+
+  // error constructors
+  Error as Error,
+  RangeError as RangeError,
+
+  // class static functions and methods
+  ArrayPrototypeJoin,
+  ArrayPrototypePush,
+  MathAbs,
+  MathSign,
+  NumberIsInteger,
+  NumberIsSafeInteger
+} from './primordials.mjs';
+
+import Call from 'es-abstract/2024/Call.js';
 
 import { ApplyUnsignedRoundingMode, GetUnsignedRoundingMode } from './math.mjs';
 
-const MathAbs = Math.abs;
-const MathSign = Math.sign;
-const NumberIsInteger = Number.isInteger;
-const NumberIsSafeInteger = Number.isSafeInteger;
+import bigInt from 'big-integer';
 
 export class TimeDuration {
   static MAX = bigInt('9007199254740991999999999');
@@ -89,9 +103,9 @@ export class TimeDuration {
     while (!remainder.isZero() && decimalDigits.length < precision) {
       remainder = remainder.multiply(10);
       ({ quotient: digit, remainder } = remainder.divmod(n));
-      decimalDigits.push(MathAbs(digit.toJSNumber()));
+      Call(ArrayPrototypePush, decimalDigits, [MathAbs(digit.toJSNumber())]);
     }
-    return sign * Number(quotient.abs().toString() + '.' + decimalDigits.join(''));
+    return sign * Number(quotient.abs().toString() + '.' + Call(ArrayPrototypeJoin, decimalDigits, ['']));
   }
 
   isZero() {

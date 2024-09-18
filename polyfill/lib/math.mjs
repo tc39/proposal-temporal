@@ -1,12 +1,14 @@
-const MathAbs = Math.abs;
-const MathLog10 = Math.log10;
-const MathSign = Math.sign;
-const MathTrunc = Math.trunc;
-const NumberParseInt = Number.parseInt;
-const NumberPrototypeToPrecision = Number.prototype.toPrecision;
-const StringPrototypePadStart = String.prototype.padStart;
-const StringPrototypeRepeat = String.prototype.repeat;
-const StringPrototypeSlice = String.prototype.slice;
+import {
+  MathAbs,
+  MathLog10,
+  MathSign,
+  MathTrunc,
+  NumberParseInt,
+  NumberPrototypeToPrecision,
+  StringPrototypePadStart,
+  StringPrototypeRepeat,
+  StringPrototypeSlice
+} from './primordials.mjs';
 
 import Call from 'es-abstract/2024/Call.js';
 

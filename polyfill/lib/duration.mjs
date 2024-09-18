@@ -1,5 +1,24 @@
 /* global __debug__ */
 
+import {
+  // constructors and similar
+  IntlDurationFormat,
+
+  // error constructors
+  Error as Error,
+  RangeError as RangeError,
+  TypeError as TypeError,
+
+  // class static functions and methods
+  MathAbs,
+  NumberIsNaN,
+  ObjectCreate,
+  ObjectDefineProperty,
+
+  // miscellaneous
+  warn
+} from './primordials.mjs';
+
 import * as ES from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -21,9 +40,6 @@ import {
   TIME_ZONE
 } from './slots.mjs';
 import { TimeDuration } from './timeduration.mjs';
-
-const NumberIsNaN = Number.isNaN;
-const ObjectCreate = Object.create;
 
 export class Duration {
   constructor(
@@ -65,7 +81,7 @@ export class Duration {
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       const normSeconds = TimeDuration.normalize(0, 0, seconds, milliseconds, microseconds, nanoseconds);
-      Object.defineProperty(this, '_repr_', {
+      ObjectDefineProperty(this, '_repr_', {
         value: `Temporal.Duration <${ES.TemporalDurationToString(
           years,
           months,
@@ -177,16 +193,16 @@ export class Duration {
   abs() {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
     return new Duration(
-      Math.abs(GetSlot(this, YEARS)),
-      Math.abs(GetSlot(this, MONTHS)),
-      Math.abs(GetSlot(this, WEEKS)),
-      Math.abs(GetSlot(this, DAYS)),
-      Math.abs(GetSlot(this, HOURS)),
-      Math.abs(GetSlot(this, MINUTES)),
-      Math.abs(GetSlot(this, SECONDS)),
-      Math.abs(GetSlot(this, MILLISECONDS)),
-      Math.abs(GetSlot(this, MICROSECONDS)),
-      Math.abs(GetSlot(this, NANOSECONDS))
+      MathAbs(GetSlot(this, YEARS)),
+      MathAbs(GetSlot(this, MONTHS)),
+      MathAbs(GetSlot(this, WEEKS)),
+      MathAbs(GetSlot(this, DAYS)),
+      MathAbs(GetSlot(this, HOURS)),
+      MathAbs(GetSlot(this, MINUTES)),
+      MathAbs(GetSlot(this, SECONDS)),
+      MathAbs(GetSlot(this, MILLISECONDS)),
+      MathAbs(GetSlot(this, MICROSECONDS)),
+      MathAbs(GetSlot(this, NANOSECONDS))
     );
   }
   add(other) {
@@ -507,10 +523,10 @@ export class Duration {
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-    if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
-      return new Intl.DurationFormat(locales, options).format(this);
+    if (typeof IntlDurationFormat === 'function') {
+      return new IntlDurationFormat(locales, options).format(this);
     }
-    console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
+    warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
     const normSeconds = TimeDuration.normalize(
       0,
       0,

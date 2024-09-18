@@ -1,3 +1,7 @@
+import { RegExp as RegExp, ArrayPrototypeJoin } from './primordials.mjs';
+
+import Call from 'es-abstract/2024/Call.js';
+
 const offsetIdentifierNoCapture = /(?:[+-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
 const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
 export const timeZoneID = new RegExp(
@@ -18,21 +22,29 @@ export const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
 export const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
 
 export const zoneddatetime = new RegExp(
-  [
-    `^${datesplit.source}`,
-    `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`,
-    `(?:\\[!?(${timeZoneID.source})\\])?`,
-    `((?:${annotation.source})*)$`
-  ].join('')
+  Call(
+    ArrayPrototypeJoin,
+    [
+      `^${datesplit.source}`,
+      `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`,
+      `(?:\\[!?(${timeZoneID.source})\\])?`,
+      `((?:${annotation.source})*)$`
+    ],
+    ['']
+  )
 );
 
 export const time = new RegExp(
-  [
-    `^[tT]?${timesplit.source}`,
-    `(?:${offsetpart.source})?`,
-    `(?:\\[!?${timeZoneID.source}\\])?`,
-    `((?:${annotation.source})*)$`
-  ].join('')
+  Call(
+    ArrayPrototypeJoin,
+    [
+      `^[tT]?${timesplit.source}`,
+      `(?:${offsetpart.source})?`,
+      `(?:\\[!?${timeZoneID.source}\\])?`,
+      `((?:${annotation.source})*)$`
+    ],
+    ['']
+  )
 );
 
 // The short forms of YearMonth and MonthDay are only for the ISO calendar, but

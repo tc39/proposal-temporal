@@ -1,3 +1,5 @@
+import { RangeError as RangeError, TypeError as TypeError, ObjectCreate } from './primordials.mjs';
+
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
@@ -15,8 +17,6 @@ import {
   CALENDAR,
   GetSlot
 } from './slots.mjs';
-
-const ObjectCreate = Object.create;
 
 export class PlainDateTime {
   constructor(
