@@ -1205,7 +1205,7 @@
         The reference year is almost always 1972 (the first ISO 8601 leap year after the epoch), with exceptions for calendars where some dates (e.g. leap days or days in leap months) didn't occur during that ISO 8601 year. For example, Hebrew calendar leap month Adar I occurred in calendar years 5730 and 5733 (respectively overlapping ISO 8601 February/March 1970 and February/March 1973), but did not occur between them, so the reference year for days of that month is 1970.
       </p>
       <p>
-        Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is *"reject"* and the month and day described by _fields_ does not exist.
+        Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is *"reject"* and the month and day described by _fields_ does not exist (or does not exist within the year described by _fields_ when there is such a year).
         For example, when _calendar_ is *"gregory"* and _overflow_ is *"reject"*, _fields_ values of { [[MonthCode]]: *"M01"*, [[Day]]: 32 } and { [[Year]]: 2001, [[Month]]: 2, [[Day]]: 29 } would both cause a *RangeError* to be thrown.
         In the latter case, even though February 29 is a date in leap years of the Gregorian calendar, 2001 was not a leap year and a month code cannot be determined from the nonexistent date 2001-02-29 with the specified month index.
       </p>
@@ -1356,10 +1356,10 @@
       <ul>
         <li>If _type_ is ~date~ or ~month-day~ and ~day~ in the calendar has an interpretation analogous to ISO 8601 and _fields_.[[Day]] is ~unset~.</li>
         <li>If ~month~ and ~month-code~ in the calendar have interpretations analogous to ISO 8601 and either the corresponding values for both are ~unset~ or neither value is ~unset~ but they do not identify the same month.</li>
-        <li>If _type_ is ~month-day~ and _fields_.[[MonthCode]] is ~unset~ and a year cannot be determined from _fields_.</li>
-        <li>If _type_ is ~date~ or ~year-month~ and the calendar supports the usual partitioning of years into eras with their own year counting as represented by ~year~, ~era~, and ~era-year~ (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:
+        <li>If _type_ is ~month-day~ and _fields_.[[MonthCode]] is ~unset~ and a specific year cannot be determined from _fields_.</li>
+        <li>If the calendar supports the usual partitioning of years into eras with their own year counting as represented by ~year~, ~era~, and ~era-year~ (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:
           <ul>
-            <li>Each of _fields_.[[Year]], _fields_.[[Era]], and _fields_.[[EraYear]] is ~unset~.</li>
+            <li>_type_ is ~date~ or ~year-month~ and each of _fields_.[[Year]], _fields_.[[Era]], and _fields_.[[EraYear]] is ~unset~.</li>
             <li>_fields_.[[Era]] is ~unset~ but _fields_.[[EraYear]] is not.</li>
             <li>_fields_.[[EraYear]] is ~unset~ but _fields_.[[Era]] is not.</li>
             <li>None of the three values are ~unset~ but _fields_.[[Era]] and _fields_.[[EraYear]] do not together identify the same year as _fields_.[[Year]].</li>
@@ -1367,7 +1367,7 @@
         </li>
       </ul>
       <emu-note>
-        When _type_ is ~month-day~ and _fields_.[[Month]] is provided without _fields_.[[MonthCode]], it is recommended that all built-in calendars other than the ISO 8601 calendar require a disambiguating year (e.g., either _fields_.[[Year]] or _fields_.[[Era]] and _fields_.[[EraYear]]), including those that always use exactly the same months as the ISO 8601 calendar (which receives special handling in this specification as a default calendar that is permanently stable for automated processing).
+        When _type_ is ~month-day~ and _fields_.[[Month]] is not ~unset~, it is recommended that all built-in calendars other than the ISO 8601 calendar require a disambiguating year (e.g., either _fields_.[[Year]] or _fields_.[[Era]] and _fields_.[[EraYear]]), regardless of whether or not _fields_.[[MonthCode]] is also ~unset~. The ISO 8601 calendar allows _fields_.[[Year]] to be ~unset~ in this case because it is a special default calendar that is permanently stable for automated processing.
       </emu-note>
     </emu-clause>
   </emu-clause>

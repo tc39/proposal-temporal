@@ -274,11 +274,11 @@ function resolveNonLunisolarMonth(calendarDate, overflow = undefined, monthsPerY
     monthCode = buildMonthCode(month);
   } else {
     const numberPart = monthCodeNumberPart(monthCode);
-    if (month !== undefined && month !== numberPart) {
-      throw new RangeErrorCtor(`monthCode ${monthCode} and month ${month} must match if both are present`);
-    }
     if (monthCode !== buildMonthCode(numberPart)) {
       throw new RangeErrorCtor(`Invalid month code: ${monthCode}`);
+    }
+    if (month !== undefined && month !== numberPart) {
+      throw new RangeErrorCtor(`monthCode ${monthCode} and month ${month} must match if both are present`);
     }
     month = numberPart;
     if (month < 1 || month > monthsPerYear) throw new RangeErrorCtor(`Invalid monthCode: ${monthCode}`);
@@ -898,14 +898,11 @@ const nonIsoHelperBase = {
   // Override if calendar uses eras
   hasEra: false,
   monthDayFromFields(fields, overflow, cache) {
-    let { monthCode, day } = fields;
-    if (monthCode === undefined) {
-      let { year, era, eraYear } = fields;
-      if (year === undefined && (era === undefined || eraYear === undefined)) {
-        throw new TypeErrorCtor(
-          'when `monthCode` is omitted, `year` (or `era` and `eraYear`) and `month` are required'
-        );
-      }
+    let { era, eraYear, year, month, monthCode, day } = fields;
+    if (month !== undefined && year === undefined && (!this.hasEra || era === undefined || eraYear === undefined)) {
+      throw new TypeErrorCtor('when month is present, year (or era and eraYear) are required');
+    }
+    if (monthCode === undefined || year !== undefined || (this.hasEra && eraYear !== undefined)) {
       // Apply overflow behaviour to year/month/day, to get correct monthCode/day
       ({ monthCode, day } = this.isoToCalendarDate(this.calendarToIsoDate(fields, overflow, cache), cache));
     }
@@ -1852,8 +1849,6 @@ const nonIsoGeneralImpl = {
       const largestMonth = this.helper.monthsInYear(fields, cache);
       resolveNonLunisolarMonth(fields, undefined, largestMonth);
     }
-    // For lunisolar calendars, either `monthCode` or `year` must be provided
-    // because `month` is ambiguous without a year or a code.
     const result = this.helper.monthDayFromFields(fields, overflow, cache);
     // result.year is a reference year where this month/day exists in this calendar
     cache.setObject(result);
