@@ -830,6 +830,191 @@
 
 	var Call$1 = /*@__PURE__*/getDefaultExportFromCjs(Call);
 
+	// Constructor Properties of the Global Object
+	const {
+	  Array: Array$1,
+	  BigInt: BigInt$1,
+	  Date: Date$1,
+	  Function: Function$1,
+	  Map: Map$1,
+	  Number: Number$1,
+	  Object: Object$1,
+	  Promise: Promise$1,
+	  RegExp: RegExp$1,
+	  Set: Set$1,
+	  String: String$1,
+	  Symbol: Symbol$1,
+	  WeakMap: WeakMap$1,
+	  WeakSet: WeakSet$1
+	} = globalThis;
+
+	// Error constructors
+	const {
+	  Error: Error$1,
+	  RangeError: RangeError$1,
+	  SyntaxError: SyntaxError$1,
+	  TypeError: TypeError$1
+	} = globalThis;
+
+	// Other Properties of the Global Object
+	const {
+	  Intl: Intl$1,
+	  JSON: JSON$1,
+	  Math: Math$1,
+	  Reflect: Reflect$1
+	} = globalThis;
+	const {
+	  assign: ObjectAssign,
+	  create: ObjectCreate,
+	  getOwnPropertyDescriptor: ObjectGetOwnPropertyDescriptor,
+	  getOwnPropertyNames: ObjectGetOwnPropertyNames,
+	  defineProperty: ObjectDefineProperty,
+	  defineProperties: ObjectDefineProperties,
+	  entries: ObjectEntries
+	} = Object$1;
+	const {
+	  from: ArrayFrom,
+	  prototype: {
+	    concat: ArrayPrototypeConcat,
+	    filter: ArrayPrototypeFilter,
+	    every: ArrayPrototypeEvery,
+	    find: ArrayPrototypeFind,
+	    flatMap: ArrayPrototypeFlatMap,
+	    forEach: ArrayPrototypeForEach,
+	    includes: ArrayPrototypeIncludes,
+	    indexOf: ArrayPrototypeIndexOf,
+	    join: ArrayPrototypeJoin,
+	    map: ArrayPrototypeMap,
+	    push: ArrayPrototypePush,
+	    reduce: ArrayPrototypeReduce,
+	    slice: ArrayPrototypeSlice,
+	    sort: ArrayPrototypeSort
+	  }
+	} = Array$1;
+	const {
+	  now: DateNow,
+	  prototype: {
+	    getTime: DatePrototypeGetTime,
+	    getUTCFullYear: DatePrototypeGetUTCFullYear,
+	    getUTCMonth: DatePrototypeGetUTCMonth,
+	    getUTCDate: DatePrototypeGetUTCDate,
+	    getUTCHours: DatePrototypeGetUTCHours,
+	    getUTCMinutes: DatePrototypeGetUTCMinutes,
+	    getUTCSeconds: DatePrototypeGetUTCSeconds,
+	    getUTCMilliseconds: DatePrototypeGetUTCMilliseconds,
+	    setUTCFullYear: DatePrototypeSetUTCFullYear,
+	    setUTCMonth: DatePrototypeSetUTCMonth,
+	    setUTCDate: DatePrototypeSetUTCDate,
+	    setUTCHours: DatePrototypeSetUTCHours,
+	    setUTCMinutes: DatePrototypeSetUTCMinutes,
+	    setUTCSeconds: DatePrototypeSetUTCSeconds,
+	    setUTCMilliseconds: DatePrototypeSetUTCMilliseconds,
+	    toLocaleDateString: DatePrototypeToLocaleDateString,
+	    valueOf: DatePrototypeValueOf
+	  }
+	} = Date$1;
+	const {
+	  supportedValuesOf: IntlSupportedValuesOf,
+	  DateTimeFormat: IntlDateTimeFormat,
+	  DurationFormat: IntlDurationFormat
+	} = Intl$1;
+	const {
+	  get: IntlDateTimeFormatPrototypeGetFormat
+	} = ObjectGetOwnPropertyDescriptor(IntlDateTimeFormat?.prototype || ObjectCreate(null), 'format') || ObjectCreate(null);
+	const {
+	  formatRange: IntlDateTimeFormatPrototypeFormatRange,
+	  formatRangeToParts: IntlDateTimeFormatPrototypeFormatRangeToParts,
+	  formatToParts: IntlDateTimeFormatPrototypeFormatToParts,
+	  resolvedOptions: IntlDateTimeFormatPrototypeResolvedOptions
+	} = IntlDateTimeFormat?.prototype || ObjectCreate(null);
+	const {
+	  stringify: JSONStringify
+	} = JSON$1;
+	const {
+	  prototype: {
+	    entries: MapPrototypeEntries,
+	    get: MapPrototypeGet,
+	    has: MapPrototypeHas,
+	    set: MapPrototypeSet
+	  }
+	} = Map$1;
+	const {
+	  abs: MathAbs,
+	  floor: MathFloor,
+	  log10: MathLog10,
+	  max: MathMax,
+	  min: MathMin,
+	  sign: MathSign,
+	  trunc: MathTrunc
+	} = Math$1;
+	const {
+	  MAX_SAFE_INTEGER: NumberMaxSafeInteger,
+	  isFinite: NumberIsFinite,
+	  isInteger: NumberIsInteger,
+	  isNaN: NumberIsNaN,
+	  isSafeInteger: NumberIsSafeInteger,
+	  parseInt: NumberParseInt,
+	  prototype: {
+	    toPrecision: NumberPrototypeToPrecision,
+	    toString: NumberPrototypeToString
+	  }
+	} = Number$1;
+	const {
+	  prototype: {
+	    exec: RegExpPrototypeExec,
+	    test: RegExpPrototypeTest
+	  }
+	} = RegExp$1;
+	const {
+	  prototype: {
+	    add: SetPrototypeAdd,
+	    has: SetPrototypeHas,
+	    values: SetPrototypeValues
+	  }
+	} = Set$1;
+	const {
+	  fromCharCode: StringFromCharCode,
+	  prototype: {
+	    charCodeAt: StringPrototypeCharCodeAt,
+	    endsWith: StringPrototypeEndsWith,
+	    indexOf: StringPrototypeIndexOf,
+	    match: StringPrototypeMatch,
+	    normalize: StringPrototypeNormalize,
+	    padStart: StringPrototypePadStart,
+	    repeat: StringPrototypeRepeat,
+	    replace: StringPrototypeReplace,
+	    slice: StringPrototypeSlice,
+	    split: StringPrototypeSplit,
+	    startsWith: StringPrototypeStartsWith,
+	    toLowerCase: StringPrototypeToLowerCase,
+	    toUpperCase: StringPrototypeToUpperCase
+	  }
+	} = String$1;
+	const {
+	  iterator: SymbolIterator,
+	  for: SymbolFor,
+	  toStringTag: SymbolToStringTag
+	} = Symbol$1;
+	const {
+	  prototype: {
+	    get: WeakMapPrototypeGet,
+	    set: WeakMapPrototypeSet
+	  }
+	} = WeakMap$1;
+	const MapIterator = Call$1(MapPrototypeEntries, new Map$1(), []);
+	const MapIteratorPrototypeNext = MapIterator.next;
+	const SetIterator = Call$1(SetPrototypeValues, new Set$1(), []);
+	const SetIteratorPrototypeNext = SetIterator.next;
+	const {
+	  console: console$1,
+	  performance: performance$1
+	} = globalThis;
+	const {
+	  log: log$1,
+	  warn
+	} = console$1;
+	const now = performance$1 && performance$1.now ? performance$1.now.bind(performance$1) : Date$1.now;
+
 	// https://262.ecma-international.org/5.1/#sec-8
 
 	var Type$4 = function Type(x) {
@@ -868,1459 +1053,6 @@
 	};
 
 	var Type$3 = /*@__PURE__*/getDefaultExportFromCjs(Type$2);
-
-	var BigInteger = {exports: {}};
-
-	(function (module) {
-		var bigInt = (function (undefined$1) {
-
-		    var BASE = 1e7,
-		        LOG_BASE = 7,
-		        MAX_INT = 9007199254740992,
-		        MAX_INT_ARR = smallToArray(MAX_INT),
-		        DEFAULT_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz";
-
-		    var supportsNativeBigInt = typeof BigInt === "function";
-
-		    function Integer(v, radix, alphabet, caseSensitive) {
-		        if (typeof v === "undefined") return Integer[0];
-		        if (typeof radix !== "undefined") return +radix === 10 && !alphabet ? parseValue(v) : parseBase(v, radix, alphabet, caseSensitive);
-		        return parseValue(v);
-		    }
-
-		    function BigInteger(value, sign) {
-		        this.value = value;
-		        this.sign = sign;
-		        this.isSmall = false;
-		    }
-		    BigInteger.prototype = Object.create(Integer.prototype);
-
-		    function SmallInteger(value) {
-		        this.value = value;
-		        this.sign = value < 0;
-		        this.isSmall = true;
-		    }
-		    SmallInteger.prototype = Object.create(Integer.prototype);
-
-		    function NativeBigInt(value) {
-		        this.value = value;
-		    }
-		    NativeBigInt.prototype = Object.create(Integer.prototype);
-
-		    function isPrecise(n) {
-		        return -MAX_INT < n && n < MAX_INT;
-		    }
-
-		    function smallToArray(n) { // For performance reasons doesn't reference BASE, need to change this function if BASE changes
-		        if (n < 1e7)
-		            return [n];
-		        if (n < 1e14)
-		            return [n % 1e7, Math.floor(n / 1e7)];
-		        return [n % 1e7, Math.floor(n / 1e7) % 1e7, Math.floor(n / 1e14)];
-		    }
-
-		    function arrayToSmall(arr) { // If BASE changes this function may need to change
-		        trim(arr);
-		        var length = arr.length;
-		        if (length < 4 && compareAbs(arr, MAX_INT_ARR) < 0) {
-		            switch (length) {
-		                case 0: return 0;
-		                case 1: return arr[0];
-		                case 2: return arr[0] + arr[1] * BASE;
-		                default: return arr[0] + (arr[1] + arr[2] * BASE) * BASE;
-		            }
-		        }
-		        return arr;
-		    }
-
-		    function trim(v) {
-		        var i = v.length;
-		        while (v[--i] === 0);
-		        v.length = i + 1;
-		    }
-
-		    function createArray(length) { // function shamelessly stolen from Yaffle's library https://github.com/Yaffle/BigInteger
-		        var x = new Array(length);
-		        var i = -1;
-		        while (++i < length) {
-		            x[i] = 0;
-		        }
-		        return x;
-		    }
-
-		    function truncate(n) {
-		        if (n > 0) return Math.floor(n);
-		        return Math.ceil(n);
-		    }
-
-		    function add(a, b) { // assumes a and b are arrays with a.length >= b.length
-		        var l_a = a.length,
-		            l_b = b.length,
-		            r = new Array(l_a),
-		            carry = 0,
-		            base = BASE,
-		            sum, i;
-		        for (i = 0; i < l_b; i++) {
-		            sum = a[i] + b[i] + carry;
-		            carry = sum >= base ? 1 : 0;
-		            r[i] = sum - carry * base;
-		        }
-		        while (i < l_a) {
-		            sum = a[i] + carry;
-		            carry = sum === base ? 1 : 0;
-		            r[i++] = sum - carry * base;
-		        }
-		        if (carry > 0) r.push(carry);
-		        return r;
-		    }
-
-		    function addAny(a, b) {
-		        if (a.length >= b.length) return add(a, b);
-		        return add(b, a);
-		    }
-
-		    function addSmall(a, carry) { // assumes a is array, carry is number with 0 <= carry < MAX_INT
-		        var l = a.length,
-		            r = new Array(l),
-		            base = BASE,
-		            sum, i;
-		        for (i = 0; i < l; i++) {
-		            sum = a[i] - base + carry;
-		            carry = Math.floor(sum / base);
-		            r[i] = sum - carry * base;
-		            carry += 1;
-		        }
-		        while (carry > 0) {
-		            r[i++] = carry % base;
-		            carry = Math.floor(carry / base);
-		        }
-		        return r;
-		    }
-
-		    BigInteger.prototype.add = function (v) {
-		        var n = parseValue(v);
-		        if (this.sign !== n.sign) {
-		            return this.subtract(n.negate());
-		        }
-		        var a = this.value, b = n.value;
-		        if (n.isSmall) {
-		            return new BigInteger(addSmall(a, Math.abs(b)), this.sign);
-		        }
-		        return new BigInteger(addAny(a, b), this.sign);
-		    };
-		    BigInteger.prototype.plus = BigInteger.prototype.add;
-
-		    SmallInteger.prototype.add = function (v) {
-		        var n = parseValue(v);
-		        var a = this.value;
-		        if (a < 0 !== n.sign) {
-		            return this.subtract(n.negate());
-		        }
-		        var b = n.value;
-		        if (n.isSmall) {
-		            if (isPrecise(a + b)) return new SmallInteger(a + b);
-		            b = smallToArray(Math.abs(b));
-		        }
-		        return new BigInteger(addSmall(b, Math.abs(a)), a < 0);
-		    };
-		    SmallInteger.prototype.plus = SmallInteger.prototype.add;
-
-		    NativeBigInt.prototype.add = function (v) {
-		        return new NativeBigInt(this.value + parseValue(v).value);
-		    };
-		    NativeBigInt.prototype.plus = NativeBigInt.prototype.add;
-
-		    function subtract(a, b) { // assumes a and b are arrays with a >= b
-		        var a_l = a.length,
-		            b_l = b.length,
-		            r = new Array(a_l),
-		            borrow = 0,
-		            base = BASE,
-		            i, difference;
-		        for (i = 0; i < b_l; i++) {
-		            difference = a[i] - borrow - b[i];
-		            if (difference < 0) {
-		                difference += base;
-		                borrow = 1;
-		            } else borrow = 0;
-		            r[i] = difference;
-		        }
-		        for (i = b_l; i < a_l; i++) {
-		            difference = a[i] - borrow;
-		            if (difference < 0) difference += base;
-		            else {
-		                r[i++] = difference;
-		                break;
-		            }
-		            r[i] = difference;
-		        }
-		        for (; i < a_l; i++) {
-		            r[i] = a[i];
-		        }
-		        trim(r);
-		        return r;
-		    }
-
-		    function subtractAny(a, b, sign) {
-		        var value;
-		        if (compareAbs(a, b) >= 0) {
-		            value = subtract(a, b);
-		        } else {
-		            value = subtract(b, a);
-		            sign = !sign;
-		        }
-		        value = arrayToSmall(value);
-		        if (typeof value === "number") {
-		            if (sign) value = -value;
-		            return new SmallInteger(value);
-		        }
-		        return new BigInteger(value, sign);
-		    }
-
-		    function subtractSmall(a, b, sign) { // assumes a is array, b is number with 0 <= b < MAX_INT
-		        var l = a.length,
-		            r = new Array(l),
-		            carry = -b,
-		            base = BASE,
-		            i, difference;
-		        for (i = 0; i < l; i++) {
-		            difference = a[i] + carry;
-		            carry = Math.floor(difference / base);
-		            difference %= base;
-		            r[i] = difference < 0 ? difference + base : difference;
-		        }
-		        r = arrayToSmall(r);
-		        if (typeof r === "number") {
-		            if (sign) r = -r;
-		            return new SmallInteger(r);
-		        } return new BigInteger(r, sign);
-		    }
-
-		    BigInteger.prototype.subtract = function (v) {
-		        var n = parseValue(v);
-		        if (this.sign !== n.sign) {
-		            return this.add(n.negate());
-		        }
-		        var a = this.value, b = n.value;
-		        if (n.isSmall)
-		            return subtractSmall(a, Math.abs(b), this.sign);
-		        return subtractAny(a, b, this.sign);
-		    };
-		    BigInteger.prototype.minus = BigInteger.prototype.subtract;
-
-		    SmallInteger.prototype.subtract = function (v) {
-		        var n = parseValue(v);
-		        var a = this.value;
-		        if (a < 0 !== n.sign) {
-		            return this.add(n.negate());
-		        }
-		        var b = n.value;
-		        if (n.isSmall) {
-		            return new SmallInteger(a - b);
-		        }
-		        return subtractSmall(b, Math.abs(a), a >= 0);
-		    };
-		    SmallInteger.prototype.minus = SmallInteger.prototype.subtract;
-
-		    NativeBigInt.prototype.subtract = function (v) {
-		        return new NativeBigInt(this.value - parseValue(v).value);
-		    };
-		    NativeBigInt.prototype.minus = NativeBigInt.prototype.subtract;
-
-		    BigInteger.prototype.negate = function () {
-		        return new BigInteger(this.value, !this.sign);
-		    };
-		    SmallInteger.prototype.negate = function () {
-		        var sign = this.sign;
-		        var small = new SmallInteger(-this.value);
-		        small.sign = !sign;
-		        return small;
-		    };
-		    NativeBigInt.prototype.negate = function () {
-		        return new NativeBigInt(-this.value);
-		    };
-
-		    BigInteger.prototype.abs = function () {
-		        return new BigInteger(this.value, false);
-		    };
-		    SmallInteger.prototype.abs = function () {
-		        return new SmallInteger(Math.abs(this.value));
-		    };
-		    NativeBigInt.prototype.abs = function () {
-		        return new NativeBigInt(this.value >= 0 ? this.value : -this.value);
-		    };
-
-
-		    function multiplyLong(a, b) {
-		        var a_l = a.length,
-		            b_l = b.length,
-		            l = a_l + b_l,
-		            r = createArray(l),
-		            base = BASE,
-		            product, carry, i, a_i, b_j;
-		        for (i = 0; i < a_l; ++i) {
-		            a_i = a[i];
-		            for (var j = 0; j < b_l; ++j) {
-		                b_j = b[j];
-		                product = a_i * b_j + r[i + j];
-		                carry = Math.floor(product / base);
-		                r[i + j] = product - carry * base;
-		                r[i + j + 1] += carry;
-		            }
-		        }
-		        trim(r);
-		        return r;
-		    }
-
-		    function multiplySmall(a, b) { // assumes a is array, b is number with |b| < BASE
-		        var l = a.length,
-		            r = new Array(l),
-		            base = BASE,
-		            carry = 0,
-		            product, i;
-		        for (i = 0; i < l; i++) {
-		            product = a[i] * b + carry;
-		            carry = Math.floor(product / base);
-		            r[i] = product - carry * base;
-		        }
-		        while (carry > 0) {
-		            r[i++] = carry % base;
-		            carry = Math.floor(carry / base);
-		        }
-		        return r;
-		    }
-
-		    function shiftLeft(x, n) {
-		        var r = [];
-		        while (n-- > 0) r.push(0);
-		        return r.concat(x);
-		    }
-
-		    function multiplyKaratsuba(x, y) {
-		        var n = Math.max(x.length, y.length);
-
-		        if (n <= 30) return multiplyLong(x, y);
-		        n = Math.ceil(n / 2);
-
-		        var b = x.slice(n),
-		            a = x.slice(0, n),
-		            d = y.slice(n),
-		            c = y.slice(0, n);
-
-		        var ac = multiplyKaratsuba(a, c),
-		            bd = multiplyKaratsuba(b, d),
-		            abcd = multiplyKaratsuba(addAny(a, b), addAny(c, d));
-
-		        var product = addAny(addAny(ac, shiftLeft(subtract(subtract(abcd, ac), bd), n)), shiftLeft(bd, 2 * n));
-		        trim(product);
-		        return product;
-		    }
-
-		    // The following function is derived from a surface fit of a graph plotting the performance difference
-		    // between long multiplication and karatsuba multiplication versus the lengths of the two arrays.
-		    function useKaratsuba(l1, l2) {
-		        return -0.012 * l1 - 0.012 * l2 + 0.000015 * l1 * l2 > 0;
-		    }
-
-		    BigInteger.prototype.multiply = function (v) {
-		        var n = parseValue(v),
-		            a = this.value, b = n.value,
-		            sign = this.sign !== n.sign,
-		            abs;
-		        if (n.isSmall) {
-		            if (b === 0) return Integer[0];
-		            if (b === 1) return this;
-		            if (b === -1) return this.negate();
-		            abs = Math.abs(b);
-		            if (abs < BASE) {
-		                return new BigInteger(multiplySmall(a, abs), sign);
-		            }
-		            b = smallToArray(abs);
-		        }
-		        if (useKaratsuba(a.length, b.length)) // Karatsuba is only faster for certain array sizes
-		            return new BigInteger(multiplyKaratsuba(a, b), sign);
-		        return new BigInteger(multiplyLong(a, b), sign);
-		    };
-
-		    BigInteger.prototype.times = BigInteger.prototype.multiply;
-
-		    function multiplySmallAndArray(a, b, sign) { // a >= 0
-		        if (a < BASE) {
-		            return new BigInteger(multiplySmall(b, a), sign);
-		        }
-		        return new BigInteger(multiplyLong(b, smallToArray(a)), sign);
-		    }
-		    SmallInteger.prototype._multiplyBySmall = function (a) {
-		        if (isPrecise(a.value * this.value)) {
-		            return new SmallInteger(a.value * this.value);
-		        }
-		        return multiplySmallAndArray(Math.abs(a.value), smallToArray(Math.abs(this.value)), this.sign !== a.sign);
-		    };
-		    BigInteger.prototype._multiplyBySmall = function (a) {
-		        if (a.value === 0) return Integer[0];
-		        if (a.value === 1) return this;
-		        if (a.value === -1) return this.negate();
-		        return multiplySmallAndArray(Math.abs(a.value), this.value, this.sign !== a.sign);
-		    };
-		    SmallInteger.prototype.multiply = function (v) {
-		        return parseValue(v)._multiplyBySmall(this);
-		    };
-		    SmallInteger.prototype.times = SmallInteger.prototype.multiply;
-
-		    NativeBigInt.prototype.multiply = function (v) {
-		        return new NativeBigInt(this.value * parseValue(v).value);
-		    };
-		    NativeBigInt.prototype.times = NativeBigInt.prototype.multiply;
-
-		    function square(a) {
-		        //console.assert(2 * BASE * BASE < MAX_INT);
-		        var l = a.length,
-		            r = createArray(l + l),
-		            base = BASE,
-		            product, carry, i, a_i, a_j;
-		        for (i = 0; i < l; i++) {
-		            a_i = a[i];
-		            carry = 0 - a_i * a_i;
-		            for (var j = i; j < l; j++) {
-		                a_j = a[j];
-		                product = 2 * (a_i * a_j) + r[i + j] + carry;
-		                carry = Math.floor(product / base);
-		                r[i + j] = product - carry * base;
-		            }
-		            r[i + l] = carry;
-		        }
-		        trim(r);
-		        return r;
-		    }
-
-		    BigInteger.prototype.square = function () {
-		        return new BigInteger(square(this.value), false);
-		    };
-
-		    SmallInteger.prototype.square = function () {
-		        var value = this.value * this.value;
-		        if (isPrecise(value)) return new SmallInteger(value);
-		        return new BigInteger(square(smallToArray(Math.abs(this.value))), false);
-		    };
-
-		    NativeBigInt.prototype.square = function (v) {
-		        return new NativeBigInt(this.value * this.value);
-		    };
-
-		    function divMod1(a, b) { // Left over from previous version. Performs faster than divMod2 on smaller input sizes.
-		        var a_l = a.length,
-		            b_l = b.length,
-		            base = BASE,
-		            result = createArray(b.length),
-		            divisorMostSignificantDigit = b[b_l - 1],
-		            // normalization
-		            lambda = Math.ceil(base / (2 * divisorMostSignificantDigit)),
-		            remainder = multiplySmall(a, lambda),
-		            divisor = multiplySmall(b, lambda),
-		            quotientDigit, shift, carry, borrow, i, l, q;
-		        if (remainder.length <= a_l) remainder.push(0);
-		        divisor.push(0);
-		        divisorMostSignificantDigit = divisor[b_l - 1];
-		        for (shift = a_l - b_l; shift >= 0; shift--) {
-		            quotientDigit = base - 1;
-		            if (remainder[shift + b_l] !== divisorMostSignificantDigit) {
-		                quotientDigit = Math.floor((remainder[shift + b_l] * base + remainder[shift + b_l - 1]) / divisorMostSignificantDigit);
-		            }
-		            // quotientDigit <= base - 1
-		            carry = 0;
-		            borrow = 0;
-		            l = divisor.length;
-		            for (i = 0; i < l; i++) {
-		                carry += quotientDigit * divisor[i];
-		                q = Math.floor(carry / base);
-		                borrow += remainder[shift + i] - (carry - q * base);
-		                carry = q;
-		                if (borrow < 0) {
-		                    remainder[shift + i] = borrow + base;
-		                    borrow = -1;
-		                } else {
-		                    remainder[shift + i] = borrow;
-		                    borrow = 0;
-		                }
-		            }
-		            while (borrow !== 0) {
-		                quotientDigit -= 1;
-		                carry = 0;
-		                for (i = 0; i < l; i++) {
-		                    carry += remainder[shift + i] - base + divisor[i];
-		                    if (carry < 0) {
-		                        remainder[shift + i] = carry + base;
-		                        carry = 0;
-		                    } else {
-		                        remainder[shift + i] = carry;
-		                        carry = 1;
-		                    }
-		                }
-		                borrow += carry;
-		            }
-		            result[shift] = quotientDigit;
-		        }
-		        // denormalization
-		        remainder = divModSmall(remainder, lambda)[0];
-		        return [arrayToSmall(result), arrayToSmall(remainder)];
-		    }
-
-		    function divMod2(a, b) { // Implementation idea shamelessly stolen from Silent Matt's library http://silentmatt.com/biginteger/
-		        // Performs faster than divMod1 on larger input sizes.
-		        var a_l = a.length,
-		            b_l = b.length,
-		            result = [],
-		            part = [],
-		            base = BASE,
-		            guess, xlen, highx, highy, check;
-		        while (a_l) {
-		            part.unshift(a[--a_l]);
-		            trim(part);
-		            if (compareAbs(part, b) < 0) {
-		                result.push(0);
-		                continue;
-		            }
-		            xlen = part.length;
-		            highx = part[xlen - 1] * base + part[xlen - 2];
-		            highy = b[b_l - 1] * base + b[b_l - 2];
-		            if (xlen > b_l) {
-		                highx = (highx + 1) * base;
-		            }
-		            guess = Math.ceil(highx / highy);
-		            do {
-		                check = multiplySmall(b, guess);
-		                if (compareAbs(check, part) <= 0) break;
-		                guess--;
-		            } while (guess);
-		            result.push(guess);
-		            part = subtract(part, check);
-		        }
-		        result.reverse();
-		        return [arrayToSmall(result), arrayToSmall(part)];
-		    }
-
-		    function divModSmall(value, lambda) {
-		        var length = value.length,
-		            quotient = createArray(length),
-		            base = BASE,
-		            i, q, remainder, divisor;
-		        remainder = 0;
-		        for (i = length - 1; i >= 0; --i) {
-		            divisor = remainder * base + value[i];
-		            q = truncate(divisor / lambda);
-		            remainder = divisor - q * lambda;
-		            quotient[i] = q | 0;
-		        }
-		        return [quotient, remainder | 0];
-		    }
-
-		    function divModAny(self, v) {
-		        var value, n = parseValue(v);
-		        if (supportsNativeBigInt) {
-		            return [new NativeBigInt(self.value / n.value), new NativeBigInt(self.value % n.value)];
-		        }
-		        var a = self.value, b = n.value;
-		        var quotient;
-		        if (b === 0) throw new Error("Cannot divide by zero");
-		        if (self.isSmall) {
-		            if (n.isSmall) {
-		                return [new SmallInteger(truncate(a / b)), new SmallInteger(a % b)];
-		            }
-		            return [Integer[0], self];
-		        }
-		        if (n.isSmall) {
-		            if (b === 1) return [self, Integer[0]];
-		            if (b == -1) return [self.negate(), Integer[0]];
-		            var abs = Math.abs(b);
-		            if (abs < BASE) {
-		                value = divModSmall(a, abs);
-		                quotient = arrayToSmall(value[0]);
-		                var remainder = value[1];
-		                if (self.sign) remainder = -remainder;
-		                if (typeof quotient === "number") {
-		                    if (self.sign !== n.sign) quotient = -quotient;
-		                    return [new SmallInteger(quotient), new SmallInteger(remainder)];
-		                }
-		                return [new BigInteger(quotient, self.sign !== n.sign), new SmallInteger(remainder)];
-		            }
-		            b = smallToArray(abs);
-		        }
-		        var comparison = compareAbs(a, b);
-		        if (comparison === -1) return [Integer[0], self];
-		        if (comparison === 0) return [Integer[self.sign === n.sign ? 1 : -1], Integer[0]];
-
-		        // divMod1 is faster on smaller input sizes
-		        if (a.length + b.length <= 200)
-		            value = divMod1(a, b);
-		        else value = divMod2(a, b);
-
-		        quotient = value[0];
-		        var qSign = self.sign !== n.sign,
-		            mod = value[1],
-		            mSign = self.sign;
-		        if (typeof quotient === "number") {
-		            if (qSign) quotient = -quotient;
-		            quotient = new SmallInteger(quotient);
-		        } else quotient = new BigInteger(quotient, qSign);
-		        if (typeof mod === "number") {
-		            if (mSign) mod = -mod;
-		            mod = new SmallInteger(mod);
-		        } else mod = new BigInteger(mod, mSign);
-		        return [quotient, mod];
-		    }
-
-		    BigInteger.prototype.divmod = function (v) {
-		        var result = divModAny(this, v);
-		        return {
-		            quotient: result[0],
-		            remainder: result[1]
-		        };
-		    };
-		    NativeBigInt.prototype.divmod = SmallInteger.prototype.divmod = BigInteger.prototype.divmod;
-
-
-		    BigInteger.prototype.divide = function (v) {
-		        return divModAny(this, v)[0];
-		    };
-		    NativeBigInt.prototype.over = NativeBigInt.prototype.divide = function (v) {
-		        return new NativeBigInt(this.value / parseValue(v).value);
-		    };
-		    SmallInteger.prototype.over = SmallInteger.prototype.divide = BigInteger.prototype.over = BigInteger.prototype.divide;
-
-		    BigInteger.prototype.mod = function (v) {
-		        return divModAny(this, v)[1];
-		    };
-		    NativeBigInt.prototype.mod = NativeBigInt.prototype.remainder = function (v) {
-		        return new NativeBigInt(this.value % parseValue(v).value);
-		    };
-		    SmallInteger.prototype.remainder = SmallInteger.prototype.mod = BigInteger.prototype.remainder = BigInteger.prototype.mod;
-
-		    BigInteger.prototype.pow = function (v) {
-		        var n = parseValue(v),
-		            a = this.value,
-		            b = n.value,
-		            value, x, y;
-		        if (b === 0) return Integer[1];
-		        if (a === 0) return Integer[0];
-		        if (a === 1) return Integer[1];
-		        if (a === -1) return n.isEven() ? Integer[1] : Integer[-1];
-		        if (n.sign) {
-		            return Integer[0];
-		        }
-		        if (!n.isSmall) throw new Error("The exponent " + n.toString() + " is too large.");
-		        if (this.isSmall) {
-		            if (isPrecise(value = Math.pow(a, b)))
-		                return new SmallInteger(truncate(value));
-		        }
-		        x = this;
-		        y = Integer[1];
-		        while (true) {
-		            if (b & 1 === 1) {
-		                y = y.times(x);
-		                --b;
-		            }
-		            if (b === 0) break;
-		            b /= 2;
-		            x = x.square();
-		        }
-		        return y;
-		    };
-		    SmallInteger.prototype.pow = BigInteger.prototype.pow;
-
-		    NativeBigInt.prototype.pow = function (v) {
-		        var n = parseValue(v);
-		        var a = this.value, b = n.value;
-		        var _0 = BigInt(0), _1 = BigInt(1), _2 = BigInt(2);
-		        if (b === _0) return Integer[1];
-		        if (a === _0) return Integer[0];
-		        if (a === _1) return Integer[1];
-		        if (a === BigInt(-1)) return n.isEven() ? Integer[1] : Integer[-1];
-		        if (n.isNegative()) return new NativeBigInt(_0);
-		        var x = this;
-		        var y = Integer[1];
-		        while (true) {
-		            if ((b & _1) === _1) {
-		                y = y.times(x);
-		                --b;
-		            }
-		            if (b === _0) break;
-		            b /= _2;
-		            x = x.square();
-		        }
-		        return y;
-		    };
-
-		    BigInteger.prototype.modPow = function (exp, mod) {
-		        exp = parseValue(exp);
-		        mod = parseValue(mod);
-		        if (mod.isZero()) throw new Error("Cannot take modPow with modulus 0");
-		        var r = Integer[1],
-		            base = this.mod(mod);
-		        if (exp.isNegative()) {
-		            exp = exp.multiply(Integer[-1]);
-		            base = base.modInv(mod);
-		        }
-		        while (exp.isPositive()) {
-		            if (base.isZero()) return Integer[0];
-		            if (exp.isOdd()) r = r.multiply(base).mod(mod);
-		            exp = exp.divide(2);
-		            base = base.square().mod(mod);
-		        }
-		        return r;
-		    };
-		    NativeBigInt.prototype.modPow = SmallInteger.prototype.modPow = BigInteger.prototype.modPow;
-
-		    function compareAbs(a, b) {
-		        if (a.length !== b.length) {
-		            return a.length > b.length ? 1 : -1;
-		        }
-		        for (var i = a.length - 1; i >= 0; i--) {
-		            if (a[i] !== b[i]) return a[i] > b[i] ? 1 : -1;
-		        }
-		        return 0;
-		    }
-
-		    BigInteger.prototype.compareAbs = function (v) {
-		        var n = parseValue(v),
-		            a = this.value,
-		            b = n.value;
-		        if (n.isSmall) return 1;
-		        return compareAbs(a, b);
-		    };
-		    SmallInteger.prototype.compareAbs = function (v) {
-		        var n = parseValue(v),
-		            a = Math.abs(this.value),
-		            b = n.value;
-		        if (n.isSmall) {
-		            b = Math.abs(b);
-		            return a === b ? 0 : a > b ? 1 : -1;
-		        }
-		        return -1;
-		    };
-		    NativeBigInt.prototype.compareAbs = function (v) {
-		        var a = this.value;
-		        var b = parseValue(v).value;
-		        a = a >= 0 ? a : -a;
-		        b = b >= 0 ? b : -b;
-		        return a === b ? 0 : a > b ? 1 : -1;
-		    };
-
-		    BigInteger.prototype.compare = function (v) {
-		        // See discussion about comparison with Infinity:
-		        // https://github.com/peterolson/BigInteger.js/issues/61
-		        if (v === Infinity) {
-		            return -1;
-		        }
-		        if (v === -Infinity) {
-		            return 1;
-		        }
-
-		        var n = parseValue(v),
-		            a = this.value,
-		            b = n.value;
-		        if (this.sign !== n.sign) {
-		            return n.sign ? 1 : -1;
-		        }
-		        if (n.isSmall) {
-		            return this.sign ? -1 : 1;
-		        }
-		        return compareAbs(a, b) * (this.sign ? -1 : 1);
-		    };
-		    BigInteger.prototype.compareTo = BigInteger.prototype.compare;
-
-		    SmallInteger.prototype.compare = function (v) {
-		        if (v === Infinity) {
-		            return -1;
-		        }
-		        if (v === -Infinity) {
-		            return 1;
-		        }
-
-		        var n = parseValue(v),
-		            a = this.value,
-		            b = n.value;
-		        if (n.isSmall) {
-		            return a == b ? 0 : a > b ? 1 : -1;
-		        }
-		        if (a < 0 !== n.sign) {
-		            return a < 0 ? -1 : 1;
-		        }
-		        return a < 0 ? 1 : -1;
-		    };
-		    SmallInteger.prototype.compareTo = SmallInteger.prototype.compare;
-
-		    NativeBigInt.prototype.compare = function (v) {
-		        if (v === Infinity) {
-		            return -1;
-		        }
-		        if (v === -Infinity) {
-		            return 1;
-		        }
-		        var a = this.value;
-		        var b = parseValue(v).value;
-		        return a === b ? 0 : a > b ? 1 : -1;
-		    };
-		    NativeBigInt.prototype.compareTo = NativeBigInt.prototype.compare;
-
-		    BigInteger.prototype.equals = function (v) {
-		        return this.compare(v) === 0;
-		    };
-		    NativeBigInt.prototype.eq = NativeBigInt.prototype.equals = SmallInteger.prototype.eq = SmallInteger.prototype.equals = BigInteger.prototype.eq = BigInteger.prototype.equals;
-
-		    BigInteger.prototype.notEquals = function (v) {
-		        return this.compare(v) !== 0;
-		    };
-		    NativeBigInt.prototype.neq = NativeBigInt.prototype.notEquals = SmallInteger.prototype.neq = SmallInteger.prototype.notEquals = BigInteger.prototype.neq = BigInteger.prototype.notEquals;
-
-		    BigInteger.prototype.greater = function (v) {
-		        return this.compare(v) > 0;
-		    };
-		    NativeBigInt.prototype.gt = NativeBigInt.prototype.greater = SmallInteger.prototype.gt = SmallInteger.prototype.greater = BigInteger.prototype.gt = BigInteger.prototype.greater;
-
-		    BigInteger.prototype.lesser = function (v) {
-		        return this.compare(v) < 0;
-		    };
-		    NativeBigInt.prototype.lt = NativeBigInt.prototype.lesser = SmallInteger.prototype.lt = SmallInteger.prototype.lesser = BigInteger.prototype.lt = BigInteger.prototype.lesser;
-
-		    BigInteger.prototype.greaterOrEquals = function (v) {
-		        return this.compare(v) >= 0;
-		    };
-		    NativeBigInt.prototype.geq = NativeBigInt.prototype.greaterOrEquals = SmallInteger.prototype.geq = SmallInteger.prototype.greaterOrEquals = BigInteger.prototype.geq = BigInteger.prototype.greaterOrEquals;
-
-		    BigInteger.prototype.lesserOrEquals = function (v) {
-		        return this.compare(v) <= 0;
-		    };
-		    NativeBigInt.prototype.leq = NativeBigInt.prototype.lesserOrEquals = SmallInteger.prototype.leq = SmallInteger.prototype.lesserOrEquals = BigInteger.prototype.leq = BigInteger.prototype.lesserOrEquals;
-
-		    BigInteger.prototype.isEven = function () {
-		        return (this.value[0] & 1) === 0;
-		    };
-		    SmallInteger.prototype.isEven = function () {
-		        return (this.value & 1) === 0;
-		    };
-		    NativeBigInt.prototype.isEven = function () {
-		        return (this.value & BigInt(1)) === BigInt(0);
-		    };
-
-		    BigInteger.prototype.isOdd = function () {
-		        return (this.value[0] & 1) === 1;
-		    };
-		    SmallInteger.prototype.isOdd = function () {
-		        return (this.value & 1) === 1;
-		    };
-		    NativeBigInt.prototype.isOdd = function () {
-		        return (this.value & BigInt(1)) === BigInt(1);
-		    };
-
-		    BigInteger.prototype.isPositive = function () {
-		        return !this.sign;
-		    };
-		    SmallInteger.prototype.isPositive = function () {
-		        return this.value > 0;
-		    };
-		    NativeBigInt.prototype.isPositive = SmallInteger.prototype.isPositive;
-
-		    BigInteger.prototype.isNegative = function () {
-		        return this.sign;
-		    };
-		    SmallInteger.prototype.isNegative = function () {
-		        return this.value < 0;
-		    };
-		    NativeBigInt.prototype.isNegative = SmallInteger.prototype.isNegative;
-
-		    BigInteger.prototype.isUnit = function () {
-		        return false;
-		    };
-		    SmallInteger.prototype.isUnit = function () {
-		        return Math.abs(this.value) === 1;
-		    };
-		    NativeBigInt.prototype.isUnit = function () {
-		        return this.abs().value === BigInt(1);
-		    };
-
-		    BigInteger.prototype.isZero = function () {
-		        return false;
-		    };
-		    SmallInteger.prototype.isZero = function () {
-		        return this.value === 0;
-		    };
-		    NativeBigInt.prototype.isZero = function () {
-		        return this.value === BigInt(0);
-		    };
-
-		    BigInteger.prototype.isDivisibleBy = function (v) {
-		        var n = parseValue(v);
-		        if (n.isZero()) return false;
-		        if (n.isUnit()) return true;
-		        if (n.compareAbs(2) === 0) return this.isEven();
-		        return this.mod(n).isZero();
-		    };
-		    NativeBigInt.prototype.isDivisibleBy = SmallInteger.prototype.isDivisibleBy = BigInteger.prototype.isDivisibleBy;
-
-		    function isBasicPrime(v) {
-		        var n = v.abs();
-		        if (n.isUnit()) return false;
-		        if (n.equals(2) || n.equals(3) || n.equals(5)) return true;
-		        if (n.isEven() || n.isDivisibleBy(3) || n.isDivisibleBy(5)) return false;
-		        if (n.lesser(49)) return true;
-		        // we don't know if it's prime: let the other functions figure it out
-		    }
-
-		    function millerRabinTest(n, a) {
-		        var nPrev = n.prev(),
-		            b = nPrev,
-		            r = 0,
-		            d, i, x;
-		        while (b.isEven()) b = b.divide(2), r++;
-		        next: for (i = 0; i < a.length; i++) {
-		            if (n.lesser(a[i])) continue;
-		            x = bigInt(a[i]).modPow(b, n);
-		            if (x.isUnit() || x.equals(nPrev)) continue;
-		            for (d = r - 1; d != 0; d--) {
-		                x = x.square().mod(n);
-		                if (x.isUnit()) return false;
-		                if (x.equals(nPrev)) continue next;
-		            }
-		            return false;
-		        }
-		        return true;
-		    }
-
-		    // Set "strict" to true to force GRH-supported lower bound of 2*log(N)^2
-		    BigInteger.prototype.isPrime = function (strict) {
-		        var isPrime = isBasicPrime(this);
-		        if (isPrime !== undefined$1) return isPrime;
-		        var n = this.abs();
-		        var bits = n.bitLength();
-		        if (bits <= 64)
-		            return millerRabinTest(n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]);
-		        var logN = Math.log(2) * bits.toJSNumber();
-		        var t = Math.ceil((strict === true) ? (2 * Math.pow(logN, 2)) : logN);
-		        for (var a = [], i = 0; i < t; i++) {
-		            a.push(bigInt(i + 2));
-		        }
-		        return millerRabinTest(n, a);
-		    };
-		    NativeBigInt.prototype.isPrime = SmallInteger.prototype.isPrime = BigInteger.prototype.isPrime;
-
-		    BigInteger.prototype.isProbablePrime = function (iterations, rng) {
-		        var isPrime = isBasicPrime(this);
-		        if (isPrime !== undefined$1) return isPrime;
-		        var n = this.abs();
-		        var t = iterations === undefined$1 ? 5 : iterations;
-		        for (var a = [], i = 0; i < t; i++) {
-		            a.push(bigInt.randBetween(2, n.minus(2), rng));
-		        }
-		        return millerRabinTest(n, a);
-		    };
-		    NativeBigInt.prototype.isProbablePrime = SmallInteger.prototype.isProbablePrime = BigInteger.prototype.isProbablePrime;
-
-		    BigInteger.prototype.modInv = function (n) {
-		        var t = bigInt.zero, newT = bigInt.one, r = parseValue(n), newR = this.abs(), q, lastT, lastR;
-		        while (!newR.isZero()) {
-		            q = r.divide(newR);
-		            lastT = t;
-		            lastR = r;
-		            t = newT;
-		            r = newR;
-		            newT = lastT.subtract(q.multiply(newT));
-		            newR = lastR.subtract(q.multiply(newR));
-		        }
-		        if (!r.isUnit()) throw new Error(this.toString() + " and " + n.toString() + " are not co-prime");
-		        if (t.compare(0) === -1) {
-		            t = t.add(n);
-		        }
-		        if (this.isNegative()) {
-		            return t.negate();
-		        }
-		        return t;
-		    };
-
-		    NativeBigInt.prototype.modInv = SmallInteger.prototype.modInv = BigInteger.prototype.modInv;
-
-		    BigInteger.prototype.next = function () {
-		        var value = this.value;
-		        if (this.sign) {
-		            return subtractSmall(value, 1, this.sign);
-		        }
-		        return new BigInteger(addSmall(value, 1), this.sign);
-		    };
-		    SmallInteger.prototype.next = function () {
-		        var value = this.value;
-		        if (value + 1 < MAX_INT) return new SmallInteger(value + 1);
-		        return new BigInteger(MAX_INT_ARR, false);
-		    };
-		    NativeBigInt.prototype.next = function () {
-		        return new NativeBigInt(this.value + BigInt(1));
-		    };
-
-		    BigInteger.prototype.prev = function () {
-		        var value = this.value;
-		        if (this.sign) {
-		            return new BigInteger(addSmall(value, 1), true);
-		        }
-		        return subtractSmall(value, 1, this.sign);
-		    };
-		    SmallInteger.prototype.prev = function () {
-		        var value = this.value;
-		        if (value - 1 > -MAX_INT) return new SmallInteger(value - 1);
-		        return new BigInteger(MAX_INT_ARR, true);
-		    };
-		    NativeBigInt.prototype.prev = function () {
-		        return new NativeBigInt(this.value - BigInt(1));
-		    };
-
-		    var powersOfTwo = [1];
-		    while (2 * powersOfTwo[powersOfTwo.length - 1] <= BASE) powersOfTwo.push(2 * powersOfTwo[powersOfTwo.length - 1]);
-		    var powers2Length = powersOfTwo.length, highestPower2 = powersOfTwo[powers2Length - 1];
-
-		    function shift_isSmall(n) {
-		        return Math.abs(n) <= BASE;
-		    }
-
-		    BigInteger.prototype.shiftLeft = function (v) {
-		        var n = parseValue(v).toJSNumber();
-		        if (!shift_isSmall(n)) {
-		            throw new Error(String(n) + " is too large for shifting.");
-		        }
-		        if (n < 0) return this.shiftRight(-n);
-		        var result = this;
-		        if (result.isZero()) return result;
-		        while (n >= powers2Length) {
-		            result = result.multiply(highestPower2);
-		            n -= powers2Length - 1;
-		        }
-		        return result.multiply(powersOfTwo[n]);
-		    };
-		    NativeBigInt.prototype.shiftLeft = SmallInteger.prototype.shiftLeft = BigInteger.prototype.shiftLeft;
-
-		    BigInteger.prototype.shiftRight = function (v) {
-		        var remQuo;
-		        var n = parseValue(v).toJSNumber();
-		        if (!shift_isSmall(n)) {
-		            throw new Error(String(n) + " is too large for shifting.");
-		        }
-		        if (n < 0) return this.shiftLeft(-n);
-		        var result = this;
-		        while (n >= powers2Length) {
-		            if (result.isZero() || (result.isNegative() && result.isUnit())) return result;
-		            remQuo = divModAny(result, highestPower2);
-		            result = remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
-		            n -= powers2Length - 1;
-		        }
-		        remQuo = divModAny(result, powersOfTwo[n]);
-		        return remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
-		    };
-		    NativeBigInt.prototype.shiftRight = SmallInteger.prototype.shiftRight = BigInteger.prototype.shiftRight;
-
-		    function bitwise(x, y, fn) {
-		        y = parseValue(y);
-		        var xSign = x.isNegative(), ySign = y.isNegative();
-		        var xRem = xSign ? x.not() : x,
-		            yRem = ySign ? y.not() : y;
-		        var xDigit = 0, yDigit = 0;
-		        var xDivMod = null, yDivMod = null;
-		        var result = [];
-		        while (!xRem.isZero() || !yRem.isZero()) {
-		            xDivMod = divModAny(xRem, highestPower2);
-		            xDigit = xDivMod[1].toJSNumber();
-		            if (xSign) {
-		                xDigit = highestPower2 - 1 - xDigit; // two's complement for negative numbers
-		            }
-
-		            yDivMod = divModAny(yRem, highestPower2);
-		            yDigit = yDivMod[1].toJSNumber();
-		            if (ySign) {
-		                yDigit = highestPower2 - 1 - yDigit; // two's complement for negative numbers
-		            }
-
-		            xRem = xDivMod[0];
-		            yRem = yDivMod[0];
-		            result.push(fn(xDigit, yDigit));
-		        }
-		        var sum = fn(xSign ? 1 : 0, ySign ? 1 : 0) !== 0 ? bigInt(-1) : bigInt(0);
-		        for (var i = result.length - 1; i >= 0; i -= 1) {
-		            sum = sum.multiply(highestPower2).add(bigInt(result[i]));
-		        }
-		        return sum;
-		    }
-
-		    BigInteger.prototype.not = function () {
-		        return this.negate().prev();
-		    };
-		    NativeBigInt.prototype.not = SmallInteger.prototype.not = BigInteger.prototype.not;
-
-		    BigInteger.prototype.and = function (n) {
-		        return bitwise(this, n, function (a, b) { return a & b; });
-		    };
-		    NativeBigInt.prototype.and = SmallInteger.prototype.and = BigInteger.prototype.and;
-
-		    BigInteger.prototype.or = function (n) {
-		        return bitwise(this, n, function (a, b) { return a | b; });
-		    };
-		    NativeBigInt.prototype.or = SmallInteger.prototype.or = BigInteger.prototype.or;
-
-		    BigInteger.prototype.xor = function (n) {
-		        return bitwise(this, n, function (a, b) { return a ^ b; });
-		    };
-		    NativeBigInt.prototype.xor = SmallInteger.prototype.xor = BigInteger.prototype.xor;
-
-		    var LOBMASK_I = 1 << 30, LOBMASK_BI = (BASE & -BASE) * (BASE & -BASE) | LOBMASK_I;
-		    function roughLOB(n) { // get lowestOneBit (rough)
-		        // SmallInteger: return Min(lowestOneBit(n), 1 << 30)
-		        // BigInteger: return Min(lowestOneBit(n), 1 << 14) [BASE=1e7]
-		        var v = n.value,
-		            x = typeof v === "number" ? v | LOBMASK_I :
-		                typeof v === "bigint" ? v | BigInt(LOBMASK_I) :
-		                    v[0] + v[1] * BASE | LOBMASK_BI;
-		        return x & -x;
-		    }
-
-		    function integerLogarithm(value, base) {
-		        if (base.compareTo(value) <= 0) {
-		            var tmp = integerLogarithm(value, base.square(base));
-		            var p = tmp.p;
-		            var e = tmp.e;
-		            var t = p.multiply(base);
-		            return t.compareTo(value) <= 0 ? { p: t, e: e * 2 + 1 } : { p: p, e: e * 2 };
-		        }
-		        return { p: bigInt(1), e: 0 };
-		    }
-
-		    BigInteger.prototype.bitLength = function () {
-		        var n = this;
-		        if (n.compareTo(bigInt(0)) < 0) {
-		            n = n.negate().subtract(bigInt(1));
-		        }
-		        if (n.compareTo(bigInt(0)) === 0) {
-		            return bigInt(0);
-		        }
-		        return bigInt(integerLogarithm(n, bigInt(2)).e).add(bigInt(1));
-		    };
-		    NativeBigInt.prototype.bitLength = SmallInteger.prototype.bitLength = BigInteger.prototype.bitLength;
-
-		    function max(a, b) {
-		        a = parseValue(a);
-		        b = parseValue(b);
-		        return a.greater(b) ? a : b;
-		    }
-		    function min(a, b) {
-		        a = parseValue(a);
-		        b = parseValue(b);
-		        return a.lesser(b) ? a : b;
-		    }
-		    function gcd(a, b) {
-		        a = parseValue(a).abs();
-		        b = parseValue(b).abs();
-		        if (a.equals(b)) return a;
-		        if (a.isZero()) return b;
-		        if (b.isZero()) return a;
-		        var c = Integer[1], d, t;
-		        while (a.isEven() && b.isEven()) {
-		            d = min(roughLOB(a), roughLOB(b));
-		            a = a.divide(d);
-		            b = b.divide(d);
-		            c = c.multiply(d);
-		        }
-		        while (a.isEven()) {
-		            a = a.divide(roughLOB(a));
-		        }
-		        do {
-		            while (b.isEven()) {
-		                b = b.divide(roughLOB(b));
-		            }
-		            if (a.greater(b)) {
-		                t = b; b = a; a = t;
-		            }
-		            b = b.subtract(a);
-		        } while (!b.isZero());
-		        return c.isUnit() ? a : a.multiply(c);
-		    }
-		    function lcm(a, b) {
-		        a = parseValue(a).abs();
-		        b = parseValue(b).abs();
-		        return a.divide(gcd(a, b)).multiply(b);
-		    }
-		    function randBetween(a, b, rng) {
-		        a = parseValue(a);
-		        b = parseValue(b);
-		        var usedRNG = rng || Math.random;
-		        var low = min(a, b), high = max(a, b);
-		        var range = high.subtract(low).add(1);
-		        if (range.isSmall) return low.add(Math.floor(usedRNG() * range));
-		        var digits = toBase(range, BASE).value;
-		        var result = [], restricted = true;
-		        for (var i = 0; i < digits.length; i++) {
-		            var top = restricted ? digits[i] + (i + 1 < digits.length ? digits[i + 1] / BASE : 0) : BASE;
-		            var digit = truncate(usedRNG() * top);
-		            result.push(digit);
-		            if (digit < digits[i]) restricted = false;
-		        }
-		        return low.add(Integer.fromArray(result, BASE, false));
-		    }
-
-		    var parseBase = function (text, base, alphabet, caseSensitive) {
-		        alphabet = alphabet || DEFAULT_ALPHABET;
-		        text = String(text);
-		        if (!caseSensitive) {
-		            text = text.toLowerCase();
-		            alphabet = alphabet.toLowerCase();
-		        }
-		        var length = text.length;
-		        var i;
-		        var absBase = Math.abs(base);
-		        var alphabetValues = {};
-		        for (i = 0; i < alphabet.length; i++) {
-		            alphabetValues[alphabet[i]] = i;
-		        }
-		        for (i = 0; i < length; i++) {
-		            var c = text[i];
-		            if (c === "-") continue;
-		            if (c in alphabetValues) {
-		                if (alphabetValues[c] >= absBase) {
-		                    if (c === "1" && absBase === 1) continue;
-		                    throw new Error(c + " is not a valid digit in base " + base + ".");
-		                }
-		            }
-		        }
-		        base = parseValue(base);
-		        var digits = [];
-		        var isNegative = text[0] === "-";
-		        for (i = isNegative ? 1 : 0; i < text.length; i++) {
-		            var c = text[i];
-		            if (c in alphabetValues) digits.push(parseValue(alphabetValues[c]));
-		            else if (c === "<") {
-		                var start = i;
-		                do { i++; } while (text[i] !== ">" && i < text.length);
-		                digits.push(parseValue(text.slice(start + 1, i)));
-		            }
-		            else throw new Error(c + " is not a valid character");
-		        }
-		        return parseBaseFromArray(digits, base, isNegative);
-		    };
-
-		    function parseBaseFromArray(digits, base, isNegative) {
-		        var val = Integer[0], pow = Integer[1], i;
-		        for (i = digits.length - 1; i >= 0; i--) {
-		            val = val.add(digits[i].times(pow));
-		            pow = pow.times(base);
-		        }
-		        return isNegative ? val.negate() : val;
-		    }
-
-		    function stringify(digit, alphabet) {
-		        alphabet = alphabet || DEFAULT_ALPHABET;
-		        if (digit < alphabet.length) {
-		            return alphabet[digit];
-		        }
-		        return "<" + digit + ">";
-		    }
-
-		    function toBase(n, base) {
-		        base = bigInt(base);
-		        if (base.isZero()) {
-		            if (n.isZero()) return { value: [0], isNegative: false };
-		            throw new Error("Cannot convert nonzero numbers to base 0.");
-		        }
-		        if (base.equals(-1)) {
-		            if (n.isZero()) return { value: [0], isNegative: false };
-		            if (n.isNegative())
-		                return {
-		                    value: [].concat.apply([], Array.apply(null, Array(-n.toJSNumber()))
-		                        .map(Array.prototype.valueOf, [1, 0])
-		                    ),
-		                    isNegative: false
-		                };
-
-		            var arr = Array.apply(null, Array(n.toJSNumber() - 1))
-		                .map(Array.prototype.valueOf, [0, 1]);
-		            arr.unshift([1]);
-		            return {
-		                value: [].concat.apply([], arr),
-		                isNegative: false
-		            };
-		        }
-
-		        var neg = false;
-		        if (n.isNegative() && base.isPositive()) {
-		            neg = true;
-		            n = n.abs();
-		        }
-		        if (base.isUnit()) {
-		            if (n.isZero()) return { value: [0], isNegative: false };
-
-		            return {
-		                value: Array.apply(null, Array(n.toJSNumber()))
-		                    .map(Number.prototype.valueOf, 1),
-		                isNegative: neg
-		            };
-		        }
-		        var out = [];
-		        var left = n, divmod;
-		        while (left.isNegative() || left.compareAbs(base) >= 0) {
-		            divmod = left.divmod(base);
-		            left = divmod.quotient;
-		            var digit = divmod.remainder;
-		            if (digit.isNegative()) {
-		                digit = base.minus(digit).abs();
-		                left = left.next();
-		            }
-		            out.push(digit.toJSNumber());
-		        }
-		        out.push(left.toJSNumber());
-		        return { value: out.reverse(), isNegative: neg };
-		    }
-
-		    function toBaseString(n, base, alphabet) {
-		        var arr = toBase(n, base);
-		        return (arr.isNegative ? "-" : "") + arr.value.map(function (x) {
-		            return stringify(x, alphabet);
-		        }).join('');
-		    }
-
-		    BigInteger.prototype.toArray = function (radix) {
-		        return toBase(this, radix);
-		    };
-
-		    SmallInteger.prototype.toArray = function (radix) {
-		        return toBase(this, radix);
-		    };
-
-		    NativeBigInt.prototype.toArray = function (radix) {
-		        return toBase(this, radix);
-		    };
-
-		    BigInteger.prototype.toString = function (radix, alphabet) {
-		        if (radix === undefined$1) radix = 10;
-		        if (radix !== 10 || alphabet) return toBaseString(this, radix, alphabet);
-		        var v = this.value, l = v.length, str = String(v[--l]), zeros = "0000000", digit;
-		        while (--l >= 0) {
-		            digit = String(v[l]);
-		            str += zeros.slice(digit.length) + digit;
-		        }
-		        var sign = this.sign ? "-" : "";
-		        return sign + str;
-		    };
-
-		    SmallInteger.prototype.toString = function (radix, alphabet) {
-		        if (radix === undefined$1) radix = 10;
-		        if (radix != 10 || alphabet) return toBaseString(this, radix, alphabet);
-		        return String(this.value);
-		    };
-
-		    NativeBigInt.prototype.toString = SmallInteger.prototype.toString;
-
-		    NativeBigInt.prototype.toJSON = BigInteger.prototype.toJSON = SmallInteger.prototype.toJSON = function () { return this.toString(); };
-
-		    BigInteger.prototype.valueOf = function () {
-		        return parseInt(this.toString(), 10);
-		    };
-		    BigInteger.prototype.toJSNumber = BigInteger.prototype.valueOf;
-
-		    SmallInteger.prototype.valueOf = function () {
-		        return this.value;
-		    };
-		    SmallInteger.prototype.toJSNumber = SmallInteger.prototype.valueOf;
-		    NativeBigInt.prototype.valueOf = NativeBigInt.prototype.toJSNumber = function () {
-		        return parseInt(this.toString(), 10);
-		    };
-
-		    function parseStringValue(v) {
-		        if (isPrecise(+v)) {
-		            var x = +v;
-		            if (x === truncate(x))
-		                return supportsNativeBigInt ? new NativeBigInt(BigInt(x)) : new SmallInteger(x);
-		            throw new Error("Invalid integer: " + v);
-		        }
-		        var sign = v[0] === "-";
-		        if (sign) v = v.slice(1);
-		        var split = v.split(/e/i);
-		        if (split.length > 2) throw new Error("Invalid integer: " + split.join("e"));
-		        if (split.length === 2) {
-		            var exp = split[1];
-		            if (exp[0] === "+") exp = exp.slice(1);
-		            exp = +exp;
-		            if (exp !== truncate(exp) || !isPrecise(exp)) throw new Error("Invalid integer: " + exp + " is not a valid exponent.");
-		            var text = split[0];
-		            var decimalPlace = text.indexOf(".");
-		            if (decimalPlace >= 0) {
-		                exp -= text.length - decimalPlace - 1;
-		                text = text.slice(0, decimalPlace) + text.slice(decimalPlace + 1);
-		            }
-		            if (exp < 0) throw new Error("Cannot include negative exponent part for integers");
-		            text += (new Array(exp + 1)).join("0");
-		            v = text;
-		        }
-		        var isValid = /^([0-9][0-9]*)$/.test(v);
-		        if (!isValid) throw new Error("Invalid integer: " + v);
-		        if (supportsNativeBigInt) {
-		            return new NativeBigInt(BigInt(sign ? "-" + v : v));
-		        }
-		        var r = [], max = v.length, l = LOG_BASE, min = max - l;
-		        while (max > 0) {
-		            r.push(+v.slice(min, max));
-		            min -= l;
-		            if (min < 0) min = 0;
-		            max -= l;
-		        }
-		        trim(r);
-		        return new BigInteger(r, sign);
-		    }
-
-		    function parseNumberValue(v) {
-		        if (supportsNativeBigInt) {
-		            return new NativeBigInt(BigInt(v));
-		        }
-		        if (isPrecise(v)) {
-		            if (v !== truncate(v)) throw new Error(v + " is not an integer.");
-		            return new SmallInteger(v);
-		        }
-		        return parseStringValue(v.toString());
-		    }
-
-		    function parseValue(v) {
-		        if (typeof v === "number") {
-		            return parseNumberValue(v);
-		        }
-		        if (typeof v === "string") {
-		            return parseStringValue(v);
-		        }
-		        if (typeof v === "bigint") {
-		            return new NativeBigInt(v);
-		        }
-		        return v;
-		    }
-		    // Pre-define numbers in range [-999,999]
-		    for (var i = 0; i < 1000; i++) {
-		        Integer[i] = parseValue(i);
-		        if (i > 0) Integer[-i] = parseValue(-i);
-		    }
-		    // Backwards compatibility
-		    Integer.one = Integer[1];
-		    Integer.zero = Integer[0];
-		    Integer.minusOne = Integer[-1];
-		    Integer.max = max;
-		    Integer.min = min;
-		    Integer.gcd = gcd;
-		    Integer.lcm = lcm;
-		    Integer.isInstance = function (x) { return x instanceof BigInteger || x instanceof SmallInteger || x instanceof NativeBigInt; };
-		    Integer.randBetween = randBetween;
-
-		    Integer.fromArray = function (digits, base, isNegative) {
-		        return parseBaseFromArray(digits.map(parseValue), parseValue(base || 10), isNegative);
-		    };
-
-		    return Integer;
-		})();
-
-		// Node.js check
-		if (module.hasOwnProperty("exports")) {
-		    module.exports = bigInt;
-		}
-	} (BigInteger));
-
-	var BigIntegerExports = BigInteger.exports;
-	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
 
 	var forEach$1 = function forEach(array, callback) {
 		for (var i = 0; i < array.length; i += 1) {
@@ -7548,41 +6280,47 @@
 	    const descr = options.stylize(this._repr_, 'special');
 	    if (depth < 1) return descr;
 	    const entries = [];
-	    for (const prop of ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds']) {
-	      if (this[prop] !== 0) entries.push(`  ${prop}: ${options.stylize(this[prop], 'number')}`);
+	    const props = ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+	    for (let i = 0; i < props.length; i++) {
+	      const prop = props[i];
+	      if (this[prop] !== 0) Call$1(ArrayPrototypePush, entries, [`  ${prop}: ${options.stylize(this[prop], 'number')}`]);
 	    }
-	    return descr + ' {\n' + entries.join(',\n') + '\n}';
+	    return descr + ' {\n' + Call$1(ArrayPrototypeJoin, entries, [',\n']) + '\n}';
 	  }
 	};
 	function defaultUtilInspectFormatter(depth, options) {
 	  return options.stylize(this._repr_, 'special');
 	}
 	function MakeIntrinsicClass(Class, name) {
-	  Object.defineProperty(Class.prototype, Symbol.toStringTag, {
+	  ObjectDefineProperty(Class.prototype, SymbolToStringTag, {
 	    value: name,
 	    writable: false,
 	    enumerable: false,
 	    configurable: true
 	  });
 	  {
-	    Object.defineProperty(Class.prototype, Symbol.for('nodejs.util.inspect.custom'), {
+	    ObjectDefineProperty(Class.prototype, SymbolFor('nodejs.util.inspect.custom'), {
 	      value: customUtilInspectFormatters[name] || defaultUtilInspectFormatter,
 	      writable: false,
 	      enumerable: false,
 	      configurable: true
 	    });
 	  }
-	  for (let prop of Object.getOwnPropertyNames(Class)) {
-	    const desc = Object.getOwnPropertyDescriptor(Class, prop);
+	  const staticNames = ObjectGetOwnPropertyNames(Class);
+	  for (let i = 0; i < staticNames.length; i++) {
+	    const prop = staticNames[i];
+	    const desc = ObjectGetOwnPropertyDescriptor(Class, prop);
 	    if (!desc.configurable || !desc.enumerable) continue;
 	    desc.enumerable = false;
-	    Object.defineProperty(Class, prop, desc);
+	    ObjectDefineProperty(Class, prop, desc);
 	  }
-	  for (let prop of Object.getOwnPropertyNames(Class.prototype)) {
-	    const desc = Object.getOwnPropertyDescriptor(Class.prototype, prop);
+	  const protoNames = ObjectGetOwnPropertyNames(Class.prototype);
+	  for (let i = 0; i < protoNames.length; i++) {
+	    const prop = protoNames[i];
+	    const desc = ObjectGetOwnPropertyDescriptor(Class.prototype, prop);
 	    if (!desc.configurable || !desc.enumerable) continue;
 	    desc.enumerable = false;
-	    Object.defineProperty(Class.prototype, prop, desc);
+	    ObjectDefineProperty(Class.prototype, prop, desc);
 	  }
 	  DefineIntrinsic(name, Class);
 	  DefineIntrinsic(`${name}.prototype`, Class.prototype);
@@ -7596,16 +6334,6 @@
 	  return intrinsic in INTRINSICS ? INTRINSICS[intrinsic] : ESGetIntrinsic(intrinsic);
 	}
 
-	const MathAbs$3 = Math.abs;
-	const MathLog10 = Math.log10;
-	const MathSign$2 = Math.sign;
-	const MathTrunc$1 = Math.trunc;
-	const NumberParseInt = Number.parseInt;
-	const NumberPrototypeToPrecision = Number.prototype.toPrecision;
-	const StringPrototypePadStart = String.prototype.padStart;
-	const StringPrototypeRepeat = String.prototype.repeat;
-	const StringPrototypeSlice$1 = String.prototype.slice;
-
 	// Computes trunc(x / 10**p) and x % 10**p, returning { div, mod }, with
 	// precision loss only once in the quotient, by string manipulation. If the
 	// quotient and remainder are safe integers, then they are exact. x must be an
@@ -7617,9 +6345,9 @@
 	    mod: x
 	  }; // preserves signed zero
 
-	  const sign = MathSign$2(x);
-	  x = MathAbs$3(x);
-	  const xDigits = MathTrunc$1(1 + MathLog10(x));
+	  const sign = MathSign(x);
+	  x = MathAbs(x);
+	  const xDigits = MathTrunc(1 + MathLog10(x));
 	  if (p >= xDigits) return {
 	    div: sign * 0,
 	    mod: sign * x
@@ -7631,8 +6359,8 @@
 
 	  // would perform nearest rounding if x was not an integer:
 	  const xStr = Call$1(NumberPrototypeToPrecision, x, [xDigits]);
-	  const div = sign * NumberParseInt(Call$1(StringPrototypeSlice$1, xStr, [0, xDigits - p]), 10);
-	  const mod = sign * NumberParseInt(Call$1(StringPrototypeSlice$1, xStr, [xDigits - p]), 10);
+	  const div = sign * NumberParseInt(Call$1(StringPrototypeSlice, xStr, [0, xDigits - p]), 10);
+	  const mod = sign * NumberParseInt(Call$1(StringPrototypeSlice, xStr, [xDigits - p]), 10);
 	  return {
 	    div,
 	    mod
@@ -7645,12 +6373,12 @@
 	// x and be less than 10**p.
 	function FMAPowerOf10(x, p, z) {
 	  if (x === 0) return z;
-	  const sign = MathSign$2(x) || MathSign$2(z);
-	  x = MathAbs$3(x);
-	  z = MathAbs$3(z);
-	  const xStr = Call$1(NumberPrototypeToPrecision, x, [MathTrunc$1(1 + MathLog10(x))]);
+	  const sign = MathSign(x) || MathSign(z);
+	  x = MathAbs(x);
+	  z = MathAbs(z);
+	  const xStr = Call$1(NumberPrototypeToPrecision, x, [MathTrunc(1 + MathLog10(x))]);
 	  if (z === 0) return sign * NumberParseInt(xStr + Call$1(StringPrototypeRepeat, '0', [p]), 10);
-	  const zStr = Call$1(NumberPrototypeToPrecision, z, [MathTrunc$1(1 + MathLog10(z))]);
+	  const zStr = Call$1(NumberPrototypeToPrecision, z, [MathTrunc(1 + MathLog10(z))]);
 	  const resStr = xStr + Call$1(StringPrototypePadStart, zStr, [p, '0']);
 	  return sign * NumberParseInt(resStr, 10);
 	}
@@ -7690,29 +6418,1478 @@
 	  return evenCardinality ? r1 : r2;
 	}
 
-	const MathAbs$2 = Math.abs;
-	const MathSign$1 = Math.sign;
-	const NumberIsInteger = Number.isInteger;
-	const NumberIsSafeInteger$1 = Number.isSafeInteger;
+	var BigInteger = {exports: {}};
+
+	(function (module) {
+		var bigInt = (function (undefined$1) {
+
+		    var BASE = 1e7,
+		        LOG_BASE = 7,
+		        MAX_INT = 9007199254740992,
+		        MAX_INT_ARR = smallToArray(MAX_INT),
+		        DEFAULT_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+		    var supportsNativeBigInt = typeof BigInt === "function";
+
+		    function Integer(v, radix, alphabet, caseSensitive) {
+		        if (typeof v === "undefined") return Integer[0];
+		        if (typeof radix !== "undefined") return +radix === 10 && !alphabet ? parseValue(v) : parseBase(v, radix, alphabet, caseSensitive);
+		        return parseValue(v);
+		    }
+
+		    function BigInteger(value, sign) {
+		        this.value = value;
+		        this.sign = sign;
+		        this.isSmall = false;
+		    }
+		    BigInteger.prototype = Object.create(Integer.prototype);
+
+		    function SmallInteger(value) {
+		        this.value = value;
+		        this.sign = value < 0;
+		        this.isSmall = true;
+		    }
+		    SmallInteger.prototype = Object.create(Integer.prototype);
+
+		    function NativeBigInt(value) {
+		        this.value = value;
+		    }
+		    NativeBigInt.prototype = Object.create(Integer.prototype);
+
+		    function isPrecise(n) {
+		        return -MAX_INT < n && n < MAX_INT;
+		    }
+
+		    function smallToArray(n) { // For performance reasons doesn't reference BASE, need to change this function if BASE changes
+		        if (n < 1e7)
+		            return [n];
+		        if (n < 1e14)
+		            return [n % 1e7, Math.floor(n / 1e7)];
+		        return [n % 1e7, Math.floor(n / 1e7) % 1e7, Math.floor(n / 1e14)];
+		    }
+
+		    function arrayToSmall(arr) { // If BASE changes this function may need to change
+		        trim(arr);
+		        var length = arr.length;
+		        if (length < 4 && compareAbs(arr, MAX_INT_ARR) < 0) {
+		            switch (length) {
+		                case 0: return 0;
+		                case 1: return arr[0];
+		                case 2: return arr[0] + arr[1] * BASE;
+		                default: return arr[0] + (arr[1] + arr[2] * BASE) * BASE;
+		            }
+		        }
+		        return arr;
+		    }
+
+		    function trim(v) {
+		        var i = v.length;
+		        while (v[--i] === 0);
+		        v.length = i + 1;
+		    }
+
+		    function createArray(length) { // function shamelessly stolen from Yaffle's library https://github.com/Yaffle/BigInteger
+		        var x = new Array(length);
+		        var i = -1;
+		        while (++i < length) {
+		            x[i] = 0;
+		        }
+		        return x;
+		    }
+
+		    function truncate(n) {
+		        if (n > 0) return Math.floor(n);
+		        return Math.ceil(n);
+		    }
+
+		    function add(a, b) { // assumes a and b are arrays with a.length >= b.length
+		        var l_a = a.length,
+		            l_b = b.length,
+		            r = new Array(l_a),
+		            carry = 0,
+		            base = BASE,
+		            sum, i;
+		        for (i = 0; i < l_b; i++) {
+		            sum = a[i] + b[i] + carry;
+		            carry = sum >= base ? 1 : 0;
+		            r[i] = sum - carry * base;
+		        }
+		        while (i < l_a) {
+		            sum = a[i] + carry;
+		            carry = sum === base ? 1 : 0;
+		            r[i++] = sum - carry * base;
+		        }
+		        if (carry > 0) r.push(carry);
+		        return r;
+		    }
+
+		    function addAny(a, b) {
+		        if (a.length >= b.length) return add(a, b);
+		        return add(b, a);
+		    }
+
+		    function addSmall(a, carry) { // assumes a is array, carry is number with 0 <= carry < MAX_INT
+		        var l = a.length,
+		            r = new Array(l),
+		            base = BASE,
+		            sum, i;
+		        for (i = 0; i < l; i++) {
+		            sum = a[i] - base + carry;
+		            carry = Math.floor(sum / base);
+		            r[i] = sum - carry * base;
+		            carry += 1;
+		        }
+		        while (carry > 0) {
+		            r[i++] = carry % base;
+		            carry = Math.floor(carry / base);
+		        }
+		        return r;
+		    }
+
+		    BigInteger.prototype.add = function (v) {
+		        var n = parseValue(v);
+		        if (this.sign !== n.sign) {
+		            return this.subtract(n.negate());
+		        }
+		        var a = this.value, b = n.value;
+		        if (n.isSmall) {
+		            return new BigInteger(addSmall(a, Math.abs(b)), this.sign);
+		        }
+		        return new BigInteger(addAny(a, b), this.sign);
+		    };
+		    BigInteger.prototype.plus = BigInteger.prototype.add;
+
+		    SmallInteger.prototype.add = function (v) {
+		        var n = parseValue(v);
+		        var a = this.value;
+		        if (a < 0 !== n.sign) {
+		            return this.subtract(n.negate());
+		        }
+		        var b = n.value;
+		        if (n.isSmall) {
+		            if (isPrecise(a + b)) return new SmallInteger(a + b);
+		            b = smallToArray(Math.abs(b));
+		        }
+		        return new BigInteger(addSmall(b, Math.abs(a)), a < 0);
+		    };
+		    SmallInteger.prototype.plus = SmallInteger.prototype.add;
+
+		    NativeBigInt.prototype.add = function (v) {
+		        return new NativeBigInt(this.value + parseValue(v).value);
+		    };
+		    NativeBigInt.prototype.plus = NativeBigInt.prototype.add;
+
+		    function subtract(a, b) { // assumes a and b are arrays with a >= b
+		        var a_l = a.length,
+		            b_l = b.length,
+		            r = new Array(a_l),
+		            borrow = 0,
+		            base = BASE,
+		            i, difference;
+		        for (i = 0; i < b_l; i++) {
+		            difference = a[i] - borrow - b[i];
+		            if (difference < 0) {
+		                difference += base;
+		                borrow = 1;
+		            } else borrow = 0;
+		            r[i] = difference;
+		        }
+		        for (i = b_l; i < a_l; i++) {
+		            difference = a[i] - borrow;
+		            if (difference < 0) difference += base;
+		            else {
+		                r[i++] = difference;
+		                break;
+		            }
+		            r[i] = difference;
+		        }
+		        for (; i < a_l; i++) {
+		            r[i] = a[i];
+		        }
+		        trim(r);
+		        return r;
+		    }
+
+		    function subtractAny(a, b, sign) {
+		        var value;
+		        if (compareAbs(a, b) >= 0) {
+		            value = subtract(a, b);
+		        } else {
+		            value = subtract(b, a);
+		            sign = !sign;
+		        }
+		        value = arrayToSmall(value);
+		        if (typeof value === "number") {
+		            if (sign) value = -value;
+		            return new SmallInteger(value);
+		        }
+		        return new BigInteger(value, sign);
+		    }
+
+		    function subtractSmall(a, b, sign) { // assumes a is array, b is number with 0 <= b < MAX_INT
+		        var l = a.length,
+		            r = new Array(l),
+		            carry = -b,
+		            base = BASE,
+		            i, difference;
+		        for (i = 0; i < l; i++) {
+		            difference = a[i] + carry;
+		            carry = Math.floor(difference / base);
+		            difference %= base;
+		            r[i] = difference < 0 ? difference + base : difference;
+		        }
+		        r = arrayToSmall(r);
+		        if (typeof r === "number") {
+		            if (sign) r = -r;
+		            return new SmallInteger(r);
+		        } return new BigInteger(r, sign);
+		    }
+
+		    BigInteger.prototype.subtract = function (v) {
+		        var n = parseValue(v);
+		        if (this.sign !== n.sign) {
+		            return this.add(n.negate());
+		        }
+		        var a = this.value, b = n.value;
+		        if (n.isSmall)
+		            return subtractSmall(a, Math.abs(b), this.sign);
+		        return subtractAny(a, b, this.sign);
+		    };
+		    BigInteger.prototype.minus = BigInteger.prototype.subtract;
+
+		    SmallInteger.prototype.subtract = function (v) {
+		        var n = parseValue(v);
+		        var a = this.value;
+		        if (a < 0 !== n.sign) {
+		            return this.add(n.negate());
+		        }
+		        var b = n.value;
+		        if (n.isSmall) {
+		            return new SmallInteger(a - b);
+		        }
+		        return subtractSmall(b, Math.abs(a), a >= 0);
+		    };
+		    SmallInteger.prototype.minus = SmallInteger.prototype.subtract;
+
+		    NativeBigInt.prototype.subtract = function (v) {
+		        return new NativeBigInt(this.value - parseValue(v).value);
+		    };
+		    NativeBigInt.prototype.minus = NativeBigInt.prototype.subtract;
+
+		    BigInteger.prototype.negate = function () {
+		        return new BigInteger(this.value, !this.sign);
+		    };
+		    SmallInteger.prototype.negate = function () {
+		        var sign = this.sign;
+		        var small = new SmallInteger(-this.value);
+		        small.sign = !sign;
+		        return small;
+		    };
+		    NativeBigInt.prototype.negate = function () {
+		        return new NativeBigInt(-this.value);
+		    };
+
+		    BigInteger.prototype.abs = function () {
+		        return new BigInteger(this.value, false);
+		    };
+		    SmallInteger.prototype.abs = function () {
+		        return new SmallInteger(Math.abs(this.value));
+		    };
+		    NativeBigInt.prototype.abs = function () {
+		        return new NativeBigInt(this.value >= 0 ? this.value : -this.value);
+		    };
+
+
+		    function multiplyLong(a, b) {
+		        var a_l = a.length,
+		            b_l = b.length,
+		            l = a_l + b_l,
+		            r = createArray(l),
+		            base = BASE,
+		            product, carry, i, a_i, b_j;
+		        for (i = 0; i < a_l; ++i) {
+		            a_i = a[i];
+		            for (var j = 0; j < b_l; ++j) {
+		                b_j = b[j];
+		                product = a_i * b_j + r[i + j];
+		                carry = Math.floor(product / base);
+		                r[i + j] = product - carry * base;
+		                r[i + j + 1] += carry;
+		            }
+		        }
+		        trim(r);
+		        return r;
+		    }
+
+		    function multiplySmall(a, b) { // assumes a is array, b is number with |b| < BASE
+		        var l = a.length,
+		            r = new Array(l),
+		            base = BASE,
+		            carry = 0,
+		            product, i;
+		        for (i = 0; i < l; i++) {
+		            product = a[i] * b + carry;
+		            carry = Math.floor(product / base);
+		            r[i] = product - carry * base;
+		        }
+		        while (carry > 0) {
+		            r[i++] = carry % base;
+		            carry = Math.floor(carry / base);
+		        }
+		        return r;
+		    }
+
+		    function shiftLeft(x, n) {
+		        var r = [];
+		        while (n-- > 0) r.push(0);
+		        return r.concat(x);
+		    }
+
+		    function multiplyKaratsuba(x, y) {
+		        var n = Math.max(x.length, y.length);
+
+		        if (n <= 30) return multiplyLong(x, y);
+		        n = Math.ceil(n / 2);
+
+		        var b = x.slice(n),
+		            a = x.slice(0, n),
+		            d = y.slice(n),
+		            c = y.slice(0, n);
+
+		        var ac = multiplyKaratsuba(a, c),
+		            bd = multiplyKaratsuba(b, d),
+		            abcd = multiplyKaratsuba(addAny(a, b), addAny(c, d));
+
+		        var product = addAny(addAny(ac, shiftLeft(subtract(subtract(abcd, ac), bd), n)), shiftLeft(bd, 2 * n));
+		        trim(product);
+		        return product;
+		    }
+
+		    // The following function is derived from a surface fit of a graph plotting the performance difference
+		    // between long multiplication and karatsuba multiplication versus the lengths of the two arrays.
+		    function useKaratsuba(l1, l2) {
+		        return -0.012 * l1 - 0.012 * l2 + 0.000015 * l1 * l2 > 0;
+		    }
+
+		    BigInteger.prototype.multiply = function (v) {
+		        var n = parseValue(v),
+		            a = this.value, b = n.value,
+		            sign = this.sign !== n.sign,
+		            abs;
+		        if (n.isSmall) {
+		            if (b === 0) return Integer[0];
+		            if (b === 1) return this;
+		            if (b === -1) return this.negate();
+		            abs = Math.abs(b);
+		            if (abs < BASE) {
+		                return new BigInteger(multiplySmall(a, abs), sign);
+		            }
+		            b = smallToArray(abs);
+		        }
+		        if (useKaratsuba(a.length, b.length)) // Karatsuba is only faster for certain array sizes
+		            return new BigInteger(multiplyKaratsuba(a, b), sign);
+		        return new BigInteger(multiplyLong(a, b), sign);
+		    };
+
+		    BigInteger.prototype.times = BigInteger.prototype.multiply;
+
+		    function multiplySmallAndArray(a, b, sign) { // a >= 0
+		        if (a < BASE) {
+		            return new BigInteger(multiplySmall(b, a), sign);
+		        }
+		        return new BigInteger(multiplyLong(b, smallToArray(a)), sign);
+		    }
+		    SmallInteger.prototype._multiplyBySmall = function (a) {
+		        if (isPrecise(a.value * this.value)) {
+		            return new SmallInteger(a.value * this.value);
+		        }
+		        return multiplySmallAndArray(Math.abs(a.value), smallToArray(Math.abs(this.value)), this.sign !== a.sign);
+		    };
+		    BigInteger.prototype._multiplyBySmall = function (a) {
+		        if (a.value === 0) return Integer[0];
+		        if (a.value === 1) return this;
+		        if (a.value === -1) return this.negate();
+		        return multiplySmallAndArray(Math.abs(a.value), this.value, this.sign !== a.sign);
+		    };
+		    SmallInteger.prototype.multiply = function (v) {
+		        return parseValue(v)._multiplyBySmall(this);
+		    };
+		    SmallInteger.prototype.times = SmallInteger.prototype.multiply;
+
+		    NativeBigInt.prototype.multiply = function (v) {
+		        return new NativeBigInt(this.value * parseValue(v).value);
+		    };
+		    NativeBigInt.prototype.times = NativeBigInt.prototype.multiply;
+
+		    function square(a) {
+		        //console.assert(2 * BASE * BASE < MAX_INT);
+		        var l = a.length,
+		            r = createArray(l + l),
+		            base = BASE,
+		            product, carry, i, a_i, a_j;
+		        for (i = 0; i < l; i++) {
+		            a_i = a[i];
+		            carry = 0 - a_i * a_i;
+		            for (var j = i; j < l; j++) {
+		                a_j = a[j];
+		                product = 2 * (a_i * a_j) + r[i + j] + carry;
+		                carry = Math.floor(product / base);
+		                r[i + j] = product - carry * base;
+		            }
+		            r[i + l] = carry;
+		        }
+		        trim(r);
+		        return r;
+		    }
+
+		    BigInteger.prototype.square = function () {
+		        return new BigInteger(square(this.value), false);
+		    };
+
+		    SmallInteger.prototype.square = function () {
+		        var value = this.value * this.value;
+		        if (isPrecise(value)) return new SmallInteger(value);
+		        return new BigInteger(square(smallToArray(Math.abs(this.value))), false);
+		    };
+
+		    NativeBigInt.prototype.square = function (v) {
+		        return new NativeBigInt(this.value * this.value);
+		    };
+
+		    function divMod1(a, b) { // Left over from previous version. Performs faster than divMod2 on smaller input sizes.
+		        var a_l = a.length,
+		            b_l = b.length,
+		            base = BASE,
+		            result = createArray(b.length),
+		            divisorMostSignificantDigit = b[b_l - 1],
+		            // normalization
+		            lambda = Math.ceil(base / (2 * divisorMostSignificantDigit)),
+		            remainder = multiplySmall(a, lambda),
+		            divisor = multiplySmall(b, lambda),
+		            quotientDigit, shift, carry, borrow, i, l, q;
+		        if (remainder.length <= a_l) remainder.push(0);
+		        divisor.push(0);
+		        divisorMostSignificantDigit = divisor[b_l - 1];
+		        for (shift = a_l - b_l; shift >= 0; shift--) {
+		            quotientDigit = base - 1;
+		            if (remainder[shift + b_l] !== divisorMostSignificantDigit) {
+		                quotientDigit = Math.floor((remainder[shift + b_l] * base + remainder[shift + b_l - 1]) / divisorMostSignificantDigit);
+		            }
+		            // quotientDigit <= base - 1
+		            carry = 0;
+		            borrow = 0;
+		            l = divisor.length;
+		            for (i = 0; i < l; i++) {
+		                carry += quotientDigit * divisor[i];
+		                q = Math.floor(carry / base);
+		                borrow += remainder[shift + i] - (carry - q * base);
+		                carry = q;
+		                if (borrow < 0) {
+		                    remainder[shift + i] = borrow + base;
+		                    borrow = -1;
+		                } else {
+		                    remainder[shift + i] = borrow;
+		                    borrow = 0;
+		                }
+		            }
+		            while (borrow !== 0) {
+		                quotientDigit -= 1;
+		                carry = 0;
+		                for (i = 0; i < l; i++) {
+		                    carry += remainder[shift + i] - base + divisor[i];
+		                    if (carry < 0) {
+		                        remainder[shift + i] = carry + base;
+		                        carry = 0;
+		                    } else {
+		                        remainder[shift + i] = carry;
+		                        carry = 1;
+		                    }
+		                }
+		                borrow += carry;
+		            }
+		            result[shift] = quotientDigit;
+		        }
+		        // denormalization
+		        remainder = divModSmall(remainder, lambda)[0];
+		        return [arrayToSmall(result), arrayToSmall(remainder)];
+		    }
+
+		    function divMod2(a, b) { // Implementation idea shamelessly stolen from Silent Matt's library http://silentmatt.com/biginteger/
+		        // Performs faster than divMod1 on larger input sizes.
+		        var a_l = a.length,
+		            b_l = b.length,
+		            result = [],
+		            part = [],
+		            base = BASE,
+		            guess, xlen, highx, highy, check;
+		        while (a_l) {
+		            part.unshift(a[--a_l]);
+		            trim(part);
+		            if (compareAbs(part, b) < 0) {
+		                result.push(0);
+		                continue;
+		            }
+		            xlen = part.length;
+		            highx = part[xlen - 1] * base + part[xlen - 2];
+		            highy = b[b_l - 1] * base + b[b_l - 2];
+		            if (xlen > b_l) {
+		                highx = (highx + 1) * base;
+		            }
+		            guess = Math.ceil(highx / highy);
+		            do {
+		                check = multiplySmall(b, guess);
+		                if (compareAbs(check, part) <= 0) break;
+		                guess--;
+		            } while (guess);
+		            result.push(guess);
+		            part = subtract(part, check);
+		        }
+		        result.reverse();
+		        return [arrayToSmall(result), arrayToSmall(part)];
+		    }
+
+		    function divModSmall(value, lambda) {
+		        var length = value.length,
+		            quotient = createArray(length),
+		            base = BASE,
+		            i, q, remainder, divisor;
+		        remainder = 0;
+		        for (i = length - 1; i >= 0; --i) {
+		            divisor = remainder * base + value[i];
+		            q = truncate(divisor / lambda);
+		            remainder = divisor - q * lambda;
+		            quotient[i] = q | 0;
+		        }
+		        return [quotient, remainder | 0];
+		    }
+
+		    function divModAny(self, v) {
+		        var value, n = parseValue(v);
+		        if (supportsNativeBigInt) {
+		            return [new NativeBigInt(self.value / n.value), new NativeBigInt(self.value % n.value)];
+		        }
+		        var a = self.value, b = n.value;
+		        var quotient;
+		        if (b === 0) throw new Error("Cannot divide by zero");
+		        if (self.isSmall) {
+		            if (n.isSmall) {
+		                return [new SmallInteger(truncate(a / b)), new SmallInteger(a % b)];
+		            }
+		            return [Integer[0], self];
+		        }
+		        if (n.isSmall) {
+		            if (b === 1) return [self, Integer[0]];
+		            if (b == -1) return [self.negate(), Integer[0]];
+		            var abs = Math.abs(b);
+		            if (abs < BASE) {
+		                value = divModSmall(a, abs);
+		                quotient = arrayToSmall(value[0]);
+		                var remainder = value[1];
+		                if (self.sign) remainder = -remainder;
+		                if (typeof quotient === "number") {
+		                    if (self.sign !== n.sign) quotient = -quotient;
+		                    return [new SmallInteger(quotient), new SmallInteger(remainder)];
+		                }
+		                return [new BigInteger(quotient, self.sign !== n.sign), new SmallInteger(remainder)];
+		            }
+		            b = smallToArray(abs);
+		        }
+		        var comparison = compareAbs(a, b);
+		        if (comparison === -1) return [Integer[0], self];
+		        if (comparison === 0) return [Integer[self.sign === n.sign ? 1 : -1], Integer[0]];
+
+		        // divMod1 is faster on smaller input sizes
+		        if (a.length + b.length <= 200)
+		            value = divMod1(a, b);
+		        else value = divMod2(a, b);
+
+		        quotient = value[0];
+		        var qSign = self.sign !== n.sign,
+		            mod = value[1],
+		            mSign = self.sign;
+		        if (typeof quotient === "number") {
+		            if (qSign) quotient = -quotient;
+		            quotient = new SmallInteger(quotient);
+		        } else quotient = new BigInteger(quotient, qSign);
+		        if (typeof mod === "number") {
+		            if (mSign) mod = -mod;
+		            mod = new SmallInteger(mod);
+		        } else mod = new BigInteger(mod, mSign);
+		        return [quotient, mod];
+		    }
+
+		    BigInteger.prototype.divmod = function (v) {
+		        var result = divModAny(this, v);
+		        return {
+		            quotient: result[0],
+		            remainder: result[1]
+		        };
+		    };
+		    NativeBigInt.prototype.divmod = SmallInteger.prototype.divmod = BigInteger.prototype.divmod;
+
+
+		    BigInteger.prototype.divide = function (v) {
+		        return divModAny(this, v)[0];
+		    };
+		    NativeBigInt.prototype.over = NativeBigInt.prototype.divide = function (v) {
+		        return new NativeBigInt(this.value / parseValue(v).value);
+		    };
+		    SmallInteger.prototype.over = SmallInteger.prototype.divide = BigInteger.prototype.over = BigInteger.prototype.divide;
+
+		    BigInteger.prototype.mod = function (v) {
+		        return divModAny(this, v)[1];
+		    };
+		    NativeBigInt.prototype.mod = NativeBigInt.prototype.remainder = function (v) {
+		        return new NativeBigInt(this.value % parseValue(v).value);
+		    };
+		    SmallInteger.prototype.remainder = SmallInteger.prototype.mod = BigInteger.prototype.remainder = BigInteger.prototype.mod;
+
+		    BigInteger.prototype.pow = function (v) {
+		        var n = parseValue(v),
+		            a = this.value,
+		            b = n.value,
+		            value, x, y;
+		        if (b === 0) return Integer[1];
+		        if (a === 0) return Integer[0];
+		        if (a === 1) return Integer[1];
+		        if (a === -1) return n.isEven() ? Integer[1] : Integer[-1];
+		        if (n.sign) {
+		            return Integer[0];
+		        }
+		        if (!n.isSmall) throw new Error("The exponent " + n.toString() + " is too large.");
+		        if (this.isSmall) {
+		            if (isPrecise(value = Math.pow(a, b)))
+		                return new SmallInteger(truncate(value));
+		        }
+		        x = this;
+		        y = Integer[1];
+		        while (true) {
+		            if (b & 1 === 1) {
+		                y = y.times(x);
+		                --b;
+		            }
+		            if (b === 0) break;
+		            b /= 2;
+		            x = x.square();
+		        }
+		        return y;
+		    };
+		    SmallInteger.prototype.pow = BigInteger.prototype.pow;
+
+		    NativeBigInt.prototype.pow = function (v) {
+		        var n = parseValue(v);
+		        var a = this.value, b = n.value;
+		        var _0 = BigInt(0), _1 = BigInt(1), _2 = BigInt(2);
+		        if (b === _0) return Integer[1];
+		        if (a === _0) return Integer[0];
+		        if (a === _1) return Integer[1];
+		        if (a === BigInt(-1)) return n.isEven() ? Integer[1] : Integer[-1];
+		        if (n.isNegative()) return new NativeBigInt(_0);
+		        var x = this;
+		        var y = Integer[1];
+		        while (true) {
+		            if ((b & _1) === _1) {
+		                y = y.times(x);
+		                --b;
+		            }
+		            if (b === _0) break;
+		            b /= _2;
+		            x = x.square();
+		        }
+		        return y;
+		    };
+
+		    BigInteger.prototype.modPow = function (exp, mod) {
+		        exp = parseValue(exp);
+		        mod = parseValue(mod);
+		        if (mod.isZero()) throw new Error("Cannot take modPow with modulus 0");
+		        var r = Integer[1],
+		            base = this.mod(mod);
+		        if (exp.isNegative()) {
+		            exp = exp.multiply(Integer[-1]);
+		            base = base.modInv(mod);
+		        }
+		        while (exp.isPositive()) {
+		            if (base.isZero()) return Integer[0];
+		            if (exp.isOdd()) r = r.multiply(base).mod(mod);
+		            exp = exp.divide(2);
+		            base = base.square().mod(mod);
+		        }
+		        return r;
+		    };
+		    NativeBigInt.prototype.modPow = SmallInteger.prototype.modPow = BigInteger.prototype.modPow;
+
+		    function compareAbs(a, b) {
+		        if (a.length !== b.length) {
+		            return a.length > b.length ? 1 : -1;
+		        }
+		        for (var i = a.length - 1; i >= 0; i--) {
+		            if (a[i] !== b[i]) return a[i] > b[i] ? 1 : -1;
+		        }
+		        return 0;
+		    }
+
+		    BigInteger.prototype.compareAbs = function (v) {
+		        var n = parseValue(v),
+		            a = this.value,
+		            b = n.value;
+		        if (n.isSmall) return 1;
+		        return compareAbs(a, b);
+		    };
+		    SmallInteger.prototype.compareAbs = function (v) {
+		        var n = parseValue(v),
+		            a = Math.abs(this.value),
+		            b = n.value;
+		        if (n.isSmall) {
+		            b = Math.abs(b);
+		            return a === b ? 0 : a > b ? 1 : -1;
+		        }
+		        return -1;
+		    };
+		    NativeBigInt.prototype.compareAbs = function (v) {
+		        var a = this.value;
+		        var b = parseValue(v).value;
+		        a = a >= 0 ? a : -a;
+		        b = b >= 0 ? b : -b;
+		        return a === b ? 0 : a > b ? 1 : -1;
+		    };
+
+		    BigInteger.prototype.compare = function (v) {
+		        // See discussion about comparison with Infinity:
+		        // https://github.com/peterolson/BigInteger.js/issues/61
+		        if (v === Infinity) {
+		            return -1;
+		        }
+		        if (v === -Infinity) {
+		            return 1;
+		        }
+
+		        var n = parseValue(v),
+		            a = this.value,
+		            b = n.value;
+		        if (this.sign !== n.sign) {
+		            return n.sign ? 1 : -1;
+		        }
+		        if (n.isSmall) {
+		            return this.sign ? -1 : 1;
+		        }
+		        return compareAbs(a, b) * (this.sign ? -1 : 1);
+		    };
+		    BigInteger.prototype.compareTo = BigInteger.prototype.compare;
+
+		    SmallInteger.prototype.compare = function (v) {
+		        if (v === Infinity) {
+		            return -1;
+		        }
+		        if (v === -Infinity) {
+		            return 1;
+		        }
+
+		        var n = parseValue(v),
+		            a = this.value,
+		            b = n.value;
+		        if (n.isSmall) {
+		            return a == b ? 0 : a > b ? 1 : -1;
+		        }
+		        if (a < 0 !== n.sign) {
+		            return a < 0 ? -1 : 1;
+		        }
+		        return a < 0 ? 1 : -1;
+		    };
+		    SmallInteger.prototype.compareTo = SmallInteger.prototype.compare;
+
+		    NativeBigInt.prototype.compare = function (v) {
+		        if (v === Infinity) {
+		            return -1;
+		        }
+		        if (v === -Infinity) {
+		            return 1;
+		        }
+		        var a = this.value;
+		        var b = parseValue(v).value;
+		        return a === b ? 0 : a > b ? 1 : -1;
+		    };
+		    NativeBigInt.prototype.compareTo = NativeBigInt.prototype.compare;
+
+		    BigInteger.prototype.equals = function (v) {
+		        return this.compare(v) === 0;
+		    };
+		    NativeBigInt.prototype.eq = NativeBigInt.prototype.equals = SmallInteger.prototype.eq = SmallInteger.prototype.equals = BigInteger.prototype.eq = BigInteger.prototype.equals;
+
+		    BigInteger.prototype.notEquals = function (v) {
+		        return this.compare(v) !== 0;
+		    };
+		    NativeBigInt.prototype.neq = NativeBigInt.prototype.notEquals = SmallInteger.prototype.neq = SmallInteger.prototype.notEquals = BigInteger.prototype.neq = BigInteger.prototype.notEquals;
+
+		    BigInteger.prototype.greater = function (v) {
+		        return this.compare(v) > 0;
+		    };
+		    NativeBigInt.prototype.gt = NativeBigInt.prototype.greater = SmallInteger.prototype.gt = SmallInteger.prototype.greater = BigInteger.prototype.gt = BigInteger.prototype.greater;
+
+		    BigInteger.prototype.lesser = function (v) {
+		        return this.compare(v) < 0;
+		    };
+		    NativeBigInt.prototype.lt = NativeBigInt.prototype.lesser = SmallInteger.prototype.lt = SmallInteger.prototype.lesser = BigInteger.prototype.lt = BigInteger.prototype.lesser;
+
+		    BigInteger.prototype.greaterOrEquals = function (v) {
+		        return this.compare(v) >= 0;
+		    };
+		    NativeBigInt.prototype.geq = NativeBigInt.prototype.greaterOrEquals = SmallInteger.prototype.geq = SmallInteger.prototype.greaterOrEquals = BigInteger.prototype.geq = BigInteger.prototype.greaterOrEquals;
+
+		    BigInteger.prototype.lesserOrEquals = function (v) {
+		        return this.compare(v) <= 0;
+		    };
+		    NativeBigInt.prototype.leq = NativeBigInt.prototype.lesserOrEquals = SmallInteger.prototype.leq = SmallInteger.prototype.lesserOrEquals = BigInteger.prototype.leq = BigInteger.prototype.lesserOrEquals;
+
+		    BigInteger.prototype.isEven = function () {
+		        return (this.value[0] & 1) === 0;
+		    };
+		    SmallInteger.prototype.isEven = function () {
+		        return (this.value & 1) === 0;
+		    };
+		    NativeBigInt.prototype.isEven = function () {
+		        return (this.value & BigInt(1)) === BigInt(0);
+		    };
+
+		    BigInteger.prototype.isOdd = function () {
+		        return (this.value[0] & 1) === 1;
+		    };
+		    SmallInteger.prototype.isOdd = function () {
+		        return (this.value & 1) === 1;
+		    };
+		    NativeBigInt.prototype.isOdd = function () {
+		        return (this.value & BigInt(1)) === BigInt(1);
+		    };
+
+		    BigInteger.prototype.isPositive = function () {
+		        return !this.sign;
+		    };
+		    SmallInteger.prototype.isPositive = function () {
+		        return this.value > 0;
+		    };
+		    NativeBigInt.prototype.isPositive = SmallInteger.prototype.isPositive;
+
+		    BigInteger.prototype.isNegative = function () {
+		        return this.sign;
+		    };
+		    SmallInteger.prototype.isNegative = function () {
+		        return this.value < 0;
+		    };
+		    NativeBigInt.prototype.isNegative = SmallInteger.prototype.isNegative;
+
+		    BigInteger.prototype.isUnit = function () {
+		        return false;
+		    };
+		    SmallInteger.prototype.isUnit = function () {
+		        return Math.abs(this.value) === 1;
+		    };
+		    NativeBigInt.prototype.isUnit = function () {
+		        return this.abs().value === BigInt(1);
+		    };
+
+		    BigInteger.prototype.isZero = function () {
+		        return false;
+		    };
+		    SmallInteger.prototype.isZero = function () {
+		        return this.value === 0;
+		    };
+		    NativeBigInt.prototype.isZero = function () {
+		        return this.value === BigInt(0);
+		    };
+
+		    BigInteger.prototype.isDivisibleBy = function (v) {
+		        var n = parseValue(v);
+		        if (n.isZero()) return false;
+		        if (n.isUnit()) return true;
+		        if (n.compareAbs(2) === 0) return this.isEven();
+		        return this.mod(n).isZero();
+		    };
+		    NativeBigInt.prototype.isDivisibleBy = SmallInteger.prototype.isDivisibleBy = BigInteger.prototype.isDivisibleBy;
+
+		    function isBasicPrime(v) {
+		        var n = v.abs();
+		        if (n.isUnit()) return false;
+		        if (n.equals(2) || n.equals(3) || n.equals(5)) return true;
+		        if (n.isEven() || n.isDivisibleBy(3) || n.isDivisibleBy(5)) return false;
+		        if (n.lesser(49)) return true;
+		        // we don't know if it's prime: let the other functions figure it out
+		    }
+
+		    function millerRabinTest(n, a) {
+		        var nPrev = n.prev(),
+		            b = nPrev,
+		            r = 0,
+		            d, i, x;
+		        while (b.isEven()) b = b.divide(2), r++;
+		        next: for (i = 0; i < a.length; i++) {
+		            if (n.lesser(a[i])) continue;
+		            x = bigInt(a[i]).modPow(b, n);
+		            if (x.isUnit() || x.equals(nPrev)) continue;
+		            for (d = r - 1; d != 0; d--) {
+		                x = x.square().mod(n);
+		                if (x.isUnit()) return false;
+		                if (x.equals(nPrev)) continue next;
+		            }
+		            return false;
+		        }
+		        return true;
+		    }
+
+		    // Set "strict" to true to force GRH-supported lower bound of 2*log(N)^2
+		    BigInteger.prototype.isPrime = function (strict) {
+		        var isPrime = isBasicPrime(this);
+		        if (isPrime !== undefined$1) return isPrime;
+		        var n = this.abs();
+		        var bits = n.bitLength();
+		        if (bits <= 64)
+		            return millerRabinTest(n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]);
+		        var logN = Math.log(2) * bits.toJSNumber();
+		        var t = Math.ceil((strict === true) ? (2 * Math.pow(logN, 2)) : logN);
+		        for (var a = [], i = 0; i < t; i++) {
+		            a.push(bigInt(i + 2));
+		        }
+		        return millerRabinTest(n, a);
+		    };
+		    NativeBigInt.prototype.isPrime = SmallInteger.prototype.isPrime = BigInteger.prototype.isPrime;
+
+		    BigInteger.prototype.isProbablePrime = function (iterations, rng) {
+		        var isPrime = isBasicPrime(this);
+		        if (isPrime !== undefined$1) return isPrime;
+		        var n = this.abs();
+		        var t = iterations === undefined$1 ? 5 : iterations;
+		        for (var a = [], i = 0; i < t; i++) {
+		            a.push(bigInt.randBetween(2, n.minus(2), rng));
+		        }
+		        return millerRabinTest(n, a);
+		    };
+		    NativeBigInt.prototype.isProbablePrime = SmallInteger.prototype.isProbablePrime = BigInteger.prototype.isProbablePrime;
+
+		    BigInteger.prototype.modInv = function (n) {
+		        var t = bigInt.zero, newT = bigInt.one, r = parseValue(n), newR = this.abs(), q, lastT, lastR;
+		        while (!newR.isZero()) {
+		            q = r.divide(newR);
+		            lastT = t;
+		            lastR = r;
+		            t = newT;
+		            r = newR;
+		            newT = lastT.subtract(q.multiply(newT));
+		            newR = lastR.subtract(q.multiply(newR));
+		        }
+		        if (!r.isUnit()) throw new Error(this.toString() + " and " + n.toString() + " are not co-prime");
+		        if (t.compare(0) === -1) {
+		            t = t.add(n);
+		        }
+		        if (this.isNegative()) {
+		            return t.negate();
+		        }
+		        return t;
+		    };
+
+		    NativeBigInt.prototype.modInv = SmallInteger.prototype.modInv = BigInteger.prototype.modInv;
+
+		    BigInteger.prototype.next = function () {
+		        var value = this.value;
+		        if (this.sign) {
+		            return subtractSmall(value, 1, this.sign);
+		        }
+		        return new BigInteger(addSmall(value, 1), this.sign);
+		    };
+		    SmallInteger.prototype.next = function () {
+		        var value = this.value;
+		        if (value + 1 < MAX_INT) return new SmallInteger(value + 1);
+		        return new BigInteger(MAX_INT_ARR, false);
+		    };
+		    NativeBigInt.prototype.next = function () {
+		        return new NativeBigInt(this.value + BigInt(1));
+		    };
+
+		    BigInteger.prototype.prev = function () {
+		        var value = this.value;
+		        if (this.sign) {
+		            return new BigInteger(addSmall(value, 1), true);
+		        }
+		        return subtractSmall(value, 1, this.sign);
+		    };
+		    SmallInteger.prototype.prev = function () {
+		        var value = this.value;
+		        if (value - 1 > -MAX_INT) return new SmallInteger(value - 1);
+		        return new BigInteger(MAX_INT_ARR, true);
+		    };
+		    NativeBigInt.prototype.prev = function () {
+		        return new NativeBigInt(this.value - BigInt(1));
+		    };
+
+		    var powersOfTwo = [1];
+		    while (2 * powersOfTwo[powersOfTwo.length - 1] <= BASE) powersOfTwo.push(2 * powersOfTwo[powersOfTwo.length - 1]);
+		    var powers2Length = powersOfTwo.length, highestPower2 = powersOfTwo[powers2Length - 1];
+
+		    function shift_isSmall(n) {
+		        return Math.abs(n) <= BASE;
+		    }
+
+		    BigInteger.prototype.shiftLeft = function (v) {
+		        var n = parseValue(v).toJSNumber();
+		        if (!shift_isSmall(n)) {
+		            throw new Error(String(n) + " is too large for shifting.");
+		        }
+		        if (n < 0) return this.shiftRight(-n);
+		        var result = this;
+		        if (result.isZero()) return result;
+		        while (n >= powers2Length) {
+		            result = result.multiply(highestPower2);
+		            n -= powers2Length - 1;
+		        }
+		        return result.multiply(powersOfTwo[n]);
+		    };
+		    NativeBigInt.prototype.shiftLeft = SmallInteger.prototype.shiftLeft = BigInteger.prototype.shiftLeft;
+
+		    BigInteger.prototype.shiftRight = function (v) {
+		        var remQuo;
+		        var n = parseValue(v).toJSNumber();
+		        if (!shift_isSmall(n)) {
+		            throw new Error(String(n) + " is too large for shifting.");
+		        }
+		        if (n < 0) return this.shiftLeft(-n);
+		        var result = this;
+		        while (n >= powers2Length) {
+		            if (result.isZero() || (result.isNegative() && result.isUnit())) return result;
+		            remQuo = divModAny(result, highestPower2);
+		            result = remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
+		            n -= powers2Length - 1;
+		        }
+		        remQuo = divModAny(result, powersOfTwo[n]);
+		        return remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
+		    };
+		    NativeBigInt.prototype.shiftRight = SmallInteger.prototype.shiftRight = BigInteger.prototype.shiftRight;
+
+		    function bitwise(x, y, fn) {
+		        y = parseValue(y);
+		        var xSign = x.isNegative(), ySign = y.isNegative();
+		        var xRem = xSign ? x.not() : x,
+		            yRem = ySign ? y.not() : y;
+		        var xDigit = 0, yDigit = 0;
+		        var xDivMod = null, yDivMod = null;
+		        var result = [];
+		        while (!xRem.isZero() || !yRem.isZero()) {
+		            xDivMod = divModAny(xRem, highestPower2);
+		            xDigit = xDivMod[1].toJSNumber();
+		            if (xSign) {
+		                xDigit = highestPower2 - 1 - xDigit; // two's complement for negative numbers
+		            }
+
+		            yDivMod = divModAny(yRem, highestPower2);
+		            yDigit = yDivMod[1].toJSNumber();
+		            if (ySign) {
+		                yDigit = highestPower2 - 1 - yDigit; // two's complement for negative numbers
+		            }
+
+		            xRem = xDivMod[0];
+		            yRem = yDivMod[0];
+		            result.push(fn(xDigit, yDigit));
+		        }
+		        var sum = fn(xSign ? 1 : 0, ySign ? 1 : 0) !== 0 ? bigInt(-1) : bigInt(0);
+		        for (var i = result.length - 1; i >= 0; i -= 1) {
+		            sum = sum.multiply(highestPower2).add(bigInt(result[i]));
+		        }
+		        return sum;
+		    }
+
+		    BigInteger.prototype.not = function () {
+		        return this.negate().prev();
+		    };
+		    NativeBigInt.prototype.not = SmallInteger.prototype.not = BigInteger.prototype.not;
+
+		    BigInteger.prototype.and = function (n) {
+		        return bitwise(this, n, function (a, b) { return a & b; });
+		    };
+		    NativeBigInt.prototype.and = SmallInteger.prototype.and = BigInteger.prototype.and;
+
+		    BigInteger.prototype.or = function (n) {
+		        return bitwise(this, n, function (a, b) { return a | b; });
+		    };
+		    NativeBigInt.prototype.or = SmallInteger.prototype.or = BigInteger.prototype.or;
+
+		    BigInteger.prototype.xor = function (n) {
+		        return bitwise(this, n, function (a, b) { return a ^ b; });
+		    };
+		    NativeBigInt.prototype.xor = SmallInteger.prototype.xor = BigInteger.prototype.xor;
+
+		    var LOBMASK_I = 1 << 30, LOBMASK_BI = (BASE & -BASE) * (BASE & -BASE) | LOBMASK_I;
+		    function roughLOB(n) { // get lowestOneBit (rough)
+		        // SmallInteger: return Min(lowestOneBit(n), 1 << 30)
+		        // BigInteger: return Min(lowestOneBit(n), 1 << 14) [BASE=1e7]
+		        var v = n.value,
+		            x = typeof v === "number" ? v | LOBMASK_I :
+		                typeof v === "bigint" ? v | BigInt(LOBMASK_I) :
+		                    v[0] + v[1] * BASE | LOBMASK_BI;
+		        return x & -x;
+		    }
+
+		    function integerLogarithm(value, base) {
+		        if (base.compareTo(value) <= 0) {
+		            var tmp = integerLogarithm(value, base.square(base));
+		            var p = tmp.p;
+		            var e = tmp.e;
+		            var t = p.multiply(base);
+		            return t.compareTo(value) <= 0 ? { p: t, e: e * 2 + 1 } : { p: p, e: e * 2 };
+		        }
+		        return { p: bigInt(1), e: 0 };
+		    }
+
+		    BigInteger.prototype.bitLength = function () {
+		        var n = this;
+		        if (n.compareTo(bigInt(0)) < 0) {
+		            n = n.negate().subtract(bigInt(1));
+		        }
+		        if (n.compareTo(bigInt(0)) === 0) {
+		            return bigInt(0);
+		        }
+		        return bigInt(integerLogarithm(n, bigInt(2)).e).add(bigInt(1));
+		    };
+		    NativeBigInt.prototype.bitLength = SmallInteger.prototype.bitLength = BigInteger.prototype.bitLength;
+
+		    function max(a, b) {
+		        a = parseValue(a);
+		        b = parseValue(b);
+		        return a.greater(b) ? a : b;
+		    }
+		    function min(a, b) {
+		        a = parseValue(a);
+		        b = parseValue(b);
+		        return a.lesser(b) ? a : b;
+		    }
+		    function gcd(a, b) {
+		        a = parseValue(a).abs();
+		        b = parseValue(b).abs();
+		        if (a.equals(b)) return a;
+		        if (a.isZero()) return b;
+		        if (b.isZero()) return a;
+		        var c = Integer[1], d, t;
+		        while (a.isEven() && b.isEven()) {
+		            d = min(roughLOB(a), roughLOB(b));
+		            a = a.divide(d);
+		            b = b.divide(d);
+		            c = c.multiply(d);
+		        }
+		        while (a.isEven()) {
+		            a = a.divide(roughLOB(a));
+		        }
+		        do {
+		            while (b.isEven()) {
+		                b = b.divide(roughLOB(b));
+		            }
+		            if (a.greater(b)) {
+		                t = b; b = a; a = t;
+		            }
+		            b = b.subtract(a);
+		        } while (!b.isZero());
+		        return c.isUnit() ? a : a.multiply(c);
+		    }
+		    function lcm(a, b) {
+		        a = parseValue(a).abs();
+		        b = parseValue(b).abs();
+		        return a.divide(gcd(a, b)).multiply(b);
+		    }
+		    function randBetween(a, b, rng) {
+		        a = parseValue(a);
+		        b = parseValue(b);
+		        var usedRNG = rng || Math.random;
+		        var low = min(a, b), high = max(a, b);
+		        var range = high.subtract(low).add(1);
+		        if (range.isSmall) return low.add(Math.floor(usedRNG() * range));
+		        var digits = toBase(range, BASE).value;
+		        var result = [], restricted = true;
+		        for (var i = 0; i < digits.length; i++) {
+		            var top = restricted ? digits[i] + (i + 1 < digits.length ? digits[i + 1] / BASE : 0) : BASE;
+		            var digit = truncate(usedRNG() * top);
+		            result.push(digit);
+		            if (digit < digits[i]) restricted = false;
+		        }
+		        return low.add(Integer.fromArray(result, BASE, false));
+		    }
+
+		    var parseBase = function (text, base, alphabet, caseSensitive) {
+		        alphabet = alphabet || DEFAULT_ALPHABET;
+		        text = String(text);
+		        if (!caseSensitive) {
+		            text = text.toLowerCase();
+		            alphabet = alphabet.toLowerCase();
+		        }
+		        var length = text.length;
+		        var i;
+		        var absBase = Math.abs(base);
+		        var alphabetValues = {};
+		        for (i = 0; i < alphabet.length; i++) {
+		            alphabetValues[alphabet[i]] = i;
+		        }
+		        for (i = 0; i < length; i++) {
+		            var c = text[i];
+		            if (c === "-") continue;
+		            if (c in alphabetValues) {
+		                if (alphabetValues[c] >= absBase) {
+		                    if (c === "1" && absBase === 1) continue;
+		                    throw new Error(c + " is not a valid digit in base " + base + ".");
+		                }
+		            }
+		        }
+		        base = parseValue(base);
+		        var digits = [];
+		        var isNegative = text[0] === "-";
+		        for (i = isNegative ? 1 : 0; i < text.length; i++) {
+		            var c = text[i];
+		            if (c in alphabetValues) digits.push(parseValue(alphabetValues[c]));
+		            else if (c === "<") {
+		                var start = i;
+		                do { i++; } while (text[i] !== ">" && i < text.length);
+		                digits.push(parseValue(text.slice(start + 1, i)));
+		            }
+		            else throw new Error(c + " is not a valid character");
+		        }
+		        return parseBaseFromArray(digits, base, isNegative);
+		    };
+
+		    function parseBaseFromArray(digits, base, isNegative) {
+		        var val = Integer[0], pow = Integer[1], i;
+		        for (i = digits.length - 1; i >= 0; i--) {
+		            val = val.add(digits[i].times(pow));
+		            pow = pow.times(base);
+		        }
+		        return isNegative ? val.negate() : val;
+		    }
+
+		    function stringify(digit, alphabet) {
+		        alphabet = alphabet || DEFAULT_ALPHABET;
+		        if (digit < alphabet.length) {
+		            return alphabet[digit];
+		        }
+		        return "<" + digit + ">";
+		    }
+
+		    function toBase(n, base) {
+		        base = bigInt(base);
+		        if (base.isZero()) {
+		            if (n.isZero()) return { value: [0], isNegative: false };
+		            throw new Error("Cannot convert nonzero numbers to base 0.");
+		        }
+		        if (base.equals(-1)) {
+		            if (n.isZero()) return { value: [0], isNegative: false };
+		            if (n.isNegative())
+		                return {
+		                    value: [].concat.apply([], Array.apply(null, Array(-n.toJSNumber()))
+		                        .map(Array.prototype.valueOf, [1, 0])
+		                    ),
+		                    isNegative: false
+		                };
+
+		            var arr = Array.apply(null, Array(n.toJSNumber() - 1))
+		                .map(Array.prototype.valueOf, [0, 1]);
+		            arr.unshift([1]);
+		            return {
+		                value: [].concat.apply([], arr),
+		                isNegative: false
+		            };
+		        }
+
+		        var neg = false;
+		        if (n.isNegative() && base.isPositive()) {
+		            neg = true;
+		            n = n.abs();
+		        }
+		        if (base.isUnit()) {
+		            if (n.isZero()) return { value: [0], isNegative: false };
+
+		            return {
+		                value: Array.apply(null, Array(n.toJSNumber()))
+		                    .map(Number.prototype.valueOf, 1),
+		                isNegative: neg
+		            };
+		        }
+		        var out = [];
+		        var left = n, divmod;
+		        while (left.isNegative() || left.compareAbs(base) >= 0) {
+		            divmod = left.divmod(base);
+		            left = divmod.quotient;
+		            var digit = divmod.remainder;
+		            if (digit.isNegative()) {
+		                digit = base.minus(digit).abs();
+		                left = left.next();
+		            }
+		            out.push(digit.toJSNumber());
+		        }
+		        out.push(left.toJSNumber());
+		        return { value: out.reverse(), isNegative: neg };
+		    }
+
+		    function toBaseString(n, base, alphabet) {
+		        var arr = toBase(n, base);
+		        return (arr.isNegative ? "-" : "") + arr.value.map(function (x) {
+		            return stringify(x, alphabet);
+		        }).join('');
+		    }
+
+		    BigInteger.prototype.toArray = function (radix) {
+		        return toBase(this, radix);
+		    };
+
+		    SmallInteger.prototype.toArray = function (radix) {
+		        return toBase(this, radix);
+		    };
+
+		    NativeBigInt.prototype.toArray = function (radix) {
+		        return toBase(this, radix);
+		    };
+
+		    BigInteger.prototype.toString = function (radix, alphabet) {
+		        if (radix === undefined$1) radix = 10;
+		        if (radix !== 10 || alphabet) return toBaseString(this, radix, alphabet);
+		        var v = this.value, l = v.length, str = String(v[--l]), zeros = "0000000", digit;
+		        while (--l >= 0) {
+		            digit = String(v[l]);
+		            str += zeros.slice(digit.length) + digit;
+		        }
+		        var sign = this.sign ? "-" : "";
+		        return sign + str;
+		    };
+
+		    SmallInteger.prototype.toString = function (radix, alphabet) {
+		        if (radix === undefined$1) radix = 10;
+		        if (radix != 10 || alphabet) return toBaseString(this, radix, alphabet);
+		        return String(this.value);
+		    };
+
+		    NativeBigInt.prototype.toString = SmallInteger.prototype.toString;
+
+		    NativeBigInt.prototype.toJSON = BigInteger.prototype.toJSON = SmallInteger.prototype.toJSON = function () { return this.toString(); };
+
+		    BigInteger.prototype.valueOf = function () {
+		        return parseInt(this.toString(), 10);
+		    };
+		    BigInteger.prototype.toJSNumber = BigInteger.prototype.valueOf;
+
+		    SmallInteger.prototype.valueOf = function () {
+		        return this.value;
+		    };
+		    SmallInteger.prototype.toJSNumber = SmallInteger.prototype.valueOf;
+		    NativeBigInt.prototype.valueOf = NativeBigInt.prototype.toJSNumber = function () {
+		        return parseInt(this.toString(), 10);
+		    };
+
+		    function parseStringValue(v) {
+		        if (isPrecise(+v)) {
+		            var x = +v;
+		            if (x === truncate(x))
+		                return supportsNativeBigInt ? new NativeBigInt(BigInt(x)) : new SmallInteger(x);
+		            throw new Error("Invalid integer: " + v);
+		        }
+		        var sign = v[0] === "-";
+		        if (sign) v = v.slice(1);
+		        var split = v.split(/e/i);
+		        if (split.length > 2) throw new Error("Invalid integer: " + split.join("e"));
+		        if (split.length === 2) {
+		            var exp = split[1];
+		            if (exp[0] === "+") exp = exp.slice(1);
+		            exp = +exp;
+		            if (exp !== truncate(exp) || !isPrecise(exp)) throw new Error("Invalid integer: " + exp + " is not a valid exponent.");
+		            var text = split[0];
+		            var decimalPlace = text.indexOf(".");
+		            if (decimalPlace >= 0) {
+		                exp -= text.length - decimalPlace - 1;
+		                text = text.slice(0, decimalPlace) + text.slice(decimalPlace + 1);
+		            }
+		            if (exp < 0) throw new Error("Cannot include negative exponent part for integers");
+		            text += (new Array(exp + 1)).join("0");
+		            v = text;
+		        }
+		        var isValid = /^([0-9][0-9]*)$/.test(v);
+		        if (!isValid) throw new Error("Invalid integer: " + v);
+		        if (supportsNativeBigInt) {
+		            return new NativeBigInt(BigInt(sign ? "-" + v : v));
+		        }
+		        var r = [], max = v.length, l = LOG_BASE, min = max - l;
+		        while (max > 0) {
+		            r.push(+v.slice(min, max));
+		            min -= l;
+		            if (min < 0) min = 0;
+		            max -= l;
+		        }
+		        trim(r);
+		        return new BigInteger(r, sign);
+		    }
+
+		    function parseNumberValue(v) {
+		        if (supportsNativeBigInt) {
+		            return new NativeBigInt(BigInt(v));
+		        }
+		        if (isPrecise(v)) {
+		            if (v !== truncate(v)) throw new Error(v + " is not an integer.");
+		            return new SmallInteger(v);
+		        }
+		        return parseStringValue(v.toString());
+		    }
+
+		    function parseValue(v) {
+		        if (typeof v === "number") {
+		            return parseNumberValue(v);
+		        }
+		        if (typeof v === "string") {
+		            return parseStringValue(v);
+		        }
+		        if (typeof v === "bigint") {
+		            return new NativeBigInt(v);
+		        }
+		        return v;
+		    }
+		    // Pre-define numbers in range [-999,999]
+		    for (var i = 0; i < 1000; i++) {
+		        Integer[i] = parseValue(i);
+		        if (i > 0) Integer[-i] = parseValue(-i);
+		    }
+		    // Backwards compatibility
+		    Integer.one = Integer[1];
+		    Integer.zero = Integer[0];
+		    Integer.minusOne = Integer[-1];
+		    Integer.max = max;
+		    Integer.min = min;
+		    Integer.gcd = gcd;
+		    Integer.lcm = lcm;
+		    Integer.isInstance = function (x) { return x instanceof BigInteger || x instanceof SmallInteger || x instanceof NativeBigInt; };
+		    Integer.randBetween = randBetween;
+
+		    Integer.fromArray = function (digits, base, isNegative) {
+		        return parseBaseFromArray(digits.map(parseValue), parseValue(base || 10), isNegative);
+		    };
+
+		    return Integer;
+		})();
+
+		// Node.js check
+		if (module.hasOwnProperty("exports")) {
+		    module.exports = bigInt;
+		}
+	} (BigInteger));
+
+	var BigIntegerExports = BigInteger.exports;
+	var bigInt = /*@__PURE__*/getDefaultExportFromCjs(BigIntegerExports);
+
 	class TimeDuration {
 	  static MAX = (() => bigInt('9007199254740991999999999'))();
 	  static ZERO = (() => new TimeDuration(bigInt.zero))();
 	  constructor(totalNs) {
-	    if (typeof totalNs === 'number') throw new Error('assertion failed: big integer required');
+	    if (typeof totalNs === 'number') throw new Error$1('assertion failed: big integer required');
 	    this.totalNs = bigInt(totalNs);
-	    if (this.totalNs.abs().greater(TimeDuration.MAX)) throw new Error('assertion failed: integer too big');
+	    if (this.totalNs.abs().greater(TimeDuration.MAX)) throw new Error$1('assertion failed: integer too big');
 	    const {
 	      quotient,
 	      remainder
 	    } = this.totalNs.divmod(1e9);
 	    this.sec = quotient.toJSNumber();
 	    this.subsec = remainder.toJSNumber();
-	    if (!NumberIsSafeInteger$1(this.sec)) throw new Error('assertion failed: seconds too big');
-	    if (MathAbs$2(this.subsec) > 999_999_999) throw new Error('assertion failed: subseconds too big');
+	    if (!NumberIsSafeInteger(this.sec)) throw new Error$1('assertion failed: seconds too big');
+	    if (MathAbs(this.subsec) > 999_999_999) throw new Error$1('assertion failed: subseconds too big');
 	  }
 	  static #validateNew(totalNs, operation) {
 	    if (totalNs.abs().greater(TimeDuration.MAX)) {
-	      throw new RangeError(`${operation} of duration time units cannot exceed ${TimeDuration.MAX} s`);
+	      throw new RangeError$1(`${operation} of duration time units cannot exceed ${TimeDuration.MAX} s`);
 	    }
 	    return new TimeDuration(totalNs);
 	  }
@@ -7732,7 +7909,7 @@
 	    return TimeDuration.#validateNew(this.totalNs.add(other.totalNs), 'sum');
 	  }
 	  add24HourDays(days) {
-	    if (!NumberIsInteger(days)) throw new Error('assertion failed: days is an integer');
+	    if (!NumberIsInteger(days)) throw new Error$1('assertion failed: days is an integer');
 	    return TimeDuration.#validateNew(this.totalNs.add(bigInt(days).multiply(86400e9)), 'sum');
 	  }
 	  addToEpochNs(epochNs) {
@@ -7742,7 +7919,7 @@
 	    return this.totalNs.compare(other.totalNs);
 	  }
 	  divmod(n) {
-	    if (n === 0) throw new Error('division by zero');
+	    if (n === 0) throw new Error$1('division by zero');
 	    const {
 	      quotient,
 	      remainder
@@ -7756,7 +7933,7 @@
 	  }
 	  fdiv(n) {
 	    n = bigInt(n);
-	    if (n.isZero()) throw new Error('division by zero');
+	    if (n.isZero()) throw new Error$1('division by zero');
 	    let {
 	      quotient,
 	      remainder
@@ -7767,16 +7944,16 @@
 	    const precision = 50;
 	    const decimalDigits = [];
 	    let digit;
-	    const sign = (this.totalNs.geq(0) ? 1 : -1) * MathSign$1(n);
+	    const sign = (this.totalNs.geq(0) ? 1 : -1) * MathSign(n);
 	    while (!remainder.isZero() && decimalDigits.length < precision) {
 	      remainder = remainder.multiply(10);
 	      ({
 	        quotient: digit,
 	        remainder
 	      } = remainder.divmod(n));
-	      decimalDigits.push(MathAbs$2(digit.toJSNumber()));
+	      Call$1(ArrayPrototypePush, decimalDigits, [MathAbs(digit.toJSNumber())]);
 	    }
-	    return sign * Number(quotient.abs().toString() + '.' + decimalDigits.join(''));
+	    return sign * Number$1(quotient.abs().toString() + '.' + Call$1(ArrayPrototypeJoin, decimalDigits, ['']));
 	  }
 	  isZero() {
 	    return this.totalNs.isZero();
@@ -7837,12 +8014,12 @@
 	const MILLISECONDS = 'slot-milliseconds';
 	const MICROSECONDS = 'slot-microseconds';
 	const NANOSECONDS = 'slot-nanoseconds';
-	const slots = new WeakMap();
+	const slots = new WeakMap$1();
 	function CreateSlots(container) {
-	  slots.set(container, Object.create(null));
+	  Call$1(WeakMapPrototypeSet, slots, [container, ObjectCreate(null)]);
 	}
 	function GetSlots(container) {
-	  return slots.get(container);
+	  return Call$1(WeakMapPrototypeGet, slots, [container]);
 	}
 	function HasSlot(container) {
 	  if (!container || 'object' !== typeof container) return false;
@@ -7850,7 +8027,7 @@
 	  for (var _len = arguments.length, ids = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	    ids[_key - 1] = arguments[_key];
 	  }
-	  return !!myslots && ids.reduce((all, id) => all && id in myslots, true);
+	  return !!myslots && Call$1(ArrayPrototypeReduce, ids, [(all, id) => all && id in myslots, true]);
 	}
 	function GetSlot(container, id) {
 	  return GetSlots(container)[id];
@@ -7861,19 +8038,19 @@
 
 	const offsetIdentifierNoCapture = /(?:[+-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
 	const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
-	const timeZoneID = new RegExp(`(?:${offsetIdentifierNoCapture.source}|(?:${tzComponent.source})(?:\\/(?:${tzComponent.source}))*)`);
+	const timeZoneID = new RegExp$1(`(?:${offsetIdentifierNoCapture.source}|(?:${tzComponent.source})(?:\\/(?:${tzComponent.source}))*)`);
 	const yearpart = /(?:[+-]\d{6}|\d{4})/;
 	const monthpart = /(?:0[1-9]|1[0-2])/;
 	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
-	const datesplit = new RegExp(`(${yearpart.source})(?:-(${monthpart.source})-(${daypart.source})|(${monthpart.source})(${daypart.source}))`);
+	const datesplit = new RegExp$1(`(${yearpart.source})(?:-(${monthpart.source})-(${daypart.source})|(${monthpart.source})(${daypart.source}))`);
 	const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
 	const offsetWithParts = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
 	const offset = /((?:[+-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
-	const offsetpart = new RegExp(`([zZ])|${offset.source}?`);
+	const offsetpart = new RegExp$1(`([zZ])|${offset.source}?`);
 	const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
 	const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
-	const zoneddatetime = new RegExp([`^${datesplit.source}`, `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`, `(?:\\[!?(${timeZoneID.source})\\])?`, `((?:${annotation.source})*)$`].join(''));
-	const time = new RegExp([`^[tT]?${timesplit.source}`, `(?:${offsetpart.source})?`, `(?:\\[!?${timeZoneID.source}\\])?`, `((?:${annotation.source})*)$`].join(''));
+	const zoneddatetime = new RegExp$1(Call$1(ArrayPrototypeJoin, [`^${datesplit.source}`, `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`, `(?:\\[!?(${timeZoneID.source})\\])?`, `((?:${annotation.source})*)$`], ['']));
+	const time = new RegExp$1(Call$1(ArrayPrototypeJoin, [`^[tT]?${timesplit.source}`, `(?:${offsetpart.source})?`, `(?:\\[!?${timeZoneID.source}\\])?`, `((?:${annotation.source})*)$`], ['']));
 
 	// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
 	// annotations are still allowed, and will throw if the calendar annotation is
@@ -7885,43 +8062,15 @@
 	// Not ambiguous with HHMMSS because that requires a 'T' prefix
 	// UTC offsets are not allowed, because they are not allowed with any date-only
 	// format; also, YYYY-MM-UU is ambiguous with YYYY-MM-DD
-	const yearmonth = new RegExp(`^(${yearpart.source})-?(${monthpart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
-	const monthday = new RegExp(`^(?:--)?(${monthpart.source})-?(${daypart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
+	const yearmonth = new RegExp$1(`^(${yearpart.source})-?(${monthpart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
+	const monthday = new RegExp$1(`^(?:--)?(${monthpart.source})-?(${daypart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
 	const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
 	const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
-	const durationTime = new RegExp(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
-	const duration = new RegExp(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
+	const durationTime = new RegExp$1(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
+	const duration = new RegExp$1(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
 
 	/* global true */
 
-	const ArrayIncludes = Array.prototype.includes;
-	const ArrayPrototypeConcat = Array.prototype.concat;
-	const ArrayPrototypeFilter = Array.prototype.filter;
-	const ArrayPrototypePush = Array.prototype.push;
-	const ArrayPrototypeSort$1 = Array.prototype.sort;
-	const IntlDateTimeFormat$2 = globalThis.Intl.DateTimeFormat;
-	const IntlSupportedValuesOf = globalThis.Intl.supportedValuesOf;
-	const MapCtor = Map;
-	const MapPrototypeSet$1 = Map.prototype.set;
-	const MathAbs$1 = Math.abs;
-	const MathFloor$1 = Math.floor;
-	const MathMax = Math.max;
-	const MathMin = Math.min;
-	const MathSign = Math.sign;
-	const MathTrunc = Math.trunc;
-	const NumberIsFinite = Number.isFinite;
-	const NumberIsNaN$1 = Number.isNaN;
-	const NumberIsSafeInteger = Number.isSafeInteger;
-	const NumberMaxSafeInteger = Number.MAX_SAFE_INTEGER;
-	const ObjectCreate$6 = Object.create;
-	const ObjectDefineProperty$1 = Object.defineProperty;
-	const SetPrototypeHas = Set.prototype.has;
-	const StringCtor = String;
-	const StringFromCharCode = String.fromCharCode;
-	const StringPrototypeCharCodeAt = String.prototype.charCodeAt;
-	const StringPrototypeMatchAll = String.prototype.matchAll;
-	const StringPrototypeReplace = String.prototype.replace;
-	const StringPrototypeSlice = String.prototype.slice;
 	const DAY_SECONDS = 86400;
 	const DAY_NANOS = DAY_SECONDS * 1e9;
 	// Instant range is 100 million days (inclusive) before or after epoch.
@@ -7941,12 +8090,12 @@
 	const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
 
 	const BUILTIN_CALENDAR_IDS = ['iso8601', 'hebrew', 'islamic', 'islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc', 'persian', 'ethiopic', 'ethioaa', 'ethiopic-amete-alem', 'coptic', 'chinese', 'dangi', 'roc', 'indian', 'buddhist', 'japanese', 'gregory'];
-	const ICU_LEGACY_TIME_ZONE_IDS = new Set(['ACT', 'AET', 'AGT', 'ART', 'AST', 'BET', 'BST', 'CAT', 'CNT', 'CST', 'CTT', 'EAT', 'ECT', 'IET', 'IST', 'JST', 'MIT', 'NET', 'NST', 'PLT', 'PNT', 'PRT', 'PST', 'SST', 'VST']);
+	const ICU_LEGACY_TIME_ZONE_IDS = new Set$1(['ACT', 'AET', 'AGT', 'ART', 'AST', 'BET', 'BST', 'CAT', 'CNT', 'CST', 'CTT', 'EAT', 'ECT', 'IET', 'IST', 'JST', 'MIT', 'NET', 'NST', 'PLT', 'PNT', 'PRT', 'PST', 'SST', 'VST']);
 	function ToIntegerWithTruncation(value) {
 	  const number = ToNumber$2(value);
 	  if (number === 0) return 0;
-	  if (NumberIsNaN$1(number) || !NumberIsFinite(number)) {
-	    throw new RangeError('invalid number value');
+	  if (NumberIsNaN(number) || !NumberIsFinite(number)) {
+	    throw new RangeError$1('invalid number value');
 	  }
 	  const integer = MathTrunc(number);
 	  if (integer === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
@@ -7956,16 +8105,16 @@
 	  const integer = ToIntegerWithTruncation(value);
 	  if (integer <= 0) {
 	    if (property !== undefined) {
-	      throw new RangeError(`property '${property}' cannot be a a number less than one`);
+	      throw new RangeError$1(`property '${property}' cannot be a a number less than one`);
 	    }
-	    throw new RangeError('Cannot convert a number less than one to a positive integer');
+	    throw new RangeError$1('Cannot convert a number less than one to a positive integer');
 	  }
 	  return integer;
 	}
 	function ToIntegerIfIntegral(value) {
 	  const number = ToNumber$2(value);
-	  if (!NumberIsFinite(number)) throw new RangeError('infinity is out of range');
-	  if (!IsIntegralNumber$2(number)) throw new RangeError(`unsupported fractional value ${value}`);
+	  if (!NumberIsFinite(number)) throw new RangeError$1('infinity is out of range');
+	  if (!IsIntegralNumber$2(number)) throw new RangeError$1(`unsupported fractional value ${value}`);
 	  if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
 	  return number;
 	}
@@ -7975,7 +8124,7 @@
 	function RequireString(value) {
 	  if (Type$3(value) !== 'String') {
 	    // Use String() to ensure that Symbols won't throw
-	    throw new TypeError(`expected a string, not ${StringCtor(value)}`);
+	    throw new TypeError$1(`expected a string, not ${String$1(value)}`);
 	  }
 	  return value;
 	}
@@ -7983,38 +8132,36 @@
 	// This function is an enum in the spec, but it's helpful to make it a
 	// function in the polyfill.
 	function ToPrimitiveAndRequireString(value) {
-	  value = ToPrimitive$2(value, StringCtor);
+	  value = ToPrimitive$2(value, String$1);
 	  return RequireString(value);
 	}
 	const CALENDAR_FIELD_KEYS = ['era', 'eraYear', 'year', 'month', 'monthCode', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'];
-	const BUILTIN_CASTS = new Map([['era', ToString$1], ['eraYear', ToIntegerWithTruncation], ['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToPrimitiveAndRequireString], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['offset', ToPrimitiveAndRequireString], ['timeZone', ToTemporalTimeZoneIdentifier]]);
-	const BUILTIN_DEFAULTS = new Map([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
+	const BUILTIN_CASTS = new Map$1([['era', ToString$1], ['eraYear', ToIntegerWithTruncation], ['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToPrimitiveAndRequireString], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['offset', ToPrimitiveAndRequireString], ['timeZone', ToTemporalTimeZoneIdentifier]]);
+	const BUILTIN_DEFAULTS = new Map$1([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
 
 	// each item is [plural, singular, category, (length in ns)]
 	const TEMPORAL_UNITS = [['years', 'year', 'date'], ['months', 'month', 'date'], ['weeks', 'week', 'date'], ['days', 'day', 'date', DAY_NANOS], ['hours', 'hour', 'time', 3600e9], ['minutes', 'minute', 'time', 60e9], ['seconds', 'second', 'time', 1e9], ['milliseconds', 'millisecond', 'time', 1e6], ['microseconds', 'microsecond', 'time', 1e3], ['nanoseconds', 'nanosecond', 'time', 1]];
-	const SINGULAR_FOR = new Map(TEMPORAL_UNITS);
-	const PLURAL_FOR = new Map(TEMPORAL_UNITS.map(_ref => {
+	const SINGULAR_FOR = new Map$1(TEMPORAL_UNITS);
+	// Iterable destructuring is acceptable in this first-run code.
+	const PLURAL_FOR = new Map$1(Call$1(ArrayPrototypeMap, TEMPORAL_UNITS, [_ref => {
 	  let [p, s] = _ref;
 	  return [s, p];
-	}));
-	const UNITS_DESCENDING = TEMPORAL_UNITS.map(_ref2 => {
+	}]));
+	const UNITS_DESCENDING = Call$1(ArrayPrototypeMap, TEMPORAL_UNITS, [_ref2 => {
 	  let [, s] = _ref2;
 	  return s;
-	});
-	const NS_PER_TIME_UNIT = new Map(TEMPORAL_UNITS.map(_ref3 => {
+	}]);
+	const NS_PER_TIME_UNIT = new Map$1(Call$1(ArrayPrototypeFlatMap, TEMPORAL_UNITS, [_ref3 => {
 	  let [, s,, l] = _ref3;
-	  return [s, l];
-	}).filter(_ref4 => {
-	  let [, l] = _ref4;
-	  return l;
-	}));
+	  return l ? [[s, l]] : [];
+	}]));
 	const DURATION_FIELDS = ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'];
-	const IntlDateTimeFormatEnUsCache = new Map();
+	const IntlDateTimeFormatEnUsCache = new Map$1();
 	function getIntlDateTimeFormatEnUsForTimeZone(timeZoneIdentifier) {
 	  const lowercaseIdentifier = ASCIILowercase(timeZoneIdentifier);
-	  let instance = IntlDateTimeFormatEnUsCache.get(lowercaseIdentifier);
+	  let instance = Call$1(MapPrototypeGet, IntlDateTimeFormatEnUsCache, [lowercaseIdentifier]);
 	  if (instance === undefined) {
-	    instance = new IntlDateTimeFormat$2('en-us', {
+	    instance = new IntlDateTimeFormat('en-us', {
 	      timeZone: lowercaseIdentifier,
 	      hour12: false,
 	      era: 'short',
@@ -8025,7 +8172,7 @@
 	      minute: 'numeric',
 	      second: 'numeric'
 	    });
-	    IntlDateTimeFormatEnUsCache.set(lowercaseIdentifier, instance);
+	    Call$1(MapPrototypeSet, IntlDateTimeFormatEnUsCache, [lowercaseIdentifier, instance]);
 	  }
 	  return instance;
 	}
@@ -8055,16 +8202,16 @@
 	}
 	function RejectTemporalLikeObject(item) {
 	  if (HasSlot(item, CALENDAR) || HasSlot(item, TIME_ZONE)) {
-	    throw new TypeError('with() does not support a calendar or timeZone property');
+	    throw new TypeError$1('with() does not support a calendar or timeZone property');
 	  }
 	  if (IsTemporalTime(item)) {
-	    throw new TypeError('with() does not accept Temporal.PlainTime, use withPlainTime() instead');
+	    throw new TypeError$1('with() does not accept Temporal.PlainTime, use withPlainTime() instead');
 	  }
 	  if (item.calendar !== undefined) {
-	    throw new TypeError('with() does not support a calendar property');
+	    throw new TypeError$1('with() does not support a calendar property');
 	  }
 	  if (item.timeZone !== undefined) {
-	    throw new TypeError('with() does not support a timeZone property');
+	    throw new TypeError$1('with() does not support a timeZone property');
 	  }
 	}
 	function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
@@ -8085,27 +8232,35 @@
 	function processAnnotations(annotations) {
 	  let calendar;
 	  let calendarWasCritical = false;
-	  for (const [, critical, key, value] of Call$1(StringPrototypeMatchAll, annotations, [annotation])) {
+	  // Avoid the user code minefield of matchAll.
+	  let match;
+	  annotation.lastIndex = 0;
+	  while (match = Call$1(RegExpPrototypeExec, annotation, [annotations])) {
+	    const {
+	      1: critical,
+	      2: key,
+	      3: value
+	    } = match;
 	    if (key === 'u-ca') {
 	      if (calendar === undefined) {
 	        calendar = value;
 	        calendarWasCritical = critical === '!';
 	      } else if (critical === '!' || calendarWasCritical) {
-	        throw new RangeError(`Invalid annotations in ${annotations}: more than one u-ca present with critical flag`);
+	        throw new RangeError$1(`Invalid annotations in ${annotations}: more than one u-ca present with critical flag`);
 	      }
 	    } else if (critical === '!') {
-	      throw new RangeError(`Unrecognized annotation: !${key}=${value}`);
+	      throw new RangeError$1(`Unrecognized annotation: !${key}=${value}`);
 	    }
 	  }
 	  return calendar;
 	}
 	function ParseISODateTime(isoString) {
 	  // ZDT is the superset of fields for every other Temporal type
-	  const match = zoneddatetime.exec(isoString);
-	  if (!match) throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
+	  const match = Call$1(RegExpPrototypeExec, zoneddatetime, [isoString]);
+	  if (!match) throw new RangeError$1(`invalid ISO 8601 string: ${isoString}`);
 	  const calendar = processAnnotations(match[16]);
 	  let yearString = match[1];
-	  if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
+	  if (yearString === '-000000') throw new RangeError$1(`invalid ISO 8601 string: ${isoString}`);
 	  const year = +yearString;
 	  const month = +(match[2] ?? match[4] ?? 1);
 	  const day = +(match[3] ?? match[5] ?? 1);
@@ -8115,9 +8270,9 @@
 	  let second = +(match[8] ?? match[11] ?? 0);
 	  if (second === 60) second = 59;
 	  const fraction = (match[9] ?? match[12] ?? '') + '000000000';
-	  const millisecond = +fraction.slice(0, 3);
-	  const microsecond = +fraction.slice(3, 6);
-	  const nanosecond = +fraction.slice(6, 9);
+	  const millisecond = +Call$1(StringPrototypeSlice, fraction, [0, 3]);
+	  const microsecond = +Call$1(StringPrototypeSlice, fraction, [3, 6]);
+	  const nanosecond = +Call$1(StringPrototypeSlice, fraction, [6, 9]);
 	  let offset;
 	  let z = false;
 	  if (match[13]) {
@@ -8148,12 +8303,12 @@
 	}
 	function ParseTemporalInstantString(isoString) {
 	  const result = ParseISODateTime(isoString);
-	  if (!result.z && !result.offset) throw new RangeError('Temporal.Instant requires a time zone offset');
+	  if (!result.z && !result.offset) throw new RangeError$1('Temporal.Instant requires a time zone offset');
 	  return result;
 	}
 	function ParseTemporalZonedDateTimeString(isoString) {
 	  const result = ParseISODateTime(isoString);
-	  if (!result.tzAnnotation) throw new RangeError('Temporal.ZonedDateTime requires a time zone ID in brackets');
+	  if (!result.tzAnnotation) throw new RangeError$1('Temporal.ZonedDateTime requires a time zone ID in brackets');
 	  return result;
 	}
 	function ParseTemporalDateTimeString(isoString) {
@@ -8163,7 +8318,7 @@
 	  return ParseISODateTime(isoString);
 	}
 	function ParseTemporalTimeString(isoString) {
-	  const match = time.exec(isoString);
+	  const match = Call$1(RegExpPrototypeExec, time, [isoString]);
 	  let hour, minute, second, millisecond, microsecond, nanosecond;
 	  if (match) {
 	    processAnnotations(match[10]); // ignore found calendar
@@ -8172,17 +8327,17 @@
 	    second = +(match[3] ?? match[6] ?? 0);
 	    if (second === 60) second = 59;
 	    const fraction = (match[4] ?? match[7] ?? '') + '000000000';
-	    millisecond = +fraction.slice(0, 3);
-	    microsecond = +fraction.slice(3, 6);
-	    nanosecond = +fraction.slice(6, 9);
-	    if (match[8]) throw new RangeError('Z designator not supported for PlainTime');
+	    millisecond = +Call$1(StringPrototypeSlice, fraction, [0, 3]);
+	    microsecond = +Call$1(StringPrototypeSlice, fraction, [3, 6]);
+	    nanosecond = +Call$1(StringPrototypeSlice, fraction, [6, 9]);
+	    if (match[8]) throw new RangeError$1('Z designator not supported for PlainTime');
 	  } else {
 	    const {
 	      time,
 	      z
 	    } = ParseISODateTime(isoString);
-	    if (time === 'start-of-day') throw new RangeError(`time is missing in string: ${isoString}`);
-	    if (z) throw new RangeError('Z designator not supported for PlainTime');
+	    if (time === 'start-of-day') throw new RangeError$1(`time is missing in string: ${isoString}`);
+	    if (z) throw new RangeError$1('Z designator not supported for PlainTime');
 	    ({
 	      hour,
 	      minute,
@@ -8193,7 +8348,7 @@
 	    } = time);
 	  }
 	  // if it's a date-time string, OK
-	  if (/[tT ][0-9][0-9]/.test(isoString)) {
+	  if (Call$1(RegExpPrototypeTest, /[tT ][0-9][0-9]/, [isoString])) {
 	    return {
 	      hour,
 	      minute,
@@ -8228,20 +8383,20 @@
 	      };
 	    }
 	  }
-	  throw new RangeError(`invalid ISO 8601 time-only string ${isoString}; may need a T prefix`);
+	  throw new RangeError$1(`invalid ISO 8601 time-only string ${isoString}; may need a T prefix`);
 	}
 	function ParseTemporalYearMonthString(isoString) {
-	  const match = yearmonth.exec(isoString);
+	  const match = Call$1(RegExpPrototypeExec, yearmonth, [isoString]);
 	  let year, month, calendar, referenceISODay;
 	  if (match) {
 	    calendar = processAnnotations(match[3]);
 	    let yearString = match[1];
-	    if (yearString === '-000000') throw new RangeError(`invalid ISO 8601 string: ${isoString}`);
+	    if (yearString === '-000000') throw new RangeError$1(`invalid ISO 8601 string: ${isoString}`);
 	    year = +yearString;
 	    month = +match[2];
 	    referenceISODay = 1;
 	    if (calendar !== undefined && calendar !== 'iso8601') {
-	      throw new RangeError('YYYY-MM format is only valid with iso8601 calendar');
+	      throw new RangeError$1('YYYY-MM format is only valid with iso8601 calendar');
 	    }
 	  } else {
 	    let z;
@@ -8252,7 +8407,7 @@
 	      day: referenceISODay,
 	      z
 	    } = ParseISODateTime(isoString));
-	    if (z) throw new RangeError('Z designator not supported for PlainYearMonth');
+	    if (z) throw new RangeError$1('Z designator not supported for PlainYearMonth');
 	  }
 	  return {
 	    year,
@@ -8262,14 +8417,14 @@
 	  };
 	}
 	function ParseTemporalMonthDayString(isoString) {
-	  const match = monthday.exec(isoString);
+	  const match = Call$1(RegExpPrototypeExec, monthday, [isoString]);
 	  let month, day, calendar, referenceISOYear;
 	  if (match) {
 	    calendar = processAnnotations(match[3]);
 	    month = +match[1];
 	    day = +match[2];
 	    if (calendar !== undefined && calendar !== 'iso8601') {
-	      throw new RangeError('MM-DD format is only valid with iso8601 calendar');
+	      throw new RangeError$1('MM-DD format is only valid with iso8601 calendar');
 	    }
 	  } else {
 	    let z;
@@ -8280,7 +8435,7 @@
 	      year: referenceISOYear,
 	      z
 	    } = ParseISODateTime(isoString));
-	    if (z) throw new RangeError('Z designator not supported for PlainMonthDay');
+	    if (z) throw new RangeError$1('Z designator not supported for PlainMonthDay');
 	  }
 	  return {
 	    month,
@@ -8289,21 +8444,21 @@
 	    referenceISOYear
 	  };
 	}
-	const TIMEZONE_IDENTIFIER = new RegExp(`^${timeZoneID.source}$`, 'i');
-	const OFFSET_IDENTIFIER = new RegExp(`^${offsetIdentifier.source}$`);
+	const TIMEZONE_IDENTIFIER = new RegExp$1(`^${timeZoneID.source}$`, 'i');
+	const OFFSET_IDENTIFIER = new RegExp$1(`^${offsetIdentifier.source}$`);
 	function throwBadTimeZoneStringError(timeZoneString) {
 	  // Offset identifiers only support minute precision, but offsets in ISO
 	  // strings support nanosecond precision. If the identifier is invalid but
 	  // it's a valid ISO offset, then it has sub-minute precision. Show a clearer
 	  // error message in that case.
-	  const msg = OFFSET.test(timeZoneString) ? 'Seconds not allowed in offset time zone' : 'Invalid time zone';
-	  throw new RangeError(`${msg}: ${timeZoneString}`);
+	  const msg = Call$1(RegExpPrototypeTest, OFFSET, [timeZoneString]) ? 'Seconds not allowed in offset time zone' : 'Invalid time zone';
+	  throw new RangeError$1(`${msg}: ${timeZoneString}`);
 	}
 	function ParseTimeZoneIdentifier(identifier) {
-	  if (!TIMEZONE_IDENTIFIER.test(identifier)) {
+	  if (!Call$1(RegExpPrototypeTest, TIMEZONE_IDENTIFIER, [identifier])) {
 	    throwBadTimeZoneStringError(identifier);
 	  }
-	  if (OFFSET_IDENTIFIER.test(identifier)) {
+	  if (Call$1(RegExpPrototypeTest, OFFSET_IDENTIFIER, [identifier])) {
 	    const offsetNanoseconds = ParseDateTimeUTCOffset(identifier);
 	    // The regex limits the input to minutes precision, so we know that the
 	    // division below will result in an integer.
@@ -8320,7 +8475,7 @@
 	// ParseTemporalTimeZoneString so that parsing can be tested separately from the
 	// logic of converting parsed values into a named or offset identifier.
 	function ParseTemporalTimeZoneStringRaw(timeZoneString) {
-	  if (TIMEZONE_IDENTIFIER.test(timeZoneString)) {
+	  if (Call$1(RegExpPrototypeTest, TIMEZONE_IDENTIFIER, [timeZoneString])) {
 	    return {
 	      tzAnnotation: timeZoneString,
 	      offset: undefined,
@@ -8355,13 +8510,13 @@
 	  if (tzAnnotation) return ParseTimeZoneIdentifier(tzAnnotation);
 	  if (z) return ParseTimeZoneIdentifier('UTC');
 	  if (offset) return ParseTimeZoneIdentifier(offset);
-	  throw new Error('this line should not be reached');
+	  throw new Error$1('this line should not be reached');
 	}
 	function ParseTemporalDurationString(isoString) {
-	  const match = duration.exec(isoString);
-	  if (!match) throw new RangeError(`invalid duration: ${isoString}`);
-	  if (match.slice(2).every(element => element === undefined)) {
-	    throw new RangeError(`invalid duration: ${isoString}`);
+	  const match = Call$1(RegExpPrototypeExec, duration, [isoString]);
+	  if (!match) throw new RangeError$1(`invalid duration: ${isoString}`);
+	  if (Call$1(ArrayPrototypeEvery, match, [(part, i) => i < 2 || part === undefined])) {
+	    throw new RangeError$1(`invalid duration: ${isoString}`);
 	  }
 	  const sign = match[1] === '-' ? -1 : 1;
 	  const years = match[2] === undefined ? 0 : ToIntegerWithTruncation(match[2]) * sign;
@@ -8380,20 +8535,20 @@
 	  let excessNanoseconds = 0;
 	  if (fHours !== undefined) {
 	    if (minutesStr ?? fMinutes ?? secondsStr ?? fSeconds ?? false) {
-	      throw new RangeError('only the smallest unit can be fractional');
+	      throw new RangeError$1('only the smallest unit can be fractional');
 	    }
-	    excessNanoseconds = ToIntegerWithTruncation((fHours + '000000000').slice(0, 9)) * 3600 * sign;
+	    excessNanoseconds = ToIntegerWithTruncation(Call$1(StringPrototypeSlice, fHours + '000000000', [0, 9])) * 3600 * sign;
 	  } else {
 	    minutes = minutesStr === undefined ? 0 : ToIntegerWithTruncation(minutesStr) * sign;
 	    if (fMinutes !== undefined) {
 	      if (secondsStr ?? fSeconds ?? false) {
-	        throw new RangeError('only the smallest unit can be fractional');
+	        throw new RangeError$1('only the smallest unit can be fractional');
 	      }
-	      excessNanoseconds = ToIntegerWithTruncation((fMinutes + '000000000').slice(0, 9)) * 60 * sign;
+	      excessNanoseconds = ToIntegerWithTruncation(Call$1(StringPrototypeSlice, fMinutes + '000000000', [0, 9])) * 60 * sign;
 	    } else {
 	      seconds = secondsStr === undefined ? 0 : ToIntegerWithTruncation(secondsStr) * sign;
 	      if (fSeconds !== undefined) {
-	        excessNanoseconds = ToIntegerWithTruncation((fSeconds + '000000000').slice(0, 9)) * sign;
+	        excessNanoseconds = ToIntegerWithTruncation(Call$1(StringPrototypeSlice, fSeconds + '000000000', [0, 9])) * sign;
 	      }
 	    }
 	  }
@@ -8533,7 +8688,7 @@
 	}
 	function ToTemporalPartialDurationRecord(temporalDurationLike) {
 	  if (Type$3(temporalDurationLike) !== 'Object') {
-	    throw new TypeError('invalid duration-like');
+	    throw new TypeError$1('invalid duration-like');
 	  }
 	  const result = {
 	    years: undefined,
@@ -8557,7 +8712,7 @@
 	    }
 	  }
 	  if (!any) {
-	    throw new TypeError('invalid duration-like');
+	    throw new TypeError$1('invalid duration-like');
 	  }
 	  return result;
 	}
@@ -8581,12 +8736,12 @@
 	    nanosecond: GetSlot(plainDateTime, ISO_NANOSECOND)
 	  };
 	}
-	function ISODateTimeToDateRecord(_ref5) {
+	function ISODateTimeToDateRecord(_ref4) {
 	  let {
 	    year,
 	    month,
 	    day
-	  } = _ref5;
+	  } = _ref4;
 	  return {
 	    year,
 	    month,
@@ -8665,17 +8820,17 @@
 	  if (increment === undefined) return 1;
 	  const integerIncrement = ToIntegerWithTruncation(increment);
 	  if (integerIncrement < 1 || integerIncrement > 1e9) {
-	    throw new RangeError(`roundingIncrement must be at least 1 and at most 1e9, not ${increment}`);
+	    throw new RangeError$1(`roundingIncrement must be at least 1 and at most 1e9, not ${increment}`);
 	  }
 	  return integerIncrement;
 	}
 	function ValidateTemporalRoundingIncrement(increment, dividend, inclusive) {
 	  const maximum = inclusive ? dividend : dividend - 1;
 	  if (increment > maximum) {
-	    throw new RangeError(`roundingIncrement must be at least 1 and less than ${maximum}, not ${increment}`);
+	    throw new RangeError$1(`roundingIncrement must be at least 1 and less than ${maximum}, not ${increment}`);
 	  }
 	  if (dividend % increment !== 0) {
-	    throw new RangeError(`Rounding increment must divide evenly into ${dividend}`);
+	    throw new RangeError$1(`Rounding increment must divide evenly into ${dividend}`);
 	  }
 	}
 	function GetTemporalFractionalSecondDigitsOption(options) {
@@ -8683,13 +8838,13 @@
 	  if (digitsValue === undefined) return 'auto';
 	  if (Type$3(digitsValue) !== 'Number') {
 	    if (ToString$1(digitsValue) !== 'auto') {
-	      throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsValue}`);
+	      throw new RangeError$1(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsValue}`);
 	    }
 	    return 'auto';
 	  }
-	  const digitCount = MathFloor$1(digitsValue);
+	  const digitCount = MathFloor(digitsValue);
 	  if (!NumberIsFinite(digitCount) || digitCount < 0 || digitCount > 9) {
-	    throw new RangeError(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsValue}`);
+	    throw new RangeError$1(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsValue}`);
 	  }
 	  return digitCount;
 	}
@@ -8765,7 +8920,7 @@
 	      };
 	  }
 	}
-	const REQUIRED = Symbol('~required~');
+	const REQUIRED = Symbol$1('~required~');
 	function GetTemporalUnitValuedOption(options, key, unitGroup, requiredOrDefault) {
 	  let extraValues = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
 	  const allowedSingular = [];
@@ -8774,7 +8929,7 @@
 	    const singular = unitInfo[1];
 	    const category = unitInfo[2];
 	    if (unitGroup === 'datetime' || unitGroup === category) {
-	      allowedSingular.push(singular);
+	      Call$1(ArrayPrototypePush, allowedSingular, [singular]);
 	    }
 	  }
 	  Call$1(ArrayPrototypePush, allowedSingular, extraValues);
@@ -8782,20 +8937,20 @@
 	  if (defaultVal === REQUIRED) {
 	    defaultVal = undefined;
 	  } else if (defaultVal !== undefined) {
-	    allowedSingular.push(defaultVal);
+	    Call$1(ArrayPrototypePush, allowedSingular, [defaultVal]);
 	  }
 	  const allowedValues = [];
 	  Call$1(ArrayPrototypePush, allowedValues, allowedSingular);
 	  for (let index = 0; index < allowedSingular.length; index++) {
 	    const singular = allowedSingular[index];
-	    const plural = PLURAL_FOR.get(singular);
-	    if (plural !== undefined) allowedValues.push(plural);
+	    const plural = Call$1(MapPrototypeGet, PLURAL_FOR, [singular]);
+	    if (plural !== undefined) Call$1(ArrayPrototypePush, allowedValues, [plural]);
 	  }
 	  let retval = GetOption(options, key, allowedValues, defaultVal);
 	  if (retval === undefined && requiredOrDefault === REQUIRED) {
-	    throw new RangeError(`${key} is required`);
+	    throw new RangeError$1(`${key} is required`);
 	  }
-	  if (SINGULAR_FOR.has(retval)) retval = SINGULAR_FOR.get(retval);
+	  if (Call$1(MapPrototypeHas, SINGULAR_FOR, [retval])) retval = Call$1(MapPrototypeGet, SINGULAR_FOR, [retval]);
 	  return retval;
 	}
 	function GetTemporalRelativeToOption(options) {
@@ -8854,10 +9009,10 @@
 	      }
 	      matchMinutes = true;
 	    } else if (z) {
-	      throw new RangeError('Z designator not supported for PlainDate relativeTo; either remove the Z or add a bracketed time zone');
+	      throw new RangeError$1('Z designator not supported for PlainDate relativeTo; either remove the Z or add a bracketed time zone');
 	    }
 	    if (!calendar) calendar = 'iso8601';
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`invalid calendar identifier ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	  }
 	  if (timeZone === undefined) return {
@@ -8882,7 +9037,11 @@
 	  return 'nanosecond';
 	}
 	function LargerOfTwoTemporalUnits(unit1, unit2) {
-	  if (UNITS_DESCENDING.indexOf(unit1) > UNITS_DESCENDING.indexOf(unit2)) return unit2;
+	  const i1 = Call$1(ArrayPrototypeIndexOf, UNITS_DESCENDING, [unit1]);
+	  const i2 = Call$1(ArrayPrototypeIndexOf, UNITS_DESCENDING, [unit2]);
+	  if (i1 > i2) {
+	    return unit2;
+	  }
 	  return unit1;
 	}
 	function IsCalendarUnit(unit) {
@@ -8901,7 +9060,7 @@
 	}
 	function ISODateToFields(calendar, isoDate) {
 	  let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'date';
-	  const fields = ObjectCreate$6(null);
+	  const fields = ObjectCreate(null);
 	  fields.monthCode = CalendarMonthCode(calendar, isoDate);
 	  if (type === 'month-day' || type === 'date') {
 	    fields.day = CalendarDay(calendar, isoDate);
@@ -8914,24 +9073,24 @@
 	function PrepareCalendarFields(calendar, bag, calendarFieldNames, nonCalendarFieldNames, requiredFields) {
 	  const extraFieldNames = GetIntrinsic('%calendarImpl%')(calendar).extraFields();
 	  const fields = Call$1(ArrayPrototypeConcat, calendarFieldNames, [nonCalendarFieldNames, extraFieldNames]);
-	  const result = ObjectCreate$6(null);
+	  const result = ObjectCreate(null);
 	  let any = false;
-	  Call$1(ArrayPrototypeSort$1, fields, []);
+	  Call$1(ArrayPrototypeSort, fields, []);
 	  for (let index = 0; index < fields.length; index++) {
 	    const property = fields[index];
 	    const value = bag[property];
 	    if (value !== undefined) {
 	      any = true;
-	      result[property] = BUILTIN_CASTS.get(property)(value);
+	      result[property] = Call$1(MapPrototypeGet, BUILTIN_CASTS, [property])(value);
 	    } else if (requiredFields !== 'partial') {
-	      if (Call$1(ArrayIncludes, requiredFields, [property])) {
-	        throw new TypeError(`required property '${property}' missing or undefined`);
+	      if (Call$1(ArrayPrototypeIncludes, requiredFields, [property])) {
+	        throw new TypeError$1(`required property '${property}' missing or undefined`);
 	      }
-	      result[property] = BUILTIN_DEFAULTS.get(property);
+	      result[property] = Call$1(MapPrototypeGet, BUILTIN_DEFAULTS, [property]);
 	    }
 	  }
 	  if (requiredFields === 'partial' && !any) {
-	    throw new TypeError('no supported properties found');
+	    throw new TypeError$1('no supported properties found');
 	  }
 	  return result;
 	}
@@ -8939,7 +9098,7 @@
 	  let completeness = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'complete';
 	  const fields = ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'];
 	  let any = false;
-	  const result = ObjectCreate$6(null);
+	  const result = ObjectCreate(null);
 	  for (let index = 0; index < fields.length; index++) {
 	    const field = fields[index];
 	    const value = bag[field];
@@ -8950,7 +9109,7 @@
 	      result[field] = 0;
 	    }
 	  }
-	  if (!any) throw new TypeError('invalid time-like');
+	  if (!any) throw new TypeError$1('invalid time-like');
 	  return result;
 	}
 	function ToTemporalDate(item) {
@@ -8986,9 +9145,9 @@
 	    calendar,
 	    z
 	  } = ParseTemporalDateString(RequireString(item));
-	  if (z) throw new RangeError('Z designator not supported for PlainDate');
+	  if (z) throw new RangeError$1('Z designator not supported for PlainDate');
 	  if (!calendar) calendar = 'iso8601';
-	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
+	  if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`invalid calendar identifier ${calendar}`);
 	  calendar = CanonicalizeCalendar(calendar);
 	  GetTemporalOverflowOption(GetOptionsObject(options)); // validate and ignore
 	  return CreateTemporalDate(year, month, day, calendar);
@@ -9037,7 +9196,7 @@
 	      calendar,
 	      z
 	    } = ParseTemporalDateTimeString(RequireString(item)));
-	    if (z) throw new RangeError('Z designator not supported for PlainDateTime');
+	    if (z) throw new RangeError$1('Z designator not supported for PlainDateTime');
 	    if (time === 'start-of-day') {
 	      time = {
 	        hour: 0,
@@ -9050,7 +9209,7 @@
 	    }
 	    RejectDateTime(year, month, day, time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond);
 	    if (!calendar) calendar = 'iso8601';
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`invalid calendar identifier ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    GetTemporalOverflowOption(GetOptionsObject(options));
 	  }
@@ -9088,7 +9247,7 @@
 	      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	      return new TemporalInstant(GetSlot(item, EPOCHNANOSECONDS));
 	    }
-	    item = ToPrimitive$2(item, StringCtor);
+	    item = ToPrimitive$2(item, String$1);
 	  }
 	  const {
 	    year,
@@ -9145,12 +9304,12 @@
 	    calendar
 	  } = ParseTemporalMonthDayString(RequireString(item));
 	  if (calendar === undefined) calendar = 'iso8601';
-	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
+	  if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`invalid calendar identifier ${calendar}`);
 	  calendar = CanonicalizeCalendar(calendar);
 	  GetTemporalOverflowOption(GetOptionsObject(options));
 	  if (referenceISOYear === undefined) {
 	    if (calendar !== 'iso8601') {
-	      throw new Error(`assertion failed: missing year with non-"iso8601" calendar identifier ${calendar}`);
+	      throw new Error$1(`assertion failed: missing year with non-"iso8601" calendar identifier ${calendar}`);
 	    }
 	    const isoCalendarReferenceYear = 1972; // First leap year after Unix epoch
 	    return CreateTemporalMonthDay(month, day, calendar, isoCalendarReferenceYear);
@@ -9246,7 +9405,7 @@
 	    calendar
 	  } = ParseTemporalYearMonthString(RequireString(item));
 	  if (calendar === undefined) calendar = 'iso8601';
-	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
+	  if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`invalid calendar identifier ${calendar}`);
 	  calendar = CanonicalizeCalendar(calendar);
 	  const result = ISODateToFields(calendar, {
 	    year,
@@ -9267,7 +9426,7 @@
 	  // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
 	  if (time === 'start-of-day') {
 	    if (offsetBehaviour !== 'wall' || offsetNs !== 0) {
-	      throw new Error('assertion failure: offset cannot be provided in YYYY-MM-DD[Zone] string');
+	      throw new Error$1('assertion failure: offset cannot be provided in YYYY-MM-DD[Zone] string');
 	    }
 	    return GetStartOfDay(timeZone, {
 	      year,
@@ -9315,7 +9474,7 @@
 	  if (offsetOpt === 'reject') {
 	    const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
 	    const dtStr = TemporalDateTimeToString(dt, 'iso8601', 'auto');
-	    throw new RangeError(`Offset ${offsetStr} is invalid for ${dtStr} in ${timeZone}`);
+	    throw new RangeError$1(`Offset ${offsetStr} is invalid for ${dtStr} in ${timeZone}`);
 	  }
 	  // fall through: offsetOpt === 'prefer', but the offset doesn't match
 	  // so fall back to use the time zone instead.
@@ -9371,7 +9530,7 @@
 	      offsetBehaviour = 'wall';
 	    }
 	    if (!calendar) calendar = 'iso8601';
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`invalid calendar identifier ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    matchMinute = true; // ISO strings may specify offset with less precision
 	    options = GetOptionsObject(options);
@@ -9395,7 +9554,7 @@
 	  SetSlot(result, DATE_BRAND, true);
 	  {
 	    const repr = TemporalDateToString(result, 'auto');
-	    ObjectDefineProperty$1(result, '_repr_', {
+	    ObjectDefineProperty(result, '_repr_', {
 	      value: `Temporal.PlainDate <${repr}>`,
 	      writable: false,
 	      enumerable: false,
@@ -9406,7 +9565,7 @@
 	function CreateTemporalDate(isoYear, isoMonth, isoDay) {
 	  let calendar = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'iso8601';
 	  const TemporalPlainDate = GetIntrinsic('%Temporal.PlainDate%');
-	  const result = ObjectCreate$6(TemporalPlainDate.prototype);
+	  const result = ObjectCreate(TemporalPlainDate.prototype);
 	  CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar);
 	  return result;
 	}
@@ -9437,7 +9596,7 @@
 	      nanosecond: ns
 	    };
 	    let repr = TemporalDateTimeToString(iso, calendar, 'auto');
-	    Object.defineProperty(result, '_repr_', {
+	    ObjectDefineProperty(result, '_repr_', {
 	      value: `Temporal.PlainDateTime <${repr}>`,
 	      writable: false,
 	      enumerable: false,
@@ -9448,7 +9607,7 @@
 	function CreateTemporalDateTime(isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns) {
 	  let calendar = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : 'iso8601';
 	  const TemporalPlainDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
-	  const result = ObjectCreate$6(TemporalPlainDateTime.prototype);
+	  const result = ObjectCreate(TemporalPlainDateTime.prototype);
 	  CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar);
 	  return result;
 	}
@@ -9463,7 +9622,7 @@
 	  SetSlot(result, MONTH_DAY_BRAND, true);
 	  {
 	    const repr = TemporalMonthDayToString(result, 'auto');
-	    Object.defineProperty(result, '_repr_', {
+	    ObjectDefineProperty(result, '_repr_', {
 	      value: `Temporal.PlainMonthDay <${repr}>`,
 	      writable: false,
 	      enumerable: false,
@@ -9473,7 +9632,7 @@
 	}
 	function CreateTemporalMonthDay(isoMonth, isoDay, calendar, referenceISOYear) {
 	  const TemporalPlainMonthDay = GetIntrinsic('%Temporal.PlainMonthDay%');
-	  const result = ObjectCreate$6(TemporalPlainMonthDay.prototype);
+	  const result = ObjectCreate(TemporalPlainMonthDay.prototype);
 	  CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, referenceISOYear);
 	  return result;
 	}
@@ -9488,7 +9647,7 @@
 	  SetSlot(result, YEAR_MONTH_BRAND, true);
 	  {
 	    const repr = TemporalYearMonthToString(result, 'auto');
-	    Object.defineProperty(result, '_repr_', {
+	    ObjectDefineProperty(result, '_repr_', {
 	      value: `Temporal.PlainYearMonth <${repr}>`,
 	      writable: false,
 	      enumerable: false,
@@ -9498,7 +9657,7 @@
 	}
 	function CreateTemporalYearMonth(isoYear, isoMonth, calendar, referenceISODay) {
 	  const TemporalPlainYearMonth = GetIntrinsic('%Temporal.PlainYearMonth%');
-	  const result = ObjectCreate$6(TemporalPlainYearMonth.prototype);
+	  const result = ObjectCreate(TemporalPlainYearMonth.prototype);
 	  CreateTemporalYearMonthSlots(result, isoYear, isoMonth, calendar, referenceISODay);
 	  return result;
 	}
@@ -9510,7 +9669,7 @@
 	  SetSlot(result, CALENDAR, calendar);
 	  {
 	    const repr = TemporalZonedDateTimeToString(result, 'auto');
-	    Object.defineProperty(result, '_repr_', {
+	    ObjectDefineProperty(result, '_repr_', {
 	      value: `Temporal.ZonedDateTime <${repr}>`,
 	      writable: false,
 	      enumerable: false,
@@ -9521,7 +9680,7 @@
 	function CreateTemporalZonedDateTime(epochNanoseconds, timeZone) {
 	  let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	  const TemporalZonedDateTime = GetIntrinsic('%Temporal.ZonedDateTime%');
-	  const result = ObjectCreate$6(TemporalZonedDateTime.prototype);
+	  const result = ObjectCreate(TemporalZonedDateTime.prototype);
 	  CreateTemporalZonedDateTimeSlots(result, epochNanoseconds, timeZone, calendar);
 	  return result;
 	}
@@ -9531,15 +9690,15 @@
 	function CalendarMergeFields(calendar, fields, additionalFields) {
 	  const additionalKeys = CalendarFieldKeysPresent(additionalFields);
 	  const overriddenKeys = GetIntrinsic('%calendarImpl%')(calendar).fieldKeysToIgnore(additionalKeys);
-	  const merged = ObjectCreate$6(null);
+	  const merged = ObjectCreate(null);
 	  const fieldsKeys = CalendarFieldKeysPresent(fields);
 	  for (let ix = 0; ix < CALENDAR_FIELD_KEYS.length; ix++) {
 	    let propValue = undefined;
 	    const key = CALENDAR_FIELD_KEYS[ix];
-	    if (Call$1(ArrayIncludes, fieldsKeys, [key]) && !Call$1(ArrayIncludes, overriddenKeys, [key])) {
+	    if (Call$1(ArrayPrototypeIncludes, fieldsKeys, [key]) && !Call$1(ArrayPrototypeIncludes, overriddenKeys, [key])) {
 	      propValue = fields[key];
 	    }
-	    if (Call$1(ArrayIncludes, additionalKeys, [key])) {
+	    if (Call$1(ArrayPrototypeIncludes, additionalKeys, [key])) {
 	      propValue = additionalFields[key];
 	    }
 	    if (propValue !== undefined) merged[key] = propValue;
@@ -9620,7 +9779,7 @@
 	    }
 	  }
 	  if (!calendar) calendar = 'iso8601';
-	  if (!IsBuiltinCalendar(calendar)) throw new RangeError(`invalid calendar identifier ${calendar}`);
+	  if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`invalid calendar identifier ${calendar}`);
 	  return CanonicalizeCalendar(calendar);
 	}
 	function GetTemporalCalendarIdentifierWithISODefault(item) {
@@ -9657,7 +9816,7 @@
 	  }
 	  // if offsetMinutes is undefined, then tzName must be present
 	  const record = GetAvailableNamedTimeZoneIdentifier(tzName);
-	  if (!record) throw new RangeError(`Unrecognized time zone ${tzName}`);
+	  if (!record) throw new RangeError$1(`Unrecognized time zone ${tzName}`);
 	  return record.identifier;
 	}
 	function TimeZoneEquals(one, two) {
@@ -9693,10 +9852,10 @@
 	}
 	function FormatUTCOffsetNanoseconds(offsetNs) {
 	  const sign = offsetNs < 0 ? '-' : '+';
-	  const absoluteNs = MathAbs$1(offsetNs);
-	  const hour = MathFloor$1(absoluteNs / 3600e9);
-	  const minute = MathFloor$1(absoluteNs / 60e9) % 60;
-	  const second = MathFloor$1(absoluteNs / 1e9) % 60;
+	  const absoluteNs = MathAbs(offsetNs);
+	  const hour = MathFloor(absoluteNs / 3600e9);
+	  const minute = MathFloor(absoluteNs / 60e9) % 60;
+	  const second = MathFloor(absoluteNs / 1e9) % 60;
 	  const subSecondNs = absoluteNs % 1e9;
 	  const precision = second === 0 && subSecondNs === 0 ? 'minute' : 'auto';
 	  const timeString = FormatTimeString(hour, minute, second, subSecondNs, precision);
@@ -9736,11 +9895,11 @@
 	        return possibleEpochNs[numInstants - 1];
 	      case 'reject':
 	        {
-	          throw new RangeError('multiple instants found');
+	          throw new RangeError$1('multiple instants found');
 	        }
 	    }
 	  }
-	  if (disambiguation === 'reject') throw new RangeError('multiple instants found');
+	  if (disambiguation === 'reject') throw new RangeError$1('multiple instants found');
 	  const {
 	    year,
 	    month,
@@ -9760,8 +9919,8 @@
 	  ValidateEpochNanoseconds(dayAfter);
 	  const offsetAfter = GetOffsetNanosecondsFor(timeZone, dayAfter);
 	  const nanoseconds = offsetAfter - offsetBefore;
-	  if (MathAbs$1(nanoseconds) > DAY_NANOS) {
-	    throw new Error('assertion failure: UTC offset shift longer than 24 hours');
+	  if (MathAbs(nanoseconds) > DAY_NANOS) {
+	    throw new Error$1('assertion failure: UTC offset shift longer than 24 hours');
 	  }
 	  switch (disambiguation) {
 	    case 'earlier':
@@ -9789,10 +9948,10 @@
 	      }
 	    case 'reject':
 	      {
-	        throw new Error('should not be reached: reject handled earlier');
+	        throw new Error$1('should not be reached: reject handled earlier');
 	      }
 	  }
-	  throw new Error(`assertion failed: invalid disambiguation value ${disambiguation}`);
+	  throw new Error$1(`assertion failed: invalid disambiguation value ${disambiguation}`);
 	}
 	function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
 	  const {
@@ -9829,7 +9988,7 @@
 	  // Otherwise, 00:00:00 lies within a DST gap. Compute an epochNs that's
 	  // guaranteed to be before the transition
 	  if (IsOffsetTimeZoneIdentifier(timeZone)) {
-	    throw new Error('assertion failure: should only be reached with named time zone');
+	    throw new Error$1('assertion failure: should only be reached with named time zone');
 	  }
 	  const utcns = GetUTCEpochNanoseconds(isoDate.year, isoDate.month, isoDate.day, 0, 0, 0, 0, 0, 0);
 	  const dayBefore = utcns.minus(DAY_NANOS);
@@ -9840,7 +9999,7 @@
 	  let yearString;
 	  if (year < 0 || year > 9999) {
 	    const sign = year < 0 ? '-' : '+';
-	    const yearNumber = MathAbs$1(year);
+	    const yearNumber = MathAbs(year);
 	    yearString = sign + ToZeroPaddedDecimalString$1(yearNumber, 6);
 	  } else {
 	    yearString = ToZeroPaddedDecimalString$1(year, 4);
@@ -9885,23 +10044,23 @@
 	  return `${dateTimeString}${timeZoneString}`;
 	}
 	function formatAsDecimalNumber(num) {
-	  if (num <= NumberMaxSafeInteger) return num.toString(10);
+	  if (num <= NumberMaxSafeInteger) return Call$1(NumberPrototypeToString, num, [10]);
 	  return bigInt(num).toString();
 	}
 	function TemporalDurationToString(years, months, weeks, days, hours, minutes, normSeconds) {
 	  let precision = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 'auto';
 	  const sign = DurationSign(years, months, weeks, days, hours, minutes, normSeconds.sec, 0, 0, normSeconds.subsec);
 	  let datePart = '';
-	  if (years !== 0) datePart += `${formatAsDecimalNumber(MathAbs$1(years))}Y`;
-	  if (months !== 0) datePart += `${formatAsDecimalNumber(MathAbs$1(months))}M`;
-	  if (weeks !== 0) datePart += `${formatAsDecimalNumber(MathAbs$1(weeks))}W`;
-	  if (days !== 0) datePart += `${formatAsDecimalNumber(MathAbs$1(days))}D`;
+	  if (years !== 0) datePart += `${formatAsDecimalNumber(MathAbs(years))}Y`;
+	  if (months !== 0) datePart += `${formatAsDecimalNumber(MathAbs(months))}M`;
+	  if (weeks !== 0) datePart += `${formatAsDecimalNumber(MathAbs(weeks))}W`;
+	  if (days !== 0) datePart += `${formatAsDecimalNumber(MathAbs(days))}D`;
 	  let timePart = '';
-	  if (hours !== 0) timePart += `${formatAsDecimalNumber(MathAbs$1(hours))}H`;
-	  if (minutes !== 0) timePart += `${formatAsDecimalNumber(MathAbs$1(minutes))}M`;
+	  if (hours !== 0) timePart += `${formatAsDecimalNumber(MathAbs(hours))}H`;
+	  if (minutes !== 0) timePart += `${formatAsDecimalNumber(MathAbs(minutes))}M`;
 	  if (!normSeconds.isZero() || years === 0 && months === 0 && weeks === 0 && days === 0 && hours === 0 && minutes === 0 || precision !== 'auto') {
-	    const secondsPart = formatAsDecimalNumber(MathAbs$1(normSeconds.sec));
-	    const subSecondsPart = FormatFractionalSeconds(MathAbs$1(normSeconds.subsec), precision);
+	    const secondsPart = formatAsDecimalNumber(MathAbs(normSeconds.sec));
+	    const subSecondsPart = FormatFractionalSeconds(MathAbs(normSeconds.subsec), precision);
 	    timePart += `${secondsPart}${subSecondsPart}S`;
 	  }
 	  let result = `${sign < 0 ? '-' : ''}P${datePart}`;
@@ -9994,22 +10153,27 @@
 	  return dateTimeString;
 	}
 	function IsOffsetTimeZoneIdentifier(string) {
-	  return OFFSET.test(string);
+	  return Call$1(RegExpPrototypeTest, OFFSET, [string]);
 	}
 	function ParseDateTimeUTCOffset(string) {
-	  const match = OFFSET_WITH_PARTS.exec(string);
+	  const match = Call$1(RegExpPrototypeExec, OFFSET_WITH_PARTS, [string]);
 	  if (!match) {
-	    throw new RangeError(`invalid time zone offset: ${string}`);
+	    throw new RangeError$1(`invalid time zone offset: ${string}`);
 	  }
 	  const sign = match[1] === '-' ? -1 : +1;
 	  const hours = +match[2];
 	  const minutes = +(match[3] || 0);
 	  const seconds = +(match[4] || 0);
-	  const nanoseconds = +((match[5] || 0) + '000000000').slice(0, 9);
+	  const nanoseconds = +Call$1(StringPrototypeSlice, (match[5] || 0) + '000000000', [0, 9]);
 	  const offsetNanoseconds = sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
 	  return offsetNanoseconds;
 	}
 	let canonicalTimeZoneIdsCache = undefined;
+	const isTZIDSep = ObjectAssign(ObjectCreate(null), {
+	  '/': true,
+	  '-': true,
+	  _: true
+	});
 	function GetAvailableNamedTimeZoneIdentifier(identifier) {
 	  // The most common case is when the identifier is a canonical time zone ID.
 	  // Fast-path that case by caching all canonical IDs. For old ECMAScript
@@ -10017,17 +10181,17 @@
 	  if (canonicalTimeZoneIdsCache === undefined) {
 	    const canonicalTimeZoneIds = IntlSupportedValuesOf?.('timeZone');
 	    if (canonicalTimeZoneIds) {
-	      canonicalTimeZoneIdsCache = new MapCtor();
+	      canonicalTimeZoneIdsCache = new Map$1();
 	      for (let ix = 0; ix < canonicalTimeZoneIds.length; ix++) {
 	        const id = canonicalTimeZoneIds[ix];
-	        Call$1(MapPrototypeSet$1, canonicalTimeZoneIdsCache, [ASCIILowercase(id), id]);
+	        Call$1(MapPrototypeSet, canonicalTimeZoneIdsCache, [ASCIILowercase(id), id]);
 	      }
 	    } else {
 	      canonicalTimeZoneIdsCache = null;
 	    }
 	  }
 	  const lower = ASCIILowercase(identifier);
-	  let primaryIdentifier = canonicalTimeZoneIdsCache?.get(lower);
+	  let primaryIdentifier = canonicalTimeZoneIdsCache ? Call$1(MapPrototypeGet, canonicalTimeZoneIdsCache, [lower]) : undefined;
 	  if (primaryIdentifier) return {
 	    identifier: primaryIdentifier,
 	    primaryIdentifier
@@ -10037,7 +10201,7 @@
 	  // return if it's not an available named time zone ID).
 	  try {
 	    const formatter = getIntlDateTimeFormatEnUsForTimeZone(identifier);
-	    primaryIdentifier = formatter.resolvedOptions().timeZone;
+	    primaryIdentifier = Call$1(IntlDateTimeFormatPrototypeResolvedOptions, formatter, []).timeZone;
 	  } catch {
 	    return undefined;
 	  }
@@ -10046,7 +10210,7 @@
 	  // Reject them even if the implementation's Intl supports them, as they are
 	  // not present in the IANA time zone database.
 	  if (Call$1(SetPrototypeHas, ICU_LEGACY_TIME_ZONE_IDS, [identifier])) {
-	    throw new RangeError(`${identifier} is a legacy time zone identifier from ICU. Use ${primaryIdentifier} instead`);
+	    throw new RangeError$1(`${identifier} is a legacy time zone identifier from ICU. Use ${primaryIdentifier} instead`);
 	  }
 
 	  // The identifier is an alias (a deprecated identifier that's a synonym for a
@@ -10057,8 +10221,9 @@
 	  // capitalization pattern:
 	  // 1. capitalize the first letter of the identifier
 	  // 2. capitalize the letter after every slash, dash, or underscore delimiter
-	  const standardCase = [...lower].map((c, i) => i === 0 || '/-_'.includes(lower[i - 1]) ? c.toUpperCase() : c).join('');
-	  const segments = standardCase.split('/');
+	  const chars = Call$1(ArrayPrototypeMap, lower, [(c, i) => i === 0 || isTZIDSep[lower[i - 1]] ? Call$1(StringPrototypeToUpperCase, c, []) : c]);
+	  const standardCase = Call$1(ArrayPrototypeJoin, chars, ['']);
+	  const segments = Call$1(StringPrototypeSplit, standardCase, ['/']);
 	  if (segments.length === 1) {
 	    // If a single-segment legacy ID is 2-3 chars or contains a number or dash, then
 	    // (except for the "GB-Eire" special case) the case-normalized form is uppercase.
@@ -10070,14 +10235,14 @@
 	      primaryIdentifier
 	    };
 	    return {
-	      identifier: lower.length <= 3 || /[-0-9]/.test(lower) ? lower.toUpperCase() : segments[0],
+	      identifier: lower.length <= 3 || Call$1(RegExpPrototypeTest, /[-0-9]/, [lower]) ? Call$1(StringPrototypeToUpperCase, lower, []) : segments[0],
 	      primaryIdentifier
 	    };
 	  }
 
 	  // All Etc zone names are uppercase except three exceptions.
 	  if (segments[0] === 'Etc') {
-	    const etcName = ['Zulu', 'Greenwich', 'Universal'].includes(segments[1]) ? segments[1] : segments[1].toUpperCase();
+	    const etcName = Call$1(ArrayPrototypeIncludes, ['Zulu', 'Greenwich', 'Universal'], [segments[1]]) ? segments[1] : Call$1(StringPrototypeToUpperCase, segments[1], []);
 	    return {
 	      identifier: `Etc/${etcName}`,
 	      primaryIdentifier
@@ -10110,7 +10275,7 @@
 	  segments[1] = specialCases[segments[1]] ?? segments[1];
 	  if (segments.length > 2) segments[2] = specialCases[segments[2]] ?? segments[2];
 	  return {
-	    identifier: segments.join('/'),
+	    identifier: Call$1(ArrayPrototypeJoin, segments, ['/']),
 	    primaryIdentifier
 	  };
 	}
@@ -10131,8 +10296,8 @@
 	}
 	function FormatOffsetTimeZoneIdentifier(offsetMinutes) {
 	  const sign = offsetMinutes < 0 ? '-' : '+';
-	  const absoluteMinutes = MathAbs$1(offsetMinutes);
-	  const hour = MathFloor$1(absoluteMinutes / 60);
+	  const absoluteMinutes = MathAbs(offsetMinutes);
+	  const hour = MathFloor(absoluteMinutes / 60);
 	  const minute = absoluteMinutes % 60;
 	  const timeString = FormatTimeString(hour, minute, 0, 0, 'minute');
 	  return `${sign}${timeString}`;
@@ -10152,10 +10317,10 @@
 
 	  // Note: Date.UTC() interprets one and two-digit years as being in the
 	  // 20th century, so don't use it
-	  const legacyDate = new Date();
-	  legacyDate.setUTCHours(hour, minute, second, millisecond);
-	  legacyDate.setUTCFullYear(reducedYear, month - 1, day);
-	  const ms = legacyDate.getTime();
+	  const legacyDate = new Date$1();
+	  Call$1(DatePrototypeSetUTCHours, legacyDate, [hour, minute, second, millisecond]);
+	  Call$1(DatePrototypeSetUTCFullYear, legacyDate, [reducedYear, month - 1, day]);
+	  const ms = Call$1(DatePrototypeGetTime, legacyDate, []);
 	  let ns = bigInt(ms).multiply(1e6);
 	  ns = ns.plus(bigInt(microsecond).multiply(1e3));
 	  ns = ns.plus(bigInt(nanosecond));
@@ -10174,16 +10339,16 @@
 	    nanos += 1e6;
 	    epochMilliseconds -= 1;
 	  }
-	  const microsecond = MathFloor$1(nanos / 1e3) % 1e3;
+	  const microsecond = MathFloor(nanos / 1e3) % 1e3;
 	  const nanosecond = nanos % 1e3;
-	  const item = new Date(epochMilliseconds);
-	  const year = item.getUTCFullYear();
-	  const month = item.getUTCMonth() + 1;
-	  const day = item.getUTCDate();
-	  const hour = item.getUTCHours();
-	  const minute = item.getUTCMinutes();
-	  const second = item.getUTCSeconds();
-	  const millisecond = item.getUTCMilliseconds();
+	  const item = new Date$1(epochMilliseconds);
+	  const year = Call$1(DatePrototypeGetUTCFullYear, item, []);
+	  const month = Call$1(DatePrototypeGetUTCMonth, item, []) + 1;
+	  const day = Call$1(DatePrototypeGetUTCDate, item, []);
+	  const hour = Call$1(DatePrototypeGetUTCHours, item, []);
+	  const minute = Call$1(DatePrototypeGetUTCMinutes, item, []);
+	  const second = Call$1(DatePrototypeGetUTCSeconds, item, []);
+	  const millisecond = Call$1(DatePrototypeGetUTCMilliseconds, item, []);
 	  return {
 	    epochMilliseconds,
 	    year,
@@ -10287,8 +10452,9 @@
 	function GetFormatterParts(timeZone, epochMilliseconds) {
 	  const formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZone);
 	  // Using `format` instead of `formatToParts` for compatibility with older clients
-	  const datetime = formatter.format(new Date(epochMilliseconds));
-	  const splits = datetime.split(/[^\w]+/);
+	  const boundFormat = Call$1(IntlDateTimeFormatPrototypeGetFormat, formatter, []);
+	  const datetime = Call$1(boundFormat, formatter, [new Date$1(epochMilliseconds)]);
+	  const splits = Call$1(StringPrototypeSplit, datetime, [/[^\w]+/]);
 	  const month = splits[0];
 	  const day = splits[1];
 	  const year = splits[2];
@@ -10297,7 +10463,7 @@
 	  const minute = splits[5];
 	  const second = splits[6];
 	  return {
-	    year: era.toUpperCase().startsWith('B') ? -year + 1 : +year,
+	    year: Call$1(StringPrototypeStartsWith, Call$1(StringPrototypeToUpperCase, era, []), ['B']) ? -year + 1 : +year,
 	    month: +month,
 	    day: +day,
 	    hour: hour === '24' ? 0 : +hour,
@@ -10329,14 +10495,15 @@
 	  // different, then there was an offset transition in between, so test both
 	  // offsets to see which one(s) will yield a matching exact time.
 	  const found = earlierOffsetNs === laterOffsetNs ? [earlierOffsetNs] : [earlierOffsetNs, laterOffsetNs];
-	  return found.map(offsetNanoseconds => {
+	  const candidates = Call$1(ArrayPrototypeMap, found, [offsetNanoseconds => {
 	    const epochNanoseconds = bigInt(ns).minus(offsetNanoseconds);
 	    const parts = GetNamedTimeZoneDateTimeParts(id, epochNanoseconds);
 	    if (year !== parts.year || month !== parts.month || day !== parts.day || hour !== parts.hour || minute !== parts.minute || second !== parts.second || millisecond !== parts.millisecond || microsecond !== parts.microsecond || nanosecond !== parts.nanosecond) {
 	      return undefined;
 	    }
 	    return epochNanoseconds;
-	  }).filter(x => x !== undefined);
+	  }]);
+	  return Call$1(ArrayPrototypeFilter, candidates, [x => x !== undefined]);
 	}
 	function LeapYear(year) {
 	  if (undefined === year) return false;
@@ -10361,9 +10528,9 @@
 	  return 0;
 	}
 	function BalanceISOYearMonth(year, month) {
-	  if (!NumberIsFinite(year) || !NumberIsFinite(month)) throw new RangeError('infinity is out of range');
+	  if (!NumberIsFinite(year) || !NumberIsFinite(month)) throw new RangeError$1('infinity is out of range');
 	  month -= 1;
-	  year += MathFloor$1(month / 12);
+	  year += MathFloor(month / 12);
 	  month %= 12;
 	  if (month < 0) month += 12;
 	  month += 1;
@@ -10373,7 +10540,7 @@
 	  };
 	}
 	function BalanceISODate(year, month, day) {
-	  if (!NumberIsFinite(day)) throw new RangeError('infinity is out of range');
+	  if (!NumberIsFinite(day)) throw new RangeError$1('infinity is out of range');
 	  ({
 	    year,
 	    month
@@ -10384,7 +10551,7 @@
 	  // convert days to a year 400 times. We can convert a multiple of 400 all at
 	  // once.
 	  const daysIn400YearCycle = 400 * 365 + 97;
-	  if (MathAbs$1(day) > daysIn400YearCycle) {
+	  if (MathAbs(day) > daysIn400YearCycle) {
 	    const nCycles = MathTrunc(day / daysIn400YearCycle);
 	    year += 400 * nCycles;
 	    day -= nCycles * daysIn400YearCycle;
@@ -10548,7 +10715,7 @@
 	      seconds = 0;
 	      break;
 	    default:
-	      throw new Error('assert not reached');
+	      throw new Error$1('assert not reached');
 	  }
 	  days *= sign;
 	  hours *= sign;
@@ -10616,7 +10783,7 @@
 	  };
 	}
 	function RejectToRange(value, min, max) {
-	  if (value < min || value > max) throw new RangeError(`value out of range: ${min} <= ${value} <= ${max}`);
+	  if (value < min || value > max) throw new RangeError$1(`value out of range: ${min} <= ${value} <= ${max}`);
 	}
 	function RejectISODate(year, month, day) {
 	  RejectToRange(month, 1, 12);
@@ -10653,7 +10820,7 @@
 	// place so that we can DRY the throwing code.
 	function ValidateEpochNanoseconds(epochNanoseconds) {
 	  if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
-	    throw new RangeError('date/time value is outside of supported range');
+	    throw new RangeError$1('date/time value is outside of supported range');
 	  }
 	}
 	function RejectYearMonthRange(year, month) {
@@ -10669,12 +10836,14 @@
 	  const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
 	  for (let index = 0; index < fields.length; index++) {
 	    const prop = fields[index];
-	    if (!NumberIsFinite(prop)) throw new RangeError('infinite values not allowed as duration fields');
+	    if (!NumberIsFinite(prop)) throw new RangeError$1('infinite values not allowed as duration fields');
 	    const propSign = MathSign(prop);
-	    if (propSign !== 0 && propSign !== sign) throw new RangeError('mixed-sign values not allowed as duration fields');
+	    if (propSign !== 0 && propSign !== sign) {
+	      throw new RangeError$1('mixed-sign values not allowed as duration fields');
+	    }
 	  }
-	  if (MathAbs$1(y) >= 2 ** 32 || MathAbs$1(mon) >= 2 ** 32 || MathAbs$1(w) >= 2 ** 32) {
-	    throw new RangeError('years, months, and weeks must be < 2³²');
+	  if (MathAbs(y) >= 2 ** 32 || MathAbs(mon) >= 2 ** 32 || MathAbs(w) >= 2 ** 32) {
+	    throw new RangeError$1('years, months, and weeks must be < 2³²');
 	  }
 	  const msResult = TruncatingDivModByPowerOf10(ms, 3);
 	  const µsResult = TruncatingDivModByPowerOf10(µs, 6);
@@ -10682,7 +10851,7 @@
 	  const remainderSec = TruncatingDivModByPowerOf10(msResult.mod * 1e6 + µsResult.mod * 1e3 + nsResult.mod, 9).div;
 	  const totalSec = d * 86400 + h * 3600 + min * 60 + s + msResult.div + µsResult.div + nsResult.div + remainderSec;
 	  if (!NumberIsSafeInteger(totalSec)) {
-	    throw new RangeError('total of duration time units cannot exceed 9007199254740991.999999999 s');
+	    throw new RangeError$1('total of duration time units cannot exceed 9007199254740991.999999999 s');
 	  }
 	}
 	function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
@@ -10693,7 +10862,7 @@
 	  const dateSign = DurationSign(y, m, w, d, 0, 0, 0, 0, 0, 0);
 	  const timeSign = norm.sign();
 	  if (dateSign !== 0 && timeSign !== 0 && dateSign !== timeSign) {
-	    throw new RangeError('mixed-sign values not allowed as duration fields');
+	    throw new RangeError$1('mixed-sign values not allowed as duration fields');
 	  }
 	}
 	function ISODateToEpochDays(y, m, d) {
@@ -10759,7 +10928,7 @@
 	  const microseconds = µs2 - µs1;
 	  const nanoseconds = ns2 - ns1;
 	  const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-	  if (norm.abs().sec >= 86400) throw new Error('assertion failure in DifferenceTime: _bt_.[[Days]] should be 0');
+	  if (norm.abs().sec >= 86400) throw new Error$1('assertion failure in DifferenceTime: _bt_.[[Days]] should be 0');
 	  return norm;
 	}
 	function DifferenceInstant(ns1, ns2, increment, smallestUnit, roundingMode) {
@@ -10882,7 +11051,7 @@
 	    }
 	  }
 	  if (dayCorrection > maxDayCorrection) {
-	    throw new Error(`assertion failed: more than ${maxDayCorrection} day correction needed`);
+	    throw new Error$1(`assertion failed: more than ${maxDayCorrection} day correction needed`);
 	  }
 
 	  // Similar to what happens in DifferenceISODateTime with date parts only:
@@ -10990,10 +11159,10 @@
 	        break;
 	      }
 	    default:
-	      throw new Error('assert not reached');
+	      throw new Error$1('assert not reached');
 	  }
 	  if (sign === 1 && (r1 < 0 || r1 >= r2) || sign === -1 && (r1 > 0 || r1 <= r2)) {
-	    throw new Error('assertion failed: ordering of r1, r2 according to sign');
+	    throw new Error$1('assertion failed: ordering of r1, r2 according to sign');
 	  }
 
 	  // Apply to origin, output PlainDateTimes
@@ -11015,28 +11184,28 @@
 
 	  // Round the smallestUnit within the epoch-nanosecond span
 	  if (sign === 1 && (startEpochNs.gt(destEpochNs) || destEpochNs.gt(endEpochNs)) || sign === -1 && (endEpochNs.gt(destEpochNs) || destEpochNs.gt(startEpochNs))) {
-	    throw new RangeError(`custom calendar reported a ${unit} that is 0 days long`);
+	    throw new RangeError$1(`custom calendar reported a ${unit} that is 0 days long`);
 	  }
 	  if (endEpochNs.equals(startEpochNs)) {
-	    throw new Error('assertion failed: startEpochNs ≠ endEpochNs');
+	    throw new Error$1('assertion failed: startEpochNs ≠ endEpochNs');
 	  }
 	  const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
 	  const denominator = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
 	  const unsignedRoundingMode = GetUnsignedRoundingMode(roundingMode, sign < 0 ? 'negative' : 'positive');
 	  const cmp = numerator.add(numerator).abs().subtract(denominator.abs()).sign();
-	  const even = MathAbs$1(r1) / increment % 2 === 0;
-	  const roundedUnit = numerator.isZero() ? MathAbs$1(r1) : !numerator.cmp(denominator) // equal?
-	  ? MathAbs$1(r2) : ApplyUnsignedRoundingMode(MathAbs$1(r1), MathAbs$1(r2), cmp, even, unsignedRoundingMode);
+	  const even = MathAbs(r1) / increment % 2 === 0;
+	  const roundedUnit = numerator.isZero() ? MathAbs(r1) : !numerator.cmp(denominator) // equal?
+	  ? MathAbs(r2) : ApplyUnsignedRoundingMode(MathAbs(r1), MathAbs(r2), cmp, even, unsignedRoundingMode);
 
 	  // Trick to minimize rounding error, due to the lack of fma() in JS
 	  const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
 	  const total = fakeNumerator.fdiv(denominator.totalNs);
-	  if (MathAbs$1(total) < MathAbs$1(r1) || MathAbs$1(total) > MathAbs$1(r2)) {
-	    throw new Error('assertion failed: r1 ≤ total ≤ r2');
+	  if (MathAbs(total) < MathAbs(r1) || MathAbs(total) > MathAbs(r2)) {
+	    throw new Error$1('assertion failed: r1 ≤ total ≤ r2');
 	  }
 
 	  // Determine whether expanded or contracted
-	  const didExpandCalendarUnit = roundedUnit === MathAbs$1(r2);
+	  const didExpandCalendarUnit = roundedUnit === MathAbs(r2);
 	  duration = {
 	    ...(didExpandCalendarUnit ? endDuration : startDuration),
 	    norm: TimeDuration.ZERO
@@ -11075,11 +11244,11 @@
 
 	  // The signed amount of time from the start of the whole-day interval to the end
 	  const daySpan = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
-	  if (daySpan.sign() !== sign) throw new RangeError('time zone returned inconsistent Instants');
+	  if (daySpan.sign() !== sign) throw new RangeError$1('time zone returned inconsistent Instants');
 
 	  // Compute time parts of the duration to nanoseconds and round
 	  // Result could be negative
-	  let roundedNorm = duration.norm.round(NS_PER_TIME_UNIT.get(unit) * increment, roundingMode);
+	  let roundedNorm = duration.norm.round(Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]) * increment, roundingMode);
 
 	  // Does the rounded time exceed the time-in-day?
 	  const beyondDaySpan = roundedNorm.subtract(daySpan);
@@ -11089,7 +11258,7 @@
 	    // If rounded into next day, use the day-end as the local origin and rerun
 	    // the rounding
 	    dayDelta = sign;
-	    roundedNorm = beyondDaySpan.round(NS_PER_TIME_UNIT.get(unit) * increment, roundingMode);
+	    roundedNorm = beyondDaySpan.round(Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]) * increment, roundingMode);
 	    nudgedEpochNs = roundedNorm.addToEpochNs(endEpochNs);
 	  } else {
 	    // Otherwise, if time not rounded beyond day, use the day-start as the local
@@ -11119,7 +11288,7 @@
 
 	  const norm = duration.norm.add24HourDays(duration.days);
 	  // Convert to nanoseconds and round
-	  const unitLength = NS_PER_TIME_UNIT.get(smallestUnit);
+	  const unitLength = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [smallestUnit]);
 	  const total = norm.fdiv(unitLength);
 	  const roundedNorm = norm.round(increment * unitLength, roundingMode);
 	  const diffNorm = roundedNorm.subtract(norm);
@@ -11162,8 +11331,8 @@
 	  // Check to see if nudgedEpochNs has hit the boundary of any units higher than
 	  // smallestUnit, in which case increment the higher unit and clear smaller
 	  // units.
-	  const largestUnitIndex = UNITS_DESCENDING.indexOf(largestUnit);
-	  const smallestUnitIndex = UNITS_DESCENDING.indexOf(smallestUnit);
+	  const largestUnitIndex = Call$1(ArrayPrototypeIndexOf, UNITS_DESCENDING, [largestUnit]);
+	  const smallestUnitIndex = Call$1(ArrayPrototypeIndexOf, UNITS_DESCENDING, [smallestUnit]);
 	  for (let unitIndex = smallestUnitIndex - 1; unitIndex >= largestUnitIndex; unitIndex--) {
 	    // The only situation where days and smaller bubble-up into weeks is when
 	    // largestUnit is 'week' (not to be confused with the situation where
@@ -11212,7 +11381,7 @@
 	          break;
 	        }
 	      default:
-	        throw new Error('assert not reached');
+	        throw new Error$1('assert not reached');
 	    }
 
 	    // Compute end-of-unit in epoch-nanoseconds
@@ -11442,30 +11611,30 @@
 	  }, ns2, dateTime, timeZone, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode);
 	}
 	function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
-	  const ALLOWED_UNITS = TEMPORAL_UNITS.reduce((allowed, unitInfo) => {
+	  const ALLOWED_UNITS = Call$1(ArrayPrototypeReduce, TEMPORAL_UNITS, [(allowed, unitInfo) => {
 	    const p = unitInfo[0];
 	    const s = unitInfo[1];
 	    const c = unitInfo[2];
-	    if ((group === 'datetime' || c === group) && !Call$1(ArrayIncludes, disallowed, [s])) {
-	      allowed.push(s, p);
+	    if ((group === 'datetime' || c === group) && !Call$1(ArrayPrototypeIncludes, disallowed, [s])) {
+	      Call$1(ArrayPrototypePush, allowed, [s, p]);
 	    }
 	    return allowed;
-	  }, []);
+	  }, []]);
 	  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit', group, 'auto');
-	  if (Call$1(ArrayIncludes, disallowed, [largestUnit])) {
-	    throw new RangeError(`largestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${largestUnit}`);
+	  if (Call$1(ArrayPrototypeIncludes, disallowed, [largestUnit])) {
+	    throw new RangeError$1(`largestUnit must be one of ${Call$1(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${largestUnit}`);
 	  }
 	  const roundingIncrement = GetRoundingIncrementOption(options);
 	  let roundingMode = GetRoundingModeOption(options, 'trunc');
 	  if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
 	  const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', group, fallbackSmallest);
-	  if (Call$1(ArrayIncludes, disallowed, [smallestUnit])) {
-	    throw new RangeError(`smallestUnit must be one of ${ALLOWED_UNITS.join(', ')}, not ${smallestUnit}`);
+	  if (Call$1(ArrayPrototypeIncludes, disallowed, [smallestUnit])) {
+	    throw new RangeError$1(`smallestUnit must be one of ${Call$1(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${smallestUnit}`);
 	  }
 	  const defaultLargestUnit = LargerOfTwoTemporalUnits(smallestLargestDefaultUnit, smallestUnit);
 	  if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
 	  if (LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-	    throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+	    throw new RangeError$1(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
 	  }
 	  const MAX_DIFFERENCE_INCREMENTS = {
 	    hour: 24,
@@ -11511,7 +11680,7 @@
 	  const calendar = GetSlot(plainDate, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  if (!CalendarEquals(calendar, otherCalendar)) {
-	    throw new RangeError(`cannot compute difference between dates of ${calendar} and ${otherCalendar} calendars`);
+	    throw new RangeError$1(`cannot compute difference between dates of ${calendar} and ${otherCalendar} calendars`);
 	  }
 	  const resolvedOptions = GetOptionsObject(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', [], 'day', 'day');
@@ -11560,7 +11729,7 @@
 	  const calendar = GetSlot(plainDateTime, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  if (!CalendarEquals(calendar, otherCalendar)) {
-	    throw new RangeError(`cannot compute difference between dates of ${calendar} and ${otherCalendar} calendars`);
+	    throw new RangeError$1(`cannot compute difference between dates of ${calendar} and ${otherCalendar} calendars`);
 	  }
 	  const resolvedOptions = GetOptionsObject(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
@@ -11610,7 +11779,7 @@
 	  const calendar = GetSlot(yearMonth, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  if (!CalendarEquals(calendar, otherCalendar)) {
-	    throw new RangeError(`cannot compute difference between months of ${calendar} and ${otherCalendar} calendars`);
+	    throw new RangeError$1(`cannot compute difference between months of ${calendar} and ${otherCalendar} calendars`);
 	  }
 	  const resolvedOptions = GetOptionsObject(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'date', ['week', 'day'], 'month', 'year');
@@ -11660,7 +11829,7 @@
 	  const calendar = GetSlot(zonedDateTime, CALENDAR);
 	  const otherCalendar = GetSlot(other, CALENDAR);
 	  if (!CalendarEquals(calendar, otherCalendar)) {
-	    throw new RangeError(`cannot compute difference between dates of ${calendar} and ${otherCalendar} calendars`);
+	    throw new RangeError$1(`cannot compute difference between dates of ${calendar} and ${otherCalendar} calendars`);
 	  }
 	  const resolvedOptions = GetOptionsObject(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'hour');
@@ -11688,7 +11857,7 @@
 	  } else {
 	    const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
 	    if (!TimeZoneEquals(timeZone, GetSlot(other, TIME_ZONE))) {
-	      throw new RangeError("When calculating difference between time zones, largestUnit must be 'hours' " + 'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.');
+	      throw new RangeError$1("When calculating difference between time zones, largestUnit must be 'hours' " + 'or smaller because day lengths can vary between time zones due to DST or time zone offset changes.');
 	    }
 	    if (ns1.equals(ns2)) return new Duration();
 	    ({
@@ -11761,14 +11930,14 @@
 	  }, overflow);
 	  return CombineISODateAndTimeRecord(addedDate, timeResult);
 	}
-	function AddZonedDateTime(epochNs, timeZone, calendar, _ref6) {
+	function AddZonedDateTime(epochNs, timeZone, calendar, _ref5) {
 	  let {
 	    years,
 	    months,
 	    weeks,
 	    days,
 	    norm
-	  } = _ref6;
+	  } = _ref5;
 	  let overflow = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'constrain';
 	  // If only time is to be added, then use Instant math. It's not OK to fall
 	  // through to the date/time code below because compatible disambiguation in
@@ -11807,7 +11976,7 @@
 	  const norm1 = TimeDuration.normalize(GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS));
 	  const norm2 = TimeDuration.normalize(GetSlot(other, HOURS), GetSlot(other, MINUTES), GetSlot(other, SECONDS), GetSlot(other, MILLISECONDS), GetSlot(other, MICROSECONDS), GetSlot(other, NANOSECONDS));
 	  if (IsCalendarUnit(largestUnit)) {
-	    throw new RangeError('For years, months, or weeks arithmetic, use date arithmetic relative to a starting point');
+	    throw new RangeError$1('For years, months, or weeks arithmetic, use date arithmetic relative to a starting point');
 	  }
 	  const {
 	    days,
@@ -11826,7 +11995,7 @@
 	  if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
 	  const largestUnit = DefaultTemporalLargestUnit(duration);
 	  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
-	    throw new RangeError(`Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`);
+	    throw new RangeError$1(`Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`);
 	  }
 	  const norm = TimeDuration.normalize(GetSlot(duration, HOURS), GetSlot(duration, MINUTES), GetSlot(duration, SECONDS), GetSlot(duration, MILLISECONDS), GetSlot(duration, MICROSECONDS), GetSlot(duration, NANOSECONDS));
 	  const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), norm);
@@ -11992,12 +12161,12 @@
 	  const quotient = MathTrunc(quantity / increment);
 	  const remainder = quantity % increment;
 	  const sign = quantity < 0 ? 'negative' : 'positive';
-	  const r1 = MathAbs$1(quotient);
+	  const r1 = MathAbs(quotient);
 	  const r2 = r1 + 1;
-	  const cmp = ComparisonResult(MathAbs$1(remainder * 2) - increment);
+	  const cmp = ComparisonResult(MathAbs(remainder * 2) - increment);
 	  const even = r1 % 2 === 0;
 	  const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
-	  const rounded = MathAbs$1(quantity) === r1 * increment ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	  const rounded = MathAbs(quantity) === r1 * increment ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
 	  return increment * (sign === 'positive' ? rounded : -rounded);
 	}
 	function RoundNumberToIncrementAsIfPositive(quantity, increment, mode) {
@@ -12020,7 +12189,7 @@
 	  return rounded.times(increment);
 	}
 	function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
-	  const incrementNs = NS_PER_TIME_UNIT.get(unit) * increment;
+	  const incrementNs = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]) * increment;
 	  return RoundNumberToIncrementAsIfPositive(epochNs, incrementNs, roundingMode);
 	}
 	function RoundISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
@@ -12050,7 +12219,7 @@
 	    case 'nanosecond':
 	      quantity = nanosecond;
 	  }
-	  const nsPerUnit = NS_PER_TIME_UNIT.get(unit);
+	  const nsPerUnit = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]);
 	  const result = RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode) / nsPerUnit;
 	  switch (unit) {
 	    case 'day':
@@ -12092,7 +12261,7 @@
 	    days = RoundNumberToIncrement(total, increment, roundingMode);
 	    norm = TimeDuration.ZERO;
 	  } else {
-	    const divisor = NS_PER_TIME_UNIT.get(unit);
+	    const divisor = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]);
 	    total = norm.fdiv(divisor);
 	    norm = norm.round(divisor * increment, roundingMode);
 	  }
@@ -12153,29 +12322,31 @@
 	  return quotient;
 	}
 	function BigIntIfAvailable(wrapper) {
-	  return typeof BigInt === 'undefined' ? wrapper : wrapper.value;
+	  return typeof BigInt$1 === 'undefined' ? wrapper : wrapper.value;
 	}
 	function ToBigInt(arg) {
 	  if (bigInt.isInstance(arg)) {
 	    return arg;
 	  }
-	  const prim = ToPrimitive$2(arg, Number);
+	  const prim = ToPrimitive$2(arg, Number$1);
 	  switch (typeof prim) {
 	    case 'undefined':
 	    case 'object':
 	    case 'number':
 	    case 'symbol':
-	      throw new TypeError(`cannot convert ${typeof arg} to bigint`);
+	      throw new TypeError$1(`cannot convert ${typeof arg} to bigint`);
 	    case 'string':
-	      if (!prim.match(/^\s*(?:[+-]?\d+\s*)?$/)) {
-	        throw new SyntaxError('invalid BigInt syntax');
+	      if (!Call$1(StringPrototypeMatch, prim, [/^\s*(?:[+-]?\d+\s*)?$/])) {
+	        throw new SyntaxError$1('invalid BigInt syntax');
 	      }
 	    // eslint: no-fallthrough: false
 	    case 'bigint':
 	      try {
 	        return bigInt(prim);
 	      } catch (e) {
-	        if (e instanceof Error && e.message.startsWith('Invalid integer')) throw new SyntaxError(e.message);
+	        if (e instanceof Error$1 && Call$1(StringPrototypeStartsWith, e.message, ['Invalid integer'])) {
+	          throw new SyntaxError$1(e.message);
+	        }
 	        throw e;
 	      }
 	    case 'boolean':
@@ -12192,39 +12363,39 @@
 	// increasing at least and that the microsecond and nanosecond fields are likely to be non-zero.
 
 	const SystemUTCEpochNanoSeconds = (() => {
-	  let ns = Date.now() % 1e6;
+	  let ns = DateNow() % 1e6;
 	  return () => {
-	    const ms = Date.now();
+	    const ms = DateNow();
 	    const result = bigInt(ms).multiply(1e6).plus(ns);
 	    ns = ms % 1e6;
 	    return bigInt.min(NS_MAX, bigInt.max(NS_MIN, result));
 	  };
 	})();
 	function DefaultTimeZone() {
-	  return new Intl.DateTimeFormat().resolvedOptions().timeZone;
+	  return Call$1(IntlDateTimeFormatPrototypeResolvedOptions, new IntlDateTimeFormat(), []).timeZone;
 	}
 	function ComparisonResult(value) {
 	  return value < 0 ? -1 : value > 0 ? 1 : value;
 	}
 	function GetOptionsObject(options) {
-	  if (options === undefined) return ObjectCreate$6(null);
+	  if (options === undefined) return ObjectCreate(null);
 	  if (Type$3(options) === 'Object') return options;
-	  throw new TypeError(`Options parameter must be an object, not ${options === null ? 'null' : `a ${typeof options}`}`);
+	  throw new TypeError$1(`Options parameter must be an object, not ${options === null ? 'null' : `a ${typeof options}`}`);
 	}
 	function GetOption(options, property, allowedValues, fallback) {
 	  let value = options[property];
 	  if (value !== undefined) {
 	    value = ToString$1(value);
-	    if (!allowedValues.includes(value)) {
-	      throw new RangeError(`${property} must be one of ${allowedValues.join(', ')}, not ${value}`);
+	    if (!Call$1(ArrayPrototypeIncludes, allowedValues, [value])) {
+	      throw new RangeError$1(`${property} must be one of ${Call$1(ArrayPrototypeJoin, allowedValues, [', '])}, not ${value}`);
 	    }
 	    return value;
 	  }
-	  if (fallback === REQUIRED) throw new RangeError(`${property} option is required`);
+	  if (fallback === REQUIRED) throw new RangeError$1(`${property} option is required`);
 	  return fallback;
 	}
 	function IsBuiltinCalendar(id) {
-	  return Call$1(ArrayIncludes, BUILTIN_CALENDAR_IDS, [ASCIILowercase(id)]);
+	  return Call$1(ArrayPrototypeIncludes, BUILTIN_CALENDAR_IDS, [ASCIILowercase(id)]);
 	}
 
 	// This is a temporary implementation. Ideally we'd rely on Intl.DateTimeFormat
@@ -12270,10 +12441,10 @@
 	// repeating the same (long) error message in many files.
 	function ValueOfThrows(constructorName) {
 	  const compareCode = constructorName === 'PlainMonthDay' ? 'Temporal.PlainDate.compare(obj1.toPlainDate(year), obj2.toPlainDate(year))' : `Temporal.${constructorName}.compare(obj1, obj2)`;
-	  throw new TypeError('Do not use built-in arithmetic operators with Temporal objects. ' + `When comparing, use ${compareCode}, not obj1 > obj2. ` + "When coercing to strings, use `${obj}` or String(obj), not '' + obj. " + 'When coercing to numbers, use properties or methods of the object, not `+obj`. ' + 'When concatenating with strings, use `${str}${obj}` or str.concat(obj), not str + obj. ' + 'In React, coerce to a string before rendering a Temporal object.');
+	  throw new TypeError$1('Do not use built-in arithmetic operators with Temporal objects. ' + `When comparing, use ${compareCode}, not obj1 > obj2. ` + "When coercing to strings, use `${obj}` or String(obj), not '' + obj. " + 'When coercing to numbers, use properties or methods of the object, not `+obj`. ' + 'When concatenating with strings, use `${str}${obj}` or str.concat(obj), not str + obj. ' + 'In React, coerce to a string before rendering a Temporal object.');
 	}
-	const OFFSET = new RegExp(`^${offset.source}$`);
-	const OFFSET_WITH_PARTS = new RegExp(`^${offsetWithParts.source}$`);
+	const OFFSET = new RegExp$1(`^${offset.source}$`);
+	const OFFSET_WITH_PARTS = new RegExp$1(`^${offsetWithParts.source}$`);
 	function bisect(getState, left, right) {
 	  let lstate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : getState(left);
 	  let rstate = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : getState(right);
@@ -12289,36 +12460,12 @@
 	      right = middle;
 	      rstate = mstate;
 	    } else {
-	      throw new Error(`invalid state in bisection ${lstate} - ${mstate} - ${rstate}`);
+	      throw new Error$1(`invalid state in bisection ${lstate} - ${mstate} - ${rstate}`);
 	    }
 	  }
 	  return right;
 	}
 
-	const ArrayFrom = Array.from;
-	const ArrayPrototypeFind = Array.prototype.find;
-	const ArrayPrototypeIncludes = Array.prototype.includes;
-	const ArrayPrototypeSort = Array.prototype.sort;
-	const IntlDateTimeFormat$1 = globalThis.Intl.DateTimeFormat;
-	const MathAbs = Math.abs;
-	const MathFloor = Math.floor;
-	const ObjectAssign$2 = Object.assign;
-	const ObjectEntries = Object.entries;
-	const OriginalMap = Map;
-	const OriginalSet = Set;
-	const OriginalWeakMap = WeakMap;
-	const MapPrototypeEntries = Map.prototype.entries;
-	const MapPrototypeGet = Map.prototype.get;
-	const MapPrototypeSet = Map.prototype.set;
-	const SetPrototypeAdd = Set.prototype.add;
-	const SetPrototypeValues = Set.prototype.values;
-	const SymbolIterator = Symbol.iterator;
-	const WeakMapPrototypeGet = WeakMap.prototype.get;
-	const WeakMapPrototypeSet = WeakMap.prototype.set;
-	const MapIterator = Call$1(MapPrototypeEntries, new Map(), []);
-	const MapIteratorPrototypeNext = MapIterator.next;
-	const SetIterator = Call$1(SetPrototypeValues, new Set(), []);
-	const SetIteratorPrototypeNext = SetIterator.next;
 	function arrayFromSet(src) {
 	  const valuesIterator = Call$1(SetPrototypeValues, src, []);
 	  return ArrayFrom({
@@ -12449,7 +12596,7 @@
 	    return [];
 	  },
 	  fieldKeysToIgnore(keys) {
-	    const result = new OriginalSet();
+	    const result = new Set$1();
 	    for (let ix = 0; ix < keys.length; ix++) {
 	      const key = keys[ix];
 	      Call$1(SetPrototypeAdd, result, [key]);
@@ -12570,22 +12717,22 @@
 	// ECMA-402.
 
 	function monthCodeNumberPart(monthCode) {
-	  if (!monthCode.startsWith('M')) {
-	    throw new RangeError(`Invalid month code: ${monthCode}.  Month codes must start with M.`);
+	  if (!Call$1(StringPrototypeStartsWith, monthCode, ['M'])) {
+	    throw new RangeError$1(`Invalid month code: ${monthCode}.  Month codes must start with M.`);
 	  }
-	  const month = +monthCode.slice(1);
-	  if (isNaN(month)) throw new RangeError(`Invalid month code: ${monthCode}`);
+	  const month = +Call$1(StringPrototypeSlice, monthCode, [1]);
+	  if (NumberIsNaN(month)) throw new RangeError$1(`Invalid month code: ${monthCode}`);
 	  return month;
 	}
 	function buildMonthCode(month) {
 	  let leap = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-	  return `M${month.toString().padStart(2, '0')}${leap ? 'L' : ''}`;
+	  return `M${Call$1(StringPrototypePadStart, `${month}`, [2, '0'])}${leap ? 'L' : ''}`;
 	}
 	function requireFields(fields, requiredFieldNames) {
 	  for (let index = 0; index < requiredFieldNames.length; index++) {
 	    const fieldName = requiredFieldNames[index];
 	    if (fields[fieldName] === undefined) {
-	      throw new TypeError(`${fieldName} is required`);
+	      throw new TypeError$1(`${fieldName} is required`);
 	    }
 	  }
 	}
@@ -12603,7 +12750,7 @@
 	    monthCode
 	  } = calendarDate;
 	  if (monthCode === undefined) {
-	    if (month === undefined) throw new TypeError('Either month or monthCode are required');
+	    if (month === undefined) throw new TypeError$1('Either month or monthCode are required');
 	    // The ISO calendar uses the default (undefined) value because it does
 	    // constrain/reject after this method returns. Non-ISO calendars, however,
 	    // rely on this function to constrain/reject out-of-range `month` values.
@@ -12613,13 +12760,13 @@
 	  } else {
 	    const numberPart = monthCodeNumberPart(monthCode);
 	    if (month !== undefined && month !== numberPart) {
-	      throw new RangeError(`monthCode ${monthCode} and month ${month} must match if both are present`);
+	      throw new RangeError$1(`monthCode ${monthCode} and month ${month} must match if both are present`);
 	    }
 	    if (monthCode !== buildMonthCode(numberPart)) {
-	      throw new RangeError(`Invalid month code: ${monthCode}`);
+	      throw new RangeError$1(`Invalid month code: ${monthCode}`);
 	    }
 	    month = numberPart;
-	    if (month < 1 || month > monthsPerYear) throw new RangeError(`Invalid monthCode: ${monthCode}`);
+	    if (month < 1 || month > monthsPerYear) throw new RangeError$1(`Invalid monthCode: ${monthCode}`);
 	  }
 	  return {
 	    ...calendarDate,
@@ -12654,9 +12801,9 @@
 	class OneObjectCache {
 	  constructor() {
 	    let cacheToClone = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    this.map = new OriginalMap();
+	    this.map = new Map$1();
 	    this.calls = 0;
-	    this.now = globalThis.performance ? globalThis.performance.now() : Date.now();
+	    this.now = now();
 	    this.hits = 0;
 	    this.misses = 0;
 	    if (cacheToClone !== undefined) {
@@ -12687,18 +12834,19 @@
 	  report() {
 	    /*
 	    if (this.calls === 0) return;
-	    const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - this.now;
-	    const hitRate = ((100 * this.hits) / this.calls).toFixed(0);
-	    console.log(`${this.calls} calls in ${ms.toFixed(2)}ms. Hits: ${this.hits} (${hitRate}%). Misses: ${this.misses}.`);
+	    const ms = now() - this.now;
+	    const hitRate = Call(NumberPrototypeToFixed, (100 * this.hits) / this.calls, [0]);
+	    const t = `${Call(NumberPrototypeToFixed, ms, [2])}ms`;
+	    log(`${this.calls} calls in ${t}. Hits: ${this.hits} (${hitRate}%). Misses: ${this.misses}.`);
 	    */
 	  }
 	  setObject(obj) {
-	    if (Call$1(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError('object already cached');
+	    if (Call$1(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj])) throw new RangeError$1('object already cached');
 	    Call$1(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
 	    this.report();
 	  }
 	}
-	OneObjectCache.objectMap = new OriginalWeakMap();
+	OneObjectCache.objectMap = new WeakMap$1();
 	OneObjectCache.MAX_CACHE_ENTRIES = 1000;
 	/**
 	 * Returns a WeakMap-backed cache that's used to store expensive results
@@ -12746,7 +12894,7 @@
 	    // into each calendar's implementation before any cache is created, so
 	    // each calendar gets its own separate cached formatter.
 	    if (typeof this.formatter === 'undefined') {
-	      this.formatter = new IntlDateTimeFormat$1(`en-US-u-ca-${this.id}`, {
+	      this.formatter = new IntlDateTimeFormat(`en-US-u-ca-${this.id}`, {
 	        day: 'numeric',
 	        month: 'numeric',
 	        year: 'numeric',
@@ -12762,7 +12910,7 @@
 	      month: isoMonth,
 	      day: isoDay
 	    } = isoDate;
-	    const key = JSON.stringify({
+	    const key = JSONStringify({
 	      func: 'isoToCalendarDate',
 	      isoYear,
 	      isoMonth,
@@ -12779,19 +12927,20 @@
 	        isoMonth,
 	        isoDay
 	      });
-	      parts = dateTimeFormat.formatToParts(new Date(isoString));
+	      parts = Call$1(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [new Date$1(isoString)]);
 	    } catch (e) {
-	      throw new RangeError(`Invalid ISO date: ${JSON.stringify({
+	      throw new RangeError$1(`Invalid ISO date: ${JSONStringify({
         isoYear,
         isoMonth,
         isoDay
       })}`);
 	    }
 	    const result = {};
-	    for (let {
-	      type,
-	      value
-	    } of parts) {
+	    for (let i = 0; i < parts.length; i++) {
+	      let {
+	        type,
+	        value
+	      } = parts[i];
 	      if (type === 'year' || type === 'relatedYear') {
 	        if (this.hasEra) {
 	          result.eraYear = +value;
@@ -12800,9 +12949,9 @@
 	        }
 	      }
 	      if (type === 'month') {
-	        const matches = /^([0-9]*)(.*?)$/.exec(value);
+	        const matches = Call$1(RegExpPrototypeExec, /^([0-9]*)(.*?)$/, [value]);
 	        if (!matches || matches.length != 3 || !matches[1] && !matches[2]) {
-	          throw new RangeError(`Unexpected month: ${value}`);
+	          throw new RangeError$1(`Unexpected month: ${value}`);
 	        }
 	        // If the month has no numeric part (should only see this for the Hebrew
 	        // calendar with newer FF / Chromium versions; see
@@ -12812,10 +12961,10 @@
 	        // `monthExtra`.
 	        result.month = matches[1] ? +matches[1] : 1;
 	        if (result.month < 1) {
-	          throw new RangeError(`Invalid month ${value} from ${isoString}[u-ca-${this.id}]` + ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10527)');
+	          throw new RangeError$1(`Invalid month ${value} from ${isoString}[u-ca-${this.id}]` + ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10527)');
 	        }
 	        if (result.month > 13) {
-	          throw new RangeError(`Invalid month ${value} from ${isoString}[u-ca-${this.id}]` + ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10529)');
+	          throw new RangeError$1(`Invalid month ${value} from ${isoString}[u-ca-${this.id}]` + ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10529)');
 	        }
 
 	        // The ICU formats for the Hebrew calendar no longer support a numeric
@@ -12833,14 +12982,18 @@
 	        // The call to normalize() and the replacement regex deals with era
 	        // names that contain non-ASCII characters like Japanese eras. Also
 	        // ignore extra content in parentheses like JPN era date ranges.
-	        value = value.split(' (')[0];
-	        result.era = value.normalize('NFD').replace(/[^-0-9 \p{L}]/gu, '').replace(' ', '-').toLowerCase();
+	        value = Call$1(StringPrototypeSplit, value, [' ('])[0];
+	        value = Call$1(StringPrototypeNormalize, value, ['NFD']);
+	        value = Call$1(StringPrototypeReplace, value, [/[^-0-9 \p{L}]/gu, '']);
+	        value = Call$1(StringPrototypeReplace, value, [/ /g, '-']);
+	        value = Call$1(StringPrototypeToLowerCase, value, []);
+	        result.era = value;
 	      }
 	    }
 	    if (this.hasEra && result.eraYear === undefined) {
 	      // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
 	      // output of Intl.DateTimeFormat.formatToParts.
-	      throw new RangeError(`Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`);
+	      throw new RangeError$1(`Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`);
 	    }
 	    // Translate old ICU era codes "ERA0" etc. into canonical era names.
 	    if (this.hasEra) {
@@ -12859,13 +13012,15 @@
 	    }
 	    if (this.checkIcuBugs) this.checkIcuBugs(isoDate);
 	    const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
-	    if (calendarDate.year === undefined) throw new RangeError(`Missing year converting ${JSON.stringify(isoDate)}`);
-	    if (calendarDate.month === undefined) throw new RangeError(`Missing month converting ${JSON.stringify(isoDate)}`);
-	    if (calendarDate.day === undefined) throw new RangeError(`Missing day converting ${JSON.stringify(isoDate)}`);
+	    if (calendarDate.year === undefined) throw new RangeError$1(`Missing year converting ${JSONStringify(isoDate)}`);
+	    if (calendarDate.month === undefined) {
+	      throw new RangeError$1(`Missing month converting ${JSONStringify(isoDate)}`);
+	    }
+	    if (calendarDate.day === undefined) throw new RangeError$1(`Missing day converting ${JSONStringify(isoDate)}`);
 	    cache.set(key, calendarDate);
 	    // Also cache the reverse mapping
-	    ['constrain', 'reject'].forEach(overflow => {
-	      const keyReverse = JSON.stringify({
+	    const cacheReverse = overflow => {
+	      const keyReverse = JSONStringify({
 	        func: 'calendarToIsoDate',
 	        year: calendarDate.year,
 	        month: calendarDate.month,
@@ -12874,7 +13029,8 @@
 	        id: this.id
 	      });
 	      cache.set(keyReverse, isoDate);
-	    });
+	    };
+	    Call$1(ArrayPrototypeForEach, ['constrain', 'reject'], [cacheReverse]);
 	    return calendarDate;
 	  },
 	  validateCalendarDate(calendarDate) {
@@ -12888,19 +13044,21 @@
 	    } = calendarDate;
 	    // When there's a suffix (e.g. "5bis" for a leap month in Chinese calendar)
 	    // the derived class must deal with it.
-	    if (monthExtra !== undefined) throw new RangeError('Unexpected `monthExtra` value');
-	    if (year === undefined && eraYear === undefined) throw new TypeError('year or eraYear is required');
-	    if (month === undefined && monthCode === undefined) throw new TypeError('month or monthCode is required');
-	    if (day === undefined) throw new RangeError('Missing day');
+	    if (monthExtra !== undefined) throw new RangeError$1('Unexpected `monthExtra` value');
+	    if (year === undefined && eraYear === undefined) throw new TypeError$1('year or eraYear is required');
+	    if (month === undefined && monthCode === undefined) throw new TypeError$1('month or monthCode is required');
+	    if (day === undefined) throw new RangeError$1('Missing day');
 	    if (monthCode !== undefined) {
 	      if (typeof monthCode !== 'string') {
-	        throw new RangeError(`monthCode must be a string, not ${Type$3(monthCode).toLowerCase()}`);
+	        throw new RangeError$1(`monthCode must be a string, not ${Call$1(StringPrototypeToLowerCase, Type$3(monthCode), [])}`);
 	      }
-	      if (!/^M([01]?\d)(L?)$/.test(monthCode)) throw new RangeError(`Invalid monthCode: ${monthCode}`);
+	      if (!Call$1(RegExpPrototypeTest, /^M([01]?\d)(L?)$/, [monthCode])) {
+	        throw new RangeError$1(`Invalid monthCode: ${monthCode}`);
+	      }
 	    }
 	    if (this.hasEra) {
 	      if (calendarDate['era'] === undefined !== (calendarDate['eraYear'] === undefined)) {
-	        throw new TypeError("properties 'era' and 'eraYear' must be provided together");
+	        throw new TypeError$1("properties 'era' and 'eraYear' must be provided together");
 	      }
 	    }
 	  },
@@ -12916,7 +13074,7 @@
 	   * - non-lunisolar calendar (no leap months)
 	   * */
 	  adjustCalendarDate(calendarDate, cache, overflow /*, fromLegacyDate = false */) {
-	    if (this.calendarType === 'lunisolar') throw new RangeError('Override required for lunisolar calendars');
+	    if (this.calendarType === 'lunisolar') throw new RangeError$1('Override required for lunisolar calendars');
 	    this.validateCalendarDate(calendarDate);
 	    const largestMonth = this.monthsInYear(calendarDate, cache);
 	    let {
@@ -12972,7 +13130,7 @@
 	      month,
 	      day
 	    } = date;
-	    const key = JSON.stringify({
+	    const key = JSONStringify({
 	      func: 'calendarToIsoDate',
 	      year,
 	      month,
@@ -12986,7 +13144,7 @@
 	    // already, then cache both the original value and the constrained value.
 	    let keyOriginal;
 	    if (originalDate.year !== undefined && originalDate.month !== undefined && originalDate.day !== undefined && (originalDate.year !== date.year || originalDate.month !== date.month || originalDate.day !== date.day)) {
-	      keyOriginal = JSON.stringify({
+	      keyOriginal = JSONStringify({
 	        func: 'calendarToIsoDate',
 	        year: originalDate.year,
 	        month: originalDate.month,
@@ -13021,7 +13179,7 @@
 	        let testCalendarDate = this.isoToCalendarDate(testIsoEstimate, cache);
 	        while (testCalendarDate.month !== month || testCalendarDate.year !== year) {
 	          if (overflow === 'reject') {
-	            throw new RangeError(`day ${day} does not exist in month ${month} of year ${year}`);
+	            throw new RangeError$1(`day ${day} does not exist in month ${month} of year ${year}`);
 	          }
 	          // Back up a day at a time until we're not hanging over the month end
 	          testIsoEstimate = this.addDaysIso(testIsoEstimate, -1);
@@ -13070,7 +13228,7 @@
 	            // original date was an invalid value that will be constrained or
 	            // rejected here.
 	            if (overflow === 'reject') {
-	              throw new RangeError(`Can't find ISO date from calendar date: ${JSON.stringify({
+	              throw new RangeError$1(`Can't find ISO date from calendar date: ${JSONStringify({
                 ...originalDate
               })}`);
 	            } else {
@@ -13087,7 +13245,7 @@
 	    cache.set(key, isoEstimate);
 	    if (keyOriginal) cache.set(keyOriginal, isoEstimate);
 	    if (date.year === undefined || date.month === undefined || date.day === undefined || date.monthCode === undefined || this.hasEra && (date.era === undefined || date.eraYear === undefined)) {
-	      throw new RangeError('Unexpected missing property');
+	      throw new RangeError$1('Unexpected missing property');
 	    }
 	    return isoEstimate;
 	  },
@@ -13123,7 +13281,7 @@
 	        month
 	      } = calendarDate;
 	      const oldCalendarDate = calendarDate;
-	      const days = months < 0 ? -Math.max(day, this.daysInPreviousMonth(calendarDate, cache)) : this.daysInMonth(calendarDate, cache);
+	      const days = months < 0 ? -MathMax(day, this.daysInPreviousMonth(calendarDate, cache)) : this.daysInMonth(calendarDate, cache);
 	      const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
 	      let addedIso = this.addDaysIso(isoDate, days, cache);
 	      calendarDate = this.isoToCalendarDate(addedIso, cache);
@@ -13149,7 +13307,7 @@
 	      }
 	    }
 	    if (overflow === 'reject' && calendarDate.day !== day) {
-	      throw new RangeError(`Day ${day} does not exist in resulting calendar month`);
+	      throw new RangeError$1(`Day ${day} does not exist in resulting calendar month`);
 	    }
 	    return calendarDate;
 	  },
@@ -13209,7 +13367,7 @@
 	            let diffInYearSign = 0;
 	            if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
 	            if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
-	            if (!diffInYearSign) diffInYearSign = Math.sign(diffDays);
+	            if (!diffInYearSign) diffInYearSign = MathSign(diffDays);
 	            const isOneFurtherInYear = diffInYearSign * sign < 0;
 	            years = isOneFurtherInYear ? diffYears - sign : diffYears;
 	          }
@@ -13339,7 +13497,7 @@
 	        eraYear
 	      } = fields;
 	      if (year === undefined && (era === undefined || eraYear === undefined)) {
-	        throw new TypeError('when `monthCode` is omitted, `year` (or `era` and `eraYear`) and `month` are required');
+	        throw new TypeError$1('when `monthCode` is omitted, `year` (or `era` and `eraYear`) and `month` are required');
 	      }
 	      // Apply overflow behaviour to year/month/day, to get correct monthCode/day
 	      ({
@@ -13389,10 +13547,10 @@
 	      }
 	    }
 	    if (overflow === 'constrain' && closestIso !== undefined) return closestIso;
-	    throw new RangeError(`No recent ${this.id} year with monthCode ${monthCode} and day ${day}`);
+	    throw new RangeError$1(`No recent ${this.id} year with monthCode ${monthCode} and day ${day}`);
 	  }
 	};
-	const helperHebrew = ObjectAssign$2({}, nonIsoHelperBase, {
+	const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
 	  id: 'hebrew',
 	  calendarType: 'lunisolar',
 	  inLeapYear(calendarDate /*, cache */) {
@@ -13421,8 +13579,8 @@
 	      year
 	    } = calendarDate;
 	    const monthCode = this.getMonthCode(year, month);
-	    const monthInfo = ObjectEntries(this.months).find(m => m[1].monthCode === monthCode);
-	    if (monthInfo === undefined) throw new RangeError(`unmatched Hebrew month: ${month}`);
+	    const monthInfo = Call$1(ArrayPrototypeFind, ObjectEntries(this.months), [m => m[1].monthCode === monthCode]);
+	    if (monthInfo === undefined) throw new RangeError$1(`unmatched Hebrew month: ${month}`);
 	    const daysInMonth = monthInfo[1].days;
 	    return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[minOrMax];
 	  },
@@ -13548,7 +13706,7 @@
 	      day,
 	      monthExtra
 	    } = calendarDate;
-	    if (year === undefined) throw new TypeError('Missing property: "year"');
+	    if (year === undefined) throw new TypeError$1('Missing property: "year"');
 	    if (fromLegacyDate) {
 	      // In Pre Node-14 V8, DateTimeFormat.formatToParts `month: 'numeric'`
 	      // output returns the numeric equivalent of `month` as a string, meaning
@@ -13559,7 +13717,7 @@
 	      // correct `month` using the string name as a key.
 	      if (monthExtra) {
 	        const monthInfo = this.months[monthExtra];
-	        if (!monthInfo) throw new RangeError(`Unrecognized month from formatToParts: ${monthExtra}`);
+	        if (!monthInfo) throw new RangeError$1(`Unrecognized month from formatToParts: ${monthExtra}`);
 	        month = this.inLeapYear({
 	          year
 	        }) ? monthInfo.leap : monthInfo.regular;
@@ -13576,16 +13734,16 @@
 	      // that all fields are present.
 	      this.validateCalendarDate(calendarDate);
 	      if (month === undefined) {
-	        if (monthCode.endsWith('L')) {
+	        if (Call$1(StringPrototypeEndsWith, monthCode, ['L'])) {
 	          if (monthCode !== 'M05L') {
-	            throw new RangeError(`Hebrew leap month must have monthCode M05L, not ${monthCode}`);
+	            throw new RangeError$1(`Hebrew leap month must have monthCode M05L, not ${monthCode}`);
 	          }
 	          month = 6;
 	          if (!this.inLeapYear({
 	            year
 	          })) {
 	            if (overflow === 'reject') {
-	              throw new RangeError(`Hebrew monthCode M05L is invalid in year ${year} which is not a leap year`);
+	              throw new RangeError$1(`Hebrew monthCode M05L is invalid in year ${year} which is not a leap year`);
 	            } else {
 	              // constrain to same day of next month (Adar)
 	              month = 6;
@@ -13601,7 +13759,7 @@
 	          const largestMonth = this.monthsInYear({
 	            year
 	          });
-	          if (month < 1 || month > largestMonth) throw new RangeError(`Invalid monthCode: ${monthCode}`);
+	          if (month < 1 || month > largestMonth) throw new RangeError$1(`Invalid monthCode: ${monthCode}`);
 	        }
 	      } else {
 	        if (overflow === 'reject') {
@@ -13626,7 +13784,7 @@
 	        } else {
 	          const calculatedMonthCode = this.getMonthCode(year, month);
 	          if (calculatedMonthCode !== monthCode) {
-	            throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Hebrew year ${year}`);
+	            throw new RangeError$1(`monthCode ${monthCode} doesn't correspond to month ${month} in Hebrew year ${year}`);
 	          }
 	        }
 	      }
@@ -13645,7 +13803,7 @@
 	 * For Temporal purposes, the Islamic calendar is simple because it's always the
 	 * same 12 months in the same order.
 	 */
-	const helperIslamic = ObjectAssign$2({}, nonIsoHelperBase, {
+	const helperIslamic = ObjectAssign({}, nonIsoHelperBase, {
 	  id: 'islamic',
 	  calendarType: 'lunar',
 	  inLeapYear(calendarDate, cache) {
@@ -13683,7 +13841,7 @@
 	    };
 	  }
 	});
-	const helperPersian = ObjectAssign$2({}, nonIsoHelperBase, {
+	const helperPersian = ObjectAssign({}, nonIsoHelperBase, {
 	  id: 'persian',
 	  calendarType: 'solar',
 	  inLeapYear(calendarDate, cache) {
@@ -13723,7 +13881,7 @@
 	    };
 	  }
 	});
-	const helperIndian = ObjectAssign$2({}, nonIsoHelperBase, {
+	const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
 	  id: 'indian',
 	  calendarType: 'solar',
 	  inLeapYear(calendarDate /*, cache*/) {
@@ -13821,7 +13979,7 @@
 	      month
 	    } = calendarDate;
 	    let monthInfo = this.months[month];
-	    if (monthInfo === undefined) throw new RangeError(`Invalid month: ${month}`);
+	    if (monthInfo === undefined) throw new RangeError$1(`Invalid month: ${month}`);
 	    if (this.inLeapYear(calendarDate) && monthInfo.leap) monthInfo = monthInfo.leap;
 	    return monthInfo;
 	  },
@@ -13840,12 +13998,12 @@
 	  // calendar output to fail for all dates before 0001-01-01 ISO.  For example,
 	  // in Node 12 0000-01-01 is calculated as 6146/12/-583 instead of 10/11/-79 as
 	  // expected.
-	  vulnerableToBceBug: new Date('0000-01-01T00:00Z').toLocaleDateString('en-US-u-ca-indian', {
+	  vulnerableToBceBug: Call$1(DatePrototypeToLocaleDateString, new Date$1('0000-01-01T00:00Z'), ['en-US-u-ca-indian', {
 	    timeZone: 'UTC'
-	  }) !== '10/11/-79 Saka',
+	  }]) !== '10/11/-79 Saka',
 	  checkIcuBugs(isoDate) {
 	    if (this.vulnerableToBceBug && isoDate.year < 1) {
-	      throw new RangeError(`calendar '${this.id}' is broken for ISO dates before 0001-01-01` + ' (see https://bugs.chromium.org/p/v8/issues/detail?id=10529)');
+	      throw new RangeError$1(`calendar '${this.id}' is broken for ISO dates before 0001-01-01` + ' (see https://bugs.chromium.org/p/v8/issues/detail?id=10529)');
 	    }
 	  }
 	});
@@ -13895,40 +14053,40 @@
 	 * */
 	function adjustEras(eras) {
 	  if (eras.length === 0) {
-	    throw new RangeError('Invalid era data: eras are required');
+	    throw new RangeError$1('Invalid era data: eras are required');
 	  }
 	  if (eras.length === 1 && eras[0].reverseOf) {
-	    throw new RangeError('Invalid era data: anchor era cannot count years backwards');
+	    throw new RangeError$1('Invalid era data: anchor era cannot count years backwards');
 	  }
 	  if (eras.length === 1 && !eras[0].name) {
-	    throw new RangeError('Invalid era data: at least one named era is required');
+	    throw new RangeError$1('Invalid era data: at least one named era is required');
 	  }
-	  if (eras.filter(e => e.reverseOf != null).length > 1) {
-	    throw new RangeError('Invalid era data: only one era can count years backwards');
+	  if (Call$1(ArrayPrototypeFilter, eras, [e => e.reverseOf != null]).length > 1) {
+	    throw new RangeError$1('Invalid era data: only one era can count years backwards');
 	  }
 
 	  // Find the "anchor era" which is the era used for (era-less) `year`. Reversed
 	  // eras can never be anchors. The era without an `anchorEpoch` property is the
 	  // anchor.
 	  let anchorEra;
-	  eras.forEach(e => {
+	  Call$1(ArrayPrototypeForEach, eras, [e => {
 	    if (e.isAnchor || !e.anchorEpoch && !e.reverseOf) {
-	      if (anchorEra) throw new RangeError('Invalid era data: cannot have multiple anchor eras');
+	      if (anchorEra) throw new RangeError$1('Invalid era data: cannot have multiple anchor eras');
 	      anchorEra = e;
 	      e.anchorEpoch = {
 	        year: e.hasYearZero ? 0 : 1
 	      };
 	    } else if (!e.name) {
-	      throw new RangeError('If era name is blank, it must be the anchor era');
+	      throw new RangeError$1('If era name is blank, it must be the anchor era');
 	    }
-	  });
+	  }]);
 
 	  // If the era name is undefined, then it's an anchor that doesn't interact
 	  // with eras at all. For example, Japanese `year` is always the same as ISO
 	  // `year`.  So this "era" is the anchor era but isn't used for era matching.
 	  // Strip it from the list that's returned.
-	  eras = eras.filter(e => e.name);
-	  eras.forEach(e => {
+	  eras = Call$1(ArrayPrototypeFilter, eras, [e => e.name]);
+	  Call$1(ArrayPrototypeForEach, eras, [e => {
 	    // Some eras are mirror images of another era e.g. B.C. is the reverse of A.D.
 	    // Replace the string-valued "reverseOf" property with the actual era object
 	    // that's reversed.
@@ -13936,15 +14094,17 @@
 	      reverseOf
 	    } = e;
 	    if (reverseOf) {
-	      const reversedEra = eras.find(era => era.name === reverseOf);
-	      if (reversedEra === undefined) throw new RangeError(`Invalid era data: unmatched reverseOf era: ${reverseOf}`);
+	      const reversedEra = Call$1(ArrayPrototypeFind, eras, [era => era.name === reverseOf]);
+	      if (reversedEra === undefined) {
+	        throw new RangeError$1(`Invalid era data: unmatched reverseOf era: ${reverseOf}`);
+	      }
 	      e.reverseOf = reversedEra;
 	      e.anchorEpoch = reversedEra.anchorEpoch;
 	      e.isoEpoch = reversedEra.isoEpoch;
 	    }
 	    if (e.anchorEpoch.month === undefined) e.anchorEpoch.month = 1;
 	    if (e.anchorEpoch.day === undefined) e.anchorEpoch.day = 1;
-	  });
+	  }]);
 
 	  // Ensure that the latest epoch is first in the array. This lets us try to
 	  // match eras in index order, with the last era getting the remaining older
@@ -13952,7 +14112,7 @@
 	  Call$1(ArrayPrototypeSort, eras, [(e1, e2) => {
 	    if (e1.reverseOf) return 1;
 	    if (e2.reverseOf) return -1;
-	    if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError('Invalid era data: missing ISO epoch');
+	    if (!e1.isoEpoch || !e2.isoEpoch) throw new RangeError$1('Invalid era data: missing ISO epoch');
 	    return e2.isoEpoch.year - e1.isoEpoch.year;
 	  }]);
 
@@ -13960,15 +14120,17 @@
 	  // being reversed.
 	  const lastEraReversed = eras[eras.length - 1].reverseOf;
 	  if (lastEraReversed) {
-	    if (lastEraReversed !== eras[eras.length - 2]) throw new RangeError('Invalid era data: invalid reverse-sign era');
+	    if (lastEraReversed !== eras[eras.length - 2]) {
+	      throw new RangeError$1('Invalid era data: invalid reverse-sign era');
+	    }
 	  }
 
 	  // Finally, add a "genericName" property in the format "era{n} where `n` is
 	  // zero-based index, with the oldest era being zero. This format is used by
 	  // older versions of ICU data.
-	  eras.forEach((e, i) => {
+	  Call$1(ArrayPrototypeForEach, eras, [(e, i) => {
 	    e.genericName = `era${eras.length - 1 - i}`;
-	  });
+	  }]);
 	  return {
 	    eras,
 	    anchorEra: anchorEra || eras[0]
@@ -13984,7 +14146,7 @@
 	 * different months/days than Gregorian.
 	 */
 	function makeHelperGregorianFixedEpoch(id) {
-	  return ObjectAssign$2({}, nonIsoHelperBase, {
+	  return ObjectAssign({}, nonIsoHelperBase, {
 	    id,
 	    calendarType: 'solar',
 	    inLeapYear(calendarDate /*, cache */) {
@@ -14002,7 +14164,7 @@
 	        month
 	      } = calendarDate;
 	      if (month === 2) return this.inLeapYear(calendarDate) ? 29 : 28;
-	      return [4, 6, 9, 11].indexOf(month) >= 0 ? 30 : 31;
+	      return Call$1(ArrayPrototypeIndexOf, [4, 6, 9, 11], [month]) >= 0 ? 30 : 31;
 	    },
 	    maximumMonthLength(calendarDate) {
 	      return this.minimumMonthLength(calendarDate);
@@ -14020,7 +14182,7 @@
 	    eras,
 	    anchorEra
 	  } = adjustEras(originalEras);
-	  return ObjectAssign$2({}, nonIsoHelperBase, {
+	  return ObjectAssign({}, nonIsoHelperBase, {
 	    id,
 	    hasEra: true,
 	    eras,
@@ -14041,7 +14203,7 @@
 	        month
 	      } = calendarDate;
 	      if (month === 2) return this.inLeapYear(calendarDate) ? 29 : 28;
-	      return [4, 6, 9, 11].indexOf(month) >= 0 ? 30 : 31;
+	      return Call$1(ArrayPrototypeIndexOf, [4, 6, 9, 11], [month]) >= 0 ? 30 : 31;
 	    },
 	    maximumMonthLength(calendarDate) {
 	      return this.minimumMonthLength(calendarDate);
@@ -14051,7 +14213,7 @@
 	      const checkField = (name, value) => {
 	        const currentValue = calendarDate[name];
 	        if (currentValue != null && currentValue != value) {
-	          throw new RangeError(`Input ${name} ${currentValue} doesn't match calculated value ${value}`);
+	          throw new RangeError$1(`Input ${name} ${currentValue} doesn't match calculated value ${value}`);
 	        }
 	      };
 	      const eraFromYear = year => {
@@ -14060,12 +14222,12 @@
 	          ...calendarDate,
 	          year
 	        };
-	        const matchingEra = this.eras.find((e, i) => {
+	        const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [(e, i) => {
 	          if (i === this.eras.length - 1) {
 	            if (e.reverseOf) {
 	              // This is a reverse-sign era (like BCE) which must be the oldest
 	              // era. Count years backwards.
-	              if (year > 0) throw new RangeError(`Signed year ${year} is invalid for era ${e.name}`);
+	              if (year > 0) throw new RangeError$1(`Signed year ${year} is invalid for era ${e.name}`);
 	              eraYear = e.anchorEpoch.year - year;
 	              return true;
 	            }
@@ -14080,8 +14242,8 @@
 	            return true;
 	          }
 	          return false;
-	        });
-	        if (!matchingEra) throw new RangeError(`Year ${year} was not matched by any era`);
+	        }]);
+	        if (!matchingEra) throw new RangeError$1(`Year ${year} was not matched by any era`);
 	        return {
 	          eraYear,
 	          era: matchingEra.name
@@ -14100,7 +14262,7 @@
 	        checkField('era', era);
 	        checkField('eraYear', eraYear);
 	      } else if (eraYear != null) {
-	        if (era === undefined) throw new RangeError('era and eraYear must be provided together');
+	        if (era === undefined) throw new RangeError$1('era and eraYear must be provided together');
 	        const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref13 => {
 	          let {
 	            name,
@@ -14108,9 +14270,9 @@
 	          } = _ref13;
 	          return name === era || Call$1(ArrayPrototypeIncludes, aliases, [era]);
 	        }]);
-	        if (!matchingEra) throw new RangeError(`Era ${era} (ISO year ${eraYear}) was not matched by any era`);
+	        if (!matchingEra) throw new RangeError$1(`Era ${era} (ISO year ${eraYear}) was not matched by any era`);
 	        if (eraYear < 1 && matchingEra.reverseOf) {
-	          throw new RangeError(`Years in ${era} era must be positive, not ${year}`);
+	          throw new RangeError$1(`Years in ${era} era must be positive, not ${year}`);
 	        }
 	        if (matchingEra.reverseOf) {
 	          year = matchingEra.anchorEpoch.year - eraYear;
@@ -14127,7 +14289,7 @@
 	          era
 	        } = eraFromYear(year));
 	      } else {
-	        throw new RangeError('Either `year` or `eraYear` and `era` are required');
+	        throw new RangeError$1('Either `year` or `eraYear` and `era` are required');
 	      }
 	      return {
 	        ...calendarDate,
@@ -14176,7 +14338,7 @@
 	 */
 	const makeHelperSameMonthDayAsGregorian = (id, originalEras) => {
 	  const base = makeHelperGregorian(id, originalEras);
-	  return ObjectAssign$2(base, {
+	  return ObjectAssign(base, {
 	    isoToCalendarDate(isoDate) {
 	      // Month and day are same as ISO, so bypass Intl.DateTimeFormat and
 	      // calculate the year, era, and eraYear here.
@@ -14198,7 +14360,7 @@
 	};
 	const makeHelperOrthodox = (id, originalEras) => {
 	  const base = originalEras ? makeHelperGregorian(id, originalEras) : makeHelperGregorianFixedEpoch(id);
-	  return ObjectAssign$2(base, {
+	  return ObjectAssign(base, {
 	    inLeapYear(calendarDate /*, cache */) {
 	      // Leap years happen one year before the Julian leap year. Note that this
 	      // calendar is based on the Julian calendar which has a leap year every 4
@@ -14238,7 +14400,7 @@
 	// - Coptic has a different epoch date
 	// - Ethiopic has an additional second era that starts at the same date as the
 	//   zero era of ethioaa.
-	const helperEthioaa = ObjectAssign$2(makeHelperOrthodox('ethioaa'), {
+	const helperEthioaa = ObjectAssign(makeHelperOrthodox('ethioaa'), {
 	  isoEpoch: {
 	    year: -5492,
 	    month: 7,
@@ -14291,14 +14453,14 @@
 	  aliases: ['before-roc'],
 	  reverseOf: 'roc'
 	}]);
-	const helperBuddhist = ObjectAssign$2(makeHelperGregorianFixedEpoch('buddhist'), {
+	const helperBuddhist = ObjectAssign(makeHelperGregorianFixedEpoch('buddhist'), {
 	  isoEpoch: {
 	    year: -543,
 	    month: 1,
 	    day: 1
 	  }
 	});
-	const helperGregory = ObjectAssign$2(makeHelperSameMonthDayAsGregorian('gregory', [{
+	const helperGregory = ObjectAssign(makeHelperSameMonthDayAsGregorian('gregory', [{
 	  name: 'gregory',
 	  aliases: ['ad', 'ce'],
 	  isoEpoch: {
@@ -14334,7 +14496,7 @@
 	    return 1;
 	  }
 	});
-	const helperJapanese = ObjectAssign$2(
+	const helperJapanese = ObjectAssign(
 	// NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
 	// before Meiji 1, the `ce` and `bce` eras are used. Challenges with pre-Meiji
 	// eras include:
@@ -14449,7 +14611,7 @@
 	    const {
 	      year: isoYear
 	    } = isoDate;
-	    if (this.eras.find(e => e.name === era)) return {
+	    if (Call$1(ArrayPrototypeFind, this.eras, [e => e.name === era])) return {
 	      era,
 	      eraYear
 	    };
@@ -14462,7 +14624,7 @@
 	    };
 	  }
 	});
-	const helperChinese = ObjectAssign$2({}, nonIsoHelperBase, {
+	const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
 	  id: 'chinese',
 	  calendarType: 'lunisolar',
 	  inLeapYear(calendarDate, cache) {
@@ -14476,9 +14638,9 @@
 	  maximumMonthLength: (/* calendarDate */) => 30,
 	  getMonthList(calendarYear, cache) {
 	    if (calendarYear === undefined) {
-	      throw new TypeError('Missing year');
+	      throw new TypeError$1('Missing year');
 	    }
-	    const key = JSON.stringify({
+	    const key = JSONStringify({
 	      func: 'getMonthList',
 	      calendarYear,
 	      id: this.id
@@ -14492,19 +14654,19 @@
 	        isoMonth: 2,
 	        isoDay: 1
 	      });
-	      const legacyDate = new Date(isoStringFeb1);
+	      const legacyDate = new Date$1(isoStringFeb1);
 	      // Now add the requested number of days, which may wrap to the next month.
-	      legacyDate.setUTCDate(daysPastFeb1 + 1);
-	      const newYearGuess = dateTimeFormat.formatToParts(legacyDate);
-	      const calendarMonthString = newYearGuess.find(tv => tv.type === 'month').value;
-	      const calendarDay = +newYearGuess.find(tv => tv.type === 'day').value;
-	      let calendarYearToVerify = newYearGuess.find(tv => tv.type === 'relatedYear');
+	      Call$1(DatePrototypeSetUTCDate, legacyDate, [daysPastFeb1 + 1]);
+	      const newYearGuess = Call$1(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [legacyDate]);
+	      const calendarMonthString = Call$1(ArrayPrototypeFind, newYearGuess, [tv => tv.type === 'month']).value;
+	      const calendarDay = +Call$1(ArrayPrototypeFind, newYearGuess, [tv => tv.type === 'day']).value;
+	      let calendarYearToVerify = Call$1(ArrayPrototypeFind, newYearGuess, [tv => tv.type === 'relatedYear']);
 	      if (calendarYearToVerify !== undefined) {
 	        calendarYearToVerify = +calendarYearToVerify.value;
 	      } else {
 	        // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
 	        // output of Intl.DateTimeFormat.formatToParts.
-	        throw new RangeError(`Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`);
+	        throw new RangeError$1(`Intl.DateTimeFormat.formatToParts lacks relatedYear in ${this.id} calendar. Try Node 14+ or modern browsers.`);
 	      }
 	      return {
 	        calendarMonthString,
@@ -14588,17 +14750,17 @@
 	      day,
 	      monthCode
 	    } = calendarDate;
-	    if (year === undefined) throw new TypeError('Missing property: "year"');
+	    if (year === undefined) throw new TypeError$1('Missing property: "year"');
 	    if (fromLegacyDate) {
 	      // Legacy Date output returns a string that's an integer with an optional
 	      // "bis" suffix used only by the Chinese/Dangi calendar to indicate a leap
 	      // month. Below we'll normalize the output.
-	      if (monthExtra && monthExtra !== 'bis') throw new RangeError(`Unexpected leap month suffix: ${monthExtra}`);
+	      if (monthExtra && monthExtra !== 'bis') throw new RangeError$1(`Unexpected leap month suffix: ${monthExtra}`);
 	      const monthCode = buildMonthCode(month, monthExtra !== undefined);
 	      const monthString = `${month}${monthExtra || ''}`;
 	      const months = this.getMonthList(year, cache);
 	      const monthInfo = months[monthString];
-	      if (monthInfo === undefined) throw new RangeError(`Unmatched month ${monthString} in Chinese year ${year}`);
+	      if (monthInfo === undefined) throw new RangeError$1(`Unmatched month ${monthString} in Chinese year ${year}`);
 	      month = monthInfo.monthIndex;
 	      return {
 	        year,
@@ -14612,15 +14774,14 @@
 	      this.validateCalendarDate(calendarDate);
 	      if (month === undefined) {
 	        const months = this.getMonthList(year, cache);
-	        let numberPart = monthCode.replace('L', 'bis').slice(1);
-	        if (numberPart[0] === '0') numberPart = numberPart.slice(1);
+	        let numberPart = Call$1(StringPrototypeReplace, monthCode, [/^M|L$/g, ch => ch === 'L' ? 'bis' : '']);
+	        if (numberPart[0] === '0') numberPart = Call$1(StringPrototypeSlice, numberPart, [1]);
 	        let monthInfo = months[numberPart];
 	        month = monthInfo && monthInfo.monthIndex;
 	        // If this leap month isn't present in this year, constrain to the same
 	        // day of the previous month.
-	        if (month === undefined && monthCode.endsWith('L') && monthCode != 'M13L' && overflow === 'constrain') {
-	          let withoutML = monthCode.slice(1, -1);
-	          if (withoutML[0] === '0') withoutML = withoutML.slice(1);
+	        if (month === undefined && Call$1(StringPrototypeEndsWith, monthCode, ['L']) && monthCode != 'M13L' && overflow === 'constrain') {
+	          const withoutML = Call$1(StringPrototypeReplace, monthCode, [/^M0?|L$/g, '']);
 	          monthInfo = months[withoutML];
 	          if (monthInfo) {
 	            month = monthInfo.monthIndex;
@@ -14628,7 +14789,7 @@
 	          }
 	        }
 	        if (month === undefined) {
-	          throw new RangeError(`Unmatched month ${monthCode} in Chinese year ${year}`);
+	          throw new RangeError$1(`Unmatched month ${monthCode} in Chinese year ${year}`);
 	        }
 	      } else if (monthCode === undefined) {
 	        const months = this.getMonthList(year, cache);
@@ -14641,23 +14802,20 @@
 	          month = ConstrainToRange(month, 1, largestMonth);
 	          day = ConstrainToRange(day, 1, this.maximumMonthLength());
 	        }
-	        const matchingMonthEntry = monthEntries.find(_ref14 => {
-	          let [, v] = _ref14;
-	          return v.monthIndex === month;
-	        });
+	        const matchingMonthEntry = Call$1(ArrayPrototypeFind, monthEntries, [entry => entry[1].monthIndex === month]);
 	        if (matchingMonthEntry === undefined) {
-	          throw new RangeError(`Invalid month ${month} in Chinese year ${year}`);
+	          throw new RangeError$1(`Invalid month ${month} in Chinese year ${year}`);
 	        }
-	        monthCode = buildMonthCode(matchingMonthEntry[0].replace('bis', ''), matchingMonthEntry[0].indexOf('bis') !== -1);
+	        monthCode = buildMonthCode(Call$1(StringPrototypeReplace, matchingMonthEntry[0], ['bis', '']), Call$1(StringPrototypeIndexOf, matchingMonthEntry[0], ['bis']) !== -1);
 	      } else {
 	        // Both month and monthCode are present. Make sure they don't conflict.
 	        const months = this.getMonthList(year, cache);
-	        let numberPart = monthCode.replace('L', 'bis').slice(1);
-	        if (numberPart[0] === '0') numberPart = numberPart.slice(1);
+	        let numberPart = Call$1(StringPrototypeReplace, monthCode, [/^M|L$/g, ch => ch === 'L' ? 'bis' : '']);
+	        if (numberPart[0] === '0') numberPart = Call$1(StringPrototypeSlice, numberPart, [1]);
 	        const monthInfo = months[numberPart];
-	        if (!monthInfo) throw new RangeError(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
+	        if (!monthInfo) throw new RangeError$1(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
 	        if (month !== monthInfo.monthIndex) {
-	          throw new RangeError(`monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`);
+	          throw new RangeError$1(`monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`);
 	        }
 	      }
 	      return {
@@ -14714,7 +14872,7 @@
 	    return result;
 	  },
 	  fieldKeysToIgnore(keys) {
-	    const result = new OriginalSet();
+	    const result = new Set$1();
 	    for (let ix = 0; ix < keys.length; ix++) {
 	      const key = keys[ix];
 	      Call$1(SetPrototypeAdd, result, [key]);
@@ -14756,13 +14914,13 @@
 	    }
 	    return arrayFromSet(result);
 	  },
-	  dateAdd(isoDate, _ref15, overflow) {
+	  dateAdd(isoDate, _ref14, overflow) {
 	    let {
 	      years,
 	      months,
 	      weeks,
 	      days
-	    } = _ref15;
+	    } = _ref14;
 	    const cache = OneObjectCache.getCacheForObject(isoDate);
 	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
 	    const added = this.helper.addCalendar(calendarDate, {
@@ -14870,51 +15028,51 @@
 	    return result;
 	  }
 	};
-	impl['hebrew'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['hebrew'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperHebrew
 	});
-	impl['islamic'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['islamic'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperIslamic
 	});
-	['islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc'].forEach(id => {
-	  impl[id] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	Call$1(ArrayPrototypeForEach, ['islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc'], [id => {
+	  impl[id] = ObjectAssign({}, nonIsoGeneralImpl, {
 	    helper: {
 	      ...helperIslamic,
 	      id
 	    }
 	  });
-	});
-	impl['persian'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	}]);
+	impl['persian'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperPersian
 	});
-	impl['ethiopic'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['ethiopic'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperEthiopic
 	});
-	impl['ethioaa'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['ethioaa'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperEthioaa
 	});
-	impl['coptic'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['coptic'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperCoptic
 	});
-	impl['chinese'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['chinese'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperChinese
 	});
-	impl['dangi'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['dangi'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperDangi
 	});
-	impl['roc'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['roc'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperRoc
 	});
-	impl['indian'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['indian'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperIndian
 	});
-	impl['buddhist'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['buddhist'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperBuddhist
 	});
-	impl['japanese'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['japanese'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperJapanese
 	});
-	impl['gregory'] = ObjectAssign$2({}, nonIsoGeneralImpl, {
+	impl['gregory'] = ObjectAssign({}, nonIsoGeneralImpl, {
 	  helper: helperGregory
 	});
 	function calendarImpl(calendar) {
@@ -14925,22 +15083,18 @@
 	DefineIntrinsic('calendarImpl', calendarImpl);
 	DefineIntrinsic('calendarDateWeekOfYear', calendarDateWeekOfYear);
 
-	const DATE = Symbol('date');
-	const YM = Symbol('ym');
-	const MD = Symbol('md');
-	const TIME = Symbol('time');
-	const DATETIME = Symbol('datetime');
-	const INST = Symbol('instant');
-	const ORIGINAL = Symbol('original');
-	const TZ_CANONICAL = Symbol('timezone-canonical');
-	const TZ_ORIGINAL = Symbol('timezone-original');
-	const CAL_ID = Symbol('calendar-id');
-	const LOCALE = Symbol('locale');
-	const OPTIONS = Symbol('options');
-	const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
-	const ObjectAssign$1 = Object.assign;
-	const ObjectCreate$5 = Object.create;
-	const ObjectDefineProperty = Object.defineProperty;
+	const DATE = Symbol$1('date');
+	const YM = Symbol$1('ym');
+	const MD = Symbol$1('md');
+	const TIME = Symbol$1('time');
+	const DATETIME = Symbol$1('datetime');
+	const INST = Symbol$1('instant');
+	const ORIGINAL = Symbol$1('original');
+	const TZ_CANONICAL = Symbol$1('timezone-canonical');
+	const TZ_ORIGINAL = Symbol$1('timezone-original');
+	const CAL_ID = Symbol$1('calendar-id');
+	const LOCALE = Symbol$1('locale');
+	const OPTIONS = Symbol$1('options');
 
 	// Construction of built-in Intl.DateTimeFormat objects is sloooooow,
 	// so we'll only create those instances when we need them.
@@ -14961,18 +15115,19 @@
 	    // unobservably
 	    const props = ['localeMatcher', 'calendar', 'numberingSystem', 'hour12', 'hourCycle', 'timeZone', 'weekday', 'era', 'year', 'month', 'day', 'dayPeriod', 'hour', 'minute', 'second', 'fractionalSecondDigits', 'timeZoneName', 'formatMatcher', 'dateStyle', 'timeStyle'];
 	    options = ToObject$2(options);
-	    const newOptions = ObjectCreate$5(null);
-	    for (const prop of props) {
+	    const newOptions = ObjectCreate(null);
+	    for (let i = 0; i < props.length; i++) {
+	      const prop = props[i];
 	      if (HasOwnProperty$1(options, prop)) {
 	        newOptions[prop] = options[prop];
 	      }
 	    }
 	    options = newOptions;
 	  } else {
-	    options = ObjectCreate$5(null);
+	    options = ObjectCreate(null);
 	  }
 	  const original = new IntlDateTimeFormat(locale, options);
-	  const ro = original.resolvedOptions();
+	  const ro = Call$1(IntlDateTimeFormatPrototypeResolvedOptions, original, []);
 	  CreateSlots(dtf);
 
 	  // DateTimeFormat instances are very expensive to create. Therefore, they will
@@ -14988,7 +15143,7 @@
 	  // Therefore, we limit the properties in the clone to properties that were
 	  // present in the original input.
 	  if (hasOptions) {
-	    const clonedResolved = ObjectAssign$1(ObjectCreate$5(null), ro);
+	    const clonedResolved = ObjectAssign(ObjectCreate(null), ro);
 	    for (const prop in clonedResolved) {
 	      if (!HasOwnProperty$1(options, prop)) delete clonedResolved[prop];
 	    }
@@ -15019,10 +15174,10 @@
 	    const id = ToString$1(timeZoneOption);
 	    if (IsOffsetTimeZoneIdentifier(id)) {
 	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-	      throw new RangeError('Intl.DateTimeFormat does not currently support offset time zones');
+	      throw new RangeError$1('Intl.DateTimeFormat does not currently support offset time zones');
 	    }
 	    const record = GetAvailableNamedTimeZoneIdentifier(id);
-	    if (!record) throw new RangeError(`Intl.DateTimeFormat formats built-in time zones, not ${id}`);
+	    if (!record) throw new RangeError$1(`Intl.DateTimeFormat formats built-in time zones, not ${id}`);
 	    SetSlot(dtf, TZ_ORIGINAL, record.identifier);
 	  }
 	}
@@ -15034,38 +15189,49 @@
 	  }
 	  get format() {
 	    var _this = this;
-	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
-	    const boundFormat = function (datetime) {
-	      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	        args[_key - 1] = arguments[_key];
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError$1('invalid receiver');
+	    const boundFormat = function () {
+	      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
 	      }
-	      return Call$1(format, _this, [datetime, ...args]);
+	      return Call$1(format, _this, args);
 	    };
-	    ObjectDefineProperty(boundFormat, 'name', {
-	      value: '',
-	      enumerable: false,
-	      writable: false,
-	      configurable: true
+	    ObjectDefineProperties(boundFormat, {
+	      length: {
+	        value: 1,
+	        enumerable: false,
+	        writable: false,
+	        configurable: true
+	      },
+	      name: {
+	        value: '',
+	        enumerable: false,
+	        writable: false,
+	        configurable: true
+	      }
 	    });
 	    return boundFormat;
 	  }
 	  formatRange(a, b) {
-	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError$1('invalid receiver');
 	    return Call$1(formatRange, this, [a, b]);
 	  }
+
+	  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 	  formatToParts(datetime) {
-	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
 	    for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
 	      rest[_key2 - 1] = arguments[_key2];
 	    }
-	    return Call$1(formatToParts, this, [datetime, ...rest]);
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError$1('invalid receiver');
+	    const args = Call$1(ArrayPrototypeSlice, arguments, []);
+	    return Call$1(formatToParts, this, args);
 	  }
 	  formatRangeToParts(a, b) {
-	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError$1('invalid receiver');
 	    return Call$1(formatRangeToParts, this, [a, b]);
 	  }
 	  resolvedOptions() {
-	    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+	    if (!HasSlot(this, ORIGINAL)) throw new TypeError$1('invalid receiver');
 	    return Call$1(resolvedOptions, this, []);
 	  }
 	}
@@ -15093,39 +15259,58 @@
 	DateTimeFormat.supportedLocalesOf = IntlDateTimeFormat.supportedLocalesOf;
 	MakeIntrinsicClass(DateTimeFormat, 'Intl.DateTimeFormat');
 	function resolvedOptions() {
-	  const resolved = GetSlot(this, ORIGINAL).resolvedOptions();
+	  const resolved = Call$1(IntlDateTimeFormatPrototypeResolvedOptions, GetSlot(this, ORIGINAL), []);
 	  resolved.timeZone = GetSlot(this, TZ_ORIGINAL);
 	  return resolved;
 	}
 	function epochNsToMs(epochNs) {
 	  return BigIntFloorDiv(epochNs, 1e6).toJSNumber();
 	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	function format(datetime) {
-	  let {
-	    epochNs,
-	    formatter
-	  } = extractOverrides(datetime, this);
-	  if (formatter) return formatter.format(epochNsToMs(epochNs));
 	  for (var _len3 = arguments.length, rest = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
 	    rest[_key3 - 1] = arguments[_key3];
 	  }
-	  return GetSlot(this, ORIGINAL).format(datetime, ...rest);
-	}
-	function formatToParts(datetime) {
 	  let {
 	    epochNs,
 	    formatter
 	  } = extractOverrides(datetime, this);
-	  if (formatter) return formatter.formatToParts(epochNsToMs(epochNs));
+	  let formatArgs;
+	  if (formatter) {
+	    formatArgs = [epochNsToMs(epochNs)];
+	  } else {
+	    formatter = GetSlot(this, ORIGINAL);
+	    formatArgs = Call$1(ArrayPrototypeSlice, arguments, []);
+	  }
+	  const boundFormat = Call$1(IntlDateTimeFormatPrototypeGetFormat, formatter, []);
+	  return Call$1(boundFormat, formatter, formatArgs);
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	function formatToParts(datetime) {
 	  for (var _len4 = arguments.length, rest = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
 	    rest[_key4 - 1] = arguments[_key4];
 	  }
-	  return GetSlot(this, ORIGINAL).formatToParts(datetime, ...rest);
+	  let {
+	    epochNs,
+	    formatter
+	  } = extractOverrides(datetime, this);
+	  let formatArgs;
+	  if (formatter) {
+	    formatArgs = [epochNsToMs(epochNs)];
+	  } else {
+	    formatter = GetSlot(this, ORIGINAL);
+	    formatArgs = Call$1(ArrayPrototypeSlice, arguments, []);
+	  }
+	  return Call$1(IntlDateTimeFormatPrototypeFormatToParts, formatter, formatArgs);
 	}
 	function formatRange(a, b) {
+	  let formatArgs = [a, b];
+	  let formatter;
 	  if (isTemporalObject(a) || isTemporalObject(b)) {
 	    if (!sameTemporalType(a, b)) {
-	      throw new TypeError('Intl.DateTimeFormat.formatRange accepts two values of the same type');
+	      throw new TypeError$1('Intl.DateTimeFormat.formatRange accepts two values of the same type');
 	    }
 	    const {
 	      epochNs: aa,
@@ -15137,17 +15322,22 @@
 	    } = extractOverrides(b, this);
 	    if (aformatter) {
 	      if (bformatter !== aformatter) {
-	        throw new Error('assertion failed: formatters for same Temporal type should be identical');
+	        throw new Error$1('assertion failed: formatters for same Temporal type should be identical');
 	      }
-	      return aformatter.formatRange(epochNsToMs(aa), epochNsToMs(bb));
+	      formatter = aformatter;
+	      formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
 	    }
+	  } else {
+	    formatter = GetSlot(this, ORIGINAL);
 	  }
-	  return GetSlot(this, ORIGINAL).formatRange(a, b);
+	  return Call$1(IntlDateTimeFormatPrototypeFormatRange, formatter, formatArgs);
 	}
 	function formatRangeToParts(a, b) {
+	  let formatArgs = [a, b];
+	  let formatter;
 	  if (isTemporalObject(a) || isTemporalObject(b)) {
 	    if (!sameTemporalType(a, b)) {
-	      throw new TypeError('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
+	      throw new TypeError$1('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
 	    }
 	    const {
 	      epochNs: aa,
@@ -15159,18 +15349,23 @@
 	    } = extractOverrides(b, this);
 	    if (aformatter) {
 	      if (bformatter !== aformatter) {
-	        throw new Error('assertion failed: formatters for same Temporal type should be identical');
+	        throw new Error$1('assertion failed: formatters for same Temporal type should be identical');
 	      }
-	      return aformatter.formatRangeToParts(epochNsToMs(aa), epochNsToMs(bb));
+	      formatter = aformatter;
+	      formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
 	    }
+	  } else {
+	    formatter = GetSlot(this, ORIGINAL);
 	  }
-	  return GetSlot(this, ORIGINAL).formatRangeToParts(a, b);
+	  return Call$1(IntlDateTimeFormatPrototypeFormatRangeToParts, formatter, formatArgs);
 	}
 	function amend() {
 	  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  let amended = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	  options = ObjectAssign$1({}, options);
-	  for (let opt of ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'dayPeriod', 'timeZoneName', 'dateStyle', 'timeStyle']) {
+	  options = ObjectAssign({}, options);
+	  const props = ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'dayPeriod', 'timeZoneName', 'dateStyle', 'timeStyle'];
+	  for (let i = 0; i < props.length; i++) {
+	    const opt = props[i];
 	    options[opt] = opt in amended ? amended[opt] : options[opt];
 	    if (options[opt] === false || options[opt] === undefined) delete options[opt];
 	  }
@@ -15186,7 +15381,7 @@
 	    dateStyle: false
 	  });
 	  if (!hasTimeOptions(options)) {
-	    options = ObjectAssign$1({}, options, {
+	    options = ObjectAssign({}, options, {
 	      hour: 'numeric',
 	      minute: 'numeric',
 	      second: 'numeric'
@@ -15228,10 +15423,10 @@
 	  if ('dateStyle' in options) {
 	    const style = options.dateStyle;
 	    delete options.dateStyle;
-	    Object.assign(options, dateStyleHacks[style]);
+	    ObjectAssign(options, dateStyleHacks[style]);
 	  }
 	  if (!('year' in options || 'month' in options)) {
-	    options = ObjectAssign$1(options, {
+	    options = ObjectAssign(options, {
 	      year: 'numeric',
 	      month: 'numeric'
 	    });
@@ -15271,10 +15466,10 @@
 	  if ('dateStyle' in options) {
 	    const style = options.dateStyle;
 	    delete options.dateStyle;
-	    Object.assign(options, dateStyleHacks[style]);
+	    ObjectAssign(options, dateStyleHacks[style]);
 	  }
 	  if (!('month' in options || 'day' in options)) {
-	    options = ObjectAssign$1({}, options, {
+	    options = ObjectAssign({}, options, {
 	      month: 'numeric',
 	      day: 'numeric'
 	    });
@@ -15291,7 +15486,7 @@
 	    timeStyle: false
 	  });
 	  if (!hasDateOptions(options)) {
-	    options = ObjectAssign$1({}, options, {
+	    options = ObjectAssign({}, options, {
 	      year: 'numeric',
 	      month: 'numeric',
 	      day: 'numeric'
@@ -15304,7 +15499,7 @@
 	    timeZoneName: false
 	  });
 	  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-	    options = ObjectAssign$1({}, options, {
+	    options = ObjectAssign({}, options, {
 	      year: 'numeric',
 	      month: 'numeric',
 	      day: 'numeric',
@@ -15317,7 +15512,7 @@
 	}
 	function instantAmend(options) {
 	  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-	    options = ObjectAssign$1({}, options, {
+	    options = ObjectAssign({}, options, {
 	      year: 'numeric',
 	      month: 'numeric',
 	      day: 'numeric',
@@ -15370,7 +15565,7 @@
 	    const calendar = GetSlot(temporalObj, CALENDAR);
 	    const mainCalendar = GetSlot(main, CAL_ID);
 	    if (calendar !== mainCalendar) {
-	      throw new RangeError(`cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`);
+	      throw new RangeError$1(`cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
 	    const isoDateTime = {
 	      year: GetSlot(temporalObj, ISO_YEAR),
@@ -15387,7 +15582,7 @@
 	    const calendar = GetSlot(temporalObj, CALENDAR);
 	    const mainCalendar = GetSlot(main, CAL_ID);
 	    if (calendar !== mainCalendar) {
-	      throw new RangeError(`cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`);
+	      throw new RangeError$1(`cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
 	    const isoDateTime = {
 	      year: GetSlot(temporalObj, ISO_YEAR),
@@ -15404,7 +15599,7 @@
 	    const calendar = GetSlot(temporalObj, CALENDAR);
 	    const mainCalendar = GetSlot(main, CAL_ID);
 	    if (calendar !== 'iso8601' && calendar !== mainCalendar) {
-	      throw new RangeError(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`);
+	      throw new RangeError$1(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
 	    const isoDateTime = {
 	      year: GetSlot(temporalObj, ISO_YEAR),
@@ -15421,7 +15616,7 @@
 	    const calendar = GetSlot(temporalObj, CALENDAR);
 	    const mainCalendar = GetSlot(main, CAL_ID);
 	    if (calendar !== 'iso8601' && calendar !== mainCalendar) {
-	      throw new RangeError(`cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${mainCalendar}`);
+	      throw new RangeError$1(`cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
 	    const isoDateTime = PlainDateTimeToISODateTimeRecord(temporalObj);
 	    return {
@@ -15430,7 +15625,7 @@
 	    };
 	  }
 	  if (IsTemporalZonedDateTime(temporalObj)) {
-	    throw new TypeError('Temporal.ZonedDateTime not supported in DateTimeFormat methods. Use toLocaleString() instead.');
+	    throw new TypeError$1('Temporal.ZonedDateTime not supported in DateTimeFormat methods. Use toLocaleString() instead.');
 	  }
 	  if (IsTemporalInstant(temporalObj)) {
 	    return {
@@ -15441,20 +15636,19 @@
 	  return {};
 	}
 
-	var Intl$1 = /*#__PURE__*/Object.freeze({
+	var Intl = /*#__PURE__*/Object.freeze({
 		__proto__: null,
 		DateTimeFormat: DateTimeFormat
 	});
 
 	/* global true */
 
-	const ObjectCreate$4 = Object.create;
 	class Instant {
 	  constructor(epochNanoseconds) {
 	    // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
 	    //       to improve the error message.
 	    if (arguments.length < 1) {
-	      throw new TypeError('missing argument: epochNanoseconds is required');
+	      throw new TypeError$1('missing argument: epochNanoseconds is required');
 	    }
 	    const ns = ToBigInt(epochNanoseconds);
 	    ValidateEpochNanoseconds(ns);
@@ -15463,8 +15657,8 @@
 	    {
 	      const iso = GetISOPartsFromEpoch(ns);
 	      const repr = TemporalDateTimeToString(iso, 'iso8601', 'auto', 'never') + 'Z';
-	      Object.defineProperty(this, '_repr_', {
-	        value: `${this[Symbol.toStringTag]} <${repr}>`,
+	      ObjectDefineProperty(this, '_repr_', {
+	        value: `${this[SymbolToStringTag]} <${repr}>`,
 	        writable: false,
 	        enumerable: false,
 	        configurable: false
@@ -15472,38 +15666,38 @@
 	    }
 	  }
 	  get epochMilliseconds() {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
 	    return BigIntFloorDiv(value, 1e6).toJSNumber();
 	  }
 	  get epochNanoseconds() {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    return BigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
 	  }
 	  add(temporalDurationLike) {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromInstant('add', this, temporalDurationLike);
 	  }
 	  subtract(temporalDurationLike) {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromInstant('subtract', this, temporalDurationLike);
 	  }
 	  until(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalInstant('until', this, other, options);
 	  }
 	  since(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalInstant('since', this, other, options);
 	  }
 	  round(roundTo) {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-	    if (roundTo === undefined) throw new TypeError('options parameter is required');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
+	    if (roundTo === undefined) throw new TypeError$1('options parameter is required');
 	    if (Type$3(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$4(null);
+	      roundTo = ObjectCreate(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -15525,7 +15719,7 @@
 	    return new Instant(roundedNs);
 	  }
 	  equals(other) {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    other = ToTemporalInstant(other);
 	    const one = GetSlot(this, EPOCHNANOSECONDS);
 	    const two = GetSlot(other, EPOCHNANOSECONDS);
@@ -15533,12 +15727,12 @@
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(options);
 	    const roundingMode = GetRoundingModeOption(options, 'trunc');
 	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
-	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
+	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    let timeZone = options.timeZone;
 	    if (timeZone !== undefined) timeZone = ToTemporalTimeZoneIdentifier(timeZone);
 	    const {
@@ -15552,20 +15746,20 @@
 	    return TemporalInstantToString(roundedInstant, timeZone, precision);
 	  }
 	  toJSON() {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalInstantToString(this, undefined, 'auto');
 	  }
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    return new DateTimeFormat(locales, options).format(this);
 	  }
 	  valueOf() {
 	    ValueOfThrows('Instant');
 	  }
 	  toZonedDateTimeISO(timeZone) {
-	    if (!IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalInstant(this)) throw new TypeError$1('invalid receiver');
 	    timeZone = ToTemporalTimeZoneIdentifier(timeZone);
 	    return CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
 	  }
@@ -15605,94 +15799,94 @@
 	    isoMonth = ToIntegerWithTruncation(isoMonth);
 	    isoDay = ToIntegerWithTruncation(isoDay);
 	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`unknown calendar ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`unknown calendar ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    CreateTemporalDateSlots(this, isoYear, isoMonth, isoDay, calendar);
 	  }
 	  get calendarId() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, CALENDAR);
 	  }
 	  get era() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarEra(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get eraYear() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarEraYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get year() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get month() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonth(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get monthCode() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get day() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDay(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get dayOfWeek() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDayOfWeek(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get dayOfYear() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDayOfYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get weekOfYear() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarWeekOfYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get yearOfWeek() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarYearOfWeek(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInWeek() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInWeek(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInMonth() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInYear() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get monthsInYear() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get inLeapYear() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarInLeapYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  with(temporalDateLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    if (Type$3(temporalDateLike) !== 'Object') {
-	      throw new TypeError('invalid argument');
+	      throw new TypeError$1('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalDateLike);
 	    const calendar = GetSlot(this, CALENDAR);
@@ -15708,32 +15902,32 @@
 	    return CreateTemporalDate(year, month, day, calendar);
 	  }
 	  withCalendar(calendar) {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    calendar = ToTemporalCalendarIdentifier(calendar);
 	    return CreateTemporalDate(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), calendar);
 	  }
 	  add(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToDate('add', this, temporalDurationLike, options);
 	  }
 	  subtract(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToDate('subtract', this, temporalDurationLike, options);
 	  }
 	  until(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainDate('until', this, other, options);
 	  }
 	  since(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainDate('since', this, other, options);
 	  }
 	  equals(other) {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    other = ToTemporalDate(other);
 	    if (GetSlot(this, ISO_YEAR) !== GetSlot(other, ISO_YEAR)) return false;
 	    if (GetSlot(this, ISO_MONTH) !== GetSlot(other, ISO_MONTH)) return false;
@@ -15742,19 +15936,19 @@
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    return TemporalDateToString(this, showCalendar);
 	  }
 	  toJSON() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalDateToString(this);
 	  }
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    return new DateTimeFormat(locales, options).format(this);
 	  }
 	  valueOf() {
@@ -15762,12 +15956,12 @@
 	  }
 	  toPlainDateTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
 	    return CreateTemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(temporalTime, ISO_HOUR), GetSlot(temporalTime, ISO_MINUTE), GetSlot(temporalTime, ISO_SECOND), GetSlot(temporalTime, ISO_MILLISECOND), GetSlot(temporalTime, ISO_MICROSECOND), GetSlot(temporalTime, ISO_NANOSECOND), GetSlot(this, CALENDAR));
 	  }
 	  toZonedDateTime(item) {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    let timeZone, temporalTime;
 	    if (Type$3(item) === 'Object') {
 	      const timeZoneLike = item.timeZone;
@@ -15809,7 +16003,7 @@
 	    return CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
 	  }
 	  toPlainYearMonth() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const calendar = GetSlot(this, CALENDAR);
 	    const fields = TemporalObjectToFields(this);
 	    const {
@@ -15820,7 +16014,7 @@
 	    return CreateTemporalYearMonth(year, month, calendar, day);
 	  }
 	  toPlainMonthDay() {
-	    if (!IsTemporalDate(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const calendar = GetSlot(this, CALENDAR);
 	    const fields = TemporalObjectToFields(this);
 	    const {
@@ -15846,7 +16040,6 @@
 	}
 	MakeIntrinsicClass(PlainDate, 'Temporal.PlainDate');
 
-	const ObjectCreate$3 = Object.create;
 	class PlainDateTime {
 	  constructor(isoYear, isoMonth, isoDay) {
 	    let hour = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
@@ -15866,118 +16059,118 @@
 	    microsecond = microsecond === undefined ? 0 : ToIntegerWithTruncation(microsecond);
 	    nanosecond = nanosecond === undefined ? 0 : ToIntegerWithTruncation(nanosecond);
 	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`unknown calendar ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`unknown calendar ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    CreateTemporalDateTimeSlots(this, isoYear, isoMonth, isoDay, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 	  }
 	  get calendarId() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, CALENDAR);
 	  }
 	  get year() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get month() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonth(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get monthCode() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get day() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDay(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get hour() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_HOUR);
 	  }
 	  get minute() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_MINUTE);
 	  }
 	  get second() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_SECOND);
 	  }
 	  get millisecond() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_MILLISECOND);
 	  }
 	  get microsecond() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_MICROSECOND);
 	  }
 	  get nanosecond() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_NANOSECOND);
 	  }
 	  get era() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarEra(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get eraYear() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarEraYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get dayOfWeek() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDayOfWeek(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get dayOfYear() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDayOfYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get weekOfYear() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarWeekOfYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get yearOfWeek() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarYearOfWeek(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInWeek() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInWeek(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInYear() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInMonth() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get monthsInYear() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get inLeapYear() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarInLeapYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  with(temporalDateTimeLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    if (Type$3(temporalDateTimeLike) !== 'Object') {
-	      throw new TypeError('invalid argument');
+	      throw new TypeError$1('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalDateTimeLike);
 	    const calendar = GetSlot(this, CALENDAR);
@@ -16009,41 +16202,41 @@
 	  }
 	  withPlainTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    temporalTime = ToTemporalTimeOrMidnight(temporalTime);
 	    return CreateTemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(temporalTime, ISO_HOUR), GetSlot(temporalTime, ISO_MINUTE), GetSlot(temporalTime, ISO_SECOND), GetSlot(temporalTime, ISO_MILLISECOND), GetSlot(temporalTime, ISO_MICROSECOND), GetSlot(temporalTime, ISO_NANOSECOND), GetSlot(this, CALENDAR));
 	  }
 	  withCalendar(calendar) {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    calendar = ToTemporalCalendarIdentifier(calendar);
 	    return CreateTemporalDateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), calendar);
 	  }
 	  add(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromPlainDateTime('add', this, temporalDurationLike, options);
 	  }
 	  subtract(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromPlainDateTime('subtract', this, temporalDurationLike, options);
 	  }
 	  until(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainDateTime('until', this, other, options);
 	  }
 	  since(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainDateTime('since', this, other, options);
 	  }
 	  round(roundTo) {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
-	    if (roundTo === undefined) throw new TypeError('options parameter is required');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
+	    if (roundTo === undefined) throw new TypeError$1('options parameter is required');
 	    if (Type$3(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$3(null);
+	      roundTo = ObjectCreate(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -16089,7 +16282,7 @@
 	    return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, GetSlot(this, CALENDAR));
 	  }
 	  equals(other) {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    other = ToTemporalDateTime(other);
 	    if (CompareISODateTime(GetSlot(this, ISO_YEAR), GetSlot(this, ISO_MONTH), GetSlot(this, ISO_DAY), GetSlot(this, ISO_HOUR), GetSlot(this, ISO_MINUTE), GetSlot(this, ISO_SECOND), GetSlot(this, ISO_MILLISECOND), GetSlot(this, ISO_MICROSECOND), GetSlot(this, ISO_NANOSECOND), GetSlot(other, ISO_YEAR), GetSlot(other, ISO_MONTH), GetSlot(other, ISO_DAY), GetSlot(other, ISO_HOUR), GetSlot(other, ISO_MINUTE), GetSlot(other, ISO_SECOND), GetSlot(other, ISO_MILLISECOND), GetSlot(other, ISO_MICROSECOND), GetSlot(other, ISO_NANOSECOND)) !== 0) {
 	      return false;
@@ -16098,13 +16291,13 @@
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(options);
 	    const roundingMode = GetRoundingModeOption(options, 'trunc');
 	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
-	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
+	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    const {
 	      precision,
 	      unit,
@@ -16115,7 +16308,7 @@
 	    return TemporalDateTimeToString(result, GetSlot(this, CALENDAR), precision, showCalendar);
 	  }
 	  toJSON() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDateTime = {
 	      year: GetSlot(this, ISO_YEAR),
 	      month: GetSlot(this, ISO_MONTH),
@@ -16132,7 +16325,7 @@
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return new DateTimeFormat(locales, options).format(this);
 	  }
 	  valueOf() {
@@ -16140,7 +16333,7 @@
 	  }
 	  toZonedDateTime(temporalTimeZoneLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const timeZone = ToTemporalTimeZoneIdentifier(temporalTimeZoneLike);
 	    options = GetOptionsObject(options);
 	    const disambiguation = GetTemporalDisambiguationOption(options);
@@ -16149,11 +16342,11 @@
 	    return CreateTemporalZonedDateTime(epochNs, timeZone, GetSlot(this, CALENDAR));
 	  }
 	  toPlainDate() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalDateTimeToDate(this);
 	  }
 	  toPlainTime() {
-	    if (!IsTemporalDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalDateTimeToTime(this);
 	  }
 	  static from(item) {
@@ -16174,8 +16367,6 @@
 
 	/* global true */
 
-	const NumberIsNaN = Number.isNaN;
-	const ObjectCreate$2 = Object.create;
 	class Duration {
 	  constructor() {
 	    let years = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -16212,7 +16403,7 @@
 	    SetSlot(this, NANOSECONDS, nanoseconds);
 	    {
 	      const normSeconds = TimeDuration.normalize(0, 0, seconds, milliseconds, microseconds, nanoseconds);
-	      Object.defineProperty(this, '_repr_', {
+	      ObjectDefineProperty(this, '_repr_', {
 	        value: `Temporal.Duration <${TemporalDurationToString(years, months, weeks, days, hours, minutes, normSeconds)}>`,
 	        writable: false,
 	        enumerable: false,
@@ -16221,55 +16412,55 @@
 	    }
 	  }
 	  get years() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, YEARS);
 	  }
 	  get months() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, MONTHS);
 	  }
 	  get weeks() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, WEEKS);
 	  }
 	  get days() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, DAYS);
 	  }
 	  get hours() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, HOURS);
 	  }
 	  get minutes() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, MINUTES);
 	  }
 	  get seconds() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, SECONDS);
 	  }
 	  get milliseconds() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, MILLISECONDS);
 	  }
 	  get microseconds() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, MICROSECONDS);
 	  }
 	  get nanoseconds() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, NANOSECONDS);
 	  }
 	  get sign() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS));
 	  }
 	  get blank() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return DurationSign(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS)) === 0;
 	  }
 	  with(durationLike) {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    const partialDuration = ToTemporalPartialDurationRecord(durationLike);
 	    const {
 	      years = GetSlot(this, YEARS),
@@ -16286,24 +16477,24 @@
 	    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	  }
 	  negated() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return CreateNegatedTemporalDuration(this);
 	  }
 	  abs() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-	    return new Duration(Math.abs(GetSlot(this, YEARS)), Math.abs(GetSlot(this, MONTHS)), Math.abs(GetSlot(this, WEEKS)), Math.abs(GetSlot(this, DAYS)), Math.abs(GetSlot(this, HOURS)), Math.abs(GetSlot(this, MINUTES)), Math.abs(GetSlot(this, SECONDS)), Math.abs(GetSlot(this, MILLISECONDS)), Math.abs(GetSlot(this, MICROSECONDS)), Math.abs(GetSlot(this, NANOSECONDS)));
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
+	    return new Duration(MathAbs(GetSlot(this, YEARS)), MathAbs(GetSlot(this, MONTHS)), MathAbs(GetSlot(this, WEEKS)), MathAbs(GetSlot(this, DAYS)), MathAbs(GetSlot(this, HOURS)), MathAbs(GetSlot(this, MINUTES)), MathAbs(GetSlot(this, SECONDS)), MathAbs(GetSlot(this, MILLISECONDS)), MathAbs(GetSlot(this, MICROSECONDS)), MathAbs(GetSlot(this, NANOSECONDS)));
 	  }
 	  add(other) {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurations('add', this, other);
 	  }
 	  subtract(other) {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurations('subtract', this, other);
 	  }
 	  round(roundTo) {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-	    if (roundTo === undefined) throw new TypeError('options parameter is required');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
+	    if (roundTo === undefined) throw new TypeError$1('options parameter is required');
 	    let years = GetSlot(this, YEARS);
 	    let months = GetSlot(this, MONTHS);
 	    let weeks = GetSlot(this, WEEKS);
@@ -16317,7 +16508,7 @@
 	    const existingLargestUnit = DefaultTemporalLargestUnit(this);
 	    if (Type$3(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$2(null);
+	      roundTo = ObjectCreate(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -16343,10 +16534,10 @@
 	    }
 	    if (largestUnit === 'auto') largestUnit = defaultLargestUnit;
 	    if (!smallestUnitPresent && !largestUnitPresent) {
-	      throw new RangeError('at least one of smallestUnit or largestUnit is required');
+	      throw new RangeError$1('at least one of smallestUnit or largestUnit is required');
 	    }
 	    if (LargerOfTwoTemporalUnits(largestUnit, smallestUnit) !== largestUnit) {
-	      throw new RangeError(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
+	      throw new RangeError$1(`largestUnit ${largestUnit} cannot be smaller than smallestUnit ${smallestUnit}`);
 	    }
 	    const maximumIncrements = {
 	      hour: 24,
@@ -16359,7 +16550,7 @@
 	    const maximum = maximumIncrements[smallestUnit];
 	    if (maximum !== undefined) ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
 	    if (roundingIncrement > 1 && (IsCalendarUnit(smallestUnit) || smallestUnit === 'day') && largestUnit !== smallestUnit) {
-	      throw new RangeError('For calendar units with roundingIncrement > 1, use largestUnit = smallestUnit');
+	      throw new RangeError$1('For calendar units with roundingIncrement > 1, use largestUnit = smallestUnit');
 	    }
 	    let norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	    if (zonedRelativeTo) {
@@ -16413,13 +16604,13 @@
 	    } else {
 	      // No reference date to calculate difference relative to
 	      if (years !== 0 || months !== 0 || weeks !== 0) {
-	        throw new RangeError('a starting point is required for years, months, or weeks balancing');
+	        throw new RangeError$1('a starting point is required for years, months, or weeks balancing');
 	      }
 	      if (IsCalendarUnit(largestUnit)) {
-	        throw new RangeError(`a starting point is required for ${largestUnit}s balancing`);
+	        throw new RangeError$1(`a starting point is required for ${largestUnit}s balancing`);
 	      }
 	      if (IsCalendarUnit(smallestUnit)) {
-	        throw new Error('assertion failed: smallestUnit was larger than largestUnit');
+	        throw new Error$1('assertion failed: smallestUnit was larger than largestUnit');
 	      }
 	      ({
 	        days,
@@ -16438,7 +16629,7 @@
 	    return new Duration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 	  }
 	  total(totalOf) {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    let years = GetSlot(this, YEARS);
 	    let months = GetSlot(this, MONTHS);
 	    let weeks = GetSlot(this, WEEKS);
@@ -16449,10 +16640,10 @@
 	    let milliseconds = GetSlot(this, MILLISECONDS);
 	    let microseconds = GetSlot(this, MICROSECONDS);
 	    let nanoseconds = GetSlot(this, NANOSECONDS);
-	    if (totalOf === undefined) throw new TypeError('options argument is required');
+	    if (totalOf === undefined) throw new TypeError$1('options argument is required');
 	    if (Type$3(totalOf) === 'String') {
 	      const stringParam = totalOf;
-	      totalOf = ObjectCreate$2(null);
+	      totalOf = ObjectCreate(null);
 	      totalOf.unit = stringParam;
 	    } else {
 	      totalOf = GetOptionsObject(totalOf);
@@ -16477,7 +16668,7 @@
 	      const {
 	        total
 	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, timeZone, calendar, unit, 1, unit, 'trunc');
-	      if (NumberIsNaN(total)) throw new Error('assertion failed: total hit unexpected code path');
+	      if (NumberIsNaN(total)) throw new Error$1('assertion failed: total hit unexpected code path');
 	      return total;
 	    }
 	    if (plainRelativeTo) {
@@ -16496,16 +16687,16 @@
 	      const {
 	        total
 	      } = DifferencePlainDateTimeWithRounding(isoRelativeToDate.year, isoRelativeToDate.month, isoRelativeToDate.day, 0, 0, 0, 0, 0, 0, targetDate.year, targetDate.month, targetDate.day, targetTime.hour, targetTime.minute, targetTime.second, targetTime.millisecond, targetTime.microsecond, targetTime.nanosecond, calendar, unit, 1, unit, 'trunc');
-	      if (NumberIsNaN(total)) throw new Error('assertion failed: total hit unexpected code path');
+	      if (NumberIsNaN(total)) throw new Error$1('assertion failed: total hit unexpected code path');
 	      return total;
 	    }
 
 	    // No reference date to calculate difference relative to
 	    if (years !== 0 || months !== 0 || weeks !== 0) {
-	      throw new RangeError('a starting point is required for years, months, or weeks total');
+	      throw new RangeError$1('a starting point is required for years, months, or weeks total');
 	    }
 	    if (IsCalendarUnit(unit)) {
-	      throw new RangeError(`a starting point is required for ${unit}s total`);
+	      throw new RangeError$1(`a starting point is required for ${unit}s total`);
 	    }
 	    norm = norm.add24HourDays(days);
 	    const {
@@ -16515,13 +16706,13 @@
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(options);
 	    const roundingMode = GetRoundingModeOption(options, 'trunc');
 	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
 	    if (smallestUnit === 'hour' || smallestUnit === 'minute') {
-	      throw new RangeError('smallestUnit must be a time unit other than "hours" or "minutes"');
+	      throw new RangeError$1('smallestUnit must be a time unit other than "hours" or "minutes"');
 	    }
 	    const {
 	      precision,
@@ -16562,18 +16753,18 @@
 	    return TemporalDurationToString(years, months, weeks, days, hours, minutes, normSeconds, precision);
 	  }
 	  toJSON() {
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    const normSeconds = TimeDuration.normalize(0, 0, GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS));
 	    return TemporalDurationToString(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), normSeconds);
 	  }
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalDuration(this)) throw new TypeError('invalid receiver');
-	    if (typeof Intl !== 'undefined' && typeof Intl.DurationFormat !== 'undefined') {
-	      return new Intl.DurationFormat(locales, options).format(this);
+	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
+	    if (typeof IntlDurationFormat === 'function') {
+	      return new IntlDurationFormat(locales, options).format(this);
 	    }
-	    console.warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
+	    warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
 	    const normSeconds = TimeDuration.normalize(0, 0, GetSlot(this, SECONDS), GetSlot(this, MILLISECONDS), GetSlot(this, MICROSECONDS), GetSlot(this, NANOSECONDS));
 	    return TemporalDurationToString(GetSlot(this, YEARS), GetSlot(this, MONTHS), GetSlot(this, WEEKS), GetSlot(this, DAYS), GetSlot(this, HOURS), GetSlot(this, MINUTES), normSeconds);
 	  }
@@ -16645,7 +16836,7 @@
 	    }
 	    if (calendarUnitsPresent) {
 	      if (!plainRelativeTo) {
-	        throw new RangeError('A starting point is required for years, months, or weeks comparison');
+	        throw new RangeError$1('A starting point is required for years, months, or weeks comparison');
 	      }
 	      d1 = UnbalanceDateDurationRelative(y1, mon1, w1, d1, plainRelativeTo);
 	      d2 = UnbalanceDateDurationRelative(y2, mon2, w2, d2, plainRelativeTo);
@@ -16664,30 +16855,30 @@
 	    isoMonth = ToIntegerWithTruncation(isoMonth);
 	    isoDay = ToIntegerWithTruncation(isoDay);
 	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`unknown calendar ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`unknown calendar ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    referenceISOYear = ToIntegerWithTruncation(referenceISOYear);
 	    CreateTemporalMonthDaySlots(this, isoMonth, isoDay, calendar, referenceISOYear);
 	  }
 	  get monthCode() {
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get day() {
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDay(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get calendarId() {
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, CALENDAR);
 	  }
 	  with(temporalMonthDayLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    if (Type$3(temporalMonthDayLike) !== 'Object') {
-	      throw new TypeError('invalid argument');
+	      throw new TypeError$1('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalMonthDayLike);
 	    const calendar = GetSlot(this, CALENDAR);
@@ -16703,7 +16894,7 @@
 	    return CreateTemporalMonthDay(month, day, calendar, year);
 	  }
 	  equals(other) {
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    other = ToTemporalMonthDay(other);
 	    if (GetSlot(this, ISO_YEAR) !== GetSlot(other, ISO_YEAR)) return false;
 	    if (GetSlot(this, ISO_MONTH) !== GetSlot(other, ISO_MONTH)) return false;
@@ -16712,27 +16903,27 @@
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    return TemporalMonthDayToString(this, showCalendar);
 	  }
 	  toJSON() {
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalMonthDayToString(this);
 	  }
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    return new DateTimeFormat(locales, options).format(this);
 	  }
 	  valueOf() {
 	    ValueOfThrows('PlainMonthDay');
 	  }
 	  toPlainDate(item) {
-	    if (!IsTemporalMonthDay(this)) throw new TypeError('invalid receiver');
-	    if (Type$3(item) !== 'Object') throw new TypeError('argument should be an object');
+	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
+	    if (Type$3(item) !== 'Object') throw new TypeError$1('argument should be an object');
 	    const calendar = GetSlot(this, CALENDAR);
 	    const fields = TemporalObjectToFields(this);
 	    const inputFields = PrepareCalendarFields(calendar, item, ['year'], [], []);
@@ -16789,7 +16980,7 @@
 	  timeZoneId,
 	  zonedDateTimeISO
 	};
-	Object.defineProperty(Now, Symbol.toStringTag, {
+	ObjectDefineProperty(Now, SymbolToStringTag, {
 	  value: 'Temporal.Now',
 	  writable: false,
 	  enumerable: false,
@@ -16798,8 +16989,6 @@
 
 	/* global true */
 
-	const ObjectAssign = Object.assign;
-	const ObjectCreate$1 = Object.create;
 	function TemporalTimeToString(time, precision) {
 	  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 	  let hour = GetSlot(time, ISO_HOUR);
@@ -16849,8 +17038,8 @@
 	    SetSlot(this, ISO_MICROSECOND, isoMicrosecond);
 	    SetSlot(this, ISO_NANOSECOND, isoNanosecond);
 	    {
-	      Object.defineProperty(this, '_repr_', {
-	        value: `${this[Symbol.toStringTag]} <${TemporalTimeToString(this, 'auto')}>`,
+	      ObjectDefineProperty(this, '_repr_', {
+	        value: `${this[SymbolToStringTag]} <${TemporalTimeToString(this, 'auto')}>`,
 	        writable: false,
 	        enumerable: false,
 	        configurable: false
@@ -16858,34 +17047,34 @@
 	    }
 	  }
 	  get hour() {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_HOUR);
 	  }
 	  get minute() {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_MINUTE);
 	  }
 	  get second() {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_SECOND);
 	  }
 	  get millisecond() {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_MILLISECOND);
 	  }
 	  get microsecond() {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_MICROSECOND);
 	  }
 	  get nanosecond() {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, ISO_NANOSECOND);
 	  }
 	  with(temporalTimeLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    if (Type$3(temporalTimeLike) !== 'Object') {
-	      throw new TypeError('invalid argument');
+	      throw new TypeError$1('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalTimeLike);
 	    const partialTime = ToTemporalTimeRecord(temporalTimeLike, 'partial');
@@ -16910,29 +17099,29 @@
 	    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 	  }
 	  add(temporalDurationLike) {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromPlainTime('add', this, temporalDurationLike);
 	  }
 	  subtract(temporalDurationLike) {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromPlainTime('subtract', this, temporalDurationLike);
 	  }
 	  until(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainTime('until', this, other, options);
 	  }
 	  since(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainTime('since', this, other, options);
 	  }
 	  round(roundTo) {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
-	    if (roundTo === undefined) throw new TypeError('options parameter is required');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
+	    if (roundTo === undefined) throw new TypeError$1('options parameter is required');
 	    if (Type$3(roundTo) === 'String') {
 	      const stringParam = roundTo;
-	      roundTo = ObjectCreate$1(null);
+	      roundTo = ObjectCreate(null);
 	      roundTo.smallestUnit = stringParam;
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
@@ -16966,23 +17155,18 @@
 	    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 	  }
 	  equals(other) {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    other = ToTemporalTime(other);
-	    for (const slot of [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND]) {
-	      const val1 = GetSlot(this, slot);
-	      const val2 = GetSlot(other, slot);
-	      if (val1 !== val2) return false;
-	    }
-	    return true;
+	    return Call$1(ArrayPrototypeEvery, [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND], [slot => GetSlot(this, slot) === GetSlot(other, slot)]);
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(options);
 	    const roundingMode = GetRoundingModeOption(options, 'trunc');
 	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
-	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
+	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    const {
 	      precision,
 	      unit,
@@ -16995,13 +17179,13 @@
 	    });
 	  }
 	  toJSON() {
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalTimeToString(this, 'auto');
 	  }
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
 	    return new DateTimeFormat(locales, options).format(this);
 	  }
 	  valueOf() {
@@ -17030,65 +17214,65 @@
 	    isoYear = ToIntegerWithTruncation(isoYear);
 	    isoMonth = ToIntegerWithTruncation(isoMonth);
 	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`unknown calendar ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`unknown calendar ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    referenceISODay = ToIntegerWithTruncation(referenceISODay);
 	    CreateTemporalYearMonthSlots(this, isoYear, isoMonth, calendar, referenceISODay);
 	  }
 	  get year() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get month() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonth(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get monthCode() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get calendarId() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, CALENDAR);
 	  }
 	  get era() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarEra(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get eraYear() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarEraYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInMonth() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get daysInYear() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarDaysInYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get monthsInYear() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  get inLeapYear() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
 	    return CalendarInLeapYear(GetSlot(this, CALENDAR), isoDate);
 	  }
 	  with(temporalYearMonthLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    if (Type$3(temporalYearMonthLike) !== 'Object') {
-	      throw new TypeError('invalid argument');
+	      throw new TypeError$1('invalid argument');
 	    }
 	    RejectTemporalLikeObject(temporalYearMonthLike);
 	    const calendar = GetSlot(this, CALENDAR);
@@ -17105,26 +17289,26 @@
 	  }
 	  add(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromPlainYearMonth('add', this, temporalDurationLike, options);
 	  }
 	  subtract(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromPlainYearMonth('subtract', this, temporalDurationLike, options);
 	  }
 	  until(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainYearMonth('until', this, other, options);
 	  }
 	  since(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalPlainYearMonth('since', this, other, options);
 	  }
 	  equals(other) {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    other = ToTemporalYearMonth(other);
 	    if (GetSlot(this, ISO_YEAR) !== GetSlot(other, ISO_YEAR)) return false;
 	    if (GetSlot(this, ISO_MONTH) !== GetSlot(other, ISO_MONTH)) return false;
@@ -17133,27 +17317,27 @@
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    return TemporalYearMonthToString(this, showCalendar);
 	  }
 	  toJSON() {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalYearMonthToString(this);
 	  }
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    return new DateTimeFormat(locales, options).format(this);
 	  }
 	  valueOf() {
 	    ValueOfThrows('PlainYearMonth');
 	  }
 	  toPlainDate(item) {
-	    if (!IsTemporalYearMonth(this)) throw new TypeError('invalid receiver');
-	    if (Type$3(item) !== 'Object') throw new TypeError('argument should be an object');
+	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
+	    if (Type$3(item) !== 'Object') throw new TypeError$1('argument should be an object');
 	    const calendar = GetSlot(this, CALENDAR);
 	    const fields = TemporalObjectToFields(this);
 	    const inputFields = PrepareCalendarFields(calendar, item, ['day'], [], []);
@@ -17182,14 +17366,13 @@
 	MakeIntrinsicClass(PlainYearMonth, 'Temporal.PlainYearMonth');
 
 	const customResolvedOptions = DateTimeFormat.prototype.resolvedOptions;
-	const ObjectCreate = Object.create;
 	class ZonedDateTime {
 	  constructor(epochNanoseconds, timeZone) {
 	    let calendar = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'iso8601';
 	    // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
 	    //       to improve the error message.
 	    if (arguments.length < 1) {
-	      throw new TypeError('missing argument: epochNanoseconds is required');
+	      throw new TypeError$1('missing argument: epochNanoseconds is required');
 	    }
 	    epochNanoseconds = ToBigInt(epochNanoseconds);
 	    timeZone = RequireString(timeZone);
@@ -17200,99 +17383,99 @@
 	    if (offsetMinutes === undefined) {
 	      // if offsetMinutes is undefined, then tzName must be present
 	      const record = GetAvailableNamedTimeZoneIdentifier(tzName);
-	      if (!record) throw new RangeError(`unknown time zone ${tzName}`);
+	      if (!record) throw new RangeError$1(`unknown time zone ${tzName}`);
 	      timeZone = record.identifier;
 	    } else {
 	      timeZone = FormatOffsetTimeZoneIdentifier(offsetMinutes);
 	    }
 	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
-	    if (!IsBuiltinCalendar(calendar)) throw new RangeError(`unknown calendar ${calendar}`);
+	    if (!IsBuiltinCalendar(calendar)) throw new RangeError$1(`unknown calendar ${calendar}`);
 	    calendar = CanonicalizeCalendar(calendar);
 	    CreateTemporalZonedDateTimeSlots(this, epochNanoseconds, timeZone, calendar);
 	  }
 	  get calendarId() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, CALENDAR);
 	  }
 	  get timeZoneId() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetSlot(this, TIME_ZONE);
 	  }
 	  get year() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get month() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarMonth(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get monthCode() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarMonthCode(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get day() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarDay(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get hour() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return dateTime(this).hour;
 	  }
 	  get minute() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return dateTime(this).minute;
 	  }
 	  get second() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return dateTime(this).second;
 	  }
 	  get millisecond() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return dateTime(this).millisecond;
 	  }
 	  get microsecond() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return dateTime(this).microsecond;
 	  }
 	  get nanosecond() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return dateTime(this).nanosecond;
 	  }
 	  get era() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarEra(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get eraYear() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarEraYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get epochMilliseconds() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const value = GetSlot(this, EPOCHNANOSECONDS);
 	    return BigIntFloorDiv(value, 1e6).toJSNumber();
 	  }
 	  get epochNanoseconds() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return BigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
 	  }
 	  get dayOfWeek() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarDayOfWeek(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get dayOfYear() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarDayOfYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get weekOfYear() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarWeekOfYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get yearOfWeek() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarYearOfWeek(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get hoursInDay() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const timeZone = GetSlot(this, TIME_ZONE);
 	    const {
 	      year,
@@ -17311,39 +17494,39 @@
 	    return diff.fdiv(3.6e12);
 	  }
 	  get daysInWeek() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarDaysInWeek(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get daysInMonth() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get daysInYear() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarDaysInYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get monthsInYear() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get inLeapYear() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return CalendarInLeapYear(GetSlot(this, CALENDAR), dateTime(this));
 	  }
 	  get offset() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const offsetNs = GetOffsetNanosecondsFor(GetSlot(this, TIME_ZONE), GetSlot(this, EPOCHNANOSECONDS));
 	    return FormatUTCOffsetNanoseconds(offsetNs);
 	  }
 	  get offsetNanoseconds() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return GetOffsetNanosecondsFor(GetSlot(this, TIME_ZONE), GetSlot(this, EPOCHNANOSECONDS));
 	  }
 	  with(temporalZonedDateTimeLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    if (Type$3(temporalZonedDateTimeLike) !== 'Object') {
-	      throw new TypeError('invalid zoned-date-time-like');
+	      throw new TypeError$1('invalid zoned-date-time-like');
 	    }
 	    RejectTemporalLikeObject(temporalZonedDateTimeLike);
 	    const calendar = GetSlot(this, CALENDAR);
@@ -17377,7 +17560,7 @@
 	  }
 	  withPlainTime() {
 	    let temporalTime = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const timeZone = GetSlot(this, TIME_ZONE);
 	    const calendar = GetSlot(this, CALENDAR);
 	    const iso = GetISODateTimeFor(timeZone, GetSlot(this, EPOCHNANOSECONDS));
@@ -17400,38 +17583,38 @@
 	    return CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
 	  }
 	  withTimeZone(timeZone) {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    timeZone = ToTemporalTimeZoneIdentifier(timeZone);
 	    return CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, GetSlot(this, CALENDAR));
 	  }
 	  withCalendar(calendar) {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    calendar = ToTemporalCalendarIdentifier(calendar);
 	    return CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), GetSlot(this, TIME_ZONE), calendar);
 	  }
 	  add(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromZonedDateTime('add', this, temporalDurationLike, options);
 	  }
 	  subtract(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return AddDurationToOrSubtractDurationFromZonedDateTime('subtract', this, temporalDurationLike, options);
 	  }
 	  until(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalZonedDateTime('until', this, other, options);
 	  }
 	  since(other) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return DifferenceTemporalZonedDateTime('since', this, other, options);
 	  }
 	  round(roundTo) {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
-	    if (roundTo === undefined) throw new TypeError('options parameter is required');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
+	    if (roundTo === undefined) throw new TypeError$1('options parameter is required');
 	    if (Type$3(roundTo) === 'String') {
 	      const stringParam = roundTo;
 	      roundTo = ObjectCreate(null);
@@ -17479,11 +17662,11 @@
 	      const dtEnd = BalanceISODate(year, month, day + 1);
 	      const startNs = GetStartOfDay(timeZone, dtStart);
 	      if (thisNs.lesser(startNs)) {
-	        throw new Error('assertion failure: cannot produce an instant during a day that ' + 'occurs before another instant it deems start-of-day');
+	        throw new Error$1('assertion failure: cannot produce an instant during a day that ' + 'occurs before another instant it deems start-of-day');
 	      }
 	      const endNs = GetStartOfDay(timeZone, dtEnd);
 	      if (thisNs.greaterOrEquals(endNs)) {
-	        throw new Error('assertion failure: cannot produce an instant during a day that ' + 'occurs on or after another instant it deems end-of-day');
+	        throw new Error$1('assertion failure: cannot produce an instant during a day that ' + 'occurs on or after another instant it deems end-of-day');
 	      }
 	      const dayLengthNs = endNs.subtract(startNs);
 	      const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
@@ -17521,7 +17704,7 @@
 	    return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
 	  }
 	  equals(other) {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    other = ToTemporalZonedDateTime(other);
 	    const one = GetSlot(this, EPOCHNANOSECONDS);
 	    const two = GetSlot(other, EPOCHNANOSECONDS);
@@ -17531,14 +17714,14 @@
 	  }
 	  toString() {
 	    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 	    const showCalendar = GetTemporalShowCalendarNameOption(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(options);
 	    const showOffset = GetTemporalShowOffsetOption(options);
 	    const roundingMode = GetRoundingModeOption(options, 'trunc');
 	    const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
-	    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
+	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    const showTimeZone = GetTemporalShowTimeZoneNameOption(options);
 	    const {
 	      precision,
@@ -17554,7 +17737,7 @@
 	  toLocaleString() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    options = GetOptionsObject(options);
 
 	    // This is not quite per specification, but this polyfill's DateTimeFormat
@@ -17564,7 +17747,7 @@
 	    const optionsCopy = ObjectCreate(null);
 	    CopyDataProperties$1(optionsCopy, options, ['timeZone']);
 	    if (options.timeZone !== undefined) {
-	      throw new TypeError('ZonedDateTime toLocaleString does not accept a timeZone option');
+	      throw new TypeError$1('ZonedDateTime toLocaleString does not accept a timeZone option');
 	    }
 	    if (optionsCopy.year === undefined && optionsCopy.month === undefined && optionsCopy.day === undefined && optionsCopy.weekday === undefined && optionsCopy.dateStyle === undefined && optionsCopy.hour === undefined && optionsCopy.minute === undefined && optionsCopy.second === undefined && optionsCopy.timeStyle === undefined && optionsCopy.dayPeriod === undefined && optionsCopy.timeZoneName === undefined) {
 	      optionsCopy.timeZoneName = 'short';
@@ -17573,30 +17756,30 @@
 	    const timeZoneIdentifier = GetSlot(this, TIME_ZONE);
 	    if (IsOffsetTimeZoneIdentifier(timeZoneIdentifier)) {
 	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-	      throw new RangeError('toLocaleString does not currently support offset time zones');
+	      throw new RangeError$1('toLocaleString does not currently support offset time zones');
 	    } else {
 	      const record = GetAvailableNamedTimeZoneIdentifier(timeZoneIdentifier);
-	      if (!record) throw new RangeError(`toLocaleString formats built-in time zones, not ${timeZoneIdentifier}`);
+	      if (!record) throw new RangeError$1(`toLocaleString formats built-in time zones, not ${timeZoneIdentifier}`);
 	      optionsCopy.timeZone = record.identifier;
 	    }
 	    const formatter = new DateTimeFormat(locales, optionsCopy);
 	    const localeCalendarIdentifier = Call$1(customResolvedOptions, formatter, []).calendar;
 	    const calendarIdentifier = GetSlot(this, CALENDAR);
 	    if (calendarIdentifier !== 'iso8601' && localeCalendarIdentifier !== 'iso8601' && !CalendarEquals(localeCalendarIdentifier, calendarIdentifier)) {
-	      throw new RangeError(`cannot format ZonedDateTime with calendar ${calendarIdentifier}` + ` in locale with calendar ${localeCalendarIdentifier}`);
+	      throw new RangeError$1(`cannot format ZonedDateTime with calendar ${calendarIdentifier}` + ` in locale with calendar ${localeCalendarIdentifier}`);
 	    }
 	    const Instant = GetIntrinsic('%Temporal.Instant%');
 	    return formatter.format(new Instant(GetSlot(this, EPOCHNANOSECONDS)));
 	  }
 	  toJSON() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    return TemporalZonedDateTimeToString(this, 'auto');
 	  }
 	  valueOf() {
 	    ValueOfThrows('ZonedDateTime');
 	  }
 	  startOfDay() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const timeZone = GetSlot(this, TIME_ZONE);
 	    const calendar = GetSlot(this, CALENDAR);
 	    const {
@@ -17612,9 +17795,9 @@
 	    return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
 	  }
 	  getTimeZoneTransition(directionParam) {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const timeZone = GetSlot(this, TIME_ZONE);
-	    if (directionParam === undefined) throw new TypeError('options parameter is required');
+	    if (directionParam === undefined) throw new TypeError$1('options parameter is required');
 	    if (Type$3(directionParam) === 'String') {
 	      const stringParam = directionParam;
 	      directionParam = ObjectCreate(null);
@@ -17623,7 +17806,7 @@
 	      directionParam = GetOptionsObject(directionParam);
 	    }
 	    const direction = GetDirectionOption(directionParam);
-	    if (direction === undefined) throw new TypeError('direction option is required');
+	    if (direction === undefined) throw new TypeError$1('direction option is required');
 
 	    // Offset time zones or UTC have no transitions
 	    if (IsOffsetTimeZoneIdentifier(timeZone) || timeZone === 'UTC') {
@@ -17634,12 +17817,12 @@
 	    return epochNanoseconds === null ? null : new ZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
 	  }
 	  toInstant() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	    return new TemporalInstant(GetSlot(this, EPOCHNANOSECONDS));
 	  }
 	  toPlainDate() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const {
 	      year,
 	      month,
@@ -17648,7 +17831,7 @@
 	    return CreateTemporalDate(year, month, day, GetSlot(this, CALENDAR));
 	  }
 	  toPlainTime() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const {
 	      hour,
 	      minute,
@@ -17661,7 +17844,7 @@
 	    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 	  }
 	  toPlainDateTime() {
-	    if (!IsTemporalZonedDateTime(this)) throw new TypeError('invalid receiver');
+	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDateTime = dateTime(this);
 	    return CreateTemporalDateTime(isoDateTime.year, isoDateTime.month, isoDateTime.day, isoDateTime.hour, isoDateTime.minute, isoDateTime.second, isoDateTime.millisecond, isoDateTime.microsecond, isoDateTime.nanosecond, GetSlot(this, CALENDAR));
 	  }
@@ -17711,7 +17894,6 @@
 		ZonedDateTime: ZonedDateTime
 	});
 
-	const DatePrototypeValueOf = Date.prototype.valueOf;
 	function toTemporalInstant() {
 	  const epochNanoseconds = bigInt(Call$1(DatePrototypeValueOf, this, [])).multiply(1e6);
 	  return new Instant(BigIntIfAvailable(epochNanoseconds));
@@ -17721,30 +17903,32 @@
 	// object. This is used only for the browser playground and the test262 tests.
 	// See the note in index.mjs.
 
-	Object.defineProperty(globalThis, 'Temporal', {
+	ObjectDefineProperty(globalThis, 'Temporal', {
 	  value: {},
 	  writable: true,
 	  enumerable: false,
 	  configurable: true
 	});
 	copy(globalThis.Temporal, Temporal);
-	Object.defineProperty(globalThis.Temporal, Symbol.toStringTag, {
+	ObjectDefineProperty(globalThis.Temporal, SymbolToStringTag, {
 	  value: 'Temporal',
 	  writable: false,
 	  enumerable: false,
 	  configurable: true
 	});
 	copy(globalThis.Temporal.Now, Now);
-	copy(globalThis.Intl, Intl$1);
-	Object.defineProperty(globalThis.Date.prototype, 'toTemporalInstant', {
+	copy(globalThis.Intl, Intl);
+	ObjectDefineProperty(globalThis.Date.prototype, 'toTemporalInstant', {
 	  value: toTemporalInstant,
 	  writable: true,
 	  enumerable: false,
 	  configurable: true
 	});
 	function copy(target, source) {
-	  for (const prop of Object.getOwnPropertyNames(source)) {
-	    Object.defineProperty(target, prop, {
+	  const props = ObjectGetOwnPropertyNames(source);
+	  for (let i = 0; i < props.length; i++) {
+	    const prop = props[i];
+	    ObjectDefineProperty(target, prop, {
 	      value: source[prop],
 	      writable: true,
 	      enumerable: false,
@@ -17757,17 +17941,18 @@
 	const types = [globalThis.Temporal.Instant, globalThis.Temporal.PlainDate, globalThis.Temporal.PlainDateTime, globalThis.Temporal.Duration, globalThis.Temporal.PlainMonthDay,
 	// globalThis.Temporal.Now, // plain object (not a constructor), so no `prototype`
 	globalThis.Temporal.PlainTime, globalThis.Temporal.PlainYearMonth, globalThis.Temporal.ZonedDateTime];
-	for (const type of types) {
-	  const descriptor = Object.getOwnPropertyDescriptor(type, 'prototype');
+	for (let i = 0; i < types.length; i++) {
+	  const type = types[i];
+	  const descriptor = ObjectGetOwnPropertyDescriptor(type, 'prototype');
 	  if (descriptor.configurable || descriptor.enumerable || descriptor.writable) {
 	    descriptor.configurable = false;
 	    descriptor.enumerable = false;
 	    descriptor.writable = false;
-	    Object.defineProperty(type, 'prototype', descriptor);
+	    ObjectDefineProperty(type, 'prototype', descriptor);
 	  }
 	}
 
-	exports.Intl = Intl$1;
+	exports.Intl = Intl;
 	exports.Temporal = Temporal;
 	exports.toTemporalInstant = toTemporalInstant;
 
