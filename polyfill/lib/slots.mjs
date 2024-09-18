@@ -1,5 +1,5 @@
 import {
-  WeakMap as WeakMap,
+  WeakMap as WeakMapCtor,
 
   // class static functions and methods
   ArrayPrototypeReduce,
@@ -44,7 +44,7 @@ export const MILLISECONDS = 'slot-milliseconds';
 export const MICROSECONDS = 'slot-microseconds';
 export const NANOSECONDS = 'slot-nanoseconds';
 
-const slots = new WeakMap();
+const slots = new WeakMapCtor();
 export function CreateSlots(container) {
   Call(WeakMapPrototypeSet, slots, [container, ObjectCreate(null)]);
 }
