@@ -1,34 +1,65 @@
+import {
+  // constructors and similar
+  Date as Date,
+  Map as Map,
+  Set as Set,
+  WeakMap as WeakMap,
+
+  // error constructors
+  RangeError as RangeError,
+  TypeError as TypeError,
+
+  // class static functions and methods
+  ArrayFrom,
+  ArrayPrototypeFilter,
+  ArrayPrototypeFind,
+  ArrayPrototypeForEach,
+  ArrayPrototypeIncludes,
+  ArrayPrototypeIndexOf,
+  ArrayPrototypeSort,
+  DatePrototypeSetUTCDate,
+  DatePrototypeToLocaleDateString,
+  IntlDateTimeFormat,
+  IntlDateTimeFormatPrototypeFormatToParts,
+  JSONStringify,
+  MapPrototypeEntries,
+  MapPrototypeGet,
+  MapPrototypeSet,
+  MathAbs,
+  MathFloor,
+  MathMax,
+  NumberIsNaN,
+  MathSign,
+  ObjectAssign,
+  ObjectEntries,
+  RegExpPrototypeExec,
+  RegExpPrototypeTest,
+  SetPrototypeAdd,
+  SetPrototypeValues,
+  StringPrototypeEndsWith,
+  StringPrototypeIndexOf,
+  StringPrototypeNormalize,
+  StringPrototypePadStart,
+  StringPrototypeReplace,
+  StringPrototypeSlice,
+  StringPrototypeSplit,
+  StringPrototypeStartsWith,
+  StringPrototypeToLowerCase,
+  SymbolIterator,
+  WeakMapPrototypeGet,
+  WeakMapPrototypeSet,
+  MapIteratorPrototypeNext,
+  SetIteratorPrototypeNext,
+
+  // miscellaneous
+  now
+} from './primordials.mjs';
+
 import Call from 'es-abstract/2024/Call.js';
 import Type from 'es-abstract/2024/Type.js';
 
 import * as ES from './ecmascript.mjs';
 import { DefineIntrinsic } from './intrinsicclass.mjs';
-
-const ArrayFrom = Array.from;
-const ArrayPrototypeFind = Array.prototype.find;
-const ArrayPrototypeIncludes = Array.prototype.includes;
-const ArrayPrototypeSort = Array.prototype.sort;
-const IntlDateTimeFormat = globalThis.Intl.DateTimeFormat;
-const MathAbs = Math.abs;
-const MathFloor = Math.floor;
-const ObjectAssign = Object.assign;
-const ObjectEntries = Object.entries;
-const OriginalMap = Map;
-const OriginalSet = Set;
-const OriginalWeakMap = WeakMap;
-const MapPrototypeEntries = Map.prototype.entries;
-const MapPrototypeGet = Map.prototype.get;
-const MapPrototypeSet = Map.prototype.set;
-const SetPrototypeAdd = Set.prototype.add;
-const SetPrototypeValues = Set.prototype.values;
-const SymbolIterator = Symbol.iterator;
-const WeakMapPrototypeGet = WeakMap.prototype.get;
-const WeakMapPrototypeSet = WeakMap.prototype.set;
-
-const MapIterator = Call(MapPrototypeEntries, new Map(), []);
-const MapIteratorPrototypeNext = MapIterator.next;
-const SetIterator = Call(SetPrototypeValues, new Set(), []);
-const SetIteratorPrototypeNext = SetIterator.next;
 
 function arrayFromSet(src) {
   const valuesIterator = Call(SetPrototypeValues, src, []);
@@ -123,7 +154,7 @@ impl['iso8601'] = {
     return [];
   },
   fieldKeysToIgnore(keys) {
-    const result = new OriginalSet();
+    const result = new Set();
     for (let ix = 0; ix < keys.length; ix++) {
       const key = keys[ix];
       Call(SetPrototypeAdd, result, [key]);
@@ -205,16 +236,16 @@ impl['iso8601'] = {
 // ECMA-402.
 
 function monthCodeNumberPart(monthCode) {
-  if (!monthCode.startsWith('M')) {
+  if (!Call(StringPrototypeStartsWith, monthCode, ['M'])) {
     throw new RangeError(`Invalid month code: ${monthCode}.  Month codes must start with M.`);
   }
-  const month = +monthCode.slice(1);
-  if (isNaN(month)) throw new RangeError(`Invalid month code: ${monthCode}`);
+  const month = +Call(StringPrototypeSlice, monthCode, [1]);
+  if (NumberIsNaN(month)) throw new RangeError(`Invalid month code: ${monthCode}`);
   return month;
 }
 
 function buildMonthCode(month, leap = false) {
-  return `M${month.toString().padStart(2, '0')}${leap ? 'L' : ''}`;
+  return `M${Call(StringPrototypePadStart, `${month}`, [2, '0'])}${leap ? 'L' : ''}`;
 }
 
 function requireFields(fields, requiredFieldNames) {
@@ -281,9 +312,9 @@ function weekNumber(firstDayOfWeek, minimalDaysInFirstWeek, desiredDay, dayOfWee
  */
 class OneObjectCache {
   constructor(cacheToClone = undefined) {
-    this.map = new OriginalMap();
+    this.map = new Map();
     this.calls = 0;
-    this.now = globalThis.performance ? globalThis.performance.now() : Date.now();
+    this.now = now();
     this.hits = 0;
     this.misses = 0;
     if (cacheToClone !== undefined) {
@@ -314,9 +345,10 @@ class OneObjectCache {
   report() {
     /*
     if (this.calls === 0) return;
-    const ms = (globalThis.performance ? globalThis.performance.now() : Date.now()) - this.now;
-    const hitRate = ((100 * this.hits) / this.calls).toFixed(0);
-    console.log(`${this.calls} calls in ${ms.toFixed(2)}ms. Hits: ${this.hits} (${hitRate}%). Misses: ${this.misses}.`);
+    const ms = now() - this.now;
+    const hitRate = Call(NumberPrototypeToFixed, (100 * this.hits) / this.calls, [0]);
+    const t = `${Call(NumberPrototypeToFixed, ms, [2])}ms`;
+    log(`${this.calls} calls in ${t}. Hits: ${this.hits} (${hitRate}%). Misses: ${this.misses}.`);
     */
   }
   setObject(obj) {
@@ -325,7 +357,7 @@ class OneObjectCache {
     this.report();
   }
 }
-OneObjectCache.objectMap = new OriginalWeakMap();
+OneObjectCache.objectMap = new WeakMap();
 OneObjectCache.MAX_CACHE_ENTRIES = 1000;
 /**
  * Returns a WeakMap-backed cache that's used to store expensive results
@@ -382,7 +414,7 @@ const nonIsoHelperBase = {
   },
   isoToCalendarDate(isoDate, cache) {
     const { year: isoYear, month: isoMonth, day: isoDay } = isoDate;
-    const key = JSON.stringify({ func: 'isoToCalendarDate', isoYear, isoMonth, isoDay, id: this.id });
+    const key = JSONStringify({ func: 'isoToCalendarDate', isoYear, isoMonth, isoDay, id: this.id });
     const cached = cache.get(key);
     if (cached) return cached;
 
@@ -390,12 +422,13 @@ const nonIsoHelperBase = {
     let parts, isoString;
     try {
       isoString = toUtcIsoDateString({ isoYear, isoMonth, isoDay });
-      parts = dateTimeFormat.formatToParts(new Date(isoString));
+      parts = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [new Date(isoString)]);
     } catch (e) {
-      throw new RangeError(`Invalid ISO date: ${JSON.stringify({ isoYear, isoMonth, isoDay })}`);
+      throw new RangeError(`Invalid ISO date: ${JSONStringify({ isoYear, isoMonth, isoDay })}`);
     }
     const result = {};
-    for (let { type, value } of parts) {
+    for (let i = 0; i < parts.length; i++) {
+      let { type, value } = parts[i];
       if (type === 'year' || type === 'relatedYear') {
         if (this.hasEra) {
           result.eraYear = +value;
@@ -404,7 +437,7 @@ const nonIsoHelperBase = {
         }
       }
       if (type === 'month') {
-        const matches = /^([0-9]*)(.*?)$/.exec(value);
+        const matches = ES.Call(RegExpPrototypeExec, /^([0-9]*)(.*?)$/, [value]);
         if (!matches || matches.length != 3 || (!matches[1] && !matches[2])) {
           throw new RangeError(`Unexpected month: ${value}`);
         }
@@ -443,12 +476,12 @@ const nonIsoHelperBase = {
         // The call to normalize() and the replacement regex deals with era
         // names that contain non-ASCII characters like Japanese eras. Also
         // ignore extra content in parentheses like JPN era date ranges.
-        value = value.split(' (')[0];
-        result.era = value
-          .normalize('NFD')
-          .replace(/[^-0-9 \p{L}]/gu, '')
-          .replace(' ', '-')
-          .toLowerCase();
+        value = ES.Call(StringPrototypeSplit, value, [' ('])[0];
+        value = ES.Call(StringPrototypeNormalize, value, ['NFD']);
+        value = ES.Call(StringPrototypeReplace, value, [/[^-0-9 \p{L}]/gu, '']);
+        value = ES.Call(StringPrototypeReplace, value, [/ /g, '-']);
+        value = ES.Call(StringPrototypeToLowerCase, value, []);
+        result.era = value;
       }
     }
     if (this.hasEra && result.eraYear === undefined) {
@@ -472,13 +505,13 @@ const nonIsoHelperBase = {
     }
     if (this.checkIcuBugs) this.checkIcuBugs(isoDate);
     const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
-    if (calendarDate.year === undefined) throw new RangeError(`Missing year converting ${JSON.stringify(isoDate)}`);
-    if (calendarDate.month === undefined) throw new RangeError(`Missing month converting ${JSON.stringify(isoDate)}`);
-    if (calendarDate.day === undefined) throw new RangeError(`Missing day converting ${JSON.stringify(isoDate)}`);
+    if (calendarDate.year === undefined) throw new RangeError(`Missing year converting ${JSONStringify(isoDate)}`);
+    if (calendarDate.month === undefined) throw new RangeError(`Missing month converting ${JSONStringify(isoDate)}`);
+    if (calendarDate.day === undefined) throw new RangeError(`Missing day converting ${JSONStringify(isoDate)}`);
     cache.set(key, calendarDate);
     // Also cache the reverse mapping
-    ['constrain', 'reject'].forEach((overflow) => {
-      const keyReverse = JSON.stringify({
+    const cacheReverse = (overflow) => {
+      const keyReverse = JSONStringify({
         func: 'calendarToIsoDate',
         year: calendarDate.year,
         month: calendarDate.month,
@@ -487,7 +520,8 @@ const nonIsoHelperBase = {
         id: this.id
       });
       cache.set(keyReverse, isoDate);
-    });
+    };
+    ES.Call(ArrayPrototypeForEach, ['constrain', 'reject'], [cacheReverse]);
     return calendarDate;
   },
   validateCalendarDate(calendarDate) {
@@ -500,9 +534,13 @@ const nonIsoHelperBase = {
     if (day === undefined) throw new RangeError('Missing day');
     if (monthCode !== undefined) {
       if (typeof monthCode !== 'string') {
-        throw new RangeError(`monthCode must be a string, not ${Type(monthCode).toLowerCase()}`);
+        throw new RangeError(
+          `monthCode must be a string, not ${ES.Call(StringPrototypeToLowerCase, Type(monthCode), [])}`
+        );
       }
-      if (!/^M([01]?\d)(L?)$/.test(monthCode)) throw new RangeError(`Invalid monthCode: ${monthCode}`);
+      if (!ES.Call(RegExpPrototypeTest, /^M([01]?\d)(L?)$/, [monthCode])) {
+        throw new RangeError(`Invalid monthCode: ${monthCode}`);
+      }
     }
     if (this.hasEra) {
       if ((calendarDate['era'] === undefined) !== (calendarDate['eraYear'] === undefined)) {
@@ -553,7 +591,7 @@ const nonIsoHelperBase = {
     date = this.regulateMonthDayNaive(date, overflow, cache);
 
     const { year, month, day } = date;
-    const key = JSON.stringify({ func: 'calendarToIsoDate', year, month, day, overflow, id: this.id });
+    const key = JSONStringify({ func: 'calendarToIsoDate', year, month, day, overflow, id: this.id });
     let cached = cache.get(key);
     if (cached) return cached;
     // If YMD are present in the input but the input has been constrained
@@ -565,7 +603,7 @@ const nonIsoHelperBase = {
       originalDate.day !== undefined &&
       (originalDate.year !== date.year || originalDate.month !== date.month || originalDate.day !== date.day)
     ) {
-      keyOriginal = JSON.stringify({
+      keyOriginal = JSONStringify({
         func: 'calendarToIsoDate',
         year: originalDate.year,
         month: originalDate.month,
@@ -645,7 +683,7 @@ const nonIsoHelperBase = {
             // original date was an invalid value that will be constrained or
             // rejected here.
             if (overflow === 'reject') {
-              throw new RangeError(`Can't find ISO date from calendar date: ${JSON.stringify({ ...originalDate })}`);
+              throw new RangeError(`Can't find ISO date from calendar date: ${JSONStringify({ ...originalDate })}`);
             } else {
               // To constrain, pick the earliest value
               const order = this.compareCalendarDates(roundtripEstimate, oldRoundtripEstimate);
@@ -698,7 +736,7 @@ const nonIsoHelperBase = {
       const oldCalendarDate = calendarDate;
       const days =
         months < 0
-          ? -Math.max(day, this.daysInPreviousMonth(calendarDate, cache))
+          ? -MathMax(day, this.daysInPreviousMonth(calendarDate, cache))
           : this.daysInMonth(calendarDate, cache);
       const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
       let addedIso = this.addDaysIso(isoDate, days, cache);
@@ -762,7 +800,7 @@ const nonIsoHelperBase = {
           let diffInYearSign = 0;
           if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
           if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
-          if (!diffInYearSign) diffInYearSign = Math.sign(diffDays);
+          if (!diffInYearSign) diffInYearSign = MathSign(diffDays);
           const isOneFurtherInYear = diffInYearSign * sign < 0;
           years = isOneFurtherInYear ? diffYears - sign : diffYears;
         }
@@ -930,7 +968,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
   minMaxMonthLength(calendarDate, minOrMax) {
     const { month, year } = calendarDate;
     const monthCode = this.getMonthCode(year, month);
-    const monthInfo = ObjectEntries(this.months).find((m) => m[1].monthCode === monthCode);
+    const monthInfo = ES.Call(ArrayPrototypeFind, ObjectEntries(this.months), [(m) => m[1].monthCode === monthCode]);
     if (monthInfo === undefined) throw new RangeError(`unmatched Hebrew month: ${month}`);
     const daysInMonth = monthInfo[1].days;
     return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[minOrMax];
@@ -986,7 +1024,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
       // that all fields are present.
       this.validateCalendarDate(calendarDate);
       if (month === undefined) {
-        if (monthCode.endsWith('L')) {
+        if (ES.Call(StringPrototypeEndsWith, monthCode, ['L'])) {
           if (monthCode !== 'M05L') {
             throw new RangeError(`Hebrew leap month must have monthCode M05L, not ${monthCode}`);
           }
@@ -1141,7 +1179,10 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
   // in Node 12 0000-01-01 is calculated as 6146/12/-583 instead of 10/11/-79 as
   // expected.
   vulnerableToBceBug:
-    new Date('0000-01-01T00:00Z').toLocaleDateString('en-US-u-ca-indian', { timeZone: 'UTC' }) !== '10/11/-79 Saka',
+    ES.Call(DatePrototypeToLocaleDateString, new Date('0000-01-01T00:00Z'), [
+      'en-US-u-ca-indian',
+      { timeZone: 'UTC' }
+    ]) !== '10/11/-79 Saka',
   checkIcuBugs(isoDate) {
     if (this.vulnerableToBceBug && isoDate.year < 1) {
       throw new RangeError(
@@ -1205,7 +1246,7 @@ function adjustEras(eras) {
   if (eras.length === 1 && !eras[0].name) {
     throw new RangeError('Invalid era data: at least one named era is required');
   }
-  if (eras.filter((e) => e.reverseOf != null).length > 1) {
+  if (ES.Call(ArrayPrototypeFilter, eras, [(e) => e.reverseOf != null]).length > 1) {
     throw new RangeError('Invalid era data: only one era can count years backwards');
   }
 
@@ -1213,37 +1254,41 @@ function adjustEras(eras) {
   // eras can never be anchors. The era without an `anchorEpoch` property is the
   // anchor.
   let anchorEra;
-  eras.forEach((e) => {
-    if (e.isAnchor || (!e.anchorEpoch && !e.reverseOf)) {
-      if (anchorEra) throw new RangeError('Invalid era data: cannot have multiple anchor eras');
-      anchorEra = e;
-      e.anchorEpoch = { year: e.hasYearZero ? 0 : 1 };
-    } else if (!e.name) {
-      throw new RangeError('If era name is blank, it must be the anchor era');
+  ES.Call(ArrayPrototypeForEach, eras, [
+    (e) => {
+      if (e.isAnchor || (!e.anchorEpoch && !e.reverseOf)) {
+        if (anchorEra) throw new RangeError('Invalid era data: cannot have multiple anchor eras');
+        anchorEra = e;
+        e.anchorEpoch = { year: e.hasYearZero ? 0 : 1 };
+      } else if (!e.name) {
+        throw new RangeError('If era name is blank, it must be the anchor era');
+      }
     }
-  });
+  ]);
 
   // If the era name is undefined, then it's an anchor that doesn't interact
   // with eras at all. For example, Japanese `year` is always the same as ISO
   // `year`.  So this "era" is the anchor era but isn't used for era matching.
   // Strip it from the list that's returned.
-  eras = eras.filter((e) => e.name);
+  eras = ES.Call(ArrayPrototypeFilter, eras, [(e) => e.name]);
 
-  eras.forEach((e) => {
-    // Some eras are mirror images of another era e.g. B.C. is the reverse of A.D.
-    // Replace the string-valued "reverseOf" property with the actual era object
-    // that's reversed.
-    const { reverseOf } = e;
-    if (reverseOf) {
-      const reversedEra = eras.find((era) => era.name === reverseOf);
-      if (reversedEra === undefined) throw new RangeError(`Invalid era data: unmatched reverseOf era: ${reverseOf}`);
-      e.reverseOf = reversedEra;
-      e.anchorEpoch = reversedEra.anchorEpoch;
-      e.isoEpoch = reversedEra.isoEpoch;
+  ES.Call(ArrayPrototypeForEach, eras, [
+    (e) => {
+      // Some eras are mirror images of another era e.g. B.C. is the reverse of A.D.
+      // Replace the string-valued "reverseOf" property with the actual era object
+      // that's reversed.
+      const { reverseOf } = e;
+      if (reverseOf) {
+        const reversedEra = ES.Call(ArrayPrototypeFind, eras, [(era) => era.name === reverseOf]);
+        if (reversedEra === undefined) throw new RangeError(`Invalid era data: unmatched reverseOf era: ${reverseOf}`);
+        e.reverseOf = reversedEra;
+        e.anchorEpoch = reversedEra.anchorEpoch;
+        e.isoEpoch = reversedEra.isoEpoch;
+      }
+      if (e.anchorEpoch.month === undefined) e.anchorEpoch.month = 1;
+      if (e.anchorEpoch.day === undefined) e.anchorEpoch.day = 1;
     }
-    if (e.anchorEpoch.month === undefined) e.anchorEpoch.month = 1;
-    if (e.anchorEpoch.day === undefined) e.anchorEpoch.day = 1;
-  });
+  ]);
 
   // Ensure that the latest epoch is first in the array. This lets us try to
   // match eras in index order, with the last era getting the remaining older
@@ -1267,9 +1312,11 @@ function adjustEras(eras) {
   // Finally, add a "genericName" property in the format "era{n} where `n` is
   // zero-based index, with the oldest era being zero. This format is used by
   // older versions of ICU data.
-  eras.forEach((e, i) => {
-    e.genericName = `era${eras.length - 1 - i}`;
-  });
+  ES.Call(ArrayPrototypeForEach, eras, [
+    (e, i) => {
+      e.genericName = `era${eras.length - 1 - i}`;
+    }
+  ]);
 
   return { eras, anchorEra: anchorEra || eras[0] };
 }
@@ -1297,7 +1344,7 @@ function makeHelperGregorianFixedEpoch(id) {
     minimumMonthLength(calendarDate) {
       const { month } = calendarDate;
       if (month === 2) return this.inLeapYear(calendarDate) ? 29 : 28;
-      return [4, 6, 9, 11].indexOf(month) >= 0 ? 30 : 31;
+      return ES.Call(ArrayPrototypeIndexOf, [4, 6, 9, 11], [month]) >= 0 ? 30 : 31;
     },
     maximumMonthLength(calendarDate) {
       return this.minimumMonthLength(calendarDate);
@@ -1333,7 +1380,7 @@ const makeHelperGregorian = (id, originalEras) => {
     minimumMonthLength(calendarDate) {
       const { month } = calendarDate;
       if (month === 2) return this.inLeapYear(calendarDate) ? 29 : 28;
-      return [4, 6, 9, 11].indexOf(month) >= 0 ? 30 : 31;
+      return ES.Call(ArrayPrototypeIndexOf, [4, 6, 9, 11], [month]) >= 0 ? 30 : 31;
     },
     maximumMonthLength(calendarDate) {
       return this.minimumMonthLength(calendarDate);
@@ -1349,27 +1396,29 @@ const makeHelperGregorian = (id, originalEras) => {
       const eraFromYear = (year) => {
         let eraYear;
         const adjustedCalendarDate = { ...calendarDate, year };
-        const matchingEra = this.eras.find((e, i) => {
-          if (i === this.eras.length - 1) {
-            if (e.reverseOf) {
-              // This is a reverse-sign era (like BCE) which must be the oldest
-              // era. Count years backwards.
-              if (year > 0) throw new RangeError(`Signed year ${year} is invalid for era ${e.name}`);
-              eraYear = e.anchorEpoch.year - year;
+        const matchingEra = ES.Call(ArrayPrototypeFind, this.eras, [
+          (e, i) => {
+            if (i === this.eras.length - 1) {
+              if (e.reverseOf) {
+                // This is a reverse-sign era (like BCE) which must be the oldest
+                // era. Count years backwards.
+                if (year > 0) throw new RangeError(`Signed year ${year} is invalid for era ${e.name}`);
+                eraYear = e.anchorEpoch.year - year;
+                return true;
+              }
+              // last era always gets all "leftover" (older than epoch) years,
+              // so no need for a comparison like below.
+              eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
               return true;
             }
-            // last era always gets all "leftover" (older than epoch) years,
-            // so no need for a comparison like below.
-            eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
-            return true;
+            const comparison = nonIsoHelperBase.compareCalendarDates(adjustedCalendarDate, e.anchorEpoch);
+            if (comparison >= 0) {
+              eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
+              return true;
+            }
+            return false;
           }
-          const comparison = nonIsoHelperBase.compareCalendarDates(adjustedCalendarDate, e.anchorEpoch);
-          if (comparison >= 0) {
-            eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
-            return true;
-          }
-          return false;
-        });
+        ]);
         if (!matchingEra) throw new RangeError(`Year ${year} was not matched by any era`);
         return { eraYear, era: matchingEra.name };
       };
@@ -1573,7 +1622,7 @@ const helperJapanese = ObjectAssign(
     reviseIntlEra(calendarDate, isoDate) {
       const { era, eraYear } = calendarDate;
       const { year: isoYear } = isoDate;
-      if (this.eras.find((e) => e.name === era)) return { era, eraYear };
+      if (ES.Call(ArrayPrototypeFind, this.eras, [(e) => e.name === era])) return { era, eraYear };
       return isoYear < 1 ? { era: 'japanese-inverse', eraYear: 1 - isoYear } : { era: 'japanese', eraYear: isoYear };
     }
   }
@@ -1595,7 +1644,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     if (calendarYear === undefined) {
       throw new TypeError('Missing year');
     }
-    const key = JSON.stringify({ func: 'getMonthList', calendarYear, id: this.id });
+    const key = JSONStringify({ func: 'getMonthList', calendarYear, id: this.id });
     const cached = cache.get(key);
     if (cached) return cached;
     const dateTimeFormat = this.getFormatter();
@@ -1603,11 +1652,11 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       const isoStringFeb1 = toUtcIsoDateString({ isoYear, isoMonth: 2, isoDay: 1 });
       const legacyDate = new Date(isoStringFeb1);
       // Now add the requested number of days, which may wrap to the next month.
-      legacyDate.setUTCDate(daysPastFeb1 + 1);
-      const newYearGuess = dateTimeFormat.formatToParts(legacyDate);
-      const calendarMonthString = newYearGuess.find((tv) => tv.type === 'month').value;
-      const calendarDay = +newYearGuess.find((tv) => tv.type === 'day').value;
-      let calendarYearToVerify = newYearGuess.find((tv) => tv.type === 'relatedYear');
+      ES.Call(DatePrototypeSetUTCDate, legacyDate, [daysPastFeb1 + 1]);
+      const newYearGuess = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [legacyDate]);
+      const calendarMonthString = ES.Call(ArrayPrototypeFind, newYearGuess, [(tv) => tv.type === 'month']).value;
+      const calendarDay = +ES.Call(ArrayPrototypeFind, newYearGuess, [(tv) => tv.type === 'day']).value;
+      let calendarYearToVerify = ES.Call(ArrayPrototypeFind, newYearGuess, [(tv) => tv.type === 'relatedYear']);
       if (calendarYearToVerify !== undefined) {
         calendarYearToVerify = +calendarYearToVerify.value;
       } else {
@@ -1687,15 +1736,19 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       this.validateCalendarDate(calendarDate);
       if (month === undefined) {
         const months = this.getMonthList(year, cache);
-        let numberPart = monthCode.replace('L', 'bis').slice(1);
-        if (numberPart[0] === '0') numberPart = numberPart.slice(1);
+        let numberPart = ES.Call(StringPrototypeReplace, monthCode, [/^M|L$/g, (ch) => (ch === 'L' ? 'bis' : '')]);
+        if (numberPart[0] === '0') numberPart = ES.Call(StringPrototypeSlice, numberPart, [1]);
         let monthInfo = months[numberPart];
         month = monthInfo && monthInfo.monthIndex;
         // If this leap month isn't present in this year, constrain to the same
         // day of the previous month.
-        if (month === undefined && monthCode.endsWith('L') && monthCode != 'M13L' && overflow === 'constrain') {
-          let withoutML = monthCode.slice(1, -1);
-          if (withoutML[0] === '0') withoutML = withoutML.slice(1);
+        if (
+          month === undefined &&
+          ES.Call(StringPrototypeEndsWith, monthCode, ['L']) &&
+          monthCode != 'M13L' &&
+          overflow === 'constrain'
+        ) {
+          const withoutML = ES.Call(StringPrototypeReplace, monthCode, [/^M0?|L$/g, '']);
           monthInfo = months[withoutML];
           if (monthInfo) {
             month = monthInfo.monthIndex;
@@ -1716,19 +1769,21 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           month = ES.ConstrainToRange(month, 1, largestMonth);
           day = ES.ConstrainToRange(day, 1, this.maximumMonthLength());
         }
-        const matchingMonthEntry = monthEntries.find(([, v]) => v.monthIndex === month);
+        const matchingMonthEntry = ES.Call(ArrayPrototypeFind, monthEntries, [
+          (entry) => entry[1].monthIndex === month
+        ]);
         if (matchingMonthEntry === undefined) {
           throw new RangeError(`Invalid month ${month} in Chinese year ${year}`);
         }
         monthCode = buildMonthCode(
-          matchingMonthEntry[0].replace('bis', ''),
-          matchingMonthEntry[0].indexOf('bis') !== -1
+          ES.Call(StringPrototypeReplace, matchingMonthEntry[0], ['bis', '']),
+          ES.Call(StringPrototypeIndexOf, matchingMonthEntry[0], ['bis']) !== -1
         );
       } else {
         // Both month and monthCode are present. Make sure they don't conflict.
         const months = this.getMonthList(year, cache);
-        let numberPart = monthCode.replace('L', 'bis').slice(1);
-        if (numberPart[0] === '0') numberPart = numberPart.slice(1);
+        let numberPart = ES.Call(StringPrototypeReplace, monthCode, [/^M|L$/g, (ch) => (ch === 'L' ? 'bis' : '')]);
+        if (numberPart[0] === '0') numberPart = ES.Call(StringPrototypeSlice, numberPart, [1]);
         const monthInfo = months[numberPart];
         if (!monthInfo) throw new RangeError(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
         if (month !== monthInfo.monthIndex) {
@@ -1776,7 +1831,7 @@ const nonIsoGeneralImpl = {
     return result;
   },
   fieldKeysToIgnore(keys) {
-    const result = new OriginalSet();
+    const result = new Set();
     for (let ix = 0; ix < keys.length; ix++) {
       const key = keys[ix];
       Call(SetPrototypeAdd, result, [key]);
@@ -1922,9 +1977,15 @@ const nonIsoGeneralImpl = {
 
 impl['hebrew'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperHebrew });
 impl['islamic'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperIslamic });
-['islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc'].forEach((id) => {
-  impl[id] = ObjectAssign({}, nonIsoGeneralImpl, { helper: { ...helperIslamic, id } });
-});
+ES.Call(
+  ArrayPrototypeForEach,
+  ['islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc'],
+  [
+    (id) => {
+      impl[id] = ObjectAssign({}, nonIsoGeneralImpl, { helper: { ...helperIslamic, id } });
+    }
+  ]
+);
 impl['persian'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperPersian });
 impl['ethiopic'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperEthiopic });
 impl['ethioaa'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperEthioaa });

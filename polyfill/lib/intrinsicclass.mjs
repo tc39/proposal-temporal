@@ -1,5 +1,17 @@
 /* global __debug__ */
 
+import {
+  ArrayPrototypeJoin,
+  ArrayPrototypePush,
+  ObjectDefineProperty,
+  ObjectGetOwnPropertyDescriptor,
+  ObjectGetOwnPropertyNames,
+  SymbolFor,
+  SymbolToStringTag
+} from './primordials.mjs';
+
+import Call from 'es-abstract/2024/Call.js';
+
 import ESGetIntrinsic from 'es-abstract/GetIntrinsic.js';
 
 const INTRINSICS = {};
@@ -9,7 +21,7 @@ const customUtilInspectFormatters = {
     const descr = options.stylize(this._repr_, 'special');
     if (depth < 1) return descr;
     const entries = [];
-    for (const prop of [
+    const props = [
       'years',
       'months',
       'weeks',
@@ -20,10 +32,12 @@ const customUtilInspectFormatters = {
       'milliseconds',
       'microseconds',
       'nanoseconds'
-    ]) {
-      if (this[prop] !== 0) entries.push(`  ${prop}: ${options.stylize(this[prop], 'number')}`);
+    ];
+    for (let i = 0; i < props.length; i++) {
+      const prop = props[i];
+      if (this[prop] !== 0) Call(ArrayPrototypePush, entries, [`  ${prop}: ${options.stylize(this[prop], 'number')}`]);
     }
-    return descr + ' {\n' + entries.join(',\n') + '\n}';
+    return descr + ' {\n' + Call(ArrayPrototypeJoin, entries, [',\n']) + '\n}';
   }
 };
 
@@ -32,31 +46,35 @@ function defaultUtilInspectFormatter(depth, options) {
 }
 
 export function MakeIntrinsicClass(Class, name) {
-  Object.defineProperty(Class.prototype, Symbol.toStringTag, {
+  ObjectDefineProperty(Class.prototype, SymbolToStringTag, {
     value: name,
     writable: false,
     enumerable: false,
     configurable: true
   });
   if (typeof __debug__ !== 'undefined' && __debug__) {
-    Object.defineProperty(Class.prototype, Symbol.for('nodejs.util.inspect.custom'), {
+    ObjectDefineProperty(Class.prototype, SymbolFor('nodejs.util.inspect.custom'), {
       value: customUtilInspectFormatters[name] || defaultUtilInspectFormatter,
       writable: false,
       enumerable: false,
       configurable: true
     });
   }
-  for (let prop of Object.getOwnPropertyNames(Class)) {
-    const desc = Object.getOwnPropertyDescriptor(Class, prop);
+  const staticNames = ObjectGetOwnPropertyNames(Class);
+  for (let i = 0; i < staticNames.length; i++) {
+    const prop = staticNames[i];
+    const desc = ObjectGetOwnPropertyDescriptor(Class, prop);
     if (!desc.configurable || !desc.enumerable) continue;
     desc.enumerable = false;
-    Object.defineProperty(Class, prop, desc);
+    ObjectDefineProperty(Class, prop, desc);
   }
-  for (let prop of Object.getOwnPropertyNames(Class.prototype)) {
-    const desc = Object.getOwnPropertyDescriptor(Class.prototype, prop);
+  const protoNames = ObjectGetOwnPropertyNames(Class.prototype);
+  for (let i = 0; i < protoNames.length; i++) {
+    const prop = protoNames[i];
+    const desc = ObjectGetOwnPropertyDescriptor(Class.prototype, prop);
     if (!desc.configurable || !desc.enumerable) continue;
     desc.enumerable = false;
-    Object.defineProperty(Class.prototype, prop, desc);
+    ObjectDefineProperty(Class.prototype, prop, desc);
   }
 
   DefineIntrinsic(name, Class);
