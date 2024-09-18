@@ -2,8 +2,8 @@
 
 import {
   // error constructors
-  RangeError as RangeError,
-  TypeError as TypeError,
+  RangeError as RangeErrorCtor,
+  TypeError as TypeErrorCtor,
 
   // class static functions and methods
   ObjectCreate,
@@ -23,7 +23,7 @@ export class Instant {
     // Note: if the argument is not passed, ToBigInt(undefined) will throw. This check exists only
     //       to improve the error message.
     if (arguments.length < 1) {
-      throw new TypeError('missing argument: epochNanoseconds is required');
+      throw new TypeErrorCtor('missing argument: epochNanoseconds is required');
     }
 
     const ns = ES.ToBigInt(epochNanoseconds);
@@ -44,34 +44,34 @@ export class Instant {
   }
 
   get epochMilliseconds() {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
     return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
   }
   get epochNanoseconds() {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     return ES.BigIntIfAvailable(GetSlot(this, EPOCHNANOSECONDS));
   }
 
   add(temporalDurationLike) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     return ES.AddDurationToOrSubtractDurationFromInstant('add', this, temporalDurationLike);
   }
   subtract(temporalDurationLike) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     return ES.AddDurationToOrSubtractDurationFromInstant('subtract', this, temporalDurationLike);
   }
   until(other, options = undefined) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     return ES.DifferenceTemporalInstant('until', this, other, options);
   }
   since(other, options = undefined) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     return ES.DifferenceTemporalInstant('since', this, other, options);
   }
   round(roundTo) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
-    if (roundTo === undefined) throw new TypeError('options parameter is required');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
+    if (roundTo === undefined) throw new TypeErrorCtor('options parameter is required');
     if (ES.Type(roundTo) === 'String') {
       const stringParam = roundTo;
       roundTo = ObjectCreate(null);
@@ -96,19 +96,19 @@ export class Instant {
     return new Instant(roundedNs);
   }
   equals(other) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     other = ES.ToTemporalInstant(other);
     const one = GetSlot(this, EPOCHNANOSECONDS);
     const two = GetSlot(other, EPOCHNANOSECONDS);
     return bigInt(one).equals(two);
   }
   toString(options = undefined) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     options = ES.GetOptionsObject(options);
     const digits = ES.GetTemporalFractionalSecondDigitsOption(options);
     const roundingMode = ES.GetRoundingModeOption(options, 'trunc');
     const smallestUnit = ES.GetTemporalUnitValuedOption(options, 'smallestUnit', 'time', undefined);
-    if (smallestUnit === 'hour') throw new RangeError('smallestUnit must be a time unit other than "hour"');
+    if (smallestUnit === 'hour') throw new RangeErrorCtor('smallestUnit must be a time unit other than "hour"');
     let timeZone = options.timeZone;
     if (timeZone !== undefined) timeZone = ES.ToTemporalTimeZoneIdentifier(timeZone);
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
@@ -118,18 +118,18 @@ export class Instant {
     return ES.TemporalInstantToString(roundedInstant, timeZone, precision);
   }
   toJSON() {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     return ES.TemporalInstantToString(this, undefined, 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     return new DateTimeFormat(locales, options).format(this);
   }
   valueOf() {
     ES.ValueOfThrows('Instant');
   }
   toZonedDateTimeISO(timeZone) {
-    if (!ES.IsTemporalInstant(this)) throw new TypeError('invalid receiver');
+    if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     timeZone = ES.ToTemporalTimeZoneIdentifier(timeZone);
     return ES.CreateTemporalZonedDateTime(GetSlot(this, EPOCHNANOSECONDS), timeZone, 'iso8601');
   }

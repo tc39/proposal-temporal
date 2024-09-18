@@ -1,10 +1,10 @@
 import {
   // constructors and similar
-  Number as Number,
+  Number as NumberCtor,
 
   // error constructors
-  Error as Error,
-  RangeError as RangeError,
+  Error as ErrorCtor,
+  RangeError as RangeErrorCtor,
 
   // class static functions and methods
   ArrayPrototypeJoin,
@@ -26,20 +26,20 @@ export class TimeDuration {
   static ZERO = new TimeDuration(bigInt.zero);
 
   constructor(totalNs) {
-    if (typeof totalNs === 'number') throw new Error('assertion failed: big integer required');
+    if (typeof totalNs === 'number') throw new ErrorCtor('assertion failed: big integer required');
     this.totalNs = bigInt(totalNs);
-    if (this.totalNs.abs().greater(TimeDuration.MAX)) throw new Error('assertion failed: integer too big');
+    if (this.totalNs.abs().greater(TimeDuration.MAX)) throw new ErrorCtor('assertion failed: integer too big');
 
     const { quotient, remainder } = this.totalNs.divmod(1e9);
     this.sec = quotient.toJSNumber();
     this.subsec = remainder.toJSNumber();
-    if (!NumberIsSafeInteger(this.sec)) throw new Error('assertion failed: seconds too big');
-    if (MathAbs(this.subsec) > 999_999_999) throw new Error('assertion failed: subseconds too big');
+    if (!NumberIsSafeInteger(this.sec)) throw new ErrorCtor('assertion failed: seconds too big');
+    if (MathAbs(this.subsec) > 999_999_999) throw new ErrorCtor('assertion failed: subseconds too big');
   }
 
   static #validateNew(totalNs, operation) {
     if (totalNs.abs().greater(TimeDuration.MAX)) {
-      throw new RangeError(`${operation} of duration time units cannot exceed ${TimeDuration.MAX} s`);
+      throw new RangeErrorCtor(`${operation} of duration time units cannot exceed ${TimeDuration.MAX} s`);
     }
     return new TimeDuration(totalNs);
   }
@@ -69,7 +69,7 @@ export class TimeDuration {
   }
 
   add24HourDays(days) {
-    if (!NumberIsInteger(days)) throw new Error('assertion failed: days is an integer');
+    if (!NumberIsInteger(days)) throw new ErrorCtor('assertion failed: days is an integer');
     return TimeDuration.#validateNew(this.totalNs.add(bigInt(days).multiply(86400e9)), 'sum');
   }
 
@@ -82,7 +82,7 @@ export class TimeDuration {
   }
 
   divmod(n) {
-    if (n === 0) throw new Error('division by zero');
+    if (n === 0) throw new ErrorCtor('division by zero');
     const { quotient, remainder } = this.totalNs.divmod(n);
     const q = quotient.toJSNumber();
     const r = new TimeDuration(remainder);
@@ -91,7 +91,7 @@ export class TimeDuration {
 
   fdiv(n) {
     n = bigInt(n);
-    if (n.isZero()) throw new Error('division by zero');
+    if (n.isZero()) throw new ErrorCtor('division by zero');
     let { quotient, remainder } = this.totalNs.divmod(n);
 
     // Perform long division to calculate the fractional part of the quotient
@@ -105,7 +105,7 @@ export class TimeDuration {
       ({ quotient: digit, remainder } = remainder.divmod(n));
       Call(ArrayPrototypePush, decimalDigits, [MathAbs(digit.toJSNumber())]);
     }
-    return sign * Number(quotient.abs().toString() + '.' + Call(ArrayPrototypeJoin, decimalDigits, ['']));
+    return sign * NumberCtor(quotient.abs().toString() + '.' + Call(ArrayPrototypeJoin, decimalDigits, ['']));
   }
 
   isZero() {

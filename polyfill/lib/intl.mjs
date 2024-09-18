@@ -1,11 +1,11 @@
 import {
   // constructors and similar
-  Symbol as Symbol,
+  Symbol as SymbolCtor,
 
   // error constructors
-  Error as Error,
-  RangeError as RangeError,
-  TypeError as TypeError,
+  Error as ErrorCtor,
+  RangeError as RangeErrorCtor,
+  TypeError as TypeErrorCtor,
 
   // class static functions and methods
   ArrayPrototypeSlice,
@@ -41,18 +41,18 @@ import {
   CALENDAR
 } from './slots.mjs';
 
-const DATE = Symbol('date');
-const YM = Symbol('ym');
-const MD = Symbol('md');
-const TIME = Symbol('time');
-const DATETIME = Symbol('datetime');
-const INST = Symbol('instant');
-const ORIGINAL = Symbol('original');
-const TZ_CANONICAL = Symbol('timezone-canonical');
-const TZ_ORIGINAL = Symbol('timezone-original');
-const CAL_ID = Symbol('calendar-id');
-const LOCALE = Symbol('locale');
-const OPTIONS = Symbol('options');
+const DATE = SymbolCtor('date');
+const YM = SymbolCtor('ym');
+const MD = SymbolCtor('md');
+const TIME = SymbolCtor('time');
+const DATETIME = SymbolCtor('datetime');
+const INST = SymbolCtor('instant');
+const ORIGINAL = SymbolCtor('original');
+const TZ_CANONICAL = SymbolCtor('timezone-canonical');
+const TZ_ORIGINAL = SymbolCtor('timezone-original');
+const CAL_ID = SymbolCtor('calendar-id');
+const LOCALE = SymbolCtor('locale');
+const OPTIONS = SymbolCtor('options');
 
 // Construction of built-in Intl.DateTimeFormat objects is sloooooow,
 // so we'll only create those instances when we need them.
@@ -157,10 +157,10 @@ function createDateTimeFormat(dtf, locale, options) {
     const id = ES.ToString(timeZoneOption);
     if (ES.IsOffsetTimeZoneIdentifier(id)) {
       // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-      throw new RangeError('Intl.DateTimeFormat does not currently support offset time zones');
+      throw new RangeErrorCtor('Intl.DateTimeFormat does not currently support offset time zones');
     }
     const record = ES.GetAvailableNamedTimeZoneIdentifier(id);
-    if (!record) throw new RangeError(`Intl.DateTimeFormat formats built-in time zones, not ${id}`);
+    if (!record) throw new RangeErrorCtor(`Intl.DateTimeFormat formats built-in time zones, not ${id}`);
     SetSlot(dtf, TZ_ORIGINAL, record.identifier);
   }
 }
@@ -171,7 +171,7 @@ class DateTimeFormatImpl {
   }
 
   get format() {
-    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, ORIGINAL)) throw new TypeErrorCtor('invalid receiver');
     const boundFormat = (...args) => ES.Call(format, this, args);
     ObjectDefineProperties(boundFormat, {
       length: { value: 1, enumerable: false, writable: false, configurable: true },
@@ -181,24 +181,24 @@ class DateTimeFormatImpl {
   }
 
   formatRange(a, b) {
-    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, ORIGINAL)) throw new TypeErrorCtor('invalid receiver');
     return ES.Call(formatRange, this, [a, b]);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   formatToParts(datetime, ...rest) {
-    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, ORIGINAL)) throw new TypeErrorCtor('invalid receiver');
     const args = ES.Call(ArrayPrototypeSlice, arguments, []);
     return ES.Call(formatToParts, this, args);
   }
 
   formatRangeToParts(a, b) {
-    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, ORIGINAL)) throw new TypeErrorCtor('invalid receiver');
     return ES.Call(formatRangeToParts, this, [a, b]);
   }
 
   resolvedOptions() {
-    if (!HasSlot(this, ORIGINAL)) throw new TypeError('invalid receiver');
+    if (!HasSlot(this, ORIGINAL)) throw new TypeErrorCtor('invalid receiver');
     return ES.Call(resolvedOptions, this, []);
   }
 }
@@ -269,13 +269,13 @@ function formatRange(a, b) {
   let formatter;
   if (isTemporalObject(a) || isTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
-      throw new TypeError('Intl.DateTimeFormat.formatRange accepts two values of the same type');
+      throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
     const { epochNs: aa, formatter: aformatter } = extractOverrides(a, this);
     const { epochNs: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aformatter) {
       if (bformatter !== aformatter) {
-        throw new Error('assertion failed: formatters for same Temporal type should be identical');
+        throw new ErrorCtor('assertion failed: formatters for same Temporal type should be identical');
       }
       formatter = aformatter;
       formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
@@ -291,13 +291,13 @@ function formatRangeToParts(a, b) {
   let formatter;
   if (isTemporalObject(a) || isTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
-      throw new TypeError('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
+      throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
     const { epochNs: aa, formatter: aformatter } = extractOverrides(a, this);
     const { epochNs: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aformatter) {
       if (bformatter !== aformatter) {
-        throw new Error('assertion failed: formatters for same Temporal type should be identical');
+        throw new ErrorCtor('assertion failed: formatters for same Temporal type should be identical');
       }
       formatter = aformatter;
       formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
@@ -514,7 +514,7 @@ function extractOverrides(temporalObj, main) {
     const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== mainCalendar) {
-      throw new RangeError(
+      throw new RangeErrorCtor(
         `cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
@@ -534,7 +534,7 @@ function extractOverrides(temporalObj, main) {
     const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== mainCalendar) {
-      throw new RangeError(
+      throw new RangeErrorCtor(
         `cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
@@ -554,7 +554,9 @@ function extractOverrides(temporalObj, main) {
     const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== 'iso8601' && calendar !== mainCalendar) {
-      throw new RangeError(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`);
+      throw new RangeErrorCtor(
+        `cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`
+      );
     }
     const isoDateTime = {
       year: GetSlot(temporalObj, ISO_YEAR),
@@ -572,7 +574,7 @@ function extractOverrides(temporalObj, main) {
     const calendar = GetSlot(temporalObj, CALENDAR);
     const mainCalendar = GetSlot(main, CAL_ID);
     if (calendar !== 'iso8601' && calendar !== mainCalendar) {
-      throw new RangeError(
+      throw new RangeErrorCtor(
         `cannot format PlainDateTime with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
@@ -584,7 +586,7 @@ function extractOverrides(temporalObj, main) {
   }
 
   if (ES.IsTemporalZonedDateTime(temporalObj)) {
-    throw new TypeError(
+    throw new TypeErrorCtor(
       'Temporal.ZonedDateTime not supported in DateTimeFormat methods. Use toLocaleString() instead.'
     );
   }
