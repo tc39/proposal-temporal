@@ -1167,7 +1167,7 @@
           _roundingIncrement_: a positive integer,
           _smallestUnit_: a String,
           _roundingMode_: a String,
-        ): either a normal completion containing a Record with fields [[DurationRecord]] (a Duration Record) and [[Total]] (a mathematical value or ~unset~), or a throw completion
+        ): either a normal completion containing a Record with fields [[Duration]] (a Temporal.Duration) and [[Total]] (a mathematical value or ~unset~), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1176,16 +1176,13 @@
       <emu-alg>
         1. If IsCalendarUnit(_largestUnit_) is *false* and _largestUnit_ is not *"day"*, then
           1. Let _diffRecord_ be DifferenceInstant(_ns1_, _ns2_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Let _norm_ be _diffRecord_.[[NormalizedTimeDuration]].
-          1. Let _result_ be ! BalanceTimeDuration(_norm_, _largestUnit_).
-          1. Let _durationRecord_ be CreateDurationRecord(0, 0, 0, 0, _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
-          1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _diffRecord_.[[Total]] }.
+          1. Let _duration_ be ! UnnormalizeDuration(_diffRecord_.[[NormalizedDuration]], _largestUnit_).
+          1. Return the Record { [[Duration]]: _duration_, [[Total]]: _diffRecord_.[[Total]] }.
         1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, then
-          1. Let _timeResult_ be ! BalanceTimeDuration(_difference_.[[NormalizedTime]], *"hour"*).
+          1. Let _duration_ be ! UnnormalizeDuration(_difference_, *"hour"*).
           1. Let _total_ be NormalizedTimeDurationSeconds(_difference_.[[NormalizedTime]]) × 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_difference_.[[NormalizedTime]]).
-          1. Let _durationRecord_ be CreateDurationRecord(_difference_.[[Date]].[[Years]], _difference_.[[Date]].[[Months]], _difference_.[[Date]].[[Weeks]], _difference_.[[Date]].[[Days]], _timeResult_.[[Hours]], _timeResult_.[[Minutes]], _timeResult_.[[Seconds]], _timeResult_.[[Milliseconds]], _timeResult_.[[Microseconds]], _timeResult_.[[Nanoseconds]]).
-          1. Return the Record { [[DurationRecord]]: _durationRecord_, [[Total]]: _total_ }.
+          1. Return the Record { [[Duration]]: _duration_, [[Total]]: _total_ }.
         1. Let _dateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
         1. Return ? RoundRelativeDuration(_difference_, _ns2_, _dateTime_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
@@ -1212,7 +1209,7 @@
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, « », *"nanosecond"*, *"hour"*).
         1. If _settings_.[[LargestUnit]] is not one of *"year"*, *"month"*, *"week"*, or *"day"*, then
           1. Let _diffRecord_ be DifferenceInstant(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
-          1. Let _norm_ be _diffRecord_.[[NormalizedTimeDuration]].
+          1. Let _norm_ be _diffRecord_.[[NormalizedDuration]].[[NormalizedTime]].
           1. Let _balanceResult_ be ! BalanceTimeDuration(_norm_, _settings_.[[LargestUnit]]).
           1. Let _result_ be ! CreateTemporalDuration(0, 0, 0, 0, _balanceResult_.[[Hours]], _balanceResult_.[[Minutes]], _balanceResult_.[[Seconds]], _balanceResult_.[[Milliseconds]], _balanceResult_.[[Microseconds]], _balanceResult_.[[Nanoseconds]]).
           1. If _operation_ is ~since~, set _result_ to CreateNegatedTemporalDuration(_result_).
@@ -1223,8 +1220,7 @@
         1. If _zonedDateTime_.[[Nanoseconds]] = _other_.[[Nanoseconds]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _resultRecord_ be ? DifferenceZonedDateTimeWithRounding(_zonedDateTime_.[[Nanoseconds]], _other_.[[Nanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
-        1. Let _durationRecord_ be _resultRecord_.[[DurationRecord]].
-        1. Let _result_ be ! CreateTemporalDuration(_durationRecord_.[[Years]], _durationRecord_.[[Months]], _durationRecord_.[[Weeks]], _durationRecord_.[[Days]], _durationRecord_.[[Hours]], _durationRecord_.[[Minutes]], _durationRecord_.[[Seconds]], _durationRecord_.[[Milliseconds]], _durationRecord_.[[Microseconds]], _durationRecord_.[[Nanoseconds]]).
+        1. Let _result_ be _resultRecord_.[[Duration]].
         1. If _operation_ is ~since~, set _result_ to CreateNegatedTemporalDuration(_result_).
         1. Return _result_.
       </emu-alg>
