@@ -546,7 +546,7 @@ const nonIsoHelperBase = {
     }
     if (this.hasEra) {
       if ((calendarDate['era'] === undefined) !== (calendarDate['eraYear'] === undefined)) {
-        throw new TypeErrorCtor("properties 'era' and 'eraYear' must be provided together");
+        throw new TypeErrorCtor('properties era and eraYear must be provided together');
       }
     }
   },
@@ -1007,7 +1007,7 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
     let { year, month, monthCode, day, monthExtra } = calendarDate;
-    if (year === undefined) throw new TypeErrorCtor('Missing property: "year"');
+    if (year === undefined) throw new TypeErrorCtor('Missing property: year');
     if (fromLegacyDate) {
       // In Pre Node-14 V8, DateTimeFormat.formatToParts `month: 'numeric'`
       // output returns the numeric equivalent of `month` as a string, meaning
@@ -1459,7 +1459,7 @@ const makeHelperGregorian = (id, originalEras) => {
         // the `year`.
         ({ eraYear, era } = eraFromYear(year));
       } else {
-        throw new RangeErrorCtor('Either `year` or `eraYear` and `era` are required');
+        throw new RangeErrorCtor('Either year or eraYear and era are required');
       }
       return { ...calendarDate, year, eraYear, era };
     },
@@ -1727,7 +1727,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
     let { year, month, monthExtra, day, monthCode } = calendarDate;
-    if (year === undefined) throw new TypeErrorCtor('Missing property: "year"');
+    if (year === undefined) throw new TypeErrorCtor('Missing property: year');
     if (fromLegacyDate) {
       // Legacy Date output returns a string that's an integer with an optional
       // "bis" suffix used only by the Chinese/Dangi calendar to indicate a leap
