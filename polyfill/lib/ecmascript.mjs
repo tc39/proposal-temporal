@@ -3133,7 +3133,7 @@ function ISODateToEpochDays(y, m, d) {
 
 export function DifferenceISODate(y1, m1, d1, y2, m2, d2, largestUnit = 'days') {
   const sign = -CompareISODate(y1, m1, d1, y2, m2, d2);
-  if (sign === 0) return { years: 0, months: 0, weeks: 0, days: 0 };
+  if (sign === 0) return ZeroDateDuration();
 
   let years = 0;
   let months = 0;
