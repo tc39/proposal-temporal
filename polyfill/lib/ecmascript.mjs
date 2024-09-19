@@ -2834,96 +2834,6 @@ export function BalanceTime(hour, minute, second, millisecond, microsecond, nano
   };
 }
 
-export function BalanceTimeDuration(norm, largestUnit) {
-  const sign = norm.sign();
-  let nanoseconds = norm.abs().subsec;
-  let microseconds = 0;
-  let milliseconds = 0;
-  let seconds = norm.abs().sec;
-  let minutes = 0;
-  let hours = 0;
-  let days = 0;
-
-  switch (largestUnit) {
-    case 'year':
-    case 'month':
-    case 'week':
-    case 'day':
-      microseconds = MathTrunc(nanoseconds / 1000);
-      nanoseconds %= 1000;
-      milliseconds = MathTrunc(microseconds / 1000);
-      microseconds %= 1000;
-      seconds += MathTrunc(milliseconds / 1000);
-      milliseconds %= 1000;
-      minutes = MathTrunc(seconds / 60);
-      seconds %= 60;
-      hours = MathTrunc(minutes / 60);
-      minutes %= 60;
-      days = MathTrunc(hours / 24);
-      hours %= 24;
-      break;
-    case 'hour':
-      microseconds = MathTrunc(nanoseconds / 1000);
-      nanoseconds %= 1000;
-      milliseconds = MathTrunc(microseconds / 1000);
-      microseconds %= 1000;
-      seconds += MathTrunc(milliseconds / 1000);
-      milliseconds %= 1000;
-      minutes = MathTrunc(seconds / 60);
-      seconds %= 60;
-      hours = MathTrunc(minutes / 60);
-      minutes %= 60;
-      break;
-    case 'minute':
-      microseconds = MathTrunc(nanoseconds / 1000);
-      nanoseconds %= 1000;
-      milliseconds = MathTrunc(microseconds / 1000);
-      microseconds %= 1000;
-      seconds += MathTrunc(milliseconds / 1000);
-      milliseconds %= 1000;
-      minutes = MathTrunc(seconds / 60);
-      seconds %= 60;
-      break;
-    case 'second':
-      microseconds = MathTrunc(nanoseconds / 1000);
-      nanoseconds %= 1000;
-      milliseconds = MathTrunc(microseconds / 1000);
-      microseconds %= 1000;
-      seconds += MathTrunc(milliseconds / 1000);
-      milliseconds %= 1000;
-      break;
-    case 'millisecond':
-      microseconds = MathTrunc(nanoseconds / 1000);
-      nanoseconds %= 1000;
-      milliseconds = FMAPowerOf10(seconds, 3, MathTrunc(microseconds / 1000));
-      microseconds %= 1000;
-      seconds = 0;
-      break;
-    case 'microsecond':
-      microseconds = FMAPowerOf10(seconds, 6, MathTrunc(nanoseconds / 1000));
-      nanoseconds %= 1000;
-      seconds = 0;
-      break;
-    case 'nanosecond':
-      nanoseconds = FMAPowerOf10(seconds, 9, nanoseconds);
-      seconds = 0;
-      break;
-    default:
-      throw new ErrorCtor('assert not reached');
-  }
-
-  days *= sign;
-  hours *= sign;
-  minutes *= sign;
-  seconds *= sign;
-  milliseconds *= sign;
-  microseconds *= sign;
-  nanoseconds *= sign;
-
-  RejectDuration(0, 0, 0, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-  return { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
-}
-
 export function UnbalanceDateDurationRelative(dateDuration, plainRelativeTo) {
   const yearsMonthsWeeksDuration = { ...dateDuration, days: 0 };
   if (DateDurationSign(yearsMonthsWeeksDuration) === 0) return dateDuration.days;
@@ -3114,19 +3024,95 @@ function NormalizeDurationWithoutTime(duration) {
 }
 
 export function UnnormalizeDuration(normalizedDuration, largestUnit) {
-  const balanceResult = BalanceTimeDuration(normalizedDuration.norm, largestUnit);
+  const sign = normalizedDuration.norm.sign();
+  let nanoseconds = normalizedDuration.norm.abs().subsec;
+  let microseconds = 0;
+  let milliseconds = 0;
+  let seconds = normalizedDuration.norm.abs().sec;
+  let minutes = 0;
+  let hours = 0;
+  let days = 0;
+
+  switch (largestUnit) {
+    case 'year':
+    case 'month':
+    case 'week':
+    case 'day':
+      microseconds = MathTrunc(nanoseconds / 1000);
+      nanoseconds %= 1000;
+      milliseconds = MathTrunc(microseconds / 1000);
+      microseconds %= 1000;
+      seconds += MathTrunc(milliseconds / 1000);
+      milliseconds %= 1000;
+      minutes = MathTrunc(seconds / 60);
+      seconds %= 60;
+      hours = MathTrunc(minutes / 60);
+      minutes %= 60;
+      days = MathTrunc(hours / 24);
+      hours %= 24;
+      break;
+    case 'hour':
+      microseconds = MathTrunc(nanoseconds / 1000);
+      nanoseconds %= 1000;
+      milliseconds = MathTrunc(microseconds / 1000);
+      microseconds %= 1000;
+      seconds += MathTrunc(milliseconds / 1000);
+      milliseconds %= 1000;
+      minutes = MathTrunc(seconds / 60);
+      seconds %= 60;
+      hours = MathTrunc(minutes / 60);
+      minutes %= 60;
+      break;
+    case 'minute':
+      microseconds = MathTrunc(nanoseconds / 1000);
+      nanoseconds %= 1000;
+      milliseconds = MathTrunc(microseconds / 1000);
+      microseconds %= 1000;
+      seconds += MathTrunc(milliseconds / 1000);
+      milliseconds %= 1000;
+      minutes = MathTrunc(seconds / 60);
+      seconds %= 60;
+      break;
+    case 'second':
+      microseconds = MathTrunc(nanoseconds / 1000);
+      nanoseconds %= 1000;
+      milliseconds = MathTrunc(microseconds / 1000);
+      microseconds %= 1000;
+      seconds += MathTrunc(milliseconds / 1000);
+      milliseconds %= 1000;
+      break;
+    case 'millisecond':
+      microseconds = MathTrunc(nanoseconds / 1000);
+      nanoseconds %= 1000;
+      milliseconds = FMAPowerOf10(seconds, 3, MathTrunc(microseconds / 1000));
+      microseconds %= 1000;
+      seconds = 0;
+      break;
+    case 'microsecond':
+      microseconds = FMAPowerOf10(seconds, 6, MathTrunc(nanoseconds / 1000));
+      nanoseconds %= 1000;
+      seconds = 0;
+      break;
+    case 'nanosecond':
+      nanoseconds = FMAPowerOf10(seconds, 9, nanoseconds);
+      seconds = 0;
+      break;
+    default:
+      throw new ErrorCtor('assert not reached');
+  }
+
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
   return new TemporalDuration(
     normalizedDuration.date.years,
     normalizedDuration.date.months,
     normalizedDuration.date.weeks,
-    normalizedDuration.date.days + balanceResult.days,
-    balanceResult.hours,
-    balanceResult.minutes,
-    balanceResult.seconds,
-    balanceResult.milliseconds,
-    balanceResult.microseconds,
-    balanceResult.nanoseconds
+    normalizedDuration.date.days + sign * days,
+    sign * hours,
+    sign * minutes,
+    sign * seconds,
+    sign * milliseconds,
+    sign * microseconds,
+    sign * nanoseconds
   );
 }
 
