@@ -93,17 +93,15 @@
           1. Return *+0*<sub>𝔽</sub>.
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
+        1. Let _largestUnit1_ be DefaultTemporalLargestUnit(_one_).
+        1. Let _largestUnit2_ be DefaultTemporalLargestUnit(_two_).
         1. Let _calendarUnitsPresent_ be *false*.
-        1. If _one_.[[Years]] ≠ 0, or _two_.[[Years]] ≠ 0, or _one_.[[Months]] ≠ 0, or _two_.[[Months]] ≠ 0, or _one_.[[Weeks]] ≠ 0, or _two_.[[Weeks]] ≠ 0, set _calendarUnitsPresent_ to *true*.
-        1. Let _dateDuration1_ be ! CreateDateDurationRecord(_one_.[[Years]], _one_.[[Months]], _one_.[[Weeks]], _one_.[[Days]]).
-        1. Let _dateDuration2_ be ! CreateDateDurationRecord(_two_.[[Years]], _two_.[[Months]], _two_.[[Weeks]], _two_.[[Days]]).
-        1. If _zonedRelativeTo_ is not *undefined*, and either _calendarUnitsPresent_ is *true*, or _one_.[[Days]] ≠ 0, or _two_.[[Days]] ≠ 0, then
+        1. If IsCalendarUnit(_largestUnit1_) is *true* or IsCalendarUnit(_largestUnit2_) is *true*, set _calendarUnitsPresent_ to *true*.
+        1. Let _duration1_ be NormalizeDuration(_one_).
+        1. Let _duration2_ be NormalizeDuration(_two_).
+        1. If _zonedRelativeTo_ is not *undefined*, and either _calendarUnitsPresent_ is *true*, or _largestUnit1_ is *"day"* or _largestUnit2_ is *"day"*, then
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
-          1. Let _norm1_ be NormalizeTimeDuration(_one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
-          1. Let _duration1_ be ! CombineDateAndNormalizedTimeDuration(_dateDuration1_, _norm1_).
-          1. Let _norm2_ be NormalizeTimeDuration(_two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
-          1. Let _duration2_ be ! CombineDateAndNormalizedTimeDuration(_dateDuration2_, _norm2_).
           1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration1_).
           1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration2_).
           1. If _after1_ > _after2_, return *1*<sub>𝔽</sub>.
@@ -111,15 +109,13 @@
           1. Return *+0*<sub>𝔽</sub>.
         1. If _calendarUnitsPresent_ is *true*, then
           1. If _plainRelativeTo_ is *undefined*, throw a *RangeError* exception.
-          1. Let _days1_ be ? UnbalanceDateDurationRelative(_dateDuration1_, _plainRelativeTo_).
-          1. Let _days2_ be ? UnbalanceDateDurationRelative(_dateDuration2_, _plainRelativeTo_).
+          1. Let _days1_ be ? UnbalanceDateDurationRelative(_duration1_.[[Date]], _plainRelativeTo_).
+          1. Let _days2_ be ? UnbalanceDateDurationRelative(_duration2_.[[Date]], _plainRelativeTo_).
         1. Else,
           1. Let _days1_ be _one_.[[Days]].
           1. Let _days2_ be _two_.[[Days]].
-        1. Let _norm1_ be NormalizeTimeDuration(_one_.[[Hours]], _one_.[[Minutes]], _one_.[[Seconds]], _one_.[[Milliseconds]], _one_.[[Microseconds]], _one_.[[Nanoseconds]]).
-        1. Set _norm1_ to ? Add24HourDaysToNormalizedTimeDuration(_norm1_, _days1_).
-        1. Let _norm2_ be NormalizeTimeDuration(_two_.[[Hours]], _two_.[[Minutes]], _two_.[[Seconds]], _two_.[[Milliseconds]], _two_.[[Microseconds]], _two_.[[Nanoseconds]]).
-        1. Set _norm2_ to ? Add24HourDaysToNormalizedTimeDuration(_norm2_, _days2_).
+        1. Let _norm1_ be ? Add24HourDaysToNormalizedTimeDuration(_duration1_.[[NormalizedTime]], _days1_).
+        1. Let _norm2_ be ? Add24HourDaysToNormalizedTimeDuration(_duration2_.[[NormalizedTime]], _days2_).
         1. Return 𝔽(CompareNormalizedTimeDuration(_norm1_, _norm2_)).
       </emu-alg>
     </emu-clause>
