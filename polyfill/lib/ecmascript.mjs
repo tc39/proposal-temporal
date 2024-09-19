@@ -3095,6 +3095,24 @@ export function NormalizeDurationWith24HourDays(duration) {
   return { date, norm };
 }
 
+function NormalizeDurationWithoutTime(duration) {
+  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
+  const days = MathTrunc(normalizedDuration.norm.sec / 86400);
+  RejectDuration(
+    normalizedDuration.date.years,
+    normalizedDuration.date.months,
+    normalizedDuration.date.weeks,
+    days,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  );
+  return { ...normalizedDuration.date, days };
+}
+
 export function UnnormalizeDuration(normalizedDuration, largestUnit) {
   const balanceResult = BalanceTimeDuration(normalizedDuration.norm, largestUnit);
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
@@ -4254,11 +4272,7 @@ export function AddDurationToDate(operation, plainDate, durationLike, options) {
 
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
-  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
-  const dateDuration = {
-    ...normalizedDuration.date,
-    days: BalanceTimeDuration(normalizedDuration.norm, 'day').days
-  };
+  const dateDuration = NormalizeDurationWithoutTime(duration);
 
   options = GetOptionsObject(options);
   const overflow = GetTemporalOverflowOption(options);
@@ -4344,10 +4358,8 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   options = GetOptionsObject(options);
-  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
   const overflow = GetTemporalOverflowOption(options);
   const sign = DurationSign(duration);
-  const durationToAdd = { ...normalizedDuration.date, days: BalanceTimeDuration(normalizedDuration.norm, 'day').days };
 
   const calendar = GetSlot(yearMonth, CALENDAR);
   const fields = TemporalObjectToFields(yearMonth);
@@ -4357,6 +4369,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
     const nextMonth = CalendarDateAdd(calendar, startDate, { months: 1 }, 'constrain');
     startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
   }
+  const durationToAdd = NormalizeDurationWithoutTime(duration);
   RejectDateRange(startDate.year, startDate.month, startDate.day);
   const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, overflow);
   const addedDateFields = ISODateToFields(calendar, addedDate, 'year-month');

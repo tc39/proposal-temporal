@@ -1097,9 +1097,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
-        1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-        1. Let _balanceResult_ be ! BalanceTimeDuration(_normalizedDuration_.[[NormalizedTime]], *"day"*).
-        1. Let _dateDuration_ be ? CreateDateDurationRecord(_normalizedDuration_.[[Date]].[[Years]], _normalizedDuration_.[[Date]].[[Months]], _normalizedDuration_.[[Date]].[[Weeks]], _balanceResult_.[[Days]]).
+        1. Let _dateDuration_ be ? NormalizeDurationWithoutTime(_duration_).
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _result_ be ? CalendarDateAdd(_calendar_, _isoDate_, _dateDuration_, _overflow_).
