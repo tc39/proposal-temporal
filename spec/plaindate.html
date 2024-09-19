@@ -816,7 +816,7 @@
         1. Assert: IsValidISODate(_y1_, _m1_, _d1_) is *true*.
         1. Assert: IsValidISODate(_y2_, _m2_, _d2_) is *true*.
         1. Let _sign_ be -CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
-        1. If _sign_ = 0, return ! CreateDateDurationRecord(0, 0, 0, 0).
+        1. If _sign_ = 0, return ZeroDateDuration().
         1. Let _years_ be 0.
         1. If _largestUnit_ is *"year"*, then
           1. Let _candidateYears_ be _sign_.
