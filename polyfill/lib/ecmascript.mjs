@@ -3898,15 +3898,14 @@ export function DifferenceTemporalInstant(operation, instant, other, options) {
 
   const onens = GetSlot(instant, EPOCHNANOSECONDS);
   const twons = GetSlot(other, EPOCHNANOSECONDS);
-  const {
-    duration: { norm }
-  } = DifferenceInstant(onens, twons, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode);
-  const { hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = BalanceTimeDuration(
-    norm,
-    settings.largestUnit
+  const { duration } = DifferenceInstant(
+    onens,
+    twons,
+    settings.roundingIncrement,
+    settings.smallestUnit,
+    settings.roundingMode
   );
-  const Duration = GetIntrinsic('%Temporal.Duration%');
-  let result = new Duration(0, 0, 0, 0, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  let result = UnnormalizeDuration(duration, settings.largestUnit);
   if (operation === 'since') result = CreateNegatedTemporalDuration(result);
   return result;
 }
