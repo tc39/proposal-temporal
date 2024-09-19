@@ -4269,15 +4269,8 @@ export function AddDurationToOrSubtractDurationFromInstant(operation, instant, d
       `Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`
     );
   }
-  const norm = TimeDuration.normalize(
-    GetSlot(duration, HOURS),
-    GetSlot(duration, MINUTES),
-    GetSlot(duration, SECONDS),
-    GetSlot(duration, MILLISECONDS),
-    GetSlot(duration, MICROSECONDS),
-    GetSlot(duration, NANOSECONDS)
-  );
-  const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), norm);
+  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
+  const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), normalizedDuration.norm);
   const Instant = GetIntrinsic('%Temporal.Instant%');
   return new Instant(ns);
 }
