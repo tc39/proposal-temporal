@@ -4374,23 +4374,7 @@ export function AddDurationToOrSubtractDurationFromZonedDateTime(operation, zone
   const overflow = GetTemporalOverflowOption(options);
   const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
   const calendar = GetSlot(zonedDateTime, CALENDAR);
-  const norm = TimeDuration.normalize(
-    GetSlot(duration, HOURS),
-    GetSlot(duration, MINUTES),
-    GetSlot(duration, SECONDS),
-    GetSlot(duration, MILLISECONDS),
-    GetSlot(duration, MICROSECONDS),
-    GetSlot(duration, NANOSECONDS)
-  );
-  const normalized = {
-    date: {
-      years: GetSlot(duration, YEARS),
-      months: GetSlot(duration, MONTHS),
-      weeks: GetSlot(duration, WEEKS),
-      days: GetSlot(duration, DAYS)
-    },
-    norm
-  };
+  const normalized = NormalizeDuration(duration);
   const epochNanoseconds = AddZonedDateTime(
     GetSlot(zonedDateTime, EPOCHNANOSECONDS),
     timeZone,

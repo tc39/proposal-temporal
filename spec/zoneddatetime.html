@@ -1246,10 +1246,8 @@
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
-        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
-        1. Set _duration_ to ! CombineDateAndNormalizedTimeDuration(_dateDuration_, _norm_).
-        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _duration_, _overflow_).
+        1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
+        1. Let _epochNanoseconds_ be ? AddZonedDateTime(_zonedDateTime_.[[Nanoseconds]], _timeZone_, _calendar_, _normalizedDuration_, _overflow_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
