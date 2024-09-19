@@ -710,9 +710,8 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
         1. Let _sign_ be DurationSign(_duration_).
-        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _balanceResult_ be ! BalanceTimeDuration(_norm_, *"day"*).
-        1. Let _days_ be _duration_.[[Days]] + _balanceResult_.[[Days]].
+        1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
+        1. Let _balanceResult_ be ! BalanceTimeDuration(_normalizedDuration_.[[NormalizedTime]], *"day"*).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
         1. Set _fields_.[[Day]] to 1.
@@ -724,7 +723,7 @@
           1. Assert: ISODateWithinLimits(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]) is *true*.
         1. Else,
           1. Let _date_ be _intermediateDate_.
-        1. Let _durationToAdd_ be ? CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _days_).
+        1. Let _durationToAdd_ be ? CreateDateDurationRecord(_normalizedDuration_.[[Date]].[[Years]], _normalizedDuration_.[[Date]].[[Months]], _normalizedDuration_.[[Date]].[[Weeks]], _balanceResult_.[[Days]]).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _overflow_).
         1. Let _addedDateFields_ be ISODateToFields(_calendar_, _addedDate_, ~year-month~).
         1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _overflow_).
