@@ -4318,14 +4318,7 @@ export function AddDurationToOrSubtractDurationFromPlainDateTime(operation, date
 export function AddDurationToOrSubtractDurationFromPlainTime(operation, temporalTime, durationLike) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
-  const norm = TimeDuration.normalize(
-    GetSlot(duration, HOURS),
-    GetSlot(duration, MINUTES),
-    GetSlot(duration, SECONDS),
-    GetSlot(duration, MILLISECONDS),
-    GetSlot(duration, MICROSECONDS),
-    GetSlot(duration, NANOSECONDS)
-  );
+  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
   let { hour, minute, second, millisecond, microsecond, nanosecond } = AddTime(
     GetSlot(temporalTime, ISO_HOUR),
     GetSlot(temporalTime, ISO_MINUTE),
@@ -4333,7 +4326,7 @@ export function AddDurationToOrSubtractDurationFromPlainTime(operation, temporal
     GetSlot(temporalTime, ISO_MILLISECOND),
     GetSlot(temporalTime, ISO_MICROSECOND),
     GetSlot(temporalTime, ISO_NANOSECOND),
-    norm
+    normalizedDuration.norm
   );
   ({ hour, minute, second, millisecond, microsecond, nanosecond } = RegulateTime(
     hour,

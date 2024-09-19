@@ -1031,8 +1031,8 @@
       <emu-alg>
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
-        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Let _result_ be AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _norm_).
+        1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
+        1. Let _result_ be AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _normalizedDuration_.[[NormalizedTime]]).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
