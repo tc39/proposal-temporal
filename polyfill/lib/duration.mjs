@@ -39,7 +39,6 @@ import {
   SetSlot,
   TIME_ZONE
 } from './slots.mjs';
-import { TimeDuration } from './timeduration.mjs';
 
 export class Duration {
   constructor(
@@ -446,69 +445,49 @@ export class Duration {
     two = ES.ToTemporalDuration(two);
     options = ES.GetOptionsObject(options);
     const { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption(options);
-    const y1 = GetSlot(one, YEARS);
-    const mon1 = GetSlot(one, MONTHS);
-    const w1 = GetSlot(one, WEEKS);
-    let d1 = GetSlot(one, DAYS);
-    let h1 = GetSlot(one, HOURS);
-    const min1 = GetSlot(one, MINUTES);
-    const s1 = GetSlot(one, SECONDS);
-    const ms1 = GetSlot(one, MILLISECONDS);
-    const µs1 = GetSlot(one, MICROSECONDS);
-    let ns1 = GetSlot(one, NANOSECONDS);
-    const y2 = GetSlot(two, YEARS);
-    const mon2 = GetSlot(two, MONTHS);
-    const w2 = GetSlot(two, WEEKS);
-    let d2 = GetSlot(two, DAYS);
-    let h2 = GetSlot(two, HOURS);
-    const min2 = GetSlot(two, MINUTES);
-    const s2 = GetSlot(two, SECONDS);
-    const ms2 = GetSlot(two, MILLISECONDS);
-    const µs2 = GetSlot(two, MICROSECONDS);
-    let ns2 = GetSlot(two, NANOSECONDS);
 
     if (
-      y1 === y2 &&
-      mon1 === mon2 &&
-      w1 === w2 &&
-      d1 === d2 &&
-      h1 === h2 &&
-      min1 === min2 &&
-      s1 === s2 &&
-      ms1 === ms2 &&
-      µs1 === µs2 &&
-      ns1 === ns2
+      GetSlot(one, YEARS) === GetSlot(two, YEARS) &&
+      GetSlot(one, MONTHS) === GetSlot(two, MONTHS) &&
+      GetSlot(one, WEEKS) === GetSlot(two, WEEKS) &&
+      GetSlot(one, DAYS) === GetSlot(two, DAYS) &&
+      GetSlot(one, HOURS) === GetSlot(two, HOURS) &&
+      GetSlot(one, MINUTES) === GetSlot(two, MINUTES) &&
+      GetSlot(one, SECONDS) === GetSlot(two, SECONDS) &&
+      GetSlot(one, MILLISECONDS) === GetSlot(two, MILLISECONDS) &&
+      GetSlot(one, MICROSECONDS) === GetSlot(two, MICROSECONDS) &&
+      GetSlot(one, NANOSECONDS) === GetSlot(two, NANOSECONDS)
     ) {
       return 0;
     }
 
-    const calendarUnitsPresent = y1 !== 0 || y2 !== 0 || mon1 !== 0 || mon2 !== 0 || w1 !== 0 || w2 !== 0;
-    const dateDuration1 = { years: y1, months: mon1, weeks: w1, days: d1 };
-    const dateDuration2 = { years: y2, months: mon2, weeks: w2, days: d2 };
+    const largestUnit1 = ES.DefaultTemporalLargestUnit(one);
+    const largestUnit2 = ES.DefaultTemporalLargestUnit(two);
+    const calendarUnitsPresent = ES.IsCalendarUnit(largestUnit1) || ES.IsCalendarUnit(largestUnit2);
+    const duration1 = ES.NormalizeDuration(one);
+    const duration2 = ES.NormalizeDuration(two);
 
-    if (zonedRelativeTo && (calendarUnitsPresent || d1 != 0 || d2 !== 0)) {
+    if (zonedRelativeTo && (calendarUnitsPresent || largestUnit1 === 'day' || largestUnit2 === 'day')) {
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
 
-      const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1);
-      const duration1 = { date: dateDuration1, norm: norm1 };
-      const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2);
-      const duration2 = { date: dateDuration2, norm: norm2 };
       const after1 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration1);
       const after2 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration2);
       return ES.ComparisonResult(after1.minus(after2).toJSNumber());
     }
 
+    let d1 = duration1.date.days;
+    let d2 = duration2.date.days;
     if (calendarUnitsPresent) {
       if (!plainRelativeTo) {
         throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
       }
-      d1 = ES.UnbalanceDateDurationRelative(dateDuration1, plainRelativeTo);
-      d2 = ES.UnbalanceDateDurationRelative(dateDuration2, plainRelativeTo);
+      d1 = ES.UnbalanceDateDurationRelative(duration1.date, plainRelativeTo);
+      d2 = ES.UnbalanceDateDurationRelative(duration2.date, plainRelativeTo);
     }
-    const norm1 = TimeDuration.normalize(h1, min1, s1, ms1, µs1, ns1).add24HourDays(d1);
-    const norm2 = TimeDuration.normalize(h2, min2, s2, ms2, µs2, ns2).add24HourDays(d2);
+    const norm1 = duration1.norm.add24HourDays(d1);
+    const norm2 = duration2.norm.add24HourDays(d2);
     return norm1.cmp(norm2);
   }
 }
