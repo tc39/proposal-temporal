@@ -4281,19 +4281,10 @@ export function AddDurationToDate(operation, plainDate, durationLike, options) {
 
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
-  const norm = TimeDuration.normalize(
-    GetSlot(duration, HOURS),
-    GetSlot(duration, MINUTES),
-    GetSlot(duration, SECONDS),
-    GetSlot(duration, MILLISECONDS),
-    GetSlot(duration, MICROSECONDS),
-    GetSlot(duration, NANOSECONDS)
-  );
+  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
   const dateDuration = {
-    years: GetSlot(duration, YEARS),
-    months: GetSlot(duration, MONTHS),
-    weeks: GetSlot(duration, WEEKS),
-    days: GetSlot(duration, DAYS) + BalanceTimeDuration(norm, 'day').days
+    ...normalizedDuration.date,
+    days: BalanceTimeDuration(normalizedDuration.norm, 'day').days
   };
 
   options = GetOptionsObject(options);
