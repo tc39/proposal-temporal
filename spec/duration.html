@@ -928,6 +928,23 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-normalizedurationwithouttime" type="abstract operation">
+      <h1>
+        NormalizeDurationWithoutTime (
+          _duration_: a Temporal.Duration,
+        ): either a normal completion containing a Date Duration Record, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _duration_ into its normalized form, for use in date-only calculations. The duration's days are assumed to be uniformly 24 hours, and the [[Days]] field of the returned Record is set to the [[Days]] internal slot of _duration_, incremented by any whole days that _duration_'s time units added up to.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
+        1. Let _days_ be truncate(NormalizedTimeDurationSeconds(_normalizedDuration_.[[NormalizedTime]]) / 86400).
+        1. Return ? CreateDateDurationRecord(_normalizedDuration_.[[Date]].[[Years]], _normalizedDuration_.[[Date]].[[Months]], _normalizedDuration_.[[Date]].[[Weeks]], _days_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-unnormalizeduration" type="abstract operation">
       <h1>
         UnnormalizeDuration (
