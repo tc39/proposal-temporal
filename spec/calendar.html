@@ -1367,6 +1367,9 @@
         </li>
       </ul>
       <emu-note>
+        In some cases, verifying the internal consistency of fields requires accessing the data from other fields, such checking _fields_.[[MonthCode]] *"M06"* against _fields_.[[Month]] 7 in the Hebrew calendar (which are consistent if and only if _fields_ identifies a year that includes leap month Adar I).
+      </emu-note>
+      <emu-note>
         When _type_ is ~month-day~ and _fields_.[[Month]] is not ~unset~, it is recommended that all built-in calendars other than the ISO 8601 calendar require a disambiguating year (e.g., either _fields_.[[Year]] or _fields_.[[Era]] and _fields_.[[EraYear]]), regardless of whether or not _fields_.[[MonthCode]] is also ~unset~. The ISO 8601 calendar allows _fields_.[[Year]] to be ~unset~ in this case because it is a special default calendar that is permanently stable for automated processing.
       </emu-note>
     </emu-clause>
