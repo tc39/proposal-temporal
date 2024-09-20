@@ -444,7 +444,7 @@
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _normalizedDuration_.[[NormalizedTime]]).
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _dateDuration_ be ? AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
+          1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, *"constrain"*).
           1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Return _roundRecord_.[[Duration]].
@@ -486,7 +486,7 @@
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _normalizedDuration_.[[NormalizedTime]]).
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _dateDuration_ be ? AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
+          1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, *"constrain"*).
           1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hour]], _targetTime_.[[Minute]], _targetTime_.[[Second]], _targetTime_.[[Millisecond]], _targetTime_.[[Microsecond]], _targetTime_.[[Nanosecond]], _calendar_, _unit_, 1, _unit_, *"trunc"*).
         1. Else,
