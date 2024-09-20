@@ -472,7 +472,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainDateTime(~add~, _dateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToDateTime(~add~, _dateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -482,7 +482,7 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainDateTime(~subtract~, _dateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToDateTime(~subtract~, _dateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1263,9 +1263,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplaindatetime" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtodatetime" type="abstract operation">
       <h1>
-        AddDurationToOrSubtractDurationFromPlainDateTime (
+        AddDurationToDateTime (
           _operation_: ~add~ or ~subtract~,
           _dateTime_: a Temporal.PlainDateTime,
           _temporalDurationLike_: an ECMAScript language value,

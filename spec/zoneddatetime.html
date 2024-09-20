@@ -592,7 +592,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~add~, _zonedDateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToZonedDateTime(~add~, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -602,7 +602,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return ? AddDurationToOrSubtractDurationFromZonedDateTime(~subtract~, _zonedDateTime_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToZonedDateTime(~subtract~, _zonedDateTime_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -1224,9 +1224,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromzoneddatetime" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtozoneddatetime" type="abstract operation">
       <h1>
-        AddDurationToOrSubtractDurationFromZonedDateTime (
+        AddDurationToZonedDateTime (
           _operation_: ~add~ or ~subtract~,
           _zonedDateTime_: a Temporal.ZonedDateTime,
           _temporalDurationLike_: an ECMAScript language value,

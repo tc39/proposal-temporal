@@ -250,11 +250,11 @@ export class PlainDateTime {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromPlainDateTime('add', this, temporalDurationLike, options);
+    return ES.AddDurationToDateTime('add', this, temporalDurationLike, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromPlainDateTime('subtract', this, temporalDurationLike, options);
+    return ES.AddDurationToDateTime('subtract', this, temporalDurationLike, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');

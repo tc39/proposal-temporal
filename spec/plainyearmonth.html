@@ -267,7 +267,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainYearMonth(~add~, _yearMonth_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToYearMonth(~add~, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -277,7 +277,7 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Return ? AddDurationToOrSubtractDurationFromPlainYearMonth(~subtract~, _yearMonth_, _temporalDurationLike_, _options_).
+        1. Return ? AddDurationToYearMonth(~subtract~, _yearMonth_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -691,9 +691,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfromplainyearmonth" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtoyearmonth" type="abstract operation">
       <h1>
-        AddDurationToOrSubtractDurationFromPlainYearMonth (
+        AddDurationToYearMonth (
           _operation_: ~add~ or ~subtract~,
           _yearMonth_: a Temporal.PlainYearMonth,
           _temporalDurationLike_: an ECMAScript language value,

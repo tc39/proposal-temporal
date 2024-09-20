@@ -146,7 +146,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Return ? AddDurationToOrSubtractDurationFromInstant(~add~, _instant_, _temporalDurationLike_).
+        1. Return ? AddDurationToInstant(~add~, _instant_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -156,7 +156,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Return ? AddDurationToOrSubtractDurationFromInstant(~subtract~, _instant_, _temporalDurationLike_).
+        1. Return ? AddDurationToInstant(~subtract~, _instant_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -556,9 +556,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-adddurationtoorsubtractdurationfrominstant" type="abstract operation">
+    <emu-clause id="sec-temporal-adddurationtoinstant" type="abstract operation">
       <h1>
-        AddDurationToOrSubtractDurationFromInstant (
+        AddDurationToInstant (
           _operation_: ~add~ or ~subtract~,
           _instant_: a Temporal.Instant,
           _temporalDurationLike_: an ECMAScript language value,
