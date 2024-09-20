@@ -641,7 +641,7 @@ export function ParseTemporalTimeZoneString(stringIdent) {
   throw new ErrorCtor('this line should not be reached');
 }
 
-export function ParseTemporalDurationString(isoString) {
+export function ParseTemporalDurationStringRaw(isoString) {
   const match = Call(RegExpPrototypeExec, PARSE.duration, [isoString]);
   if (!match) throw new RangeErrorCtor(`invalid duration: ${isoString}`);
   if (Call(ArrayPrototypeEvery, match, [(part, i) => i < 2 || part === undefined])) {
@@ -694,6 +694,24 @@ export function ParseTemporalDurationString(isoString) {
   return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
 }
 
+function ParseTemporalDurationString(isoString) {
+  const { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
+    ParseTemporalDurationStringRaw(isoString);
+  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+  return new TemporalDuration(
+    years,
+    months,
+    weeks,
+    days,
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  );
+}
+
 export function RegulateISODate(year, month, day, overflow) {
   switch (overflow) {
     case 'reject':
@@ -736,49 +754,6 @@ export function RegulateISOYearMonth(year, month, overflow) {
       break;
   }
   return { year, month };
-}
-
-export function ToTemporalDurationRecord(item) {
-  if (Type(item) !== 'Object') {
-    return ParseTemporalDurationString(RequireString(item));
-  }
-  if (IsTemporalDuration(item)) {
-    return {
-      years: GetSlot(item, YEARS),
-      months: GetSlot(item, MONTHS),
-      weeks: GetSlot(item, WEEKS),
-      days: GetSlot(item, DAYS),
-      hours: GetSlot(item, HOURS),
-      minutes: GetSlot(item, MINUTES),
-      seconds: GetSlot(item, SECONDS),
-      milliseconds: GetSlot(item, MILLISECONDS),
-      microseconds: GetSlot(item, MICROSECONDS),
-      nanoseconds: GetSlot(item, NANOSECONDS)
-    };
-  }
-  const result = {
-    years: 0,
-    months: 0,
-    weeks: 0,
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    milliseconds: 0,
-    microseconds: 0,
-    nanoseconds: 0
-  };
-  let partial = ToTemporalPartialDurationRecord(item);
-  for (let index = 0; index < DURATION_FIELDS.length; index++) {
-    const property = DURATION_FIELDS[index];
-    const value = partial[property];
-    if (value !== undefined) {
-      result[property] = value;
-    }
-  }
-  let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } = result;
-  RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-  return result;
 }
 
 export function ToTemporalPartialDurationRecord(temporalDurationLike) {
@@ -1312,20 +1287,41 @@ export function ToTemporalDateTime(item, options = undefined) {
 
 export function ToTemporalDuration(item) {
   if (IsTemporalDuration(item)) return item;
-  let { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds } =
-    ToTemporalDurationRecord(item);
+  if (Type(item) !== 'Object') {
+    return ParseTemporalDurationString(RequireString(item));
+  }
+  const result = {
+    years: 0,
+    months: 0,
+    weeks: 0,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+    microseconds: 0,
+    nanoseconds: 0
+  };
+  let partial = ToTemporalPartialDurationRecord(item);
+  for (let index = 0; index < DURATION_FIELDS.length; index++) {
+    const property = DURATION_FIELDS[index];
+    const value = partial[property];
+    if (value !== undefined) {
+      result[property] = value;
+    }
+  }
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
   return new TemporalDuration(
-    years,
-    months,
-    weeks,
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
+    result.years,
+    result.months,
+    result.weeks,
+    result.days,
+    result.hours,
+    result.minutes,
+    result.seconds,
+    result.milliseconds,
+    result.microseconds,
+    result.nanoseconds
   );
 }
 

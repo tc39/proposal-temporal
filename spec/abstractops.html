@@ -1747,7 +1747,7 @@
     <h1>
       ParseTemporalDurationString (
         _isoString_: a String,
-      ): either a normal completion containing a Duration Record or a throw completion
+      ): either a normal completion containing a Temporal.Duration or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1843,8 +1843,7 @@
       1. Set _millisecondsMV_ to floor(_millisecondsMV_) × _factor_.
       1. Set _microsecondsMV_ to floor(_microsecondsMV_) × _factor_.
       1. Set _nanosecondsMV_ to floor(_nanosecondsMV_) × _factor_.
-      1. If IsValidDuration(_yearsMV_, _monthsMV_, _weeksMV_, _daysMV_, _hoursMV_, _minutesMV_, _secondsMV_, _millisecondsMV_, _microsecondsMV_, _nanosecondsMV_) is *false*, throw a *RangeError* exception.
-      1. Return CreateDurationRecord(_yearsMV_, _monthsMV_, _weeksMV_, _daysMV_, _hoursMV_, _minutesMV_, _secondsMV_, _millisecondsMV_, _microsecondsMV_, _nanosecondsMV_).
+      1. Return ? CreateTemporalDuration(_yearsMV_, _monthsMV_, _weeksMV_, _daysMV_, _hoursMV_, _minutesMV_, _secondsMV_, _millisecondsMV_, _microsecondsMV_, _nanosecondsMV_).
     </emu-alg>
   </emu-clause>
 

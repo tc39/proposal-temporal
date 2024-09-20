@@ -681,24 +681,22 @@
   <emu-clause id="sec-temporal-duration-abstract-ops">
     <h1>Abstract Operations</h1>
 
-    <emu-clause id="sec-temporal-duration-records">
-      <h1>Duration Records</h1>
+    <emu-clause id="sec-temporal-date-duration-records">
+      <h1>Date Duration Records</h1>
       <p>
-        A <dfn variants="Duration Records">Duration Record</dfn> is a Record value used to represent a Temporal.Duration object.
-        Duration Records are produced by the abstract operation CreateDurationRecord, among others.
+        A <dfn variants="Date Duration Records">Date Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with calendar date units.
+        Date Duration Records are produced by the abstract operation CreateDateDurationRecord, among others.
       </p>
-      <p>Duration Records have the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.</p>
-      <emu-table id="table-temporal-duration-record-fields" caption="Duration Record Fields">
+      <p>Date Duration Records have the fields listed in <emu-xref href="#table-temporal-date-duration-record-fields"></emu-xref>.</p>
+      <emu-table id="table-temporal-date-duration-record-fields" caption="Date Duration Record Fields">
         <table class="real-table">
           <tr>
             <th>Field Name</th>
-            <th>Property Name</th>
             <th>Value</th>
             <th>Meaning</th>
           </tr>
           <tr>
             <td>[[Years]]</td>
-            <td>*"years"*</td>
             <td>a float64-representable integer</td>
             <td>
               The number of years in the duration.
@@ -706,7 +704,6 @@
           </tr>
           <tr>
             <td>[[Months]]</td>
-            <td>*"months"*</td>
             <td>a float64-representable integer</td>
             <td>
               The number of months in the duration.
@@ -714,7 +711,6 @@
           </tr>
           <tr>
             <td>[[Weeks]]</td>
-            <td>*"weeks"*</td>
             <td>a float64-representable integer</td>
             <td>
               The number of weeks in the duration.
@@ -722,80 +718,101 @@
           </tr>
           <tr>
             <td>[[Days]]</td>
-            <td>*"days"*</td>
             <td>a float64-representable integer</td>
             <td>
               The number of days in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Hours]]</td>
-            <td>*"hours"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of hours in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Minutes]]</td>
-            <td>*"minutes"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of minutes in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Seconds]]</td>
-            <td>*"seconds"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of seconds in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Milliseconds]]</td>
-            <td>*"milliseconds"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of milliseconds in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Microseconds]]</td>
-            <td>*"microseconds"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of microseconds in the duration.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Nanoseconds]]</td>
-            <td>*"nanoseconds"*</td>
-            <td>a float64-representable integer</td>
-            <td>
-              The number of nanoseconds in the duration.
             </td>
           </tr>
         </table>
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-date-duration-records">
-      <h1>Date Duration Records</h1>
-      <p>
-        A <dfn variants="Date Duration Records">Date Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with calendar date units.
-        Date Duration Records are produced by the abstract operation CreateDateDurationRecord, among others.
-      </p>
-      <p>Of the fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>, Date Duration Records have [[Years]], [[Months]], [[Weeks]], and [[Days]].</p>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-partial-duration-records">
       <h1>Partial Duration Records</h1>
       <p>A <dfn variants="partial Duration Records">partial Duration Record</dfn> is a Record value used to represent a portion of a Temporal.Duration object, in which it is not required that all the fields be specified.</p>
       <p>
-        Partial Duration Records have the same fields listed in <emu-xref href="#table-temporal-duration-record-fields"></emu-xref>.
-        Unlike Duration Records, each field of a partial Duration Record may also have the value *undefined* as long as there is at least one field that is not *undefined*.
+        Partial Duration Records have the fields listed in <emu-xref href="#table-temporal-partial-duration-record-fields"></emu-xref>.
+        Additionally, Partial Duration Records must have at least one field that is not *undefined*.
       </p>
+      <emu-table id="table-temporal-partial-duration-record-fields" caption="Partial Duration Record Fields">
+        <table class="real-table">
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Years]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of years in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Months]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of months in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Weeks]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of weeks in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Days]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of days in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Hours]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of hours in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Minutes]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of minutes in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Seconds]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of seconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Milliseconds]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of milliseconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Microseconds]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of microseconds in the duration.
+            </td>
+          </tr>
+          <tr>
+            <td>[[Nanoseconds]]</td>
+            <td>a float64-representable integer or *undefined*</td>
+            <td>
+              The number of nanoseconds in the duration.
+            </td>
+          </tr>
+        </table>
+      </emu-table>
     </emu-clause>
 
     <emu-clause id="sec-temporal-normalized-time-duration-records">
@@ -1012,42 +1029,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-createdurationrecord" type="abstract operation">
-      <h1>
-        CreateDurationRecord (
-          _years_: an integer,
-          _months_: an integer,
-          _weeks_: an integer,
-          _days_: an integer,
-          _hours_: an integer,
-          _minutes_: an integer,
-          _seconds_: an integer,
-          _milliseconds_: an integer,
-          _microseconds_: an integer,
-          _nanoseconds_: an integer,
-        ): a Duration Record
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd></dd>
-      </dl>
-      <emu-alg>
-        1. Assert: IsValidDuration(_years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_) is *true*.
-        1. Return Duration Record {
-          [[Years]]: ℝ(𝔽(_years_)),
-          [[Months]]: ℝ(𝔽(_months_)),
-          [[Weeks]]: ℝ(𝔽(_weeks_)),
-          [[Days]]: ℝ(𝔽(_days_)),
-          [[Hours]]: ℝ(𝔽(_hours_)),
-          [[Minutes]]: ℝ(𝔽(_minutes_)),
-          [[Seconds]]: ℝ(𝔽(_seconds_)),
-          [[Milliseconds]]: ℝ(𝔽(_milliseconds_)),
-          [[Microseconds]]: ℝ(𝔽(_microseconds_)),
-          [[Nanoseconds]]: ℝ(𝔽(_nanoseconds_))
-          }.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-createdatedurationrecord" type="abstract operation">
       <h1>
         CreateDateDurationRecord (
@@ -1127,29 +1108,11 @@
       <emu-alg>
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
           1. Return _item_.
-        1. Let _result_ be ? ToTemporalDurationRecord(_item_).
-        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-totemporaldurationrecord" type="abstract operation">
-      <h1>
-        ToTemporalDurationRecord (
-          _temporalDurationLike_: an ECMAScript language value,
-        ): either a normal completion containing a Duration Record or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>The returned Record has its fields set according to the properties of _temporalDurationLike_, with absent or undefined properties corresponding to fields containing 0.</dd>
-      </dl>
-      <emu-alg>
-        1. If _temporalDurationLike_ is not an Object, then
-          1. If _temporalDurationLike_ is not a String, throw a *TypeError* exception.
-          1. Return ? ParseTemporalDurationString(_temporalDurationLike_).
-        1. If _temporalDurationLike_ has an [[InitializedTemporalDuration]] internal slot, then
-          1. Return CreateDurationRecord(_temporalDurationLike_.[[Years]], _temporalDurationLike_.[[Months]], _temporalDurationLike_.[[Weeks]], _temporalDurationLike_.[[Days]], _temporalDurationLike_.[[Hours]], _temporalDurationLike_.[[Minutes]], _temporalDurationLike_.[[Seconds]], _temporalDurationLike_.[[Milliseconds]], _temporalDurationLike_.[[Microseconds]], _temporalDurationLike_.[[Nanoseconds]]).
-        1. Let _result_ be a new Duration Record with each field set to 0.
-        1. Let _partial_ be ? ToTemporalPartialDurationRecord(_temporalDurationLike_).
+        1. If _item_ is not an Object, then
+          1. If _item_ is not a String, throw a *TypeError* exception.
+          1. Return ? ParseTemporalDurationString(_item_).
+        1. Let _result_ be a new Partial Duration Record with each field set to 0.
+        1. Let _partial_ be ? ToTemporalPartialDurationRecord(_item_).
         1. If _partial_.[[Years]] is not *undefined*, set _result_.[[Years]] to _partial_.[[Years]].
         1. If _partial_.[[Months]] is not *undefined*, set _result_.[[Months]] to _partial_.[[Months]].
         1. If _partial_.[[Weeks]] is not *undefined*, set _result_.[[Weeks]] to _partial_.[[Weeks]].
@@ -1160,9 +1123,7 @@
         1. If _partial_.[[Milliseconds]] is not *undefined*, set _result_.[[Milliseconds]] to _partial_.[[Milliseconds]].
         1. If _partial_.[[Microseconds]] is not *undefined*, set _result_.[[Microseconds]] to _partial_.[[Microseconds]].
         1. If _partial_.[[Nanoseconds]] is not *undefined*, set _result_.[[Nanoseconds]] to _partial_.[[Nanoseconds]].
-        1. If IsValidDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]) is *false*, then
-          1. Throw a *RangeError* exception.
-        1. Return _result_.
+        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
