@@ -123,6 +123,7 @@
             <th>Plural</th>
             <th>Category</th>
             <th>Length in nanoseconds</th>
+            <th>Maximum duration rounding increment</th>
           </tr>
         </thead>
         <tr>
@@ -130,6 +131,7 @@
           <td>*"years"*</td>
           <td>~date~</td>
           <td>calendar-dependent</td>
+          <td>~unset~</td>
         </tr>
 
         <tr>
@@ -137,6 +139,7 @@
           <td>*"months"*</td>
           <td>~date~</td>
           <td>calendar-dependent</td>
+          <td>~unset~</td>
         </tr>
 
         <tr>
@@ -144,6 +147,7 @@
           <td>*"weeks"*</td>
           <td>~date~</td>
           <td>calendar-dependent</td>
+          <td>~unset~</td>
         </tr>
 
         <tr>
@@ -151,6 +155,7 @@
           <td>*"days"*</td>
           <td>~date~</td>
           <td>nsPerDay</td>
+          <td>~unset~</td>
         </tr>
 
         <tr>
@@ -158,6 +163,7 @@
           <td>*"hours"*</td>
           <td>~time~</td>
           <td>3.6 × 10<sup>12</sup></td>
+          <td>24</td>
         </tr>
 
         <tr>
@@ -165,6 +171,7 @@
           <td>*"minutes"*</td>
           <td>~time~</td>
           <td>6 × 10<sup>10</sup></td>
+          <td>60</td>
         </tr>
 
         <tr>
@@ -172,6 +179,7 @@
           <td>*"seconds"*</td>
           <td>~time~</td>
           <td>10<sup>9</sup></td>
+          <td>60</td>
         </tr>
 
         <tr>
@@ -179,6 +187,7 @@
           <td>*"milliseconds"*</td>
           <td>~time~</td>
           <td>10<sup>6</sup></td>
+          <td>1000</td>
         </tr>
 
         <tr>
@@ -186,6 +195,7 @@
           <td>*"microseconds"*</td>
           <td>~time~</td>
           <td>10<sup>3</sup></td>
+          <td>1000</td>
         </tr>
 
         <tr>
@@ -193,6 +203,7 @@
           <td>*"nanoseconds"*</td>
           <td>~time~</td>
           <td>1</td>
+          <td>1000</td>
         </tr>
       </table>
     </emu-table>
@@ -820,21 +831,14 @@
     <h1>
       MaximumTemporalDurationRoundingIncrement (
         _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
-      ): 24, 60, 1000, or *undefined*
+      ): 24, 60, 1000, or ~unset~
     </h1>
     <dl class="header">
       <dt>description</dt>
-      <dd>Given a string representing a Temporal.Duration unit, it returns the maximum rounding increment for that unit, or *undefined* if there is no maximum.</dd>
+      <dd>Given a string representing a Temporal.Duration unit, it returns the maximum rounding increment for that unit, or ~unset~ if there is no maximum.</dd>
     </dl>
     <emu-alg>
-      1. If _unit_ is *"year"*, *"month"*, *"week"*, or *"day"*, then
-        1. Return *undefined*.
-      1. If _unit_ is *"hour"*, then
-        1. Return 24.
-      1. If _unit_ is *"minute"* or *"second"*, then
-        1. Return 60.
-      1. Assert: _unit_ is *"millisecond"*, *"microsecond"*, or *"nanosecond"*.
-      1. Return 1000.
+      1. Return the value from the "Maximum duration rounding increment" column of the row in which _unit_ is in the "Singular" column.
     </emu-alg>
   </emu-clause>
 
@@ -2201,7 +2205,7 @@
       1. If _largestUnit_ is *"auto"*, set _largestUnit_ to _defaultLargestUnit_.
       1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
       1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
-      1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
+      1. If _maximum_ is not ~unset~, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
       1. Return the Record {
         [[SmallestUnit]]: _smallestUnit_,
         [[LargestUnit]]: _largestUnit_,

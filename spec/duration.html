@@ -428,7 +428,7 @@
           1. Throw a *RangeError* exception.
         1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
         1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
-        1. If _maximum_ is not *undefined*, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
+        1. If _maximum_ is not ~unset~, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
         1. If _roundingIncrement_ > 1, and _largestUnit_ is not _smallestUnit_, and IsCalendarUnit(_smallestUnit_) is *true* or _smallestUnit_ is *"day"*, then
           1. Throw a *RangeError* exception.
         1. If _zonedRelativeTo_ is not *undefined*, then
