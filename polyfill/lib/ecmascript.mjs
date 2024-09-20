@@ -1092,6 +1092,11 @@ export function IsCalendarUnit(unit) {
   return unit === 'year' || unit === 'month' || unit === 'week';
 }
 
+export function TemporalUnitCategory(unit) {
+  if (IsCalendarUnit(unit) || unit === 'day') return 'date';
+  return 'time';
+}
+
 export function TemporalObjectToFields(temporalObject) {
   const calendar = GetSlot(temporalObject, CALENDAR);
   const isoDate = TemporalObjectToISODateRecord(temporalObject);
@@ -3541,7 +3546,7 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
 
   let days = 0;
   let remainder = roundedNorm;
-  if (LargerOfTwoTemporalUnits(largestUnit, 'day') === largestUnit) {
+  if (TemporalUnitCategory(largestUnit) === 'date') {
     days = roundedWholeDays;
     remainder = roundedNorm.subtract(TimeDuration.normalize(roundedWholeDays * 24, 0, 0, 0, 0, 0));
   }
@@ -3805,7 +3810,7 @@ export function DifferenceZonedDateTimeWithRounding(
   smallestUnit,
   roundingMode
 ) {
-  if (!IsCalendarUnit(largestUnit) && largestUnit !== 'day') {
+  if (TemporalUnitCategory(largestUnit) === 'time') {
     // The user is only asking for a time difference, so return difference of instants.
     return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, largestUnit, roundingMode);
   }
@@ -4126,12 +4131,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
   const Duration = GetIntrinsic('%Temporal.Duration%');
 
   let result;
-  if (
-    settings.largestUnit !== 'year' &&
-    settings.largestUnit !== 'month' &&
-    settings.largestUnit !== 'week' &&
-    settings.largestUnit !== 'day'
-  ) {
+  if (TemporalUnitCategory(settings.largestUnit) !== 'date') {
     // The user is only asking for a time difference, so return difference of instants.
     const { duration } = DifferenceInstant(
       ns1,
@@ -4227,7 +4227,7 @@ export function AddDurationToInstant(operation, instant, durationLike) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   const largestUnit = DefaultTemporalLargestUnit(duration);
-  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
+  if (TemporalUnitCategory(largestUnit) === 'date') {
     throw new RangeErrorCtor(
       `Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`
     );

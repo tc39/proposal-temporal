@@ -519,8 +519,8 @@
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
         1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, *"halfExpand"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « *"day"* »).
-        1. If _smallestUnit_ is *"day"*, then
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « ~day~ »).
+        1. If _smallestUnit_ is ~day~, then
           1. Let _maximum_ be 1.
           1. Let _inclusive_ be *true*.
         1. Else,
@@ -528,7 +528,7 @@
           1. Assert: _maximum_ is not ~unset~.
           1. Let _inclusive_ be *false*.
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, _inclusive_).
-        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, then
+        1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, then
           1. Return ! CreateTemporalDateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _dateTime_.[[Calendar]]).
         1. Let _result_ be RoundISODateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _dateTime_.[[Calendar]]).
@@ -559,8 +559,8 @@
         1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, *undefined*).
-        1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, ~unset~).
+        1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Let _result_ be RoundISODateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. If ISODateTimeWithinLimits(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]) is *false*, throw a *RangeError* exception.
@@ -1112,7 +1112,7 @@
           _microsecond_: an integer in the inclusive interval from 0 to 999,
           _nanosecond_: an integer in the inclusive interval from 0 to 999,
           _increment_: a positive integer,
-          _unit_: *"day"*, *"hour"*, *"minute"*, *"second"*, *"millisecond"*, *"microsecond"*, or *"nanosecond"*,
+          _unit_: a time unit or ~day~,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): an ISO Date-Time Record
       </h1>
@@ -1151,7 +1151,7 @@
           _mus2_: an integer between 0 and 999 inclusive,
           _ns2_: an integer between 0 and 999 inclusive,
           _calendar_: a String,
-          _largestUnit_: a String,
+          _largestUnit_: a Temporal unit,
         ): either a normal completion containing a Normalized Duration Record or a throw completion
       </h1>
       <dl class="header">
@@ -1173,7 +1173,7 @@
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, -_timeSign_).
         1. Let _date1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
         1. Let _date2_ be _adjustedDate_.
-        1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(*"day"*, _largestUnit_).
+        1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(~day~, _largestUnit_).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _date1_, _date2_, _dateLargestUnit_).
         1. If _largestUnit_ is not _dateLargestUnit_, then
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
@@ -1204,9 +1204,9 @@
           _mus2_: an integer in the inclusive interval from 0 to 999,
           _ns2_: an integer in the inclusive interval from 0 to 999,
           _calendar_: a String,
-          _largestUnit_: a String etc,
+          _largestUnit_: a Temporal unit,
           _roundingIncrement_: a positive integer,
-          _smallestUnit_: a String,
+          _smallestUnit_: a Temporal unit,
           _roundingMode_: a String,
         ): either a normal completion containing a Record with fields [[NormalizedDuration]] (a Normalized Duration Record) and [[Total]] (a mathematical value), or a throw completion
       </h1>
@@ -1221,7 +1221,7 @@
           1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
           1. Return the Record { [[NormalizedDuration]]: _duration_, [[Total]]: 0 }.
         1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _largestUnit_).
-        1. If _smallestUnit_ is *"nanosecond"* and _roundingIncrement_ = 1, then
+        1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, then
           1. Let _total_ be NormalizedTimeDurationSeconds(_diff_.[[NormalizedTime]]) × 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_diff_.[[NormalizedTime]]).
           1. Return the Record { [[NormalizedDuration]]: _diff_, [[Total]]: _total_ }.
         1. Let _dateTime_ be ISO Date-Time Record { [[Year]]: _y1_, [[Month]]: _mon1_, [[Day]]: _d1_, [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
@@ -1247,7 +1247,7 @@
         1. Set _other_ to ? ToTemporalDateTime(_other_).
         1. If CalendarEquals(_dateTime_.[[Calendar]], _other_.[[Calendar]]) is *false*, throw a *RangeError* exception.
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
-        1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, « », *"nanosecond"*, *"day"*).
+        1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, « », ~nanosecond~, ~day~).
         1. If _dateTime_.[[ISOYear]] = _other_.[[ISOYear]], and _dateTime_.[[ISOMonth]] = _other_.[[ISOMonth]], and _dateTime_.[[ISODay]] = _other_.[[ISODay]], and _dateTime_.[[ISOHour]] = _other_.[[ISOHour]], and _dateTime_.[[ISOMinute]] = _other_.[[ISOMinute]], and _dateTime_.[[ISOSecond]] = _other_.[[ISOSecond]], and _dateTime_.[[ISOMillisecond]] = _other_.[[ISOMillisecond]], and _dateTime_.[[ISOMicrosecond]] = _other_.[[ISOMicrosecond]], and _dateTime_.[[ISONanosecond]] = _other_.[[ISONanosecond]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _plainDate_ be ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[Calendar]]).
