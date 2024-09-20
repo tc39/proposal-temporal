@@ -444,7 +444,7 @@
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _normalizedDuration_.[[NormalizedTime]]).
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _dateDuration_ be ? CreateDateDurationRecord(_normalizedDuration_.[[Date]].[[Years]], _normalizedDuration_.[[Date]].[[Months]], _normalizedDuration_.[[Date]].[[Weeks]], _targetTime_.[[Days]]).
+          1. Let _dateDuration_ be ? AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, *"constrain"*).
           1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Return _roundRecord_.[[Duration]].
@@ -486,9 +486,9 @@
           1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _normalizedDuration_.[[NormalizedTime]]).
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _dateDuration_ be ? CreateDateDurationRecord(_normalizedDuration_.[[Date]].[[Years]], _normalizedDuration_.[[Date]].[[Months]], _normalizedDuration_.[[Date]].[[Weeks]], _targetTime_.[[Days]]).
+          1. Let _dateDuration_ be ? AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, *"constrain"*).
-          1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hours]], _targetTime_.[[Minutes]], _targetTime_.[[Seconds]], _targetTime_.[[Milliseconds]], _targetTime_.[[Microseconds]], _targetTime_.[[Nanoseconds]], _calendar_, _unit_, 1, _unit_, *"trunc"*).
+          1. Let _roundRecord_ be ? DifferencePlainDateTimeWithRounding(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hour]], _targetTime_.[[Minute]], _targetTime_.[[Second]], _targetTime_.[[Millisecond]], _targetTime_.[[Microsecond]], _targetTime_.[[Nanosecond]], _calendar_, _unit_, 1, _unit_, *"trunc"*).
         1. Else,
           1. Let _largestUnit_ be DefaultTemporalLargestUnit(_duration_).
           1. If IsCalendarUnit(_largestUnit_) is *true*, or IsCalendarUnit(_unit_) is *true*, throw a *RangeError* exception.
@@ -1072,6 +1072,26 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-adjustdatedurationrecord" type="abstract operation">
+      <h1>
+        AdjustDateDurationRecord (
+          _dateDuration_: a Date Duration Record,
+          _days_: an integer,
+          optional _weeks_: an integer,
+          optional _months_: an integer,
+        ): either a normal completion containing a Date Duration Record or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates a new Date Duration Record that is a copy of _dateDuration_, with one or more fields replaced with new values.</dd>
+      </dl>
+      <emu-alg>
+        1. If _weeks_ is not present, set _weeks_ to _dateDuration_.[[Weeks]].
+        1. If _months_ is not present, set _months_ to _dateDuration_.[[Months]].
+        1. Return ? CreateDateDurationRecord(_dateDuration_.[[Years]], _months_, _weeks_, _days_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-combinedateandnormalizedtimeduration" type="abstract operation">
       <h1>
         CombineDateAndNormalizedTimeDuration (
@@ -1635,7 +1655,7 @@
         <dd>It converts the calendar units of a duration into a number of days, and returns the result.</dd>
       </dl>
       <emu-alg>
-        1. Let _yearsMonthsWeeksDuration_ be ! CreateDateDurationRecord(_dateDuration_.[[Years]], _dateDuration_.[[Months]], _dateDuration_.[[Weeks]], 0).
+        1. Let _yearsMonthsWeeksDuration_ be ! AdjustDateDurationRecord(_dateDuration_, 0).
         1. If DateDurationSign(_yearsMonthsWeeksDuration_) = 0, return _dateDuration_.[[Days]].
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
         1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _isoDate_, _yearsMonthsWeeksDuration_, *"constrain"*).
@@ -1676,7 +1696,7 @@
           1. Let _divisor_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
           1. Let _total_ be DivideNormalizedTimeDuration(_norm_, _divisor_).
           1. Set _norm_ to ? RoundNormalizedTimeDurationToIncrement(_norm_, _divisor_ × _increment_, _roundingMode_).
-        1. Let _dateDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _days_).
+        1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _days_).
         1. Return the Record {
           [[NormalizedDuration]]: ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _norm_),
           [[Total]]: _total_
@@ -1758,10 +1778,10 @@
           1. Let _months_ be RoundNumberToIncrement(_duration_.[[Date]].[[Months]], _increment_, *"trunc"*).
           1. Let _r1_ be _months_.
           1. Let _r2_ be _months_ + _increment_ × _sign_.
-          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _r1_, 0, 0).
-          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _r2_, 0, 0).
+          1. Let _startDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r1_).
+          1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
         1. Else if _unit_ is *"week"*, then
-          1. Let _yearsMonths_ be ! CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], 0, 0).
+          1. Let _yearsMonths_ be ! AdjustDateDurationRecord(_duration_.[[Date]], 0, 0).
           1. Let _isoDate_ be ISODateTimeToDateRecord(_dateTime_).
           1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDate_, _yearsMonths_, *"constrain"*).
           1. Let _weeksEnd_ be BalanceISODate(_weeksStart_.[[Year]], _weeksStart_.[[Month]], _weeksStart_.[[Day]] + _duration_.[[Date]].[[Days]]).
@@ -1769,15 +1789,15 @@
           1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Date]].[[Weeks]] + _untilResult_.[[Weeks]], _increment_, *"trunc"*).
           1. Let _r1_ be _weeks_.
           1. Let _r2_ be _weeks_ + _increment_ × _sign_.
-          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _r1_, 0).
-          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _r2_, 0).
+          1. Let _startDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, _r1_).
+          1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, _r2_).
         1. Else,
           1. Assert: _unit_ is *"day"*.
           1. Let _days_ be RoundNumberToIncrement(_duration_.[[Date]].[[Days]], _increment_, *"trunc"*).
           1. Let _r1_ be _days_.
           1. Let _r2_ be _days_ + _increment_ × _sign_.
-          1. Let _startDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _r1_).
-          1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _r2_).
+          1. Let _startDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _r1_).
+          1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
         1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ > _r2_.
         1. Let _startDate_ be ISODateTimeToDateRecord(_dateTime_).
@@ -1866,7 +1886,7 @@
           1. Let _didRoundBeyondDay_ be *false*.
           1. Let _dayDelta_ be 0.
           1. Let _nudgedEpochNs_ be AddNormalizedTimeDurationToEpochNanoseconds(_roundedNorm_, _startEpochNs_).
-        1. Let _dateDuration_ be ? CreateDateDurationRecord (_dateDuration_.[[Years]], _dateDuration_.[[Months]], _dateDuration_.[[Weeks]], _dateDuration_.[[Days]] + _dayDelta_).
+        1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _duration_.[[Date]].[[Days]] + _dayDelta_).
         1. Let _resultDuration_ be ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _roundedNorm_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[Total]]: ~unset~, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didRoundBeyondDay_ }.
       </emu-alg>
@@ -1907,7 +1927,7 @@
         1. If LargerOfTwoTemporalUnits(_largestUnit_, *"day"*) is _largestUnit_, then
           1. Set _days_ to _roundedWholeDays_.
           1. Set _remainder_ to ! SubtractNormalizedTimeDuration(_roundedNorm_, NormalizeTimeDuration(_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
-        1. Let _dateDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _duration_.[[Date]].[[Weeks]], _days_).
+        1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _days_).
         1. Let _resultDuration_ be ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _remainder_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[Total]]: _total_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandDays_ }.
       </emu-alg>
@@ -1948,11 +1968,11 @@
               1. Let _endDuration_ be ? CreateDateDurationRecord(_years_, 0, 0, 0).
             1. Else if _unit_ is *"month"*, then
               1. Let _months_ be _duration_.[[Date]].[[Months]] + _sign_.
-              1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _months_, 0, 0).
+              1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _months_).
             1. Else,
               1. Assert: _unit_ is *"week"*.
               1. Let _weeks_ be _duration_.[[Date]].[[Weeks]] + _sign_.
-              1. Let _endDuration_ be ? CreateDateDurationRecord(_duration_.[[Date]].[[Years]], _duration_.[[Date]].[[Months]], _weeks_, 0).
+              1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, _weeks_).
             1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
             1. Let _end_ be ? CalendarDateAdd(_calendar_, _date_, _endDuration_, *"constrain"*).
             1. If _timeZone_ is ~unset~, then

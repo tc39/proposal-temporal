@@ -812,6 +812,15 @@ export function ToTemporalPartialDurationRecord(temporalDurationLike) {
   return result;
 }
 
+export function AdjustDateDurationRecord({ years, months, weeks, days }, newDays, newWeeks, newMonths) {
+  return {
+    years,
+    months: newMonths ?? months,
+    weeks: newWeeks ?? weeks,
+    days: newDays ?? days
+  };
+}
+
 function ZeroDateDuration() {
   return { years: 0, months: 0, weeks: 0, days: 0 };
 }
@@ -2835,7 +2844,7 @@ export function BalanceTime(hour, minute, second, millisecond, microsecond, nano
 }
 
 export function UnbalanceDateDurationRelative(dateDuration, plainRelativeTo) {
-  const yearsMonthsWeeksDuration = { ...dateDuration, days: 0 };
+  const yearsMonthsWeeksDuration = AdjustDateDurationRecord(dateDuration, 0);
   if (DateDurationSign(yearsMonthsWeeksDuration) === 0) return dateDuration.days;
 
   // balance years, months, and weeks down to days
@@ -3352,28 +3361,28 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, ca
       const months = RoundNumberToIncrement(duration.date.months, increment, 'trunc');
       r1 = months;
       r2 = months + increment * sign;
-      startDuration = { years: duration.date.years, months: r1, weeks: 0, days: 0 };
-      endDuration = { ...startDuration, months: r2 };
+      startDuration = AdjustDateDurationRecord(duration.date, 0, 0, r1);
+      endDuration = AdjustDateDurationRecord(duration.date, 0, 0, r2);
       break;
     }
     case 'week': {
-      const yearsMonths = { years: duration.date.years, months: duration.date.months };
+      const yearsMonths = AdjustDateDurationRecord(duration.date, 0, 0);
       const weeksStart = CalendarDateAdd(calendar, dateTime, yearsMonths, 'constrain');
       const weeksEnd = BalanceISODate(weeksStart.year, weeksStart.month, weeksStart.day + duration.date.days);
       const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
       const weeks = RoundNumberToIncrement(duration.date.weeks + untilResult.weeks, increment, 'trunc');
       r1 = weeks;
       r2 = weeks + increment * sign;
-      startDuration = { ...duration.date, weeks: r1, days: 0 };
-      endDuration = { ...startDuration, weeks: r2 };
+      startDuration = AdjustDateDurationRecord(duration.date, 0, r1);
+      endDuration = AdjustDateDurationRecord(duration.date, 0, r2);
       break;
     }
     case 'day': {
       const days = RoundNumberToIncrement(duration.date.days, increment, 'trunc');
       r1 = days;
       r2 = days + increment * sign;
-      startDuration = { ...duration.date, days: r1 };
-      endDuration = { ...startDuration, days: r2 };
+      startDuration = AdjustDateDurationRecord(duration.date, r1);
+      endDuration = AdjustDateDurationRecord(duration.date, r2);
       break;
     }
     default:
@@ -3505,10 +3514,8 @@ function NudgeToZonedTime(sign, duration, dateTime, timeZone, calendar, incremen
     nudgedEpochNs = roundedNorm.addToEpochNs(startEpochNs);
   }
 
-  const resultDuration = CombineDateAndNormalizedTimeDuration(
-    { ...duration.date, days: duration.date.days + dayDelta },
-    roundedNorm
-  );
+  const dateDuration = AdjustDateDurationRecord(duration.date, duration.date.days + dayDelta);
+  const resultDuration = CombineDateAndNormalizedTimeDuration(dateDuration, roundedNorm);
   return {
     duration: resultDuration,
     total: NaN, // Not computed in this path, so we assert that it is not NaN later on
@@ -3542,9 +3549,9 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
     remainder = roundedNorm.subtract(TimeDuration.normalize(roundedWholeDays * 24, 0, 0, 0, 0, 0));
   }
 
-  duration = { date: { ...duration.date, days }, norm: remainder };
+  const dateDuration = AdjustDateDurationRecord(duration.date, days);
   return {
-    duration,
+    duration: { date: dateDuration, norm: remainder },
     total,
     nudgedEpochNs,
     didExpandCalendarUnit: didExpandDays
@@ -3594,12 +3601,12 @@ function BubbleRelativeDuration(
       }
       case 'month': {
         const months = duration.date.months + sign;
-        endDuration = { years: duration.date.years, months, weeks: 0, days: 0 };
+        endDuration = AdjustDateDurationRecord(duration.date, 0, 0, months);
         break;
       }
       case 'week': {
         const weeks = duration.date.weeks + sign;
-        endDuration = { years: duration.date.years, months: duration.date.months, weeks, days: 0 };
+        endDuration = AdjustDateDurationRecord(duration.date, 0, weeks);
         break;
       }
       default:
@@ -4089,8 +4096,8 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
   otherFields.day = 1;
   const otherDate = CalendarDateFromFields(calendar, otherFields, 'constrain');
 
-  let { years, months } = CalendarDateUntil(calendar, thisDate, otherDate, settings.largestUnit);
-  const duration = { date: { years, months, weeks: 0, days: 0 }, norm: TimeDuration.ZERO };
+  const dateDifference = CalendarDateUntil(calendar, thisDate, otherDate, settings.largestUnit);
+  const duration = { date: AdjustDateDurationRecord(dateDifference, 0, 0), norm: TimeDuration.ZERO };
   let result;
   if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
     const dateTime = {
@@ -4287,7 +4294,7 @@ export function AddDurationToOrSubtractDurationFromPlainDateTime(operation, date
     GetSlot(dateTime, ISO_NANOSECOND),
     normalizedDuration.norm
   );
-  const dateDuration = { ...normalizedDuration.date, days: timeResult.deltaDays };
+  const dateDuration = AdjustDateDurationRecord(normalizedDuration.date, timeResult.deltaDays);
 
   // Delegate the date part addition to the calendar
   RejectDuration(dateDuration.years, dateDuration.months, dateDuration.weeks, dateDuration.days, 0, 0, 0, 0, 0, 0);
@@ -4500,7 +4507,7 @@ export function RoundTimeDuration(duration, increment, unit, roundingMode) {
     total = norm.fdiv(divisor);
     norm = norm.round(divisor * increment, roundingMode);
   }
-  const dateDuration = { ...duration.date, days };
+  const dateDuration = AdjustDateDurationRecord(duration.date, days);
   return { duration: CombineDateAndNormalizedTimeDuration(dateDuration, norm), total };
 }
 
