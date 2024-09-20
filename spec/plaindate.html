@@ -738,7 +738,7 @@
             1. Perform ? GetTemporalOverflowOption(_options_).
             1. Return _item_.
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Let _isoDateTime_ be GetISODateTimeFor(_item_.[[TimeZone]], _item_.[[Nanoseconds]]).
+            1. Let _isoDateTime_ be GetISODateTimeFor(_item_.[[TimeZone]], _item_.[[EpochNanoseconds]]).
             1. Set _options_ to ? GetOptionsObject(_options_).
             1. Perform ? GetTemporalOverflowOption(_options_).
             1. Return ! CreateTemporalDate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _item_.[[Calendar]]).

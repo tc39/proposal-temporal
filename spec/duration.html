@@ -102,8 +102,8 @@
         1. If _zonedRelativeTo_ is not *undefined*, and either _calendarUnitsPresent_ is *true*, or _largestUnit1_ is *"day"* or _largestUnit2_ is *"day"*, then
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
-          1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration1_).
-          1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[Nanoseconds]], _timeZone_, _calendar_, _duration2_).
+          1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[EpochNanoseconds]], _timeZone_, _calendar_, _duration1_).
+          1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[EpochNanoseconds]], _timeZone_, _calendar_, _duration2_).
           1. If _after1_ > _after2_, return *1*<sub>𝔽</sub>.
           1. If _after1_ &lt; _after2_, return *-1*<sub>𝔽</sub>.
           1. Return *+0*<sub>𝔽</sub>.
@@ -435,7 +435,7 @@
           1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
-          1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
+          1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[EpochNanoseconds]].
           1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_).
           1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Return _roundRecord_.[[Duration]].
@@ -478,7 +478,7 @@
           1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
-          1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[Nanoseconds]].
+          1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[EpochNanoseconds]].
           1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_).
           1. Let _roundRecord_ be ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _unit_, 1, _unit_, *"trunc"*).
         1. Else if _plainRelativeTo_ is not *undefined*, then

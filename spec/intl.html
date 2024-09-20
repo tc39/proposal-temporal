@@ -1400,7 +1400,7 @@
           1. Let _format_ be _dateTimeFormat_.[[TemporalInstantFormat]].
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _instant_.[[Nanoseconds]]
+            [[EpochNanoseconds]]: _instant_.[[EpochNanoseconds]]
             }.
         </emu-alg>
       </emu-clause>
@@ -1759,7 +1759,7 @@
             1. Let _dateTimeFormat_ be ? CreateDateTimeFormat(%Intl.DateTimeFormat%, _locales_, _options_, ~any~, ~all~, _timeZone_).
             1. If _zonedDateTime_.[[Calendar]] is not *"iso8601"* and CalendarEquals(_zonedDateTime_.[[Calendar]], _dateTimeFormat_.[[Calendar]]) is *false*, then
               1. Throw a *RangeError* exception.
-            1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[Nanoseconds]]).
+            1. Let _instant_ be ! CreateTemporalInstant(_zonedDateTime_.[[EpochNanoseconds]]).
             1. Return ? FormatDateTime(_dateTimeFormat_, _instant_).
           </emu-alg>
         </emu-clause>
