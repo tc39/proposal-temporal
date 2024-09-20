@@ -236,12 +236,12 @@ export class Duration {
     }
 
     if (zonedRelativeTo) {
-      const duration = ES.NormalizeDuration(this);
+      let duration = ES.NormalizeDuration(this);
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
       const targetEpochNs = ES.AddZonedDateTime(relativeEpochNs, timeZone, calendar, duration);
-      return ES.DifferenceZonedDateTimeWithRounding(
+      ({ duration } = ES.DifferenceZonedDateTimeWithRounding(
         relativeEpochNs,
         targetEpochNs,
         timeZone,
@@ -250,11 +250,15 @@ export class Duration {
         roundingIncrement,
         smallestUnit,
         roundingMode
-      ).duration;
+      ));
+      if (ES.IsCalendarUnit(largestUnit) || largestUnit === 'day') {
+        largestUnit = 'hour';
+      }
+      return ES.UnnormalizeDuration(duration, largestUnit);
     }
 
     if (plainRelativeTo) {
-      const duration = ES.NormalizeDurationWith24HourDays(this);
+      let duration = ES.NormalizeDurationWith24HourDays(this);
       const targetTime = ES.AddTime(0, 0, 0, 0, 0, 0, duration.norm);
 
       // Delegate the date part addition to the calendar
@@ -263,7 +267,7 @@ export class Duration {
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');
 
-      return ES.DifferencePlainDateTimeWithRounding(
+      ({ duration } = ES.DifferencePlainDateTimeWithRounding(
         isoRelativeToDate.year,
         isoRelativeToDate.month,
         isoRelativeToDate.day,
@@ -287,7 +291,8 @@ export class Duration {
         roundingIncrement,
         smallestUnit,
         roundingMode
-      ).duration;
+      ));
+      return ES.UnnormalizeDuration(duration, largestUnit);
     }
 
     // No reference date to calculate difference relative to
