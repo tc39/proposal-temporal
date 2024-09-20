@@ -227,11 +227,7 @@ export class Duration {
     };
     const maximum = maximumIncrements[smallestUnit];
     if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
-    if (
-      roundingIncrement > 1 &&
-      (ES.IsCalendarUnit(smallestUnit) || smallestUnit === 'day') &&
-      largestUnit !== smallestUnit
-    ) {
+    if (roundingIncrement > 1 && ES.TemporalUnitCategory(smallestUnit) === 'date' && largestUnit !== smallestUnit) {
       throw new RangeErrorCtor('For calendar units with roundingIncrement > 1, use largestUnit = smallestUnit');
     }
 
@@ -251,9 +247,7 @@ export class Duration {
         smallestUnit,
         roundingMode
       ));
-      if (ES.IsCalendarUnit(largestUnit) || largestUnit === 'day') {
-        largestUnit = 'hour';
-      }
+      if (ES.TemporalUnitCategory(largestUnit) === 'date') largestUnit = 'hour';
       return ES.UnnormalizeDuration(duration, largestUnit);
     }
 
@@ -454,11 +448,13 @@ export class Duration {
 
     const largestUnit1 = ES.DefaultTemporalLargestUnit(one);
     const largestUnit2 = ES.DefaultTemporalLargestUnit(two);
-    const calendarUnitsPresent = ES.IsCalendarUnit(largestUnit1) || ES.IsCalendarUnit(largestUnit2);
     const duration1 = ES.NormalizeDuration(one);
     const duration2 = ES.NormalizeDuration(two);
 
-    if (zonedRelativeTo && (calendarUnitsPresent || largestUnit1 === 'day' || largestUnit2 === 'day')) {
+    if (
+      zonedRelativeTo &&
+      (ES.TemporalUnitCategory(largestUnit1) === 'date' || ES.TemporalUnitCategory(largestUnit2) === 'date')
+    ) {
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
@@ -470,7 +466,7 @@ export class Duration {
 
     let d1 = duration1.date.days;
     let d2 = duration2.date.days;
-    if (calendarUnitsPresent) {
+    if (ES.IsCalendarUnit(largestUnit1) || ES.IsCalendarUnit(largestUnit2)) {
       if (!plainRelativeTo) {
         throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
       }

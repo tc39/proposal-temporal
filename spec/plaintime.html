@@ -307,8 +307,8 @@
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToFractionalSecondDigits reads *"fractionalSecondDigits"* and ToTemporalRoundingMode reads *"roundingMode"*).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
-        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, *undefined*).
-        1. If _smallestUnit_ is *"hour"*, throw a *RangeError* exception.
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, ~unset~).
+        1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Let _roundResult_ be RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Return TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
@@ -931,7 +931,7 @@
           _microsecond_: an integer in the inclusive interval from 0 to 999,
           _nanosecond_: an integer in the inclusive interval from 0 to 999,
           _increment_: a positive integer,
-          _unit_: a String from the "Singular" column of <emu-xref href="#table-temporal-units"></emu-xref>,
+          _unit_: a time unit or ~day~,
           _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
         ): a Time Record
       </h1>
@@ -940,22 +940,22 @@
         <dd>It rounds a time to the given increment.</dd>
       </dl>
       <emu-alg>
-        1. If _unit_ is *"day"* or *"hour"*, then
+        1. If _unit_ is ~day~ or ~hour~, then
           1. Let _quantity_ be ((((_hour_ × 60 + _minute_) × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
-        1. Else if _unit_ is *"minute"*, then
+        1. Else if _unit_ is ~minute~, then
           1. Let _quantity_ be (((_minute_ × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
-        1. Else if _unit_ is *"second"*, then
+        1. Else if _unit_ is ~second~, then
           1. Let _quantity_ be ((_second_ × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
-        1. Else if _unit_ is *"millisecond"*, then
+        1. Else if _unit_ is ~millisecond~, then
           1. Let _quantity_ be (_millisecond_ × 1000 + _microsecond_) × 1000 + _nanosecond_.
-        1. Else if _unit_ is *"microsecond"*, then
+        1. Else if _unit_ is ~microsecond~, then
           1. Let _quantity_ be _microsecond_ × 1000 + _nanosecond_.
         1. Else,
-          1. Assert: _unit_ is *"nanosecond"*.
+          1. Assert: _unit_ is ~nanosecond~.
           1. Let _quantity_ be _nanosecond_.
-        1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Singular" column contains _unit_.
+        1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
         1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_ × _unitLength_, _roundingMode_) / _unitLength_.
-        1. If _unit_ is *"day"*, then
+        1. If _unit_ is ~day~, then
           1. Return Time Record {
             [[Days]]: _result_,
             [[Hour]]: 0,
@@ -965,17 +965,17 @@
             [[Microsecond]]: 0,
             [[Nanosecond]]: 0
             }.
-        1. If _unit_ is *"hour"*, then
+        1. If _unit_ is ~hour~, then
           1. Return BalanceTime(_result_, 0, 0, 0, 0, 0).
-        1. If _unit_ is *"minute"*, then
+        1. If _unit_ is ~minute~, then
           1. Return BalanceTime(_hour_, _result_, 0, 0, 0, 0).
-        1. If _unit_ is *"second"*, then
+        1. If _unit_ is ~second~, then
           1. Return BalanceTime(_hour_, _minute_, _result_, 0, 0, 0).
-        1. If _unit_ is *"millisecond"*, then
+        1. If _unit_ is ~millisecond~, then
           1. Return BalanceTime(_hour_, _minute_, _second_, _result_, 0, 0).
-        1. If _unit_ is *"microsecond"*, then
+        1. If _unit_ is ~microsecond~, then
           1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _result_, 0).
-        1. Assert: _unit_ is *"nanosecond"*.
+        1. Assert: _unit_ is ~nanosecond~.
         1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _result_).
       </emu-alg>
     </emu-clause>
@@ -996,10 +996,10 @@
       <emu-alg>
         1. Set _other_ to ? ToTemporalTime(_other_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
-        1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, « », *"nanosecond"*, *"hour"*).
+        1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, « », ~nanosecond~, ~hour~).
         1. Let _norm_ be DifferenceTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
         1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), _norm_).
-        1. If _settings_.[[SmallestUnit]] is not *"nanosecond"* or _settings_.[[RoundingIncrement]] ≠ 1, then
+        1. If _settings_.[[SmallestUnit]] is not ~nanosecond~ or _settings_.[[RoundingIncrement]] ≠ 1, then
           1. Let _roundRecord_ be ! RoundTimeDuration(_duration_, _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
           1. Set _duration_ to _roundRecord_.[[NormalizedDuration]].
         1. Let _result_ be ! UnnormalizeDuration(_duration_, _settings_.[[LargestUnit]]).
