@@ -4240,7 +4240,7 @@ export function AddDurations(operation, duration, other) {
   return UnnormalizeDuration(result, largestUnit);
 }
 
-export function AddDurationToOrSubtractDurationFromInstant(operation, instant, durationLike) {
+export function AddDurationToInstant(operation, instant, durationLike) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   const largestUnit = DefaultTemporalLargestUnit(duration);
@@ -4270,7 +4270,7 @@ export function AddDurationToDate(operation, plainDate, durationLike, options) {
   return CreateTemporalDate(addedDate.year, addedDate.month, addedDate.day, calendar);
 }
 
-export function AddDurationToOrSubtractDurationFromPlainDateTime(operation, dateTime, durationLike, options) {
+export function AddDurationToDateTime(operation, dateTime, durationLike, options) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   options = GetOptionsObject(options);
@@ -4317,7 +4317,7 @@ export function AddDurationToOrSubtractDurationFromPlainDateTime(operation, date
   );
 }
 
-export function AddDurationToOrSubtractDurationFromPlainTime(operation, temporalTime, durationLike) {
+export function AddDurationToTime(operation, temporalTime, durationLike) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   const normalizedDuration = NormalizeDurationWith24HourDays(duration);
@@ -4343,7 +4343,7 @@ export function AddDurationToOrSubtractDurationFromPlainTime(operation, temporal
   return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
-export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yearMonth, durationLike, options) {
+export function AddDurationToYearMonth(operation, yearMonth, durationLike, options) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   options = GetOptionsObject(options);
@@ -4367,7 +4367,7 @@ export function AddDurationToOrSubtractDurationFromPlainYearMonth(operation, yea
   return CreateTemporalYearMonth(year, month, calendar, day);
 }
 
-export function AddDurationToOrSubtractDurationFromZonedDateTime(operation, zonedDateTime, durationLike, options) {
+export function AddDurationToZonedDateTime(operation, zonedDateTime, durationLike, options) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
 

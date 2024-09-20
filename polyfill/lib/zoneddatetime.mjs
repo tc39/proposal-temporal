@@ -262,11 +262,11 @@ export class ZonedDateTime {
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromZonedDateTime('add', this, temporalDurationLike, options);
+    return ES.AddDurationToZonedDateTime('add', this, temporalDurationLike, options);
   }
   subtract(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.AddDurationToOrSubtractDurationFromZonedDateTime('subtract', this, temporalDurationLike, options);
+    return ES.AddDurationToZonedDateTime('subtract', this, temporalDurationLike, options);
   }
   until(other, options = undefined) {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
