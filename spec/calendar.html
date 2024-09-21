@@ -35,7 +35,7 @@
     </emu-clause>
 
     <emu-clause id="sec-availablecalendars" type="implementation-defined abstract operation">
-      <h1>AvailableCalendars ( ): a List of Strings</h1>
+      <h1>AvailableCalendars ( ): a List of calendar types</h1>
       <dl class="header">
         <dt>description</dt>
         <dd>The returned List is sorted according to lexicographic code unit order, and contains unique calendar types in canonical form (<emu-xref href="#sec-calendar-types"></emu-xref>) identifying the calendars for which the implementation provides the functionality of Intl.DateTimeFormat objects, including their aliases (e.g., either both or neither of *"islamicc"* and *"islamic-civil"*). The List must include *"iso8601"*.</dd>
@@ -389,7 +389,7 @@
     <emu-clause id="sec-temporal-calendarmergefields" type="abstract operation">
       <h1>
         CalendarMergeFields (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
           _additionalFields_: a Calendar Fields Record,
         ): a Calendar Fields Record
@@ -421,7 +421,7 @@
     <emu-clause id="sec-temporal-calendardateadd" type="abstract operation">
       <h1>
         CalendarDateAdd (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
           _duration_: a Date Duration Record,
           _overflow_: *"constrain"* or *"reject"*,
@@ -443,7 +443,7 @@
     <emu-clause id="sec-temporal-calendardateuntil" type="abstract operation">
       <h1>
         CalendarDateUntil (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _one_: an ISO Date Record,
           _two_: an ISO Date Record,
           _largestUnit_: a date unit,
@@ -466,7 +466,7 @@
     <emu-clause id="sec-temporal-calendarera" type="abstract operation">
       <h1>
         CalendarEra (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a String or *undefined*
       </h1>
@@ -483,7 +483,7 @@
     <emu-clause id="sec-temporal-calendarerayear" type="abstract operation">
       <h1>
         CalendarEraYear (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): an integer or *undefined*
       </h1>
@@ -500,7 +500,7 @@
     <emu-clause id="sec-temporal-calendaryear" type="abstract operation">
       <h1>
         CalendarYear (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): an integer
       </h1>
@@ -517,7 +517,7 @@
     <emu-clause id="sec-temporal-calendarmonth" type="abstract operation">
       <h1>
         CalendarMonth (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -534,7 +534,7 @@
     <emu-clause id="sec-temporal-calendarmonthcode" type="abstract operation">
       <h1>
         CalendarMonthCode (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a String
       </h1>
@@ -551,7 +551,7 @@
     <emu-clause id="sec-temporal-calendarday" type="abstract operation">
       <h1>
         CalendarDay (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -568,7 +568,7 @@
     <emu-clause id="sec-temporal-calendardayofweek" type="abstract operation">
       <h1>
         CalendarDayOfWeek (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -586,7 +586,7 @@
     <emu-clause id="sec-temporal-calendardayofyear" type="abstract operation">
       <h1>
         CalendarDayOfYear (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -604,7 +604,7 @@
     <emu-clause id="sec-temporal-calendarweekofyear" type="abstract operation">
       <h1>
         CalendarWeekOfYear (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer or *undefined*
       </h1>
@@ -624,7 +624,7 @@
     <emu-clause id="sec-temporal-calendaryearofweek" type="abstract operation">
       <h1>
         CalendarYearOfWeek (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer or *undefined*
       </h1>
@@ -644,7 +644,7 @@
     <emu-clause id="sec-temporal-calendardaysinweek" type="abstract operation">
       <h1>
         CalendarDaysInWeek (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -661,7 +661,7 @@
     <emu-clause id="sec-temporal-calendardaysinmonth" type="abstract operation">
       <h1>
         CalendarDaysInMonth (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -679,7 +679,7 @@
     <emu-clause id="sec-temporal-calendardaysinyear" type="abstract operation">
       <h1>
         CalendarDaysInYear (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -697,7 +697,7 @@
     <emu-clause id="sec-temporal-calendarmonthsinyear" type="abstract operation">
       <h1>
         CalendarMonthsInYear (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a positive integer
       </h1>
@@ -714,7 +714,7 @@
     <emu-clause id="sec-temporal-calendarinleapyear" type="abstract operation">
       <h1>
         CalendarInLeapYear (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a Boolean
       </h1>
@@ -734,12 +734,12 @@
       <h1>
         ToTemporalCalendarIdentifier (
           _temporalCalendarLike_: an ECMAScript value,
-        ): either a normal completion containing a String or a throw completion
+        ): either a normal completion containing a calendar type or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It attempts to derive a value from _temporalCalendarLike_ that is a calendar identifier according to IsBuiltinCalendar, and returns that value if found or throws an exception if not.
+          It attempts to derive a calendar type from _temporalCalendarLike_, and returns that value if found or throws an exception if not.
         </dd>
       </dl>
       <emu-alg>
@@ -757,7 +757,7 @@
       <h1>
         GetTemporalCalendarIdentifierWithISODefault (
           _item_: an Object,
-        ): either a normal completion containing a String or a throw completion
+        ): either a normal completion containing a calendar type or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -779,7 +779,7 @@
     <emu-clause id="sec-temporal-calendardatefromfields" type="abstract operation">
       <h1>
         CalendarDateFromFields (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
           _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing an ISO Date Record or a throw completion
@@ -801,7 +801,7 @@
     <emu-clause id="sec-temporal-calendaryearmonthfromfields" type="abstract operation">
       <h1>
         CalendarYearMonthFromFields (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
           _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing an ISO Date Record or a throw completion
@@ -825,7 +825,7 @@
     <emu-clause id="sec-temporal-calendarmonthdayfromfields" type="abstract operation">
       <h1>
         CalendarMonthDayFromFields (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
           _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing an ISO Date Record or a throw completion
@@ -847,7 +847,7 @@
     <emu-clause id="sec-temporal-maybeformatcalendarannotation" type="abstract operation">
       <h1>
         MaybeFormatCalendarAnnotation (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
         ): a String
       </h1>
@@ -867,7 +867,7 @@
     <emu-clause id="sec-temporal-formatcalendarannotation" type="abstract operation">
       <h1>
         FormatCalendarAnnotation (
-          _id_: a String,
+          _id_: a calendar type,
           _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
         ): a String
       </h1>
@@ -889,8 +889,8 @@
     <emu-clause id="sec-temporal-calendarequals" type="abstract operation">
       <h1>
         CalendarEquals (
-          _one_: a String,
-          _two_: a String,
+          _one_: a calendar type,
+          _two_: a calendar type,
         ): a Boolean
       </h1>
       <dl class="header">
@@ -1156,7 +1156,7 @@
     <emu-clause id="sec-temporal-calendardatetoiso" type="implementation-defined abstract operation">
       <h1>
         CalendarDateToISO (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
           _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing an ISO Date Record or a throw completion
@@ -1185,7 +1185,7 @@
     <emu-clause id="sec-temporal-calendarmonthdaytoisoreferencedate" type="implementation-defined abstract operation">
       <h1>
         CalendarMonthDayToISOReferenceDate (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
           _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing an ISO Date Record or a throw completion
@@ -1218,7 +1218,7 @@
     <emu-clause id="sec-temporal-calendardateaddition" type="implementation-defined abstract operation">
       <h1>
         CalendarDateAddition (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _date_: an ISO Date Record,
           _duration_: a Date Duration Record,
           _overflow_: *"constrain"* or *"reject"*,
@@ -1236,7 +1236,7 @@
     <emu-clause id="sec-temporal-calendardatedifference" type="implementation-defined abstract operation">
       <h1>
         CalendarDateDifference (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _one_: an ISO Date Record,
           _two_: an ISO Date Record,
           _largestUnit_: a date unit,
@@ -1251,7 +1251,7 @@
     <emu-clause id="sec-temporal-calendarisotodate" type="implementation-defined abstract operation">
       <h1>
         CalendarISOToDate (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _isoDate_: an ISO Date Record,
         ): a Calendar Date Record
       </h1>
@@ -1264,7 +1264,7 @@
     <emu-clause id="sec-temporal-calendarextrafields" type="implementation-defined abstract operation">
       <h1>
         CalendarExtraFields (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _type_: ~date~, ~year-month~, ~month-day~, or a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
         ): a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>
       </h1>
@@ -1277,7 +1277,7 @@
     <emu-clause id="sec-temporal-calendarfieldkeystoignore" type="implementation-defined abstract operation">
       <h1>
         CalendarFieldKeysToIgnore (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _keys_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
         ): a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>
       </h1>
@@ -1341,7 +1341,7 @@
     <emu-clause id="sec-temporal-calendarresolvefields" type="implementation-defined abstract operation">
       <h1>
         CalendarResolveFields (
-          _calendar_: a String that is not *"iso8601"* for which IsBuiltinCalendar returns *true*,
+          _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
           _type_: ~date~, ~year-month~, or ~month-day~,
         ): either a normal completion containing ~unused~ or a throw completion

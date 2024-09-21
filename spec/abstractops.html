@@ -2131,7 +2131,7 @@
   <emu-clause id="sec-temporal-isodatetofields" type="abstract operation">
     <h1>
       ISODateToFields (
-        _calendar_: a String,
+        _calendar_: a calendar type,
         _isoDate_: an ISO Date Record,
         _type_: ~date~, ~year-month~, or ~month-day~,
       ): a Calendar Fields Record
@@ -2154,7 +2154,7 @@
   <emu-clause id="sec-temporal-preparecalendarfields" type="abstract operation">
     <h1>
       PrepareCalendarFields (
-        _calendar_: a String,
+        _calendar_: a calendar type,
         _fields_: an Object,
         _calendarFieldNames_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
         _nonCalendarFieldNames_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
