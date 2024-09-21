@@ -326,7 +326,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"auto"*).
+        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -336,7 +336,7 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], *"auto"*).
+        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -847,7 +847,7 @@
           _millisecond_: an integer in the inclusive interval from 0 to 999,
           _microsecond_: an integer in the inclusive interval from 0 to 999,
           _nanosecond_: an integer in the inclusive interval from 0 to 999,
-          _precision_: an integer in the inclusive interval from 0 to 9, *"minute"*, or *"auto"*,
+          _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
         ): a String
       </h1>
       <dl class="header">

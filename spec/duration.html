@@ -525,7 +525,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return TemporalDurationToString(_duration_, *"auto"*).
+        1. Return TemporalDurationToString(_duration_, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -539,7 +539,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. Return TemporalDurationToString(_duration_, *"auto"*).
+        1. Return TemporalDurationToString(_duration_, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -1990,7 +1990,7 @@
       <h1>
         TemporalDurationToString (
           _duration_: a Temporal.Duration,
-          _precision_: an integer between 0 and 9 inclusive, or *"auto"*,
+          _precision_: an integer between 0 and 9 inclusive, or ~auto~,
         ): a String
       </h1>
       <dl class="header">
@@ -2016,7 +2016,7 @@
         1. Let _zeroMinutesAndHigher_ be *false*.
         1. If DefaultTemporalLargestUnit(_duration_) is ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~, set _zeroMinutesAndHigher_ to *true*.
         1. Let _normSeconds_ be NormalizeTimeDuration(0, 0, _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. If NormalizedTimeDurationIsZero(_normSeconds_) is *false*, or _zeroMinutesAndHigher_ is *true*, or _precision_ is not *"auto"*, then
+        1. If NormalizedTimeDurationIsZero(_normSeconds_) is *false*, or _zeroMinutesAndHigher_ is *true*, or _precision_ is not ~auto~, then
           1. Let _secondsPart_ be abs(NormalizedTimeDurationSeconds(_normSeconds_)) formatted as a decimal number.
           1. Let _subSecondsPart_ be FormatFractionalSeconds(abs(NormalizedTimeDurationSubseconds(_normSeconds_)), _precision_).
           1. Set _timePart_ to the string concatenation of _timePart_, _secondsPart_, _subSecondsPart_, and the code unit 0x0053 (LATIN CAPITAL LETTER S).

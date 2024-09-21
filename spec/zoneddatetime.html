@@ -716,7 +716,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
+        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, ~auto~, *"auto"*, *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -726,7 +726,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, *"auto"*, *"auto"*, *"auto"*, *"auto"*).
+        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, ~auto~, *"auto"*, *"auto"*, *"auto"*).
       </emu-alg>
     </emu-clause>
 
@@ -1035,7 +1035,7 @@
       <h1>
         TemporalZonedDateTimeToString (
           _zonedDateTime_: a Temporal.ZonedDateTime,
-          _precision_: one of *"auto"*, *"minute"*, or an integer between 0 and 9 inclusive,
+          _precision_: ~auto~, ~minute~, or an integer between 0 and 9 inclusive,
           _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
           _showTimeZone_: one of *"auto"*, *"never"*, or *"critical"*,
           _showOffset_: one of *"auto"* or *"never"*,
