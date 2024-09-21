@@ -745,7 +745,7 @@
             [[Calendar]]
           </td>
           <td>
-            A String representing the calendar.
+            A calendar type.
           </td>
         </tr>
       </table>
@@ -899,7 +899,7 @@
     <emu-clause id="sec-temporal-interprettemporaldatetimefields" type="abstract operation">
       <h1>
         InterpretTemporalDateTimeFields (
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
           _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing a Record with fields [[Year]], [[Month]], [[Day]] (as in ISO Date-Time Record) and [[Time]] (a Time Record), or a throw completion
@@ -1000,7 +1000,7 @@
           _millisecond_: an integer,
           _microsecond_: an integer,
           _nanosecond_: an integer,
-          _calendar_: a String or Object,
+          _calendar_: a calendar type,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.PlainDateTime or a throw completion
       </h1>
@@ -1041,7 +1041,7 @@
           _millisecond_: an integer in the inclusive interval from 0 to 999,
           _microsecond_: an integer in the inclusive interval from 0 to 999,
           _nanosecond_: an integer in the inclusive interval from 0 to 999,
-          _calendar_: a String or Object,
+          _calendar_: a calendar type,
           _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
           _showCalendar_: *"auto"*, *"always"*, *"never"*, or *"critical"*,
         ): a String
@@ -1150,7 +1150,7 @@
           _ms2_: an integer between 0 and 999 inclusive,
           _mus2_: an integer between 0 and 999 inclusive,
           _ns2_: an integer between 0 and 999 inclusive,
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
         ): either a normal completion containing a Normalized Duration Record or a throw completion
       </h1>
@@ -1203,7 +1203,7 @@
           _ms2_: an integer in the inclusive interval from 0 to 999,
           _mus2_: an integer in the inclusive interval from 0 to 999,
           _ns2_: an integer in the inclusive interval from 0 to 999,
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
           _roundingIncrement_: a positive integer,
           _smallestUnit_: a Temporal unit,

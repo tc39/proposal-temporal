@@ -875,7 +875,7 @@
             [[Calendar]]
           </td>
           <td>
-            A String representing the calendar.
+            A calendar type.
           </td>
         </tr>
       </table>
@@ -1012,7 +1012,7 @@
         CreateTemporalZonedDateTime (
           _epochNanoseconds_: a BigInt,
           _timeZone_: a String or Object,
-          _calendar_: a String or Object,
+          _calendar_: a calendar type,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
       </h1>
@@ -1079,7 +1079,7 @@
         AddZonedDateTime (
           _epochNanoseconds_: a BigInt,
           _timeZone_: a String,
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _duration_: a Normalized Duration Record,
           optional _overflow_: *"constrain"* or *"reject"*,
         ): either a normal completion containing a BigInt or a throw completion
@@ -1111,7 +1111,7 @@
           _ns1_: a BigInt,
           _ns2_: a BigInt,
           _timeZone_: a String,
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
         ): either a normal completion containing a Normalized Duration Record, or a throw completion
       </h1>
@@ -1155,7 +1155,7 @@
           _ns1_: a BigInt,
           _ns2_: a BigInt,
           _timeZone_: a String,
-          _calendar_: a String,
+          _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
           _roundingIncrement_: a positive integer,
           _smallestUnit_: a Temporal unit,

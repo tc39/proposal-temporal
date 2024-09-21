@@ -261,7 +261,7 @@
           </td>
           <td>
             An integer representing the year in the ISO 8601 calendar.
-            This slot is used by the calendar object in the [[Calendar]] slot to disambiguate if the [[ISOMonth]] and [[ISODay]] slots are not enough to uniquely identify a month and day in that calendar.
+            This slot is used by the calendar in the [[Calendar]] slot to disambiguate if the [[ISOMonth]] and [[ISODay]] slots are not enough to uniquely identify a month and day in that calendar.
           </td>
         </tr>
         <tr>
@@ -285,7 +285,7 @@
             [[Calendar]]
           </td>
           <td>
-            A String representing the calendar.
+            A calendar type.
           </td>
         </tr>
       </table>
@@ -344,7 +344,7 @@
         CreateTemporalMonthDay (
           _isoMonth_: an integer,
           _isoDay_: an integer,
-          _calendar_: a String or Object,
+          _calendar_: a calendar type,
           _referenceISOYear_: an integer,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.PlainMonthDay or a throw completion
