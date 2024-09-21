@@ -1081,7 +1081,7 @@
           _timeZone_: a String,
           _calendar_: a calendar type,
           _duration_: a Normalized Duration Record,
-          optional _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing a BigInt or a throw completion
       </h1>
       <dl class="header">
@@ -1092,7 +1092,6 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _overflow_ is not present, set _overflow_ to *"constrain"*.
         1. If DateDurationSign(_duration_.[[Date]]) = 0, then
           1. Return ? AddInstant(_epochNanoseconds_, _duration_.[[NormalizedTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNanoseconds_).

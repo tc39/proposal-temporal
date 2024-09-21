@@ -375,7 +375,7 @@
         1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
         1. Let _inputFields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~ », « », « »).
         1. Let _mergedFields_ be CalendarMergeFields(_calendar_, _fields_, _inputFields_).
-        1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _mergedFields_, *"constrain"*).
+        1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _mergedFields_, ~constrain~).
         1. Return ! CreateTemporalDate(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -506,10 +506,10 @@
         1. Set _calendar_ to CanonicalizeUValue(*"ca"*, _calendar_).
         1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
         1. Set _result_ to ISODateToFields(_calendar_, _isoDate_, ~year-month~).
-        1. NOTE: The following operation is called with *"constrain"* regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
+        1. NOTE: The following operation is called with ~constrain~ regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. Perform ? GetTemporalOverflowOption(_options_).
-        1. Set _isoDate_ to ? CalendarYearMonthFromFields(_calendar_, _result_, *"constrain"*).
+        1. Set _isoDate_ to ? CalendarYearMonthFromFields(_calendar_, _result_, ~constrain~).
         1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
       </emu-alg>
     </emu-clause>
@@ -519,24 +519,24 @@
         RegulateISOYearMonth (
           _year_: an integer,
           _month_: an integer,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Year-Month Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>It applies the correction given by _overflow_ to the given month.
-          If _overflow_ is *"constrain"*, _month_ is clamped to a valid value.
-          If _overflow_ is *"reject"* and _month_ is out of range, a *RangeError* is thrown.</dd>
+          If _overflow_ is ~constrain~, _month_ is clamped to a valid value.
+          If _overflow_ is ~reject~ and _month_ is out of range, a *RangeError* is thrown.</dd>
       </dl>
       <emu-alg>
-        1. If _overflow_ is *"constrain"*, then
+        1. If _overflow_ is ~constrain~, then
           1. Set _month_ to the result of clamping _month_ between 1 and 12.
           1. Return ISO Year-Month Record {
             [[Year]]: _year_,
             [[Month]]: _month_
             }.
         1. Else,
-          1. Assert: _overflow_ is *"reject"*.
+          1. Assert: _overflow_ is ~reject~.
           1. If _month_ &lt; 1 or _month_ > 12, throw a *RangeError* exception.
           1. Return ISO Year-Month Record {
             [[Year]]: _year_,
@@ -668,10 +668,10 @@
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _thisFields_ be TemporalObjectToFields(_yearMonth_).
         1. Set _thisFields_.[[Day]] to 1.
-        1. Let _thisDate_ be ? CalendarDateFromFields(_calendar_, _thisFields_, *"constrain"*).
+        1. Let _thisDate_ be ? CalendarDateFromFields(_calendar_, _thisFields_, ~constrain~).
         1. Let _otherFields_ be TemporalObjectToFields(_other_).
         1. Set _otherFields_.[[Day]] to 1.
-        1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_, *"constrain"*).
+        1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_, ~constrain~).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _settings_.[[LargestUnit]]).
         1. Let _yearsMonthsDifference_ be ! AdjustDateDurationRecord(_dateDifference_, 0, 0).
         1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(_yearsMonthsDifference_, ZeroTimeDuration()).
@@ -709,10 +709,10 @@
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
         1. Set _fields_.[[Day]] to 1.
-        1. Let _intermediateDate_ be ? CalendarDateFromFields(_calendar_, _fields_, *"constrain"*).
+        1. Let _intermediateDate_ be ? CalendarDateFromFields(_calendar_, _fields_, ~constrain~).
         1. If _sign_ &lt; 0, then
           1. Let _oneMonthDuration_ be ! CreateDateDurationRecord(0, 1, 0, 0).
-          1. Let _nextMonth_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _oneMonthDuration_, *"constrain"*).
+          1. Let _nextMonth_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _oneMonthDuration_, ~constrain~).
           1. Let _date_ be BalanceISODate(_nextMonth_.[[Year]], _nextMonth_.[[Month]], _nextMonth_.[[Day]] - 1).
           1. Assert: ISODateWithinLimits(_date_.[[Year]], _date_.[[Month]], _date_.[[Day]]) is *true*.
         1. Else,

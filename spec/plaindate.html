@@ -339,7 +339,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fields_ be TemporalObjectToFields(_temporalDate_).
-        1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _fields_, *"constrain"*).
+        1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _fields_, ~constrain~).
         1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
         1. NOTE: The call to CalendarYearMonthFromFields is necessary in order to create a PlainYearMonth object with the [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots set correctly.
       </emu-alg>
@@ -353,7 +353,7 @@
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fields_ be TemporalObjectToFields(_temporalDate_).
-        1. Let _isoDate_ be ? CalendarMonthDayFromFields(_calendar_, _fields_, *"constrain"*).
+        1. Let _isoDate_ be ? CalendarMonthDayFromFields(_calendar_, _fields_, ~constrain~).
         1. Return ! CreateTemporalMonthDay(_isoDate_.[[Month]], _isoDate_.[[Day]], _calendar_, _isoDate_.[[Year]]).
         1. NOTE: The call to CalendarMonthDayFromFields is necessary in order to create a PlainMonthDay object with the [[ISOYear]], [[ISOMonth]], and [[ISODay]] internal slots set correctly.
       </emu-alg>
@@ -828,7 +828,7 @@
             1. Set _candidateMonths_ to _candidateMonths_ + _sign_.
             1. Set _intermediate_ to BalanceISOYearMonth(_intermediate_.[[Year]], _intermediate_.[[Month]] + _sign_).
         1. Set _intermediate_ to BalanceISOYearMonth(_y1_ + _years_, _m1_ + _months_).
-        1. Let _constrained_ be ! RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d1_, *"constrain"*).
+        1. Let _constrained_ be ! RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d1_, ~constrain~).
         1. Let _weeks_ be 0.
         1. If _largestUnit_ is ~week~, then
           1. Let _candidateWeeks_ be _sign_.
@@ -854,25 +854,25 @@
           _year_: an integer,
           _month_: an integer,
           _day_: an integer,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
           It performs the overflow correction specified by _overflow_ on the values _year_, _month_, and _day_, in order to arrive at a valid date in the ISO 8601 calendar, as determined by IsValidISODate.
-          For *"reject"*, values that do not form a valid date cause an exception to be thrown.
-          For *"constrain"*, values that do not form a valid date are independently clamped to their respective valid range in order of descending unit magnitude.
+          For ~reject~, values that do not form a valid date cause an exception to be thrown.
+          For ~constrain~, values that do not form a valid date are independently clamped to their respective valid range in order of descending unit magnitude.
         </dd>
       </dl>
       <emu-alg>
-        1. If _overflow_ is *"constrain"*, then
+        1. If _overflow_ is ~constrain~, then
           1. Set _month_ to the result of clamping _month_ between 1 and 12.
           1. Let _daysInMonth_ be ISODaysInMonth(_year_, _month_).
           1. Set _day_ to the result of clamping _day_ between 1 and _daysInMonth_.
           1. Return CreateISODateRecord(_year_, _month_, _day_).
         1. Else,
-          1. Assert: _overflow_ is *"reject"*.
+          1. Assert: _overflow_ is ~reject~.
           1. If IsValidISODate(_year_, _month_, _day_) is *false*, throw a *RangeError* exception.
           1. Return CreateISODateRecord(_year_, _month_, _day_).
       </emu-alg>
@@ -991,7 +991,7 @@
           _month_: an integer,
           _day_: an integer,
           _dateDuration_: a Date Duration Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">

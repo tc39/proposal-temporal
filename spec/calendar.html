@@ -424,7 +424,7 @@
           _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
           _duration_: a Date Duration Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -781,7 +781,7 @@
         CalendarDateFromFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -803,7 +803,7 @@
         CalendarYearMonthFromFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -827,7 +827,7 @@
         CalendarMonthDayFromFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -1018,7 +1018,7 @@
       <h1>
         ISODateFromFields (
           _fields_: a Calendar Fields Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -1040,7 +1040,7 @@
       <h1>
         ISOYearMonthFromFields (
           _fields_: a Calendar Fields Record,
-          _overflow_: either *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -1065,7 +1065,7 @@
       <h1>
         ISOMonthDayFromFields (
           _fields_: a Calendar Fields Record,
-          _overflow_: either *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -1158,22 +1158,22 @@
         CalendarDateToISO (
           _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
           It performs implementation-defined processing to convert _fields_, which represents either a date or a year and month in the built-in calendar identified by _calendar_, to a corresponding representative date in the ISO 8601 calendar, subject to overflow correction specified by _overflow_.
-          For *"reject"*, values that do not form a valid date cause an exception to be thrown, as described below.
-          For *"constrain"*, values that do not form a valid date are clamped to their respective valid range.
+          For ~reject~, values that do not form a valid date cause an exception to be thrown, as described below.
+          For ~constrain~, values that do not form a valid date are clamped to their respective valid range.
         </dd>
       </dl>
       <p>
-        Like RegulateISODate, the operation throws a *RangeError* exception when _overflow_ is *"reject"* and the date described by _fields_ does not exist.
+        Like RegulateISODate, the operation throws a *RangeError* exception when _overflow_ is ~reject~ and the date described by _fields_ does not exist.
         It also throws a *RangeError* exception if the date described by _fields_ is outside the range allowed by ISODateWithinLimits.
       </p>
-      <p>Clamping an invalid date to the correct range when _overflow_ is *"constrain"* is a behaviour specific to each built-in calendar, but all built-in calendars follow this guideline:</p>
+      <p>Clamping an invalid date to the correct range when _overflow_ is ~constrain~ is a behaviour specific to each built-in calendar, but all built-in calendars follow this guideline:</p>
       <ul>
         <li>Pick the closest day in the same month. If there are two equally-close dates in that month, pick the later one.</li>
         <li>If the month is a leap month that doesn't exist in the year, pick another date according to the cultural conventions of that calendar's users. Usually this will result in the same day in the month before or after where that month would normally fall in a leap year.</li>
@@ -1187,15 +1187,15 @@
         CalendarMonthDayToISOReferenceDate (
           _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
           It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to overflow correction specified by _overflow_.
-          For *"reject"*, values that do not form a valid date cause an exception to be thrown.
-          For *"constrain"*, values that do not form a valid date are clamped to their respective valid range as in CalendarDateToISO.
+          For ~reject~, values that do not form a valid date cause an exception to be thrown.
+          For ~constrain~, values that do not form a valid date are clamped to their respective valid range as in CalendarDateToISO.
         </dd>
       </dl>
       <p>
@@ -1205,13 +1205,13 @@
         The reference year is almost always 1972 (the first ISO 8601 leap year after the epoch), with exceptions for calendars where some dates (e.g. leap days or days in leap months) didn't occur during that ISO 8601 year. For example, Hebrew calendar leap month Adar I occurred in calendar years 5730 and 5733 (respectively overlapping ISO 8601 February/March 1970 and February/March 1973), but did not occur between them, so the reference year for days of that month is 1970.
       </p>
       <p>
-        Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is *"reject"* and the month and day described by _fields_ does not exist (or does not exist within the year described by _fields_ when there is such a year).
-        For example, when _calendar_ is *"gregory"* and _overflow_ is *"reject"*, _fields_ values of { [[MonthCode]]: *"M01"*, [[Day]]: 32 } and { [[Year]]: 2001, [[Month]]: 2, [[Day]]: 29 } would both cause a *RangeError* to be thrown.
+        Like RegulateISODate, the operation throws a *RangeError* exception if _overflow_ is ~reject~ and the month and day described by _fields_ does not exist (or does not exist within the year described by _fields_ when there is such a year).
+        For example, when _calendar_ is *"gregory"* and _overflow_ is ~reject~, _fields_ values of { [[MonthCode]]: *"M01"*, [[Day]]: 32 } and { [[Year]]: 2001, [[Month]]: 2, [[Day]]: 29 } would both cause a *RangeError* to be thrown.
         In the latter case, even though February 29 is a date in leap years of the Gregorian calendar, 2001 was not a leap year and a month code cannot be determined from the nonexistent date 2001-02-29 with the specified month index.
       </p>
       <p>
-        Also like RegulateISODate, if _overflow_ is *"constrain"* and the date or month and day described by _fields_ does not exist (or does not exist within the year described by _fields_ when there is such a year), the values of those fields are clamped to their respective valid range. As in CalendarDateToISO, such clamping is calendar-specific.
-        For example, when _calendar_ is *"gregory"* and _overflow_ is *"constrain"*, a _fields_ value of { [[MonthCode]]: *"M02"*, [[Day]]: 30 } is clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 29 } (because 29 is the maximum valid day for February) while _fields_ values of { [[Year]]: 2001, [[MonthCode]]: *"M02"*, [[Day]]: 30 } and { [[Era]]: *"ce"*, [[EraYear]]: 2001, [[Month]]: 2, [[Day]]: 30 } (or an equivalent with a supported value for [[Era]] representing the Common Era beginning in ISO 8601 year 1) are clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 28 } (because 28 is the maximum valid day for February 2001, which did not include a leap day).
+        Also like RegulateISODate, if _overflow_ is ~constrain~ and the date or month and day described by _fields_ does not exist (or does not exist within the year described by _fields_ when there is such a year), the values of those fields are clamped to their respective valid range. As in CalendarDateToISO, such clamping is calendar-specific.
+        For example, when _calendar_ is *"gregory"* and _overflow_ is ~constrain~, a _fields_ value of { [[MonthCode]]: *"M02"*, [[Day]]: 30 } is clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 29 } (because 29 is the maximum valid day for February) while _fields_ values of { [[Year]]: 2001, [[MonthCode]]: *"M02"*, [[Day]]: 30 } and { [[Era]]: *"ce"*, [[EraYear]]: 2001, [[Month]]: 2, [[Day]]: 30 } (or an equivalent with a supported value for [[Era]] representing the Common Era beginning in ISO 8601 year 1) are clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 28 } (because 28 is the maximum valid day for February 2001, which did not include a leap day).
       </p>
     </emu-clause>
 
@@ -1221,14 +1221,14 @@
           _calendar_: a calendar type that is not *"iso8601"*,
           _date_: an ISO Date Record,
           _duration_: a Date Duration Record,
-          _overflow_: *"constrain"* or *"reject"*,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
           It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by _calendar_ and returns the corresponding day, month and year of the result in the ISO 8601 calendar values as an ISO Date Record.
-          It may throw a *RangeError* exception if _overflow_ is *"reject"* and the resulting month or day would need to be clamped in order to form a valid date in _calendar_, or if the date resulting from the addition is outside the range allowed by ISODateTimeWithinLimits.
+          It may throw a *RangeError* exception if _overflow_ is ~reject~ and the resulting month or day would need to be clamped in order to form a valid date in _calendar_, or if the date resulting from the addition is outside the range allowed by ISODateTimeWithinLimits.
         </dd>
       </dl>
     </emu-clause>
