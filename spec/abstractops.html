@@ -306,15 +306,19 @@
     <h1>
       GetTemporalDisambiguationOption (
         _options_: an Object or *undefined*,
-      ): either a normal completion containing either *"compatible"*, *"earlier"*, *"later"*, or *"reject"*, or a throw completion
+      ): either a normal completion containing either ~compatible~, ~earlier~, ~later~, or ~reject~, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>It fetches and validates the *"disambiguation"* property of _options_, returning a default if absent.</dd>
     </dl>
     <emu-alg>
-      1. If _options_ is *undefined*, return *"compatible"*.
-      1. Return ? GetOption(_options_, *"disambiguation"*, ~string~, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
+      1. If _options_ is *undefined*, return ~compatible~.
+      1. Let _stringValue_ be ? GetOption(_options_, *"disambiguation"*, ~string~, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
+      1. If _stringValue_ is *"compatible"*, return ~compatible~.
+      1. If _stringValue_ is *"earlier"*, return ~earlier~.
+      1. If _stringValue_ is *"later"*, return ~later~.
+      1. Return ~reject~.
     </emu-alg>
   </emu-clause>
 
@@ -807,7 +811,7 @@
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]], _offsetBehaviour_, _offsetNs_, _timeZone_, *"compatible"*, *"reject"*, _matchBehaviour_).
+      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]], _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, *"reject"*, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
     </emu-alg>
