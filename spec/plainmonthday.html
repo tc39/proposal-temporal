@@ -225,7 +225,7 @@
         1. Let _fields_ be TemporalObjectToFields(_monthDay_).
         1. Let _inputFields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~year~ », « », « »).
         1. Let _mergedFields_ be CalendarMergeFields(_calendar_, _fields_, _inputFields_).
-        1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _mergedFields_, *"constrain"*).
+        1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _mergedFields_, ~constrain~).
         1. Return ! CreateTemporalDate(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -333,8 +333,8 @@
           1. Return ! CreateTemporalMonthDay(_result_.[[Month]], _result_.[[Day]], _calendar_, _referenceISOYear_).
         1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
         1. Set _result_ to ISODateToFields(_calendar_, _isoDate_, ~month-day~).
-        1. NOTE: The following operation is called with *"constrain"* regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
-        1. Set _isoDate_ to ? CalendarMonthDayFromFields(_calendar_, _result_, *"constrain"*).
+        1. NOTE: The following operation is called with ~constrain~ regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[ISOYear]] internal slot of the result.
+        1. Set _isoDate_ to ? CalendarMonthDayFromFields(_calendar_, _result_, ~constrain~).
         1. Return ! CreateTemporalMonthDay(_isoDate_.[[Month]], _isoDate_.[[Day]], _calendar_, _isoDate_.[[Year]]).
       </emu-alg>
     </emu-clause>
