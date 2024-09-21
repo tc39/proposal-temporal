@@ -156,7 +156,7 @@
         1. Let _absoluteMinutes_ be abs(_offsetMinutes_).
         1. Let _hour_ be floor(_absoluteMinutes_ / 60).
         1. Let _minute_ be _absoluteMinutes_ modulo 60.
-        1. Let _timeString_ be FormatTimeString(_hour_, _minute_, 0, 0, *"minute"*, _style_).
+        1. Let _timeString_ be FormatTimeString(_hour_, _minute_, 0, 0, ~minute~, _style_).
         1. Return the string-concatenation of _sign_ and _timeString_.
       </emu-alg>
     </emu-clause>
@@ -181,7 +181,7 @@
         1. Let _minute_ be floor(_absoluteNanoseconds_ / (60 × 10<sup>9</sup>)) modulo 60.
         1. Let _second_ be floor(_absoluteNanoseconds_ / 10<sup>9</sup>) modulo 60.
         1. Let _subSecondNanoseconds_ be _absoluteNanoseconds_ modulo 10<sup>9</sup>.
-        1. If _second_ = 0 and _subSecondNanoseconds_ = 0, let _precision_ be *"minute"*; otherwise, let _precision_ be *"auto"*.
+        1. If _second_ = 0 and _subSecondNanoseconds_ = 0, let _precision_ be ~minute~; otherwise, let _precision_ be ~auto~.
         1. Let _timeString_ be FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
         1. Return the string-concatenation of _sign_ and _timeString_.
       </emu-alg>

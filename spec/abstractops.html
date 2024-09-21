@@ -595,7 +595,7 @@
     <h1>
       GetTemporalFractionalSecondDigitsOption (
         _options_: an Object,
-      ): either a normal completion containing either *"auto"* or an integer in the inclusive interval from 0 to 9, or a throw completion
+      ): either a normal completion containing either ~auto~ or an integer in the inclusive interval from 0 to 9, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -603,10 +603,10 @@
     </dl>
     <emu-alg>
       1. Let _digitsValue_ be ? Get(_options_, *"fractionalSecondDigits"*).
-      1. If _digitsValue_ is *undefined*, return *"auto"*.
+      1. If _digitsValue_ is *undefined*, return ~auto~.
       1. If _digitsValue_ is not a Number, then
         1. If ? ToString(_digitsValue_) is not *"auto"*, throw a *RangeError* exception.
-        1. Return *"auto"*.
+        1. Return ~auto~.
       1. If _digitsValue_ is *NaN*, *+∞*<sub>𝔽</sub>, or *-∞*<sub>𝔽</sub>, throw a *RangeError* exception.
       1. Let _digitCount_ be floor(ℝ(_digitsValue_)).
       1. If _digitCount_ &lt; 0 or _digitCount_ > 9, throw a *RangeError* exception.
@@ -618,21 +618,21 @@
     <h1>
       ToSecondsStringPrecisionRecord (
         _smallestUnit_: ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~, or ~unset~,
-        _fractionalDigitCount_: *"auto"* or an integer in the inclusive interval from 0 to 9,
-      ): a Record with fields [[Precision]] (*"minute"*, *"auto"*, or an integer in the inclusive interval from 0 to 9), [[Unit]] (~minute~, ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~), and [[Increment]] (1, 10, or 100)
+        _fractionalDigitCount_: ~auto~ or an integer in the inclusive interval from 0 to 9,
+      ): a Record with fields [[Precision]] (~minute~, ~auto~, or an integer in the inclusive interval from 0 to 9), [[Unit]] (~minute~, ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~), and [[Increment]] (1, 10, or 100)
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>
         The returned Record represents details for serializing minutes and seconds to a string subject to the specified _smallestUnit_ or (when _smallestUnit_ is ~unset~) _fractionalDigitCount_ digits after the decimal point in the seconds.
-        Its [[Precision]] field is either that count of digits, the string *"auto"* signifying that there should be no insignificant trailing zeroes, or the string *"minute"* signifying that seconds should not be included at all.
+        Its [[Precision]] field is either that count of digits, the value ~auto~ signifying that there should be no insignificant trailing zeroes, or the value ~minute~ signifying that seconds should not be included at all.
         Its [[Unit]] field is the most precise unit that can contribute to the string, and its [[Increment]] field indicates the rounding increment that should be applied to that unit.
       </dd>
     </dl>
     <emu-alg>
       1. If _smallestUnit_ is ~minute~, then
         1. Return the Record {
-          [[Precision]]: *"minute"*,
+          [[Precision]]: ~minute~,
           [[Unit]]: ~minute~,
           [[Increment]]: 1
           }.
@@ -661,9 +661,9 @@
           [[Increment]]: 1
           }.
       1. Assert: _smallestUnit_ is ~unset~.
-      1. If _fractionalDigitCount_ is *"auto"*, then
+      1. If _fractionalDigitCount_ is ~auto~, then
         1. Return the Record {
-          [[Precision]]: *"auto"*,
+          [[Precision]]: ~auto~,
           [[Unit]]: ~nanosecond~,
           [[Increment]]: 1
           }.
@@ -903,18 +903,18 @@
     <h1>
       FormatFractionalSeconds (
         _subSecondNanoseconds_: an integer in the inclusive interval from 0 to 999999999,
-        _precision_: either an integer in the inclusive interval from 0 to 9 or *"auto"*,
+        _precision_: either an integer in the inclusive interval from 0 to 9 or ~auto~,
       ): a String
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>
-        If _precision_ is zero, or if _precision_ is *"auto"* and _subSecondNanoseconds_ is zero, then an empty String will be returned.
-        Otherwise, the output will be a decimal point followed by a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is *"auto"*) to the last non-zero digit.
+        If _precision_ is zero, or if _precision_ is ~auto~ and _subSecondNanoseconds_ is zero, then an empty String will be returned.
+        Otherwise, the output will be a decimal point followed by a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is ~auto~) to the last non-zero digit.
       </dd>
     </dl>
     <emu-alg>
-      1. If _precision_ is *"auto"*, then
+      1. If _precision_ is ~auto~, then
         1. If _subSecondNanoseconds_ = 0, return the empty String.
         1. Let _fractionString_ be ToZeroPaddedDecimalString(_subSecondNanoseconds_, 9).
         1. Set _fractionString_ to the longest prefix of _fractionString_ ending with a code unit other than 0x0030 (DIGIT ZERO).
@@ -933,7 +933,7 @@
         _minute_: an integer in the inclusive interval from 0 to 59,
         _second_: an integer in the inclusive interval from 0 to 59,
         _subSecondNanoseconds_: an integer in the inclusive interval from 0 to 999999999,
-        _precision_: an integer in the inclusive interval from 0 to 9, *"minute"*, or *"auto"*,
+        _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
         optional _style_: ~separated~ or ~unseparated~,
       ): a String
     </h1>
@@ -941,16 +941,16 @@
       <dt>description</dt>
       <dd>
         It formats a collection of unsigned time components into a string, truncating units as necessary, and separating hours, minutes, and seconds with colons unless _style_ is ~unseparated~.
-        The output will be formatted like HH:MM or HHMM if _precision_ is *"minute"*.
-        Otherwise, the output will be formatted like HH:MM:SS or HHMMSS if _precision_ is zero, or if _subSecondNanoseconds_ is zero and _precision_ is *"auto"*.
-        Otherwise, the output will be formatted like HH:MM:SS.fff or HHMMSS.fff where "fff" is a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is *"auto"*) to the last non-zero digit.
+        The output will be formatted like HH:MM or HHMM if _precision_ is ~minute~.
+        Otherwise, the output will be formatted like HH:MM:SS or HHMMSS if _precision_ is zero, or if _subSecondNanoseconds_ is zero and _precision_ is ~auto~.
+        Otherwise, the output will be formatted like HH:MM:SS.fff or HHMMSS.fff where "fff" is a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is ~auto~) to the last non-zero digit.
       </dd>
     </dl>
     <emu-alg>
       1. If _style_ is present and _style_ is ~unseparated~, let _separator_ be the empty String; otherwise, let _separator_ be *":"*.
       1. Let _hh_ be ToZeroPaddedDecimalString(_hour_, 2).
       1. Let _mm_ be ToZeroPaddedDecimalString(_minute_, 2).
-      1. If _precision_ is *"minute"*, return the string-concatenation of _hh_, _separator_, and _mm_.
+      1. If _precision_ is ~minute~, return the string-concatenation of _hh_, _separator_, and _mm_.
       1. Let _ss_ be ToZeroPaddedDecimalString(_second_, 2).
       1. Let _subSecondsPart_ be FormatFractionalSeconds(_subSecondNanoseconds_, _precision_).
       1. Return the string-concatenation of _hh_, _separator_, _mm_, _separator_, _ss_, and _subSecondsPart_.

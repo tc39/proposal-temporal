@@ -259,7 +259,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Return TemporalInstantToString(_instant_, *undefined*, *"auto"*).
+        1. Return TemporalInstantToString(_instant_, *undefined*, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -269,7 +269,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. Return TemporalInstantToString(_instant_, *undefined*, *"auto"*).
+        1. Return TemporalInstantToString(_instant_, *undefined*, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -504,7 +504,7 @@
         TemporalInstantToString (
           _instant_: a Temporal.Instant,
           _timeZone_: a String or *undefined*,
-          _precision_: an integer in the inclusive interval from 0 to 9, *"minute"*, or *"auto"*,
+          _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
         ): a String
       </h1>
       <dl class="header">
