@@ -1764,9 +1764,9 @@
           1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
         1. Else,
           1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
-          1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, *"compatible"*).
+          1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
           1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
-          1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
+          1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
         1. If _sign_ is 1, then
           1. Assert: _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_.
         1. Else,
@@ -1825,8 +1825,8 @@
         1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
         1. Let _endDate_ be BalanceISODate(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]] + _sign_).
         1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _dateTime_).
-        1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, *"compatible"*).
-        1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
+        1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
+        1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
         1. Let _daySpan_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_endEpochNs_, _startEpochNs_).
         1. Assert: NormalizedTimeDurationSign(_daySpan_) = _sign_.
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
@@ -1931,7 +1931,7 @@
               1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
             1. Else,
               1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
-              1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, *"compatible"*).
+              1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
             1. If _beyondEndSign_ ≠ -_sign_, then

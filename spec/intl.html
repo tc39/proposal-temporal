@@ -1288,7 +1288,7 @@
         <emu-alg>
           1. If _temporalDate_.[[Calendar]] is not _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
           1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: _temporalDate_.[[ISOYear]], [[Month]]: _temporalDate_.[[ISOMonth]], [[Day]]: _temporalDate_.[[ISODay]], [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, *"compatible"*).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainDateFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
@@ -1311,7 +1311,7 @@
           1. If _temporalYearMonth_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: _temporalYearMonth_.[[ISOYear]], [[Month]]: _temporalYearMonth_.[[ISOMonth]], [[Day]]: _temporalYearMonth_.[[ISODay]], [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, *"compatible"*).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainYearMonthFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
@@ -1334,7 +1334,7 @@
           1. If _temporalMonthDay_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: _temporalMonthDay_.[[ISOYear]], [[Month]]: _temporalMonthDay_.[[ISOMonth]], [[Day]]: _temporalMonthDay_.[[ISODay]], [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, *"compatible"*).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainMonthDayFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
@@ -1355,7 +1355,7 @@
         </dl>
         <emu-alg>
           1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: 1970, [[Month]]: 1, [[Day]]: 1, [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, *"compatible"*).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainTimeFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
@@ -1378,7 +1378,7 @@
           1. If _dateTime_.[[Calendar]] is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _isoDateTime_ be PlainDateTimeToISODateTimeRecord(_dateTime_).
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, *"compatible"*).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainDateTimeFormat]].
           1. Return Value Format Record {
             [[Format]]: _format_,

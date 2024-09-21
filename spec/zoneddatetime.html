@@ -553,7 +553,7 @@
           1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
           1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: _plainTime_.[[ISOHour]], [[Minute]]: _plainTime_.[[ISOMinute]], [[Second]]: _plainTime_.[[ISOSecond]], [[Millisecond]]: _plainTime_.[[ISOMillisecond]], [[Microsecond]]: _plainTime_.[[ISOMicrosecond]], [[Nanosecond]]: _plainTime_.[[ISONanosecond]] }.
           1. Let _resultISODateTime_ be CombineISODateAndTimeRecord(_isoDateTime_, _time_).
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _resultISODateTime_, *"compatible"*).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _resultISODateTime_, ~compatible~).
         1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -667,7 +667,7 @@
           1. Let _roundResult_ be RoundISODateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _thisNs_).
           1. Let _time_ be Time Record { [[Hour]]: _roundResult_.[[Hour]], [[Minute]]: _roundResult_.[[Minute]], [[Second]]: _roundResult_.[[Second]], [[Millisecond]]: _roundResult_.[[Millisecond]], [[Microsecond]]: _roundResult_.[[Microsecond]], [[Nanosecond]]: _roundResult_.[[Nanosecond]] }.
-          1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _time_, ~option~, _offsetNanoseconds_, _timeZone_, *"compatible"*, *"prefer"*, ~match-exactly~).
+          1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _time_, ~option~, _offsetNanoseconds_, _timeZone_, ~compatible~, *"prefer"*, ~match-exactly~).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
     </emu-clause>
@@ -895,7 +895,7 @@
           _offsetBehaviour_: one of ~option~, ~exact~, or ~wall~,
           _offsetNanoseconds_: an integer,
           _timeZone_: a String,
-          _disambiguation_: one of *"earlier"*, *"later"*, *"compatible"*, or *"reject"*,
+          _disambiguation_: ~earlier~, ~later~, ~compatible~, or ~reject~,
           _offsetOption_: one of *"ignore"*, *"use"*, *"prefer"*, or *"reject"*,
           _matchBehaviour_: one of ~match-exactly~ or ~match-minutes~,
         ): either a normal completion containing a BigInt or a throw completion
@@ -1099,7 +1099,7 @@
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _duration_.[[Date]], _overflow_).
         1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_addedDate_, _isoDateTime_).
         1. If ISODateTimeWithinLimits(_intermediateDateTime_.[[Year]], _intermediateDateTime_.[[Month]], _intermediateDateTime_.[[Day]], _intermediateDateTime_.[[Hour]], _intermediateDateTime_.[[Minute]], _intermediateDateTime_.[[Second]], _intermediateDateTime_.[[Millisecond]], _intermediateDateTime_.[[Microsecond]], _intermediateDateTime_.[[Nanosecond]]) is *false*, throw a *RangeError* exception.
-        1. Let _intermediateNs_ be ! GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
+        1. Let _intermediateNs_ be ! GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
         1. Return ? AddInstant(_intermediateNs_, _duration_.[[NormalizedTime]]).
       </emu-alg>
     </emu-clause>
@@ -1133,7 +1133,7 @@
         1. Repeat, while _dayCorrection_ ≤ _maxDayCorrection_ and _success_ is *false*,
           1. Let _intermediateDate_ be BalanceISODate(_endDateTime_.[[Year]], _endDateTime_.[[Month]], _endDateTime_.[[Day]] - _dayCorrection_ × _sign_).
           1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_intermediateDate_, _startDateTime_).
-          1. Let _intermediateNs_ be ? GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, *"compatible"*).
+          1. Let _intermediateNs_ be ? GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
           1. Let _norm_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_ns2_, _intermediateNs_).
           1. Let _timeSign_ be NormalizedTimeDurationSign(_norm_).
           1. If _sign_ ≠ -_timeSign_, then
