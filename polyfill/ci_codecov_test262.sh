@@ -2,11 +2,6 @@
 
 set -ex
 
-SHA_ARG=""
-if [ -n "$HEAD_SHA" ]; then
-  SHA_ARG="-c $HEAD_SHA"
-fi
-
 npm run build262
 
 export NODE_V8_COVERAGE=coverage/tmp/
@@ -32,8 +27,6 @@ node runtest262.mjs "test262/test/built-ins/Date/*/toLocale*String/*.js" || fail
 c8 report --reporter=text-lcov --temp-directory=$NODE_V8_COVERAGE \
   --exclude=polyfill/runtest262.mjs \
   --exclude-after-remap > coverage/test262.lcov
-
-codecov $SHA_ARG -f coverage/test262.lcov
 
 rm -rf $NODE_V8_COVERAGE
 
