@@ -14,6 +14,7 @@ rm -rf $NODE_V8_COVERAGE
 
 # Run the tests in chunks, by subdirectory
 # Works around memory leak with vm.Script and NODE_V8_COVERAGE
+# https://github.com/nodejs/node/issues/44364
 subdirs=$(find test262/test/*/Temporal/* -maxdepth 0 -type d -exec basename "{}" ";" | sort -u)
 
 failed=0
