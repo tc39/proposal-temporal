@@ -907,13 +907,9 @@
         <dt>description</dt>
         <dd>It <del>interprets _x_ as a time value as specified in es2024, <emu-xref href="#sec-time-values-and-time-range"></emu-xref>, and</del> creates the corresponding parts <ins>for the epoch time _epochNanoseconds_</ins> according to _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _format_.</dd>
       </dl>
-      <emu-note type="editor">
-        This operation changes to not return a Completion Record.
-        That usage of `&lt;ins>` and `&lt;del>` is <a href="https://github.com/tc39/ecmarkup/issues/609">not currently supported</a> in ecmarkup, so that is not reflected in the text above.
-      </emu-note>
       <emu-alg>
         1. <del>Let _x_ be TimeClip(_x_).</del>
-        1. <del>`If _x_ is *NaN*, throw a *RangeError* exception.`</del>
+        1. <del>If _x_ is *NaN*, throw a *RangeError* exception.</del>
         1. Let _locale_ be _dateTimeFormat_.[[Locale]].
         1. Let _nfOptions_ be OrdinaryObjectCreate(*null*).
         1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
