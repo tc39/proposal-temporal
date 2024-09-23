@@ -27,10 +27,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
-      - run: npm ci
       - run: npm run codecov:test262
+      - uses: codecov/codecov-action@v4
+        with:
+          files: coverage/test262.lcov
         env:
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   test-cookbook:
     runs-on: ubuntu-latest
     steps:
