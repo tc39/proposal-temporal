@@ -867,7 +867,7 @@
             [[TimeZone]]
           </td>
           <td>
-            A String representing the time zone.
+            An available time zone identifier.
           </td>
         </tr>
         <tr>
@@ -894,7 +894,7 @@
           _time_: a Time Record or ~start-of-day~,
           _offsetBehaviour_: ~option~, ~exact~, or ~wall~,
           _offsetNanoseconds_: an integer,
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _disambiguation_: ~earlier~, ~later~, ~compatible~, or ~reject~,
           _offsetOption_: ~ignore~, ~use~, ~prefer~, or ~reject~,
           _matchBehaviour_: ~match-exactly~ or ~match-minutes~,
@@ -1011,7 +1011,7 @@
       <h1>
         CreateTemporalZonedDateTime (
           _epochNanoseconds_: a BigInt,
-          _timeZone_: a String or Object,
+          _timeZone_: an available time zone identifier,
           _calendar_: a calendar type,
           optional _newTarget_: a constructor,
         ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
@@ -1078,7 +1078,7 @@
       <h1>
         AddZonedDateTime (
           _epochNanoseconds_: a BigInt,
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _calendar_: a calendar type,
           _duration_: a Normalized Duration Record,
           _overflow_: ~constrain~ or ~reject~,
@@ -1109,7 +1109,7 @@
         DifferenceZonedDateTime (
           _ns1_: a BigInt,
           _ns2_: a BigInt,
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
         ): either a normal completion containing a Normalized Duration Record, or a throw completion
@@ -1153,7 +1153,7 @@
         DifferenceZonedDateTimeWithRounding (
           _ns1_: a BigInt,
           _ns2_: a BigInt,
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
           _roundingIncrement_: a positive integer,
