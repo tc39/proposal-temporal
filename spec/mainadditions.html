@@ -92,6 +92,9 @@
         Each available named time zone is associated with exactly one primary time zone identifier and zero or more non-primary time zone identifiers.
       </p>
       <ins class="block">
+        <p>An <dfn>available time zone identifier</dfn> is either an available named time zone identifier or an offset time zone identifier.</p>
+      </ins>
+      <ins class="block">
         <p>
           Time zone identifiers are compared using ASCII-case-insensitive comparisons, and are accepted as input in any variation of letter case.
           Offset time zone identifiers are compared using the number of minutes represented (not as a String), and are accepted as input in any the formats specified by |UTCOffset[~SubMinutePrecision]|.
@@ -113,7 +116,7 @@
     </emu-clause>
 
     <emu-clause id="sec-systemtimezoneidentifier" oldids="sec-defaulttimezone" type="implementation-defined abstract operation">
-      <h1>SystemTimeZoneIdentifier ( ): a String</h1>
+      <h1>SystemTimeZoneIdentifier ( ): an available time zone identifier</h1>
       <dl class="header">
         <dt>description</dt>
         <dd>

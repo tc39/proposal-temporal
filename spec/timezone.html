@@ -23,7 +23,7 @@
     <emu-clause id="sec-getavailablenamedtimezoneidentifier" type="abstract operation">
       <h1>
         GetAvailableNamedTimeZoneIdentifier (
-          _timeZoneIdentifier_: a String,
+          _timeZoneIdentifier_: a named time zone identifier,
         ): either a Time Zone Identifier Record or ~empty~
       </h1>
       <dl class="header">
@@ -89,7 +89,7 @@
     <emu-clause id="sec-temporal-getnamedtimezonenexttransition" type="implementation-defined abstract operation">
       <h1>
         GetNamedTimeZoneNextTransition (
-          _timeZoneIdentifier_: a String,
+          _timeZoneIdentifier_: an available named time zone identifier,
           _epochNanoseconds_: a BigInt,
         ): a BigInt or *null*
       </h1>
@@ -114,7 +114,7 @@
     <emu-clause id="sec-temporal-getnamedtimezoneprevioustransition" type="implementation-defined abstract operation">
       <h1>
         GetNamedTimeZonePreviousTransition (
-          _timeZoneIdentifier_: a String,
+          _timeZoneIdentifier_: an available named time zone identifier,
           _epochNanoseconds_: a BigInt,
         ): a BigInt or *null*
       </h1>
@@ -141,7 +141,7 @@
         FormatOffsetTimeZoneIdentifier (
           _offsetMinutes_: an integer,
           optional _style_: ~separated~ or ~unseparated~,
-        ): a String
+        ): an offset time zone identifier
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -209,11 +209,11 @@
       <h1>
         ToTemporalTimeZoneIdentifier (
           _temporalTimeZoneLike_: an ECMAScript value,
-        ): either a normal completion containing a String or a throw completion
+        ): either a normal completion containing an available time zone identifier or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It attempts to derive a value from _temporalTimeZoneLike_ that is a time zone identifier according to GetAvailableNamedTimeZoneIdentifier, and returns that value if found or throws an exception if not.</dd>
+        <dd>It attempts to derive a value from _temporalTimeZoneLike_ that is an available time zone identifier, and returns that value if found or throws an exception if not.</dd>
       </dl>
       <emu-alg>
         1. If _temporalTimeZoneLike_ is an Object, then
@@ -233,7 +233,7 @@
     <emu-clause id="sec-temporal-getoffsetnanosecondsfor" type="abstract operation">
       <h1>
         GetOffsetNanosecondsFor (
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _epochNs_: a BigInt,
         ): an integer in the interval from -86400 × 10<sup>9</sup> (exclusive) to 86400 × 10<sup>9</sup> (exclusive)
       </h1>
@@ -253,7 +253,7 @@
     <emu-clause id="sec-temporal-getisodatetimefor" type="abstract operation">
       <h1>
         GetISODateTimeFor (
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _epochNs_: a BigInt,
         ): an ISO Date-Time Record
       </h1>
@@ -272,7 +272,7 @@
     <emu-clause id="sec-temporal-getepochnanosecondsfor" type="abstract operation">
       <h1>
         GetEpochNanosecondsFor (
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _isoDateTime_: an ISO Date-Time Record,
           _disambiguation_: ~compatible~, ~earlier~, ~later~, or ~reject~,
         ): either a normal completion containing a BigInt or a throw completion
@@ -292,7 +292,7 @@
       <h1>
         DisambiguatePossibleEpochNanoseconds (
           _possibleEpochNs_: a List of BigInts,
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _isoDateTime_: an ISO Date-Time Record,
           _disambiguation_: ~compatible~, ~earlier~, ~later~, or ~reject~,
         ): either a normal completion containing a BigInt or a throw completion
@@ -344,7 +344,7 @@
     <emu-clause id="sec-temporal-getpossibleepochnanoseconds" type="abstract operation">
       <h1>
         GetPossibleEpochNanoseconds (
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _isoDateTime_: an ISO Date-Time Record,
         ): either a normal completion containing a List of BigInts or a throw completion
       </h1>
@@ -371,7 +371,7 @@
     <emu-clause id="sec-temporal-getstartofday" type="abstract operation">
       <h1>
         GetStartOfDay (
-          _timeZone_: a String,
+          _timeZone_: an available time zone identifier,
           _isoDate_: an ISO Date Record,
         ): either a normal completion containing a BigInt or a throw completion
       </h1>
@@ -393,8 +393,8 @@
     <emu-clause id="sec-temporal-timezoneequals" type="abstract operation">
       <h1>
         TimeZoneEquals (
-          _one_: a String,
-          _two_: a String,
+          _one_: an available time zone identifier,
+          _two_: an available time zone identifier,
         ): a Boolean
       </h1>
       <dl class="header">
@@ -419,7 +419,7 @@
       <h1>
         ParseTimeZoneIdentifier (
           _identifier_: a String,
-        ): either a normal completion containing a Record with fields [[Name]] (a String or ~empty~) and [[OffsetMinutes]] (an integer or ~empty~), or a throw completion
+        ): either a normal completion containing a Record with fields [[Name]] (a named time zone identifier or ~empty~) and [[OffsetMinutes]] (an integer or ~empty~), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
