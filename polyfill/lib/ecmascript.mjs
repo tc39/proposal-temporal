@@ -3437,7 +3437,7 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, ca
     (sign === 1 && (startEpochNs.gt(destEpochNs) || destEpochNs.gt(endEpochNs))) ||
     (sign === -1 && (endEpochNs.gt(destEpochNs) || destEpochNs.gt(startEpochNs)))
   ) {
-    throw new RangeErrorCtor(`custom calendar reported a ${unit} that is 0 days long`);
+    throw new ErrorCtor(`assertion failed: ${unit} cannot be 0 days long`);
   }
   if (endEpochNs.equals(startEpochNs)) {
     throw new ErrorCtor('assertion failed: startEpochNs ≠ endEpochNs');
