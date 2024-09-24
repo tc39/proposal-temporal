@@ -294,7 +294,6 @@ dt.nanosecond;  // => 500
 ### datetime.**calendarId** : string
 
 The `calendarId` read-only property gives the identifier of the calendar that the `year`, `month`, `monthCode`, and `day` properties are interpreted in.
-If the date was created with a custom calendar object, this gives the `id` property of that object.
 
 ### datetime.**era** : string | undefined
 

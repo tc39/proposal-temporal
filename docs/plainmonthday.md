@@ -28,7 +28,7 @@ A `Temporal.PlainMonthDay` can be converted into a `Temporal.PlainDate` by combi
 **Returns:** a new `Temporal.PlainMonthDay` object.
 
 > The `calendar` and `referenceISOYear` parameters should be avoided because `equals` or `compare` will consider `new Temporal.PlainMonthDay(3, 14, 'iso8601', 1977)` and `new Temporal.PlainMonthDay(3, 14, 'iso8601', 2000)` unequal even though they refer to the same month and day.
-> When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the `from()` method which will automatically set a valid and `equals`-compatible reference year.
+> When creating instances for non-ISO-8601 calendars use the `from()` method which will automatically set a valid and `equals`-compatible reference year.
 
 All values are given as reckoned in the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates).
 Together, `referenceISOYear`, `isoMonth`, and `isoDay` must represent a valid date in that calendar, even if you are passing a different calendar as the `calendar` parameter.
@@ -169,7 +169,6 @@ md.month; // => undefined
 ### monthDay.**calendarId** : object
 
 The `calendarId` read-only property gives the calendar that the `monthCode` and `day` properties are interpreted in.
-If `monthDay` was created with a custom calendar object, this gives the `id` property of that object.
 
 ## Methods
 
