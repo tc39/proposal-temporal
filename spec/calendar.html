@@ -848,7 +848,7 @@
       <h1>
         MaybeFormatCalendarAnnotation (
           _calendar_: a calendar type,
-          _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
+          _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
         ): a String
       </h1>
       <dl class="header">
@@ -859,7 +859,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _showCalendar_ is *"never"*, return the empty String.
+        1. If _showCalendar_ is ~never~, return the empty String.
         1. Return FormatCalendarAnnotation(_calendar_, _showCalendar_).
       </emu-alg>
     </emu-clause>
@@ -868,7 +868,7 @@
       <h1>
         FormatCalendarAnnotation (
           _id_: a calendar type,
-          _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
+          _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
         ): a String
       </h1>
       <dl class="header">
@@ -879,9 +879,9 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _showCalendar_ is *"never"*, return the empty String.
-        1. If _showCalendar_ is *"auto"* and _id_ is *"iso8601"*, return the empty String.
-        1. If _showCalendar_ is *"critical"*, let _flag_ be *"!"*; else, let flag be the empty String.
+        1. If _showCalendar_ is ~never~, return the empty String.
+        1. If _showCalendar_ is ~auto~ and _id_ is *"iso8601"*, return the empty String.
+        1. If _showCalendar_ is ~critical~, let _flag_ be *"!"*; else, let flag be the empty String.
         1. Return the string-concatenation of *"["*, _flag_, *"u-ca="*, _id_, and *"]"*.
       </emu-alg>
     </emu-clause>
