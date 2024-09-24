@@ -270,7 +270,7 @@
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
         1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
-        1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, *"halfExpand"*).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, ~half-expand~).
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~).
         1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Assert: _maximum_ is not ~unset~.
@@ -306,7 +306,7 @@
         1. Set _options_ to ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToFractionalSecondDigits reads *"fractionalSecondDigits"* and ToTemporalRoundingMode reads *"roundingMode"*).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
-        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, ~trunc~).
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, ~unset~).
         1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
@@ -932,7 +932,7 @@
           _nanosecond_: an integer in the inclusive interval from 0 to 999,
           _increment_: a positive integer,
           _unit_: a time unit or ~day~,
-          _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
+          _roundingMode_: a rounding mode,
         ): a Time Record
       </h1>
       <dl class="header">
