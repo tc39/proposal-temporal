@@ -25,11 +25,11 @@ A `Temporal.PlainYearMonth` can be converted into a `Temporal.PlainDate` by comb
   For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.
 
 > The `calendar` and `referenceISODay` parameters should be avoided because `equals` or `compare` will consider `new Temporal.PlainYearMonth(2000, 3, 'iso8601', 14)` and `PlainYearMonth(2000, 3, 'iso8601', 1)` unequal even though they refer to the same year and month.
-> When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the `from()` method which will automatically set a valid and `equals`-compatible reference day.
+> When creating instances for non-ISO-8601 calendars use the `from()` method which will automatically set a valid and `equals`-compatible reference day.
 
 > NOTE: To avoid infinite recursion, `referenceISODay` is accepted as-is without validating that the day provided is actually the first day of the month in the desired calendar system.
 > This lack of validation means that `equals` or `compare` may return `false` for `Temporal.PlainYearMonth` instances where the year and month and day are identical, but the reference days don't match.
-> For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when implementing a custom calendar or when only using the ISO 8601 calendar.
+> For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when only using the ISO 8601 calendar.
 > For other calendars, use `Temporal.PlainYearMonth.from()` which will automatically set the correct always set the `referenceISODay` to the first of the month when constructing the new object.
 
 **Returns:** a new `Temporal.PlainYearMonth` object.
@@ -191,7 +191,6 @@ ym.monthCode; // => 'M05L'
 ### yearMonth.**calendarId** : object
 
 The `calendarId` read-only property gives the identifier of the calendar that the `year`, `month`, and `monthCode` properties are interpreted in.
-If `yearMonth` was created with a custom calendar object, this gives the `id` property of that project.
 
 ### yearMonth.**era** : string | undefined
 
