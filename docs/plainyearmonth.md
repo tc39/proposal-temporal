@@ -22,7 +22,7 @@ A `Temporal.PlainYearMonth` can be converted into a `Temporal.PlainDate` by comb
 - `calendar` (optional string): A calendar to project the month into.
 - `referenceISODay` (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
   For the ISO 8601 calendar, this parameter will default to 1 if omitted.
-  For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.
+  For other calendars, this parameter must be the ISO-calendar day corresponding to the first day of the desired calendar year and month.
 
 > The `calendar` and `referenceISODay` parameters should be avoided because `equals` or `compare` will consider `new Temporal.PlainYearMonth(2000, 3, 'iso8601', 14)` and `PlainYearMonth(2000, 3, 'iso8601', 1)` unequal even though they refer to the same year and month.
 > When creating instances for non-ISO-8601 calendars use the `from()` method which will automatically set a valid and `equals`-compatible reference day.
