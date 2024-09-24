@@ -516,7 +516,7 @@
         1. If _outputTimeZone_ is *undefined*, set _outputTimeZone_ to *"UTC"*.
         1. Let _epochNs_ be _instant_.[[EpochNanoseconds]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_outputTimeZone_, _epochNs_).
-        1. Let _dateTimeString_ be TemporalDateTimeToString(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], *"iso8601"*, _precision_, *"never"*).
+        1. Let _dateTimeString_ be TemporalDateTimeToString(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], *"iso8601"*, _precision_, ~never~).
         1. If _timeZone_ is *undefined*, then
           1. Let _timeZoneString_ be *"Z"*.
         1. Else,

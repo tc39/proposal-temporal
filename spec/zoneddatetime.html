@@ -716,7 +716,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, ~auto~, *"auto"*, *"auto"*, *"auto"*).
+        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, ~auto~, ~auto~, ~auto~, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -726,7 +726,7 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, ~auto~, *"auto"*, *"auto"*, *"auto"*).
+        1. Return TemporalZonedDateTimeToString(_zonedDateTime_, ~auto~, ~auto~, ~auto~, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -1036,9 +1036,9 @@
         TemporalZonedDateTimeToString (
           _zonedDateTime_: a Temporal.ZonedDateTime,
           _precision_: ~auto~, ~minute~, or an integer between 0 and 9 inclusive,
-          _showCalendar_: one of *"auto"*, *"always"*, *"never"*, or *"critical"*,
-          _showTimeZone_: one of *"auto"*, *"never"*, or *"critical"*,
-          _showOffset_: one of *"auto"* or *"never"*,
+          _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
+          _showTimeZone_: ~auto~, ~never~, or ~critical~,
+          _showOffset_: ~auto~ or ~never~,
           optional _increment_: a positive integer,
           optional _unit_: ~minute~, ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~,
           optional _roundingMode_: a rounding mode,
@@ -1059,15 +1059,15 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _epochNs_).
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNs_).
-        1. Let _dateTimeString_ be TemporalDateTimeToString(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], *"iso8601"*, _precision_, *"never"*).
-        1. If _showOffset_ is *"never"*, then
+        1. Let _dateTimeString_ be TemporalDateTimeToString(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], *"iso8601"*, _precision_, ~never~).
+        1. If _showOffset_ is ~never~, then
           1. Let _offsetString_ be the empty String.
         1. Else,
           1. Let _offsetString_ be FormatDateTimeUTCOffsetRounded(_offsetNanoseconds_).
-        1. If _showTimeZone_ is *"never"*, then
+        1. If _showTimeZone_ is ~never~, then
           1. Let _timeZoneString_ be the empty String.
         1. Else,
-          1. If _showTimeZone_ is *"critical"*, let _flag_ be *"!"*; else let _flag_ be the empty String.
+          1. If _showTimeZone_ is ~critical~, let _flag_ be *"!"*; else let _flag_ be the empty String.
           1. Let _timeZoneString_ be the string-concatenation of the code unit 0x005B (LEFT SQUARE BRACKET), _flag_, _timeZone_, and the code unit 0x005D (RIGHT SQUARE BRACKET).
         1. Let _calendarString_ be MaybeFormatCalendarAnnotation(_zonedDateTime_.[[Calendar]], _showCalendar_).
         1. Return the string-concatenation of _dateTimeString_, _offsetString_, _timeZoneString_, and _calendarString_.

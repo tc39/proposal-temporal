@@ -508,7 +508,7 @@
     <h1>
       GetTemporalShowCalendarNameOption (
         _options_: an Object,
-      ): either a normal completion containing either *"auto"*, *"always"*, *"never"*, or *"critical"*, or a throw completion
+      ): either a normal completion containing either ~auto~, ~always~, ~never~, or ~critical~, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -518,7 +518,11 @@
       This property is used in `toString` methods in Temporal to control whether a calendar annotation should be output.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_options_, *"calendarName"*, ~string~, « *"auto"*, *"always"*, *"never"*, *"critical"* », *"auto"*).
+      1. Let _stringValue_ be ? GetOption(_options_, *"calendarName"*, ~string~, « *"auto"*, *"always"*, *"never"*, *"critical"* », *"auto"*).
+      1. If _stringValue_ is *"always"*, return ~always~.
+      1. If _stringValue_ is *"never"*, return ~never~.
+      1. If _stringValue_ is *"critical"*, return ~critical~.
+      1. Return ~auto~.
     </emu-alg>
   </emu-clause>
 
@@ -526,7 +530,7 @@
     <h1>
       GetTemporalShowTimeZoneNameOption (
         _options_: an Object,
-      ): either a normal completion containing either *"auto"*, *"never"*, or *"critical"*, or a throw completion
+      ): either a normal completion containing either ~auto~, ~never~, or ~critical~, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -537,7 +541,10 @@
       It is different from the `timeZone` property passed to `Temporal.ZonedDateTime.from()` and from the `timeZone` property in the options passed to `Temporal.Instant.prototype.toString()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_options_, *"timeZoneName"*, ~string~, « *"auto"*, *"never"*, *"critical"* », *"auto"*).
+      1. Let _stringValue_ be ? GetOption(_options_, *"timeZoneName"*, ~string~, « *"auto"*, *"never"*, *"critical"* », *"auto"*).
+      1. If _stringValue_ is *"never"*, return ~never~.
+      1. If _stringValue_ is *"critical"*, return ~critical~.
+      1. Return ~auto~.
     </emu-alg>
   </emu-clause>
 
@@ -545,7 +552,7 @@
     <h1>
       GetTemporalShowOffsetOption (
         _options_: an Object,
-      ): either a normal completion containing either *"auto"* or *"never"*, or a throw completion
+      ): either a normal completion containing either ~auto~ or ~never~, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -556,7 +563,9 @@
       It is different from the `offset` property passed to `Temporal.ZonedDateTime.from()`.
     </emu-note>
     <emu-alg>
-      1. Return ? GetOption(_options_, *"offset"*, ~string~, « *"auto"*, *"never"* », *"auto"*).
+      1. Let _stringValue_ be ? GetOption(_options_, *"offset"*, ~string~, « *"auto"*, *"never"* », *"auto"*).
+      1. If _stringValue_ is *"never"*, return ~never~.
+      1. Return ~auto~.
     </emu-alg>
   </emu-clause>
 
