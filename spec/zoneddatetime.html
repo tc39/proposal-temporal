@@ -636,7 +636,7 @@
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
         1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
-        1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, *"halfExpand"*).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, ~half-expand~).
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « ~day~ »).
         1. If _smallestUnit_ is ~day~, then
           1. Let _maximum_ be 1.
@@ -696,7 +696,7 @@
         1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
         1. Let _showOffset_ be ? GetTemporalShowOffsetOption(_options_).
-        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, *"trunc"*).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, ~trunc~).
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, ~unset~).
         1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _showTimeZone_ be ? GetTemporalShowTimeZoneNameOption(_options_).
@@ -935,7 +935,7 @@
           1. If _candidateOffset_ = _offsetNanoseconds_, then
             1. Return _candidate_.
           1. If _matchBehaviour_ is ~match-minutes~, then
-            1. Let _roundedCandidateNanoseconds_ be RoundNumberToIncrement(_candidateOffset_, 60 × 10<sup>9</sup>, *"halfExpand"*).
+            1. Let _roundedCandidateNanoseconds_ be RoundNumberToIncrement(_candidateOffset_, 60 × 10<sup>9</sup>, ~half-expand~).
             1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
               1. Return _candidate_.
         1. If _offsetOption_ is *"reject"*, throw a *RangeError* exception.
@@ -1041,7 +1041,7 @@
           _showOffset_: one of *"auto"* or *"never"*,
           optional _increment_: a positive integer,
           optional _unit_: ~minute~, ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~,
-          optional _roundingMode_: a String from the "Identifier" column of <emu-xref href="#table-temporal-rounding-modes"></emu-xref>,
+          optional _roundingMode_: a rounding mode,
         ): a String
       </h1>
       <dl class="header">
@@ -1053,7 +1053,7 @@
       <emu-alg>
         1. If _increment_ is not present, set _increment_ to 1.
         1. If _unit_ is not present, set _unit_ to ~nanosecond~.
-        1. If _roundingMode_ is not present, set _roundingMode_ to *"trunc"*.
+        1. If _roundingMode_ is not present, set _roundingMode_ to ~trunc~.
         1. Let _epochNs_ be _zonedDateTime_.[[EpochNanoseconds]].
         1. Set _epochNs_ to RoundTemporalInstant(_epochNs_, _increment_, _unit_, _roundingMode_).
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
@@ -1158,7 +1158,7 @@
           _largestUnit_: a Temporal unit,
           _roundingIncrement_: a positive integer,
           _smallestUnit_: a Temporal unit,
-          _roundingMode_: a String,
+          _roundingMode_: a rounding mode,
         ): either a normal completion containing a Record with fields [[NormalizedDuration]] (a Normalized Duration Record) and [[Total]] (a mathematical value or ~unset~), or a throw completion
       </h1>
       <dl class="header">

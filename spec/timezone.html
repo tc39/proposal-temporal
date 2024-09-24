@@ -198,7 +198,7 @@
         <dd>It rounds _offsetNanoseconds_ to the nearest minute boundary and formats the rounded value into a ±HH:MM format, to support available named time zones that may have sub-minute offsets.</dd>
       </dl>
       <emu-alg>
-        1. Set _offsetNanoseconds_ to RoundNumberToIncrement(_offsetNanoseconds_, 60 × 10<sup>9</sup>, *"halfExpand"*).
+        1. Set _offsetNanoseconds_ to RoundNumberToIncrement(_offsetNanoseconds_, 60 × 10<sup>9</sup>, ~half-expand~).
         1. Let _offsetMinutes_ be _offsetNanoseconds_ / (60 × 10<sup>9</sup>).
         1. Assert: _offsetMinutes_ is an integer.
         1. Return FormatOffsetTimeZoneIdentifier(_offsetMinutes_).
