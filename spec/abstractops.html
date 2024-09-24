@@ -483,8 +483,8 @@
     <h1>
       GetTemporalOffsetOption (
         _options_: an Object or *undefined*,
-        _fallback_: *"prefer"*, *"use"*, *"ignore"*, or *"reject"*,
-      ): either a normal completion containing either *"prefer"*, *"use"*, *"ignore"*, or *"reject"*, or a throw completion
+        _fallback_: ~prefer~, ~use~, ~ignore~, or ~reject~,
+      ): either a normal completion containing either ~prefer~, ~use~, ~ignore~, or ~reject~, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -492,7 +492,15 @@
     </dl>
     <emu-alg>
       1. If _options_ is *undefined*, return _fallback_.
-      1. Return ? GetOption(_options_, *"offset"*, ~string~, « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _fallback_).
+      1. If _fallback_ is ~prefer~, let _stringFallback_ be *"prefer"*.
+      1. Else if _fallback_ is ~use~, let _stringFallback_ be *"use"*.
+      1. Else if _fallback_ is ~ignore~, let _stringFallback_ be *"ignore"*.
+      1. Else, let _stringFallback_ be *"reject"*.
+      1. Let _stringValue_ be ? GetOption(_options_, *"offset"*, ~string~, « *"prefer"*, *"use"*, *"ignore"*, *"reject"* », _stringFallback_).
+      1. If _stringValue_ is *"prefer"*, return ~prefer~.
+      1. If _stringValue_ is *"use"*, return ~use~.
+      1. If _stringValue_ is *"ignore"*, return ~ignore~.
+      1. Return ~reject~.
     </emu-alg>
   </emu-clause>
 
@@ -830,7 +838,7 @@
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]], _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, *"reject"*, _matchBehaviour_).
+      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]], _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
     </emu-alg>
