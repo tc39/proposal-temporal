@@ -573,14 +573,16 @@
     <h1>
       GetDirectionOption (
         _options_: an Object,
-      ): either a normal completion containing either *"next"* or *"previous"*, or a throw completion
+      ): either a normal completion containing either ~next~ or ~previous~, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>It fetches and validates the *"direction"* property from _options_, throwing if absent.</dd>
     </dl>
     <emu-alg>
-      1. Return ? GetOption(_options_, *"direction"*, ~string~, « *"next"*, *"previous"* », ~required~).
+      1. Let _stringValue_ be ? GetOption(_options_, *"direction"*, ~string~, « *"next"*, *"previous"* », ~required~).
+      1. If _stringValue_ is *"next"*, return ~next~.
+      1. Return ~previous~.
     </emu-alg>
   </emu-clause>
 
