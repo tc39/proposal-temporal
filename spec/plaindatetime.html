@@ -516,7 +516,7 @@
           1. Perform ! CreateDataPropertyOrThrow(_roundTo_, *"smallestUnit"*, _paramString_).
         1. Else,
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
-        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetRoundingIncrementOption reads *"roundingIncrement"* and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, ~half-expand~).
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~, « ~day~ »).
@@ -555,7 +555,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToCalendarNameOption reads *"calendarName"*, ToFractionalSecondDigits reads *"fractionalSecondDigits"*, and ToTemporalRoundingMode reads *"roundingMode"*).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalShowCalendarNameOption reads *"calendarName"*, GetTemporalFractionalSecondDigitsOption reads *"fractionalSecondDigits"*, and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, ~trunc~).

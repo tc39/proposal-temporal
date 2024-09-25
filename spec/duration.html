@@ -402,7 +402,7 @@
           1. Set _roundTo_ to ? GetOptionsObject(_roundTo_).
         1. Let _smallestUnitPresent_ be *true*.
         1. Let _largestUnitPresent_ be *true*.
-        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToRelativeTemporalObject reads *"relativeTo"*, ToTemporalRoundingIncrement reads *"roundingIncrement"* and ToTemporalRoundingMode reads *"roundingMode"*).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalRelativeToOption reads *"relativeTo"*, GetRoundingIncrementOption reads *"roundingIncrement"* and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _largestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"largestUnit"*, ~datetime~, ~unset~, « ~auto~ »).
         1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_roundTo_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
@@ -465,7 +465,7 @@
           1. Perform ! CreateDataPropertyOrThrow(_totalOf_, *"unit"*, _paramString_).
         1. Else,
           1. Set _totalOf_ to ? GetOptionsObject(_totalOf_).
-        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToRelativeTemporalObject reads *"relativeTo"*).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalRelativeToOption reads *"relativeTo"*).
         1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_totalOf_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
@@ -502,7 +502,7 @@
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
         1. Set _options_ to ? GetOptionsObject(_options_).
-        1. NOTE: The following steps read options and perform independent validation in alphabetical order (ToFractionalSecondDigits reads *"fractionalSecondDigits"* and ToTemporalRoundingMode reads *"roundingMode"*).
+        1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalFractionalSecondDigitsOption reads *"fractionalSecondDigits"* and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, ~trunc~).
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, ~unset~).
