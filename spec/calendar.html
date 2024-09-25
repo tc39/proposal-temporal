@@ -844,26 +844,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-maybeformatcalendarannotation" type="abstract operation">
-      <h1>
-        MaybeFormatCalendarAnnotation (
-          _calendar_: a calendar type,
-          _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
-        ): a String
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>
-          It returns a string with a calendar annotation suitable for concatenating to the end of an ISO 8601 string.
-          Depending on the given _calendar_ and the value of _showCalendar_, the string may be empty if no calendar annotation need be included.
-        </dd>
-      </dl>
-      <emu-alg>
-        1. If _showCalendar_ is ~never~, return the empty String.
-        1. Return FormatCalendarAnnotation(_calendar_, _showCalendar_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-formatcalendarannotation" type="abstract operation">
       <h1>
         FormatCalendarAnnotation (

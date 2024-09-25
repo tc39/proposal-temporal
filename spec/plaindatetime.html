@@ -1057,7 +1057,7 @@
         1. Let _dayString_ be ToZeroPaddedDecimalString(_isoDay_, 2).
         1. Let _subSecondNanoseconds_ be _millisecond_ × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
         1. Let _timeString_ be FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
-        1. Let _calendarString_ be MaybeFormatCalendarAnnotation(_calendar_, _showCalendar_).
+        1. Let _calendarString_ be FormatCalendarAnnotation(_calendar_, _showCalendar_).
         1. Return the string-concatenation of _yearString_, the code unit 0x002D (HYPHEN-MINUS), _monthString_, the code unit 0x002D (HYPHEN-MINUS), _dayString_, 0x0054 (LATIN CAPITAL LETTER T), _timeString_, and _calendarString_.
       </emu-alg>
     </emu-clause>

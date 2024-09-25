@@ -408,11 +408,6 @@ export function RejectTemporalLikeObject(item) {
   }
 }
 
-export function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
-  if (showCalendar === 'never') return '';
-  return FormatCalendarAnnotation(calendar, showCalendar);
-}
-
 export function FormatCalendarAnnotation(id, showCalendar) {
   if (showCalendar === 'never') return '';
   if (showCalendar === 'auto' && id === 'iso8601') return '';
@@ -2266,7 +2261,7 @@ export function TemporalDateToString(date, showCalendar = 'auto') {
   const year = ISOYearString(GetSlot(date, ISO_YEAR));
   const month = ISODateTimePartString(GetSlot(date, ISO_MONTH));
   const day = ISODateTimePartString(GetSlot(date, ISO_DAY));
-  const calendar = MaybeFormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
+  const calendar = FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
   return `${year}-${month}-${day}${calendar}`;
 }
 
@@ -2277,7 +2272,7 @@ export function TemporalDateTimeToString(isoDateTime, calendar, precision, showC
   const dayString = ISODateTimePartString(day);
   const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
   const timeString = FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
-  const calendarString = MaybeFormatCalendarAnnotation(calendar, showCalendar);
+  const calendarString = FormatCalendarAnnotation(calendar, showCalendar);
   return `${yearString}-${monthString}-${dayString}T${timeString}${calendarString}`;
 }
 
@@ -2335,7 +2330,7 @@ export function TemporalZonedDateTimeToString(
     const flag = showTimeZone === 'critical' ? '!' : '';
     dateTimeString += `[${flag}${tz}]`;
   }
-  dateTimeString += MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
+  dateTimeString += FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
   return dateTimeString;
 }
 
