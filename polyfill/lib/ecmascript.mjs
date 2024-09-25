@@ -129,8 +129,8 @@ import {
 
 import bigInt from 'big-integer';
 
-const DAY_SECONDS = 86400;
-const DAY_NANOS = DAY_SECONDS * 1e9;
+const DAY_MS = 86400_000;
+const DAY_NANOS = DAY_MS * 1e6;
 // Instant range is 100 million days (inclusive) before or after epoch.
 const NS_MIN = bigInt(DAY_NANOS).multiply(-1e8);
 const NS_MAX = bigInt(DAY_NANOS).multiply(1e8);
@@ -142,7 +142,7 @@ const DATETIME_NS_MAX = NS_MAX.add(DAY_NANOS).subtract(bigInt.one);
 // The pattern of leap years in the ISO 8601 calendar repeats every 400 years.
 // The constant below is the number of nanoseconds in 400 years. It is used to
 // avoid overflows when dealing with values at the edge legacy Date's range.
-const NS_IN_400_YEAR_CYCLE = bigInt(400 * 365 + 97).multiply(DAY_NANOS);
+const MS_IN_400_YEAR_CYCLE = (400 * 365 + 97) * DAY_MS;
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = bigInt(-388152).multiply(1e13); // 1847-01-01T00:00:00Z
@@ -2428,10 +2428,15 @@ export function GetAvailableNamedTimeZoneIdentifier(identifier) {
 }
 
 export function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {
-  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } =
-    GetNamedTimeZoneDateTimeParts(id, epochNanoseconds);
-  const utc = GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-  return utc.minus(epochNanoseconds).toJSNumber();
+  // Optimization: We get the offset nanoseconds only with millisecond
+  // resolution, assuming that time zone offset changes don't happen in the
+  // middle of a millisecond
+  const epochMilliseconds = epochNsToMs(epochNanoseconds, 'floor');
+  const { year, month, day, hour, minute, second } = GetFormatterParts(id, epochMilliseconds);
+  let millisecond = epochMilliseconds % 1000;
+  if (millisecond < 0) millisecond += 1000;
+  const utc = GetUTCEpochMilliseconds(year, month, day, hour, minute, second, millisecond);
+  return (utc - epochMilliseconds) * 1e6;
 }
 
 export function FormatOffsetTimeZoneIdentifier(offsetMinutes) {
@@ -2448,7 +2453,7 @@ export function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {
   return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
 }
 
-function GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+function GetUTCEpochMilliseconds(year, month, day, hour, minute, second, millisecond) {
   // The pattern of leap years in the ISO 8601 calendar repeats every 400
   // years. To avoid overflowing at the edges of the range, we reduce the year
   // to the remainder after dividing by 400, and then add back all the
@@ -2462,11 +2467,13 @@ function GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisec
   Call(DatePrototypeSetUTCHours, legacyDate, [hour, minute, second, millisecond]);
   Call(DatePrototypeSetUTCFullYear, legacyDate, [reducedYear, month - 1, day]);
   const ms = Call(DatePrototypeGetTime, legacyDate, []);
-  let ns = bigInt(ms).multiply(1e6);
-  ns = ns.plus(bigInt(microsecond).multiply(1e3));
-  ns = ns.plus(bigInt(nanosecond));
+  return ms + MS_IN_400_YEAR_CYCLE * yearCycles;
+}
 
-  return ns.plus(NS_IN_400_YEAR_CYCLE.multiply(bigInt(yearCycles)));
+function GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+  const ms = GetUTCEpochMilliseconds(year, month, day, hour, minute, second, millisecond);
+  const subMs = microsecond * 1e3 + nanosecond;
+  return bigInt(ms).multiply(1e6).plus(subMs);
 }
 
 export function GetISOPartsFromEpoch(epochNanoseconds) {
@@ -4474,14 +4481,13 @@ export function NonNegativeBigIntDivmod(x, y) {
   return { quotient, remainder };
 }
 
-export function BigIntFloorDiv(left, right) {
-  left = bigInt(left);
-  right = bigInt(right);
-  const { quotient, remainder } = left.divmod(right);
-  if (!remainder.isZero() && !left.isNegative() != !right.isNegative()) {
-    return quotient.prev();
-  }
-  return quotient;
+// rounding modes supported: floor, ceil
+export function epochNsToMs(epochNanoseconds, mode) {
+  const { quotient, remainder } = bigInt(epochNanoseconds).divmod(1e6);
+  let epochMilliseconds = +quotient;
+  if (mode === 'floor' && +remainder < 0) epochMilliseconds -= 1;
+  if (mode === 'ceil' && +remainder > 0) epochMilliseconds += 1;
+  return epochMilliseconds;
 }
 
 export function BigIntIfAvailable(wrapper) {

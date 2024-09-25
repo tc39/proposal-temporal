@@ -236,6 +236,75 @@ describe('ECMAScript', () => {
       );
     });
   });
+
+  describe('epochNsToMs', () => {
+    it('returns 0 for 0n', () => {
+      equal(ES.epochNsToMs(bigInt.zero, 'floor'), 0);
+      equal(ES.epochNsToMs(bigInt.zero, 'ceil'), 0);
+    });
+
+    const oneBillionSeconds = bigInt(1e18);
+
+    it('for a positive value already on ms boundary, divides by 1e6', () => {
+      equal(ES.epochNsToMs(oneBillionSeconds, 'floor'), 1e12);
+      equal(ES.epochNsToMs(oneBillionSeconds, 'ceil'), 1e12);
+    });
+
+    it('positive value just ahead of ms boundary', () => {
+      const plusOne = oneBillionSeconds.plus(bigInt.one);
+      equal(ES.epochNsToMs(plusOne, 'floor'), 1e12);
+      equal(ES.epochNsToMs(plusOne, 'ceil'), 1e12 + 1);
+    });
+
+    it('positive value just behind ms boundary', () => {
+      const minusOne = oneBillionSeconds.minus(bigInt.one);
+      equal(ES.epochNsToMs(minusOne, 'floor'), 1e12 - 1);
+      equal(ES.epochNsToMs(minusOne, 'ceil'), 1e12);
+    });
+
+    it('positive value just behind next ms boundary', () => {
+      const plus999999 = oneBillionSeconds.plus(999999);
+      equal(ES.epochNsToMs(plus999999, 'floor'), 1e12);
+      equal(ES.epochNsToMs(plus999999, 'ceil'), 1e12 + 1);
+    });
+
+    it('positive value just behind ms boundary', () => {
+      const minus999999 = oneBillionSeconds.minus(999999);
+      equal(ES.epochNsToMs(minus999999, 'floor'), 1e12 - 1);
+      equal(ES.epochNsToMs(minus999999, 'ceil'), 1e12);
+    });
+
+    const minusOneBillionSeconds = bigInt(-1e18);
+
+    it('for a negative value already on ms boundary, divides by 1e6', () => {
+      equal(ES.epochNsToMs(minusOneBillionSeconds, 'floor'), -1e12);
+      equal(ES.epochNsToMs(minusOneBillionSeconds, 'ceil'), -1e12);
+    });
+
+    it('negative value just ahead of ms boundary', () => {
+      const plusOne = minusOneBillionSeconds.plus(bigInt.one);
+      equal(ES.epochNsToMs(plusOne, 'floor'), -1e12);
+      equal(ES.epochNsToMs(plusOne, 'ceil'), -1e12 + 1);
+    });
+
+    it('negative value just behind ms boundary', () => {
+      const minusOne = minusOneBillionSeconds.minus(bigInt.one);
+      equal(ES.epochNsToMs(minusOne, 'floor'), -1e12 - 1);
+      equal(ES.epochNsToMs(minusOne, 'ceil'), -1e12);
+    });
+
+    it('negative value just behind next ms boundary', () => {
+      const plus999999 = minusOneBillionSeconds.plus(999999);
+      equal(ES.epochNsToMs(plus999999, 'floor'), -1e12);
+      equal(ES.epochNsToMs(plus999999, 'ceil'), -1e12 + 1);
+    });
+
+    it('negative value just behind ms boundary', () => {
+      const minus999999 = minusOneBillionSeconds.minus(999999);
+      equal(ES.epochNsToMs(minus999999, 'floor'), -1e12 - 1);
+      equal(ES.epochNsToMs(minus999999, 'ceil'), -1e12);
+    });
+  });
 });
 
 import { normalize } from 'path';

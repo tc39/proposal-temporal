@@ -46,7 +46,7 @@ export class Instant {
   get epochMilliseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');
     const value = bigInt(GetSlot(this, EPOCHNANOSECONDS));
-    return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
+    return ES.epochNsToMs(value, 'floor');
   }
   get epochNanoseconds() {
     if (!ES.IsTemporalInstant(this)) throw new TypeErrorCtor('invalid receiver');

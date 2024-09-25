@@ -229,16 +229,12 @@ function resolvedOptions() {
   return resolved;
 }
 
-function epochNsToMs(epochNs) {
-  return ES.BigIntFloorDiv(epochNs, 1e6).toJSNumber();
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function format(datetime, ...rest) {
   let { epochNs, formatter } = extractOverrides(datetime, this);
   let formatArgs;
   if (formatter) {
-    formatArgs = [epochNsToMs(epochNs)];
+    formatArgs = [ES.epochNsToMs(epochNs, 'floor')];
   } else {
     formatter = GetSlot(this, ORIGINAL);
     formatArgs = ES.Call(ArrayPrototypeSlice, arguments, []);
@@ -252,7 +248,7 @@ function formatToParts(datetime, ...rest) {
   let { epochNs, formatter } = extractOverrides(datetime, this);
   let formatArgs;
   if (formatter) {
-    formatArgs = [epochNsToMs(epochNs)];
+    formatArgs = [ES.epochNsToMs(epochNs, 'floor')];
   } else {
     formatter = GetSlot(this, ORIGINAL);
     formatArgs = ES.Call(ArrayPrototypeSlice, arguments, []);
@@ -272,7 +268,7 @@ function formatRange(a, b) {
     if (aformatter) {
       assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
       formatter = aformatter;
-      formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
+      formatArgs = [ES.epochNsToMs(aa, 'floor'), ES.epochNsToMs(bb, 'floor')];
     }
   } else {
     formatter = GetSlot(this, ORIGINAL);
@@ -292,7 +288,7 @@ function formatRangeToParts(a, b) {
     if (aformatter) {
       assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
       formatter = aformatter;
-      formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
+      formatArgs = [ES.epochNsToMs(aa, 'floor'), ES.epochNsToMs(bb, 'floor')];
     }
   } else {
     formatter = GetSlot(this, ORIGINAL);

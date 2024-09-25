@@ -110,7 +110,7 @@ export class ZonedDateTime {
   get epochMilliseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     const value = GetSlot(this, EPOCHNANOSECONDS);
-    return ES.BigIntFloorDiv(value, 1e6).toJSNumber();
+    return ES.epochNsToMs(value, 'floor');
   }
   get epochNanoseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
