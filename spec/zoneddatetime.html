@@ -922,23 +922,22 @@
         1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
         1. If _offsetBehaviour_ is ~wall~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is *"ignore"*, then
           1. Return ? GetEpochNanosecondsFor(_timeZone_, _isoDateTime_, _disambiguation_).
+        1. Let _utcEpochNanoseconds_ be GetUTCEpochNanoseconds(_year_, _month_, _day_, _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
         1. If _offsetBehaviour_ is ~exact~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is *"use"*, then
-          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_year_, _month_, _day_, _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]], _offsetNanoseconds_).
+          1. Let _epochNanoseconds_ be _utcEpochNanoseconds_ - ℤ(_offsetNanoseconds_).
           1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
           1. Return _epochNanoseconds_.
         1. Assert: _offsetBehaviour_ is ~option~.
         1. Assert: _offsetOption_ is *"prefer"* or *"reject"*.
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
-        1. If _possibleEpochNs_ is not empty, then
-          1. Let _utcEpochNanoseconds_ be GetUTCEpochNanoseconds(_year_, _month_, _day_, _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]]).
-          1. For each element _candidate_ of _possibleEpochNs_, do
-            1. Let _candidateOffset_ be _utcEpochNanoseconds_ - _candidate_.
-            1. If _candidateOffset_ = _offsetNanoseconds_, then
+        1. For each element _candidate_ of _possibleEpochNs_, do
+          1. Let _candidateOffset_ be _utcEpochNanoseconds_ - _candidate_.
+          1. If _candidateOffset_ = _offsetNanoseconds_, then
+            1. Return _candidate_.
+          1. If _matchBehaviour_ is ~match-minutes~, then
+            1. Let _roundedCandidateNanoseconds_ be RoundNumberToIncrement(_candidateOffset_, 60 × 10<sup>9</sup>, *"halfExpand"*).
+            1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
               1. Return _candidate_.
-            1. If _matchBehaviour_ is ~match-minutes~, then
-              1. Let _roundedCandidateNanoseconds_ be RoundNumberToIncrement(_candidateOffset_, 60 × 10<sup>9</sup>, *"halfExpand"*).
-              1. If _roundedCandidateNanoseconds_ = _offsetNanoseconds_, then
-                1. Return _candidate_.
         1. If _offsetOption_ is *"reject"*, throw a *RangeError* exception.
         1. Return ? DisambiguatePossibleEpochNanoseconds(_possibleEpochNs_, _timeZone_, _isoDateTime_, _disambiguation_).
       </emu-alg>
