@@ -2592,9 +2592,10 @@ export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
 
 export function GetFormatterParts(timeZone, epochMilliseconds) {
   const formatter = getIntlDateTimeFormatEnUsForTimeZone(timeZone);
-  // Using `format` instead of `formatToParts` for compatibility with older clients
+  // Using `format` instead of `formatToParts` for compatibility with older
+  // clients and because it is twice as fast
   const boundFormat = Call(IntlDateTimeFormatPrototypeGetFormat, formatter, []);
-  const datetime = Call(boundFormat, formatter, [new DateCtor(epochMilliseconds)]);
+  const datetime = Call(boundFormat, formatter, [epochMilliseconds]);
   const splits = Call(StringPrototypeSplit, datetime, [/[^\w]+/]);
   const month = splits[0];
   const day = splits[1];
@@ -2604,7 +2605,7 @@ export function GetFormatterParts(timeZone, epochMilliseconds) {
   const minute = splits[5];
   const second = splits[6];
   return {
-    year: Call(StringPrototypeStartsWith, Call(StringPrototypeToUpperCase, era, []), ['B']) ? -year + 1 : +year,
+    year: era[0] === 'b' || era[0] === 'B' ? -year + 1 : +year,
     month: +month,
     day: +day,
     hour: hour === '24' ? 0 : +hour, // bugs.chromium.org/p/chromium/issues/detail?id=1045791
