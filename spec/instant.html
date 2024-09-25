@@ -466,7 +466,7 @@
           _roundingIncrement_: a positive integer,
           _smallestUnit_: a time unit or ~day~,
           _roundingMode_: a rounding mode,
-        ): a Record with fields [[NormalizedDuration]] (a Normalized Duration Record) and [[Total]] (a mathematical value)
+        ): a Normalized Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -543,8 +543,8 @@
         1. Set _other_ to ? ToTemporalInstant(_other_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, « », ~nanosecond~, ~second~).
-        1. Let _diffRecord_ be DifferenceInstant(_instant_.[[EpochNanoseconds]], _other_.[[EpochNanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
-        1. Let _result_ be ! UnnormalizeDuration(_diffRecord_.[[NormalizedDuration]], _settings_.[[LargestUnit]]).
+        1. Let _normalizedDuration_ be DifferenceInstant(_instant_.[[EpochNanoseconds]], _other_.[[EpochNanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
+        1. Let _result_ be ! UnnormalizeDuration(_normalizedDuration_, _settings_.[[LargestUnit]]).
         1. If _operation_ is ~since~, set _result_ to CreateNegatedTemporalDuration(_result_).
         1. Return _result_.
       </emu-alg>
