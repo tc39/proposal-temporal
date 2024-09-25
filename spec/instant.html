@@ -404,9 +404,7 @@
       </dl>
       <emu-alg>
         1. If _item_ is an Object, then
-          1. If _item_ has an [[InitializedTemporalInstant]] internal slot, then
-            1. Return ! CreateTemporalInstant(_item_.[[EpochNanoseconds]]).
-          1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
+          1. If _item_ has an [[InitializedTemporalInstant]] or [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return ! CreateTemporalInstant(_item_.[[EpochNanoseconds]]).
           1. NOTE: This use of ToPrimitive allows Instant-like objects to be converted.
           1. Set _item_ to ? ToPrimitive(_item_, ~string~).
