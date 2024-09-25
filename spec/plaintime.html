@@ -517,7 +517,7 @@
         1. Let _microseconds_ be _mus2_ - _mus1_.
         1. Let _nanoseconds_ be _ns2_ - _ns1_.
         1. Let _norm_ be NormalizeTimeDuration(_hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Assert: NormalizedTimeDurationAbs(_norm_).[[TotalNanoseconds]] &lt; nsPerDay.
+        1. Assert: abs(_norm_.[[TotalNanoseconds]]) &lt; nsPerDay.
         1. Return _norm_.
       </emu-alg>
     </emu-clause>
