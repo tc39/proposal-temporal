@@ -247,15 +247,6 @@ export class PlainDate {
   }
 
   static from(item, options = undefined) {
-    if (ES.IsTemporalDate(item)) {
-      ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
-      return ES.CreateTemporalDate(
-        GetSlot(item, ISO_YEAR),
-        GetSlot(item, ISO_MONTH),
-        GetSlot(item, ISO_DAY),
-        GetSlot(item, CALENDAR)
-      );
-    }
     return ES.ToTemporalDate(item, options);
   }
   static compare(one, two) {

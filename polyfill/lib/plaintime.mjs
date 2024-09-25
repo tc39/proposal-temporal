@@ -224,17 +224,6 @@ export class PlainTime {
   }
 
   static from(item, options = undefined) {
-    if (ES.IsTemporalTime(item)) {
-      ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
-      return new PlainTime(
-        GetSlot(item, ISO_HOUR),
-        GetSlot(item, ISO_MINUTE),
-        GetSlot(item, ISO_SECOND),
-        GetSlot(item, ISO_MILLISECOND),
-        GetSlot(item, ISO_MICROSECOND),
-        GetSlot(item, ISO_NANOSECOND)
-      );
-    }
     return ES.ToTemporalTime(item, options);
   }
   static compare(one, two) {

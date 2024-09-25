@@ -92,15 +92,6 @@ export class PlainMonthDay {
   }
 
   static from(item, options = undefined) {
-    if (ES.IsTemporalMonthDay(item)) {
-      ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
-      return ES.CreateTemporalMonthDay(
-        GetSlot(item, ISO_MONTH),
-        GetSlot(item, ISO_DAY),
-        GetSlot(item, CALENDAR),
-        GetSlot(item, ISO_YEAR)
-      );
-    }
     return ES.ToTemporalMonthDay(item, options);
   }
 }

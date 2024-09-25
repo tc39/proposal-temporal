@@ -448,21 +448,6 @@ export class PlainDateTime {
   }
 
   static from(item, options = undefined) {
-    if (ES.IsTemporalDateTime(item)) {
-      ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
-      return ES.CreateTemporalDateTime(
-        GetSlot(item, ISO_YEAR),
-        GetSlot(item, ISO_MONTH),
-        GetSlot(item, ISO_DAY),
-        GetSlot(item, ISO_HOUR),
-        GetSlot(item, ISO_MINUTE),
-        GetSlot(item, ISO_SECOND),
-        GetSlot(item, ISO_MILLISECOND),
-        GetSlot(item, ISO_MICROSECOND),
-        GetSlot(item, ISO_NANOSECOND),
-        GetSlot(item, CALENDAR)
-      );
-    }
     return ES.ToTemporalDateTime(item, options);
   }
   static compare(one, two) {
