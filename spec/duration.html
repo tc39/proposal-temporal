@@ -1474,22 +1474,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizedtimedurationiszero" type="abstract operation">
-      <h1>
-        NormalizedTimeDurationIsZero (
-          _d_: a Normalized Time Duration Record,
-        ): a Boolean
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It returns *true* if _d_ is a zero duration, *false* otherwise.</dd>
-      </dl>
-      <emu-alg>
-        1. If _d_.[[TotalNanoseconds]] = 0, return *true*.
-        1. Return *false*.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-roundnormalizedtimedurationtoincrement" type="abstract operation">
       <h1>
         RoundNormalizedTimeDurationToIncrement (
@@ -2001,7 +1985,7 @@
         1. Let _zeroMinutesAndHigher_ be *false*.
         1. If DefaultTemporalLargestUnit(_duration_) is ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~, set _zeroMinutesAndHigher_ to *true*.
         1. Let _normSeconds_ be NormalizeTimeDuration(0, 0, _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. If NormalizedTimeDurationIsZero(_normSeconds_) is *false*, or _zeroMinutesAndHigher_ is *true*, or _precision_ is not ~auto~, then
+        1. If _normSeconds_.[[TotalNanoseconds]] ≠ 0, or _zeroMinutesAndHigher_ is *true*, or _precision_ is not ~auto~, then
           1. Let _secondsPart_ be abs(NormalizedTimeDurationSeconds(_normSeconds_)) formatted as a decimal number.
           1. Let _subSecondsPart_ be FormatFractionalSeconds(abs(NormalizedTimeDurationSubseconds(_normSeconds_)), _precision_).
           1. Set _timePart_ to the string concatenation of _timePart_, _secondsPart_, _subSecondsPart_, and the code unit 0x0053 (LATIN CAPITAL LETTER S).
