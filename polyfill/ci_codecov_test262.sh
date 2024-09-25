@@ -25,7 +25,8 @@ node runtest262.mjs "test262/test/intl402/Intl/DateTimeFormat/**/*.js" || failed
 node runtest262.mjs "test262/test/built-ins/Date/*/toLocale*String/*.js" || failed=1
 
 c8 report --reporter=text-lcov --temp-directory=$NODE_V8_COVERAGE \
-  --include=lib/* --exclude-after-remap > coverage/test262.lcov
+  --include=lib/* --exclude=lib/assert.mjs \
+  --exclude-after-remap > coverage/test262.lcov
 
 rm -rf $NODE_V8_COVERAGE
 
