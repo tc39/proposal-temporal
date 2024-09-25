@@ -357,7 +357,8 @@
       <emu-alg>
         1. Let _parseResult_ be ! ParseTimeZoneIdentifier(_timeZone_).
         1. If _parseResult_.[[OffsetMinutes]] is not ~empty~, then
-          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _parseResult_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>)).
+          1. Let _offsetNanoseconds_ be _parseResult_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>).
+          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]) - ℤ(_offsetNanoseconds_).
           1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ ».
         1. Else,
           1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_parseResult_.[[Name]], _isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]).
