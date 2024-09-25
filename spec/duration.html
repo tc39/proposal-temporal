@@ -75,8 +75,6 @@
       <h1>Temporal.Duration.from ( _item_ )</h1>
       <p>The `Temporal.Duration.from` function performs the following steps when called:</p>
       <emu-alg>
-        1. If _item_ is an Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
-          1. Return ! CreateTemporalDuration(_item_.[[Years]], _item_.[[Months]], _item_.[[Weeks]], _item_.[[Days]], _item_.[[Hours]], _item_.[[Minutes]], _item_.[[Seconds]], _item_.[[Milliseconds]], _item_.[[Microseconds]], _item_.[[Nanoseconds]]).
         1. Return ? ToTemporalDuration(_item_).
       </emu-alg>
     </emu-clause>
@@ -1104,11 +1102,11 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns its argument _item_ if it is already a Temporal.Duration instance, converts _item_ to a new Temporal.Duration instance if possible and returns that, and throws otherwise.</dd>
+        <dd>Converts _item_ to a new Temporal.Duration instance if possible and returns that, and throws otherwise.</dd>
       </dl>
       <emu-alg>
         1. If _item_ is an Object and _item_ has an [[InitializedTemporalDuration]] internal slot, then
-          1. Return _item_.
+          1. Return ! CreateTemporalDuration(_item_.[[Years]], _item_.[[Months]], _item_.[[Weeks]], _item_.[[Days]], _item_.[[Hours]], _item_.[[Minutes]], _item_.[[Seconds]], _item_.[[Milliseconds]], _item_.[[Microseconds]], _item_.[[Nanoseconds]]).
         1. If _item_ is not an Object, then
           1. If _item_ is not a String, throw a *TypeError* exception.
           1. Return ? ParseTemporalDurationString(_item_).

@@ -63,12 +63,6 @@
       <h1>Temporal.ZonedDateTime.from ( _item_ [ , _options_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If _item_ is an Object and _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Perform ? GetTemporalDisambiguationOption(_options_).
-          1. Perform ? GetTemporalOffsetOption(_options_, *"reject"*).
-          1. Perform ? GetTemporalOverflowOption(_options_).
-          1. Return ! CreateTemporalZonedDateTime(_item_.[[EpochNanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
         1. Return ? ToTemporalZonedDateTime(_item_, _options_).
       </emu-alg>
     </emu-clause>
@@ -960,7 +954,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It returns its argument _item_ if it is already a Temporal.ZonedDateTime instance, converts _item_ to a new Temporal.ZonedDateTime instance if possible, and throws otherwise.
+          Converts _item_ to a new Temporal.ZonedDateTime instance if possible, and throws otherwise.
         </dd>
       </dl>
       <emu-alg>
@@ -974,7 +968,7 @@
             1. Perform ? GetTemporalDisambiguationOption(_options_).
             1. Perform ? GetTemporalOffsetOption(_options_, *"reject"*).
             1. Perform ? GetTemporalOverflowOption(_options_).
-            1. Return _item_.
+            1. Return ! CreateTemporalZonedDateTime(_item_.[[EpochNanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », « ~hour~, ~microsecond~, ~millisecond~, ~minute~, ~nanosecond~, ~offset~, ~second~, ~time-zone~ », « ~time-zone~ »).
           1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_fields_.[[TimeZone]]).

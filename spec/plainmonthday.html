@@ -58,10 +58,6 @@
       <h1>Temporal.PlainMonthDay.from ( _item_ [ , _options_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If _item_ is an Object and _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Perform ? GetTemporalOverflowOption(_options_).
-          1. Return ! CreateTemporalMonthDay(_item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]], _item_.[[ISOYear]]).
         1. Return ? ToTemporalMonthDay(_item_, _options_).
       </emu-alg>
     </emu-clause>
@@ -308,7 +304,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns its argument _item_ if it is already a Temporal.PlainMonthDay instance, converts _item_ to a new Temporal.PlainMonthDay instance if possible, and throws otherwise.</dd>
+        <dd>Converts _item_ to a new Temporal.PlainMonthDay instance if possible, and throws otherwise.</dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
@@ -316,7 +312,7 @@
           1. If _item_ has an [[InitializedTemporalMonthDay]] internal slot, then
             1. Set _options_ to ? GetOptionsObject(_options_).
             1. Perform ? GetTemporalOverflowOption(_options_).
-            1. Return _item_.
+            1. Return ! CreateTemporalMonthDay(_item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]], _item_.[[ISOYear]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », «», «»).
           1. Set _options_ to ? GetOptionsObject(_options_).

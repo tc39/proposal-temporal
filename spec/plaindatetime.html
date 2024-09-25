@@ -62,10 +62,6 @@
       <h1>Temporal.PlainDateTime.from ( _item_ [ , _options_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If _item_ is an Object and _item_ has an [[InitializedTemporalDateTime]] internal slot, then
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Perform ? GetTemporalOverflowOption(_options_).
-          1. Return ! CreateTemporalDateTime(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]], _item_.[[Calendar]]).
         1. Return ? ToTemporalDateTime(_item_, _options_).
       </emu-alg>
     </emu-clause>
@@ -928,7 +924,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns its argument _item_ if it is already a Temporal.PlainDateTime instance, converts _item_ to a new Temporal.PlainDateTime instance if possible, and throws otherwise.</dd>
+        <dd>Converts _item_ to a new Temporal.PlainDateTime instance if possible, and throws otherwise.</dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
@@ -936,7 +932,7 @@
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
             1. Set _options_ to ? GetOptionsObject(_options_).
             1. Perform ? GetTemporalOverflowOption(_options_).
-            1. Return _item_.
+            1. Return ! CreateTemporalDateTime(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]], _item_.[[Calendar]]).
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Let _isoDateTime_ be GetISODateTimeFor(_item_.[[TimeZone]], _item_.[[EpochNanoseconds]]).
             1. Set _options_ to ? GetOptionsObject(_options_).
