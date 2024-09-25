@@ -9108,7 +9108,7 @@
 	  if (Type$3(item) === 'Object') {
 	    if (IsTemporalDate(item)) {
 	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return item;
+	      return CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
 	    }
 	    if (IsTemporalZonedDateTime(item)) {
 	      const isoDateTime = GetISODateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, EPOCHNANOSECONDS));
@@ -9157,7 +9157,7 @@
 	  if (Type$3(item) === 'Object') {
 	    if (IsTemporalDateTime(item)) {
 	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return item;
+	      return CreateTemporalDateTime(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, ISO_HOUR), GetSlot(item, ISO_MINUTE), GetSlot(item, ISO_SECOND), GetSlot(item, ISO_MILLISECOND), GetSlot(item, ISO_MICROSECOND), GetSlot(item, ISO_NANOSECOND), GetSlot(item, CALENDAR));
 	    }
 	    if (IsTemporalZonedDateTime(item)) {
 	      const isoDateTime = GetISODateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, EPOCHNANOSECONDS));
@@ -9215,7 +9215,10 @@
 	  return CreateTemporalDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, calendar);
 	}
 	function ToTemporalDuration(item) {
-	  if (IsTemporalDuration(item)) return item;
+	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+	  if (IsTemporalDuration(item)) {
+	    return new TemporalDuration(GetSlot(item, YEARS), GetSlot(item, MONTHS), GetSlot(item, WEEKS), GetSlot(item, DAYS), GetSlot(item, HOURS), GetSlot(item, MINUTES), GetSlot(item, SECONDS), GetSlot(item, MILLISECONDS), GetSlot(item, MICROSECONDS), GetSlot(item, NANOSECONDS));
+	  }
 	  if (Type$3(item) !== 'Object') {
 	    return ParseTemporalDurationString(RequireString(item));
 	  }
@@ -9239,14 +9242,12 @@
 	      result[property] = value;
 	    }
 	  }
-	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	  return new TemporalDuration(result.years, result.months, result.weeks, result.days, result.hours, result.minutes, result.seconds, result.milliseconds, result.microseconds, result.nanoseconds);
 	}
 	function ToTemporalInstant(item) {
+	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	  if (Type$3(item === 'Object')) {
-	    if (IsTemporalInstant(item)) return item;
-	    if (IsTemporalZonedDateTime(item)) {
-	      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+	    if (IsTemporalInstant(item) || IsTemporalZonedDateTime(item)) {
 	      return new TemporalInstant(GetSlot(item, EPOCHNANOSECONDS));
 	    }
 	    item = ToPrimitive$2(item, String$1);
@@ -9272,7 +9273,6 @@
 	  const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
 	  const epochNanoseconds = GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, offsetNanoseconds);
 	  ValidateEpochNanoseconds(epochNanoseconds);
-	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
 	  return new TemporalInstant(epochNanoseconds);
 	}
 	function ToTemporalMonthDay(item) {
@@ -9280,7 +9280,7 @@
 	  if (Type$3(item) === 'Object') {
 	    if (IsTemporalMonthDay(item)) {
 	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return item;
+	      return CreateTemporalMonthDay(GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR), GetSlot(item, ISO_YEAR));
 	    }
 	    let calendar;
 	    if (HasSlot(item, CALENDAR)) {
@@ -9334,18 +9334,14 @@
 	  let hour, minute, second, millisecond, microsecond, nanosecond;
 	  const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
 	  if (Type$3(item) === 'Object') {
-	    if (IsTemporalTime(item)) {
+	    if (IsTemporalTime(item) || IsTemporalDateTime(item)) {
 	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return item;
+	      return new TemporalPlainTime(GetSlot(item, ISO_HOUR), GetSlot(item, ISO_MINUTE), GetSlot(item, ISO_SECOND), GetSlot(item, ISO_MILLISECOND), GetSlot(item, ISO_MICROSECOND), GetSlot(item, ISO_NANOSECOND));
 	    }
 	    if (IsTemporalZonedDateTime(item)) {
 	      const isoDateTime = GetISODateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, EPOCHNANOSECONDS));
 	      GetTemporalOverflowOption(GetOptionsObject(options));
 	      return new TemporalPlainTime(isoDateTime.hour, isoDateTime.minute, isoDateTime.second, isoDateTime.millisecond, isoDateTime.microsecond, isoDateTime.nanosecond);
-	    }
-	    if (IsTemporalDateTime(item)) {
-	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return new TemporalPlainTime(GetSlot(item, ISO_HOUR), GetSlot(item, ISO_MINUTE), GetSlot(item, ISO_SECOND), GetSlot(item, ISO_MILLISECOND), GetSlot(item, ISO_MICROSECOND), GetSlot(item, ISO_NANOSECOND));
 	    }
 	    ({
 	      hour,
@@ -9388,7 +9384,7 @@
 	  if (Type$3(item) === 'Object') {
 	    if (IsTemporalYearMonth(item)) {
 	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return item;
+	      return CreateTemporalYearMonth(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, CALENDAR), GetSlot(item, ISO_DAY));
 	    }
 	    const calendar = GetTemporalCalendarIdentifierWithISODefault(item);
 	    const fields = PrepareCalendarFields(calendar, item, ['month', 'monthCode', 'year'], [], []);
@@ -9494,7 +9490,7 @@
 	      GetTemporalDisambiguationOption(options); // validate and ignore
 	      GetTemporalOffsetOption(options, 'reject');
 	      GetTemporalOverflowOption(options);
-	      return item;
+	      return CreateTemporalZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
 	    }
 	    calendar = GetTemporalCalendarIdentifierWithISODefault(item);
 	    const fields = PrepareCalendarFields(calendar, item, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'], ['timeZone']);
@@ -15480,9 +15476,6 @@
 	    return new Instant(epochNanoseconds);
 	  }
 	  static from(item) {
-	    if (IsTemporalInstant(item)) {
-	      return new Instant(GetSlot(item, EPOCHNANOSECONDS));
-	    }
 	    return ToTemporalInstant(item);
 	  }
 	  static compare(one, two) {
@@ -15731,10 +15724,6 @@
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (IsTemporalDate(item)) {
-	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return CreateTemporalDate(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR));
-	    }
 	    return ToTemporalDate(item, options);
 	  }
 	  static compare(one, two) {
@@ -16056,10 +16045,6 @@
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (IsTemporalDateTime(item)) {
-	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return CreateTemporalDateTime(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, ISO_HOUR), GetSlot(item, ISO_MINUTE), GetSlot(item, ISO_SECOND), GetSlot(item, ISO_MILLISECOND), GetSlot(item, ISO_MICROSECOND), GetSlot(item, ISO_NANOSECOND), GetSlot(item, CALENDAR));
-	    }
 	    return ToTemporalDateTime(item, options);
 	  }
 	  static compare(one, two) {
@@ -16390,9 +16375,6 @@
 	    ValueOfThrows('Duration');
 	  }
 	  static from(item) {
-	    if (IsTemporalDuration(item)) {
-	      return new Duration(GetSlot(item, YEARS), GetSlot(item, MONTHS), GetSlot(item, WEEKS), GetSlot(item, DAYS), GetSlot(item, HOURS), GetSlot(item, MINUTES), GetSlot(item, SECONDS), GetSlot(item, MILLISECONDS), GetSlot(item, MICROSECONDS), GetSlot(item, NANOSECONDS));
-	    }
 	    return ToTemporalDuration(item);
 	  }
 	  static compare(one, two) {
@@ -16525,10 +16507,6 @@
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (IsTemporalMonthDay(item)) {
-	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return CreateTemporalMonthDay(GetSlot(item, ISO_MONTH), GetSlot(item, ISO_DAY), GetSlot(item, CALENDAR), GetSlot(item, ISO_YEAR));
-	    }
 	    return ToTemporalMonthDay(item, options);
 	  }
 	}
@@ -16781,10 +16759,6 @@
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (IsTemporalTime(item)) {
-	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return new PlainTime(GetSlot(item, ISO_HOUR), GetSlot(item, ISO_MINUTE), GetSlot(item, ISO_SECOND), GetSlot(item, ISO_MILLISECOND), GetSlot(item, ISO_MICROSECOND), GetSlot(item, ISO_NANOSECOND));
-	    }
 	    return ToTemporalTime(item, options);
 	  }
 	  static compare(one, two) {
@@ -16939,10 +16913,6 @@
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (IsTemporalYearMonth(item)) {
-	      GetTemporalOverflowOption(GetOptionsObject(options));
-	      return CreateTemporalYearMonth(GetSlot(item, ISO_YEAR), GetSlot(item, ISO_MONTH), GetSlot(item, CALENDAR), GetSlot(item, ISO_DAY));
-	    }
 	    return ToTemporalYearMonth(item, options);
 	  }
 	  static compare(one, two) {
@@ -17438,13 +17408,6 @@
 	  }
 	  static from(item) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    if (IsTemporalZonedDateTime(item)) {
-	      options = GetOptionsObject(options);
-	      GetTemporalDisambiguationOption(options); // validate and ignore
-	      GetTemporalOffsetOption(options, 'reject');
-	      GetTemporalOverflowOption(options);
-	      return CreateTemporalZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
-	    }
 	    return ToTemporalZonedDateTime(item, options);
 	  }
 	  static compare(one, two) {
