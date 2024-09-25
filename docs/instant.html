@@ -259,14 +259,14 @@ This range covers approximately half a million years. If <code>epochNanoseconds<
 <span class="token comment">// When was the Unix epoch?</span>
 epoch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token number">0n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1970-01-01T00:00:00Z</span>
 <span class="token comment">// Dates before the Unix epoch are negative</span>
-turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1900-01-01T00:00:00Z</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Instant.<strong>from</strong>(<em>thing</em>: any) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
+turnOfTheCentury <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Instant</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2208988800000000000n</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 1900-01-01T00:00:00Z</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Instant.<strong>from</strong>(<em>item</em>: Temporal.Instant | string) : Temporal.Instant</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code>: The value representing the desired exact time.</li>
+<li><code>item</code>: a value convertible to a <code>Temporal.Instant</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Instant</code> object.</p>
 <p>This static method creates a new <code>Temporal.Instant</code> object from another value.
 If the value is another <code>Temporal.Instant</code> object, a new object representing the same exact time is returned.</p>
-<p>Any other value is converted to a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
+<p>Otherwise, the value must be a string, which is expected to be in ISO 8601 format, including a date, a time, and a time zone.
 The time zone name, if given, is ignored; only the time zone offset is taken into account.</p>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
@@ -632,7 +632,7 @@ instant<span class="token punctuation">.</span><span class="token function">toSt
 </ul>
 <p><strong>Returns:</strong> a language-sensitive representation of <code>instant</code>.</p>
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>instant</code>.</p>
-<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters"><code>Intl.DateTimeFormat</code></a>.</p>
 <p>Because <code>Temporal.Instant</code> does not carry a time zone, the time zone used for the output will be the <code>timeZone</code> property of <code>options</code>, if present; and otherwise, the current time zone from the environment, which is usually the system&#39;s time zone.</p>
 <p>This is identical to how the time zone is determined in legacy <code>Date</code>&#39;s <code>toLocaleString</code> method.</p>
 <blockquote>

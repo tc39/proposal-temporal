@@ -63,27 +63,11 @@
               a 20 20 0 0 0 20,-20"/>
       <text y="70" x="-55">PlainMonthDay</text>
     </g>
-    <g transform="translate(700, 0)">
-      <path d="m 0,0
-              a 20 20 0 0 0 20,20
-              h 98
-              a 20 20 0 0 1 20,20 a 20 20 0 0 1 20,-20
-              h 98
-              a 20 20 0 0 0 20,-20"/>
-      <text y="70" x="62">TimeZone</text>
-    </g>
     <g transform="translate(1015, 0)">
-      <path d="m 0,0
-              a 20 20 0 0 0 20,20
-              h 125
-              a 20 20 0 0 1 20,20 a 20 20 0 0 1 20,-20
-              h 125
-              a 20 20 0 0 0 20,-20"/>
-      <text x="93" y="70">Calendar</text>
-      <text x="93" y="112"><tspan>(Used in</tspan></text>
-      <text x="100" y="154"><tspan>all types</tspan></text>
-      <text x="100" y="196"><tspan>except</tspan></text>
-      <text x="100" y="238"><tspan>Instant)</tspan></text>
+      <text x="93" y="34"><tspan>(Used in</tspan></text>
+      <text x="100" y="76"><tspan>all types</tspan></text>
+      <text x="100" y="118"><tspan>except</tspan></text>
+      <text x="100" y="160"><tspan>Instant)</tspan></text>
     </g>
     <g transform="translate(0, 100)">
       <path d="m 0,0

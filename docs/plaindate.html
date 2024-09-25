@@ -255,12 +255,12 @@ If <code>isoYear</code>, <code>isoMonth</code>, and <code>isoDay</code> form a d
 </blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Pi day in 2020</span>
-date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-03-14</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainDate.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
+date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDate</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-03-14</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainDate.<strong>from</strong>(<em>item</em>: Temporal.PlainDate | object | string, <em>options</em>?: object) : Temporal.PlainDate</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code>: The value representing the desired date.</li>
+<li><code>item</code>: a value convertible to a <code>Temporal.PlainDate</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date.
 The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with out-of-range values if <code>thing</code> is an object.
+<li><code>overflow</code> (string): How to deal with out-of-range values if <code>item</code> is an object.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -275,20 +275,20 @@ If the value is any other object, it:</p>
 <li>Must have either a number <code>month</code> property or a string <code>monthCode</code> property.</li>
 <li>May have a <code>calendar</code> property. If omitted, the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a> will be used by default.</li>
 </ul>
-<p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
+<p>If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
 Any time part is optional and will be ignored.
 Time zone or UTC offset information will also be ignored, with one exception: if a string contains a <code>Z</code> in place of a numeric UTC offset, then a <code>RangeError</code> will be thrown because interpreting these strings as a local date and time is usually a bug. <code>Temporal.Instant.from</code> should be used instead to parse these strings, and the result&#39;s <code>toZonedDateTimeISO</code> method can be used to obtain a timezone-local date and time.</p>
-<p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC date&quot;: <code>Temporal.Instant.from(thing).toZonedDateTimeISO(&#39;UTC&#39;).toPlainDate()</code>.</p>
+<p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC date&quot;: <code>Temporal.Instant.from(item).toZonedDateTimeISO(&#39;UTC&#39;).toPlainDate()</code>.</p>
 <p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
-<p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
+<p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
-<p>The <code>overflow</code> option is ignored if <code>thing</code> is a string.</p>
+<p>The <code>overflow</code> option is ignored if <code>item</code> is a string.</p>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDate</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this function will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
-<p><strong>NOTE</strong>: The allowed values for the <code>thing.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+<p><strong>NOTE</strong>: The allowed values for the <code>item.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
@@ -674,7 +674,7 @@ date<span class="token punctuation">.</span><span class="token function">toStrin
 </ul>
 <p><strong>Returns:</strong> a language-sensitive representation of <code>date</code>.</p>
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>date</code>.</p>
-<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters"><code>Intl.DateTimeFormat</code></a>.</p>
 <p>Example usage:</p>
 <pre class="language-js"><code class="language-js">date <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainDate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2006-08-24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 date<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// example output: 8/24/2006</span>

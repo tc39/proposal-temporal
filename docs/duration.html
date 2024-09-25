@@ -298,9 +298,9 @@ Otherwise <code>Temporal.Duration.from()</code> is probably more convenient beca
 <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => P40D</span>
 <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => PT0S</span>
 
-<span class="token comment">/* WRONG */</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1.5</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Duration.<strong>from</strong>(<em>thing</em>: any) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
+<span class="token comment">/* WRONG */</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>Duration</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1.5</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => throws</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.Duration.<strong>from</strong>(<em>item</em>: Temporal.Duration | object | string) : Temporal.Duration</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code>: A <code>Duration</code>-like object or a string from which to create a <code>Temporal.Duration</code>.</li>
+<li><code>item</code>: a value convertible to a <code>Temporal.Duration</code>.</li>
 </ul>
 <p><strong>Returns:</strong> a new <code>Temporal.Duration</code> object.</p>
 <p>This static method creates a new <code>Temporal.Duration</code> from another value.
@@ -309,7 +309,7 @@ If the value is any other object, a <code>Temporal.Duration</code> will be const
 Any missing ones will be assumed to be 0.</p>
 <p>All non-zero values must be integers, must have the same sign, and must not be infinite.
 Otherwise, the function will throw a <code>RangeError</code>.</p>
-<p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.</p>
+<p>If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.</p>
 <blockquote>
 <p><strong>NOTE:</strong> This function understands strings where weeks and other units are combined, and strings with a single sign character at the start, which are extensions to the ISO 8601 standard described in ISO 8601-2.
 For example, <code>P3W1D</code> is understood to mean three weeks and one day, <code>-P1Y1M</code> is a negative duration of one year and one month, and <code>+P1Y1M</code> is one year and one month.

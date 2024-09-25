@@ -327,11 +327,11 @@ If omitted, the ISO 8601 calendar will be used, which is identical to the Gregor
   <span class="token comment">// => 1969-12-31T16:00:00-08:00[America/Los_Angeles]</span>
   <span class="token comment">// same, but shorter</span></code></pre><!-- prettier-ignore-end -->
 
-<h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.ZonedDateTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
+<h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.ZonedDateTime.<strong>from</strong>(<em>item</em>: Temporal.ZonedDateTime | object | string, <em>options</em>?: object) : Temporal.ZonedDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code>: The value representing the desired date, time, time zone, and calendar.</li>
+<li><code>item</code>: a value convertible to a <code>Temporal.ZonedDateTime</code>.</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>
-<li><code>overflow</code> (string): How to deal with out-of-range values if <code>thing</code> is an object.
+<li><code>overflow</code> (string): How to deal with out-of-range values if <code>item</code> is an object.
 Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
 The default is <code>&#39;constrain&#39;</code>.</li>
 <li><code>disambiguation</code> (string): How to disambiguate if the date and time given by <code>zonedDateTime</code> does not exist in the time zone, or exists more than once.
@@ -353,7 +353,7 @@ Any other missing properties will be assumed to be 0 (for time fields).</p>
 <p>Date/time values will be interpreted in context of the provided offset and/or time zone, depending on the <code>offset</code> option.</p>
 <p>Date/time values in object inputs will be interpreted in the context of <code>calendar</code>.
 However, date/time values in string inputs are always interpreted in the context of the ISO 8601 calendar.</p>
-<p>Any non-object value is converted to a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
+<p>If the value is not an object, it must be a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
 For example:</p>
 <pre><code>2020-08-05T20:06:13+09:00[Asia/Tokyo][u-ca=japanese]</code></pre><p>If the string isn&#39;t valid, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
 <p>Note that this string format (albeit limited to the ISO 8601 calendar system) is also used by <code>java.time</code> and some other time-zone-aware libraries.
@@ -372,12 +372,12 @@ Temporal<span class="token punctuation">.</span>Instant<span class="token punctu
 <span class="token comment">// => 2020-08-05T20:06:13+05:45[+05:45]</span></code></pre><p>Note that using <code>Temporal.ZonedDateTime</code> with a single-offset time zone will not adjust for Daylight Saving Time or other time zone changes.
 Therefore, using offset time zones with <code>Temporal.ZonedDateTime</code> is relatively unusual.
 Instead of using <code>Temporal.ZonedDateTime</code> with an offset time zone, it may be easier for most use cases to use <code>Temporal.PlainDateTime</code> and/or <code>Temporal.Instant</code> instead.</p>
-<p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
+<p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
 <li>In <code>&#39;constrain&#39;</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>&#39;reject&#39;</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
-<p>The <code>overflow</code> option is ignored if <code>thing</code> is a string.</p>
+<p>The <code>overflow</code> option is ignored if <code>item</code> is a string.</p>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
@@ -418,7 +418,7 @@ This behavior avoids exceptions when converting nonexistent local time values to
 <p>The <code>disambiguation</code> option is only used if there is no offset in the input, or if the offset is ignored by using the <code>offset</code> option as described above.
 If the offset in the input is used, then there is no ambiguity and the <code>disambiguation</code> option is ignored.</p>
 <blockquote>
-<p><strong>NOTE</strong>: The allowed values for the <code>thing.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+<p><strong>NOTE</strong>: The allowed values for the <code>item.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
@@ -1247,7 +1247,7 @@ zdt<span class="token punctuation">.</span><span class="token function">toString
 </ul>
 <p><strong>Returns:</strong> a language-sensitive representation of <code>zonedDateTime</code>.</p>
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>zonedDateTime</code>.</p>
-<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters"><code>Intl.DateTimeFormat</code></a>.</p>
 <p><code>options.timeZone</code> will be automatically set from the time zone of <code>zonedDateTime</code>.
 If a different time zone ID is provided in <code>options.timeZone</code>, a RangeError will be thrown.
 To display a <code>Temporal.ZonedDateTime</code> value in a different time zone, use <code>withTimeZone(timeZone).toLocaleString()</code>.</p>

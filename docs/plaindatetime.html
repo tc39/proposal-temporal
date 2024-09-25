@@ -300,12 +300,12 @@ If the parameters passed in to this constructor are out of range, then this func
 </blockquote>
 <p>Usage examples:</p>
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Leet hour on pi day in 2020</span>
-datetime <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDateTime</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-03-14T13:37:00</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainDateTime.<strong>from</strong>(<em>thing</em>: any, <em>options</em>?: object) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
+datetime <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Temporal<span class="token punctuation">.</span>PlainDateTime</span><span class="token punctuation">(</span><span class="token number">2020</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">37</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => 2020-03-14T13:37:00</span></code></pre><h2 id="static-methods"><a class="heading-link" href="#static-methods"></a>Static methods</h3><h3 id="from"><a class="heading-link" href="#from"></a>Temporal.PlainDateTime.<strong>from</strong>(<em>item</em>: Temporal.PlainDateTime | object | string, <em>options</em>?: object) : Temporal.PlainDateTime</h3><p><strong>Parameters:</strong></p>
 <ul>
-<li><code>thing</code>: The value representing the desired date and time.</li>
+<li><code>item</code>: a value convertible to a <code>Temporal.PlainDateTime</code>.</li>
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date and time.
 The following options are recognized:<ul>
-<li><code>overflow</code> (string): How to deal with out-of-range values if <code>thing</code> is an object.
+<li><code>overflow</code> (string): How to deal with out-of-range values if <code>item</code> is an object.
 Allowed values are <code>constrain</code> and <code>reject</code>.
 The default is <code>constrain</code>.</li>
 </ul>
@@ -319,16 +319,16 @@ If the value is any other object, a <code>Temporal.PlainDateTime</code> will be 
 Default values for other missing fields are determined by the calendar.</p>
 <p>If the <code>calendar</code> property is not present, it&#39;s assumed to be <code>&#39;iso8601&#39;</code> (identifying the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>).
 Any other missing properties will be assumed to be 0 (for time fields).</p>
-<p>Any non-object value is converted to a string, which is expected to be in ISO 8601 format.
+<p>If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
 Time zone or UTC offset information will be ignored, with one exception: if a string contains a <code>Z</code> in place of a numeric UTC offset, then a <code>RangeError</code> will be thrown because interpreting these strings as a local date and time is usually a bug. <code>Temporal.Instant.from</code> should be used instead to parse these strings, and the result&#39;s <code>toZonedDateTimeISO</code> method can be used to obtain a timezone-local date and time.</p>
-<p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC date&quot;: <code>Temporal.Instant.from(thing).toZonedDateTimeISO(&#39;UTC&#39;).toPlainDate()</code>.</p>
+<p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC date&quot;: <code>Temporal.Instant.from(item).toZonedDateTimeISO(&#39;UTC&#39;).toPlainDate()</code>.</p>
 <p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
-<p>The <code>overflow</code> option works as follows, if <code>thing</code> is an object:</p>
+<p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
 <li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
 <li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
-<p>The <code>overflow</code> option is ignored if <code>thing</code> is a string.</p>
+<p>The <code>overflow</code> option is ignored if <code>item</code> is a string.</p>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
@@ -336,7 +336,7 @@ In the default <code>constrain</code> mode and when parsing an ISO 8601 string, 
 In <code>reject</code> mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.</p>
 </blockquote>
 <blockquote>
-<p><strong>NOTE</strong>: The allowed values for the <code>thing.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
+<p><strong>NOTE</strong>: The allowed values for the <code>item.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
 </blockquote>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
@@ -872,7 +872,7 @@ dt<span class="token punctuation">.</span><span class="token function">toString<
 </ul>
 <p><strong>Returns:</strong> a language-sensitive representation of <code>datetime</code>.</p>
 <p>This method overrides <code>Object.prototype.toLocaleString()</code> to provide a human-readable, language-sensitive representation of <code>datetime</code>.</p>
-<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat"><code>Intl.DateTimeFormat</code></a>.</p>
+<p>The <code>locales</code> and <code>options</code> arguments are the same as in the constructor to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters"><code>Intl.DateTimeFormat</code></a>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Unlike in <a href="./instant.html#toLocaleString"><code>Temporal.Instant.prototype.toLocaleString()</code></a>, <code>options.timeZone</code> will have no effect, because <code>Temporal.PlainDateTime</code> carries no time zone information.
 It&#39;s not always possible to uniquely determine the localized time zone name using the <code>Temporal.PlainDateTime</code> instance and the <code>options.timeZone</code>.
