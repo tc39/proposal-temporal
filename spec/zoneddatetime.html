@@ -1170,8 +1170,7 @@
           1. Return DifferenceInstant(_ns1_, _ns2_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, then
-          1. Let _total_ be NormalizedTimeDurationSeconds(_difference_.[[NormalizedTime]]) × 10<sup>9</sup> + NormalizedTimeDurationSubseconds(_difference_.[[NormalizedTime]]).
-          1. Return the Record { [[NormalizedDuration]]: _difference_, [[Total]]: _total_ }.
+          1. Return the Record { [[NormalizedDuration]]: _difference_, [[Total]]: _difference_.[[NormalizedTime]].[[TotalNanoseconds]] }.
         1. Let _dateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
         1. Return ? RoundRelativeDuration(_difference_, _ns2_, _dateTime_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
