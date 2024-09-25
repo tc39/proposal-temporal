@@ -51,8 +51,6 @@
       <h1>Temporal.Instant.from ( _item_ )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If _item_ is an Object and _item_ has an [[InitializedTemporalInstant]] internal slot, then
-          1. Return ! CreateTemporalInstant(_item_.[[EpochNanoseconds]]).
         1. Return ? ToTemporalInstant(_item_).
       </emu-alg>
     </emu-clause>
@@ -402,12 +400,12 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns its argument _item_ if it is already a Temporal.Instant instance, converts _item_ to a new Temporal.Instant instance if possible, and throws otherwise.</dd>
+        <dd>Converts _item_ to a new Temporal.Instant instance if possible, and throws otherwise.</dd>
       </dl>
       <emu-alg>
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalInstant]] internal slot, then
-            1. Return _item_.
+            1. Return ! CreateTemporalInstant(_item_.[[EpochNanoseconds]]).
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Return ! CreateTemporalInstant(_item_.[[EpochNanoseconds]]).
           1. NOTE: This use of ToPrimitive allows Instant-like objects to be converted.

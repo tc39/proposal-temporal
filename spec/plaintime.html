@@ -61,10 +61,6 @@
       <h1>Temporal.PlainTime.from ( _item_ [ , _options_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If _item_ is an Object and _item_ has an [[InitializedTemporalTime]] internal slot, then
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Perform ? GetTemporalOverflowOption(_options_).
-          1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
         1. Return ? ToTemporalTime(_item_, _options_).
       </emu-alg>
     </emu-clause>
@@ -535,7 +531,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns its argument _item_ if it is already a Temporal.PlainTime instance, converts _item_ to a new Temporal.PlainTime instance if possible, and throws otherwise.</dd>
+        <dd>Converts _item_ to a new Temporal.PlainTime instance if possible, and throws otherwise.</dd>
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
@@ -543,7 +539,7 @@
           1. If _item_ has an [[InitializedTemporalTime]] internal slot, then
             1. Set _options_ to ? GetOptionsObject(_options_).
             1. Perform ? GetTemporalOverflowOption(_options_).
-            1. Return _item_.
+            1. Return ! CreateTemporalTime(_item_.[[ISOHour]], _item_.[[ISOMinute]], _item_.[[ISOSecond]], _item_.[[ISOMillisecond]], _item_.[[ISOMicrosecond]], _item_.[[ISONanosecond]]).
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Let _isoDateTime_ be GetISODateTimeFor(_item_.[[TimeZone]], _item_.[[EpochNanoseconds]]).
             1. Set _options_ to ? GetOptionsObject(_options_).
@@ -575,7 +571,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns its argument _item_ if it is already a Temporal.PlainTime instance, converts _item_ to a new Temporal.PlainTime instance if possible, considering *undefined* to be the same as midnight, and throws otherwise.</dd>
+        <dd>Converts _item_ to a new Temporal.PlainTime instance if possible, considering *undefined* to be the same as midnight, and throws otherwise.</dd>
       </dl>
       <emu-alg>
         1. If _item_ is *undefined*, return ! CreateTemporalTime(0, 0, 0, 0, 0, 0).
