@@ -2794,41 +2794,61 @@ export function BalanceISODateTime(year, month, day, hour, minute, second, milli
 }
 
 export function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
-  hour = bigInt(hour);
-  minute = bigInt(minute);
-  second = bigInt(second);
-  millisecond = bigInt(millisecond);
-  microsecond = bigInt(microsecond);
-  nanosecond = bigInt(nanosecond);
+  let div;
 
-  let quotient;
+  ({ div, mod: nanosecond } = TruncatingDivModByPowerOf10(nanosecond, 3));
+  microsecond += div;
+  if (nanosecond < 0) {
+    microsecond -= 1;
+    nanosecond += 1000;
+  }
 
-  ({ quotient, remainder: nanosecond } = NonNegativeBigIntDivmod(nanosecond, 1000));
-  microsecond = microsecond.add(quotient);
+  ({ div, mod: microsecond } = TruncatingDivModByPowerOf10(microsecond, 3));
+  millisecond += div;
+  if (microsecond < 0) {
+    millisecond -= 1;
+    microsecond += 1000;
+  }
 
-  ({ quotient, remainder: microsecond } = NonNegativeBigIntDivmod(microsecond, 1000));
-  millisecond = millisecond.add(quotient);
+  second += MathTrunc(millisecond / 1000);
+  millisecond %= 1000;
+  if (millisecond < 0) {
+    second -= 1;
+    millisecond += 1000;
+  }
 
-  ({ quotient, remainder: millisecond } = NonNegativeBigIntDivmod(millisecond, 1000));
-  second = second.add(quotient);
+  minute += MathTrunc(second / 60);
+  second %= 60;
+  if (second < 0) {
+    minute -= 1;
+    second += 60;
+  }
 
-  ({ quotient, remainder: second } = NonNegativeBigIntDivmod(second, 60));
-  minute = minute.add(quotient);
+  hour += MathTrunc(minute / 60);
+  minute %= 60;
+  if (minute < 0) {
+    hour -= 1;
+    minute += 60;
+  }
 
-  ({ quotient, remainder: minute } = NonNegativeBigIntDivmod(minute, 60));
-  hour = hour.add(quotient);
+  let deltaDays = MathTrunc(hour / 24);
+  hour %= 24;
+  if (hour < 0) {
+    deltaDays -= 1;
+    hour += 24;
+  }
 
-  ({ quotient, remainder: hour } = NonNegativeBigIntDivmod(hour, 24));
+  // Results are possibly -0 at this point, but these are mathematical values in
+  // the spec. Force -0 to +0.
+  deltaDays += 0;
+  hour += 0;
+  minute += 0;
+  second += 0;
+  millisecond += 0;
+  microsecond += 0;
+  nanosecond += 0;
 
-  return {
-    deltaDays: quotient.toJSNumber(),
-    hour: hour.toJSNumber(),
-    minute: minute.toJSNumber(),
-    second: second.toJSNumber(),
-    millisecond: millisecond.toJSNumber(),
-    microsecond: microsecond.toJSNumber(),
-    nanosecond: nanosecond.toJSNumber()
-  };
+  return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
 export function UnbalanceDateDurationRelative(dateDuration, plainRelativeTo) {
@@ -4487,15 +4507,6 @@ export function CompareISODateTime(y1, m1, d1, h1, min1, s1, ms1, µs1, ns1, y2,
 }
 
 // Not abstract operations from the spec
-
-export function NonNegativeBigIntDivmod(x, y) {
-  let { quotient, remainder } = x.divmod(y);
-  if (remainder.lesser(0)) {
-    quotient = quotient.prev();
-    remainder = remainder.plus(y);
-  }
-  return { quotient, remainder };
-}
 
 // rounding modes supported: floor, ceil
 export function epochNsToMs(epochNanoseconds, mode) {
