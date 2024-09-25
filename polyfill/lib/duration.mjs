@@ -429,20 +429,6 @@ export class Duration {
     ES.ValueOfThrows('Duration');
   }
   static from(item) {
-    if (ES.IsTemporalDuration(item)) {
-      return new Duration(
-        GetSlot(item, YEARS),
-        GetSlot(item, MONTHS),
-        GetSlot(item, WEEKS),
-        GetSlot(item, DAYS),
-        GetSlot(item, HOURS),
-        GetSlot(item, MINUTES),
-        GetSlot(item, SECONDS),
-        GetSlot(item, MILLISECONDS),
-        GetSlot(item, MICROSECONDS),
-        GetSlot(item, NANOSECONDS)
-      );
-    }
     return ES.ToTemporalDuration(item);
   }
   static compare(one, two, options = undefined) {

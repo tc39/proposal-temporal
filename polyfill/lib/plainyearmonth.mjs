@@ -141,15 +141,6 @@ export class PlainYearMonth {
   }
 
   static from(item, options = undefined) {
-    if (ES.IsTemporalYearMonth(item)) {
-      ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
-      return ES.CreateTemporalYearMonth(
-        GetSlot(item, ISO_YEAR),
-        GetSlot(item, ISO_MONTH),
-        GetSlot(item, CALENDAR),
-        GetSlot(item, ISO_DAY)
-      );
-    }
     return ES.ToTemporalYearMonth(item, options);
   }
   static compare(one, two) {

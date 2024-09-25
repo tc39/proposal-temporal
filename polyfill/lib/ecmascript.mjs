@@ -1163,7 +1163,12 @@ export function ToTemporalDate(item, options = undefined) {
   if (Type(item) === 'Object') {
     if (IsTemporalDate(item)) {
       GetTemporalOverflowOption(GetOptionsObject(options));
-      return item;
+      return CreateTemporalDate(
+        GetSlot(item, ISO_YEAR),
+        GetSlot(item, ISO_MONTH),
+        GetSlot(item, ISO_DAY),
+        GetSlot(item, CALENDAR)
+      );
     }
     if (IsTemporalZonedDateTime(item)) {
       const isoDateTime = GetISODateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, EPOCHNANOSECONDS));
@@ -1214,7 +1219,18 @@ export function ToTemporalDateTime(item, options = undefined) {
   if (Type(item) === 'Object') {
     if (IsTemporalDateTime(item)) {
       GetTemporalOverflowOption(GetOptionsObject(options));
-      return item;
+      return CreateTemporalDateTime(
+        GetSlot(item, ISO_YEAR),
+        GetSlot(item, ISO_MONTH),
+        GetSlot(item, ISO_DAY),
+        GetSlot(item, ISO_HOUR),
+        GetSlot(item, ISO_MINUTE),
+        GetSlot(item, ISO_SECOND),
+        GetSlot(item, ISO_MILLISECOND),
+        GetSlot(item, ISO_MICROSECOND),
+        GetSlot(item, ISO_NANOSECOND),
+        GetSlot(item, CALENDAR)
+      );
     }
     if (IsTemporalZonedDateTime(item)) {
       const isoDateTime = GetISODateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, EPOCHNANOSECONDS));
@@ -1286,7 +1302,21 @@ export function ToTemporalDateTime(item, options = undefined) {
 }
 
 export function ToTemporalDuration(item) {
-  if (IsTemporalDuration(item)) return item;
+  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
+  if (IsTemporalDuration(item)) {
+    return new TemporalDuration(
+      GetSlot(item, YEARS),
+      GetSlot(item, MONTHS),
+      GetSlot(item, WEEKS),
+      GetSlot(item, DAYS),
+      GetSlot(item, HOURS),
+      GetSlot(item, MINUTES),
+      GetSlot(item, SECONDS),
+      GetSlot(item, MILLISECONDS),
+      GetSlot(item, MICROSECONDS),
+      GetSlot(item, NANOSECONDS)
+    );
+  }
   if (Type(item) !== 'Object') {
     return ParseTemporalDurationString(RequireString(item));
   }
@@ -1310,7 +1340,6 @@ export function ToTemporalDuration(item) {
       result[property] = value;
     }
   }
-  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
   return new TemporalDuration(
     result.years,
     result.months,
@@ -1326,10 +1355,9 @@ export function ToTemporalDuration(item) {
 }
 
 export function ToTemporalInstant(item) {
+  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
   if (Type(item === 'Object')) {
-    if (IsTemporalInstant(item)) return item;
-    if (IsTemporalZonedDateTime(item)) {
-      const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
+    if (IsTemporalInstant(item) || IsTemporalZonedDateTime(item)) {
       return new TemporalInstant(GetSlot(item, EPOCHNANOSECONDS));
     }
     item = ToPrimitive(item, StringCtor);
@@ -1359,8 +1387,6 @@ export function ToTemporalInstant(item) {
     offsetNanoseconds
   );
   ValidateEpochNanoseconds(epochNanoseconds);
-
-  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
   return new TemporalInstant(epochNanoseconds);
 }
 
@@ -1368,7 +1394,12 @@ export function ToTemporalMonthDay(item, options = undefined) {
   if (Type(item) === 'Object') {
     if (IsTemporalMonthDay(item)) {
       GetTemporalOverflowOption(GetOptionsObject(options));
-      return item;
+      return CreateTemporalMonthDay(
+        GetSlot(item, ISO_MONTH),
+        GetSlot(item, ISO_DAY),
+        GetSlot(item, CALENDAR),
+        GetSlot(item, ISO_YEAR)
+      );
     }
     let calendar;
     if (HasSlot(item, CALENDAR)) {
@@ -1407,9 +1438,16 @@ export function ToTemporalTime(item, options = undefined) {
   let hour, minute, second, millisecond, microsecond, nanosecond;
   const TemporalPlainTime = GetIntrinsic('%Temporal.PlainTime%');
   if (Type(item) === 'Object') {
-    if (IsTemporalTime(item)) {
+    if (IsTemporalTime(item) || IsTemporalDateTime(item)) {
       GetTemporalOverflowOption(GetOptionsObject(options));
-      return item;
+      return new TemporalPlainTime(
+        GetSlot(item, ISO_HOUR),
+        GetSlot(item, ISO_MINUTE),
+        GetSlot(item, ISO_SECOND),
+        GetSlot(item, ISO_MILLISECOND),
+        GetSlot(item, ISO_MICROSECOND),
+        GetSlot(item, ISO_NANOSECOND)
+      );
     }
     if (IsTemporalZonedDateTime(item)) {
       const isoDateTime = GetISODateTimeFor(GetSlot(item, TIME_ZONE), GetSlot(item, EPOCHNANOSECONDS));
@@ -1421,17 +1459,6 @@ export function ToTemporalTime(item, options = undefined) {
         isoDateTime.millisecond,
         isoDateTime.microsecond,
         isoDateTime.nanosecond
-      );
-    }
-    if (IsTemporalDateTime(item)) {
-      GetTemporalOverflowOption(GetOptionsObject(options));
-      return new TemporalPlainTime(
-        GetSlot(item, ISO_HOUR),
-        GetSlot(item, ISO_MINUTE),
-        GetSlot(item, ISO_SECOND),
-        GetSlot(item, ISO_MILLISECOND),
-        GetSlot(item, ISO_MICROSECOND),
-        GetSlot(item, ISO_NANOSECOND)
       );
     }
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = ToTemporalTimeRecord(item));
@@ -1463,7 +1490,12 @@ export function ToTemporalYearMonth(item, options = undefined) {
   if (Type(item) === 'Object') {
     if (IsTemporalYearMonth(item)) {
       GetTemporalOverflowOption(GetOptionsObject(options));
-      return item;
+      return CreateTemporalYearMonth(
+        GetSlot(item, ISO_YEAR),
+        GetSlot(item, ISO_MONTH),
+        GetSlot(item, CALENDAR),
+        GetSlot(item, ISO_DAY)
+      );
     }
     const calendar = GetTemporalCalendarIdentifierWithISODefault(item);
     const fields = PrepareCalendarFields(calendar, item, ['month', 'monthCode', 'year'], [], []);
@@ -1581,7 +1613,11 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
       GetTemporalDisambiguationOption(options); // validate and ignore
       GetTemporalOffsetOption(options, 'reject');
       GetTemporalOverflowOption(options);
-      return item;
+      return CreateTemporalZonedDateTime(
+        GetSlot(item, EPOCHNANOSECONDS),
+        GetSlot(item, TIME_ZONE),
+        GetSlot(item, CALENDAR)
+      );
     }
     calendar = GetTemporalCalendarIdentifierWithISODefault(item);
     const fields = PrepareCalendarFields(

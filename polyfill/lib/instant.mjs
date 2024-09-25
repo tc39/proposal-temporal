@@ -146,9 +146,6 @@ export class Instant {
     return new Instant(epochNanoseconds);
   }
   static from(item) {
-    if (ES.IsTemporalInstant(item)) {
-      return new Instant(GetSlot(item, EPOCHNANOSECONDS));
-    }
     return ES.ToTemporalInstant(item);
   }
   static compare(one, two) {

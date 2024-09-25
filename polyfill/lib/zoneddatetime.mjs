@@ -544,17 +544,6 @@ export class ZonedDateTime {
   }
 
   static from(item, options = undefined) {
-    if (ES.IsTemporalZonedDateTime(item)) {
-      options = ES.GetOptionsObject(options);
-      ES.GetTemporalDisambiguationOption(options); // validate and ignore
-      ES.GetTemporalOffsetOption(options, 'reject');
-      ES.GetTemporalOverflowOption(options);
-      return ES.CreateTemporalZonedDateTime(
-        GetSlot(item, EPOCHNANOSECONDS),
-        GetSlot(item, TIME_ZONE),
-        GetSlot(item, CALENDAR)
-      );
-    }
     return ES.ToTemporalZonedDateTime(item, options);
   }
   static compare(one, two) {
