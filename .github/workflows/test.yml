@@ -31,6 +31,7 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           files: coverage/test262.lcov
+          working-directory: polyfill
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   test-cookbook:
