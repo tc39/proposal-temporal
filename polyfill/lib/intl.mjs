@@ -3,7 +3,6 @@ import {
   Symbol as SymbolCtor,
 
   // error constructors
-  Error as ErrorCtor,
   RangeError as RangeErrorCtor,
   TypeError as TypeErrorCtor,
 
@@ -20,7 +19,7 @@ import {
   ObjectDefineProperties,
   ObjectDefineProperty
 } from './primordials.mjs';
-
+import { assert } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -274,9 +273,7 @@ function formatRange(a, b) {
     const { epochNs: aa, formatter: aformatter } = extractOverrides(a, this);
     const { epochNs: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aformatter) {
-      if (bformatter !== aformatter) {
-        throw new ErrorCtor('assertion failed: formatters for same Temporal type should be identical');
-      }
+      assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
       formatter = aformatter;
       formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
     }
@@ -296,9 +293,7 @@ function formatRangeToParts(a, b) {
     const { epochNs: aa, formatter: aformatter } = extractOverrides(a, this);
     const { epochNs: bb, formatter: bformatter } = extractOverrides(b, this);
     if (aformatter) {
-      if (bformatter !== aformatter) {
-        throw new ErrorCtor('assertion failed: formatters for same Temporal type should be identical');
-      }
+      assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
       formatter = aformatter;
       formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
     }
