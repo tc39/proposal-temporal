@@ -1383,9 +1383,8 @@ export function ToTemporalInstant(item) {
     second,
     millisecond,
     microsecond,
-    nanosecond,
-    offsetNanoseconds
-  );
+    nanosecond
+  ).subtract(offsetNanoseconds);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
 }
@@ -1545,48 +1544,36 @@ export function InterpretISODateTimeOffset(
     return GetEpochNanosecondsFor(timeZone, dt, disambiguation);
   }
 
+  const utcEpochNs = GetUTCEpochNanoseconds(
+    year,
+    month,
+    day,
+    time.hour,
+    time.minute,
+    time.second,
+    time.millisecond,
+    time.microsecond,
+    time.nanosecond
+  );
+
   // The caller wants the offset to always win ('use') OR the caller is OK
   // with the offset winning ('prefer' or 'reject') as long as it's valid
   // for this timezone and date/time.
   if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
     // Calculate the instant for the input's date/time and offset
-    const epochNs = GetUTCEpochNanoseconds(
-      year,
-      month,
-      day,
-      time.hour,
-      time.minute,
-      time.second,
-      time.millisecond,
-      time.microsecond,
-      time.nanosecond,
-      offsetNs
-    );
+    const epochNs = utcEpochNs.subtract(offsetNs);
     ValidateEpochNanoseconds(epochNs);
     return epochNs;
   }
 
   // "prefer" or "reject"
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
-  if (possibleEpochNs.length > 0) {
-    const utcEpochNs = GetUTCEpochNanoseconds(
-      year,
-      month,
-      day,
-      time.hour,
-      time.minute,
-      time.second,
-      time.millisecond,
-      time.microsecond,
-      time.nanosecond
-    );
-    for (let index = 0; index < possibleEpochNs.length; index++) {
-      const candidate = possibleEpochNs[index];
-      const candidateOffset = utcEpochNs - candidate;
-      const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
-      if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
-        return candidate;
-      }
+  for (let index = 0; index < possibleEpochNs.length; index++) {
+    const candidate = possibleEpochNs[index];
+    const candidateOffset = utcEpochNs - candidate;
+    const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
+    if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
+      return candidate;
     }
   }
 
@@ -2126,16 +2113,7 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
   if (offsetMinutes !== undefined) {
     return [
-      GetUTCEpochNanoseconds(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
+      GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond).subtract(
         offsetMinutes * 60e9
       )
     ];
@@ -2502,18 +2480,7 @@ export function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {
   return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
 }
 
-export function GetUTCEpochNanoseconds(
-  year,
-  month,
-  day,
-  hour,
-  minute,
-  second,
-  millisecond,
-  microsecond,
-  nanosecond,
-  offsetNs = 0
-) {
+function GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
   // The pattern of leap years in the ISO 8601 calendar repeats every 400
   // years. To avoid overflowing at the edges of the range, we reduce the year
   // to the remainder after dividing by 400, and then add back all the
@@ -2531,9 +2498,7 @@ export function GetUTCEpochNanoseconds(
   ns = ns.plus(bigInt(microsecond).multiply(1e3));
   ns = ns.plus(bigInt(nanosecond));
 
-  let result = ns.plus(NS_IN_400_YEAR_CYCLE.multiply(bigInt(yearCycles)));
-  if (offsetNs) result = result.subtract(bigInt(offsetNs));
-  return result;
+  return ns.plus(NS_IN_400_YEAR_CYCLE.multiply(bigInt(yearCycles)));
 }
 
 export function GetISOPartsFromEpoch(epochNanoseconds) {
