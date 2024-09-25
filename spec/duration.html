@@ -969,7 +969,7 @@
       <emu-alg>
         1. Let _days_, _hours_, _minutes_, _seconds_, _milliseconds_, and _microseconds_ be 0.
         1. Let _sign_ be NormalizedTimeDurationSign(_normalizedDuration_.[[NormalizedTime]]).
-        1. Let _nanoseconds_ be NormalizedTimeDurationAbs(_normalizedDuration_.[[NormalizedTime]]).[[TotalNanoseconds]].
+        1. Let _nanoseconds_ be abs(_normalizedDuration_.[[NormalizedTime]].[[TotalNanoseconds]]).
         1. If TemporalUnitCategory(_largestUnit_) is ~date~, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
@@ -1359,21 +1359,6 @@
         1. Set _nanoseconds_ to _nanoseconds_ + _microseconds_ × 1000.
         1. Assert: abs(_nanoseconds_) ≤ maxTimeDuration.
         1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _nanoseconds_ }.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-normalizedtimedurationabs" type="abstract operation">
-      <h1>
-        NormalizedTimeDurationAbs (
-          _d_: a Normalized Time Duration Record,
-        ): a Normalized Time Duration Record
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It returns a new normalized time duration that is the absolute value of _d_.</dd>
-      </dl>
-      <emu-alg>
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: abs(_d_.[[TotalNanoseconds]]) }.
       </emu-alg>
     </emu-clause>
 
