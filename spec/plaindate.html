@@ -959,7 +959,7 @@
         1. Let _year_ be PadISOYear(_temporalDate_.[[ISOYear]]).
         1. Let _month_ be ToZeroPaddedDecimalString(_temporalDate_.[[ISOMonth]], 2).
         1. Let _day_ be ToZeroPaddedDecimalString(_temporalDate_.[[ISODay]], 2).
-        1. Let _calendar_ be MaybeFormatCalendarAnnotation(_temporalDate_.[[Calendar]], _showCalendar_).
+        1. Let _calendar_ be FormatCalendarAnnotation(_temporalDate_.[[Calendar]], _showCalendar_).
         1. Return the string-concatenation of _year_, the code unit 0x002D (HYPHEN-MINUS), _month_, the code unit 0x002D (HYPHEN-MINUS), _day_, and _calendar_.
       </emu-alg>
     </emu-clause>
