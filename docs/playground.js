@@ -9038,6 +9038,10 @@
 	function IsCalendarUnit(unit) {
 	  return unit === 'year' || unit === 'month' || unit === 'week';
 	}
+	function TemporalUnitCategory(unit) {
+	  if (IsCalendarUnit(unit) || unit === 'day') return 'date';
+	  return 'time';
+	}
 	function TemporalObjectToFields(temporalObject) {
 	  const calendar = GetSlot(temporalObject, CALENDAR);
 	  const isoDate = TemporalObjectToISODateRecord(temporalObject);
@@ -11269,7 +11273,7 @@
 	  const nudgedEpochNs = diffNorm.addToEpochNs(destEpochNs);
 	  let days = 0;
 	  let remainder = roundedNorm;
-	  if (LargerOfTwoTemporalUnits(largestUnit, 'day') === largestUnit) {
+	  if (TemporalUnitCategory(largestUnit) === 'date') {
 	    days = roundedWholeDays;
 	    remainder = roundedNorm.subtract(TimeDuration.normalize(roundedWholeDays * 24, 0, 0, 0, 0, 0));
 	  }
@@ -11436,7 +11440,7 @@
 	  return RoundRelativeDuration(duration, destEpochNs, dateTime, null, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode);
 	}
 	function DifferenceZonedDateTimeWithRounding(ns1, ns2, timeZone, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode) {
-	  if (!IsCalendarUnit(largestUnit) && largestUnit !== 'day') {
+	  if (TemporalUnitCategory(largestUnit) === 'time') {
 	    // The user is only asking for a time difference, so return difference of instants.
 	    return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, largestUnit);
 	  }
@@ -11638,7 +11642,7 @@
 	  const ns2 = GetSlot(other, EPOCHNANOSECONDS);
 	  const Duration = GetIntrinsic('%Temporal.Duration%');
 	  let result;
-	  if (settings.largestUnit !== 'year' && settings.largestUnit !== 'month' && settings.largestUnit !== 'week' && settings.largestUnit !== 'day') {
+	  if (TemporalUnitCategory(settings.largestUnit) !== 'date') {
 	    // The user is only asking for a time difference, so return difference of instants.
 	    const {
 	      duration
@@ -11709,7 +11713,7 @@
 	  let duration = ToTemporalDuration(durationLike);
 	  if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
 	  const largestUnit = DefaultTemporalLargestUnit(duration);
-	  if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
+	  if (TemporalUnitCategory(largestUnit) === 'date') {
 	    throw new RangeError$1(`Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`);
 	  }
 	  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
@@ -16223,7 +16227,7 @@
 	    };
 	    const maximum = maximumIncrements[smallestUnit];
 	    if (maximum !== undefined) ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
-	    if (roundingIncrement > 1 && (IsCalendarUnit(smallestUnit) || smallestUnit === 'day') && largestUnit !== smallestUnit) {
+	    if (roundingIncrement > 1 && TemporalUnitCategory(smallestUnit) === 'date' && largestUnit !== smallestUnit) {
 	      throw new RangeError$1('For calendar units with roundingIncrement > 1, use largestUnit = smallestUnit');
 	    }
 	    if (zonedRelativeTo) {
@@ -16235,9 +16239,7 @@
 	      ({
 	        duration
 	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, timeZone, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode));
-	      if (IsCalendarUnit(largestUnit) || largestUnit === 'day') {
-	        largestUnit = 'hour';
-	      }
+	      if (TemporalUnitCategory(largestUnit) === 'date') largestUnit = 'hour';
 	      return UnnormalizeDuration(duration, largestUnit);
 	    }
 	    if (plainRelativeTo) {
@@ -16386,10 +16388,9 @@
 	    }
 	    const largestUnit1 = DefaultTemporalLargestUnit(one);
 	    const largestUnit2 = DefaultTemporalLargestUnit(two);
-	    const calendarUnitsPresent = IsCalendarUnit(largestUnit1) || IsCalendarUnit(largestUnit2);
 	    const duration1 = NormalizeDuration(one);
 	    const duration2 = NormalizeDuration(two);
-	    if (zonedRelativeTo && (calendarUnitsPresent || largestUnit1 === 'day' || largestUnit2 === 'day')) {
+	    if (zonedRelativeTo && (TemporalUnitCategory(largestUnit1) === 'date' || TemporalUnitCategory(largestUnit2) === 'date')) {
 	      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
 	      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
 	      const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
@@ -16399,7 +16400,7 @@
 	    }
 	    let d1 = duration1.date.days;
 	    let d2 = duration2.date.days;
-	    if (calendarUnitsPresent) {
+	    if (IsCalendarUnit(largestUnit1) || IsCalendarUnit(largestUnit2)) {
 	      if (!plainRelativeTo) {
 	        throw new RangeError$1('A starting point is required for years, months, or weeks comparison');
 	      }
