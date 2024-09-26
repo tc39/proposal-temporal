@@ -547,26 +547,28 @@
         1. Else if the "Category" column of the row is ~time~ and _unitGroup_ is ~time~ or ~datetime~, append _unit_ to _allowedValues_.
       1. If _extraValues_ is present, then
         1. Set _allowedValues_ to the list-concatenation of _allowedValues_ and _extraValues_.
-      1. If _default_ is ~required~, then
-        1. Let _defaultValue_ be ~unset~.
+      1. If _default_ is ~unset~, then
+        1. Let _defaultValue_ be *undefined*.
+      1. Else if _default_ is ~required~, then
+        1. Let _defaultValue_ be ~required~.
+      1. Else if _default_ is ~auto~, then
+        1. Append _default_ to _allowedValues_.
+        1. Let _defaultValue_ be *"auto"*.
       1. Else,
-        1. Let _defaultValue_ be _default_.
-        1. If _defaultValue_ is not ~unset~ and _allowedValues_ does not contain _defaultValue_, then
-          1. Append _defaultValue_ to _allowedValues_.
-      1. Let _allowedStrings_ be a copy of _allowedValues_.
+        1. Assert: _allowedValues_ contains _default_.
+        1. Let _defaultValue_ be the value in the "Singular property name" column of <emu-xref href="#table-temporal-units"></emu-xref> corresponding to the row with _default_ in the "Value" column.
+      1. Let _allowedStrings_ be a new empty List.
       1. For each element _value_ of _allowedValues_, do
         1. If _value_ is ~auto~, then
           1. Append *"auto"* to _allowedStrings_.
-        1. Else if _value_ is not ~unset~, then
+        1. Else,
           1. Let _singularName_ be the value in the "Singular property name" column of <emu-xref href="#table-temporal-units"></emu-xref> corresponding to the row with _value_ in the "Value" column.
           1. Append _singularName_ to _allowedStrings_.
           1. Let _pluralName_ be the value in the "Plural property name" column of the corresponding row.
           1. Append _pluralName_ to _allowedStrings_.
       1. NOTE: For each singular Temporal unit name that is contained within _allowedStrings_, the corresponding plural name is also contained within it.
       1. Let _value_ be ? GetOption(_options_, _key_, ~string~, _allowedStrings_, _defaultValue_).
-      1. If _value_ is *undefined*, then
-        1. If _default_ is ~required~, throw a *RangeError* exception.
-        1. Return ~unset~.
+      1. If _value_ is *undefined*, return ~unset~.
       1. If _value_ is *"auto"*, return ~auto~.
       1. Return the value in the "Value" column of <emu-xref href="#table-temporal-units"></emu-xref> corresponding to the row with _value_ in its "Singular property name" or "Plural property name" column.
     </emu-alg>
