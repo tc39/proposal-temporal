@@ -1792,7 +1792,7 @@
         1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
         1. Let _start_ be ? CalendarDateAdd(_calendar_, _date_, _duration_.[[Date]], ~constrain~).
         1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
-        1. Let _endDate_ be BalanceISODate(_start_.[[ISOYear]], _start_.[[ISOMonth]], _start_.[[ISODay]] + _sign_).
+        1. Let _endDate_ be BalanceISODate(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]] + _sign_).
         1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _dateTime_).
         1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
         1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
