@@ -17,20 +17,20 @@
       Their canonical form is a string containing only Unicode Basic Latin lowercase letters (U+0061 LATIN SMALL LETTER A through U+007A LATIN SMALL LETTER Z, inclusive) and/or digits (U+0030 DIGIT ZERO through U+0039 DIGIT NINE, inclusive), with zero or more medial hyphens (U+002D HYPHEN-MINUS).
     </p>
 
-    <emu-clause id="sec-temporal-isbuiltincalendar" type="abstract operation">
+    <emu-clause id="sec-temporal-canonicalizecalendar" type="abstract operation">
       <h1>
-        IsBuiltinCalendar (
+        CanonicalizeCalendar (
           _id_: a String,
-        ): a Boolean
+        ): either a normal completion containing a calendar type, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>The returned value is *true* if _id_ is a calendar type denoting a built-in calendar, and *false* otherwise.</dd>
+        <dd>It returns the canonical form of the calendar type denoted by _id_, or throws an exception if there is no such built-in calendar.</dd>
       </dl>
       <emu-alg>
         1. Let _calendars_ be AvailableCalendars().
-        1. If _calendars_ contains the ASCII-lowercase of _id_, return *true*.
-        1. Return *false*.
+        1. If _calendars_ does not contain the ASCII-lowercase of _id_, throw a *RangeError* exception.
+        1. Return CanonicalizeUValue(*"ca"*, _id_).
       </emu-alg>
     </emu-clause>
 
@@ -748,8 +748,7 @@
             1. Return _temporalCalendarLike_.[[Calendar]].
         1. If _temporalCalendarLike_ is not a String, throw a *TypeError* exception.
         1. Let _identifier_ be ? ParseTemporalCalendarString(_temporalCalendarLike_).
-        1. If IsBuiltinCalendar(_identifier_) is *false*, throw a *RangeError* exception.
-        1. Return CanonicalizeUValue(*"ca"*, _identifier_).
+        1. Return ? CanonicalizeCalendar(_identifier_).
       </emu-alg>
     </emu-clause>
 

@@ -1,4 +1,4 @@
-import { RangeError as RangeErrorCtor, TypeError as TypeErrorCtor } from './primordials.mjs';
+import { TypeError as TypeErrorCtor } from './primordials.mjs';
 
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
@@ -10,7 +10,6 @@ export class PlainYearMonth {
     isoYear = ES.ToIntegerWithTruncation(isoYear);
     isoMonth = ES.ToIntegerWithTruncation(isoMonth);
     calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
-    if (!ES.IsBuiltinCalendar(calendar)) throw new RangeErrorCtor(`unknown calendar ${calendar}`);
     calendar = ES.CanonicalizeCalendar(calendar);
     referenceISODay = ES.ToIntegerWithTruncation(referenceISODay);
 

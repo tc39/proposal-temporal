@@ -48,7 +48,6 @@ export class PlainDateTime {
     microsecond = microsecond === undefined ? 0 : ES.ToIntegerWithTruncation(microsecond);
     nanosecond = nanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(nanosecond);
     calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
-    if (!ES.IsBuiltinCalendar(calendar)) throw new RangeErrorCtor(`unknown calendar ${calendar}`);
     calendar = ES.CanonicalizeCalendar(calendar);
 
     ES.CreateTemporalDateTimeSlots(
