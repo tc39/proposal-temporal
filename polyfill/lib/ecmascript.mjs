@@ -2059,17 +2059,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
   }
 
   if (disambiguation === 'reject') throw new RangeErrorCtor('multiple instants found');
-  const {
-    year,
-    month,
-    day,
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millisecond = 0,
-    microsecond = 0,
-    nanosecond = 0
-  } = isoDateTime;
+  const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = isoDateTime;
   const utcns = GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 
   const dayBefore = utcns.minus(DAY_NANOS);
