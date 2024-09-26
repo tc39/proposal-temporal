@@ -76,7 +76,8 @@ export const {
     setUTCMilliseconds: DatePrototypeSetUTCMilliseconds,
     toLocaleDateString: DatePrototypeToLocaleDateString,
     valueOf: DatePrototypeValueOf
-  }
+  },
+  UTC: DateUTC
 } = Date;
 export const {
   supportedValuesOf: IntlSupportedValuesOf,
