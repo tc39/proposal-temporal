@@ -27,9 +27,6 @@ import {
   GetSlot,
   HasSlot,
   EPOCHNANOSECONDS,
-  ISO_YEAR,
-  ISO_MONTH,
-  ISO_DAY,
   ISO_HOUR,
   ISO_MINUTE,
   ISO_SECOND,
@@ -486,6 +483,8 @@ function sameTemporalType(x, y) {
   return true;
 }
 
+const noon = { hour: 12, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+
 function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalTime(temporalObj)) {
     const isoDateTime = {
@@ -513,12 +512,8 @@ function extractOverrides(temporalObj, main) {
         `cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const isoDateTime = {
-      year: GetSlot(temporalObj, ISO_YEAR),
-      month: GetSlot(temporalObj, ISO_MONTH),
-      day: GetSlot(temporalObj, ISO_DAY),
-      hour: 12
-    };
+    const isoDate = ES.TemporalObjectToISODateRecord(temporalObj);
+    const isoDateTime = { ...isoDate, ...noon };
     return {
       epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
       formatter: getSlotLazy(main, YM)
@@ -533,12 +528,8 @@ function extractOverrides(temporalObj, main) {
         `cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const isoDateTime = {
-      year: GetSlot(temporalObj, ISO_YEAR),
-      month: GetSlot(temporalObj, ISO_MONTH),
-      day: GetSlot(temporalObj, ISO_DAY),
-      hour: 12
-    };
+    const isoDate = ES.TemporalObjectToISODateRecord(temporalObj);
+    const isoDateTime = { ...isoDate, ...noon };
     return {
       epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
       formatter: getSlotLazy(main, MD)
@@ -553,12 +544,8 @@ function extractOverrides(temporalObj, main) {
         `cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const isoDateTime = {
-      year: GetSlot(temporalObj, ISO_YEAR),
-      month: GetSlot(temporalObj, ISO_MONTH),
-      day: GetSlot(temporalObj, ISO_DAY),
-      hour: 12
-    };
+    const isoDate = ES.TemporalObjectToISODateRecord(temporalObj);
+    const isoDateTime = { ...isoDate, ...noon };
     return {
       epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
       formatter: getSlotLazy(main, DATE)
