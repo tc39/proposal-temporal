@@ -1472,7 +1472,7 @@
 
       <emu-alg>
         1. If IsTimeZoneOffsetString(_timeZoneIdentifier_) is *true*, then
-          1. Let _offsetNs_ be ParseTimeZoneOffsetString(_timeZoneIdentifier_).
+          1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString</del><ins>! ParseDateTimeUTCOffset</ins>(_timeZoneIdentifier_).
         1. Else,
           1. Assert: IsValidTimeZoneName(_timeZoneIdentifier_) is *true*.
           1. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_timeZoneIdentifier_, _epochNs_).
