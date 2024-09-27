@@ -360,7 +360,7 @@ Date unit details:
 - `day` is a positive integer representing the day of the month.
 
 Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
-Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
+Similarly, in calendars that use eras, an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
 
 Time unit details:
 

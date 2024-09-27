@@ -172,7 +172,7 @@ The above read-only properties allow accessing the year or month individually.
   Examples: `'M02'` => February; `'M08L'` => repeated 8th month in the Chinese calendar; `'M05L'` => Adar I in the Hebrew calendar.
 
 Either `month` or `monthCode` can be used in `from` or `with` to refer to the month.
-Similarly, in calendars that user eras an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
+Similarly, in calendars that use eras, an `era`/`eraYear` pair can be used in place of `year` when calling `from` or `with`.
 
 Usage examples:
 
