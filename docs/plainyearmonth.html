@@ -219,16 +219,16 @@ A <code>Temporal.PlainYearMonth</code> can be converted into a <code>Temporal.Pl
 <li><code>calendar</code> (optional string): A calendar to project the month into.</li>
 <li><code>referenceISODay</code> (optional for ISO 8601 calendar; required for other calendars): A reference day, used for disambiguation when implementing calendar systems.
 For the ISO 8601 calendar, this parameter will default to 1 if omitted.
-For other calendars, the must set this parameter to the ISO-calendar day corresponding to the first day of the desired calendar year and month.</li>
+For other calendars, this parameter must be the ISO-calendar day corresponding to the first day of the desired calendar year and month.</li>
 </ul>
 <blockquote>
 <p>The <code>calendar</code> and <code>referenceISODay</code> parameters should be avoided because <code>equals</code> or <code>compare</code> will consider <code>new Temporal.PlainYearMonth(2000, 3, &#39;iso8601&#39;, 14)</code> and <code>PlainYearMonth(2000, 3, &#39;iso8601&#39;, 1)</code> unequal even though they refer to the same year and month.
-When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the <code>from()</code> method which will automatically set a valid and <code>equals</code>-compatible reference day.</p>
+When creating instances for non-ISO-8601 calendars use the <code>from()</code> method which will automatically set a valid and <code>equals</code>-compatible reference day.</p>
 </blockquote>
 <blockquote>
 <p>NOTE: To avoid infinite recursion, <code>referenceISODay</code> is accepted as-is without validating that the day provided is actually the first day of the month in the desired calendar system.
 This lack of validation means that <code>equals</code> or <code>compare</code> may return <code>false</code> for <code>Temporal.PlainYearMonth</code> instances where the year and month and day are identical, but the reference days don&#39;t match.
-For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when implementing a custom calendar or when only using the ISO 8601 calendar.
+For this reason, it is STRONGLY recommended that this constructor SHOULD NOT be used except when only using the ISO 8601 calendar.
 For other calendars, use <code>Temporal.PlainYearMonth.from()</code> which will automatically set the correct always set the <code>referenceISODay</code> to the first of the month when constructing the new object.</p>
 </blockquote>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainYearMonth</code> object.</p>
@@ -343,8 +343,7 @@ ym<span class="token punctuation">.</span>monthCode<span class="token punctuatio
 ym <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>PlainYearMonth<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2019-02-23[u-ca=hebrew]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 ym<span class="token punctuation">.</span>year<span class="token punctuation">;</span> <span class="token comment">// => 5779</span>
 ym<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => 6</span>
-ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => 'M05L'</span></code></pre><h3 id="calendarId"><a class="heading-link" href="#calendarId"></a>yearMonth.<strong>calendarId</strong> : object</h3><p>The <code>calendarId</code> read-only property gives the identifier of the calendar that the <code>year</code>, <code>month</code>, and <code>monthCode</code> properties are interpreted in.
-If <code>yearMonth</code> was created with a custom calendar object, this gives the <code>id</code> property of that project.</p>
+ym<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => 'M05L'</span></code></pre><h3 id="calendarId"><a class="heading-link" href="#calendarId"></a>yearMonth.<strong>calendarId</strong> : object</h3><p>The <code>calendarId</code> read-only property gives the identifier of the calendar that the <code>year</code>, <code>month</code>, and <code>monthCode</code> properties are interpreted in.</p>
 <h3 id="era"><a class="heading-link" href="#era"></a>yearMonth.<strong>era</strong> : string | undefined</h3><h3 id="eraYear"><a class="heading-link" href="#eraYear"></a>yearMonth.<strong>eraYear</strong> : number | undefined</h3><p>In calendars that use eras, the <code>era</code> and <code>eraYear</code> read-only properties can be used together to resolve an era-relative year.
 Both properties are <code>undefined</code> when using the ISO 8601 calendar.
 As inputs to <code>from</code> or <code>with</code>, <code>era</code> and <code>eraYear</code> can be used instead of <code>year</code>.

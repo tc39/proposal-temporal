@@ -6266,6 +6266,14 @@
 
 	var ToZeroPaddedDecimalString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToZeroPaddedDecimalString);
 
+	function assert(condition, message) {
+	  if (!condition) throw new Error$1(`assertion failure: ${message}`);
+	}
+	function assertNotReached(message) {
+	  const reason = message ? ` because ${message}` : '';
+	  throw new Error$1(`assertion failure: code should not be reached${reason}`);
+	}
+
 	// TODO: remove, semver-major
 
 	var GetIntrinsic$1 = getIntrinsic;
@@ -7875,17 +7883,17 @@
 	  static MAX = (() => bigInt('9007199254740991999999999'))();
 	  static ZERO = (() => new TimeDuration(bigInt.zero))();
 	  constructor(totalNs) {
-	    if (typeof totalNs === 'number') throw new Error$1('assertion failed: big integer required');
+	    assert(typeof totalNs !== 'number', 'big integer required');
 	    this.totalNs = bigInt(totalNs);
-	    if (this.totalNs.abs().greater(TimeDuration.MAX)) throw new Error$1('assertion failed: integer too big');
+	    assert(this.totalNs.abs().leq(TimeDuration.MAX), 'integer too big');
 	    const {
 	      quotient,
 	      remainder
 	    } = this.totalNs.divmod(1e9);
 	    this.sec = quotient.toJSNumber();
 	    this.subsec = remainder.toJSNumber();
-	    if (!NumberIsSafeInteger(this.sec)) throw new Error$1('assertion failed: seconds too big');
-	    if (MathAbs(this.subsec) > 999_999_999) throw new Error$1('assertion failed: subseconds too big');
+	    assert(NumberIsSafeInteger(this.sec), 'seconds too big');
+	    assert(MathAbs(this.subsec) <= 999_999_999, 'subseconds too big');
 	  }
 	  static #validateNew(totalNs, operation) {
 	    if (totalNs.abs().greater(TimeDuration.MAX)) {
@@ -7909,7 +7917,7 @@
 	    return TimeDuration.#validateNew(this.totalNs.add(other.totalNs), 'sum');
 	  }
 	  add24HourDays(days) {
-	    if (!NumberIsInteger(days)) throw new Error$1('assertion failed: days is an integer');
+	    assert(NumberIsInteger(days), 'days must be an integer');
 	    return TimeDuration.#validateNew(this.totalNs.add(bigInt(days).multiply(86400e9)), 'sum');
 	  }
 	  addToEpochNs(epochNs) {
@@ -7919,7 +7927,7 @@
 	    return this.totalNs.compare(other.totalNs);
 	  }
 	  divmod(n) {
-	    if (n === 0) throw new Error$1('division by zero');
+	    assert(n !== 0, 'division by zero');
 	    const {
 	      quotient,
 	      remainder
@@ -7933,7 +7941,7 @@
 	  }
 	  fdiv(n) {
 	    n = bigInt(n);
-	    if (n.isZero()) throw new Error$1('division by zero');
+	    assert(!n.isZero(), 'division by zero');
 	    let {
 	      quotient,
 	      remainder
@@ -8214,10 +8222,6 @@
 	    throw new TypeError$1('with() does not support a timeZone property');
 	  }
 	}
-	function MaybeFormatCalendarAnnotation(calendar, showCalendar) {
-	  if (showCalendar === 'never') return '';
-	  return FormatCalendarAnnotation(calendar, showCalendar);
-	}
 	function FormatCalendarAnnotation(id, showCalendar) {
 	  if (showCalendar === 'never') return '';
 	  if (showCalendar === 'auto' && id === 'iso8601') return '';
@@ -8347,6 +8351,7 @@
 	      nanosecond
 	    } = time);
 	  }
+	  RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 	  // if it's a date-time string, OK
 	  if (Call$1(RegExpPrototypeTest, /[tT ][0-9][0-9]/, [isoString])) {
 	    return {
@@ -8510,7 +8515,8 @@
 	  if (tzAnnotation) return ParseTimeZoneIdentifier(tzAnnotation);
 	  if (z) return ParseTimeZoneIdentifier('UTC');
 	  if (offset) return ParseTimeZoneIdentifier(offset);
-	  throw new Error$1('this line should not be reached');
+	  /* c8 ignore next */
+	  assertNotReached();
 	}
 	function ParseTemporalDurationStringRaw(isoString) {
 	  const match = Call$1(RegExpPrototypeExec, duration, [isoString]);
@@ -9314,9 +9320,7 @@
 	  calendar = CanonicalizeCalendar(calendar);
 	  GetTemporalOverflowOption(GetOptionsObject(options));
 	  if (referenceISOYear === undefined) {
-	    if (calendar !== 'iso8601') {
-	      throw new Error$1(`assertion failed: missing year with non-"iso8601" calendar identifier ${calendar}`);
-	    }
+	    assert(calendar === 'iso8601', `missing year with non-"iso8601" calendar identifier ${calendar}`);
 	    const isoCalendarReferenceYear = 1972; // First leap year after Unix epoch
 	    return CreateTemporalMonthDay(month, day, calendar, isoCalendarReferenceYear);
 	  }
@@ -9373,7 +9377,6 @@
 	      microsecond,
 	      nanosecond
 	    } = ParseTemporalTimeString(RequireString(item)));
-	    RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 	    GetTemporalOverflowOption(GetOptionsObject(options));
 	  }
 	  return new TemporalPlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -9427,9 +9430,8 @@
 	  // grammatically not possible to specify a UTC offset in that string, so the
 	  // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
 	  if (time === 'start-of-day') {
-	    if (offsetBehaviour !== 'wall' || offsetNs !== 0) {
-	      throw new Error$1('assertion failure: offset cannot be provided in YYYY-MM-DD[Zone] string');
-	    }
+	    assert(offsetBehaviour === 'wall', 'offset cannot be provided in YYYY-MM-DD[Zone] string');
+	    assert(offsetNs === 0, 'offset cannot be provided in YYYY-MM-DD[Zone] string');
 	    return GetStartOfDay(timeZone, {
 	      year,
 	      month,
@@ -9904,12 +9906,12 @@
 	    year,
 	    month,
 	    day,
-	    hour = 0,
-	    minute = 0,
-	    second = 0,
-	    millisecond = 0,
-	    microsecond = 0,
-	    nanosecond = 0
+	    hour,
+	    minute,
+	    second,
+	    millisecond,
+	    microsecond,
+	    nanosecond
 	  } = isoDateTime;
 	  const utcns = GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	  const dayBefore = utcns.minus(DAY_NANOS);
@@ -9919,9 +9921,7 @@
 	  ValidateEpochNanoseconds(dayAfter);
 	  const offsetAfter = GetOffsetNanosecondsFor(timeZone, dayAfter);
 	  const nanoseconds = offsetAfter - offsetBefore;
-	  if (MathAbs(nanoseconds) > DAY_NANOS) {
-	    throw new Error$1('assertion failure: UTC offset shift longer than 24 hours');
-	  }
+	  assert(MathAbs(nanoseconds) <= DAY_NANOS, 'UTC offset shift longer than 24 hours');
 	  switch (disambiguation) {
 	    case 'earlier':
 	      {
@@ -9947,11 +9947,10 @@
 	        return possible[possible.length - 1];
 	      }
 	    case 'reject':
-	      {
-	        throw new Error$1('should not be reached: reject handled earlier');
-	      }
+	      /* c8 ignore next */assertNotReached('reject handled earlier');
 	  }
-	  throw new Error$1(`assertion failed: invalid disambiguation value ${disambiguation}`);
+	  /* c8 ignore next */
+	  assertNotReached(`invalid disambiguation value ${disambiguation}`);
 	}
 	function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
 	  const {
@@ -9987,9 +9986,7 @@
 
 	  // Otherwise, 00:00:00 lies within a DST gap. Compute an epochNs that's
 	  // guaranteed to be before the transition
-	  if (IsOffsetTimeZoneIdentifier(timeZone)) {
-	    throw new Error$1('assertion failure: should only be reached with named time zone');
-	  }
+	  assert(!IsOffsetTimeZoneIdentifier(timeZone), 'should only be reached with named time zone');
 	  const utcns = GetUTCEpochNanoseconds(isoDate.year, isoDate.month, isoDate.day, 0, 0, 0, 0, 0, 0);
 	  const dayBefore = utcns.minus(DAY_NANOS);
 	  ValidateEpochNanoseconds(dayBefore);
@@ -10081,7 +10078,7 @@
 	  const year = ISOYearString(GetSlot(date, ISO_YEAR));
 	  const month = ISODateTimePartString(GetSlot(date, ISO_MONTH));
 	  const day = ISODateTimePartString(GetSlot(date, ISO_DAY));
-	  const calendar = MaybeFormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
+	  const calendar = FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
 	  return `${year}-${month}-${day}${calendar}`;
 	}
 	function TemporalDateTimeToString(isoDateTime, calendar, precision) {
@@ -10102,7 +10099,7 @@
 	  const dayString = ISODateTimePartString(day);
 	  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
 	  const timeString = FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
-	  const calendarString = MaybeFormatCalendarAnnotation(calendar, showCalendar);
+	  const calendarString = FormatCalendarAnnotation(calendar, showCalendar);
 	  return `${yearString}-${monthString}-${dayString}T${timeString}${calendarString}`;
 	}
 	function TemporalMonthDayToString(monthDay) {
@@ -10158,7 +10155,7 @@
 	    const flag = showTimeZone === 'critical' ? '!' : '';
 	    dateTimeString += `[${flag}${tz}]`;
 	  }
-	  dateTimeString += MaybeFormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
+	  dateTimeString += FormatCalendarAnnotation(GetSlot(zdt, CALENDAR), showCalendar);
 	  return dateTimeString;
 	}
 	function IsOffsetTimeZoneIdentifier(string) {
@@ -10890,7 +10887,7 @@
 	      seconds = 0;
 	      break;
 	    default:
-	      throw new Error$1('assert not reached');
+	      /* c8 ignore next */assertNotReached();
 	  }
 	  const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
 	  return new TemporalDuration(normalizedDuration.date.years, normalizedDuration.date.months, normalizedDuration.date.weeks, normalizedDuration.date.days + sign * days, sign * hours, sign * minutes, sign * seconds, sign * milliseconds, sign * microseconds, sign * nanoseconds);
@@ -10964,7 +10961,7 @@
 	  const microseconds = µs2 - µs1;
 	  const nanoseconds = ns2 - ns1;
 	  const norm = TimeDuration.normalize(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-	  if (norm.abs().sec >= 86400) throw new Error$1('assertion failure in DifferenceTime: _bt_.[[Days]] should be 0');
+	  assert(norm.abs().sec < 86400, '_bt_.[[Days]] should be 0');
 	  return norm;
 	}
 	function DifferenceInstant(ns1, ns2, increment, smallestUnit, roundingMode) {
@@ -11069,9 +11066,7 @@
 	      break;
 	    }
 	  }
-	  if (dayCorrection > maxDayCorrection) {
-	    throw new Error$1(`assertion failed: more than ${maxDayCorrection} day correction needed`);
-	  }
+	  assert(dayCorrection <= maxDayCorrection, `more than ${maxDayCorrection} day correction needed`);
 
 	  // Similar to what happens in DifferenceISODateTime with date parts only:
 	  const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
@@ -11139,11 +11134,10 @@
 	        break;
 	      }
 	    default:
-	      throw new Error$1('assert not reached');
+	      /* c8 ignore next */assertNotReached();
 	  }
-	  if (sign === 1 && (r1 < 0 || r1 >= r2) || sign === -1 && (r1 > 0 || r1 <= r2)) {
-	    throw new Error$1('assertion failed: ordering of r1, r2 according to sign');
-	  }
+	  if (sign === 1) assert(r1 >= 0 && r1 < r2, `positive ordering of r1, r2: 0 ≤ ${r1} < ${r2}`);
+	  if (sign === -1) assert(r1 <= 0 && r1 > r2, `negative ordering of r1, r2: 0 ≥ ${r1} > ${r2}`);
 
 	  // Apply to origin, output PlainDateTimes
 	  const startDate = ISODateTimeToDateRecord(dateTime);
@@ -11163,12 +11157,9 @@
 	  }
 
 	  // Round the smallestUnit within the epoch-nanosecond span
-	  if (sign === 1 && (startEpochNs.gt(destEpochNs) || destEpochNs.gt(endEpochNs)) || sign === -1 && (endEpochNs.gt(destEpochNs) || destEpochNs.gt(startEpochNs))) {
-	    throw new RangeError$1(`custom calendar reported a ${unit} that is 0 days long`);
-	  }
-	  if (endEpochNs.equals(startEpochNs)) {
-	    throw new Error$1('assertion failed: startEpochNs ≠ endEpochNs');
-	  }
+	  if (sign === 1) assert(startEpochNs.leq(destEpochNs) && destEpochNs.leq(endEpochNs), `${unit} was 0 days long`);
+	  if (sign === -1) assert(endEpochNs.leq(destEpochNs) && destEpochNs.leq(startEpochNs), `${unit} was 0 days long`);
+	  assert(!endEpochNs.equals(startEpochNs), 'startEpochNs must ≠ endEpochNs');
 	  const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
 	  const denominator = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
 	  const unsignedRoundingMode = GetUnsignedRoundingMode(roundingMode, sign < 0 ? 'negative' : 'positive');
@@ -11180,9 +11171,7 @@
 	  // Trick to minimize rounding error, due to the lack of fma() in JS
 	  const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
 	  const total = fakeNumerator.fdiv(denominator.totalNs);
-	  if (MathAbs(total) < MathAbs(r1) || MathAbs(total) > MathAbs(r2)) {
-	    throw new Error$1('assertion failed: r1 ≤ total ≤ r2');
-	  }
+	  assert(MathAbs(r1) <= MathAbs(total) && MathAbs(total) <= MathAbs(r2), 'r1 ≤ total ≤ r2');
 
 	  // Determine whether expanded or contracted
 	  const didExpandCalendarUnit = roundedUnit === MathAbs(r2);
@@ -11339,7 +11328,7 @@
 	          break;
 	        }
 	      default:
-	        throw new Error$1('assert not reached');
+	        /* c8 ignore next */assertNotReached();
 	    }
 
 	    // Compute end-of-unit in epoch-nanoseconds
@@ -12119,7 +12108,7 @@
 	      right = middle;
 	      rstate = mstate;
 	    } else {
-	      throw new Error$1(`invalid state in bisection ${lstate} - ${mstate} - ${rstate}`);
+	      /* c8 ignore next */assertNotReached(`invalid state in bisection ${lstate} - ${mstate} - ${rstate}`);
 	    }
 	  }
 	  return right;
@@ -15021,9 +15010,7 @@
 	      formatter: bformatter
 	    } = extractOverrides(b, this);
 	    if (aformatter) {
-	      if (bformatter !== aformatter) {
-	        throw new Error$1('assertion failed: formatters for same Temporal type should be identical');
-	      }
+	      assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
 	      formatter = aformatter;
 	      formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
 	    }
@@ -15048,9 +15035,7 @@
 	      formatter: bformatter
 	    } = extractOverrides(b, this);
 	    if (aformatter) {
-	      if (bformatter !== aformatter) {
-	        throw new Error$1('assertion failed: formatters for same Temporal type should be identical');
-	      }
+	      assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
 	      formatter = aformatter;
 	      formatArgs = [epochNsToMs(aa), epochNsToMs(bb)];
 	    }
@@ -15243,6 +15228,14 @@
 	  if (IsTemporalInstant(x) && !IsTemporalInstant(y)) return false;
 	  return true;
 	}
+	const noon = {
+	  hour: 12,
+	  minute: 0,
+	  second: 0,
+	  millisecond: 0,
+	  microsecond: 0,
+	  nanosecond: 0
+	};
 	function extractOverrides(temporalObj, main) {
 	  if (IsTemporalTime(temporalObj)) {
 	    const isoDateTime = {
@@ -15267,11 +15260,10 @@
 	    if (calendar !== mainCalendar) {
 	      throw new RangeError$1(`cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
+	    const isoDate = TemporalObjectToISODateRecord(temporalObj);
 	    const isoDateTime = {
-	      year: GetSlot(temporalObj, ISO_YEAR),
-	      month: GetSlot(temporalObj, ISO_MONTH),
-	      day: GetSlot(temporalObj, ISO_DAY),
-	      hour: 12
+	      ...isoDate,
+	      ...noon
 	    };
 	    return {
 	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
@@ -15284,11 +15276,10 @@
 	    if (calendar !== mainCalendar) {
 	      throw new RangeError$1(`cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
+	    const isoDate = TemporalObjectToISODateRecord(temporalObj);
 	    const isoDateTime = {
-	      year: GetSlot(temporalObj, ISO_YEAR),
-	      month: GetSlot(temporalObj, ISO_MONTH),
-	      day: GetSlot(temporalObj, ISO_DAY),
-	      hour: 12
+	      ...isoDate,
+	      ...noon
 	    };
 	    return {
 	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
@@ -15301,11 +15292,10 @@
 	    if (calendar !== 'iso8601' && calendar !== mainCalendar) {
 	      throw new RangeError$1(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
+	    const isoDate = TemporalObjectToISODateRecord(temporalObj);
 	    const isoDateTime = {
-	      year: GetSlot(temporalObj, ISO_YEAR),
-	      month: GetSlot(temporalObj, ISO_MONTH),
-	      day: GetSlot(temporalObj, ISO_DAY),
-	      hour: 12
+	      ...isoDate,
+	      ...noon
 	    };
 	    return {
 	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
@@ -16264,9 +16254,7 @@
 	    if (IsCalendarUnit(largestUnit)) {
 	      throw new RangeError$1(`a starting point is required for ${largestUnit}s balancing`);
 	    }
-	    if (IsCalendarUnit(smallestUnit)) {
-	      throw new Error$1('assertion failed: smallestUnit was larger than largestUnit');
-	    }
+	    assert(!IsCalendarUnit(smallestUnit), 'smallestUnit was larger than largestUnit');
 	    let duration = NormalizeDurationWith24HourDays(this);
 	    ({
 	      duration
@@ -16297,7 +16285,7 @@
 	      const {
 	        total
 	      } = DifferenceZonedDateTimeWithRounding(relativeEpochNs, targetEpochNs, timeZone, calendar, unit, 1, unit, 'trunc');
-	      if (NumberIsNaN(total)) throw new Error$1('assertion failed: total hit unexpected code path');
+	      assert(!NumberIsNaN(total), 'total went through NudgeToZonedTime code path');
 	      return total;
 	    }
 	    if (plainRelativeTo) {
@@ -16312,7 +16300,7 @@
 	      const {
 	        total
 	      } = DifferencePlainDateTimeWithRounding(isoRelativeToDate.year, isoRelativeToDate.month, isoRelativeToDate.day, 0, 0, 0, 0, 0, 0, targetDate.year, targetDate.month, targetDate.day, targetTime.hour, targetTime.minute, targetTime.second, targetTime.millisecond, targetTime.microsecond, targetTime.nanosecond, calendar, unit, 1, unit, 'trunc');
-	      if (NumberIsNaN(total)) throw new Error$1('assertion failed: total hit unexpected code path');
+	      assert(!NumberIsNaN(total), 'total went through NudgeToZonedTime code path');
 	      return total;
 	    }
 
@@ -17215,13 +17203,9 @@
 	      };
 	      const dtEnd = BalanceISODate(year, month, day + 1);
 	      const startNs = GetStartOfDay(timeZone, dtStart);
-	      if (thisNs.lesser(startNs)) {
-	        throw new Error$1('assertion failure: cannot produce an instant during a day that ' + 'occurs before another instant it deems start-of-day');
-	      }
+	      assert(thisNs.geq(startNs), 'cannot produce an instant during a day that occurs before start-of-day instant');
 	      const endNs = GetStartOfDay(timeZone, dtEnd);
-	      if (thisNs.greaterOrEquals(endNs)) {
-	        throw new Error$1('assertion failure: cannot produce an instant during a day that ' + 'occurs on or after another instant it deems end-of-day');
-	      }
+	      assert(thisNs.lt(endNs), 'cannot produce an instant during a day that occurs on or after end-of-day instant');
 	      const dayLengthNs = endNs.subtract(startNs);
 	      const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
 	      epochNanoseconds = dayProgressNs.round(dayLengthNs, roundingMode).add(new TimeDuration(startNs)).totalNs;

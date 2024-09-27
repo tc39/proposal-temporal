@@ -201,7 +201,7 @@ This value is required for other calendar systems. If you don&#39;t know what to
 <p><strong>Returns:</strong> a new <code>Temporal.PlainMonthDay</code> object.</p>
 <blockquote>
 <p>The <code>calendar</code> and <code>referenceISOYear</code> parameters should be avoided because <code>equals</code> or <code>compare</code> will consider <code>new Temporal.PlainMonthDay(3, 14, &#39;iso8601&#39;, 1977)</code> and <code>new Temporal.PlainMonthDay(3, 14, &#39;iso8601&#39;, 2000)</code> unequal even though they refer to the same month and day.
-When creating instances for non-ISO-8601 calendars (except when implementing a custom calendar) use the <code>from()</code> method which will automatically set a valid and <code>equals</code>-compatible reference year.</p>
+When creating instances for non-ISO-8601 calendars use the <code>from()</code> method which will automatically set a valid and <code>equals</code>-compatible reference year.</p>
 </blockquote>
 <p>All values are given as reckoned in the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>.
 Together, <code>referenceISOYear</code>, <code>isoMonth</code>, and <code>isoDay</code> must represent a valid date in that calendar, even if you are passing a different calendar as the <code>calendar</code> parameter.</p>
@@ -310,8 +310,7 @@ md <span class="token operator">=</span> Temporal<span class="token punctuation"
 md<span class="token punctuation">.</span>monthCode<span class="token punctuation">;</span> <span class="token comment">// => 'M05L'</span>
 md<span class="token punctuation">.</span>day<span class="token punctuation">;</span> <span class="token comment">// => 15</span>
 md<span class="token punctuation">.</span>month<span class="token punctuation">;</span> <span class="token comment">// => undefined</span>
-<span class="token comment">// (no `month` property; use `monthCode` instead)</span></code></pre><h3 id="calendarId"><a class="heading-link" href="#calendarId"></a>monthDay.<strong>calendarId</strong> : object</h3><p>The <code>calendarId</code> read-only property gives the calendar that the <code>monthCode</code> and <code>day</code> properties are interpreted in.
-If <code>monthDay</code> was created with a custom calendar object, this gives the <code>id</code> property of that object.</p>
+<span class="token comment">// (no `month` property; use `monthCode` instead)</span></code></pre><h3 id="calendarId"><a class="heading-link" href="#calendarId"></a>monthDay.<strong>calendarId</strong> : object</h3><p>The <code>calendarId</code> read-only property gives the calendar that the <code>monthCode</code> and <code>day</code> properties are interpreted in.</p>
 <h2 id="methods"><a class="heading-link" href="#methods"></a>Methods</h3><h3 id="with"><a class="heading-link" href="#with"></a>monthDay.<strong>with</strong>(<em>monthDayLike</em>: object, <em>options</em>?: object) : Temporal.PlainMonthDay</h3><p><strong>Parameters:</strong></p>
 <ul>
 <li><code>monthDayLike</code> (object): an object with some or all of the properties that are accepted by <code>Temporal.PlainMonthDay.from</code>.</li>
