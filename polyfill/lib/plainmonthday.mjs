@@ -63,8 +63,8 @@ export class PlainMonthDay {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeErrorCtor('invalid receiver');
-    options = ES.GetOptionsObject(options);
-    const showCalendar = ES.GetTemporalShowCalendarNameOption(options);
+    const resolvedOptions = ES.GetOptionsObject(options);
+    const showCalendar = ES.GetTemporalShowCalendarNameOption(resolvedOptions);
     return ES.TemporalMonthDayToString(this, showCalendar);
   }
   toJSON() {

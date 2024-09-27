@@ -112,8 +112,8 @@ export class PlainYearMonth {
   }
   toString(options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    options = ES.GetOptionsObject(options);
-    const showCalendar = ES.GetTemporalShowCalendarNameOption(options);
+    const resolvedOptions = ES.GetOptionsObject(options);
+    const showCalendar = ES.GetTemporalShowCalendarNameOption(resolvedOptions);
     return ES.TemporalYearMonthToString(this, showCalendar);
   }
   toJSON() {
