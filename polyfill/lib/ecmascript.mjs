@@ -797,13 +797,6 @@ function ZeroDateDuration() {
   return { years: 0, months: 0, weeks: 0, days: 0 };
 }
 
-function ZeroNormalizedDuration() {
-  return {
-    date: ZeroDateDuration(),
-    norm: TimeDuration.ZERO
-  };
-}
-
 export function TemporalObjectToISODateRecord(temporalObject) {
   return {
     year: GetSlot(temporalObject, ISO_YEAR),
@@ -3226,7 +3219,7 @@ export function DifferenceISODateTime(
 
 export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
   const nsDiff = ns2.subtract(ns1);
-  if (nsDiff.isZero()) return ZeroNormalizedDuration();
+  if (nsDiff.isZero()) return { date: ZeroDateDuration(), norm: TimeDuration.ZERO };
   const sign = nsDiff.lt(0) ? -1 : 1;
 
   // Convert start/end instants to datetimes

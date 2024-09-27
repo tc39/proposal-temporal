@@ -1119,7 +1119,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _ns1_ = _ns2_, return ZeroNormalizedDuration().
+        1. If _ns1_ = _ns2_, return ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
         1. Let _startDateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
         1. Let _endDateTime_ be GetISODateTimeFor(_timeZone_, _ns2_).
         1. If _ns2_ - _ns1_ &lt; 0, let _sign_ be -1; else let _sign_ be 1.
