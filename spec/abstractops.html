@@ -232,7 +232,7 @@
   <emu-clause id="sec-temporal-gettemporaloverflowoption" type="abstract operation">
     <h1>
       GetTemporalOverflowOption (
-        _options_: an Object or *undefined*,
+        _options_: an Object,
       ): either a normal completion containing either ~constrain~ or ~reject~, or a throw completion
     </h1>
     <dl class="header">
@@ -240,7 +240,6 @@
       <dd>It fetches and validates the *"overflow"* property of _options_, returning a default if absent.</dd>
     </dl>
     <emu-alg>
-      1. If _options_ is *undefined*, return ~constrain~.
       1. Let _stringValue_ be ? GetOption(_options_, *"overflow"*, ~string~, « *"constrain"*, *"reject"* », *"constrain"*).
       1. If _stringValue_ is *"constrain"*, return ~constrain~.
       1. Return ~reject~.
@@ -250,7 +249,7 @@
   <emu-clause id="sec-temporal-gettemporaldisambiguationoption" type="abstract operation">
     <h1>
       GetTemporalDisambiguationOption (
-        _options_: an Object or *undefined*,
+        _options_: an Object,
       ): either a normal completion containing either ~compatible~, ~earlier~, ~later~, or ~reject~, or a throw completion
     </h1>
     <dl class="header">
@@ -258,7 +257,6 @@
       <dd>It fetches and validates the *"disambiguation"* property of _options_, returning a default if absent.</dd>
     </dl>
     <emu-alg>
-      1. If _options_ is *undefined*, return ~compatible~.
       1. Let _stringValue_ be ? GetOption(_options_, *"disambiguation"*, ~string~, « *"compatible"*, *"earlier"*, *"later"*, *"reject"* », *"compatible"*).
       1. If _stringValue_ is *"compatible"*, return ~compatible~.
       1. If _stringValue_ is *"earlier"*, return ~earlier~.
@@ -289,7 +287,7 @@
   <emu-clause id="sec-temporal-gettemporaloffsetoption" type="abstract operation">
     <h1>
       GetTemporalOffsetOption (
-        _options_: an Object or *undefined*,
+        _options_: an Object,
         _fallback_: ~prefer~, ~use~, ~ignore~, or ~reject~,
       ): either a normal completion containing either ~prefer~, ~use~, ~ignore~, or ~reject~, or a throw completion
     </h1>
@@ -298,7 +296,6 @@
       <dd>It fetches and validates the *"offset"* property of _options_, returning _fallback_ as a default if absent.</dd>
     </dl>
     <emu-alg>
-      1. If _options_ is *undefined*, return _fallback_.
       1. If _fallback_ is ~prefer~, let _stringFallback_ be *"prefer"*.
       1. Else if _fallback_ is ~use~, let _stringFallback_ be *"use"*.
       1. Else if _fallback_ is ~ignore~, let _stringFallback_ be *"ignore"*.
