@@ -412,7 +412,7 @@ sorted<span class="token punctuation">.</span><span class="token function">join<
 <ul>
 <li><code>year</code> is a signed integer representing the number of years relative to a calendar-specific epoch.
 For calendars that use eras, the anchor is usually aligned with the latest era so that <code>eraYear === year</code> for all dates in that era.
-However, some calendars like Japanese may use a different anchor.</li>
+However, some calendars use a different anchor (e.g., the Japanese calendar <code>year</code> matches the ISO 8601 and Gregorian calendars in counting from ISO year 0001 as <code>1</code>).</li>
 <li><code>month</code> is a positive integer representing the ordinal index of the month in the current year.
 For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different <code>month</code> value depending on the year.
 The first month in every year has <code>month</code> equal to <code>1</code>.
@@ -425,7 +425,7 @@ Examples: <code>&#39;M02&#39;</code> =&gt; February; <code>&#39;M08L&#39;</code>
 <li><code>day</code> is a positive integer representing the day of the month.</li>
 </ul>
 <p>Either <code>month</code> or <code>monthCode</code> can be used in <code>from</code> or <code>with</code> to refer to the month.
-Similarly, in calendars that user eras an <code>era</code>/<code>eraYear</code> pair can be used in place of <code>year</code> when calling <code>from</code> or <code>with</code>.</p>
+Similarly, in calendars that use eras, an <code>era</code>/<code>eraYear</code> pair can be used in place of <code>year</code> when calling <code>from</code> or <code>with</code>.</p>
 <p>Time unit details:</p>
 <ul>
 <li><code>hour</code> is an integer between 0 and 23</li>
