@@ -1621,7 +1621,7 @@
       <dt>description</dt>
       <dd>It parses the argument as an ISO 8601 duration string.</dd>
     </dl>
-    <emu-note>The value of ToIntegerWithTruncation(*""*) is 0.</emu-note>
+    <emu-note>The value of ToIntegerWithTruncation(the empty String) is 0.</emu-note>
     <emu-note>Use of mathematical values rather than approximations is important to avoid off-by-one errors with input like "PT46H66M71.50040904S".</emu-note>
     <emu-alg>
       1. Let _duration_ be ParseText(StringToCodePoints(_isoString_), |TemporalDurationString|).
