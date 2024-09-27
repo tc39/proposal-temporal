@@ -158,7 +158,7 @@ sorted.join(' '); // => '1930-02 2006-08 2015-07'
 
 The above read-only properties allow accessing the year or month individually.
 
-- `year` is a signed integer representing the number of years relative to a calendar-specific anchor date.
+- `year` is a signed integer representing the number of years relative to a calendar-specific epoch.
   For calendars that use eras, the anchor is usually aligned with the latest era so that `eraYear === year` for all dates in that era.
   However, some calendars like Japanese may use a different anchor.
 - `month` is a positive integer representing the ordinal index of the month in the current year.
