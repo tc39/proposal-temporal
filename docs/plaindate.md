@@ -167,7 +167,7 @@ The above read-only properties allow accessing each component of a date individu
 
 - `year` is a signed integer representing the number of years relative to a calendar-specific epoch.
   For calendars that use eras, the anchor is usually aligned with the latest era so that `eraYear === year` for all dates in that era.
-  However, some calendars like Japanese may use a different anchor.
+  However, some calendars use a different anchor (e.g., the Japanese calendar `year` matches the ISO 8601 and Gregorian calendars in counting from ISO year 0001 as `1`).
 - `month` is a positive integer representing the ordinal index of the month in the current year.
   For calendars like Hebrew or Chinese that use leap months, the same-named month may have a different `month` value depending on the year.
   The first month in every year has `month` equal to `1`.
