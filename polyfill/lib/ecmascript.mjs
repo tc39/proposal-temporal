@@ -837,12 +837,10 @@ export function CombineISODateAndTimeRecord(date, time) {
 }
 
 export function GetTemporalOverflowOption(options) {
-  if (options === undefined) return 'constrain';
   return GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
 }
 
 export function GetTemporalDisambiguationOption(options) {
-  if (options === undefined) return 'compatible';
   return GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
 }
 
@@ -871,7 +869,6 @@ export function NegateRoundingMode(roundingMode) {
 }
 
 export function GetTemporalOffsetOption(options, fallback) {
-  if (options === undefined) return fallback;
   return GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
 }
 
