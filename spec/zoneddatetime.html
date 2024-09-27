@@ -690,15 +690,15 @@
       <emu-alg>
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
-        1. Set _options_ to ? GetOptionsObject(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalShowCalendarNameOption reads *"calendarName"*, GetTemporalFractionalSecondDigitsOption reads *"fractionalSecondDigits"*, GetTemporalShowOffsetOption reads *"offset"*, and GetRoundingModeOption reads *"roundingMode"*).
-        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
-        1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_options_).
-        1. Let _showOffset_ be ? GetTemporalShowOffsetOption(_options_).
-        1. Let _roundingMode_ be ? GetRoundingModeOption(_options_, ~trunc~).
-        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~time~, ~unset~).
+        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_resolvedOptions_).
+        1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_resolvedOptions_).
+        1. Let _showOffset_ be ? GetTemporalShowOffsetOption(_resolvedOptions_).
+        1. Let _roundingMode_ be ? GetRoundingModeOption(_resolvedOptions_, ~trunc~).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_resolvedOptions_, *"smallestUnit"*, ~time~, ~unset~).
         1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
-        1. Let _showTimeZone_ be ? GetTemporalShowTimeZoneNameOption(_options_).
+        1. Let _showTimeZone_ be ? GetTemporalShowTimeZoneNameOption(_resolvedOptions_).
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Return TemporalZonedDateTimeToString(_zonedDateTime_, _precision_.[[Precision]], _showCalendar_, _showTimeZone_, _showOffset_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
       </emu-alg>
@@ -962,10 +962,10 @@
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. NOTE: The following steps, and similar ones below, read options and perform independent validation in alphabetical order (GetTemporalDisambiguationOption reads *"disambiguation"*, GetTemporalOffsetOption reads *"offset"*, and GetTemporalOverflowOption reads *"overflow"*).
-            1. Set _options_ to ? GetOptionsObject(_options_).
-            1. Perform ? GetTemporalDisambiguationOption(_options_).
-            1. Perform ? GetTemporalOffsetOption(_options_, ~reject~).
-            1. Perform ? GetTemporalOverflowOption(_options_).
+            1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalDisambiguationOption(_resolvedOptions_).
+            1. Perform ? GetTemporalOffsetOption(_resolvedOptions_, ~reject~).
+            1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
             1. Return ! CreateTemporalZonedDateTime(_item_.[[EpochNanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », « ~hour~, ~microsecond~, ~millisecond~, ~minute~, ~nanosecond~, ~offset~, ~second~, ~time-zone~ », « ~time-zone~ »).
@@ -973,10 +973,10 @@
           1. Let _offsetString_ be _fields_.[[OffsetString]].
           1. If _offsetString_ is ~unset~, then
             1. Set _offsetBehaviour_ to ~wall~.
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_options_).
-          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_options_, ~reject~).
-          1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+          1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
+          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_resolvedOptions_, ~reject~).
+          1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
           1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Else,
           1. If _item_ is not a String, throw a *TypeError* exception.
@@ -993,10 +993,10 @@
           1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
           1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
           1. Set _matchBehaviour_ to ~match-minutes~.
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_options_).
-          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_options_, ~reject~).
-          1. Perform ? GetTemporalOverflowOption(_options_).
+          1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+          1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
+          1. Let _offsetOption_ be ? GetTemporalOffsetOption(_resolvedOptions_, ~reject~).
+          1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetNanoseconds_ to ? ParseDateTimeUTCOffset(_offsetString_).
@@ -1226,8 +1226,8 @@
       <emu-alg>
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _normalizedDuration_ be NormalizeDuration(_duration_).

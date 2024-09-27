@@ -490,8 +490,8 @@
       <emu-alg>
         1. Let _temporalDate_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_resolvedOptions_).
         1. Return TemporalDateToString(_temporalDate_, _showCalendar_).
       </emu-alg>
     </emu-clause>
@@ -729,22 +729,22 @@
         1. If _options_ is not present, set _options_ to *undefined*.
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalDate]] internal slot, then
-            1. Set _options_ to ? GetOptionsObject(_options_).
-            1. Perform ? GetTemporalOverflowOption(_options_).
+            1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
             1. Return ! CreateTemporalDate(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
             1. Let _isoDateTime_ be GetISODateTimeFor(_item_.[[TimeZone]], _item_.[[EpochNanoseconds]]).
-            1. Set _options_ to ? GetOptionsObject(_options_).
-            1. Perform ? GetTemporalOverflowOption(_options_).
+            1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
             1. Return ! CreateTemporalDate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _item_.[[Calendar]]).
           1. If _item_ has an [[InitializedTemporalDateTime]] internal slot, then
-            1. Set _options_ to ? GetOptionsObject(_options_).
-            1. Perform ? GetTemporalOverflowOption(_options_).
+            1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
             1. Return ! CreateTemporalDate(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[ISODay]], _item_.[[Calendar]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », «», «»).
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+          1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+          1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
           1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _fields_, _overflow_).
           1. Return ! CreateTemporalDate(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _calendar_).
         1. If _item_ is not a String, throw a *TypeError* exception.
@@ -753,8 +753,8 @@
         1. Let _calendar_ be _result_.[[Calendar]].
         1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
         1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Perform ? GetTemporalOverflowOption(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Return ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -1091,8 +1091,8 @@
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Let _dateDuration_ be ? NormalizeDurationWithoutTime(_duration_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _result_ be ? CalendarDateAdd(_calendar_, _isoDate_, _dateDuration_, _overflow_).
         1. Return ! CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
       </emu-alg>

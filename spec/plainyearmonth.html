@@ -316,8 +316,8 @@
       <emu-alg>
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_resolvedOptions_).
         1. Return TemporalYearMonthToString(_yearMonth_, _showCalendar_).
       </emu-alg>
     </emu-clause>
@@ -488,13 +488,13 @@
         1. If _options_ is not present, set _options_ to *undefined*.
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalYearMonth]] internal slot, then
-            1. Set _options_ to ? GetOptionsObject(_options_).
-            1. Perform ? GetTemporalOverflowOption(_options_).
+            1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+            1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
             1. Return ! CreateTemporalYearMonth(_item_.[[ISOYear]], _item_.[[ISOMonth]], _item_.[[Calendar]], _item_.[[ISODay]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~month~, ~month-code~, ~year~ », «», «»).
-          1. Set _options_ to ? GetOptionsObject(_options_).
-          1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+          1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+          1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
           1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _fields_, _overflow_).
           1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
         1. If _item_ is not a String, throw a *TypeError* exception.
@@ -505,8 +505,8 @@
         1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
         1. Set _result_ to ISODateToFields(_calendar_, _isoDate_, ~year-month~).
         1. NOTE: The following operation is called with ~constrain~ regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[ISODay]] internal slot of the result.
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Perform ? GetTemporalOverflowOption(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Set _isoDate_ to ? CalendarYearMonthFromFields(_calendar_, _result_, ~constrain~).
         1. Return ! CreateTemporalYearMonth(_isoDate_.[[Year]], _isoDate_.[[Month]], _calendar_, _isoDate_.[[Day]]).
       </emu-alg>
@@ -701,8 +701,8 @@
       <emu-alg>
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
-        1. Set _options_ to ? GetOptionsObject(_options_).
-        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _sign_ be DurationSign(_duration_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
