@@ -528,7 +528,7 @@
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
         1. Let _offset_ be ? GetTemporalOffsetOption(_resolvedOptions_, ~prefer~).
-        1. Let _overflow_ be ? GetTemporalOverflowOption(_options_).
+        1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
         1. Let _newOffsetNanoseconds_ be ? ParseDateTimeUTCOffset(_fields_.[[OffsetString]]).
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[Year]], _dateTimeResult_.[[Month]], _dateTimeResult_.[[Day]], _dateTimeResult_.[[Time]], ~option~, _newOffsetNanoseconds_, _timeZone_, _disambiguation_, _offset_, ~match-exactly~).
