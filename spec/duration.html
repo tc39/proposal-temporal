@@ -1968,7 +1968,7 @@
       </dl>
       <emu-alg>
         1. Let _sign_ be DurationSign(_duration_).
-        1. Let _datePart_ be *""*.
+        1. Let _datePart_ be the empty String.
         1. If _duration_.[[Years]] ≠ 0, then
           1. Set _datePart_ to the string concatenation of abs(_duration_.[[Years]]) formatted as a decimal number and the code unit 0x0059 (LATIN CAPITAL LETTER Y).
         1. If _duration_.[[Months]] ≠ 0, then
@@ -1977,7 +1977,7 @@
           1. Set _datePart_ to the string concatenation of _datePart_, abs(_duration_.[[Weeks]]) formatted as a decimal number, and the code unit 0x0057 (LATIN CAPITAL LETTER W).
         1. If _duration_.[[Days]] ≠ 0, then
           1. Set _datePart_ to the string concatenation of _datePart_, abs(_duration_.[[Days]]) formatted as a decimal number, and the code unit 0x0044 (LATIN CAPITAL LETTER D).
-        1. Let _timePart_ be *""*.
+        1. Let _timePart_ be the empty String.
         1. If _duration_.[[Hours]] ≠ 0, then
           1. Set _timePart_ to the string concatenation of abs(_duration_.[[Hours]]) formatted as a decimal number and the code unit 0x0048 (LATIN CAPITAL LETTER H).
         1. If _duration_.[[Minutes]] ≠ 0, then
@@ -1991,7 +1991,7 @@
           1. Set _timePart_ to the string concatenation of _timePart_, _secondsPart_, _subSecondsPart_, and the code unit 0x0053 (LATIN CAPITAL LETTER S).
         1. Let _signPart_ be the code unit 0x002D (HYPHEN-MINUS) if _sign_ &lt; 0, and otherwise the empty String.
         1. Let _result_ be the string concatenation of _signPart_, the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
-        1. If _timePart_ is not *""*, then
+        1. If _timePart_ is not the empty String, then
           1. Set _result_ to the string concatenation of _result_, the code unit 0x0054 (LATIN CAPITAL LETTER T), and _timePart_.
         1. Return _result_.
       </emu-alg>
