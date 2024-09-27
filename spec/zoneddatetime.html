@@ -969,7 +969,7 @@
             1. Return ! CreateTemporalZonedDateTime(_item_.[[EpochNanoseconds]], _item_.[[TimeZone]], _item_.[[Calendar]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », « ~hour~, ~microsecond~, ~millisecond~, ~minute~, ~nanosecond~, ~offset~, ~second~, ~time-zone~ », « ~time-zone~ »).
-          1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_fields_.[[TimeZone]]).
+          1. Let _timeZone_ be _fields_.[[TimeZone]].
           1. Let _offsetString_ be _fields_.[[OffsetString]].
           1. If _offsetString_ is ~unset~, then
             1. Set _offsetBehaviour_ to ~wall~.
