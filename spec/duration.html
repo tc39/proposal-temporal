@@ -884,19 +884,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-zeronormalizedduration" type="abstract operation">
-      <h1>ZeroNormalizedDuration ( ): a Normalized Duration Record</h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>The returned Record represents a duration with length 0.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _dateDuration_ be ZeroDateDuration().
-        1. Let _timeDuration_ be ZeroTimeDuration().
-        1. Return ! CombineDateAndNormalizedTimeDuration(_dateDuration_, _timeDuration_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-normalizeduration" type="abstract operation">
       <h1>
         NormalizeDuration (
