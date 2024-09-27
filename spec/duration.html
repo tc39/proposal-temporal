@@ -1750,10 +1750,6 @@
         1. Set _resultDuration_ to ! CombineDateAndNormalizedTimeDuration(_resultDuration_, ZeroTimeDuration()).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[Total]]: _total_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandCalendarUnit_ }.
       </emu-alg>
-
-      <emu-note type="editor">
-        _startDate_ and _endDate_ are distinct objects because they're potentially passed to user-code when _calendarRec_.[[Receiver]] is a user-defined calendar.
-      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-nudgetozonedtime" type="abstract operation">
