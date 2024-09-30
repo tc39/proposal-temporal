@@ -1349,6 +1349,13 @@
         In some cases, verifying the internal consistency of fields requires accessing the data from other fields, such checking _fields_.[[MonthCode]] *"M06"* against _fields_.[[Month]] 7 in the Hebrew calendar (which are consistent if and only if _fields_ identifies a year that includes leap month Adar I).
       </emu-note>
       <emu-note>
+        <p>When the fields of _fields_ are inconsistent with respect to a non-~unset~ _fields_.[[Era]], it is recommended that _fields_.[[Era]] and _fields_.[[EraYear]] be updated to resolve the inconsistency by appropriate interpretation of out-of-bounds values (rather than throwing a *RangeError*), which is particularly useful for consistent interpretation of dates in calendars with regnal eras.</p>
+        <ul>
+          <li>In the Gregorian calendar, a non-positive [[EraYear]] should be replaced with a positive [[EraYear]] corresponding with extension of the era into its complement and [[Era]] should be updating accordingly (such that Common Era [[EraYear]] 0 is updated to Before Common Era [[EraYear]] 1, Before Common Era [[EraYear]] -1 is updated to Common Era [[EraYear]] 2, etc.).</li>
+          <li>In the Japanese calendar, when _fields_.[[Era]] is not ~unset~ and the date represented by _fields_ is not within the bounds of that era, _fields_.[[Era]] should be updated to the appropriate containing era for that date (for example, because the transition from Heisei era [[EraYear]] 31 to Reiwa era [[EraYear]] 1 took place on May 1 of [[Year]] 2019, Heisei era [[EraYear]] 32 should be updated to Reiwa era [[EraYear]] 2, Reiwa era [[EraYear]] 1 [[Month]] 1 should be updated to Heisei era [[EraYear]] 31 [[Month 1]], etc.).</li>
+        </ul>
+      </emu-note>
+      <emu-note>
         When _type_ is ~month-day~ and _fields_.[[Month]] is not ~unset~, it is recommended that all built-in calendars other than the ISO 8601 calendar require a disambiguating year (e.g., either _fields_.[[Year]] or _fields_.[[Era]] and _fields_.[[EraYear]]), regardless of whether or not _fields_.[[MonthCode]] is also ~unset~. The ISO 8601 calendar allows _fields_.[[Year]] to be ~unset~ in this case because it is a special default calendar that is permanently stable for automated processing.
       </emu-note>
     </emu-clause>
