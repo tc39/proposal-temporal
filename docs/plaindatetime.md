@@ -112,8 +112,8 @@ If the string isn't valid according to ISO 8601, then a `RangeError` will be thr
 
 The `overflow` option works as follows, if `item` is an object:
 
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value.
-- In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`).
+- In `reject` mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`) will cause the function to throw a `RangeError`.
 
 The `overflow` option is ignored if `item` is a string.
 
