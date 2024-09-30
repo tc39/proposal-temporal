@@ -1363,7 +1363,7 @@ export function ToTemporalInstant(item) {
 
   // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
-  const epochNanoseconds = GetUTCEpochNanoseconds(
+  const balanced = BalanceISODateTime(
     year,
     month,
     day,
@@ -1372,8 +1372,22 @@ export function ToTemporalInstant(item) {
     second,
     millisecond,
     microsecond,
-    nanosecond
-  ).subtract(offsetNanoseconds);
+    nanosecond - offsetNanoseconds
+  );
+  if (MathAbs(ISODateToEpochDays(balanced.year, balanced.month - 1, balanced.day)) > 1e8) {
+    throw new RangeErrorCtor('date/time value is outside the supported range');
+  }
+  const epochNanoseconds = GetUTCEpochNanoseconds(
+    balanced.year,
+    balanced.month,
+    balanced.day,
+    balanced.hour,
+    balanced.minute,
+    balanced.second,
+    balanced.millisecond,
+    balanced.microsecond,
+    balanced.nanosecond
+  );
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
 }
