@@ -206,29 +206,23 @@ export class PlainDate {
       timeZone = ES.ToTemporalTimeZoneIdentifier(item);
     }
 
-    const calendar = GetSlot(this, CALENDAR);
-    const year = GetSlot(this, ISO_YEAR);
-    const month = GetSlot(this, ISO_MONTH);
-    const day = GetSlot(this, ISO_DAY);
+    const isoDate = ES.TemporalObjectToISODateRecord(this);
     let epochNs;
     if (temporalTime === undefined) {
-      epochNs = ES.GetStartOfDay(timeZone, { year, month, day });
+      epochNs = ES.GetStartOfDay(timeZone, isoDate);
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
-      const dt = {
-        year,
-        month,
-        day,
+      const dt = ES.CombineISODateAndTimeRecord(isoDate, {
         hour: GetSlot(temporalTime, ISO_HOUR),
         minute: GetSlot(temporalTime, ISO_MINUTE),
         second: GetSlot(temporalTime, ISO_SECOND),
         millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
         microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
         nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
-      };
+      });
       epochNs = ES.GetEpochNanosecondsFor(timeZone, dt, 'compatible');
     }
-    return ES.CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
+    return ES.CreateTemporalZonedDateTime(epochNs, timeZone, GetSlot(this, CALENDAR));
   }
   toPlainYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
