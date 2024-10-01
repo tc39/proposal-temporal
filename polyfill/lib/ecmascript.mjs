@@ -1541,6 +1541,43 @@ export function InterpretISODateTimeOffset(
     return GetEpochNanosecondsFor(timeZone, dt, disambiguation);
   }
 
+  // The caller wants the offset to always win ('use') OR the caller is OK
+  // with the offset winning ('prefer' or 'reject') as long as it's valid
+  // for this timezone and date/time.
+  if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
+    // Calculate the instant for the input's date/time and offset
+    const balanced = BalanceISODateTime(
+      year,
+      month,
+      day,
+      time.hour,
+      time.minute,
+      time.second,
+      time.millisecond,
+      time.microsecond,
+      time.nanosecond - offsetNs
+    );
+    if (MathAbs(ISODateToEpochDays(balanced.year, balanced.month - 1, balanced.day)) > 1e8) {
+      throw new RangeErrorCtor('date/time outside of supported range');
+    }
+    const epochNs = GetUTCEpochNanoseconds(
+      balanced.year,
+      balanced.month,
+      balanced.day,
+      balanced.hour,
+      balanced.minute,
+      balanced.second,
+      balanced.millisecond,
+      balanced.microsecond,
+      balanced.nanosecond
+    );
+    ValidateEpochNanoseconds(epochNs);
+    return epochNs;
+  }
+
+  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
+    throw new RangeErrorCtor('date/time outside of supported range');
+  }
   const utcEpochNs = GetUTCEpochNanoseconds(
     year,
     month,
@@ -1552,16 +1589,6 @@ export function InterpretISODateTimeOffset(
     time.microsecond,
     time.nanosecond
   );
-
-  // The caller wants the offset to always win ('use') OR the caller is OK
-  // with the offset winning ('prefer' or 'reject') as long as it's valid
-  // for this timezone and date/time.
-  if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
-    // Calculate the instant for the input's date/time and offset
-    const epochNs = utcEpochNs.subtract(offsetNs);
-    ValidateEpochNanoseconds(epochNs);
-    return epochNs;
-  }
 
   // "prefer" or "reject"
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
