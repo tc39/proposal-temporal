@@ -842,15 +842,15 @@
     <emu-clause id="sec-temporal-combineisodateandtimerecord" type="abstract operation">
       <h1>
         CombineISODateAndTimeRecord (
-          _isoDate_: an ISO Date Record,
+          _isoDate_: an ISO Date Record or ISO Date-Time Record,
           _time_: a Time Record or ISO Date-Time Record,
         ): an ISO Date-Time Record
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It combines an ISO Date Record and a time into one ISO Date-Time Record.
-          The time may come from a Time Record or another ISO Date-Time Record.
+          It combines a date and a time into one ISO Date-Time Record.
+          The date may come from an ISO Date Record or another ISO Date-Time Record, and the time may come from a Time Record or another ISO Date-Time Record.
         </dd>
       </dl>
       <emu-alg>
