@@ -546,7 +546,7 @@
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _zonedDateTime_.[[EpochNanoseconds]]).
         1. If _plainTimeLike_ is *undefined*, then
-          1. Let _isoDate_ be CreateISODateRecord(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]]).
+          1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
           1. Let _epochNs_ be ? GetStartOfDay(_timeZone_, _isoDate_).
         1. Else,
           1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
@@ -652,8 +652,8 @@
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _thisNs_).
         1. If _smallestUnit_ is ~day~, then
-          1. Let _dateStart_ be CreateISODateRecord(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]]).
-          1. Let _dateEnd_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + 1).
+          1. Let _dateStart_ be ISODateTimeToDateRecord(_isoDateTime_).
+          1. Let _dateEnd_ be BalanceISODate(_dateStart_.[[Year]], _dateStart_.[[Month]], _dateStart_.[[Day]] + 1).
           1. Let _startNs_ be ? GetStartOfDay(_timeZone_, _dateStart_).
           1. Assert: _thisNs_ ≥ _startNs_.
           1. Let _endNs_ be ? GetStartOfDay(_timeZone_, _dateEnd_).
@@ -753,7 +753,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _calendar_ be _zonedDateTime_.[[Calendar]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _zonedDateTime_.[[EpochNanoseconds]]).
-        1. Let _isoDate_ be CreateISODateRecord(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]]).
+        1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
         1. Let _epochNanoseconds_ be ? GetStartOfDay(_timeZone_, _isoDate_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
