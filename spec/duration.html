@@ -1105,7 +1105,7 @@
         1. If _partial_.[[Milliseconds]] is not *undefined*, set _result_.[[Milliseconds]] to _partial_.[[Milliseconds]].
         1. If _partial_.[[Microseconds]] is not *undefined*, set _result_.[[Microseconds]] to _partial_.[[Microseconds]].
         1. If _partial_.[[Nanoseconds]] is not *undefined*, set _result_.[[Nanoseconds]] to _partial_.[[Nanoseconds]].
-        1. Return ! CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
+        1. Return ? CreateTemporalDuration(_result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]).
       </emu-alg>
     </emu-clause>
 
