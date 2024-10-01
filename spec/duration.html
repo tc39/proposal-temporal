@@ -1680,6 +1680,7 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Let _startDate_ be ISODateTimeToDateRecord(_dateTime_).
         1. If _unit_ is ~year~, then
           1. Let _years_ be RoundNumberToIncrement(_duration_.[[Date]].[[Years]], _increment_, ~trunc~).
           1. Let _r1_ be _years_.
@@ -1694,8 +1695,7 @@
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
         1. Else if _unit_ is ~week~, then
           1. Let _yearsMonths_ be ! AdjustDateDurationRecord(_duration_.[[Date]], 0, 0).
-          1. Let _isoDate_ be ISODateTimeToDateRecord(_dateTime_).
-          1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDate_, _yearsMonths_, ~constrain~).
+          1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _startDate_, _yearsMonths_, ~constrain~).
           1. Let _weeksEnd_ be BalanceISODate(_weeksStart_.[[Year]], _weeksStart_.[[Month]], _weeksStart_.[[Day]] + _duration_.[[Date]].[[Days]]).
           1. Let _untilResult_ be CalendarDateUntil(_calendar_, _weeksStart_, _weeksEnd_, ~week~).
           1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Date]].[[Weeks]] + _untilResult_.[[Weeks]], _increment_, ~trunc~).
@@ -1712,7 +1712,6 @@
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
         1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ > _r2_.
-        1. Let _startDate_ be ISODateTimeToDateRecord(_dateTime_).
         1. Let _start_ be ? CalendarDateAdd(_calendar_, _startDate_, _startDuration_, ~constrain~).
         1. Let _end_ be ? CalendarDateAdd(_calendar_, _startDate_, _endDuration_, ~constrain~).
         1. If _timeZone_ is ~unset~, then

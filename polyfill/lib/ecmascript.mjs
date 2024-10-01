@@ -3419,6 +3419,7 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, ca
   // Create a duration with smallestUnit trunc'd towards zero
   // Create a separate duration that incorporates roundingIncrement
   let r1, r2, startDuration, endDuration;
+  const startDate = ISODateTimeToDateRecord(dateTime);
   switch (unit) {
     case 'year': {
       const years = RoundNumberToIncrement(duration.date.years, increment, 'trunc');
@@ -3438,7 +3439,7 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, ca
     }
     case 'week': {
       const yearsMonths = AdjustDateDurationRecord(duration.date, 0, 0);
-      const weeksStart = CalendarDateAdd(calendar, dateTime, yearsMonths, 'constrain');
+      const weeksStart = CalendarDateAdd(calendar, startDate, yearsMonths, 'constrain');
       const weeksEnd = BalanceISODate(weeksStart.year, weeksStart.month, weeksStart.day + duration.date.days);
       const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
       const weeks = RoundNumberToIncrement(duration.date.weeks + untilResult.weeks, increment, 'trunc');
@@ -3464,7 +3465,6 @@ function NudgeToCalendarUnit(sign, duration, destEpochNs, dateTime, timeZone, ca
   if (sign === -1) assert(r1 <= 0 && r1 > r2, `negative ordering of r1, r2: 0 ≥ ${r1} > ${r2}`);
 
   // Apply to origin, output PlainDateTimes
-  const startDate = ISODateTimeToDateRecord(dateTime);
   const start = CalendarDateAdd(calendar, startDate, startDuration, 'constrain');
   const end = CalendarDateAdd(calendar, startDate, endDuration, 'constrain');
 
