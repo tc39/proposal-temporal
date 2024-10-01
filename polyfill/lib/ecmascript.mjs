@@ -821,7 +821,7 @@ export function PlainDateTimeToISODateTimeRecord(plainDateTime) {
   };
 }
 
-function ISODateTimeToDateRecord({ year, month, day }) {
+export function ISODateTimeToDateRecord({ year, month, day }) {
   return { year, month, day };
 }
 
