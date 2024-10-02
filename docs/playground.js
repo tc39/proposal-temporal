@@ -13978,9 +13978,6 @@
 	          return code === era || Call$1(ArrayPrototypeIncludes, names, [era]);
 	        }]);
 	        if (!matchingEra) throw new RangeError$1(`Era ${era} (ISO year ${eraYear}) was not matched by any era`);
-	        if (eraYear < 1 && matchingEra.reverseOf) {
-	          throw new RangeError$1(`Years in ${era} era must be positive, not ${year}`);
-	        }
 	        if (matchingEra.reverseOf) {
 	          year = matchingEra.anchorEpoch.year - eraYear;
 	        } else {
