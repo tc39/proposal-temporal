@@ -17,7 +17,8 @@ import {
   ObjectAssign,
   ObjectCreate,
   ObjectDefineProperties,
-  ObjectDefineProperty
+  ObjectDefineProperty,
+  ObjectKeys
 } from './primordials.mjs';
 import { assert } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
@@ -316,8 +317,8 @@ function amend(options = {}, amended = {}) {
   return options;
 }
 
-function timeAmend(options) {
-  options = amend(options, {
+function timeAmend(originalOptions) {
+  const options = amend(originalOptions, {
     year: false,
     month: false,
     day: false,
@@ -326,7 +327,10 @@ function timeAmend(options) {
     dateStyle: false
   });
   if (!hasTimeOptions(options)) {
-    options = ObjectAssign({}, options, {
+    if (hasAnyDateTimeOptions(originalOptions)) {
+      throw new TypeError(`cannot format Temporal.PlainTime with options [${ObjectKeys(originalOptions)}]`);
+    }
+    ObjectAssign(options, {
       hour: 'numeric',
       minute: 'numeric',
       second: 'numeric'
@@ -335,7 +339,7 @@ function timeAmend(options) {
   return options;
 }
 
-function yearMonthAmend(options) {
+function yearMonthAmend(originalOptions) {
   // Try to fake what dateStyle should do for dates without a day. This is not
   // accurate for locales that always print the era
   const dateStyleHacks = {
@@ -344,7 +348,7 @@ function yearMonthAmend(options) {
     long: { year: 'numeric', month: 'long' },
     full: { year: 'numeric', month: 'long' }
   };
-  options = amend(options, {
+  const options = amend(originalOptions, {
     day: false,
     hour: false,
     minute: false,
@@ -360,12 +364,15 @@ function yearMonthAmend(options) {
     ObjectAssign(options, dateStyleHacks[style]);
   }
   if (!('year' in options || 'month' in options || 'era' in options)) {
-    options = ObjectAssign(options, { year: 'numeric', month: 'numeric' });
+    if (hasAnyDateTimeOptions(originalOptions)) {
+      throw new TypeError(`cannot format PlainYearMonth with options [${ObjectKeys(originalOptions)}]`);
+    }
+    ObjectAssign(options, { year: 'numeric', month: 'numeric' });
   }
   return options;
 }
 
-function monthDayAmend(options) {
+function monthDayAmend(originalOptions) {
   // Try to fake what dateStyle should do for dates without a day
   const dateStyleHacks = {
     short: { month: 'numeric', day: 'numeric' },
@@ -373,7 +380,7 @@ function monthDayAmend(options) {
     long: { month: 'long', day: 'numeric' },
     full: { month: 'long', day: 'numeric' }
   };
-  options = amend(options, {
+  const options = amend(originalOptions, {
     year: false,
     hour: false,
     minute: false,
@@ -389,13 +396,16 @@ function monthDayAmend(options) {
     ObjectAssign(options, dateStyleHacks[style]);
   }
   if (!('month' in options || 'day' in options)) {
-    options = ObjectAssign({}, options, { month: 'numeric', day: 'numeric' });
+    if (hasAnyDateTimeOptions(originalOptions)) {
+      throw new TypeError(`cannot format PlainMonthDay with options [${ObjectKeys(originalOptions)}]`);
+    }
+    ObjectAssign(options, { month: 'numeric', day: 'numeric' });
   }
   return options;
 }
 
-function dateAmend(options) {
-  options = amend(options, {
+function dateAmend(originalOptions) {
+  const options = amend(originalOptions, {
     hour: false,
     minute: false,
     second: false,
@@ -404,7 +414,10 @@ function dateAmend(options) {
     timeStyle: false
   });
   if (!hasDateOptions(options)) {
-    options = ObjectAssign({}, options, {
+    if (hasAnyDateTimeOptions(originalOptions)) {
+      throw new TypeError(`cannot format PlainDate with options [${ObjectKeys(originalOptions)}]`);
+    }
+    ObjectAssign(options, {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric'
@@ -413,10 +426,13 @@ function dateAmend(options) {
   return options;
 }
 
-function datetimeAmend(options) {
-  options = amend(options, { timeZoneName: false });
+function datetimeAmend(originalOptions) {
+  const options = amend(originalOptions, { timeZoneName: false });
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-    options = ObjectAssign({}, options, {
+    if (hasAnyDateTimeOptions(originalOptions)) {
+      throw new TypeError(`cannot format PlainDateTime with options [${ObjectKeys(originalOptions)}]`);
+    }
+    ObjectAssign(options, {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
@@ -461,6 +477,16 @@ function hasTimeOptions(options) {
     'timeStyle' in options ||
     'dayPeriod' in options ||
     'fractionalSecondDigits' in options
+  );
+}
+
+function hasAnyDateTimeOptions(originalOptions) {
+  return (
+    hasDateOptions(originalOptions) ||
+    hasTimeOptions(originalOptions) ||
+    'dateStyle' in originalOptions ||
+    'timeStyle' in originalOptions ||
+    'timeZoneName' in originalOptions
   );
 }
 
