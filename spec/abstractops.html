@@ -632,7 +632,7 @@
         1. Let _plainDate_ be ? CreateTemporalDate(_isoDate_, _calendar_).
         1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
       1. If _offsetBehaviour_ is ~option~, then
-        1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
+        1. Let _offsetNs_ be ! ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
       1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_isoDate_, _time_, _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
@@ -1764,6 +1764,56 @@
     </emu-alg>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-tomonthcode" type="abstract operation">
+    <h1>
+      ToMonthCode (
+        _argument_: an ECMAScript language value,
+      ): either a normal completion containing a String or a throw completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It converts _argument_ to a String, or throws a *TypeError* if that is not possible.
+        It also requires that the String is a syntactically valid month code, or throws a *RangeError* if it is not.
+        The month code is not guaranteed to be correct in the context of any particular calendar; for example, some calendars do not have leap months.
+      </dd>
+    </dl>
+    <emu-alg>
+      1. Let _monthCode_ be ? ToPrimitive(_argument_, ~string~).
+      1. If _monthCode_ is not a String, throw a *TypeError* exception.
+      1. If the length of _monthCode_ is not 3 or 4, throw a *RangeError* exception.
+      1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
+      1. If the second code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
+      1. If the third code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
+      1. If the length of _monthCode_ is 4 and the fourth code unit of _monthCode_ is not 0x004C (LATIN CAPITAL LETTER L), throw a *RangeError* exception.
+      1. Let _monthCodeDigits_ be the substring of monthCode from 1 to 3.
+      1. Let _monthCodeInteger_ be ℝ(StringToNumber(_monthCodeDigits_)).
+      1. If _monthCodeInteger_ is 0 and the length of _monthCode_ is not 4, throw a *RangeError* exception.
+      1. Return _monthCode_.
+    </emu-alg>
+  </emu-clause>
+
+  <emu-clause id="sec-temporal-tooffsetstring" type="abstract operation">
+    <h1>
+      ToOffsetString (
+        _argument_: an ECMAScript language value,
+      ): either a normal completion containing a String or a throw completion
+    </h1>
+    <dl class="header">
+      <dt>description</dt>
+      <dd>
+        It converts _argument_ to a String, or throws a *TypeError* if that is not possible.
+        It also requires that the String is parseable as a UTC offset string, or throws a *RangeError* if it is not.
+      </dd>
+    </dl>
+    <emu-alg>
+      1. Let _offset_ be ? ToPrimitive(_argument_, ~string~).
+      1. If _offset_ is not a String, throw a *TypeError* exception.
+      1. Perform ? ParseDateTimeUTCOffset(_offset_).
+      1. Return _offset_.
+    </emu-alg>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-isodatetofields" type="abstract operation">
     <h1>
       ISODateToFields (
@@ -1832,11 +1882,11 @@
             1. Set _value_ to ? ToString(_value_).
           1. Else if _Conversion_ is ~to-temporal-time-zone-identifier~, then
             1. Set _value_ to ? ToTemporalTimeZoneIdentifier(_value_).
+          1. Else if _Conversion_ is ~to-month-code~, then
+            1. Set _value_ to ? ToMonthCode(_value_).
           1. Else,
-            1. Assert: _Conversion_ is ~to-primitive-and-require-string~.
-            1. NOTE: Non-primitive values are supported here for consistency with other fields, but such values must coerce to Strings.
-            1. Set _value_ to ? ToPrimitive(_value_, ~string~).
-            1. If _value_ is not a String, throw a *TypeError* exception.
+            1. Assert: _Conversion_ is ~to-offset-string~.
+            1. Set _value_ to ? ToOffsetString(_value_).
           1. Set _result_'s field whose name is given in the Field Name column of the same row to _value_.
         1. Else if _requiredFieldNames_ is a List, then
           1. If _requiredFieldNames_ contains _key_, then
