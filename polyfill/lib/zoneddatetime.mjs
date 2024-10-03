@@ -377,11 +377,13 @@ export class ZonedDateTime {
       optionsCopy.year === undefined &&
       optionsCopy.month === undefined &&
       optionsCopy.day === undefined &&
+      optionsCopy.era === undefined &&
       optionsCopy.weekday === undefined &&
       optionsCopy.dateStyle === undefined &&
       optionsCopy.hour === undefined &&
       optionsCopy.minute === undefined &&
       optionsCopy.second === undefined &&
+      optionsCopy.fractionalSecondDigits === undefined &&
       optionsCopy.timeStyle === undefined &&
       optionsCopy.dayPeriod === undefined &&
       optionsCopy.timeZoneName === undefined
