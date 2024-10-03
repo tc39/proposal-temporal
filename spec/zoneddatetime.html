@@ -530,7 +530,7 @@
         1. Let _offset_ be ? GetTemporalOffsetOption(_resolvedOptions_, ~prefer~).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _dateTimeResult_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
-        1. Let _newOffsetNanoseconds_ be ? ParseDateTimeUTCOffset(_fields_.[[OffsetString]]).
+        1. Let _newOffsetNanoseconds_ be ! ParseDateTimeUTCOffset(_fields_.[[OffsetString]]).
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_dateTimeResult_.[[ISODate]], _dateTimeResult_.[[Time]], ~option~, _newOffsetNanoseconds_, _timeZone_, _disambiguation_, _offset_, ~match-exactly~).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>
@@ -999,7 +999,7 @@
           1. Let _time_ be _result_.[[Time]].
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
-          1. Set _offsetNanoseconds_ to ? ParseDateTimeUTCOffset(_offsetString_).
+          1. Set _offsetNanoseconds_ to ! ParseDateTimeUTCOffset(_offsetString_).
         1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_isoDate_, _time_, _offsetBehaviour_, _offsetNanoseconds_, _timeZone_, _disambiguation_, _offsetOption_, _matchBehaviour_).
         1. Return ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       </emu-alg>

@@ -67,6 +67,7 @@ import {
   SetPrototypeHas,
   StringFromCharCode,
   StringPrototypeCharCodeAt,
+  StringPrototypeIndexOf,
   StringPrototypeMatch,
   StringPrototypeReplace,
   StringPrototypeSlice,
@@ -234,11 +235,28 @@ export function RequireString(value) {
   return value;
 }
 
-// This function is an enum in the spec, but it's helpful to make it a
-// function in the polyfill.
-function ToPrimitiveAndRequireString(value) {
+function ToSyntacticallyValidMonthCode(value) {
   value = ToPrimitive(value, StringCtor);
-  return RequireString(value);
+  RequireString(value);
+  if (
+    value.length < 3 ||
+    value.length > 4 ||
+    value[0] !== 'M' ||
+    Call(StringPrototypeIndexOf, '0123456789', [value[1]]) === -1 ||
+    Call(StringPrototypeIndexOf, '0123456789', [value[2]]) === -1 ||
+    (value[1] + value[2] === '00' && value[3] !== 'L') ||
+    (value[3] !== 'L' && value[3] !== undefined)
+  ) {
+    throw new RangeError(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
+  }
+  return value;
+}
+
+function ToOffsetString(value) {
+  value = ToPrimitive(value, StringCtor);
+  RequireString(value);
+  ParseDateTimeUTCOffset(value);
+  return value;
 }
 
 const CALENDAR_FIELD_KEYS = [
@@ -263,7 +281,7 @@ const BUILTIN_CASTS = new MapCtor([
   ['eraYear', ToIntegerWithTruncation],
   ['year', ToIntegerWithTruncation],
   ['month', ToPositiveIntegerWithTruncation],
-  ['monthCode', ToPrimitiveAndRequireString],
+  ['monthCode', ToSyntacticallyValidMonthCode],
   ['day', ToPositiveIntegerWithTruncation],
   ['hour', ToIntegerWithTruncation],
   ['minute', ToIntegerWithTruncation],
@@ -271,7 +289,7 @@ const BUILTIN_CASTS = new MapCtor([
   ['millisecond', ToIntegerWithTruncation],
   ['microsecond', ToIntegerWithTruncation],
   ['nanosecond', ToIntegerWithTruncation],
-  ['offset', ToPrimitiveAndRequireString],
+  ['offset', ToOffsetString],
   ['timeZone', ToTemporalTimeZoneIdentifier]
 ]);
 
@@ -2149,7 +2167,7 @@ export function IsOffsetTimeZoneIdentifier(string) {
 export function ParseDateTimeUTCOffset(string) {
   const match = Call(RegExpPrototypeExec, OFFSET_WITH_PARTS, [string]);
   if (!match) {
-    throw new RangeErrorCtor(`invalid time zone offset: ${string}`);
+    throw new RangeErrorCtor(`invalid time zone offset: ${string}; must match ±HH:MM[:SS.SSSSSSSSS]`);
   }
   const sign = match[1] === '-' ? -1 : +1;
   const hours = +match[2];
