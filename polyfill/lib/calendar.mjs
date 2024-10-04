@@ -27,6 +27,7 @@ import {
   MapPrototypeSet,
   MathAbs,
   MathFloor,
+  MathTrunc,
   MathMax,
   NumberIsNaN,
   MathSign,
@@ -126,6 +127,11 @@ function calendarDateWeekOfYear(id, isoDate) {
   return { week: woy, year: yow };
 }
 
+function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
+  const cmp = ES.CompareISODate(y1, m1, d1, y2, m2, d2);
+  return sign * cmp === 1;
+}
+
 const impl = {};
 
 impl['iso8601'] = {
@@ -177,7 +183,52 @@ impl['iso8601'] = {
     return { year, month, day };
   },
   dateUntil(one, two, largestUnit) {
-    return ES.DifferenceISODate(one.year, one.month, one.day, two.year, two.month, two.day, largestUnit);
+    const sign = -ES.CompareISODate(one.year, one.month, one.day, two.year, two.month, two.day);
+    if (sign === 0) return { years: 0, months: 0, weeks: 0, days: 0 };
+
+    let years = 0;
+    let months = 0;
+    let intermediate;
+    if (largestUnit === 'year' || largestUnit === 'month') {
+      // We can skip right to the neighbourhood of the correct number of years,
+      // it'll be at least one less than two.year - one.year (unless it's zero)
+      let candidateYears = two.year - one.year;
+      if (candidateYears !== 0) candidateYears -= sign;
+      // loops at most twice
+      while (!ISODateSurpasses(sign, one.year + candidateYears, one.month, one.day, two.year, two.month, two.day)) {
+        years = candidateYears;
+        candidateYears += sign;
+      }
+
+      let candidateMonths = sign;
+      intermediate = ES.BalanceISOYearMonth(one.year + years, one.month + candidateMonths);
+      // loops at most 12 times
+      while (!ISODateSurpasses(sign, intermediate.year, intermediate.month, one.day, two.year, two.month, two.day)) {
+        months = candidateMonths;
+        candidateMonths += sign;
+        intermediate = ES.BalanceISOYearMonth(intermediate.year, intermediate.month + sign);
+      }
+
+      if (largestUnit === 'month') {
+        months += years * 12;
+        years = 0;
+      }
+    }
+
+    intermediate = ES.BalanceISOYearMonth(one.year + years, one.month + months);
+    const constrained = ES.ConstrainISODate(intermediate.year, intermediate.month, one.day);
+
+    let weeks = 0;
+    let days =
+      ES.ISODateToEpochDays(two.year, two.month - 1, two.day) -
+      ES.ISODateToEpochDays(constrained.year, constrained.month - 1, constrained.day);
+
+    if (largestUnit === 'week') {
+      weeks = MathTrunc(days / 7);
+      days %= 7;
+    }
+
+    return { years, months, weeks, days };
   },
   year({ year }) {
     return year;
@@ -888,19 +939,10 @@ const nonIsoHelperBase = {
   calendarDaysUntil(calendarOne, calendarTwo, cache) {
     const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', cache);
     const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', cache);
-    return this.isoDaysUntil(oneIso, twoIso);
-  },
-  isoDaysUntil(oneIso, twoIso) {
-    const duration = ES.DifferenceISODate(
-      oneIso.year,
-      oneIso.month,
-      oneIso.day,
-      twoIso.year,
-      twoIso.month,
-      twoIso.day,
-      'day'
+    return (
+      ES.ISODateToEpochDays(twoIso.year, twoIso.month - 1, twoIso.day) -
+      ES.ISODateToEpochDays(oneIso.year, oneIso.month - 1, oneIso.day)
     );
-    return duration.days;
   },
   // Override if calendar uses eras
   hasEra: false,

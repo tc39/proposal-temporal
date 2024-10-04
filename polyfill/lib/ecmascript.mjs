@@ -3048,11 +3048,6 @@ export function RejectDuration(y, mon, w, d, h, min, s, ms, µs, ns) {
   }
 }
 
-function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
-  const cmp = CompareISODate(y1, m1, d1, y2, m2, d2);
-  return sign * cmp === 1;
-}
-
 export function NormalizeDuration(duration) {
   const date = {
     years: GetSlot(duration, YEARS),
@@ -3210,56 +3205,8 @@ function CombineDateAndNormalizedTimeDuration(dateDuration, norm) {
 }
 
 // Caution: month is 0-based
-function ISODateToEpochDays(y, m, d) {
+export function ISODateToEpochDays(y, m, d) {
   return GetUTCEpochMilliseconds(y, m + 1, d, 0, 0, 0, 0) / DAY_MS;
-}
-
-export function DifferenceISODate(y1, m1, d1, y2, m2, d2, largestUnit = 'days') {
-  const sign = -CompareISODate(y1, m1, d1, y2, m2, d2);
-  if (sign === 0) return ZeroDateDuration();
-
-  let years = 0;
-  let months = 0;
-  let intermediate;
-  if (largestUnit === 'year' || largestUnit === 'month') {
-    // We can skip right to the neighbourhood of the correct number of years,
-    // it'll be at least one less than y2 - y1 (unless it's zero)
-    let candidateYears = y2 - y1;
-    if (candidateYears !== 0) candidateYears -= sign;
-    // loops at most twice
-    while (!ISODateSurpasses(sign, y1 + candidateYears, m1, d1, y2, m2, d2)) {
-      years = candidateYears;
-      candidateYears += sign;
-    }
-
-    let candidateMonths = sign;
-    intermediate = BalanceISOYearMonth(y1 + years, m1 + candidateMonths);
-    // loops at most 12 times
-    while (!ISODateSurpasses(sign, intermediate.year, intermediate.month, d1, y2, m2, d2)) {
-      months = candidateMonths;
-      candidateMonths += sign;
-      intermediate = BalanceISOYearMonth(intermediate.year, intermediate.month + sign);
-    }
-
-    if (largestUnit === 'month') {
-      months += years * 12;
-      years = 0;
-    }
-  }
-
-  intermediate = BalanceISOYearMonth(y1 + years, m1 + months);
-  const constrained = ConstrainISODate(intermediate.year, intermediate.month, d1);
-
-  let weeks = 0;
-  let days =
-    ISODateToEpochDays(y2, m2 - 1, d2) - ISODateToEpochDays(constrained.year, constrained.month - 1, constrained.day);
-
-  if (largestUnit === 'week') {
-    weeks = MathTrunc(days / 7);
-    days %= 7;
-  }
-
-  return { years, months, weeks, days };
 }
 
 export function DifferenceTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2) {
