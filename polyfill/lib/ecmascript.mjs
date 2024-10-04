@@ -742,19 +742,6 @@ export function RegulateTime(hour, minute, second, millisecond, microsecond, nan
   return { hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
-export function RegulateISOYearMonth(year, month, overflow) {
-  const referenceISODay = 1;
-  switch (overflow) {
-    case 'reject':
-      RejectISODate(year, month, referenceISODay);
-      break;
-    case 'constrain':
-      ({ year, month } = ConstrainISODate(year, month));
-      break;
-  }
-  return { year, month };
-}
-
 export function ToTemporalPartialDurationRecord(temporalDurationLike) {
   if (Type(temporalDurationLike) !== 'Object') {
     throw new TypeErrorCtor('invalid duration-like');
