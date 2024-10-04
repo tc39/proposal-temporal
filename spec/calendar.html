@@ -431,11 +431,17 @@
         <dt>description</dt>
         <dd>
           It adds _dateDuration_ to _isoDate_ using the years, months, and weeks reckoning of _calendar_.
+          If addition of years or months results in a nonexistent date, depending on _overflow_ it will be coerced to an existing date or the operation will throw.
         </dd>
       </dl>
       <emu-alg>
         1. If _calendar_ is *"iso8601"*, then
-          1. Return ? AddISODate(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _duration_, _overflow_).
+          1. Let _intermediate_ be BalanceISOYearMonth(_isoDate_.[[Year]] + _duration_.[[Years]], _isoDate_.[[Month]] + _duration_.[[Months]]).
+          1. Set _intermediate_ to ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _isoDate_.[[Day]], _overflow_).
+          1. Let _d_ be _intermediate_.[[Day]] + _duration_.[[Days]] + 7 × _duration_.[[Weeks]].
+          1. Let _result_ be BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+          1. If ISODateWithinLimits(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, throw a *RangeError* exception.
+          1. Return _result_.
         1. Return ? CalendarDateAddition(_calendar_, _isoDate_, _duration_, _overflow_).
       </emu-alg>
     </emu-clause>
