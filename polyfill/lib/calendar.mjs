@@ -153,7 +153,7 @@ impl['iso8601'] = {
     requireFields(fields, ['day']);
     const referenceISOYear = 1972;
     let { month, day, year } = resolveNonLunisolarMonth(fields);
-    ({ month, day } = ES.RegulateISODate(year !== undefined ? year : referenceISOYear, month, day, overflow));
+    ({ month, day } = ES.RegulateISODate(year ?? referenceISOYear, month, day, overflow));
     return { month, day, year: referenceISOYear };
   },
   extraFields() {

@@ -886,7 +886,15 @@
         1. If _calendar_ is *"iso8601"*, then
           1. If _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
           1. Perform ? ISOResolveMonth(_fields_).
-          1. Return ? ISOMonthDayFromFields(_fields_, _overflow_).
+          1. Assert: _fields_.[[Month]] is not ~unset~.
+          1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
+          1. If _fields_.[[Year]] is ~unset~, let _year_ be _referenceISOYear_; else let _year_ be _fields_.[[Year]].
+          1. Let _result_ be ? RegulateISODate(_year_, _fields_.[[Month]], _fields_.[[Day]], _overflow_).
+          1. Return ISO Date Record {
+              [[Year]]: _referenceISOYear_,
+              [[Month]]: _result_.[[Month]],
+              [[Day]]: _result_.[[Day]]
+            }.
         1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~month-day~).
         1. Return ? CalendarMonthDayToISOReferenceDate(_calendar_, _fields_, _overflow_).
       </emu-alg>
@@ -1039,35 +1047,6 @@
         1. If _month_ is not ~unset~ and _month_ ≠ _monthCodeInteger_, throw a *RangeError* exception.
         1. Set _fields_.[[Month]] to _monthCodeInteger_.
         1. Return ~unused~.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-isomonthdayfromfields" type="abstract operation">
-      <h1>
-        ISOMonthDayFromFields (
-          _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
-        ): either a normal completion containing an ISO Date Record or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It performs the conversion operation of a Calendar Fields Record to an ISO Date Record for the ISO 8601 calendar in the context of Temporal.PlainMonthDay, as CalendarMonthDayFromFields does for other calendars.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _month_ be _fields_.[[Month]].
-        1. Let _day_ be _fields_.[[Day]].
-        1. Assert: _month_ and _day_ are not ~unset~.
-        1. Let _year_ be _fields_.[[Year]].
-        1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
-        1. If _year_ is ~unset~, then
-          1. Let _result_ be ? RegulateISODate(_referenceISOYear_, _month_, _day_, _overflow_).
-        1. Else,
-          1. Let _result_ be ? RegulateISODate(_year_, _month_, _day_, _overflow_).
-        1. Return ISO Date Record {
-          [[Year]]: _referenceISOYear_,
-          [[Month]]: _result_.[[Month]],
-          [[Day]]: _result_.[[Day]]
-          }.
       </emu-alg>
     </emu-clause>
 
