@@ -1862,63 +1862,63 @@ export function CalendarDateUntil(calendar, isoDate, isoOtherDate, largestUnit) 
 }
 
 export function CalendarYear(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).year(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { year: true }).year;
 }
 
 export function CalendarMonth(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).month(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { month: true }).month;
 }
 
 export function CalendarMonthCode(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).monthCode(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { monthCode: true }).monthCode;
 }
 
 export function CalendarDay(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).day(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { day: true }).day;
 }
 
 export function CalendarEra(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).era(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { era: true }).era;
 }
 
 export function CalendarEraYear(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).eraYear(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { eraYear: true }).eraYear;
 }
 
 export function CalendarDayOfWeek(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).dayOfWeek(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { dayOfWeek: true }).dayOfWeek;
 }
 
 export function CalendarDayOfYear(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).dayOfYear(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { dayOfYear: true }).dayOfYear;
 }
 
 export function CalendarWeekOfYear(calendar, isoDate) {
-  return GetIntrinsic('%calendarDateWeekOfYear%')(calendar, isoDate).week;
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { weekOfYear: true }).weekOfYear.week;
 }
 
 export function CalendarYearOfWeek(calendar, isoDate) {
-  return GetIntrinsic('%calendarDateWeekOfYear%')(calendar, isoDate).year;
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { weekOfYear: true }).weekOfYear.year;
 }
 
 export function CalendarDaysInWeek(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).daysInWeek(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { daysInWeek: true }).daysInWeek;
 }
 
 export function CalendarDaysInMonth(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).daysInMonth(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { daysInMonth: true }).daysInMonth;
 }
 
 export function CalendarDaysInYear(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).daysInYear(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { daysInYear: true }).daysInYear;
 }
 
 export function CalendarMonthsInYear(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).monthsInYear(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { monthsInYear: true }).monthsInYear;
 }
 
 export function CalendarInLeapYear(calendar, isoDate) {
-  return GetIntrinsic('%calendarImpl%')(calendar).inLeapYear(isoDate);
+  return GetIntrinsic('%calendarImpl%')(calendar).isoToDate(isoDate, { inLeapYear: true }).inLeapYear;
 }
 
 export function ToTemporalCalendarIdentifier(calendarLike) {
