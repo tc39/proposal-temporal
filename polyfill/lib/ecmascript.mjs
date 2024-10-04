@@ -1956,11 +1956,15 @@ export function CalendarEquals(one, two) {
 }
 
 export function CalendarDateFromFields(calendar, fields, overflow) {
-  return GetIntrinsic('%calendarImpl%')(calendar).dateFromFields(fields, overflow);
+  const result = GetIntrinsic('%calendarImpl%')(calendar).dateFromFields(fields, overflow);
+  RejectDateRange(result.year, result.month, result.day);
+  return result;
 }
 
 export function CalendarYearMonthFromFields(calendar, fields, overflow) {
-  return GetIntrinsic('%calendarImpl%')(calendar).yearMonthFromFields(fields, overflow);
+  const result = GetIntrinsic('%calendarImpl%')(calendar).yearMonthFromFields(fields, overflow);
+  RejectYearMonthRange(result.year, result.month);
+  return result;
 }
 
 export function CalendarMonthDayFromFields(calendar, fields, overflow) {
