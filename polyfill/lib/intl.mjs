@@ -326,6 +326,11 @@ function timeAmend(originalOptions) {
     timeZoneName: false,
     dateStyle: false
   });
+  if (options.timeStyle === 'long' || options.timeStyle === 'full') {
+    // Try to fake what timeStyle should do if not printing the time zone name
+    delete options.timeStyle;
+    ObjectAssign(options, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+  }
   if (!hasTimeOptions(options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
       throw new TypeError(`cannot format Temporal.PlainTime with options [${ObjectKeys(originalOptions)}]`);
@@ -428,6 +433,11 @@ function dateAmend(originalOptions) {
 
 function datetimeAmend(originalOptions) {
   const options = amend(originalOptions, { timeZoneName: false });
+  if (options.timeStyle === 'long' || options.timeStyle === 'full') {
+    // Try to fake what timeStyle should do if not printing the time zone name
+    delete options.timeStyle;
+    ObjectAssign(options, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+  }
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
       throw new TypeError(`cannot format PlainDateTime with options [${ObjectKeys(originalOptions)}]`);

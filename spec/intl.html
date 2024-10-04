@@ -690,6 +690,7 @@
         1. Set _dateTimeFormat_.[[DateStyle]] to _dateStyle_.
         1. Let _timeStyle_ be ? GetOption(_options_, *"timeStyle"*, ~string~, « *"full"*, *"long"*, *"medium"*, *"short"* », *undefined*).
         1. Set _dateTimeFormat_.[[TimeStyle]] to _timeStyle_.
+        1. <ins>Let _formats_ be _resolvedLocaleData_.[[formats]].[[&lt;_resolvedCalendar_>]].</ins>
         1. If _dateStyle_ is not *undefined* or _timeStyle_ is not *undefined*, then
           1. If _hasExplicitFormatComponents_ is *true*, then
             1. Throw a *TypeError* exception.
@@ -700,18 +701,18 @@
           1. Let _styles_ be _resolvedLocaleData_.[[styles]].[[&lt;_resolvedCalendar_>]].
           1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _styles_).
           1. <ins>If _dateStyle_ is not *undefined*, then</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to _bestFormat_.</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to _bestFormat_.</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to _bestFormat_.</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[era]], [[year]], [[month]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[month]], [[day]] »).</ins>
           1. <ins>Else,</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to *null*.</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to *null*.</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to *null*.</ins>
           1. <ins>If _timeStyle_ is not *undefined*, then</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to _bestFormat_.</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
           1. <ins>Else,</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to *null*.</ins>
-          1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateTimeFormat]] to _bestFormat_.</ins>
+          1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]], [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
           1. <ins>Set _dateTimeFormat_.[[TemporalInstantFormat]] to _bestFormat_.</ins>
         1. Else,
           1. <del>Let _needDefaults_ be *true*.</del>
@@ -729,7 +730,7 @@
           1. <del>If _needDefaults_ is *true* and _defaults_ is either ~time~ or ~all~, then</del>
             1. <del>For each property name _prop_ of « *"hour"*, *"minute"*, *"second"* », do</del>
               1. <del>Set _formatOptions_.[[&lt;_prop_>]] to *"numeric"*.</del>
-          1. Let _formats_ be _resolvedLocaleData_.[[formats]].[[&lt;_resolvedCalendar_>]].
+          1. <del>Let _formats_ be _resolvedLocaleData_.[[formats]].[[&lt;_resolvedCalendar_>]].</del>
           1. <del>If _formatMatcher_ is *"basic"*, then</del>
             1. <del>Let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_).</del>
           1. <del>Else,</del>
@@ -869,6 +870,35 @@
               1. Set _formatOptions_.[[&lt;_prop_>]] to *"numeric"*.
             1. If _defaults_ is ~zoned-date-time~, then
               1. Set _formatOptions_.[[timeZoneName]] to *"short"*.
+          1. If _matcher_ is *"basic"*, then
+            1. Let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_).
+          1. Else,
+            1. Let _bestFormat_ be BestFitFormatMatcher(_formatOptions_, _formats_).
+          1. Return _bestFormat_.
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-adjustdatetimestyleformat" type="abstract operation">
+        <h1>
+          AdjustDateTimeStyleFormat (
+            _formats_: a List of DateTime Format Records,
+            _baseFormat_: a DateTime Format Record,
+            _matcher_: *"basic"* or *"best fit"*,
+            _allowedOptions_: a List of field names,
+          ): a DateTime Format Record
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>
+            It inspects _baseFormat_ and determines the closest format to it that only includes fields from _allowedOptions_.
+            This is used for determining the best format for Temporal objects with the `"dateStyle"` or `"timeStyle"` options.
+            For example, a locale's best format for `"dateStyle": "full"` might include the weekday, which is not applicable when formatting a `Temporal.PlainYearMonth` object.
+          </dd>
+        </dl>
+        <emu-alg>
+          1. Let _formatOptions_ be a new Record.
+          1. For each field name _fieldName_ of _allowedOptions_, do
+            1. Set the field of _formatOptions_ whose name is _fieldName_ to the value of the field of _baseFormat_ whose name is _fieldName_.
           1. If _matcher_ is *"basic"*, then
             1. Let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_).
           1. Else,
