@@ -2011,19 +2011,7 @@ const nonIsoGeneralImpl = {
   daysInMonth(date) {
     const cache = OneObjectCache.getCacheForObject(date);
     const calendarDate = this.helper.isoToCalendarDate(date, cache);
-
-    // Easy case: if the helper knows the length without any heavy calculation.
-    const max = this.helper.maximumMonthLength(calendarDate);
-    const min = this.helper.minimumMonthLength(calendarDate);
-    if (max === min) return max;
-
-    // The harder case is where months vary every year, e.g. islamic calendars.
-    // Find the answer by calculating the difference in days between the first
-    // day of the current month and the first day of the next month.
-    const startOfMonthCalendar = this.helper.startOfCalendarMonth(calendarDate);
-    const startOfNextMonthCalendar = this.helper.addMonthsCalendar(startOfMonthCalendar, 1, 'constrain', cache);
-    const result = this.helper.calendarDaysUntil(startOfMonthCalendar, startOfNextMonthCalendar, cache);
-    return result;
+    return this.helper.daysInMonth(calendarDate, cache);
   },
   daysInYear(isoDate) {
     const cache = OneObjectCache.getCacheForObject(isoDate);
