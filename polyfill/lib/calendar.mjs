@@ -138,16 +138,12 @@ impl['iso8601'] = {
   dateFromFields(fields, overflow) {
     requireFields(fields, ['year', 'day']);
     let { year, month, day } = resolveNonLunisolarMonth(fields);
-    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
-    ES.RejectDateRange(year, month, day);
-    return { year, month, day };
+    return ES.RegulateISODate(year, month, day, overflow);
   },
   yearMonthFromFields(fields, overflow) {
     requireFields(fields, ['year']);
     let { year, month } = resolveNonLunisolarMonth(fields);
-    ({ year, month } = ES.RegulateISODate(year, month, 1, overflow));
-    ES.RejectYearMonthRange(year, month);
-    return { year, month, /* reference */ day: 1 };
+    return ES.RegulateISODate(year, month, 1, overflow);
   },
   monthDayFromFields(fields, overflow) {
     requireFields(fields, ['day']);
