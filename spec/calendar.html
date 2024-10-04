@@ -519,7 +519,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return *undefined*.
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[Era]].
       </emu-alg>
     </emu-clause>
@@ -536,7 +535,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return *undefined*.
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[EraYear]].
       </emu-alg>
     </emu-clause>
@@ -553,7 +551,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return _isoDate_.[[Year]].
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[Year]].
       </emu-alg>
     </emu-clause>
@@ -570,7 +567,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return _isoDate_.[[Month]].
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[Month]].
       </emu-alg>
     </emu-clause>
@@ -587,7 +583,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return ISOMonthCode(_isoDate_.[[Month]]).
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[MonthCode]].
       </emu-alg>
     </emu-clause>
@@ -604,7 +599,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return _isoDate_.[[Day]].
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[Day]].
       </emu-alg>
     </emu-clause>
@@ -621,8 +615,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. Return ToISODayOfWeek(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]).
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[DayOfWeek]].
       </emu-alg>
     </emu-clause>
@@ -639,8 +631,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. Return ToISODayOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]).
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[DayOfYear]].
       </emu-alg>
     </emu-clause>
@@ -657,11 +647,7 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. Let _yearWeek_ be ToISOWeekOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]).
-        1. Else,
-          1. Let _yearWeek_ be CalendarISOToDate(_calendar_, _isoDate_).[[WeekOfYear]].
-        1. Return _yearWeek_.[[Week]].
+        1. Return CalendarISOToDate(_calendar_, _isoDate_).[[WeekOfYear]].[[Week]].
       </emu-alg>
     </emu-clause>
 
@@ -677,11 +663,7 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. Let _yearWeek_ be ToISOWeekOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]).
-        1. Else,
-          1. Let _yearWeek_ be CalendarISOToDate(_calendar_, _isoDate_).[[WeekOfYear]].
-        1. Return _yearWeek_.[[Year]].
+        1. Return CalendarISOToDate(_calendar_, _isoDate_).[[WeekOfYear]].[[Year]].
       </emu-alg>
     </emu-clause>
 
@@ -697,7 +679,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return 7.
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[DaysInWeek]].
       </emu-alg>
     </emu-clause>
@@ -714,8 +695,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. Return ISODaysInMonth(_isoDate_.[[Year]], _isoDate_.[[Month]]).
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[DaysInMonth]].
       </emu-alg>
     </emu-clause>
@@ -732,8 +711,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. Return MathematicalDaysInYear(_isoDate_.[[Year]]).
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[DaysInYear]].
       </emu-alg>
     </emu-clause>
@@ -750,7 +727,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return 12.
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[MonthsInYear]].
       </emu-alg>
     </emu-clause>
@@ -767,9 +743,6 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. If MathematicalInLeapYear(EpochTimeForYear(_isoDate_.[[Year]])) = 1, return *true*.
-          1. Return *false*.
         1. Return CalendarISOToDate(_calendar_, _isoDate_).[[InLeapYear]].
       </emu-alg>
     </emu-clause>
@@ -1181,7 +1154,7 @@
     <emu-clause id="sec-temporal-calendarisotodate" type="implementation-defined abstract operation">
       <h1>
         CalendarISOToDate (
-          _calendar_: a calendar type that is not *"iso8601"*,
+          _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
         ): a Calendar Date Record
       </h1>
@@ -1189,6 +1162,30 @@
         <dt>description</dt>
         <dd>It performs implementation-defined processing to find the the date corresponding to _isoDate_ in the context of the calendar represented by _calendar_ and returns a Calendar Date Record representing that calendar date, with its fields filled in according to their descriptions.</dd>
       </dl>
+      <emu-alg>
+        1. If _calendar_ is *"iso8601"*, then
+          1. If MathematicalInLeapYear(EpochTimeForYear(_isoDate_.[[Year]])) = 1, let _inLeapYear_ be *true*; else let _inLeapYear_ be *false*.
+          1. Return Calendar Date Record {
+              [[Era]]: *undefined*,
+              [[EraYear]]: *undefined*,
+              [[Year]]: _isoDate_.[[Year]],
+              [[Month]]: _isoDate_.[[Month]],
+              [[MonthCode]]: ISOMonthCode(_isoDate_.[[Month]]),
+              [[Day]]: _isoDate_.[[Day]],
+              [[DayOfWeek]]: ToISODayOfWeek(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
+              [[DayOfYear]]: ToISODayOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
+              [[WeekOfYear]]: ToISOWeekOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
+              [[DaysInWeek]]: 7,
+              [[DaysInMonth]]: ISODaysInMonth(_isoDate_.[[Year]], _isoDate_.[[Month]]),
+              [[DaysInYear]]: MathematicalDaysInYear(_isoDate_.[[Year]]),
+              [[MonthsInYear]]: 12,
+              [[InLeapYear]]: _inLeapYear_
+            }.
+        1. Return an implementation-defined Calendar Date Record with fields as described in <emu-xref href="#table-temporal-calendar-date-record-fields"></emu-xref>.
+      </emu-alg>
+      <emu-note>
+        <p>Implementations are encouraged to elide fields that are not read by the caller.</p>
+      </emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarextrafields" type="implementation-defined abstract operation">
