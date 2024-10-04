@@ -418,7 +418,7 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-calendardateadd" type="abstract operation">
+    <emu-clause id="sec-temporal-calendardateadd" type="implementation-defined abstract operation">
       <h1>
         CalendarDateAdd (
           _calendar_: a calendar type,
@@ -440,10 +440,15 @@
           1. Set _intermediate_ to ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _isoDate_.[[Day]], _overflow_).
           1. Let _d_ be _intermediate_.[[Day]] + _duration_.[[Days]] + 7 × _duration_.[[Weeks]].
           1. Let _result_ be BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
-          1. If ISODateWithinLimits(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, throw a *RangeError* exception.
-          1. Return _result_.
-        1. Return ? CalendarDateAddition(_calendar_, _isoDate_, _duration_, _overflow_).
+        1. Else,
+          1. Let _result_ be an implementation-defined ISO Date Record, or throw a *RangeError* exception, as described below.
+        1. If ISODateWithinLimits(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, throw a *RangeError* exception.
+        1. Return _result_.
       </emu-alg>
+      <p>
+        When _calendar_ is not *"iso8601"*, the operation performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by _calendar_ and returns the corresponding day, month and year of the result in the ISO 8601 calendar values as an ISO Date Record.
+        It may throw a *RangeError* exception if _overflow_ is ~reject~ and the resulting month or day would need to be clamped in order to form a valid date in _calendar_.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardateuntil" type="abstract operation">
@@ -1171,24 +1176,6 @@
         Also like RegulateISODate, if _overflow_ is ~constrain~ and the date or month and day described by _fields_ does not exist (or does not exist within the year described by _fields_ when there is such a year), the values of those fields are clamped to their respective valid range. As in CalendarDateToISO, such clamping is calendar-specific.
         For example, when _calendar_ is *"gregory"* and _overflow_ is ~constrain~, a _fields_ value of { [[MonthCode]]: *"M02"*, [[Day]]: 30 } is clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 29 } (because 29 is the maximum valid day for February) while _fields_ values of { [[Year]]: 2001, [[MonthCode]]: *"M02"*, [[Day]]: 30 } and { [[Era]]: *"ce"*, [[EraYear]]: 2001, [[Month]]: 2, [[Day]]: 30 } (or an equivalent with a supported value for [[Era]] representing the Common Era beginning in ISO 8601 year 1) are clamped to { [[Year]]: 1972, [[Month]]: 2, [[Day]]: 28 } (because 28 is the maximum valid day for February 2001, which did not include a leap day).
       </p>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-calendardateaddition" type="implementation-defined abstract operation">
-      <h1>
-        CalendarDateAddition (
-          _calendar_: a calendar type that is not *"iso8601"*,
-          _date_: an ISO Date Record,
-          _duration_: a Date Duration Record,
-          _overflow_: ~constrain~ or ~reject~,
-        ): either a normal completion containing an ISO Date Record or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>
-          It performs implementation-defined processing to add _duration_ to _date_ in the context of the calendar represented by _calendar_ and returns the corresponding day, month and year of the result in the ISO 8601 calendar values as an ISO Date Record.
-          It may throw a *RangeError* exception if _overflow_ is ~reject~ and the resulting month or day would need to be clamped in order to form a valid date in _calendar_, or if the date resulting from the addition is outside the range allowed by ISODateTimeWithinLimits.
-        </dd>
-      </dl>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendardatedifference" type="implementation-defined abstract operation">

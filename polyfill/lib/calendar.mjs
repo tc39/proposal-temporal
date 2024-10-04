@@ -174,9 +174,7 @@ impl['iso8601'] = {
     ({ year, month } = ES.BalanceISOYearMonth(year, month));
     ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
     day += days + 7 * weeks;
-    ({ year, month, day } = ES.BalanceISODate(year, month, day));
-    ES.RejectDateRange(year, month, day);
-    return { year, month, day };
+    return ES.BalanceISODate(year, month, day);
   },
   dateUntil(one, two, largestUnit) {
     const sign = -ES.CompareISODate(one.year, one.month, one.day, two.year, two.month, two.day);

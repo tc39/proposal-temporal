@@ -1852,7 +1852,9 @@ export function CalendarMergeFields(calendar, fields, additionalFields) {
 }
 
 export function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
-  return GetIntrinsic('%calendarImpl%')(calendar).dateAdd(isoDate, dateDuration, overflow);
+  const result = GetIntrinsic('%calendarImpl%')(calendar).dateAdd(isoDate, dateDuration, overflow);
+  RejectDateRange(result.year, result.month, result.day);
+  return result;
 }
 
 export function CalendarDateUntil(calendar, isoDate, isoOtherDate, largestUnit) {
