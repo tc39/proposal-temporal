@@ -512,37 +512,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-regulateisoyearmonth" type="abstract operation">
-      <h1>
-        RegulateISOYearMonth (
-          _year_: an integer,
-          _month_: an integer,
-          _overflow_: ~constrain~ or ~reject~,
-        ): either a normal completion containing an ISO Year-Month Record or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It applies the correction given by _overflow_ to the given month.
-          If _overflow_ is ~constrain~, _month_ is clamped to a valid value.
-          If _overflow_ is ~reject~ and _month_ is out of range, a *RangeError* is thrown.</dd>
-      </dl>
-      <emu-alg>
-        1. If _overflow_ is ~constrain~, then
-          1. Set _month_ to the result of clamping _month_ between 1 and 12.
-          1. Return ISO Year-Month Record {
-            [[Year]]: _year_,
-            [[Month]]: _month_
-            }.
-        1. Else,
-          1. Assert: _overflow_ is ~reject~.
-          1. If _month_ &lt; 1 or _month_ > 12, throw a *RangeError* exception.
-          1. Return ISO Year-Month Record {
-            [[Year]]: _year_,
-            [[Month]]: _month_
-            }.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-isoyearmonthwithinlimits" type="abstract operation">
       <h1>
         ISOYearMonthWithinLimits (
