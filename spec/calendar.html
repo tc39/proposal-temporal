@@ -1191,7 +1191,7 @@
     <emu-clause id="sec-temporal-calendarextrafields" type="implementation-defined abstract operation">
       <h1>
         CalendarExtraFields (
-          _calendar_: a calendar type that is not *"iso8601"*,
+          _calendar_: a calendar type,
           _type_: ~date~, ~year-month~, ~month-day~, or a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
         ): a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>
       </h1>
@@ -1199,6 +1199,10 @@
         <dt>description</dt>
         <dd>It characterizes calendar-specific fields that are relevant for values of the provided _type_ in the built-in calendar identified by _calendar_ (inferring the type when _type_ is a List by interpreting its elements as field names). For example, « ~era~, ~era-year~ » is returned when _calendar_ is *"gregory"* or *"japanese"* and _type_ is ~date~ or ~year-month~ or a List containing ~year~.</dd>
       </dl>
+      <emu-alg>
+        1. If _calendar_ is *"iso8601"*, return an empty List.
+        1. Return an implementation-defined List as described above.
+      </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-calendarfieldkeystoignore" type="implementation-defined abstract operation">
