@@ -802,11 +802,7 @@
         <dd>It converts a calendar date in the reckoning of _calendar_, if it is uniquely determined by the fields of _fields_, into an ISO Date Record.</dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. If _fields_.[[Year]] is ~unset~ or _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
-          1. Perform ? ISOResolveMonth(_fields_).
-        1. Else,
-          1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~date~).
+        1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~date~).
         1. Let _result_ be ? CalendarDateToISO(_calendar_, _fields_, _overflow_).
         1. If ISODateWithinLimits(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *false*, throw a *RangeError* exception.
         1. Return _result_.
@@ -826,11 +822,7 @@
         <dd>It converts a calendar month in the reckoning of _calendar_, if it is uniquely determined by the properties on _fields_, into an ISO Date Record denoting the first day of that month.</dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. If _fields_.[[Year]] is ~unset~, throw a *TypeError* exception.
-          1. Perform ? ISOResolveMonth(_fields_).
-        1. Else,
-          1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~year-month~).
+        1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~year-month~).
         1. Let _firstDayIndex_ be the 1-based index of the first day of the month described by _fields_ (i.e., 1 unless the month's first day is skipped by this calendar.)
         1. Set _fields_.[[Day]] to _firstDayIndex_.
         1. Let _result_ be ? CalendarDateToISO(_calendar_, _fields_, _overflow_).
@@ -852,11 +844,7 @@
         <dd>It converts a calendar month-day in the reckoning of _calendar_, if it is uniquely determined by the properties on _fields_, into an ISO Date Record denoting that day in an appropriate reference year.</dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, then
-          1. If _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
-          1. Perform ? ISOResolveMonth(_fields_).
-        1. Else,
-          1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~month-day~).
+        1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~month-day~).
         1. Return ? CalendarMonthDayToISOReferenceDate(_calendar_, _fields_, _overflow_).
       </emu-alg>
     </emu-clause>
@@ -975,39 +963,6 @@
       <emu-alg>
         1. Let _numberPart_ be ToZeroPaddedDecimalString(_month_, 2).
         1. Return the string-concatenation of *"M"* and _numberPart_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-isoresolvemonth" type="abstract operation">
-      <h1>
-        ISOResolveMonth (
-          _fields_: a Calendar Fields Record,
-        ): either a normal completion containing ~unused~ or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>
-          It ensures that the [[Month]] field of _fields_, if ~unset~, is set to the integral Number value in the inclusive interval from 1 to 12 that corresponds to the [[MonthCode]] field of _fields_.
-          It throws an exception if both fields are ~unset~, or if either field is invalid, or if the fields are inconsistent.
-        </dd>
-      </dl>
-      <emu-alg>
-        1. Let _month_ be _fields_.[[Month]].
-        1. Let _monthCode_ be _fields_.[[MonthCode]].
-        1. If _monthCode_ is ~unset~, then
-          1. If _month_ is ~unset~, throw a *TypeError* exception.
-          1. Return ~unused~.
-        1. Assert: _monthCode_ is a String.
-        1. NOTE: The ISO 8601 calendar does not include leap months.
-        1. If the length of _monthCode_ is not 3, throw a *RangeError* exception.
-        1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
-        1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1.
-        1. If ParseText(StringToCodePoints(_monthCodeDigits_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
-        1. Let _monthCodeInteger_ be ℝ(StringToNumber(_monthCodeDigits_)).
-        1. Assert: SameValue(_monthCode_, ISOMonthCode(_monthCodeInteger_)) is *true*.
-        1. If _month_ is not ~unset~ and _month_ ≠ _monthCodeInteger_, throw a *RangeError* exception.
-        1. Set _fields_.[[Month]] to _monthCodeInteger_.
-        1. Return ~unused~.
       </emu-alg>
     </emu-clause>
 
@@ -1257,7 +1212,7 @@
     <emu-clause id="sec-temporal-calendarresolvefields" type="implementation-defined abstract operation">
       <h1>
         CalendarResolveFields (
-          _calendar_: a calendar type that is not *"iso8601"*,
+          _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
           _type_: ~date~, ~year-month~, or ~month-day~,
         ): either a normal completion containing ~unused~ or a throw completion
@@ -1268,6 +1223,29 @@
           It performs implementation-defined processing to validate that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard fields and removing redundant fields (for example, merging [[Month]] and [[MonthCode]] into [[Month]] and merging [[Era]] and [[EraYear]] into [[Year]]).
         </dd>
       </dl>
+      <emu-alg>
+        1. If _calendar_ is *"iso8601"*, then
+          1. If _type_ is ~date~ or ~year-month~ and _fields_.[[Year]] is ~unset~, throw a *TypeError* exception.
+          1. If _type_ is ~date~ or ~month-day~ and _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
+          1. Let _month_ be _fields_.[[Month]].
+          1. Let _monthCode_ be _fields_.[[MonthCode]].
+          1. If _monthCode_ is ~unset~, then
+            1. If _month_ is ~unset~, throw a *TypeError* exception.
+            1. Return ~unused~.
+          1. Assert: _monthCode_ is a String.
+          1. NOTE: The ISO 8601 calendar does not include leap months.
+          1. If the length of _monthCode_ is not 3, throw a *RangeError* exception.
+          1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
+          1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1.
+          1. If ParseText(StringToCodePoints(_monthCodeDigits_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
+          1. Let _monthCodeInteger_ be ℝ(StringToNumber(_monthCodeDigits_)).
+          1. Assert: SameValue(_monthCode_, ISOMonthCode(_monthCodeInteger_)) is *true*.
+          1. If _month_ is not ~unset~ and _month_ ≠ _monthCodeInteger_, throw a *RangeError* exception.
+          1. Set _fields_.[[Month]] to _monthCodeInteger_.
+        1. Else,
+          1. Perform implementation-defined processing to mutate _fields_, or throw a *TypeError* or *RangeError* exception, as described below.
+        1. Return ~unused~.
+      </emu-alg>
       <p>The operation throws a *TypeError* exception if the non-~unset~ fields of _fields_ are insufficient to identify a unique instance of _type_ in the calendar (e.g., when at least one field in each combination capable of determining some part of its data is ~unset~) or a *RangeError* exception if the fields are sufficient but their values are internally inconsistent within the calendar (e.g., when fields such as [[Month]] and [[MonthCode]] have conflicting non-~unset~ values). For example:</p>
       <ul>
         <li>If _type_ is ~date~ or ~month-day~ and "day" in the calendar has an interpretation similar to ISO 8601 and _fields_.[[Day]] is ~unset~.</li>
