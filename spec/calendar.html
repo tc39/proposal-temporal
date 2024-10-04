@@ -194,7 +194,7 @@
       </p>
       <p>
         Each field has a corresponding enumeration key.
-        Lists of these enumeration keys are passed to abstract operations such as PrepareCalendarFields and ISOFieldKeysToIgnore to denote a subset of fields to operate on.
+        Lists of these enumeration keys are passed to abstract operations such as PrepareCalendarFields and CalendarFieldKeysToIgnore to denote a subset of fields to operate on.
       </p>
       <p>Calendar Fields Records have the fields listed in <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-calendar-fields-record-fields" caption="Calendar Fields Record Fields">
@@ -400,10 +400,7 @@
       </dl>
       <emu-alg>
         1. Let _additionalKeys_ be CalendarFieldKeysPresent(_additionalFields_).
-        1. If _calendar_ is *"iso8601"*, then
-          1. Let _overriddenKeys_ be ISOFieldKeysToIgnore(_additionalKeys_).
-        1. Else,
-          1. Let _overriddenKeys_ be CalendarFieldKeysToIgnore(_calendar_, _additionalKeys_).
+        1. Let _overriddenKeys_ be CalendarFieldKeysToIgnore(_calendar_, _additionalKeys_).
         1. Let _merged_ be a Calendar Fields Record with all fields set to ~unset~.
         1. Let _fieldsKeys_ be CalendarFieldKeysPresent(_fields_).
         1. For each row of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>, except the header row, do
@@ -1014,29 +1011,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isofieldkeystoignore" type="abstract operation">
-      <h1>
-        ISOFieldKeysToIgnore (
-          _keys_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
-        ): a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>
-          It determines which calendar date fields changing any of the fields named in _keys_ can potentially conflict with or invalidate, for the ISO 8601 calendar.
-        </dd>
-      </dl>
-      <emu-alg>
-        1. Let _ignoredKeys_ be an empty List.
-        1. For each element _key_ of _keys_, do
-          1. Append _key_ to _ignoredKeys_.
-          1. If _key_ is ~month~, append ~month-code~ to _ignoredKeys_.
-          1. Else if _key_ is ~month-code~, append ~month~ to _ignoredKeys_.
-        1. NOTE: While _ignoredKeys_ can have duplicate elements, this is not intended to be meaningful. This specification only checks whether particular keys are or are not members of the list.
-        1. Return _ignoredKeys_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-toisodayofyear" type="abstract operation">
       <h1>
         ToISODayOfYear (
@@ -1208,7 +1182,7 @@
     <emu-clause id="sec-temporal-calendarfieldkeystoignore" type="implementation-defined abstract operation">
       <h1>
         CalendarFieldKeysToIgnore (
-          _calendar_: a calendar type that is not *"iso8601"*,
+          _calendar_: a calendar type,
           _keys_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
         ): a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>
       </h1>
@@ -1219,11 +1193,22 @@
           A field always invalidates at least itself.
         </dd>
       </dl>
+      <emu-alg>
+        1. If _calendar_ is *"iso8601"*, then
+          1. Let _ignoredKeys_ be an empty List.
+          1. For each element _key_ of _keys_, do
+            1. Append _key_ to _ignoredKeys_.
+            1. If _key_ is ~month~, append ~month-code~ to _ignoredKeys_.
+            1. Else if _key_ is ~month-code~, append ~month~ to _ignoredKeys_.
+          1. NOTE: While _ignoredKeys_ can have duplicate elements, this is not intended to be meaningful. This specification only checks whether particular keys are or are not members of the list.
+          1. Return _ignoredKeys_.
+        1. Return an implementation-defined List as described below.
+      </emu-alg>
       <p>This operation is relevant for calendars which accept fields other than the standard set of ISO 8601 calendar fields, in order to implement the Temporal objects' `with()` methods in such a way that the result is free of ambiguity or conflicts.</p>
       <p>
         For example, given a _calendar_ that uses eras, such as *"gregory"*, a key in _keys_ being any one of ~year~, ~era~, or ~era-year~ would exclude all three.
         Passing any one of the three to a `with()` method might conflict with either of the other two properties on the receiver object, so those properties of the receiver object should be ignored.
-        Given this, in addition to the ISO 8601 mutual exclusion of ~month~ and ~month-code~ as in ISOFieldKeysToIgnore, a possible implementation might produce the following results when _calendar_ is *"gregory"*:
+        Given this, in addition to the ISO 8601 mutual exclusion of ~month~ and ~month-code~ as above, a possible implementation might produce the following results when _calendar_ is *"gregory"*:
       </p>
       <emu-table id="table-calendarfieldkeystoignore-example">
         <emu-caption>Example results of CalendarFieldKeysToIgnore</emu-caption>
