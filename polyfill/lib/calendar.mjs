@@ -141,21 +141,21 @@ function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
 const impl = {};
 
 impl['iso8601'] = {
-  dateFromFields(fields, overflow) {
-    requireFields(fields, ['year', 'day']);
-    let { year, month, day } = resolveNonLunisolarMonth(fields);
-    return ES.RegulateISODate(year, month, day, overflow);
+  resolveFields(fields, type) {
+    if ((type === 'date' || type === 'year-month') && fields.year === undefined) {
+      throw new TypeErrorCtor('year is required');
+    }
+    if ((type === 'date' || type === 'month-day') && fields.day === undefined) {
+      throw new TypeErrorCtor('day is required');
+    }
+    ObjectAssign(fields, resolveNonLunisolarMonth(fields));
   },
-  yearMonthFromFields(fields, overflow) {
-    requireFields(fields, ['year']);
-    let { year, month } = resolveNonLunisolarMonth(fields);
-    return ES.RegulateISODate(year, month, 1, overflow);
+  dateToISO(fields, overflow) {
+    return ES.RegulateISODate(fields.year, fields.month, fields.day, overflow);
   },
-  monthDayFromFields(fields, overflow) {
-    requireFields(fields, ['day']);
+  monthDayToISOReferenceDate(fields, overflow) {
     const referenceISOYear = 1972;
-    let { month, day, year } = resolveNonLunisolarMonth(fields);
-    ({ month, day } = ES.RegulateISODate(year ?? referenceISOYear, month, day, overflow));
+    const { month, day } = ES.RegulateISODate(fields.year ?? referenceISOYear, fields.month, fields.day, overflow);
     return { month, day, year: referenceISOYear };
   },
   extraFields() {
@@ -293,15 +293,6 @@ function monthCodeNumberPart(monthCode) {
 
 function buildMonthCode(month, leap = false) {
   return `M${Call(StringPrototypePadStart, `${month}`, [2, '0'])}${leap ? 'L' : ''}`;
-}
-
-function requireFields(fields, requiredFieldNames) {
-  for (let index = 0; index < requiredFieldNames.length; index++) {
-    const fieldName = requiredFieldNames[index];
-    if (fields[fieldName] === undefined) {
-      throw new TypeErrorCtor(`${fieldName} is required`);
-    }
-  }
 }
 
 /**
@@ -1866,32 +1857,21 @@ const nonIsoGeneralImpl = {
     if (type === 'month-day') return [];
     return ['era', 'eraYear'];
   },
-  dateFromFields(fields, overflow) {
-    const cache = new OneObjectCache();
+  resolveFields(fields /* , type */) {
     if (this.helper.calendarType !== 'lunisolar') {
+      const cache = new OneObjectCache();
       const largestMonth = this.helper.monthsInYear(fields, cache);
       resolveNonLunisolarMonth(fields, undefined, largestMonth);
     }
+  },
+  dateToISO(fields, overflow) {
+    const cache = new OneObjectCache();
     const result = this.helper.calendarToIsoDate(fields, overflow, cache);
     cache.setObject(result);
     return result;
   },
-  yearMonthFromFields(fields, overflow) {
+  monthDayToISOReferenceDate(fields, overflow) {
     const cache = new OneObjectCache();
-    if (this.helper.calendarType !== 'lunisolar') {
-      const largestMonth = this.helper.monthsInYear(fields, cache);
-      resolveNonLunisolarMonth(fields, undefined, largestMonth);
-    }
-    const result = this.helper.calendarToIsoDate({ ...fields, day: 1 }, overflow, cache);
-    cache.setObject(result);
-    return result;
-  },
-  monthDayFromFields(fields, overflow) {
-    const cache = new OneObjectCache();
-    if (this.helper.calendarType !== 'lunisolar') {
-      const largestMonth = this.helper.monthsInYear(fields, cache);
-      resolveNonLunisolarMonth(fields, undefined, largestMonth);
-    }
     const result = this.helper.monthDayFromFields(fields, overflow, cache);
     // result.year is a reference year where this month/day exists in this calendar
     cache.setObject(result);

@@ -1958,19 +1958,26 @@ export function CalendarEquals(one, two) {
 }
 
 export function CalendarDateFromFields(calendar, fields, overflow) {
-  const result = GetIntrinsic('%calendarImpl%')(calendar).dateFromFields(fields, overflow);
+  const calendarImpl = GetIntrinsic('%calendarImpl%')(calendar);
+  calendarImpl.resolveFields(fields, 'date');
+  const result = calendarImpl.dateToISO(fields, overflow);
   RejectDateRange(result.year, result.month, result.day);
   return result;
 }
 
 export function CalendarYearMonthFromFields(calendar, fields, overflow) {
-  const result = GetIntrinsic('%calendarImpl%')(calendar).yearMonthFromFields(fields, overflow);
+  const calendarImpl = GetIntrinsic('%calendarImpl%')(calendar);
+  calendarImpl.resolveFields(fields, 'year-month');
+  fields.day = 1;
+  const result = calendarImpl.dateToISO(fields, overflow);
   RejectYearMonthRange(result.year, result.month);
   return result;
 }
 
 export function CalendarMonthDayFromFields(calendar, fields, overflow) {
-  return GetIntrinsic('%calendarImpl%')(calendar).monthDayFromFields(fields, overflow);
+  const calendarImpl = GetIntrinsic('%calendarImpl%')(calendar);
+  calendarImpl.resolveFields(fields, 'month-day');
+  return calendarImpl.monthDayToISOReferenceDate(fields, overflow);
 }
 
 export function ToTemporalTimeZoneIdentifier(temporalTimeZoneLike) {
