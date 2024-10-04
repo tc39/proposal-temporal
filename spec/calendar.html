@@ -880,16 +880,8 @@
         1. If _calendar_ is *"iso8601"*, then
           1. If _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
           1. Perform ? ISOResolveMonth(_fields_).
-          1. Assert: _fields_.[[Month]] is not ~unset~.
-          1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
-          1. If _fields_.[[Year]] is ~unset~, let _year_ be _referenceISOYear_; else let _year_ be _fields_.[[Year]].
-          1. Let _result_ be ? RegulateISODate(_year_, _fields_.[[Month]], _fields_.[[Day]], _overflow_).
-          1. Return ISO Date Record {
-              [[Year]]: _referenceISOYear_,
-              [[Month]]: _result_.[[Month]],
-              [[Day]]: _result_.[[Day]]
-            }.
-        1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~month-day~).
+        1. Else,
+          1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~month-day~).
         1. Return ? CalendarMonthDayToISOReferenceDate(_calendar_, _fields_, _overflow_).
       </emu-alg>
     </emu-clause>
@@ -1155,8 +1147,17 @@
           For ~constrain~, values that do not form a valid date are clamped to their respective valid range as in CalendarDateToISO.
         </dd>
       </dl>
+      <emu-alg>
+        1. If _calendar_ is *"iso8601"*, then
+          1. Assert: _fields_.[[Month]] and _fields_.[[Day]] are not ~unset~.
+          1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
+          1. If _fields_.[[Year]] is ~unset~, let _year_ be _referenceISOYear_; else let _year_ be _fields_.[[Year]].
+          1. Let _result_ be ? RegulateISODate(_year_, _fields_.[[Month]], _fields_.[[Day]], _overflow_).
+          1. Return CreateISODateRecord(_referenceISOYear_, _result_.[[Month]], _result_.[[Day]]).
+        1. Return an implementation-defined ISO Date Record, or throw a *RangeError* exception, as described below.
+      </emu-alg>
       <p>
-        The fields of the returned ISO Date Record represent a reference date in the ISO 8601 calendar that, when converted to the built-in calendar identified by _calendar_, corresponds to the month code and day of _fields_ in an arbitrary but deterministically chosen reference year.
+        The fields of the returned ISO Date Record represent a reference date in the ISO 8601 calendar that, when converted to _calendar_, corresponds to the month code and day of _fields_ in an arbitrary but deterministically chosen reference year.
         The reference date is the latest ISO 8601 date corresponding to the calendar date, that is also earlier than or equal to the ISO 8601 date December 31, 1972.
         If that calendar date never occurs on or before the ISO 8601 date December 31, 1972, then the reference date is the earliest ISO 8601 date corresponding to that calendar date.
         The reference year is almost always 1972 (the first ISO 8601 leap year after the epoch), with exceptions for calendars where some dates (e.g. leap days or days in leap months) didn't occur during that ISO 8601 year. For example, Hebrew calendar leap month Adar I occurred in calendar years 5730 and 5733 (respectively overlapping ISO 8601 February/March 1970 and February/March 1973), but did not occur between them, so the reference year for days of that month is 1970.
