@@ -1829,9 +1829,8 @@
     <emu-alg>
       1. Assert: If _requiredFieldNames_ is a List, _requiredFieldNames_ contains zero or one of each of the elements of _calendarFieldNames_ and _nonCalendarFieldNames_.
       1. Let _fieldNames_ be the list-concatenation of _calendarFieldNames_ and _nonCalendarFieldNames_.
-      1. If _calendar_ is not *"iso8601"*, then
-        1. Let _extraFieldNames_ be CalendarExtraFields(_calendar_, _calendarFieldNames_).
-        1. Set _fieldNames_ to the list-concatenation of _fieldNames_ and _extraFieldNames_.
+      1. Let _extraFieldNames_ be CalendarExtraFields(_calendar_, _calendarFieldNames_).
+      1. Set _fieldNames_ to the list-concatenation of _fieldNames_ and _extraFieldNames_.
       1. Assert: _fieldNames_ contains no duplicate elements.
       1. Let _result_ be a Calendar Fields Record with all fields equal to ~unset~.
       1. Let _any_ be *false*.
