@@ -67,7 +67,9 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalYearMonth(_one_).
         1. Set _two_ to ? ToTemporalYearMonth(_two_).
-        1. Return 𝔽(CompareISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]])).
+        1. Let _isoDate1_ be CreateISODateRecord(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]]).
+        1. Let _isoDate2_ be CreateISODateRecord(_two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]]).
+        1. Return 𝔽(CompareISODate(_isoDate1_, _isoDate2_)).
       </emu-alg>
     </emu-clause>
   </emu-clause>

@@ -71,7 +71,9 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalDate(_one_).
         1. Set _two_ to ? ToTemporalDate(_two_).
-        1. Return 𝔽(CompareISODate(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]])).
+        1. Let _isoDate1_ be CreateISODateRecord(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]]).
+        1. Let _isoDate2_ be CreateISODateRecord(_two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]]).
+        1. Return 𝔽(CompareISODate(_isoDate1_, _isoDate2_)).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -767,23 +769,24 @@
           _y1_: an integer,
           _m1_: an integer,
           _d1_: an integer,
-          _y2_: an integer,
-          _m2_: an integer,
-          _d2_: an integer,
+          _isoDate2_: an ISO Date Record,
         ): a Boolean
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          The return value indicates whether the date denoted by _y1_, _m1_, _d1_ surpasses that denoted by _y2_, _m2_, _d2_ in the direction denoted by _sign_.
+          The return value indicates whether the date denoted by _y1_, _m1_, _d1_ surpasses that denoted by _isoDate2_ in the direction denoted by _sign_.
           The former date does not have to exist.
           Note that this operation is specific to date difference calculations and is not the same as CompareISODate.
         </dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_y2_, _m2_, _d2_).
-        1. Let _comparison_ be CompareISODate(_y1_, _m1_, _d1_, _y2_, _m2_, _d2_).
-        1. If _sign_ × _comparison_ = 1, return *true*.
+        1. If _y1_ ≠ _isoDate2_.[[Year]], then
+          1. If _sign_ × (_y1_ - _isoDate2_.[[Year]]) > 0, return *true*.
+        1. Else if _m1 ≠ _isoDate2_.[[Month]], then
+          1. If _sign_ × (_m1_ - _isoDate2_.[[Month]]) > 0, return *true*.
+        1. Else if _d1_ ≠ _isoDate2_.[[Day]], then
+          1. If _sign_ × (_d1_ - _isoDate2_.[[Day]]) > 0, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
@@ -927,26 +930,23 @@
     <emu-clause id="sec-temporal-compareisodate" type="abstract operation">
       <h1>
         CompareISODate (
-          _y1_: an integer,
-          _m1_: an integer,
-          _d1_: an integer,
-          _y2_: an integer,
-          _m2_: an integer,
-          _d2_: an integer,
+          _isoDate1_: an ISO Date Record,
+          _isoDate2_: an ISO Date Record,
         ): -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It performs a comparison of the two dates denoted by _y1_, _m1_, _d1_ and _y2, _m2_, _d2_ according to ISO 8601 calendar arithmetic.</dd>
+        <dd>
+          It performs a comparison of the two dates denoted by _isoDate1_ and _isoDate2_ according to ISO 8601 calendar arithmetic.
+        </dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_y2_, _m2_, _d2_) is *true*.
-        1. If _y1_ > _y2_, return 1.
-        1. If _y1_ &lt; _y2_, return -1.
-        1. If _m1_ > _m2_, return 1.
-        1. If _m1_ &lt; _m2_, return -1.
-        1. If _d1_ > _d2_, return 1.
-        1. If _d1_ &lt; _d2_, return -1.
+        1. If _isoDate1_.[[Year]] > _isoDate2_.[[Year]], return 1.
+        1. If _isoDate1_.[[Year]] &lt; _isoDate2_.[[Year]], return -1.
+        1. If _isoDate1_.[[Month]] > _isoDate2_.[[Month]], return 1.
+        1. If _isoDate1_.[[Month]] &lt; _isoDate2_.[[Month]], return -1.
+        1. If _isoDate1_.[[Day]] > _isoDate2_.[[Day]], return 1.
+        1. If _isoDate1_.[[Day]] &lt; _isoDate2_.[[Day]], return -1.
         1. Return 0.
       </emu-alg>
     </emu-clause>

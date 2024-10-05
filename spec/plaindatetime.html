@@ -1074,11 +1074,10 @@
         <dd>It performs a comparison of two date-times according to ISO 8601 calendar arithmetic.</dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_y1_, _mon1_, _d1_) is *true*.
-        1. Assert: IsValidISODate(_y2_, _mon2_, _d2_) is *true*.
-        1. Let _dateResult_ be CompareISODate(_y1_, _mon1_, _d1_, _y2_, _mon2_, _d2_).
-        1. If _dateResult_ is not 0, then
-          1. Return _dateResult_.
+        1. Let _isoDate1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
+        1. Let _isoDate2_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
+        1. Let _dateResult_ be CompareISODate(_isoDate1_, _isoDate2_).
+        1. If _dateResult_ ≠ 0, return _dateResult_.
         1. Return CompareTemporalTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
       </emu-alg>
     </emu-clause>
@@ -1153,15 +1152,15 @@
         1. Assert: ISODateTimeWithinLimits(_isoDateTime2_) is *true*.
         1. Let _timeDuration_ be DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_timeDuration_).
-        1. Let _dateSign_ be CompareISODate(_y2_, _mon2_, _d2_, _y1_, _mon1_, _d1_).
-        1. Let _adjustedDate_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
+        1. Let _isoDate1_ be ISODateTimeToDateRecord(_isoDateTime1_).
+        1. Let _isoDate2_ be ISODateTimeToDateRecord(_isoDateTime2_).
+        1. Let _dateSign_ be CompareISODate(_isoDate2_, _isoDate1_).
+        1. Let _adjustedDate_ be _isoDate2_.
         1. If _timeSign_ = -_dateSign_, then
           1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] + _timeSign_).
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, -_timeSign_).
-        1. Let _date1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
-        1. Let _date2_ be _adjustedDate_.
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(~day~, _largestUnit_).
-        1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _date1_, _date2_, _dateLargestUnit_).
+        1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _isoDate1_, _adjustedDate_, _dateLargestUnit_).
         1. If _largestUnit_ is not _dateLargestUnit_, then
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
           1. Set _dateDifference_.[[Days]] to 0.

@@ -246,12 +246,8 @@ export class PlainDate {
     one = ES.ToTemporalDate(one);
     two = ES.ToTemporalDate(two);
     return ES.CompareISODate(
-      GetSlot(one, ISO_YEAR),
-      GetSlot(one, ISO_MONTH),
-      GetSlot(one, ISO_DAY),
-      GetSlot(two, ISO_YEAR),
-      GetSlot(two, ISO_MONTH),
-      GetSlot(two, ISO_DAY)
+      { year: GetSlot(one, ISO_YEAR), month: GetSlot(one, ISO_MONTH), day: GetSlot(one, ISO_DAY) },
+      { year: GetSlot(two, ISO_YEAR), month: GetSlot(two, ISO_MONTH), day: GetSlot(two, ISO_DAY) }
     );
   }
 }
