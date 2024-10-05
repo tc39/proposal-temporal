@@ -1683,7 +1683,7 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
 
 export function CreateTemporalDateSlots(result, isoYear, isoMonth, isoDay, calendar) {
   RejectISODate(isoYear, isoMonth, isoDay);
-  RejectDateRange(isoYear, isoMonth, isoDay);
+  RejectDateRange({ year: isoYear, month: isoMonth, day: isoDay });
 
   CreateSlots(result);
   SetSlot(result, ISO_YEAR, isoYear);
@@ -1712,7 +1712,18 @@ export function CreateTemporalDate(isoYear, isoMonth, isoDay, calendar = 'iso860
 
 export function CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns, calendar) {
   RejectDateTime(isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns);
-  RejectDateTimeRange(isoYear, isoMonth, isoDay, h, min, s, ms, µs, ns);
+  const iso = {
+    year: isoYear,
+    month: isoMonth,
+    day: isoDay,
+    hour: h,
+    minute: min,
+    second: s,
+    millisecond: ms,
+    microsecond: µs,
+    nanosecond: ns
+  };
+  RejectDateTimeRange(iso);
 
   CreateSlots(result);
   SetSlot(result, ISO_YEAR, isoYear);
@@ -1727,17 +1738,6 @@ export function CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h
   SetSlot(result, CALENDAR, calendar);
 
   if (typeof __debug__ !== 'undefined' && __debug__) {
-    const iso = {
-      year: isoYear,
-      month: isoMonth,
-      day: isoDay,
-      hour: h,
-      minute: min,
-      second: s,
-      millisecond: ms,
-      microsecond: µs,
-      nanosecond: ns
-    };
     let repr = TemporalDateTimeToString(iso, calendar, 'auto');
     ObjectDefineProperty(result, '_repr_', {
       value: `Temporal.PlainDateTime <${repr}>`,
@@ -1757,7 +1757,7 @@ export function CreateTemporalDateTime(isoYear, isoMonth, isoDay, h, min, s, ms,
 
 export function CreateTemporalMonthDaySlots(result, isoMonth, isoDay, calendar, referenceISOYear) {
   RejectISODate(referenceISOYear, isoMonth, isoDay);
-  RejectDateRange(referenceISOYear, isoMonth, isoDay);
+  RejectDateRange({ year: referenceISOYear, month: isoMonth, day: isoDay });
 
   CreateSlots(result);
   SetSlot(result, ISO_MONTH, isoMonth);
@@ -1864,7 +1864,7 @@ export function CalendarMergeFields(calendar, fields, additionalFields) {
 
 export function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
   const result = calendarImplForID(calendar).dateAdd(isoDate, dateDuration, overflow);
-  RejectDateRange(result.year, result.month, result.day);
+  RejectDateRange(result);
   return result;
 }
 
@@ -1912,7 +1912,7 @@ export function CalendarDateFromFields(calendar, fields, overflow) {
   const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'date');
   const result = calendarImpl.dateToISO(fields, overflow);
-  RejectDateRange(result.year, result.month, result.day);
+  RejectDateRange(result);
   return result;
 }
 
@@ -2927,9 +2927,10 @@ export function RejectISODate(year, month, day) {
   RejectToRange(day, 1, ISODaysInMonth(year, month));
 }
 
-export function RejectDateRange(year, month, day) {
+function RejectDateRange(isoDate) {
   // Noon avoids trouble at edges of DateTime range (excludes midnight)
-  RejectDateTimeRange(year, month, day, 12, 0, 0, 0, 0, 0);
+  const noon = { hour: 12, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+  RejectDateTimeRange(CombineISODateAndTimeRecord(isoDate, noon));
 }
 
 export function RejectTime(hour, minute, second, millisecond, microsecond, nanosecond) {
@@ -2946,7 +2947,7 @@ export function RejectDateTime(year, month, day, hour, minute, second, milliseco
   RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
-export function RejectDateTimeRange(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
+export function RejectDateTimeRange({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond }) {
   const ns = GetUTCEpochNanoseconds(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
     // Because PlainDateTime's range is wider than Instant's range, the line
@@ -4381,7 +4382,7 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
     startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
   }
   const durationToAdd = NormalizeDurationWithoutTime(duration);
-  RejectDateRange(startDate.year, startDate.month, startDate.day);
+  RejectDateRange(startDate);
   const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, overflow);
   const addedDateFields = ISODateToFields(calendar, addedDate, 'year-month');
 
