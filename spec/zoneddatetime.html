@@ -139,7 +139,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return CalendarEra(_zonedDateTime_.[[Calendar]], _isoDate_).
+        1. Return CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[Era]].
       </emu-alg>
     </emu-clause>
 
@@ -154,7 +154,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Let _result_ be CalendarEraYear(_zonedDateTime_.[[Calendar]], _isoDate_).
+        1. Let _result_ be CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[EraYear]].
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -171,7 +171,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarYear(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[Year]]).
       </emu-alg>
     </emu-clause>
 
@@ -186,7 +186,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarMonth(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -201,7 +201,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return CalendarMonthCode(_zonedDateTime_.[[Calendar]], _isoDate_).
+        1. Return CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[MonthCode]].
       </emu-alg>
     </emu-clause>
 
@@ -216,7 +216,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarDay(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -343,7 +343,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarDayOfWeek(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[DayOfWeek]]).
       </emu-alg>
     </emu-clause>
 
@@ -358,7 +358,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarDayOfYear(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[DayOfYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -373,7 +373,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Let _result_ be CalendarWeekOfYear(_zonedDateTime_.[[Calendar]], _isoDate_).
+        1. Let _result_ be CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[WeekOfYear]].[[Week]].
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -390,7 +390,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Let _result_ be CalendarYearOfWeek(_zonedDateTime_.[[Calendar]], _isoDate_).
+        1. Let _result_ be CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[WeekOfYear]].[[Year]].
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -427,7 +427,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarDaysInWeek(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[DaysInWeek]]).
       </emu-alg>
     </emu-clause>
 
@@ -442,7 +442,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarDaysInMonth(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[DaysInMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -457,7 +457,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarDaysInYear(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[DaysInYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -472,7 +472,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return 𝔽(CalendarMonthsInYear(_zonedDateTime_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[MonthsInYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -487,7 +487,7 @@
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _isoDate_ be ISODateTimeToDateRecord(_isoDateTime_).
-        1. Return CalendarInLeapYear(_zonedDateTime_.[[Calendar]], _isoDate_).
+        1. Return CalendarISOToDate(_zonedDateTime_.[[Calendar]], _isoDate_).[[InLeapYear]].
       </emu-alg>
     </emu-clause>
 

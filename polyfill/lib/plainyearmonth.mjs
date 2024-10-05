@@ -18,17 +18,17 @@ export class PlainYearMonth {
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarYear(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { year: true }).year;
   }
   get month() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarMonth(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { month: true }).month;
   }
   get monthCode() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { monthCode: true }).monthCode;
   }
   get calendarId() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
@@ -37,32 +37,32 @@ export class PlainYearMonth {
   get era() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarEra(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { era: true }).era;
   }
   get eraYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarEraYear(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { eraYear: true }).eraYear;
   }
   get daysInMonth() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarDaysInMonth(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { daysInMonth: true }).daysInMonth;
   }
   get daysInYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarDaysInYear(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { daysInYear: true }).daysInYear;
   }
   get monthsInYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarMonthsInYear(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { monthsInYear: true }).monthsInYear;
   }
   get inLeapYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarInLeapYear(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { inLeapYear: true }).inLeapYear;
   }
   with(temporalYearMonthLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');

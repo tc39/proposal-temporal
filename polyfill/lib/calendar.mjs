@@ -1992,4 +1992,3 @@ function calendarImpl(calendar) {
 // Probably not what the intrinsics mechanism was intended for, but view this as
 // an export of calendarImpl while avoiding circular dependencies
 DefineIntrinsic('calendarImpl', calendarImpl);
-DefineIntrinsic('calendarDateWeekOfYear', calendarDateWeekOfYear);
