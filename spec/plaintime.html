@@ -71,7 +71,9 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalTime(_one_).
         1. Set _two_ to ? ToTemporalTime(_two_).
-        1. Return 𝔽(CompareTemporalTime(_one_.[[ISOHour]], _one_.[[ISOMinute]], _one_.[[ISOSecond]], _one_.[[ISOMillisecond]], _one_.[[ISOMicrosecond]], _one_.[[ISONanosecond]], _two_.[[ISOHour]], _two_.[[ISOMinute]], _two_.[[ISOSecond]], _two_.[[ISOMillisecond]], _two_.[[ISOMicrosecond]], _two_.[[ISONanosecond]])).
+        1. Let _time1_ be Time Record { [[Hour]]: _one_.[[ISOHour]], [[Minute]]: _one_.[[ISOMinute]], [[Second]]: _one_.[[ISOSecond]], [[Millisecond]]: _one_.[[ISOMillisecond]], [[Microsecond]]: _one_.[[ISOMicrosecond]], [[Nanosecond]]: _one_.[[ISONanosecond]] }.
+        1. Let _time2_ be Time Record { [[Hour]]: _two_.[[ISOHour]], [[Minute]]: _two_.[[ISOMinute]], [[Second]]: _two_.[[ISOSecond]], [[Millisecond]]: _two_.[[ISOMillisecond]], [[Microsecond]]: _two_.[[ISOMicrosecond]], [[Nanosecond]]: _two_.[[ISONanosecond]] }.
+        1. Return 𝔽(CompareTimeRecord(_time1_, _time2_)).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -849,21 +851,11 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-comparetemporaltime" type="abstract operation">
+    <emu-clause id="sec-temporal-comparetimerecord" type="abstract operation">
       <h1>
-        CompareTemporalTime (
-          _h1_: an integer in the inclusive interval from 0 to 23,
-          _min1_: an integer in the inclusive interval from 0 to 59,
-          _s1_: an integer in the inclusive interval from 0 to 59,
-          _ms1_: an integer in the inclusive interval from 0 to 999,
-          _mus1_: an integer in the inclusive interval from 0 to 999,
-          _ns1_: an integer in the inclusive interval from 0 to 999,
-          _h2_: an integer in the inclusive interval from 0 to 23,
-          _min2_: an integer in the inclusive interval from 0 to 59,
-          _s2_: an integer in the inclusive interval from 0 to 59,
-          _ms2_: an integer in the inclusive interval from 0 to 999,
-          _mus2_: an integer in the inclusive interval from 0 to 999,
-          _ns2_: an integer in the inclusive interval from 0 to 999,
+        CompareTimeRecord (
+          _time1_: a Time Record,
+          _time2_: a Time Record,
         ): -1, 0, or 1
       </h1>
       <dl class="header">
@@ -871,18 +863,18 @@
         <dd>It compares the two given times and returns -1 if the second comes earlier in the day than the first, 1 if the first comes earlier in the day than the second, and 0 if they are the same.</dd>
       </dl>
       <emu-alg>
-        1. If _h1_ > _h2_, return 1.
-        1. If _h1_ &lt; _h2_, return -1.
-        1. If _min1_ > _min2_, return 1.
-        1. If _min1_ &lt; _min2_, return -1.
-        1. If _s1_ > _s2_, return 1.
-        1. If _s1_ &lt; _s2_, return -1.
-        1. If _ms1_ > _ms2_, return 1.
-        1. If _ms1_ &lt; _ms2_, return -1.
-        1. If _mus1_ > _mus2_, return 1.
-        1. If _mus1_ &lt; _mus2_, return -1.
-        1. If _ns1_ > _ns2_, return 1.
-        1. If _ns1_ &lt; _ns2_, return -1.
+        1. If _time1_.[[Hour]] > _time2_.[[Hour]], return 1.
+        1. If _time1_.[[Hour]] &lt; _time2_.[[Hour]], return -1.
+        1. If _time1_.[[Minute]] > _time2_.[[Minute]], return 1.
+        1. If _time1_.[[Minute]] &lt; _time2_.[[Minute]], return -1.
+        1. If _time1_.[[Second]] > _time2_.[[Second]], return 1.
+        1. If _time1_.[[Second]] &lt; _time2_.[[Second]], return -1.
+        1. If _time1_.[[Millisecond]] > _time2_.[[Millisecond]], return 1.
+        1. If _time1_.[[Millisecond]] &lt; _time2_.[[Millisecond]], return -1.
+        1. If _time1_.[[Microsecond]] > _time2_.[[Microsecond]], return 1.
+        1. If _time1_.[[Microsecond]] &lt; _time2_.[[Microsecond]], return -1.
+        1. If _time1_.[[Nanosecond]] > _time2_.[[Nanosecond]], return 1.
+        1. If _time1_.[[Nanosecond]] &lt; _time2_.[[Nanosecond]], return -1.
         1. Return 0.
       </emu-alg>
     </emu-clause>
