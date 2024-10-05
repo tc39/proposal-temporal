@@ -491,18 +491,8 @@
     <emu-clause id="sec-temporal-differencetime" type="abstract operation">
       <h1>
         DifferenceTime (
-          _h1_: an integer between 0 and 23 inclusive,
-          _min1_: an integer between 0 and 59 inclusive,
-          _s1_: an integer between 0 and 59 inclusive,
-          _ms1_: an integer between 0 and 999 inclusive,
-          _mus1_: an integer between 0 and 999 inclusive,
-          _ns1_: an integer between 0 and 999 inclusive,
-          _h2_: an integer between 0 and 23 inclusive,
-          _min2_: an integer between 0 and 59 inclusive,
-          _s2_: an integer between 0 and 59 inclusive,
-          _ms2_: an integer between 0 and 999 inclusive,
-          _mus2_: an integer between 0 and 999 inclusive,
-          _ns2_: an integer between 0 and 999 inclusive,
+          _time1_: a Time Record,
+          _time2_: a Time Record,
         ): a Normalized Time Duration Record
       </h1>
       <dl class="header">
@@ -510,12 +500,12 @@
         <dd>It returns the elapsed duration from a first wall-clock time, until a second wall-clock time.</dd>
       </dl>
       <emu-alg>
-        1. Let _hours_ be _h2_ - _h1_.
-        1. Let _minutes_ be _min2_ - _min1_.
-        1. Let _seconds_ be _s2_ - _s1_.
-        1. Let _milliseconds_ be _ms2_ - _ms1_.
-        1. Let _microseconds_ be _mus2_ - _mus1_.
-        1. Let _nanoseconds_ be _ns2_ - _ns1_.
+        1. Let _hours_ be _time2_.[[Hour]] - _time1_.[[Hour]].
+        1. Let _minutes_ be _time2_.[[Minute]] - _time1_.[[Minute]].
+        1. Let _seconds_ be _time2_.[[Second]] - _time1_.[[Second]].
+        1. Let _milliseconds_ be _time2_.[[Millisecond]] - _time1_.[[Millisecond]].
+        1. Let _microseconds_ be _time2_.[[Microsecond]] - _time1_.[[Microsecond]].
+        1. Let _nanoseconds_ be _time2_.[[Nanosecond]] - _time1_.[[Nanosecond]].
         1. Let _norm_ be NormalizeTimeDuration(_hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
         1. Assert: abs(_norm_.[[TotalNanoseconds]]) &lt; nsPerDay.
         1. Return _norm_.
@@ -999,7 +989,9 @@
         1. Set _other_ to ? ToTemporalTime(_other_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, « », ~nanosecond~, ~hour~).
-        1. Let _norm_ be DifferenceTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
+        1. Let _time1_ be Time Record { [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
+        1. Let _time2_ be Time Record { [[Hour]]: _other_.[[ISOHour]], [[Minute]]: _other_.[[ISOMinute]], [[Second]]: _other_.[[ISOSecond]], [[Millisecond]]: _other_.[[ISOMillisecond]], [[Microsecond]]: _other_.[[ISOMicrosecond]], [[Nanosecond]]: _other_.[[ISONanosecond]] }.
+        1. Let _norm_ be DifferenceTime(_time1_, _time2_).
         1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), _norm_).
         1. If _settings_.[[SmallestUnit]] is not ~nanosecond~ or _settings_.[[RoundingIncrement]] ≠ 1, then
           1. Set _duration_ to ! RoundTimeDuration(_duration_, _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).

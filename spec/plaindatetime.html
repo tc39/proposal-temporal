@@ -1150,7 +1150,9 @@
         1. Assert: ISODateTimeWithinLimits(_isoDateTime1_) is *true*.
         1. Let _isoDateTime2_ be ISO Date-Time Record { [[Year]]: _y2_, [[Month]]: _mon2_, [[Day]]: _d2_, [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
         1. Assert: ISODateTimeWithinLimits(_isoDateTime2_) is *true*.
-        1. Let _timeDuration_ be DifferenceTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
+        1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _time2_ be Time Record { [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
+        1. Let _timeDuration_ be DifferenceTime(_time1_, _time2_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_timeDuration_).
         1. Let _isoDate1_ be ISODateTimeToDateRecord(_isoDateTime1_).
         1. Let _isoDate2_ be ISODateTimeToDateRecord(_isoDateTime2_).
