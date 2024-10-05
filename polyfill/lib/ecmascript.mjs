@@ -3203,18 +3203,19 @@ export function DifferenceISODateTime(
   let timeDuration = DifferenceTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2);
 
   const timeSign = timeDuration.sign();
-  const dateSign = CompareISODate(y2, mon2, d2, y1, mon1, d1);
+  const isoDate1 = { year: y1, month: mon1, day: d1 };
+  const isoDate2 = { year: y2, month: mon2, day: d2 };
+  const dateSign = CompareISODate(isoDate2, isoDate1);
 
-  // back-off a day from date2 so that the signs of the date a time diff match
+  // back-off a day from date2 so that the signs of the date and time diff match
+  let adjustedDate = isoDate2;
   if (dateSign === -timeSign) {
-    ({ year: y2, month: mon2, day: d2 } = BalanceISODate(y2, mon2, d2 + timeSign));
+    adjustedDate = BalanceISODate(adjustedDate.year, adjustedDate.month, adjustedDate.day + timeSign);
     timeDuration = timeDuration.add24HourDays(-timeSign);
   }
 
-  const date1 = { year: y1, month: mon1, day: d1 };
-  const date2 = { year: y2, month: mon2, day: d2 };
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
-  const dateDifference = CalendarDateUntil(calendar, date1, date2, dateLargestUnit);
+  const dateDifference = CalendarDateUntil(calendar, isoDate1, adjustedDate, dateLargestUnit);
   if (largestUnit !== dateLargestUnit) {
     // largestUnit < days, so add the days in to the normalized duration
     timeDuration = timeDuration.add24HourDays(dateDifference.days);
@@ -4529,10 +4530,10 @@ export function TotalTimeDuration(norm, unit) {
   return norm.fdiv(divisor);
 }
 
-export function CompareISODate(y1, m1, d1, y2, m2, d2) {
-  if (y1 !== y2) return ComparisonResult(y1 - y2);
-  if (m1 !== m2) return ComparisonResult(m1 - m2);
-  if (d1 !== d2) return ComparisonResult(d1 - d2);
+export function CompareISODate(isoDate1, isoDate2) {
+  if (isoDate1.year !== isoDate2.year) return ComparisonResult(isoDate1.year - isoDate2.year);
+  if (isoDate1.month !== isoDate2.month) return ComparisonResult(isoDate1.month - isoDate2.month);
+  if (isoDate1.day !== isoDate2.day) return ComparisonResult(isoDate1.day - isoDate2.day);
   return 0;
 }
 
@@ -4547,7 +4548,7 @@ export function CompareTemporalTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, 
 }
 
 export function CompareISODateTime(y1, m1, d1, h1, min1, s1, ms1, µs1, ns1, y2, m2, d2, h2, min2, s2, ms2, µs2, ns2) {
-  const dateResult = CompareISODate(y1, m1, d1, y2, m2, d2);
+  const dateResult = CompareISODate({ year: y1, month: m1, day: d1 }, { year: y2, month: m2, day: d2 });
   if (dateResult !== 0) return dateResult;
   return CompareTemporalTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2);
 }
