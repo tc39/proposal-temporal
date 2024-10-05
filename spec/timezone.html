@@ -323,7 +323,8 @@
         1. Assert: abs(_nanoseconds_) ≤ nsPerDay.
         1. If _disambiguation_ is ~earlier~, then
           1. Let _norm_ be NormalizeTimeDuration(0, 0, 0, 0, 0, -_nanoseconds_).
-          1. Let _earlierTime_ be AddTime(_isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _norm_).
+          1. Let _time_ be Time Record { [[Hour]]: _isoDateTime_.[[Hour]], [[Minute]]: _isoDateTime_.[[Minute]], [[Second]]: _isoDateTime_.[[Second]], [[Millisecond]]: _isoDateTime_.[[Millisecond]], [[Microsecond]]: _isoDateTime_.[[Microsecond]], [[Nanosecond]]: _isoDateTime_.[[Nanosecond]] }.
+          1. Let _earlierTime_ be AddTime(_time_, _norm_).
           1. Let _earlierDate_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + _earlierTime_.[[Days]]).
           1. Let _earlierDateTime_ be CombineISODateAndTimeRecord(_earlierDate_, _earlierTime_).
           1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _earlierDateTime_).
@@ -331,7 +332,8 @@
           1. Return _possibleEpochNs_[0].
         1. Assert: _disambiguation_ is ~compatible~ or ~later~.
         1. Let _norm_ be NormalizeTimeDuration(0, 0, 0, 0, 0, _nanoseconds_).
-        1. Let _laterTime_ be AddTime(_isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _norm_).
+        1. Let _time_ be Time Record { [[Hour]]: _isoDateTime_.[[Hour]], [[Minute]]: _isoDateTime_.[[Minute]], [[Second]]: _isoDateTime_.[[Second]], [[Millisecond]]: _isoDateTime_.[[Millisecond]], [[Microsecond]]: _isoDateTime_.[[Microsecond]], [[Nanosecond]]: _isoDateTime_.[[Nanosecond]] }.
+        1. Let _laterTime_ be AddTime(_time_, _norm_).
         1. Let _laterDate_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + _laterTime_.[[Days]]).
         1. Let _laterDateTime_ be CombineISODateAndTimeRecord(_laterDate_, _laterTime_).
         1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _laterDateTime_).

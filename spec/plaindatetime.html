@@ -1306,7 +1306,8 @@
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-        1. Let _timeResult_ be AddTime(_dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _normalizedDuration_.[[NormalizedTime]]).
+        1. Let _time_ be Time Record { [[Hour]]: _dateTime_.[[ISOHour]], [[Minute]]: _dateTime_.[[ISOMinute]], [[Second]]: _dateTime_.[[ISOSecond]], [[Millisecond]]: _dateTime_.[[ISOMillisecond]], [[Microsecond]]: _dateTime_.[[ISOMicrosecond]], [[Nanosecond]]: _dateTime_.[[ISONanosecond]] }.
+        1. Let _timeResult_ be AddTime(_time_, _normalizedDuration_.[[NormalizedTime]]).
         1. Let _datePart_ be TemporalObjectToISODateRecord(_dateTime_).
         1. Let _dateDuration_ be ? AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _timeResult_.[[Days]]).
         1. Let _addedDate_ be ? CalendarDateAdd(_dateTime_.[[Calendar]], _datePart_, _dateDuration_, _overflow_).

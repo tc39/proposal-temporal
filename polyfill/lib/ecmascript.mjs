@@ -2053,7 +2053,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
   switch (disambiguation) {
     case 'earlier': {
       const norm = TimeDuration.normalize(0, 0, 0, 0, 0, -nanoseconds);
-      const earlierTime = AddTime(hour, minute, second, millisecond, microsecond, nanosecond, norm);
+      const earlierTime = AddTime(isoDateTime, norm);
       const earlierDate = BalanceISODate(year, month, day + earlierTime.deltaDays);
       return GetPossibleEpochNanoseconds(timeZone, { ...earlierTime, ...earlierDate })[0];
     }
@@ -2061,7 +2061,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
     // fall through because 'compatible' means 'later' for "spring forward" transitions
     case 'later': {
       const norm = TimeDuration.normalize(0, 0, 0, 0, 0, nanoseconds);
-      const laterTime = AddTime(hour, minute, second, millisecond, microsecond, nanosecond, norm);
+      const laterTime = AddTime(isoDateTime, norm);
       const laterDate = BalanceISODate(year, month, day + laterTime.deltaDays);
       const possible = GetPossibleEpochNanoseconds(timeZone, { ...laterTime, ...laterDate });
       return possible[possible.length - 1];
@@ -4208,7 +4208,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
   return result;
 }
 
-export function AddTime(hour, minute, second, millisecond, microsecond, nanosecond, norm) {
+export function AddTime({ hour, minute, second, millisecond, microsecond, nanosecond }, norm) {
   second += norm.sec;
   nanosecond += norm.subsec;
   return BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -4305,12 +4305,14 @@ export function AddDurationToDateTime(operation, dateTime, durationLike, options
 
   // Add the time part
   const timeResult = AddTime(
-    GetSlot(dateTime, ISO_HOUR),
-    GetSlot(dateTime, ISO_MINUTE),
-    GetSlot(dateTime, ISO_SECOND),
-    GetSlot(dateTime, ISO_MILLISECOND),
-    GetSlot(dateTime, ISO_MICROSECOND),
-    GetSlot(dateTime, ISO_NANOSECOND),
+    {
+      hour: GetSlot(dateTime, ISO_HOUR),
+      minute: GetSlot(dateTime, ISO_MINUTE),
+      second: GetSlot(dateTime, ISO_SECOND),
+      millisecond: GetSlot(dateTime, ISO_MILLISECOND),
+      microsecond: GetSlot(dateTime, ISO_MICROSECOND),
+      nanosecond: GetSlot(dateTime, ISO_NANOSECOND)
+    },
     normalizedDuration.norm
   );
   const dateDuration = AdjustDateDurationRecord(normalizedDuration.date, timeResult.deltaDays);
@@ -4345,12 +4347,14 @@ export function AddDurationToTime(operation, temporalTime, durationLike) {
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   const normalizedDuration = NormalizeDurationWith24HourDays(duration);
   let { hour, minute, second, millisecond, microsecond, nanosecond } = AddTime(
-    GetSlot(temporalTime, ISO_HOUR),
-    GetSlot(temporalTime, ISO_MINUTE),
-    GetSlot(temporalTime, ISO_SECOND),
-    GetSlot(temporalTime, ISO_MILLISECOND),
-    GetSlot(temporalTime, ISO_MICROSECOND),
-    GetSlot(temporalTime, ISO_NANOSECOND),
+    {
+      hour: GetSlot(temporalTime, ISO_HOUR),
+      minute: GetSlot(temporalTime, ISO_MINUTE),
+      second: GetSlot(temporalTime, ISO_SECOND),
+      millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
+      microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
+      nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
+    },
     normalizedDuration.norm
   );
   ({ hour, minute, second, millisecond, microsecond, nanosecond } = RegulateTime(
