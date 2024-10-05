@@ -710,22 +710,6 @@
       <emu-note>For example, week calendar year 2020 includes both 31 December 2019 (a Tuesday belonging to its calendar week 1) and 1 January 2021 (a Friday belonging to its calendar week 53).</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-isomonthcode" type="abstract operation">
-      <h1>
-        ISOMonthCode (
-          _month_: an integer in the inclusive interval from 1 to 12,
-        ): a String
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It returns the string month code for a month in the ISO 8601 calendar.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _numberPart_ be ToZeroPaddedDecimalString(_month_, 2).
-        1. Return the string-concatenation of *"M"* and _numberPart_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-toisodayofyear" type="abstract operation">
       <h1>
         ToISODayOfYear (
@@ -853,13 +837,15 @@
       </dl>
       <emu-alg>
         1. If _calendar_ is *"iso8601"*, then
+          1. Let _monthNumberPart_ be ToZeroPaddedDecimalString(_isoDate_.[[Month]], 2).
+          1. Let _monthCode_ be the string-concatenation of *"M"* and _monthNumberPart_.
           1. If MathematicalInLeapYear(EpochTimeForYear(_isoDate_.[[Year]])) = 1, let _inLeapYear_ be *true*; else let _inLeapYear_ be *false*.
           1. Return Calendar Date Record {
               [[Era]]: *undefined*,
               [[EraYear]]: *undefined*,
               [[Year]]: _isoDate_.[[Year]],
               [[Month]]: _isoDate_.[[Month]],
-              [[MonthCode]]: ISOMonthCode(_isoDate_.[[Month]]),
+              [[MonthCode]]: _monthCode_,
               [[Day]]: _isoDate_.[[Day]],
               [[DayOfWeek]]: ToISODayOfWeek(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
               [[DayOfYear]]: ToISODayOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
@@ -999,7 +985,6 @@
           1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1.
           1. If ParseText(StringToCodePoints(_monthCodeDigits_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
           1. Let _monthCodeInteger_ be ℝ(StringToNumber(_monthCodeDigits_)).
-          1. Assert: SameValue(_monthCode_, ISOMonthCode(_monthCodeInteger_)) is *true*.
           1. If _month_ is not ~unset~ and _month_ ≠ _monthCodeInteger_, throw a *RangeError* exception.
           1. Set _fields_.[[Month]] to _monthCodeInteger_.
         1. Else,
