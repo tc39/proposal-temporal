@@ -679,7 +679,7 @@
           1. Let _roundedDayNs_ be ! RoundNormalizedTimeDurationToIncrement(_dayProgressNs_, _dayLengthNs_, _roundingMode_).
           1. Let _epochNanoseconds_ be _startNs_ + _roundedDayNs_.[[TotalNanoseconds]].
         1. Else,
-          1. Let _roundResult_ be RoundISODateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+          1. Let _roundResult_ be RoundISODateTime(_isoDateTime_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _thisNs_).
           1. Let _time_ be Time Record { [[Hour]]: _roundResult_.[[Hour]], [[Minute]]: _roundResult_.[[Minute]], [[Second]]: _roundResult_.[[Second]], [[Millisecond]]: _roundResult_.[[Millisecond]], [[Microsecond]]: _roundResult_.[[Microsecond]], [[Nanosecond]]: _roundResult_.[[Nanosecond]] }.
           1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_roundResult_.[[Year]], _roundResult_.[[Month]], _roundResult_.[[Day]], _time_, ~option~, _offsetNanoseconds_, _timeZone_, ~compatible~, ~prefer~, ~match-exactly~).

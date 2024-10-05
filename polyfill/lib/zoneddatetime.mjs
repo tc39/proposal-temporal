@@ -333,15 +333,7 @@ export class ZonedDateTime {
       // smallestUnit < day
       // Round based on ISO-calendar time units
       const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
-        iso.year,
-        iso.month,
-        iso.day,
-        iso.hour,
-        iso.minute,
-        iso.second,
-        iso.millisecond,
-        iso.microsecond,
-        iso.nanosecond,
+        iso,
         roundingIncrement,
         smallestUnit,
         roundingMode
