@@ -882,12 +882,7 @@
     <emu-clause id="sec-temporal-addtime" type="abstract operation">
       <h1>
         AddTime (
-          _hour_: an integer in the inclusive interval from 0 to 23,
-          _minute_: an integer in the inclusive interval from 0 to 59,
-          _second_: an integer in the inclusive interval from 0 to 59,
-          _millisecond_: an integer in the inclusive interval from 0 to 999,
-          _microsecond_: an integer in the inclusive interval from 0 to 999,
-          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+          _time_: a Time Record,
           _norm_: a Normalized Time Duration Record,
         ): a Time Record
       </h1>
@@ -896,9 +891,9 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Set _second_ to _second_ + NormalizedTimeDurationSeconds(_norm_).
-        1. Set _nanosecond_ to _nanosecond_ + NormalizedTimeDurationSubseconds(_norm_).
-        1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
+        1. Let _second_ be _time_.[[Second]] + NormalizedTimeDurationSeconds(_norm_).
+        1. Let _nanosecond_ be _time_.[[Nanosecond]] + NormalizedTimeDurationSubseconds(_norm_).
+        1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _second_, _time_.[[Millisecond]], _time_.[[Microsecond]], _nanosecond_).
       </emu-alg>
     </emu-clause>
 
@@ -1006,7 +1001,8 @@
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
-        1. Let _result_ be AddTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _normalizedDuration_.[[NormalizedTime]]).
+        1. Let _time_ be Time Record { [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
+        1. Let _result_ be AddTime(_time_, _normalizedDuration_.[[NormalizedTime]]).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>

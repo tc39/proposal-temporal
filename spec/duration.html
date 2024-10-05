@@ -437,7 +437,8 @@
           1. Return ? UnnormalizeDuration(_normalizedDuration_, _largestUnit_).
         1. If _plainRelativeTo_ is not *undefined*, then
           1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-          1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _normalizedDuration_.[[NormalizedTime]]).
+          1. Let _midnight_ be Time Record { [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+          1. Let _targetTime_ be AddTime(_midnight_, _normalizedDuration_.[[NormalizedTime]]).
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
@@ -479,7 +480,8 @@
           1. Let _total_ be ? DifferenceZonedDateTimeWithTotal(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _unit_).
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-          1. Let _targetTime_ be AddTime(0, 0, 0, 0, 0, 0, _normalizedDuration_.[[NormalizedTime]]).
+          1. Let _midnight_ be Time Record { [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+          1. Let _targetTime_ be AddTime(_midnight_, _normalizedDuration_.[[NormalizedTime]]).
           1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
