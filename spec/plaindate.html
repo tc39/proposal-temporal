@@ -479,7 +479,7 @@
           1. Set _temporalTime_ to ? ToTemporalTime(_temporalTime_).
           1. Let _timeRecord_ be Time Record { [[Days]]: 0, [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _timeRecord_).
-          1. If ISODateTimeWithinLimits(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]) is *false*, throw a *RangeError* exception.
+          1. If ISODateTimeWithinLimits(_isoDateTime_) is *false*, throw a *RangeError* exception.
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _isoDateTime_, ~compatible~).
         1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _temporalDate_.[[Calendar]]).
       </emu-alg>
@@ -704,7 +704,8 @@
       </dl>
       <emu-alg>
         1. If IsValidISODate(_isoYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
-        1. If ISODateWithinLimits(_isoYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
+        1. Let _isoDate_ be CreateISODateRecord(_isoYear_, _isoMonth_, _isoDay_).
+        1. If ISODateWithinLimits(_isoDate_) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainDate%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainDate.prototype%"*, « [[InitializedTemporalDate]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
@@ -906,20 +907,20 @@
     <emu-clause id="sec-temporal-isodatewithinlimits" type="abstract operation">
       <h1>
         ISODateWithinLimits (
-          _year_: an integer,
-          _month_: an integer between 1 and 12 inclusive,
-          _day_: an integer between 1 and 31 inclusive,
+          _isoDate_: an ISO Date Record,
         ): a Boolean
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>The return value is *true* if the date in the ISO 8601 calendar given by the arguments is within the representable range of `Temporal.PlainDate`, and *false* otherwise.</dd>
+        <dd>The return value is *true* if the date in the ISO 8601 calendar given by the argument is within the representable range of `Temporal.PlainDate`, and *false* otherwise.</dd>
       </dl>
       <emu-note>
         <p>Deferring to ISODateTimeWithinLimits with an hour of 12 avoids trouble at the extremes of the representable range of Temporal.PlainDateTime, which stops just before midnight on each end.</p>
       </emu-note>
       <emu-alg>
-        1. Return ISODateTimeWithinLimits(_year_, _month_, _day_, 12, 0, 0, 0, 0, 0).
+        1. Let _noon_ be Time Record { [[Days]]: 0, [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _noon_).
+        1. Return ISODateTimeWithinLimits(_isoDateTime_).
       </emu-alg>
     </emu-clause>
 

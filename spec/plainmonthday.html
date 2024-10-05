@@ -353,7 +353,8 @@
       </dl>
       <emu-alg>
         1. If IsValidISODate(_referenceISOYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
-        1. If ISODateWithinLimits(_referenceISOYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
+        1. Let _isoDate_ be CreateISODateRecord(_referenceISOYear_, _isoMonth_, _isoDay_).
+        1. If ISODateWithinLimits(_isoDate_) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainMonthDay%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainMonthDay.prototype%"*, « [[InitializedTemporalMonthDay]], [[ISOMonth]], [[ISODay]], [[ISOYear]], [[Calendar]] »).
         1. Set _object_.[[ISOMonth]] to _isoMonth_.

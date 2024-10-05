@@ -1115,7 +1115,7 @@
         1. Let _datePart_ be ISODateTimeToDateRecord(_isoDateTime_).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _datePart_, _duration_.[[Date]], _overflow_).
         1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_addedDate_, _isoDateTime_).
-        1. If ISODateTimeWithinLimits(_intermediateDateTime_.[[Year]], _intermediateDateTime_.[[Month]], _intermediateDateTime_.[[Day]], _intermediateDateTime_.[[Hour]], _intermediateDateTime_.[[Minute]], _intermediateDateTime_.[[Second]], _intermediateDateTime_.[[Millisecond]], _intermediateDateTime_.[[Microsecond]], _intermediateDateTime_.[[Nanosecond]]) is *false*, throw a *RangeError* exception.
+        1. If ISODateTimeWithinLimits(_intermediateDateTime_) is *false*, throw a *RangeError* exception.
         1. Let _intermediateNs_ be ! GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
         1. Return ? AddInstant(_intermediateNs_, _duration_.[[NormalizedTime]]).
       </emu-alg>

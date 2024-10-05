@@ -389,17 +389,7 @@ export class PlainDateTime {
       unit,
       roundingMode
     );
-    ES.RejectDateTimeRange(
-      result.year,
-      result.month,
-      result.day,
-      result.hour,
-      result.minute,
-      result.second,
-      result.millisecond,
-      result.microsecond,
-      result.nanosecond
-    );
+    ES.RejectDateTimeRange(result);
     return ES.TemporalDateTimeToString(result, GetSlot(this, CALENDAR), precision, showCalendar);
   }
   toJSON() {

@@ -1385,7 +1385,7 @@
     <p>An <dfn variants="ISO Date-Time Parse Records">ISO Date-Time Parse Record</dfn> is a Record value used to represent the result of parsing an ISO 8601 string.</p>
     <p>
       For any ISO Date-Time Parse Record _r_, IsValidISODate(_r_.[[Year]], _r_.[[Month]], _r_.[[Day]]) must return *true*, or, if _r_.[[Year]] is ~empty~, IsValidISODate(1972, _r_.[[Month]], _r_.[[Day]]) must return *true*.
-      It is not necessary for ISODateTimeWithinLimits(_r_.[[Year]], _r_.[[Month]], _r_.[[Day]], 0, 0, 0, 0, 0, 0) to return *true*.
+      It is not necessary for the represented date and time to be within the range given by ISODateTimeWithinLimits.
     </p>
     <p>ISO Date-Time Parse Records have the fields listed in <emu-xref href="#table-temporal-iso-date-time-parse-record-fields"></emu-xref>.</p>
     <emu-table id="table-temporal-iso-date-time-parse-record-fields" caption="ISO Date-Time Parse Record Fields">
