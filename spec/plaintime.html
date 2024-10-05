@@ -311,7 +311,7 @@
         1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
         1. Let _roundResult_ be RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
-        1. Return TemporalTimeToString(_roundResult_.[[Hour]], _roundResult_.[[Minute]], _roundResult_.[[Second]], _roundResult_.[[Millisecond]], _roundResult_.[[Microsecond]], _roundResult_.[[Nanosecond]], _precision_.[[Precision]]).
+        1. Return TimeRecordToString(_roundResult_, _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
 
@@ -326,7 +326,8 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], ~auto~).
+        1. Let _time_ be Time Record { [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
+        1. Return TimeRecordToString(_time_, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -336,7 +337,8 @@
       <emu-alg>
         1. Let _temporalTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return TemporalTimeToString(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], ~auto~).
+        1. Let _time_ be Time Record { [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
+        1. Return TimeRecordToString(_time_, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -830,15 +832,10 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaltimetostring" type="abstract operation">
+    <emu-clause id="sec-temporal-timerecordtostring" type="abstract operation">
       <h1>
-        TemporalTimeToString (
-          _hour_: an integer in the inclusive interval from 0 to 23,
-          _minute_: an integer in the inclusive interval from 0 to 59,
-          _second_: an integer in the inclusive interval from 0 to 59,
-          _millisecond_: an integer in the inclusive interval from 0 to 999,
-          _microsecond_: an integer in the inclusive interval from 0 to 999,
-          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+        TimeRecordToString (
+          _time_: a Time Record,
           _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
         ): a String
       </h1>
@@ -847,8 +844,8 @@
         <dd>It formats the given time as an ISO 8601 string, to the precision specified by _precision_.</dd>
       </dl>
       <emu-alg>
-        1. Let _subSecondNanoseconds_ be _millisecond_ × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
-        1. Return FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
+        1. Let _subSecondNanoseconds_ be _time_.[[Millisecond]] × 10<sup>6</sup> + _time_.[[Microsecond]] × 10<sup>3</sup> + _time_.[[Nanosecond]].
+        1. Return FormatTimeString(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _subSecondNanoseconds_, _precision_).
       </emu-alg>
     </emu-clause>
 

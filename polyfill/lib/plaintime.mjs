@@ -29,33 +29,6 @@ import {
   SetSlot
 } from './slots.mjs';
 
-function TemporalTimeToString(time, precision, options = undefined) {
-  let hour = GetSlot(time, ISO_HOUR);
-  let minute = GetSlot(time, ISO_MINUTE);
-  let second = GetSlot(time, ISO_SECOND);
-  let millisecond = GetSlot(time, ISO_MILLISECOND);
-  let microsecond = GetSlot(time, ISO_MICROSECOND);
-  let nanosecond = GetSlot(time, ISO_NANOSECOND);
-
-  if (options) {
-    const { unit, increment, roundingMode } = options;
-    ({ hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      increment,
-      unit,
-      roundingMode
-    ));
-  }
-
-  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
-  return ES.FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
-}
-
 export class PlainTime {
   constructor(isoHour = 0, isoMinute = 0, isoSecond = 0, isoMillisecond = 0, isoMicrosecond = 0, isoNanosecond = 0) {
     isoHour = isoHour === undefined ? 0 : ES.ToIntegerWithTruncation(isoHour);
@@ -75,8 +48,16 @@ export class PlainTime {
     SetSlot(this, ISO_NANOSECOND, isoNanosecond);
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
+      const time = {
+        hour: isoHour,
+        minute: isoMinute,
+        second: isoSecond,
+        millisecond: isoMillisecond,
+        microsecond: isoMicrosecond,
+        nanosecond: isoNanosecond
+      };
       ObjectDefineProperty(this, '_repr_', {
-        value: `${this[SymbolToStringTag]} <${TemporalTimeToString(this, 'auto')}>`,
+        value: `${this[SymbolToStringTag]} <${ES.TimeRecordToString(time, 'auto')}>`,
         writable: false,
         enumerable: false,
         configurable: false
@@ -209,11 +190,30 @@ export class PlainTime {
     const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeErrorCtor('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
-    return TemporalTimeToString(this, precision, { unit, increment, roundingMode });
+    const time = ES.RoundTime(
+      GetSlot(this, ISO_HOUR),
+      GetSlot(this, ISO_MINUTE),
+      GetSlot(this, ISO_SECOND),
+      GetSlot(this, ISO_MILLISECOND),
+      GetSlot(this, ISO_MICROSECOND),
+      GetSlot(this, ISO_NANOSECOND),
+      increment,
+      unit,
+      roundingMode
+    );
+    return ES.TimeRecordToString(time, precision);
   }
   toJSON() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return TemporalTimeToString(this, 'auto');
+    const time = {
+      hour: GetSlot(this, ISO_HOUR),
+      minute: GetSlot(this, ISO_MINUTE),
+      second: GetSlot(this, ISO_SECOND),
+      millisecond: GetSlot(this, ISO_MILLISECOND),
+      microsecond: GetSlot(this, ISO_MICROSECOND),
+      nanosecond: GetSlot(this, ISO_NANOSECOND)
+    };
+    return ES.TimeRecordToString(time, 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');

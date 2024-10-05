@@ -2252,6 +2252,11 @@ export function TemporalDateToString(date, showCalendar = 'auto') {
   return `${year}-${month}-${day}${calendar}`;
 }
 
+export function TimeRecordToString({ hour, minute, second, millisecond, microsecond, nanosecond }, precision) {
+  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+  return FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
+}
+
 export function TemporalDateTimeToString(isoDateTime, calendar, precision, showCalendar = 'auto') {
   let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = isoDateTime;
   const yearString = ISOYearString(year);
