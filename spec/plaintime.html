@@ -277,7 +277,8 @@
         1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Assert: _maximum_ is not ~unset~.
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
-        1. Let _result_ be RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Let _time_ be Time Record { [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
+        1. Let _result_ be RoundTime(_time_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ! CreateTemporalTime(_result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
@@ -312,7 +313,8 @@
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_resolvedOptions_, *"smallestUnit"*, ~time~, ~unset~).
         1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
-        1. Let _roundResult_ be RoundTime(_temporalTime_.[[ISOHour]], _temporalTime_.[[ISOMinute]], _temporalTime_.[[ISOSecond]], _temporalTime_.[[ISOMillisecond]], _temporalTime_.[[ISOMicrosecond]], _temporalTime_.[[ISONanosecond]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Let _time_ be Time Record { [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
+        1. Let _roundResult_ be RoundTime(_time_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Return TimeRecordToString(_roundResult_, _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
@@ -900,12 +902,7 @@
     <emu-clause id="sec-temporal-roundtime" type="abstract operation">
       <h1>
         RoundTime (
-          _hour_: an integer in the inclusive interval from 0 to 23,
-          _minute_: an integer in the inclusive interval from 0 to 59,
-          _second_: an integer in the inclusive interval from 0 to 59,
-          _millisecond_: an integer in the inclusive interval from 0 to 999,
-          _microsecond_: an integer in the inclusive interval from 0 to 999,
-          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+          _time_: a Time Record,
           _increment_: a positive integer,
           _unit_: a time unit or ~day~,
           _roundingMode_: a rounding mode,
@@ -917,18 +914,18 @@
       </dl>
       <emu-alg>
         1. If _unit_ is ~day~ or ~hour~, then
-          1. Let _quantity_ be ((((_hour_ × 60 + _minute_) × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
+          1. Let _quantity_ be ((((_time_.[[Hour]] × 60 + _time_.[[Minute]]) × 60 + _time_.[[Second]]) × 1000 + _time_.[[Millisecond]]) × 1000 + _time_.[[Microsecond]]) × 1000 + _time_.[[Nanosecond]].
         1. Else if _unit_ is ~minute~, then
-          1. Let _quantity_ be (((_minute_ × 60 + _second_) × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
+          1. Let _quantity_ be (((_time_.[[Minute]] × 60 + _time_.[[Second]]) × 1000 + _time_.[[Millisecond]]) × 1000 + _time_.[[Microsecond]]) × 1000 + _time_.[[Nanosecond]].
         1. Else if _unit_ is ~second~, then
-          1. Let _quantity_ be ((_second_ × 1000 + _millisecond_) × 1000 + _microsecond_) × 1000 + _nanosecond_.
+          1. Let _quantity_ be ((_time_.[[Second]] × 1000 + _time_.[[Millisecond]]) × 1000 + _time_.[[Microsecond]]) × 1000 + _time_.[[Nanosecond]].
         1. Else if _unit_ is ~millisecond~, then
-          1. Let _quantity_ be (_millisecond_ × 1000 + _microsecond_) × 1000 + _nanosecond_.
+          1. Let _quantity_ be (_time_.[[Millisecond]] × 1000 + _time_.[[Microsecond]]) × 1000 + _time_.[[Nanosecond]].
         1. Else if _unit_ is ~microsecond~, then
-          1. Let _quantity_ be _microsecond_ × 1000 + _nanosecond_.
+          1. Let _quantity_ be _time_.[[Microsecond]] × 1000 + _time_.[[Nanosecond]].
         1. Else,
           1. Assert: _unit_ is ~nanosecond~.
-          1. Let _quantity_ be _nanosecond_.
+          1. Let _quantity_ be _time_.[[Nanosecond]].
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
         1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_ × _unitLength_, _roundingMode_) / _unitLength_.
         1. If _unit_ is ~day~, then
@@ -944,15 +941,15 @@
         1. If _unit_ is ~hour~, then
           1. Return BalanceTime(_result_, 0, 0, 0, 0, 0).
         1. If _unit_ is ~minute~, then
-          1. Return BalanceTime(_hour_, _result_, 0, 0, 0, 0).
+          1. Return BalanceTime(_time_.[[Hour]], _result_, 0, 0, 0, 0).
         1. If _unit_ is ~second~, then
-          1. Return BalanceTime(_hour_, _minute_, _result_, 0, 0, 0).
+          1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _result_, 0, 0, 0).
         1. If _unit_ is ~millisecond~, then
-          1. Return BalanceTime(_hour_, _minute_, _second_, _result_, 0, 0).
+          1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _result_, 0, 0).
         1. If _unit_ is ~microsecond~, then
-          1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _result_, 0).
+          1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _result_, 0).
         1. Assert: _unit_ is ~nanosecond~.
-        1. Return BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _result_).
+        1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _result_).
       </emu-alg>
     </emu-clause>
 

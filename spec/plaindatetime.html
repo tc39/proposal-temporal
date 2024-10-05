@@ -1101,7 +1101,8 @@
       </dl>
       <emu-alg>
         1. Assert: ISODateTimeWithinLimits(_isoDateTime_) is *true*.
-        1. Let _roundedTime_ be RoundTime(_isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _increment_, _unit_, _roundingMode_).
+        1. Let _time_ be Time Record { [[Hour]]: _isoDateTime_.[[Hour]], [[Minute]]: _isoDateTime_.[[Minute]], [[Second]]: _isoDateTime_.[[Second]], [[Millisecond]]: _isoDateTime_.[[Millisecond]], [[Microsecond]]: _isoDateTime_.[[Microsecond]], [[Nanosecond]]: _isoDateTime_.[[Nanosecond]] }.
+        1. Let _roundedTime_ be RoundTime(_time_, _increment_, _unit_, _roundingMode_).
         1. Let _balanceResult_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + _roundedTime_.[[Days]]).
         1. Return CombineISODateAndTimeRecord(_balanceResult_, _roundedTime_).
       </emu-alg>
