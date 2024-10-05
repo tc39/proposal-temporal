@@ -286,54 +286,33 @@ export class PlainDateTime {
     const inclusive = maximum === 1;
     ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, inclusive);
 
-    let year = GetSlot(this, ISO_YEAR);
-    let month = GetSlot(this, ISO_MONTH);
-    let day = GetSlot(this, ISO_DAY);
-    let hour = GetSlot(this, ISO_HOUR);
-    let minute = GetSlot(this, ISO_MINUTE);
-    let second = GetSlot(this, ISO_SECOND);
-    let millisecond = GetSlot(this, ISO_MILLISECOND);
-    let microsecond = GetSlot(this, ISO_MICROSECOND);
-    let nanosecond = GetSlot(this, ISO_NANOSECOND);
+    const isoDateTime = ES.PlainDateTimeToISODateTimeRecord(this);
     if (roundingIncrement === 1 && smallestUnit === 'nanosecond') {
       return ES.CreateTemporalDateTime(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond,
+        isoDateTime.year,
+        isoDateTime.month,
+        isoDateTime.day,
+        isoDateTime.hour,
+        isoDateTime.minute,
+        isoDateTime.second,
+        isoDateTime.millisecond,
+        isoDateTime.microsecond,
+        isoDateTime.nanosecond,
         GetSlot(this, CALENDAR)
       );
     }
-    ({ year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
-      roundingIncrement,
-      smallestUnit,
-      roundingMode
-    ));
+    const result = ES.RoundISODateTime(isoDateTime, roundingIncrement, smallestUnit, roundingMode);
 
     return ES.CreateTemporalDateTime(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      microsecond,
-      nanosecond,
+      result.year,
+      result.month,
+      result.day,
+      result.hour,
+      result.minute,
+      result.second,
+      result.millisecond,
+      result.microsecond,
+      result.nanosecond,
       GetSlot(this, CALENDAR)
     );
   }
@@ -375,20 +354,7 @@ export class PlainDateTime {
     const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeErrorCtor('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
-    const result = ES.RoundISODateTime(
-      GetSlot(this, ISO_YEAR),
-      GetSlot(this, ISO_MONTH),
-      GetSlot(this, ISO_DAY),
-      GetSlot(this, ISO_HOUR),
-      GetSlot(this, ISO_MINUTE),
-      GetSlot(this, ISO_SECOND),
-      GetSlot(this, ISO_MILLISECOND),
-      GetSlot(this, ISO_MICROSECOND),
-      GetSlot(this, ISO_NANOSECOND),
-      increment,
-      unit,
-      roundingMode
-    );
+    const result = ES.RoundISODateTime(ES.PlainDateTimeToISODateTimeRecord(this), increment, unit, roundingMode);
     ES.RejectDateTimeRange(result);
     return ES.TemporalDateTimeToString(result, GetSlot(this, CALENDAR), precision, showCalendar);
   }

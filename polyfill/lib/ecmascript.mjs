@@ -4452,15 +4452,7 @@ export function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
 }
 
 export function RoundISODateTime(
-  year,
-  month,
-  day,
-  hour,
-  minute,
-  second,
-  millisecond,
-  microsecond,
-  nanosecond,
+  { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond },
   increment,
   unit,
   roundingMode
