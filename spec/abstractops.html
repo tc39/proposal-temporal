@@ -1798,11 +1798,12 @@
     </dl>
     <emu-alg>
       1. Let _fields_ be an empty Calendar Fields Record with all fields set to ~unset~.
-      1. Set _fields_.[[MonthCode]] to CalendarMonthCode(_calendar_, _isoDate_).
+      1. Let _calendarDate_ be CalendarISOToDate(_calendar_, _isoDate_).
+      1. Set _fields_.[[MonthCode]] to _calendarDate_.[[MonthCode]].
       1. If _type_ is ~month-day~ or ~date~, then
-        1. Set _fields_.[[Day]] to CalendarDay(_calendar_, _isoDate_).
+        1. Set _fields_.[[Day]] to _calendarDate_.[[Day]].
       1. If _type_ is ~year-month~ or ~date~, then
-        1. Set _fields_.[[Year]] to CalendarYear(_calendar_, _isoDate_).
+        1. Set _fields_.[[Year]] to _calendarDate_.[[Year]].
       1. Return _fields_.
     </emu-alg>
   </emu-clause>

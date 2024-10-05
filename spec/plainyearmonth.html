@@ -120,7 +120,7 @@
         1. Let _plainYearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainYearMonth_).
-        1. Return CalendarEra(_plainYearMonth_.[[Calendar]], _isoDate_).
+        1. Return CalendarISOToDate(_plainYearMonth.[[Calendar]], _isoDate_).[[Era]].
       </emu-alg>
     </emu-clause>
 
@@ -134,7 +134,7 @@
         1. Let _plainYearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainYearMonth_).
-        1. Let _result_ be CalendarEraYear(_plainYearMonth_.[[Calendar]], _isoDate_).
+        1. Let _result_ be CalendarISOToDate(_plainYearMonth.[[Calendar]], _isoDate_).[[EraYear]].
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -150,7 +150,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
-        1. Return 𝔽(CalendarYear(_yearMonth_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_yearMonth_.[[Calendar]], _isoDate_).[[Year]]).
       </emu-alg>
     </emu-clause>
 
@@ -164,7 +164,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
-        1. Return 𝔽(CalendarMonth(_yearMonth_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_yearMonth_.[[Calendar]], _isoDate_).[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -178,7 +178,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
-        1. Return CalendarMonthCode(_yearMonth_.[[Calendar]], _isoDate_).
+        1. Return CalendarISOToDate(_yearMonth_.[[Calendar]], _isoDate_).[[MonthCode]].
       </emu-alg>
     </emu-clause>
 
@@ -192,7 +192,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
-        1. Return 𝔽(CalendarDaysInYear(_yearMonth_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_yearMonth_.[[Calendar]], _isoDate_).[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -206,7 +206,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
-        1. Return 𝔽(CalendarDaysInMonth(_yearMonth_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_yearMonth_.[[Calendar]], _isoDate_).[[DaysInMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -220,7 +220,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
-        1. Return 𝔽(CalendarMonthsInYear(_yearMonth_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_yearMonth_.[[Calendar]], _isoDate_).[[MonthsInYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -234,7 +234,7 @@
         1. Let _yearMonth_ be the *this* value.
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_yearMonth_).
-        1. Return CalendarInLeapYear(_yearMonth_.[[Calendar]], _isoDate_).
+        1. Return CalendarISOToDate(_yearMonth_.[[Calendar]], _isoDate_).[[InLeapYear]].
       </emu-alg>
     </emu-clause>
 

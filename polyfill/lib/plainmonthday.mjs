@@ -19,12 +19,12 @@ export class PlainMonthDay {
   get monthCode() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { monthCode: true }).monthCode;
   }
   get day() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDate = ES.TemporalObjectToISODateRecord(this);
-    return ES.CalendarDay(GetSlot(this, CALENDAR), isoDate);
+    return ES.calendarImplForObj(this).isoToDate(isoDate, { day: true }).day;
   }
   get calendarId() {
     if (!ES.IsTemporalMonthDay(this)) throw new TypeErrorCtor('invalid receiver');

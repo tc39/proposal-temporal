@@ -110,7 +110,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_monthDay_).
-        1. Return CalendarMonthCode(_monthDay_.[[Calendar]], _isoDate_).
+        1. Return CalendarISOToDate(_monthDay_.[[Calendar]], _isoDate_).[[MonthCode]].
       </emu-alg>
     </emu-clause>
 
@@ -124,7 +124,7 @@
         1. Let _monthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. Let _isoDate_ be TemporalObjectToISODateRecord(_monthDay_).
-        1. Return 𝔽(CalendarDay(_monthDay_.[[Calendar]], _isoDate_)).
+        1. Return 𝔽(CalendarISOToDate(_monthDay_.[[Calendar]], _isoDate_).[[Day]]).
       </emu-alg>
     </emu-clause>
 
