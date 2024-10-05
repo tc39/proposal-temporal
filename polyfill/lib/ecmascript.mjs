@@ -4536,20 +4536,23 @@ export function CompareISODate(isoDate1, isoDate2) {
   return 0;
 }
 
-export function CompareTemporalTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2) {
-  if (h1 !== h2) return ComparisonResult(h1 - h2);
-  if (min1 !== min2) return ComparisonResult(min1 - min2);
-  if (s1 !== s2) return ComparisonResult(s1 - s2);
-  if (ms1 !== ms2) return ComparisonResult(ms1 - ms2);
-  if (µs1 !== µs2) return ComparisonResult(µs1 - µs2);
-  if (ns1 !== ns2) return ComparisonResult(ns1 - ns2);
+export function CompareTimeRecord(time1, time2) {
+  if (time1.hour !== time2.hour) return ComparisonResult(time1.hour - time2.hour);
+  if (time1.minute !== time2.minute) return ComparisonResult(time1.minute - time2.minute);
+  if (time1.second !== time2.second) return ComparisonResult(time1.second - time2.second);
+  if (time1.millisecond !== time2.millisecond) return ComparisonResult(time1.millisecond - time2.millisecond);
+  if (time1.microsecond !== time2.microsecond) return ComparisonResult(time1.microsecond - time2.microsecond);
+  if (time1.nanosecond !== time2.nanosecond) return ComparisonResult(time1.nanosecond - time2.nanosecond);
   return 0;
 }
 
 export function CompareISODateTime(y1, m1, d1, h1, min1, s1, ms1, µs1, ns1, y2, m2, d2, h2, min2, s2, ms2, µs2, ns2) {
   const dateResult = CompareISODate({ year: y1, month: m1, day: d1 }, { year: y2, month: m2, day: d2 });
   if (dateResult !== 0) return dateResult;
-  return CompareTemporalTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2);
+  return CompareTimeRecord(
+    { hour: h1, minute: min1, second: s1, millisecond: ms1, microsecond: µs1, nanosecond: ns1 },
+    { hour: h2, minute: min2, second: s2, millisecond: ms2, microsecond: µs2, nanosecond: ns2 }
+  );
 }
 
 // Not abstract operations from the spec

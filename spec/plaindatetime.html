@@ -1078,7 +1078,9 @@
         1. Let _isoDate2_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
         1. Let _dateResult_ be CompareISODate(_isoDate1_, _isoDate2_).
         1. If _dateResult_ ≠ 0, return _dateResult_.
-        1. Return CompareTemporalTime(_h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
+        1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _time2_ be Time Record { [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
+        1. Return CompareTimeRecord(_time1_, _time2_).
       </emu-alg>
     </emu-clause>
 
