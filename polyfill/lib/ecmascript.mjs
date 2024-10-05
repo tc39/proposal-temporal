@@ -4457,12 +4457,17 @@ export function RoundISODateTime(
   unit,
   roundingMode
 ) {
-  const time = RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode);
+  const time = RoundTime({ hour, minute, second, millisecond, microsecond, nanosecond }, increment, unit, roundingMode);
   const isoDate = BalanceISODate(year, month, day + time.deltaDays);
   return CombineISODateAndTimeRecord(isoDate, time);
 }
 
-export function RoundTime(hour, minute, second, millisecond, microsecond, nanosecond, increment, unit, roundingMode) {
+export function RoundTime(
+  { hour, minute, second, millisecond, microsecond, nanosecond },
+  increment,
+  unit,
+  roundingMode
+) {
   let quantity;
   switch (unit) {
     case 'day':
