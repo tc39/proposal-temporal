@@ -494,6 +494,44 @@
       </emu-table>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-midnighttimerecord" type="abstract operation">
+      <h1>MidnightTimeRecord ( ): a Time Record</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned Record denotes the wall-clock time of midnight.</dd>
+      </dl>
+      <emu-alg>
+        1. Return Time Record {
+            [[Days]]: 0,
+            [[Hour]]: 0,
+            [[Minute]]: 0,
+            [[Second]]: 0,
+            [[Millisecond]]: 0,
+            [[Microsecond]]: 0,
+            [[Nanosecond]]: 0
+          }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-noontimerecord" type="abstract operation">
+      <h1>NoonTimeRecord ( ): a Time Record</h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>The returned Record denotes the wall-clock time of noon.</dd>
+      </dl>
+      <emu-alg>
+        1. Return Time Record {
+            [[Days]]: 0,
+            [[Hour]]: 12,
+            [[Minute]]: 0,
+            [[Second]]: 0,
+            [[Millisecond]]: 0,
+            [[Microsecond]]: 0,
+            [[Nanosecond]]: 0
+          }.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-differencetime" type="abstract operation">
       <h1>
         DifferenceTime (
