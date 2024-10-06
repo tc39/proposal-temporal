@@ -803,6 +803,25 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-timevaluetoisodatetimerecord" type="abstract operation">
+      <h1>
+        TimeValueToISODateTimeRecord (
+          _t_: a finite time value,
+        ): an ISO Date-Time Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It converts a time value into an ISO Date-Time Record.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Let _isoDate_ be CreateISODateRecord(ℝ(YearFromTime(_t_)), ℝ(MonthFromTime(_t_)) + 1, ℝ(DateFromTime(_t_))).
+        1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: ℝ(HourFromTime(_t_)), [[Minute]]: ℝ(MinFromTime(_t_)), [[Second]]: ℝ(SecFromTime(_t_)), [[Millisecond]]: ℝ(msFromTime(_t_)), [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+        1. Return ISO Date-Time Record { [[ISODate]]: _isoDate_, [[Time]]: _time_ }.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-combineisodateandtimerecord" type="abstract operation">
       <h1>
         CombineISODateAndTimeRecord (

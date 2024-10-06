@@ -362,7 +362,7 @@
           1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ ».
         1. Else,
           1. If abs(ISODateToEpochDays(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]] - 1, _isoDateTime_.[[ISODate]].[[Day]])) > 10<sup>8</sup>, throw a *RangeError* exception.
-          1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_parseResult_.[[Name]], _isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
+          1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_parseResult_.[[Name]], _isoDateTime_).
         1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
           1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return _possibleEpochNanoseconds_.
@@ -386,7 +386,7 @@
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
         1. If _possibleEpochNs_ is not empty, return _possibleEpochNs_[0].
         1. Assert: IsOffsetTimeZoneIdentifier(_timeZone_) is *false*.
-        1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_.[[ISODate]].[[Year]], _isoDateTimeAfter_.[[ISODate]].[[Month]], _isoDateTimeAfter_.[[ISODate]].[[Day]], _isoDateTimeAfter_.[[Time]].[[Hour]], _isoDateTimeAfter_.[[Time]].[[Minute]], _isoDateTimeAfter_.[[Time]].[[Second]], _isoDateTimeAfter_.[[Time]].[[Millisecond]], _isoDateTimeAfter_.[[Time]].[[Microsecond]], _isoDateTimeAfter_.[[Time]].[[Nanosecond]]), where _isoDateTimeAfter_ is the ISO Date-Time Record for which ! DifferenceISODateTime(_isoDateTime_, _isoDateTimeAfter_, *"iso8601"*, ~hour~).[[Norm]] is the smallest possible value > 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
+        1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_), where _isoDateTimeAfter_ is the ISO Date-Time Record for which ! DifferenceISODateTime(_isoDateTime_, _isoDateTimeAfter_, *"iso8601"*, ~hour~).[[Norm]] is the smallest possible value > 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
         1. Assert: _possibleEpochNsAfter_'s length = 1.
         1. Return _possibleEpochNsAfter_[0].
       </emu-alg>
