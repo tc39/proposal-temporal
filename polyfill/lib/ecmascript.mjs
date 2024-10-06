@@ -3735,45 +3735,24 @@ export function DifferencePlainDateTimeWithRounding(
   );
 }
 
-export function DifferencePlainDateTimeWithTotal(
-  y1,
-  mon1,
-  d1,
-  h1,
-  min1,
-  s1,
-  ms1,
-  µs1,
-  ns1,
-  y2,
-  mon2,
-  d2,
-  h2,
-  min2,
-  s2,
-  ms2,
-  µs2,
-  ns2,
-  calendar,
-  unit
-) {
-  const isoDateTime1 = {
-    isoDate: { year: y1, month: mon1, day: d1 },
-    time: { hour: h1, minute: min1, second: s1, millisecond: ms1, microsecond: µs1, nanosecond: ns1 }
-  };
-  const isoDateTime2 = {
-    isoDate: { year: y2, month: mon2, day: d2 },
-    time: { hour: h2, minute: min2, second: s2, millisecond: ms2, microsecond: µs2, nanosecond: ns2 }
-  };
-  if (CompareISODateTime(isoDateTime1, isoDateTime2) == 0) {
-    return 0;
-  }
+export function DifferencePlainDateTimeWithTotal(isoDateTime1, isoDateTime2, calendar, unit) {
+  if (CompareISODateTime(isoDateTime1, isoDateTime2) == 0) return 0;
 
   const duration = DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, unit);
 
   if (unit === 'nanosecond') return duration.norm.totalNs.toJSNumber();
 
-  const destEpochNs = GetUTCEpochNanoseconds(y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2);
+  const destEpochNs = GetUTCEpochNanoseconds(
+    isoDateTime2.isoDate.year,
+    isoDateTime2.isoDate.month,
+    isoDateTime2.isoDate.day,
+    isoDateTime2.time.hour,
+    isoDateTime2.time.minute,
+    isoDateTime2.time.second,
+    isoDateTime2.time.millisecond,
+    isoDateTime2.time.microsecond,
+    isoDateTime2.time.nanosecond
+  );
   return TotalRelativeDuration(duration, destEpochNs, isoDateTime1, null, calendar, unit);
 }
 
