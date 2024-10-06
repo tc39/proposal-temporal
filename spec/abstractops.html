@@ -635,7 +635,7 @@
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _time_, _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
+      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_isoDate_, _time_, _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
     </emu-alg>
