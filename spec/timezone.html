@@ -314,8 +314,8 @@
         1. Assert: _n_ = 0.
         1. If _disambiguation_ is ~reject~, then
           1. Throw a *RangeError* exception.
-        1. Let _before_ be the latest possible ISO Date-Time Record for which CompareISODateTime(_before_.[[Year]], _before_.[[Month]], _before_.[[Day]], _before_.[[Hour]], _before_.[[Minute]], _before_.[[Second]], _before_.[[Millisecond]], _before_.[[Microsecond]], _before_.[[Nanosecond]], _isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]) = -1 and ! GetPossibleEpochNanoseconds(_timeZone_, _before_) is not empty.
-        1. Let _after_ be the earliest possible ISO Date-Time Record for which CompareISODateTime(_after_.[[Year]], _after_.[[Month]], _after_.[[Day]], _after_.[[Hour]], _after_.[[Minute]], _after_.[[Second]], _after_.[[Millisecond]], _after_.[[Microsecond]], _after_.[[Nanosecond]], _isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]) = 1 and ! GetPossibleEpochNanoseconds(_timeZone_, _after_) is not empty.
+        1. Let _before_ be the latest possible ISO Date-Time Record for which CompareISODateTime(_before_, _isoDateTime_) = -1 and ! GetPossibleEpochNanoseconds(_timeZone_, _before_) is not empty.
+        1. Let _after_ be the earliest possible ISO Date-Time Record for which CompareISODateTime(_after_, _isoDateTime_) = 1 and ! GetPossibleEpochNanoseconds(_timeZone_, _after_) is not empty.
         1. Let _offsetBefore_ be GetOffsetNanosecondsFor(_timeZone_, _before_).
         1. Let _offsetAfter_ be GetOffsetNanosecondsFor(_timeZone_, _after_).
         1. Let _nanoseconds_ be _offsetAfter_ - _offsetBefore_.
