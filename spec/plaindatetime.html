@@ -429,9 +429,7 @@
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
-        1. Assert: IsValidISODate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]) is *true*.
-        1. Assert: IsValidTime(_result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]]) is *true*.
-        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]], _calendar_).
+        1. Return ? CreateTemporalDateTime(_result_.[[ISODate]].[[Year]], _result_.[[ISODate]].[[Month]], _result_.[[ISODate]].[[Day]], _result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]], _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -758,7 +756,7 @@
       <h1>ISO Date-Time Records</h1>
       <p>
         An <dfn variants="ISO Date-Time Records">ISO Date-Time Record</dfn> is a Record value used to represent a valid calendar date in the ISO 8601 calendar together with a clock time.
-        For any ISO Date-Time Record _r_, IsValidISODate(_r_.[[Year]], _r_.[[Month]], _r_.[[Day]]) must return *true*, and IsValidTime(_r_.[[Hour]], _r_.[[Minute]], _r_.[[Second]], _r_.[[Millisecond]], _r_.[[Microsecond]], _r_.[[Nanosecond]]) must return *true*.
+        For any ISO Date-Time Record _r_, IsValidISODate(_r_.[[ISODate]].[[Year]], _r_.[[ISODate]][[Month]], _r_.[[ISODate]].[[Day]]) must return *true*, and IsValidTime(_r_.[[Time]].[[Hour]], _r_.[[Time]].[[Minute]], _r_.[[Time]].[[Second]], _r_.[[Time]].[[Millisecond]], _r_.[[Time]].[[Microsecond]], _r_.[[Time]].[[Nanosecond]]) must return *true*.
         It is not necessary for ISODateTimeWithinLimits(_r_) to return *true*.
       </p>
       <p>ISO Date-Time Records have the fields listed in <emu-xref href="#table-temporal-iso-date-time-record-fields"></emu-xref>.</p>
@@ -770,55 +768,16 @@
             <th>Meaning</th>
           </tr>
           <tr>
-            <td>[[Year]]</td>
-            <td>an integer</td>
+            <td>[[ISODate]]</td>
+            <td>an ISO Date Record</td>
             <td>
-              The year in the ISO 8601 calendar.
+              The date in the ISO 8601 calendar.
             </td>
           </tr>
           <tr>
-            <td>[[Month]]</td>
-            <td>an integer between 1 and 12, inclusive</td>
-            <td>
-              The number of the month in the ISO 8601 calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Day]]</td>
-            <td>an integer between 1 and 31, inclusive</td>
-            <td>
-              The number of the day of the month in the ISO 8601 calendar.
-            </td>
-          </tr>
-          <tr>
-            <td>[[Hour]]</td>
-            <td>an integer in the inclusive interval from 0 to 23</td>
-            <td>The number of the hour.</td>
-          </tr>
-          <tr>
-            <td>[[Minute]]</td>
-            <td>an integer in the inclusive interval from 0 to 59</td>
-            <td>The number of the minute.</td>
-          </tr>
-          <tr>
-            <td>[[Second]]</td>
-            <td>an integer in the inclusive interval from 0 to 59</td>
-            <td>The number of the second.</td>
-          </tr>
-          <tr>
-            <td>[[Millisecond]]</td>
-            <td>an integer in the inclusive interval from 0 to 999</td>
-            <td>The number of the millisecond.</td>
-          </tr>
-          <tr>
-            <td>[[Microsecond]]</td>
-            <td>an integer in the inclusive interval from 0 to 999</td>
-            <td>The number of the microsecond.</td>
-          </tr>
-          <tr>
-            <td>[[Nanosecond]]</td>
-            <td>an integer in the inclusive interval from 0 to 999</td>
-            <td>The number of the nanosecond.</td>
+            <td>[[Time]]</td>
+            <td>a Time Record</td>
+            <td>The time. The [[Days]] field is ignored.</td>
           </tr>
         </table>
       </emu-table>
@@ -835,27 +794,28 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Return ISO Date-Time Record { [[Year]]: _plainDateTime_.[[ISOYear]], [[Month]]: _plainDateTime_.[[ISOMonth]], [[Day]]: _plainDateTime_.[[ISODay]], [[Hour]]: _plainDateTime_.[[ISOHour]], [[Minute]]: _plainDateTime_.[[ISOMinute]], [[Second]]: _plainDateTime_.[[ISOSecond]], [[Millisecond]]: _plainDateTime_.[[ISOMillisecond]], [[Microsecond]]: _plainDateTime_.[[ISOMicrosecond]], [[Nanosecond]]: _plainDateTime_.[[ISONanosecond]] }.
+        1. Let _isoDate_ be CreateISODateRecord(_plainDateTime_.[[ISOYear]], _plainDateTime_.[[ISOMonth]], _plainDateTime_.[[ISODay]]).
+        1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: _plainDateTime_.[[ISOHour]], [[Minute]]: _plainDateTime_.[[ISOMinute]], [[Second]]: _plainDateTime_.[[ISOSecond]], [[Millisecond]]: _plainDateTime_.[[ISOMillisecond]], [[Microsecond]]: _plainDateTime_.[[ISOMicrosecond]], [[Nanosecond]]: _plainDateTime_.[[ISONanosecond]] }.
+        1. Return ISO Date-Time Record { [[ISODate]]: _isoDate_, [[Time]]: _time_ }.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-combineisodateandtimerecord" type="abstract operation">
       <h1>
         CombineISODateAndTimeRecord (
-          _isoDate_: an ISO Date Record or ISO Date-Time Record,
-          _time_: a Time Record or ISO Date-Time Record,
+          _isoDate_: an ISO Date Record,
+          _time_: a Time Record,
         ): an ISO Date-Time Record
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
           It combines a date and a time into one ISO Date-Time Record.
-          The date may come from an ISO Date Record or another ISO Date-Time Record, and the time may come from a Time Record or another ISO Date-Time Record.
         </dd>
       </dl>
       <emu-alg>
         1. NOTE: _time_.[[Days]] is ignored.
-        1. Return ISO Date-Time Record { [[Year]]: _isoDate_.[[Year]], [[Month]]: _isoDate_.[[Month]], [[Day]]: _isoDate_.[[Day]], [[Hour]]: _time_.[[Hour]], [[Minute]]: _time_.[[Minute]], [[Second]]: _time_.[[Second]], [[Millisecond]]: _time_.[[Millisecond]], [[Microsecond]]: _time_.[[Microsecond]], [[Nanosecond]]: _time_.[[Nanosecond]] }.
+        1. Return ISO Date-Time Record { [[ISODate]]: _isoDate_, [[Time]]: _time_ }.
       </emu-alg>
     </emu-clause>
 
@@ -876,8 +836,8 @@
         </p>
       </emu-note>
       <emu-alg>
-        1. If abs(ISODateToEpochDays(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]] - 1, _isoDateTime_.[[Day]])) > 10<sup>8</sup> + 1, return *false*.
-        1. Let _ns_ be ℝ(GetUTCEpochNanoseconds(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]])).
+        1. If abs(ISODateToEpochDays(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]] - 1, _isoDateTime_.[[ISODate]].[[Day]])) > 10<sup>8</sup> + 1, return *false*.
+        1. Let _ns_ be ℝ(GetUTCEpochNanoseconds(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]])).
         1. If _ns_ ≤ nsMinInstant - nsPerDay, then
           1. Return *false*.
         1. If _ns_ ≥ nsMaxInstant + nsPerDay, then
@@ -892,16 +852,16 @@
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
           _overflow_: ~constrain~ or ~reject~,
-        ): either a normal completion containing a Record with fields [[Year]], [[Month]], [[Day]] (as in ISO Date-Time Record) and [[Time]] (a Time Record), or a throw completion
+        ): either a normal completion containing an ISO Date-Time Record, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It interprets the date/time fields in the object _fields_ using the given calendar, and returns a Record with the fields according to the ISO 8601 calendar.</dd>
+        <dd>It interprets the date/time fields in the object _fields_ using the given calendar.</dd>
       </dl>
       <emu-alg>
         1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _fields_, _overflow_).
         1. Let _time_ be ? RegulateTime(_fields_.[[Hour]], _fields_.[[Minute]], _fields_.[[Second]], _fields_.[[Millisecond]], _fields_.[[Microsecond]], _fields_.[[Nanosecond]], _overflow_).
-        1. Return the Record { [[Year]]: _isoDate_.[[Year]], [[Month]]: _isoDate_.[[Month]], [[Day]]: _isoDate_.[[Day]], [[Time]]: _time_ }.
+        1. Return CombineISODateAndTimeRecord(_isoDate_, _time_).
       </emu-alg>
     </emu-clause>
 
@@ -937,15 +897,15 @@
           1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
           1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
           1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
-        1. Else,
-          1. If _item_ is not a String, throw a *TypeError* exception.
-          1. Let _result_ be ? ParseISODateTime(_item_, « |TemporalDateTimeString[~Zoned]| »).
-          1. If _result_.[[Time]] is ~start-of-day~, set _result_.[[Time]] to Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Let _calendar_ be _result_.[[Calendar]].
-          1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
-          1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
-          1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
-          1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
+          1. Return ? CreateTemporalDateTime(_result_.[[ISODate]].[[Year]], _result_.[[ISODate]].[[Month]], _result_.[[ISODate]].[[Day]], _result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]], _calendar_).
+        1. If _item_ is not a String, throw a *TypeError* exception.
+        1. Let _result_ be ? ParseISODateTime(_item_, « |TemporalDateTimeString[~Zoned]| »).
+        1. If _result_.[[Time]] is ~start-of-day~, set _result_.[[Time]] to Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+        1. Let _calendar_ be _result_.[[Calendar]].
+        1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
+        1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
+        1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
+        1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]], _calendar_).
       </emu-alg>
     </emu-clause>
@@ -998,7 +958,9 @@
       <emu-alg>
         1. If IsValidISODate(_isoYear_, _isoMonth_, _isoDay_) is *false*, throw a *RangeError* exception.
         1. If IsValidTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_) is *false*, throw a *RangeError* exception.
-        1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: _isoYear_, [[Month]]: _isoMonth_, [[Day]]: _isoDay_, [[Hour]]: _hour_, [[Minute]]: _minute_, [[Second]]: _second_, [[Millisecond]]: _millisecond_, [[Microsecond]]: _microsecond_, [[Nanosecond]]: _nanosecond_ }.
+        1. Let _isoDate_ be CreateISODateRecord(_isoYear_, _isoMonth_, _isoDay_).
+        1. Let _time_ be Time Record { [[Hour]]: _hour_, [[Minute]]: _minute_, [[Second]]: _second_, [[Millisecond]]: _millisecond_, [[Microsecond]]: _microsecond_, [[Nanosecond]]: _nanosecond_ }.
+        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
         1. If ISODateTimeWithinLimits(_isoDateTime_) is *false*, then
           1. Throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainDateTime%.
@@ -1031,11 +993,11 @@
         <dd>It formats an ISO Date-Time Record into an ISO 8601 string, to the precision specified by _precision_.</dd>
       </dl>
       <emu-alg>
-        1. Let _yearString_ be PadISOYear(_isoDateTime_.[[Year]]).
-        1. Let _monthString_ be ToZeroPaddedDecimalString(_isoDateTime_.[[Month]], 2).
-        1. Let _dayString_ be ToZeroPaddedDecimalString(_isoDateTime_.[[Day]], 2).
-        1. Let _subSecondNanoseconds_ be _isoDateTime_.[[Millisecond]] × 10<sup>6</sup> + _isoDateTime_.[[Microsecond]] × 10<sup>3</sup> + _isoDateTime_.[[Nanosecond]].
-        1. Let _timeString_ be FormatTimeString(_isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _subSecondNanoseconds_, _precision_).
+        1. Let _yearString_ be PadISOYear(_isoDateTime_.[[ISODate]].[[Year]]).
+        1. Let _monthString_ be ToZeroPaddedDecimalString(_isoDateTime_.[[ISODate]].[[Month]], 2).
+        1. Let _dayString_ be ToZeroPaddedDecimalString(_isoDateTime_.[[ISODate]].[[Day]], 2).
+        1. Let _subSecondNanoseconds_ be _isoDateTime_.[[Time]].[[Millisecond]] × 10<sup>6</sup> + _isoDateTime_.[[Time]].[[Microsecond]] × 10<sup>3</sup> + _isoDateTime_.[[Time]].[[Nanosecond]].
+        1. Let _timeString_ be FormatTimeString(_isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _subSecondNanoseconds_, _precision_).
         1. Let _calendarString_ be FormatCalendarAnnotation(_calendar_, _showCalendar_).
         1. Return the string-concatenation of _yearString_, the code unit 0x002D (HYPHEN-MINUS), _monthString_, the code unit 0x002D (HYPHEN-MINUS), _dayString_, 0x0054 (LATIN CAPITAL LETTER T), _timeString_, and _calendarString_.
       </emu-alg>
@@ -1094,9 +1056,8 @@
       </dl>
       <emu-alg>
         1. Assert: ISODateTimeWithinLimits(_isoDateTime_) is *true*.
-        1. Let _time_ be Time Record { [[Hour]]: _isoDateTime_.[[Hour]], [[Minute]]: _isoDateTime_.[[Minute]], [[Second]]: _isoDateTime_.[[Second]], [[Millisecond]]: _isoDateTime_.[[Millisecond]], [[Microsecond]]: _isoDateTime_.[[Microsecond]], [[Nanosecond]]: _isoDateTime_.[[Nanosecond]] }.
-        1. Let _roundedTime_ be RoundTime(_time_, _increment_, _unit_, _roundingMode_).
-        1. Let _balanceResult_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + _roundedTime_.[[Days]]).
+        1. Let _roundedTime_ be RoundTime(_isoDateTime_.[[Time]], _increment_, _unit_, _roundingMode_).
+        1. Let _balanceResult_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _roundedTime_.[[Days]]).
         1. Return CombineISODateAndTimeRecord(_balanceResult_, _roundedTime_).
       </emu-alg>
     </emu-clause>
@@ -1134,23 +1095,23 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _isoDateTime1_ be ISO Date-Time Record { [[Year]]: _y1_, [[Month]]: _mon1_, [[Day]]: _d1_, [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
-        1. Assert: ISODateTimeWithinLimits(_isoDateTime1_) is *true*.
-        1. Let _isoDateTime2_ be ISO Date-Time Record { [[Year]]: _y2_, [[Month]]: _mon2_, [[Day]]: _d2_, [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
-        1. Assert: ISODateTimeWithinLimits(_isoDateTime2_) is *true*.
+        1. Let _isoDate1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
         1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _isoDateTime1_ be CombineISODateAndTimeRecord(_isoDate1_, _time1_).
+        1. Assert: ISODateTimeWithinLimits(_isoDateTime1_) is *true*.
+        1. Let _isoDate2_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
         1. Let _time2_ be Time Record { [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
-        1. Let _timeDuration_ be DifferenceTime(_time1_, _time2_).
+        1. Let _isoDateTime2_ be CombineISODateAndTimeRecord(_isoDate2_, _time2_).
+        1. Assert: ISODateTimeWithinLimits(_isoDateTime2_) is *true*.
+        1. Let _timeDuration_ be DifferenceTime(_isoDateTime1_.[[Time]], _isoDateTime2_.[[Time]]).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_timeDuration_).
-        1. Let _isoDate1_ be ISODateTimeToDateRecord(_isoDateTime1_).
-        1. Let _isoDate2_ be ISODateTimeToDateRecord(_isoDateTime2_).
-        1. Let _dateSign_ be CompareISODate(_isoDate2_, _isoDate1_).
-        1. Let _adjustedDate_ be _isoDate2_.
+        1. Let _dateSign_ be CompareISODate(_isoDateTime2_.[[ISODate]], _isoDateTime1_.[[ISODate]]).
+        1. Let _adjustedDate_ be _isoDateTime2_.[[ISODate]].
         1. If _timeSign_ = -_dateSign_, then
           1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] + _timeSign_).
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, -_timeSign_).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(~day~, _largestUnit_).
-        1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _isoDate1_, _adjustedDate_, _dateLargestUnit_).
+        1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _isoDateTime1_.[[ISODate]], _adjustedDate_, _dateLargestUnit_).
         1. If _largestUnit_ is not _dateLargestUnit_, then
           1. Set _timeDuration_ to ? Add24HourDaysToNormalizedTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
           1. Set _dateDifference_.[[Days]] to 0.
@@ -1197,9 +1158,11 @@
           1. Return ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
         1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
-        1. Let _dateTime_ be ISO Date-Time Record { [[Year]]: _y1_, [[Month]]: _mon1_, [[Day]]: _d1_, [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _isoDate1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
+        1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _isoDateTime1_ be CombineISODateAndTimeRecord(_isoDate1_, _time1_).
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
-        1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _dateTime_, ~unset~, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
@@ -1239,9 +1202,11 @@
           1. Return 0.
         1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _unit_).
         1. If _unit_ is ~nanosecond~, return _diff_.[[NormalizedTime]].[[TotalNanoseconds]].
-        1. Let _dateTime_ be ISO Date-Time Record { [[Year]]: _y1_, [[Month]]: _mon1_, [[Day]]: _d1_, [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _isoDate_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
+        1. Let _time_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
-        1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _dateTime_, ~unset~, _calendar_, _unit_).
+        1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _isoDateTime_, ~unset~, _calendar_, _unit_).
       </emu-alg>
     </emu-clause>
 
@@ -1298,7 +1263,7 @@
         1. Let _dateDuration_ be ? AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _timeResult_.[[Days]]).
         1. Let _addedDate_ be ? CalendarDateAdd(_dateTime_.[[Calendar]], _datePart_, _dateDuration_, _overflow_).
         1. Let _result_ be CombineISODateAndTimeRecord(_addedDate_, _timeResult_).
-        1. Return ? CreateTemporalDateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _dateTime_.[[Calendar]]).
+        1. Return ? CreateTemporalDateTime(_result_.[[ISODate]].[[Year]], _result_.[[ISODate]].[[Month]], _result_.[[ISODate]].[[Day]], _result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]], _dateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>

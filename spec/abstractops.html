@@ -607,6 +607,8 @@
         1. Let _offsetString_ be _fields_.[[Offset]].
         1. If _offsetString_ is ~unset~, then
           1. Set _offsetBehaviour_ to ~wall~.
+        1. Let _isoDate_ be _result_.[[ISODate]].
+        1. Let _time_ be _result_.[[Time]].
       1. Else,
         1. If _value_ is not a String, throw a *TypeError* exception.
         1. Let _result_ be ? ParseISODateTime(_value_, « |TemporalDateTimeString[+Zoned]|, |TemporalDateTimeString[~Zoned]| »).
@@ -624,14 +626,16 @@
         1. Let _calendar_ be _result_.[[Calendar]].
         1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
         1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
+        1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Let _time_ be _result_.[[Time]].
       1. If _timeZone_ is ~unset~, then
-        1. Let _plainDate_ be ? CreateTemporalDate(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _calendar_).
+        1. Let _plainDate_ be ? CreateTemporalDate(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _calendar_).
         1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
       1. If _offsetBehaviour_ is ~option~, then
         1. Let _offsetNs_ be ? ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Time]], _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
+      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]], _time_, _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
     </emu-alg>

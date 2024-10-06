@@ -193,9 +193,7 @@ export class PlainDateTime {
 
     const overflow = ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
     const {
-      year,
-      month,
-      day,
+      isoDate: { year, month, day },
       time: { hour, minute, second, millisecond, microsecond, nanosecond }
     } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
 
@@ -289,30 +287,30 @@ export class PlainDateTime {
     const isoDateTime = ES.PlainDateTimeToISODateTimeRecord(this);
     if (roundingIncrement === 1 && smallestUnit === 'nanosecond') {
       return ES.CreateTemporalDateTime(
-        isoDateTime.year,
-        isoDateTime.month,
-        isoDateTime.day,
-        isoDateTime.hour,
-        isoDateTime.minute,
-        isoDateTime.second,
-        isoDateTime.millisecond,
-        isoDateTime.microsecond,
-        isoDateTime.nanosecond,
+        isoDateTime.isoDate.year,
+        isoDateTime.isoDate.month,
+        isoDateTime.isoDate.day,
+        isoDateTime.time.hour,
+        isoDateTime.time.minute,
+        isoDateTime.time.second,
+        isoDateTime.time.millisecond,
+        isoDateTime.time.microsecond,
+        isoDateTime.time.nanosecond,
         GetSlot(this, CALENDAR)
       );
     }
     const result = ES.RoundISODateTime(isoDateTime, roundingIncrement, smallestUnit, roundingMode);
 
     return ES.CreateTemporalDateTime(
-      result.year,
-      result.month,
-      result.day,
-      result.hour,
-      result.minute,
-      result.second,
-      result.millisecond,
-      result.microsecond,
-      result.nanosecond,
+      result.isoDate.year,
+      result.isoDate.month,
+      result.isoDate.day,
+      result.time.hour,
+      result.time.minute,
+      result.time.second,
+      result.time.millisecond,
+      result.time.microsecond,
+      result.time.nanosecond,
       GetSlot(this, CALENDAR)
     );
   }
@@ -360,17 +358,7 @@ export class PlainDateTime {
   }
   toJSON() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDateTime = {
-      year: GetSlot(this, ISO_YEAR),
-      month: GetSlot(this, ISO_MONTH),
-      day: GetSlot(this, ISO_DAY),
-      hour: GetSlot(this, ISO_HOUR),
-      minute: GetSlot(this, ISO_MINUTE),
-      second: GetSlot(this, ISO_SECOND),
-      millisecond: GetSlot(this, ISO_MILLISECOND),
-      microsecond: GetSlot(this, ISO_MICROSECOND),
-      nanosecond: GetSlot(this, ISO_NANOSECOND)
-    };
+    const isoDateTime = ES.PlainDateTimeToISODateTimeRecord(this);
     return ES.ISODateTimeToString(isoDateTime, GetSlot(this, CALENDAR), 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
