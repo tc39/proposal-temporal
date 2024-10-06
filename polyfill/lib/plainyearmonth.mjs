@@ -3,31 +3,32 @@ import { TypeError as TypeErrorCtor } from './primordials.mjs';
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
-import { ISO_YEAR, ISO_MONTH, ISO_DAY, CALENDAR, GetSlot } from './slots.mjs';
+import { CALENDAR, GetSlot, ISO_DATE } from './slots.mjs';
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = 'iso8601', referenceISODay = 1) {
-    isoYear = ES.ToIntegerWithTruncation(isoYear);
-    isoMonth = ES.ToIntegerWithTruncation(isoMonth);
+    const year = ES.ToIntegerWithTruncation(isoYear);
+    const month = ES.ToIntegerWithTruncation(isoMonth);
     calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
-    referenceISODay = ES.ToIntegerWithTruncation(referenceISODay);
+    const day = ES.ToIntegerWithTruncation(referenceISODay);
 
-    ES.CreateTemporalYearMonthSlots(this, isoYear, isoMonth, calendar, referenceISODay);
+    ES.RejectISODate(year, month, day);
+    ES.CreateTemporalYearMonthSlots(this, { year, month, day }, calendar);
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { year: true }).year;
   }
   get month() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { month: true }).month;
   }
   get monthCode() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { monthCode: true }).monthCode;
   }
   get calendarId() {
@@ -36,32 +37,32 @@ export class PlainYearMonth {
   }
   get era() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { era: true }).era;
   }
   get eraYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { eraYear: true }).eraYear;
   }
   get daysInMonth() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { daysInMonth: true }).daysInMonth;
   }
   get daysInYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { daysInYear: true }).daysInYear;
   }
   get monthsInYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { monthsInYear: true }).monthsInYear;
   }
   get inLeapYear() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDate = ES.TemporalObjectToISODateRecord(this);
+    const isoDate = GetSlot(this, ISO_DATE);
     return ES.calendarImplForObj(this).isoToDate(isoDate, { inLeapYear: true }).inLeapYear;
   }
   with(temporalYearMonthLike, options = undefined) {
@@ -83,8 +84,8 @@ export class PlainYearMonth {
     fields = ES.CalendarMergeFields(calendar, fields, partialYearMonth);
 
     const overflow = ES.GetTemporalOverflowOption(ES.GetOptionsObject(options));
-    const { year, month, day } = ES.CalendarYearMonthFromFields(calendar, fields, overflow);
-    return ES.CreateTemporalYearMonth(year, month, calendar, day);
+    const isoDate = ES.CalendarYearMonthFromFields(calendar, fields, overflow);
+    return ES.CreateTemporalYearMonth(isoDate, calendar);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
@@ -105,9 +106,7 @@ export class PlainYearMonth {
   equals(other) {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
     other = ES.ToTemporalYearMonth(other);
-    if (GetSlot(this, ISO_YEAR) !== GetSlot(other, ISO_YEAR)) return false;
-    if (GetSlot(this, ISO_MONTH) !== GetSlot(other, ISO_MONTH)) return false;
-    if (GetSlot(this, ISO_DAY) !== GetSlot(other, ISO_DAY)) return false;
+    if (ES.CompareISODate(GetSlot(this, ISO_DATE), GetSlot(other, ISO_DATE)) !== 0) return false;
     return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
   }
   toString(options = undefined) {
@@ -135,8 +134,8 @@ export class PlainYearMonth {
     const fields = ES.TemporalObjectToFields(this);
     const inputFields = ES.PrepareCalendarFields(calendar, item, ['day'], [], []);
     const mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
-    const { year, month, day } = ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');
-    return ES.CreateTemporalDate(year, month, day, calendar);
+    const isoDate = ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');
+    return ES.CreateTemporalDate(isoDate, calendar);
   }
 
   static from(item, options = undefined) {
@@ -145,10 +144,7 @@ export class PlainYearMonth {
   static compare(one, two) {
     one = ES.ToTemporalYearMonth(one);
     two = ES.ToTemporalYearMonth(two);
-    return ES.CompareISODate(
-      { year: GetSlot(one, ISO_YEAR), month: GetSlot(one, ISO_MONTH), day: GetSlot(one, ISO_DAY) },
-      { year: GetSlot(two, ISO_YEAR), month: GetSlot(two, ISO_MONTH), day: GetSlot(two, ISO_DAY) }
-    );
+    return ES.CompareISODate(GetSlot(one, ISO_DATE), GetSlot(two, ISO_DATE));
   }
 }
 

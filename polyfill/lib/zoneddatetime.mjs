@@ -10,18 +10,7 @@ import { assert } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { GetIntrinsic, MakeIntrinsicClass } from './intrinsicclass.mjs';
-import {
-  CALENDAR,
-  EPOCHNANOSECONDS,
-  ISO_HOUR,
-  ISO_MICROSECOND,
-  ISO_MILLISECOND,
-  ISO_MINUTE,
-  ISO_NANOSECOND,
-  ISO_SECOND,
-  TIME_ZONE,
-  GetSlot
-} from './slots.mjs';
+import { CALENDAR, EPOCHNANOSECONDS, GetSlot, TIME, TIME_ZONE } from './slots.mjs';
 import { TimeDuration } from './timeduration.mjs';
 
 import bigInt from 'big-integer';
@@ -232,15 +221,7 @@ export class ZonedDateTime {
       epochNs = ES.GetStartOfDay(timeZone, iso);
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
-      const time = {
-        hour: GetSlot(temporalTime, ISO_HOUR),
-        minute: GetSlot(temporalTime, ISO_MINUTE),
-        second: GetSlot(temporalTime, ISO_SECOND),
-        millisecond: GetSlot(temporalTime, ISO_MILLISECOND),
-        microsecond: GetSlot(temporalTime, ISO_MICROSECOND),
-        nanosecond: GetSlot(temporalTime, ISO_NANOSECOND)
-      };
-      const dt = ES.CombineISODateAndTimeRecord(iso, time);
+      const dt = ES.CombineISODateAndTimeRecord(iso, GetSlot(temporalTime, TIME));
       epochNs = ES.GetEpochNanosecondsFor(timeZone, dt, 'compatible');
     }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
@@ -485,32 +466,15 @@ export class ZonedDateTime {
   }
   toPlainDate() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    const {
-      isoDate: { year, month, day }
-    } = dateTime(this);
-    return ES.CreateTemporalDate(year, month, day, GetSlot(this, CALENDAR));
+    return ES.CreateTemporalDate(dateTime(this).isoDate, GetSlot(this, CALENDAR));
   }
   toPlainTime() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = dateTime(this).time;
-    const PlainTime = GetIntrinsic('%Temporal.PlainTime%');
-    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    return ES.CreateTemporalTime(dateTime(this).time);
   }
   toPlainDateTime() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    const isoDateTime = dateTime(this);
-    return ES.CreateTemporalDateTime(
-      isoDateTime.isoDate.year,
-      isoDateTime.isoDate.month,
-      isoDateTime.isoDate.day,
-      isoDateTime.time.hour,
-      isoDateTime.time.minute,
-      isoDateTime.time.second,
-      isoDateTime.time.millisecond,
-      isoDateTime.time.microsecond,
-      isoDateTime.time.nanosecond,
-      GetSlot(this, CALENDAR)
-    );
+    return ES.CreateTemporalDateTime(dateTime(this), GetSlot(this, CALENDAR));
   }
 
   static from(item, options = undefined) {

@@ -1933,8 +1933,10 @@ const nonIsoGeneralImpl = {
     const added = this.helper.addCalendar(calendarDate, { years, months, weeks, days }, overflow, cache);
     const isoAdded = this.helper.calendarToIsoDate(added, 'constrain', cache);
     // The new object's cache starts with the cache of the old object
-    const newCache = new OneObjectCache(cache);
-    newCache.setObject(isoAdded);
+    if (!OneObjectCache.getCacheForObject(isoAdded)) {
+      const newCache = new OneObjectCache(cache);
+      newCache.setObject(isoAdded);
+    }
     return isoAdded;
   },
   dateUntil(one, two, largestUnit) {
