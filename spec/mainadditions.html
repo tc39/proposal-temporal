@@ -370,6 +370,46 @@
       </p>
     </emu-clause>
 
+    <emu-clause id="sec-getnamedtimezoneepochnanoseconds" type="implementation-defined abstract operation">
+      <h1>
+        GetNamedTimeZoneEpochNanoseconds (
+          _timeZoneIdentifier_: a String,
+          <del>_year_: an integer,</del>
+          <del>_month_: an integer in the inclusive interval from 1 to 12,</del>
+          <del>_day_: an integer in the inclusive interval from 1 to 31,</del>
+          <del>_hour_: an integer in the inclusive interval from 0 to 23,</del>
+          <del>_minute_: an integer in the inclusive interval from 0 to 59,</del>
+          <del>_second_: an integer in the inclusive interval from 0 to 59,</del>
+          <del>_millisecond_: an integer in the inclusive interval from 0 to 999,</del>
+          <del>_microsecond_: an integer in the inclusive interval from 0 to 999,</del>
+          <del>_nanosecond_: an integer in the inclusive interval from 0 to 999,</del>
+          <ins>_isoDateTime_: an ISO Date-Time Record,</ins>
+        ): a List of BigInts
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          Each value in the returned List represents a number of nanoseconds since the epoch that corresponds to the given ISO 8601 calendar date and wall-clock time in the named time zone identified by _timeZoneIdentifier_.
+        </dd>
+      </dl>
+      <p>
+        When the input represents a local time occurring more than once because of a negative time zone transition (e.g. when daylight saving time ends or the time zone offset is decreased due to a time zone rule change), the returned List will have more than one element and will be sorted by ascending numerical value.
+        When the input represents a local time skipped because of a positive time zone transition (e.g. when daylight saving time begins or the time zone offset is increased due to a time zone rule change), the returned List will be empty.
+        Otherwise, the returned List will have one element.
+      </p>
+      <p>The default implementation of GetNamedTimeZoneEpochNanoseconds, to be used for ECMAScript implementations that do not include local political rules for any time zones, performs the following steps when called:</p>
+      <emu-alg>
+        1. Assert: _timeZoneIdentifier_ is *"UTC"*.
+        1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(<del>_year_, _month_, _day_, _hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_</del><ins>_isoDateTime_</ins>).
+        1. Return « _epochNanoseconds_ ».
+      </emu-alg>
+      <emu-note>
+        <p>It is required for time zone aware implementations (and recommended for all others) to use the time zone information of the IANA Time Zone Database <a href="https://www.iana.org/time-zones/">https://www.iana.org/time-zones/</a>.</p>
+        <p>1:30 AM on 5 November 2017 in America/New_York is repeated twice, so GetNamedTimeZoneEpochNanoseconds<del>(*"America/New_York"*, 2017, 11, 5, 1, 30, 0, 0, 0, 0)</del> <ins>for that time zone and ISO date-time</ins> would return a List of length 2 in which the first element represents 05:30 UTC (corresponding with 01:30 US Eastern Daylight Time at UTC offset -04:00) and the second element represents 06:30 UTC (corresponding with 01:30 US Eastern Standard Time at UTC offset -05:00).</p>
+        <p>2:30 AM on 12 March 2017 in America/New_York does not exist, so GetNamedTimeZoneEpochNanoseconds<del>(*"America/New_York"*, 2017, 3, 12, 2, 30, 0, 0, 0, 0)</del> <ins>for that time zone and ISO date-time</ins> would return an empty List.</p>
+      </emu-note>
+    </emu-clause>
+
     <emu-clause id="sec-systemtimezoneidentifier" oldids="sec-defaulttimezone" type="implementation-defined abstract operation">
       <h1>SystemTimeZoneIdentifier ( ): an available time zone identifier</h1>
       <dl class="header">
@@ -475,13 +515,14 @@
         1. If <del>IsTimeZoneOffsetString(_systemTimeZoneIdentifier_) is *true*</del><ins>_parseResult_.[[OffsetMinutes]] is not ~empty~</ins>, then
           1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString(_systemTimeZoneIdentifier_)</del><ins>_parseResult_.[[OffsetMinutes]] × (60 × 10<sup>9</sup>)</ins>.
         1. Else,
-          1. Let _possibleInstants_ be GetNamedTimeZoneEpochNanoseconds(_systemTimeZoneIdentifier_, ℝ(YearFromTime(_t_)), ℝ(MonthFromTime(_t_)) + 1, ℝ(DateFromTime(_t_)), ℝ(HourFromTime(_t_)), ℝ(MinFromTime(_t_)), ℝ(SecFromTime(_t_)), ℝ(msFromTime(_t_)), 0, 0).
+          1. <ins>Let _isoDateTime_ be TimeValueToISODateTimeRecord(_t_).</ins>
+          1. Let _possibleInstants_ be GetNamedTimeZoneEpochNanoseconds(_systemTimeZoneIdentifier_, <del>ℝ(YearFromTime(_t_)), ℝ(MonthFromTime(_t_)) + 1, ℝ(DateFromTime(_t_)), ℝ(HourFromTime(_t_)), ℝ(MinFromTime(_t_)), ℝ(SecFromTime(_t_)), ℝ(msFromTime(_t_)), 0, 0</del><ins>_isoDateTime_</ins>).
           1. NOTE: The following steps ensure that when _t_ represents local time repeating multiple times at a negative time zone transition (e.g. when the daylight saving time ends or the time zone offset is decreased due to a time zone rule change) or skipped local time at a positive time zone transition (e.g. when the daylight saving time starts or the time zone offset is increased due to a time zone rule change), _t_ is interpreted using the time zone offset before the transition.
           1. If _possibleInstants_ is not empty, then
             1. Let _disambiguatedInstant_ be _possibleInstants_[0].
           1. Else,
             1. NOTE: _t_ represents a local time skipped at a positive time zone transition (e.g. due to daylight saving time starting or a time zone rule change increasing the UTC offset).
-            1. [declared="tBefore"] Let _possibleInstantsBefore_ be GetNamedTimeZoneEpochNanoseconds(_systemTimeZoneIdentifier_, ℝ(YearFromTime(_tBefore_)), ℝ(MonthFromTime(_tBefore_)) + 1, ℝ(DateFromTime(_tBefore_)), ℝ(HourFromTime(_tBefore_)), ℝ(MinFromTime(_tBefore_)), ℝ(SecFromTime(_tBefore_)), ℝ(msFromTime(_tBefore_)), 0, 0), where _tBefore_ is the largest integral Number &lt; _t_ for which _possibleInstantsBefore_ is not empty (i.e., _tBefore_ represents the last local time before the transition).
+            1. [declared="tBefore"] Let _possibleInstantsBefore_ be GetNamedTimeZoneEpochNanoseconds(_systemTimeZoneIdentifier_, <del>ℝ(YearFromTime(_tBefore_)), ℝ(MonthFromTime(_tBefore_)) + 1, ℝ(DateFromTime(_tBefore_)), ℝ(HourFromTime(_tBefore_)), ℝ(MinFromTime(_tBefore_)), ℝ(SecFromTime(_tBefore_)), ℝ(msFromTime(_tBefore_)), 0, 0</del><ins>TimeValueToISODateTimeRecord(_tBefore_)</ins>), where _tBefore_ is the largest integral Number &lt; _t_ for which _possibleInstantsBefore_ is not empty (i.e., _tBefore_ represents the last local time before the transition).
             1. Let _disambiguatedInstant_ be the last element of _possibleInstantsBefore_.
           1. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_systemTimeZoneIdentifier_, _disambiguatedInstant_).
         1. Let _offsetMs_ be truncate(_offsetNs_ / 10<sup>6</sup>).
