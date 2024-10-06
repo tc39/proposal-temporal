@@ -1667,7 +1667,7 @@
           _sign_: -1 or 1,
           _duration_: a Normalized Duration Record,
           _destEpochNs_: a BigInt,
-          _dateTime_: an ISO Date-Time Record,
+          _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _increment_: a positive integer,
@@ -1682,7 +1682,6 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _startDate_ be ISODateTimeToDateRecord(_dateTime_).
         1. If _unit_ is ~year~, then
           1. Let _years_ be RoundNumberToIncrement(_duration_.[[Date]].[[Years]], _increment_, ~trunc~).
           1. Let _r1_ be _years_.
@@ -1697,7 +1696,7 @@
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
         1. Else if _unit_ is ~week~, then
           1. Let _yearsMonths_ be ! AdjustDateDurationRecord(_duration_.[[Date]], 0, 0).
-          1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _startDate_, _yearsMonths_, ~constrain~).
+          1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _yearsMonths_, ~constrain~).
           1. Let _weeksEnd_ be BalanceISODate(_weeksStart_.[[Year]], _weeksStart_.[[Month]], _weeksStart_.[[Day]] + _duration_.[[Date]].[[Days]]).
           1. Let _untilResult_ be CalendarDateUntil(_calendar_, _weeksStart_, _weeksEnd_, ~week~).
           1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Date]].[[Weeks]] + _untilResult_.[[Weeks]], _increment_, ~trunc~).
@@ -1714,15 +1713,15 @@
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _r2_).
         1. Assert: If _sign_ is 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
         1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ > _r2_.
-        1. Let _start_ be ? CalendarDateAdd(_calendar_, _startDate_, _startDuration_, ~constrain~).
-        1. Let _end_ be ? CalendarDateAdd(_calendar_, _startDate_, _endDuration_, ~constrain~).
+        1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _startDuration_, ~constrain~).
+        1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~).
         1. If _timeZone_ is ~unset~, then
-          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
-          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
+          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
         1. Else,
-          1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
+          1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _isoDateTime_.[[Time]]).
           1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
-          1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
+          1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
           1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
         1. If _sign_ is 1, then
           1. Assert: _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_.
@@ -1759,7 +1758,7 @@
         NudgeToZonedTime (
           _sign_: -1 or 1,
           _duration_: a Normalized Duration Record,
-          _dateTime_: an ISO Date-Time Record,
+          _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier,
           _calendar_: a calendar type,
           _increment_: a positive integer,
@@ -1774,11 +1773,10 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
-        1. Let _start_ be ? CalendarDateAdd(_calendar_, _date_, _duration_.[[Date]], ~constrain~).
-        1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _dateTime_).
+        1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _duration_.[[Date]], ~constrain~).
+        1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _isoDateTime_.[[Time]]).
         1. Let _endDate_ be BalanceISODate(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]] + _sign_).
-        1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _dateTime_).
+        1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _isoDateTime_.[[Time]]).
         1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
         1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
         1. Let _daySpan_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_endEpochNs_, _startEpochNs_).
@@ -1846,7 +1844,7 @@
           _sign_: -1 or 1,
           _duration_: a Normalized Duration Record,
           _nudgedEpochNs_: a BigInt,
-          _dateTime_: an ISO Date-Time Record,
+          _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _largestUnit_: a date unit,
@@ -1878,12 +1876,11 @@
               1. Assert: _unit_ is ~week~.
               1. Let _weeks_ be _duration_.[[Date]].[[Weeks]] + _sign_.
               1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, _weeks_).
-            1. Let _date_ be ISODateTimeToDateRecord(_dateTime_).
-            1. Let _end_ be ? CalendarDateAdd(_calendar_, _date_, _endDuration_, ~constrain~).
+            1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~).
             1. If _timeZone_ is ~unset~, then
-              1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _dateTime_.[[Hour]], _dateTime_.[[Minute]], _dateTime_.[[Second]], _dateTime_.[[Millisecond]], _dateTime_.[[Microsecond]], _dateTime_.[[Nanosecond]]).
+              1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]).
             1. Else,
-              1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _dateTime_).
+              1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
               1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
@@ -1901,7 +1898,7 @@
         RoundRelativeDuration (
           _duration_: a Normalized Duration Record,
           _destEpochNs_: a BigInt,
-          _dateTime_: an ISO Date-Time Record,
+          _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
@@ -1913,7 +1910,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It rounds a duration _duration_ relative to _dateTime_ according to the rounding parameters _smallestUnit_, _increment_, and _roundingMode_, bubbles overflows up to the next highest unit until _largestUnit_, and returns a normalized duration.
+          It rounds a duration _duration_ relative to _isoDateTime_ according to the rounding parameters _smallestUnit_, _increment_, and _roundingMode_, bubbles overflows up to the next highest unit until _largestUnit_, and returns a normalized duration.
         </dd>
       </dl>
       <emu-alg>
@@ -1922,16 +1919,16 @@
         1. If _timeZone_ is not ~unset~ and _smallestUnit_ is ~day~, set _irregularLengthUnit_ to *true*.
         1. If NormalizedDurationSign(_duration_) &lt; 0, let _sign_ be -1; else let _sign_ be 1.
         1. If _irregularLengthUnit_ is *true*, then
-          1. Let _record_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _dateTime_, _timeZone_, _calendar_, _increment_, _smallestUnit_, _roundingMode_).
+          1. Let _record_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _smallestUnit_, _roundingMode_).
           1. Let _nudgeResult_ be _record_.[[NudgeResult]].
         1. Else if _timeZone_ is not ~unset~, then
-          1. Let _nudgeResult_ be ? NudgeToZonedTime(_sign_, _duration_, _dateTime_, _timeZone_, _calendar_, _increment_, _smallestUnit_, _roundingMode_).
+          1. Let _nudgeResult_ be ? NudgeToZonedTime(_sign_, _duration_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _smallestUnit_, _roundingMode_).
         1. Else,
           1. Let _nudgeResult_ be ? NudgeToDayOrTime(_duration_, _destEpochNs_, _largestUnit_, _increment_, _smallestUnit_, _roundingMode_).
         1. Set _duration_ to _nudgeResult_.[[Duration]].
         1. If _nudgeResult_.[[DidExpandCalendarUnit]] is *true* and _smallestUnit_ is not ~week~, then
           1. Let _startUnit_ be LargerOfTwoTemporalUnits(_smallestUnit_, ~day~).
-          1. Set _duration_ to ? BubbleRelativeDuration(_sign_, _duration_, _nudgeResult_.[[NudgedEpochNs]], _dateTime_, _timeZone_, _calendar_, _largestUnit_, _startUnit_).
+          1. Set _duration_ to ? BubbleRelativeDuration(_sign_, _duration_, _nudgeResult_.[[NudgedEpochNs]], _isoDateTime_, _timeZone_, _calendar_, _largestUnit_, _startUnit_).
         1. Return _duration_.
       </emu-alg>
     </emu-clause>
@@ -1941,7 +1938,7 @@
         TotalRelativeDuration (
           _duration_: a Normalized Duration Record,
           _destEpochNs_: a BigInt,
-          _dateTime_: an ISO Date-Time Record,
+          _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _unit_: a Temporal unit,
@@ -1949,12 +1946,12 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns the total number of _unit_ in _duration_, relative to _dateTime_ if a starting point is necessary for calendar units.</dd>
+        <dd>It returns the total number of _unit_ in _duration_, relative to _isoDateTime_ if a starting point is necessary for calendar units.</dd>
       </dl>
       <emu-alg>
         1. If IsCalendarUnit(_unit_) is *true*, or _timeZone_ is not ~unset~ and _unit_ is ~day~, then
           1. Let _sign_ be NormalizedDurationSign(_duration_).
-          1. Let _record_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _dateTime_, _timeZone_, _calendar_, 1, _unit_, ~trunc~).
+          1. Let _record_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _isoDateTime_, _timeZone_, _calendar_, 1, _unit_, ~trunc~).
           1. Return _record_.[[Total]].
         1. Let _norm_ be ! Add24HourDaysToNormalizedTimeDuration(_duration_.[[NormalizedTime]], _duration_.[[Date]].[[Days]]).
         1. Return TotalTimeDuration(_norm_, _unit_).

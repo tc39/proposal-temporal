@@ -11,15 +11,15 @@ const plainDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZoneIdentifier(temporalTimeZoneLike);
   const iso = ES.GetISODateTimeFor(timeZone, ES.SystemUTCEpochNanoSeconds());
   return ES.CreateTemporalDateTime(
-    iso.year,
-    iso.month,
-    iso.day,
-    iso.hour,
-    iso.minute,
-    iso.second,
-    iso.millisecond,
-    iso.microsecond,
-    iso.nanosecond,
+    iso.isoDate.year,
+    iso.isoDate.month,
+    iso.isoDate.day,
+    iso.time.hour,
+    iso.time.minute,
+    iso.time.second,
+    iso.time.millisecond,
+    iso.time.microsecond,
+    iso.time.nanosecond,
     'iso8601'
   );
 };

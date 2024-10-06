@@ -61,51 +61,51 @@ export class ZonedDateTime {
   }
   get year() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { year: true }).year;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { year: true }).year;
   }
   get month() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { month: true }).month;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { month: true }).month;
   }
   get monthCode() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { monthCode: true }).monthCode;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { monthCode: true }).monthCode;
   }
   get day() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { day: true }).day;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { day: true }).day;
   }
   get hour() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return dateTime(this).hour;
+    return dateTime(this).time.hour;
   }
   get minute() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return dateTime(this).minute;
+    return dateTime(this).time.minute;
   }
   get second() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return dateTime(this).second;
+    return dateTime(this).time.second;
   }
   get millisecond() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return dateTime(this).millisecond;
+    return dateTime(this).time.millisecond;
   }
   get microsecond() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return dateTime(this).microsecond;
+    return dateTime(this).time.microsecond;
   }
   get nanosecond() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return dateTime(this).nanosecond;
+    return dateTime(this).time.nanosecond;
   }
   get era() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { era: true }).era;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { era: true }).era;
   }
   get eraYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { eraYear: true }).eraYear;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { eraYear: true }).eraYear;
   }
   get epochMilliseconds() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
@@ -118,24 +118,24 @@ export class ZonedDateTime {
   }
   get dayOfWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { dayOfWeek: true }).dayOfWeek;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { dayOfWeek: true }).dayOfWeek;
   }
   get dayOfYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { dayOfYear: true }).dayOfYear;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { dayOfYear: true }).dayOfYear;
   }
   get weekOfYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { weekOfYear: true }).weekOfYear.week;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { weekOfYear: true }).weekOfYear.week;
   }
   get yearOfWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { weekOfYear: true }).weekOfYear.year;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { weekOfYear: true }).weekOfYear.year;
   }
   get hoursInDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     const timeZone = GetSlot(this, TIME_ZONE);
-    const today = date(this);
+    const today = dateTime(this).isoDate;
     const tomorrow = ES.BalanceISODate(today.year, today.month, today.day + 1);
     const todayNs = ES.GetStartOfDay(timeZone, today);
     const tomorrowNs = ES.GetStartOfDay(timeZone, tomorrow);
@@ -144,23 +144,23 @@ export class ZonedDateTime {
   }
   get daysInWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { daysInWeek: true }).daysInWeek;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { daysInWeek: true }).daysInWeek;
   }
   get daysInMonth() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { daysInMonth: true }).daysInMonth;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { daysInMonth: true }).daysInMonth;
   }
   get daysInYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { daysInYear: true }).daysInYear;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { daysInYear: true }).daysInYear;
   }
   get monthsInYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { monthsInYear: true }).monthsInYear;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { monthsInYear: true }).monthsInYear;
   }
   get inLeapYear() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return ES.calendarImplForObj(this).isoToDate(date(this), { inLeapYear: true }).inLeapYear;
+    return ES.calendarImplForObj(this).isoToDate(dateTime(this).isoDate, { inLeapYear: true }).inLeapYear;
   }
   get offset() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
@@ -183,14 +183,13 @@ export class ZonedDateTime {
     const epochNs = GetSlot(this, EPOCHNANOSECONDS);
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, epochNs);
     const isoDateTime = dateTime(this);
-    const isoDate = ES.ISODateTimeToDateRecord(isoDateTime);
-    let fields = ES.ISODateToFields(calendar, isoDate);
-    fields.hour = isoDateTime.hour;
-    fields.minute = isoDateTime.minute;
-    fields.second = isoDateTime.second;
-    fields.millisecond = isoDateTime.millisecond;
-    fields.microsecond = isoDateTime.microsecond;
-    fields.nanosecond = isoDateTime.nanosecond;
+    let fields = ES.ISODateToFields(calendar, isoDateTime.isoDate);
+    fields.hour = isoDateTime.time.hour;
+    fields.minute = isoDateTime.time.minute;
+    fields.second = isoDateTime.time.second;
+    fields.millisecond = isoDateTime.time.millisecond;
+    fields.microsecond = isoDateTime.time.microsecond;
+    fields.nanosecond = isoDateTime.time.nanosecond;
     fields.offset = ES.FormatUTCOffsetNanoseconds(offsetNs);
     const partialZonedDateTime = ES.PrepareCalendarFields(
       calendar,
@@ -206,13 +205,13 @@ export class ZonedDateTime {
     const offset = ES.GetTemporalOffsetOption(resolvedOptions, 'prefer');
     const overflow = ES.GetTemporalOverflowOption(resolvedOptions);
 
-    const { year, month, day, time } = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
+    const newDateTime = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
     const newOffsetNs = ES.ParseDateTimeUTCOffset(fields.offset);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
-      year,
-      month,
-      day,
-      time,
+      newDateTime.isoDate.year,
+      newDateTime.isoDate.month,
+      newDateTime.isoDate.day,
+      newDateTime.time,
       'option',
       newOffsetNs,
       timeZone,
@@ -228,7 +227,7 @@ export class ZonedDateTime {
 
     const timeZone = GetSlot(this, TIME_ZONE);
     const calendar = GetSlot(this, CALENDAR);
-    const iso = date(this);
+    const iso = dateTime(this).isoDate;
 
     let epochNs;
     if (temporalTime === undefined) {
@@ -317,7 +316,7 @@ export class ZonedDateTime {
     if (smallestUnit === 'day') {
       // Compute Instants for start-of-day and end-of-day
       // Determine how far the current instant has progressed through this span.
-      const dateStart = ES.ISODateTimeToDateRecord(iso);
+      const dateStart = iso.isoDate;
       const dateEnd = ES.BalanceISODate(dateStart.year, dateStart.month, dateStart.day + 1);
 
       const startNs = ES.GetStartOfDay(timeZone, dateStart);
@@ -332,12 +331,7 @@ export class ZonedDateTime {
     } else {
       // smallestUnit < day
       // Round based on ISO-calendar time units
-      const { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundISODateTime(
-        iso,
-        roundingIncrement,
-        smallestUnit,
-        roundingMode
-      );
+      const roundedDateTime = ES.RoundISODateTime(iso, roundingIncrement, smallestUnit, roundingMode);
 
       // Now reset all DateTime fields but leave the TimeZone. The offset will
       // also be retained if the new date/time values are still OK with the old
@@ -346,10 +340,10 @@ export class ZonedDateTime {
       // disambiguation algorithm will be used.
       const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, thisNs);
       epochNanoseconds = ES.InterpretISODateTimeOffset(
-        year,
-        month,
-        day,
-        { hour, minute, second, millisecond, microsecond, nanosecond },
+        roundedDateTime.isoDate.year,
+        roundedDateTime.isoDate.month,
+        roundedDateTime.isoDate.day,
+        roundedDateTime.time,
         'option',
         offsetNs,
         timeZone,
@@ -457,7 +451,7 @@ export class ZonedDateTime {
   startOfDay() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     const timeZone = GetSlot(this, TIME_ZONE);
-    const isoDate = date(this);
+    const isoDate = dateTime(this).isoDate;
     const epochNanoseconds = ES.GetStartOfDay(timeZone, isoDate);
     return ES.CreateTemporalZonedDateTime(epochNanoseconds, timeZone, GetSlot(this, CALENDAR));
   }
@@ -495,12 +489,14 @@ export class ZonedDateTime {
   }
   toPlainDate() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    const { year, month, day } = dateTime(this);
+    const {
+      isoDate: { year, month, day }
+    } = dateTime(this);
     return ES.CreateTemporalDate(year, month, day, GetSlot(this, CALENDAR));
   }
   toPlainTime() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = dateTime(this);
+    const { hour, minute, second, millisecond, microsecond, nanosecond } = dateTime(this).time;
     const PlainTime = GetIntrinsic('%Temporal.PlainTime%');
     return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
@@ -508,15 +504,15 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     const isoDateTime = dateTime(this);
     return ES.CreateTemporalDateTime(
-      isoDateTime.year,
-      isoDateTime.month,
-      isoDateTime.day,
-      isoDateTime.hour,
-      isoDateTime.minute,
-      isoDateTime.second,
-      isoDateTime.millisecond,
-      isoDateTime.microsecond,
-      isoDateTime.nanosecond,
+      isoDateTime.isoDate.year,
+      isoDateTime.isoDate.month,
+      isoDateTime.isoDate.day,
+      isoDateTime.time.hour,
+      isoDateTime.time.minute,
+      isoDateTime.time.second,
+      isoDateTime.time.millisecond,
+      isoDateTime.time.microsecond,
+      isoDateTime.time.nanosecond,
       GetSlot(this, CALENDAR)
     );
   }
@@ -539,8 +535,4 @@ MakeIntrinsicClass(ZonedDateTime, 'Temporal.ZonedDateTime');
 
 function dateTime(zdt) {
   return ES.GetISODateTimeFor(GetSlot(zdt, TIME_ZONE), GetSlot(zdt, EPOCHNANOSECONDS));
-}
-
-function date(zdt) {
-  return ES.ISODateTimeToDateRecord(dateTime(zdt));
 }

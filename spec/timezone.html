@@ -72,10 +72,8 @@
         1. Let _microsecond_ be floor(_remainderNs_ / 1000).
         1. Assert: _microsecond_ &lt; 1000.
         1. Let _nanosecond_ be _remainderNs_ modulo 1000.
-        1. Return ISO Date-Time Record {
-          [[Year]]: _year_,
-          [[Month]]: _month_,
-          [[Day]]: _day_,
+        1. Let _isoDate_ be CreateISODateRecord(_year_, _month_, _day_).
+        1. Let _time_ be Time Record {
           [[Hour]]: _hour_,
           [[Minute]]: _minute_,
           [[Second]]: _second_,
@@ -83,6 +81,7 @@
           [[Microsecond]]: _microsecond_,
           [[Nanosecond]]: _nanosecond_
           }.
+        1. Return CombineISODateAndTimeRecord(_isoDate_, _time_).
       </emu-alg>
     </emu-clause>
 
@@ -265,7 +264,7 @@
       <emu-alg>
         1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _epochNs_).
         1. Let _result_ be GetISOPartsFromEpoch(ℝ(_epochNs_)).
-        1. Return BalanceISODateTime(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]] + _offsetNanoseconds_).
+        1. Return BalanceISODateTime(_result_.[[ISODate]].[[Year]], _result_.[[ISODate]].[[Month]], _result_.[[ISODate]].[[Day]], _result_.[[Time]].[[Hour]], _result_.[[Time]].[[Minute]], _result_.[[Time]].[[Second]], _result_.[[Time]].[[Millisecond]], _result_.[[Time]].[[Microsecond]], _result_.[[Time]].[[Nanosecond]] + _offsetNanoseconds_).
       </emu-alg>
     </emu-clause>
 
@@ -323,18 +322,16 @@
         1. Assert: abs(_nanoseconds_) ≤ nsPerDay.
         1. If _disambiguation_ is ~earlier~, then
           1. Let _norm_ be NormalizeTimeDuration(0, 0, 0, 0, 0, -_nanoseconds_).
-          1. Let _time_ be Time Record { [[Hour]]: _isoDateTime_.[[Hour]], [[Minute]]: _isoDateTime_.[[Minute]], [[Second]]: _isoDateTime_.[[Second]], [[Millisecond]]: _isoDateTime_.[[Millisecond]], [[Microsecond]]: _isoDateTime_.[[Microsecond]], [[Nanosecond]]: _isoDateTime_.[[Nanosecond]] }.
-          1. Let _earlierTime_ be AddTime(_time_, _norm_).
-          1. Let _earlierDate_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + _earlierTime_.[[Days]]).
+          1. Let _earlierTime_ be AddTime(_isoDateTime_.[[Time]], _norm_).
+          1. Let _earlierDate_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _earlierTime_.[[Days]]).
           1. Let _earlierDateTime_ be CombineISODateAndTimeRecord(_earlierDate_, _earlierTime_).
           1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _earlierDateTime_).
           1. Assert: _possibleEpochNs_ is not empty.
           1. Return _possibleEpochNs_[0].
         1. Assert: _disambiguation_ is ~compatible~ or ~later~.
         1. Let _norm_ be NormalizeTimeDuration(0, 0, 0, 0, 0, _nanoseconds_).
-        1. Let _time_ be Time Record { [[Hour]]: _isoDateTime_.[[Hour]], [[Minute]]: _isoDateTime_.[[Minute]], [[Second]]: _isoDateTime_.[[Second]], [[Millisecond]]: _isoDateTime_.[[Millisecond]], [[Microsecond]]: _isoDateTime_.[[Microsecond]], [[Nanosecond]]: _isoDateTime_.[[Nanosecond]] }.
-        1. Let _laterTime_ be AddTime(_time_, _norm_).
-        1. Let _laterDate_ be BalanceISODate(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]] + _laterTime_.[[Days]]).
+        1. Let _laterTime_ be AddTime(_isoDateTime_.[[Time]], _norm_).
+        1. Let _laterDate_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _laterTime_.[[Days]]).
         1. Let _laterDateTime_ be CombineISODateAndTimeRecord(_laterDate_, _laterTime_).
         1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _laterDateTime_).
         1. Set _n_ to _possibleEpochNs_'s length.
@@ -359,13 +356,13 @@
       <emu-alg>
         1. Let _parseResult_ be ! ParseTimeZoneIdentifier(_timeZone_).
         1. If _parseResult_.[[OffsetMinutes]] is not ~empty~, then
-          1. Let _balanced_ be BalanceISODateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]] - _parseResult_.[[OffsetMinutes]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]).
-          1. If abs(ISODateToEpochDays(_balanced_.[[Year]], _balanced_.[[Month]] - 1, _balanced_.[[Day]])) > 10<sup>8</sup>, throw a *RangeError* exception.
-          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_balanced_.[[Year]], _balanced_.[[Month]], _balanced_.[[Day]], _balanced_.[[Hour]], _balanced_.[[Minute]], _balanced_.[[Second]], _balanced_.[[Millisecond]], _balanced_.[[Microsecond]], _balanced_.[[Nanosecond]]).
+          1. Let _balanced_ be BalanceISODateTime(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]] - _parseResult_.[[OffsetMinutes]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
+          1. If abs(ISODateToEpochDays(_balanced_.[[ISODate]].[[Year]], _balanced_.[[ISODate]].[[Month]] - 1, _balanced_.[[ISODate]].[[Day]])) > 10<sup>8</sup>, throw a *RangeError* exception.
+          1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_balanced_.[[ISODate]].[[Year]], _balanced_.[[ISODate]].[[Month]], _balanced_.[[ISODate]].[[Day]], _balanced_.[[Time]].[[Hour]], _balanced_.[[Time]].[[Minute]], _balanced_.[[Time]].[[Second]], _balanced_.[[Time]].[[Millisecond]], _balanced_.[[Time]].[[Microsecond]], _balanced_.[[Time]].[[Nanosecond]]).
           1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ ».
         1. Else,
-          1. If abs(ISODateToEpochDays(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]] - 1, _isoDateTime_.[[Day]])) > 10<sup>8</sup>, throw a *RangeError* exception.
-          1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_parseResult_.[[Name]], _isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]).
+          1. If abs(ISODateToEpochDays(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]] - 1, _isoDateTime_.[[ISODate]].[[Day]])) > 10<sup>8</sup>, throw a *RangeError* exception.
+          1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_parseResult_.[[Name]], _isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
         1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
           1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return _possibleEpochNanoseconds_.
@@ -384,11 +381,12 @@
         <dd>It determines the exact time that corresponds to the first valid wall-clock time in the calendar date _isoDate_ in _timeZone_.</dd>
       </dl>
       <emu-alg>
-        1. Let _isoDateTime_ be ISO Date-Time Record { [[Year]]: _isoDate_.[[Year]], [[Month]]: _isoDate_.[[Month]], [[Day]]: _isoDate_.[[Day]], [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+        1. Let _midnight_ be Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _midnight_).
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
         1. If _possibleEpochNs_ is not empty, return _possibleEpochNs_[0].
         1. Assert: IsOffsetTimeZoneIdentifier(_timeZone_) is *false*.
-        1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_.[[Year]], _isoDateTimeAfter_.[[Month]], _isoDateTimeAfter_.[[Day]], _isoDateTimeAfter_.[[Hour]], _isoDateTimeAfter_.[[Minute]], _isoDateTimeAfter_.[[Second]], _isoDateTimeAfter_.[[Millisecond]], _isoDateTimeAfter_.[[Microsecond]], _isoDateTimeAfter_.[[Nanosecond]]), where _isoDateTimeAfter_ is the ISO Date-Time Record for which ! DifferenceISODateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _isoDateTimeAfter_.[[Year]], _isoDateTimeAfter_.[[Month]], _isoDateTimeAfter_.[[Day]], _isoDateTimeAfter_.[[Hour]], _isoDateTimeAfter_.[[Minute]], _isoDateTimeAfter_.[[Second]], _isoDateTimeAfter_.[[Millisecond]], _isoDateTimeAfter_.[[Microsecond]], _isoDateTimeAfter_.[[Nanosecond]], *"iso8601"*, ~hour~).[[Norm]] is the smallest possible value > 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
+        1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_.[[ISODate]].[[Year]], _isoDateTimeAfter_.[[ISODate]].[[Month]], _isoDateTimeAfter_.[[ISODate]].[[Day]], _isoDateTimeAfter_.[[Time]].[[Hour]], _isoDateTimeAfter_.[[Time]].[[Minute]], _isoDateTimeAfter_.[[Time]].[[Second]], _isoDateTimeAfter_.[[Time]].[[Millisecond]], _isoDateTimeAfter_.[[Time]].[[Microsecond]], _isoDateTimeAfter_.[[Time]].[[Nanosecond]]), where _isoDateTimeAfter_ is the ISO Date-Time Record for which ! DifferenceISODateTime(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]], _isoDateTimeAfter_.[[ISODate]].[[Year]], _isoDateTimeAfter_.[[ISODate]].[[Month]], _isoDateTimeAfter_.[[ISODate]].[[Day]], _isoDateTimeAfter_.[[Time]].[[Hour]], _isoDateTimeAfter_.[[Time]].[[Minute]], _isoDateTimeAfter_.[[Time]].[[Second]], _isoDateTimeAfter_.[[Time]].[[Millisecond]], _isoDateTimeAfter_.[[Time]].[[Microsecond]], _isoDateTimeAfter_.[[Time]].[[Nanosecond]], *"iso8601"*, ~hour~).[[Norm]] is the smallest possible value > 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
         1. Assert: _possibleEpochNsAfter_'s length = 1.
         1. Return _possibleEpochNsAfter_[0].
       </emu-alg>
