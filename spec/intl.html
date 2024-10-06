@@ -1288,8 +1288,7 @@
         <emu-alg>
           1. If _temporalDate_.[[Calendar]] is not _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
           1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalDate_).
-          1. Let _noon_ be Time Record { [[Days]]: 0, [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _noon_).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, NoonTimeRecord()).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainDateFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
@@ -1313,8 +1312,7 @@
           1. If _temporalYearMonth_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalYearMonth_).
-          1. Let _noon_ be Time Record { [[Days]]: 0, [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _noon_).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, NoonTimeRecord()).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainYearMonthFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
@@ -1338,8 +1336,7 @@
           1. If _temporalMonthDay_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalMonthDay_).
-          1. Let _noon_ be Time Record { [[Days]]: 0, [[Hour]]: 12, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _noon_).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, NoonTimeRecord()).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainMonthDayFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
