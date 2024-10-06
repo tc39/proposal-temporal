@@ -1048,24 +1048,8 @@
     <emu-clause id="sec-temporal-differenceisodatetime" type="abstract operation">
       <h1>
         DifferenceISODateTime (
-          _y1_: an integer,
-          _mon1_: an integer between 1 and 12 inclusive,
-          _d1_: an integer between 1 and 31 inclusive,
-          _h1_: an integer between 0 and 23 inclusive,
-          _min1_: an integer between 0 and 59 inclusive,
-          _s1_: an integer between 0 and 59 inclusive,
-          _ms1_: an integer between 0 and 999 inclusive,
-          _mus1_: an integer between 0 and 999 inclusive,
-          _ns1_: an integer between 0 and 999 inclusive,
-          _y2_: an integer,
-          _mon2_: an integer between 1 and 12 inclusive,
-          _d2_: an integer between 1 and 31 inclusive,
-          _h2_: an integer between 0 and 23 inclusive,
-          _min2_: an integer between 0 and 59 inclusive,
-          _s2_: an integer between 0 and 59 inclusive,
-          _ms2_: an integer between 0 and 999 inclusive,
-          _mus2_: an integer between 0 and 999 inclusive,
-          _ns2_: an integer between 0 and 999 inclusive,
+          _isoDateTime1_: an ISO Date-Time Record,
+          _isoDateTime2_: an ISO Date-Time Record,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
         ): either a normal completion containing a Normalized Duration Record or a throw completion
@@ -1078,13 +1062,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _isoDate1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
-        1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
-        1. Let _isoDateTime1_ be CombineISODateAndTimeRecord(_isoDate1_, _time1_).
         1. Assert: ISODateTimeWithinLimits(_isoDateTime1_) is *true*.
-        1. Let _isoDate2_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
-        1. Let _time2_ be Time Record { [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
-        1. Let _isoDateTime2_ be CombineISODateAndTimeRecord(_isoDate2_, _time2_).
         1. Assert: ISODateTimeWithinLimits(_isoDateTime2_) is *true*.
         1. Let _timeDuration_ be DifferenceTime(_isoDateTime1_.[[Time]], _isoDateTime2_.[[Time]]).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_timeDuration_).
@@ -1143,7 +1121,7 @@
         1. Let _isoDateTime2_ be CombineISODateAndTimeRecord(_isoDate2_, _time2_).
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
           1. Return ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
-        1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _largestUnit_).
+        1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
@@ -1188,7 +1166,7 @@
         1. Let _isoDateTime2_ be CombineISODateAndTimeRecord(_isoDate2_, _time2_).
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
           1. Return 0.
-        1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _unit_).
+        1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _unit_).
         1. If _unit_ is ~nanosecond~, return _diff_.[[NormalizedTime]].[[TotalNanoseconds]].
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _unit_).
