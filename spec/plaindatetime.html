@@ -71,7 +71,9 @@
       <emu-alg>
         1. Set _one_ to ? ToTemporalDateTime(_one_).
         1. Set _two_ to ? ToTemporalDateTime(_two_).
-        1. Return 𝔽(CompareISODateTime(_one_.[[ISOYear]], _one_.[[ISOMonth]], _one_.[[ISODay]], _one_.[[ISOHour]], _one_.[[ISOMinute]], _one_.[[ISOSecond]], _one_.[[ISOMillisecond]], _one_.[[ISOMicrosecond]], _one_.[[ISONanosecond]], _two_.[[ISOYear]], _two_.[[ISOMonth]], _two_.[[ISODay]], _two_.[[ISOHour]], _two_.[[ISOMinute]], _two_.[[ISOSecond]], _two_.[[ISOMillisecond]], _two_.[[ISOMicrosecond]], _two_.[[ISONanosecond]])).
+        1. Let _isoDateTime1_ be PlainDateTimeToISODateTimeRecord(_one_).
+        1. Let _isoDateTime2_ be PlainDateTimeToISODateTimeRecord(_two_).
+        1. Return 𝔽(CompareISODateTime(_isoDateTime1_, _isoDateTime2_)).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -536,8 +538,9 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Set _other_ to ? ToTemporalDateTime(_other_).
-        1. Let _result_ be CompareISODateTime(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _other_.[[ISOYear]], _other_.[[ISOMonth]], _other_.[[ISODay]], _other_.[[ISOHour]], _other_.[[ISOMinute]], _other_.[[ISOSecond]], _other_.[[ISOMillisecond]], _other_.[[ISOMicrosecond]], _other_.[[ISONanosecond]]).
-        1. If _result_ is not 0, return *false*.
+        1. Let _isoDateTime_ be PlainDateTimeToISODateTimeRecord(_dateTime_).
+        1. Let _isoDateTimeOther_ be PlainDateTimeToISODateTimeRecord(_other_).
+        1. If CompareISODateTime(_isoDateTime_, _isoDateTimeOther_) ≠ 0, return *false*.
         1. Return CalendarEquals(_dateTime_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
@@ -1006,24 +1009,8 @@
     <emu-clause id="sec-temporal-compareisodatetime" type="abstract operation">
       <h1>
         CompareISODateTime (
-          _y1_: an integer,
-          _mon1_: an integer,
-          _d1_: an integer,
-          _h1_: an integer in the inclusive interval from 0 to 23,
-          _min1_: an integer in the inclusive interval from 0 to 59,
-          _s1_: an integer in the inclusive interval from 0 to 59,
-          _ms1_: an integer in the inclusive interval from 0 to 999,
-          _mus1_: an integer in the inclusive interval from 0 to 999,
-          _ns1_: an integer in the inclusive interval from 0 to 999,
-          _y2_: an integer,
-          _mon2_: an integer,
-          _d2_: an integer,
-          _h2_: an integer in the inclusive interval from 0 to 23,
-          _min2_: an integer in the inclusive interval from 0 to 59,
-          _s2_: an integer in the inclusive interval from 0 to 59,
-          _ms2_: an integer in the inclusive interval from 0 to 999,
-          _mus2_: an integer in the inclusive interval from 0 to 999,
-          _ns2_: an integer in the inclusive interval from 0 to 999,
+          _isoDateTime1_: an ISO Date-Time Record,
+          _isoDateTime2_: an ISO Date-Time Record,
         ): -1, 0, or 1
       </h1>
       <dl class="header">
@@ -1031,13 +1018,9 @@
         <dd>It performs a comparison of two date-times according to ISO 8601 calendar arithmetic.</dd>
       </dl>
       <emu-alg>
-        1. Let _isoDate1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
-        1. Let _isoDate2_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
-        1. Let _dateResult_ be CompareISODate(_isoDate1_, _isoDate2_).
+        1. Let _dateResult_ be CompareISODate(_isoDateTime1_.[[ISODate]], _isoDateTime2_.[[ISODate]]).
         1. If _dateResult_ ≠ 0, return _dateResult_.
-        1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
-        1. Let _time2_ be Time Record { [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
-        1. Return CompareTimeRecord(_time1_, _time2_).
+        1. Return CompareTimeRecord(_isoDateTime1_.[[Time]], _isoDateTime2_.[[Time]]).
       </emu-alg>
     </emu-clause>
 
@@ -1152,15 +1135,16 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_y1_, _mon1_, _d1_) is *true*.
-        1. Assert: IsValidISODate(_y2_, _mon2_, _d2_) is *true*.
-        1. If CompareISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_) = 0, then
-          1. Return ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
-        1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _largestUnit_).
-        1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
         1. Let _isoDate1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
         1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
         1. Let _isoDateTime1_ be CombineISODateAndTimeRecord(_isoDate1_, _time1_).
+        1. Let _isoDate2_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
+        1. Let _time2_ be Time Record { [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
+        1. Let _isoDateTime2_ be CombineISODateAndTimeRecord(_isoDate2_, _time2_).
+        1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
+          1. Return ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
+        1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _largestUnit_).
+        1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
         1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
@@ -1196,17 +1180,18 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_y1_, _mon1_, _d1_) is *true*.
-        1. Assert: IsValidISODate(_y2_, _mon2_, _d2_) is *true*.
-        1. If CompareISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_) = 0, then
+        1. Let _isoDate1_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
+        1. Let _time1_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
+        1. Let _isoDateTime1_ be CombineISODateAndTimeRecord(_isoDate1_, _time1_).
+        1. Let _isoDate2_ be CreateISODateRecord(_y2_, _mon2_, _d2_).
+        1. Let _time2_ be Time Record { [[Hour]]: _h2_, [[Minute]]: _min2_, [[Second]]: _s2_, [[Millisecond]]: _ms2_, [[Microsecond]]: _mus2_, [[Nanosecond]]: _ns2_ }.
+        1. Let _isoDateTime2_ be CombineISODateAndTimeRecord(_isoDate2_, _time2_).
+        1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
           1. Return 0.
         1. Let _diff_ be ? DifferenceISODateTime(_y1_, _mon1_, _d1_, _h1_, _min1_, _s1_, _ms1_, _mus1_, _ns1_, _y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_, _calendar_, _unit_).
         1. If _unit_ is ~nanosecond~, return _diff_.[[NormalizedTime]].[[TotalNanoseconds]].
-        1. Let _isoDate_ be CreateISODateRecord(_y1_, _mon1_, _d1_).
-        1. Let _time_ be Time Record { [[Hour]]: _h1_, [[Minute]]: _min1_, [[Second]]: _s1_, [[Millisecond]]: _ms1_, [[Microsecond]]: _mus1_, [[Nanosecond]]: _ns1_ }.
-        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_y2_, _mon2_, _d2_, _h2_, _min2_, _s2_, _ms2_, _mus2_, _ns2_).
-        1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _isoDateTime_, ~unset~, _calendar_, _unit_).
+        1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _unit_).
       </emu-alg>
     </emu-clause>
 

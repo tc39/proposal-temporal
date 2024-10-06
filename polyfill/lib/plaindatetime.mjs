@@ -317,30 +317,9 @@ export class PlainDateTime {
   equals(other) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     other = ES.ToTemporalDateTime(other);
-    if (
-      ES.CompareISODateTime(
-        GetSlot(this, ISO_YEAR),
-        GetSlot(this, ISO_MONTH),
-        GetSlot(this, ISO_DAY),
-        GetSlot(this, ISO_HOUR),
-        GetSlot(this, ISO_MINUTE),
-        GetSlot(this, ISO_SECOND),
-        GetSlot(this, ISO_MILLISECOND),
-        GetSlot(this, ISO_MICROSECOND),
-        GetSlot(this, ISO_NANOSECOND),
-        GetSlot(other, ISO_YEAR),
-        GetSlot(other, ISO_MONTH),
-        GetSlot(other, ISO_DAY),
-        GetSlot(other, ISO_HOUR),
-        GetSlot(other, ISO_MINUTE),
-        GetSlot(other, ISO_SECOND),
-        GetSlot(other, ISO_MILLISECOND),
-        GetSlot(other, ISO_MICROSECOND),
-        GetSlot(other, ISO_NANOSECOND)
-      ) !== 0
-    ) {
-      return false;
-    }
+    const isoDateTime = ES.PlainDateTimeToISODateTimeRecord(this);
+    const isoDateTimeOther = ES.PlainDateTimeToISODateTimeRecord(other);
+    if (ES.CompareISODateTime(isoDateTime, isoDateTimeOther) !== 0) return false;
     return ES.CalendarEquals(GetSlot(this, CALENDAR), GetSlot(other, CALENDAR));
   }
   toString(options = undefined) {
@@ -393,26 +372,9 @@ export class PlainDateTime {
   static compare(one, two) {
     one = ES.ToTemporalDateTime(one);
     two = ES.ToTemporalDateTime(two);
-    return ES.CompareISODateTime(
-      GetSlot(one, ISO_YEAR),
-      GetSlot(one, ISO_MONTH),
-      GetSlot(one, ISO_DAY),
-      GetSlot(one, ISO_HOUR),
-      GetSlot(one, ISO_MINUTE),
-      GetSlot(one, ISO_SECOND),
-      GetSlot(one, ISO_MILLISECOND),
-      GetSlot(one, ISO_MICROSECOND),
-      GetSlot(one, ISO_NANOSECOND),
-      GetSlot(two, ISO_YEAR),
-      GetSlot(two, ISO_MONTH),
-      GetSlot(two, ISO_DAY),
-      GetSlot(two, ISO_HOUR),
-      GetSlot(two, ISO_MINUTE),
-      GetSlot(two, ISO_SECOND),
-      GetSlot(two, ISO_MILLISECOND),
-      GetSlot(two, ISO_MICROSECOND),
-      GetSlot(two, ISO_NANOSECOND)
-    );
+    const isoDateTime1 = ES.PlainDateTimeToISODateTimeRecord(one);
+    const isoDateTime2 = ES.PlainDateTimeToISODateTimeRecord(two);
+    return ES.CompareISODateTime(isoDateTime1, isoDateTime2);
   }
 }
 
