@@ -251,10 +251,8 @@ export class Duration {
 
     if (plainRelativeTo) {
       let duration = ES.NormalizeDurationWith24HourDays(this);
-      const targetTime = ES.AddTime(
-        { hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 },
-        duration.norm
-      );
+      const midnight = { hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+      const targetTime = ES.AddTime(midnight, duration.norm);
 
       // Delegate the date part addition to the calendar
       const isoRelativeToDate = ES.TemporalObjectToISODateRecord(plainRelativeTo);
@@ -262,25 +260,11 @@ export class Duration {
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');
 
+      const isoDateTime = ES.CombineISODateAndTimeRecord(isoRelativeToDate, midnight);
+      const targetDateTime = ES.CombineISODateAndTimeRecord(targetDate, targetTime);
       duration = ES.DifferencePlainDateTimeWithRounding(
-        isoRelativeToDate.year,
-        isoRelativeToDate.month,
-        isoRelativeToDate.day,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        targetDate.year,
-        targetDate.month,
-        targetDate.day,
-        targetTime.hour,
-        targetTime.minute,
-        targetTime.second,
-        targetTime.millisecond,
-        targetTime.microsecond,
-        targetTime.nanosecond,
+        isoDateTime,
+        targetDateTime,
         calendar,
         largestUnit,
         roundingIncrement,

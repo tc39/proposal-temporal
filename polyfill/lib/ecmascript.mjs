@@ -3695,38 +3695,14 @@ function TotalRelativeDuration(duration, destEpochNs, isoDateTime, timeZone, cal
 }
 
 export function DifferencePlainDateTimeWithRounding(
-  y1,
-  mon1,
-  d1,
-  h1,
-  min1,
-  s1,
-  ms1,
-  µs1,
-  ns1,
-  y2,
-  mon2,
-  d2,
-  h2,
-  min2,
-  s2,
-  ms2,
-  µs2,
-  ns2,
+  isoDateTime1,
+  isoDateTime2,
   calendar,
   largestUnit,
   roundingIncrement,
   smallestUnit,
   roundingMode
 ) {
-  const isoDateTime1 = {
-    isoDate: { year: y1, month: mon1, day: d1 },
-    time: { hour: h1, minute: min1, second: s1, millisecond: ms1, microsecond: µs1, nanosecond: ns1 }
-  };
-  const isoDateTime2 = {
-    isoDate: { year: y2, month: mon2, day: d2 },
-    time: { hour: h2, minute: min2, second: s2, millisecond: ms2, microsecond: µs2, nanosecond: ns2 }
-  };
   if (CompareISODateTime(isoDateTime1, isoDateTime2) == 0) {
     return { date: ZeroDateDuration(), norm: TimeDuration.ZERO };
   }
@@ -3735,7 +3711,17 @@ export function DifferencePlainDateTimeWithRounding(
 
   if (smallestUnit === 'nanosecond' && roundingIncrement === 1) return duration;
 
-  const destEpochNs = GetUTCEpochNanoseconds(y2, mon2, d2, h2, min2, s2, ms2, µs2, ns2);
+  const destEpochNs = GetUTCEpochNanoseconds(
+    isoDateTime2.isoDate.year,
+    isoDateTime2.isoDate.month,
+    isoDateTime2.isoDate.day,
+    isoDateTime2.time.hour,
+    isoDateTime2.time.minute,
+    isoDateTime2.time.second,
+    isoDateTime2.time.millisecond,
+    isoDateTime2.time.microsecond,
+    isoDateTime2.time.nanosecond
+  );
   return RoundRelativeDuration(
     duration,
     destEpochNs,
@@ -3967,39 +3953,13 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
   const settings = GetDifferenceSettings(operation, resolvedOptions, 'datetime', [], 'nanosecond', 'day');
 
   const Duration = GetIntrinsic('%Temporal.Duration%');
-  if (
-    GetSlot(plainDateTime, ISO_YEAR) === GetSlot(other, ISO_YEAR) &&
-    GetSlot(plainDateTime, ISO_MONTH) === GetSlot(other, ISO_MONTH) &&
-    GetSlot(plainDateTime, ISO_DAY) === GetSlot(other, ISO_DAY) &&
-    GetSlot(plainDateTime, ISO_HOUR) == GetSlot(other, ISO_HOUR) &&
-    GetSlot(plainDateTime, ISO_MINUTE) == GetSlot(other, ISO_MINUTE) &&
-    GetSlot(plainDateTime, ISO_SECOND) == GetSlot(other, ISO_SECOND) &&
-    GetSlot(plainDateTime, ISO_MILLISECOND) == GetSlot(other, ISO_MILLISECOND) &&
-    GetSlot(plainDateTime, ISO_MICROSECOND) == GetSlot(other, ISO_MICROSECOND) &&
-    GetSlot(plainDateTime, ISO_NANOSECOND) == GetSlot(other, ISO_NANOSECOND)
-  ) {
-    return new Duration();
-  }
+  const isoDateTime1 = PlainDateTimeToISODateTimeRecord(plainDateTime);
+  const isoDateTime2 = PlainDateTimeToISODateTimeRecord(other);
+  if (CompareISODateTime(isoDateTime1, isoDateTime2) === 0) return new Duration();
 
   const duration = DifferencePlainDateTimeWithRounding(
-    GetSlot(plainDateTime, ISO_YEAR),
-    GetSlot(plainDateTime, ISO_MONTH),
-    GetSlot(plainDateTime, ISO_DAY),
-    GetSlot(plainDateTime, ISO_HOUR),
-    GetSlot(plainDateTime, ISO_MINUTE),
-    GetSlot(plainDateTime, ISO_SECOND),
-    GetSlot(plainDateTime, ISO_MILLISECOND),
-    GetSlot(plainDateTime, ISO_MICROSECOND),
-    GetSlot(plainDateTime, ISO_NANOSECOND),
-    GetSlot(other, ISO_YEAR),
-    GetSlot(other, ISO_MONTH),
-    GetSlot(other, ISO_DAY),
-    GetSlot(other, ISO_HOUR),
-    GetSlot(other, ISO_MINUTE),
-    GetSlot(other, ISO_SECOND),
-    GetSlot(other, ISO_MILLISECOND),
-    GetSlot(other, ISO_MICROSECOND),
-    GetSlot(other, ISO_NANOSECOND),
+    isoDateTime1,
+    isoDateTime2,
     calendar,
     settings.largestUnit,
     settings.roundingIncrement,
