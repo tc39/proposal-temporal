@@ -34,6 +34,7 @@ import {
   EPOCHNANOSECONDS,
   CreateSlots,
   GetSlot,
+  ISO_DATE,
   SetSlot,
   TIME_ZONE
 } from './slots.mjs';
@@ -254,7 +255,7 @@ export class Duration {
       const targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.norm);
 
       // Delegate the date part addition to the calendar
-      const isoRelativeToDate = ES.TemporalObjectToISODateRecord(plainRelativeTo);
+      const isoRelativeToDate = GetSlot(plainRelativeTo, ISO_DATE);
       const calendar = GetSlot(plainRelativeTo, CALENDAR);
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');
@@ -313,7 +314,7 @@ export class Duration {
       let targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.norm);
 
       // Delegate the date part addition to the calendar
-      const isoRelativeToDate = ES.TemporalObjectToISODateRecord(plainRelativeTo);
+      const isoRelativeToDate = GetSlot(plainRelativeTo, ISO_DATE);
       const calendar = GetSlot(plainRelativeTo, CALENDAR);
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');

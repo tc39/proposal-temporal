@@ -2,6 +2,7 @@ import { ObjectDefineProperty, SymbolToStringTag } from './primordials.mjs';
 
 import * as ES from './ecmascript.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
+import { GetSlot, ISO_DATE_TIME } from './slots.mjs';
 
 const instant = () => {
   const Instant = GetIntrinsic('%Temporal.Instant%');
@@ -9,29 +10,18 @@ const instant = () => {
 };
 const plainDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZoneIdentifier(temporalTimeZoneLike);
-  const iso = ES.GetISODateTimeFor(timeZone, ES.SystemUTCEpochNanoSeconds());
-  return ES.CreateTemporalDateTime(
-    iso.isoDate.year,
-    iso.isoDate.month,
-    iso.isoDate.day,
-    iso.time.hour,
-    iso.time.minute,
-    iso.time.second,
-    iso.time.millisecond,
-    iso.time.microsecond,
-    iso.time.nanosecond,
-    'iso8601'
-  );
+  const isoDateTime = ES.GetISODateTimeFor(timeZone, ES.SystemUTCEpochNanoSeconds());
+  return ES.CreateTemporalDateTime(isoDateTime, 'iso8601');
 };
 const zonedDateTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
   const timeZone = ES.ToTemporalTimeZoneIdentifier(temporalTimeZoneLike);
   return ES.CreateTemporalZonedDateTime(ES.SystemUTCEpochNanoSeconds(), timeZone, 'iso8601');
 };
 const plainDateISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
-  return ES.TemporalDateTimeToDate(plainDateTimeISO(temporalTimeZoneLike));
+  return ES.CreateTemporalDate(GetSlot(plainDateTimeISO(temporalTimeZoneLike), ISO_DATE_TIME).isoDate, 'iso8601');
 };
 const plainTimeISO = (temporalTimeZoneLike = ES.DefaultTimeZone()) => {
-  return ES.TemporalDateTimeToTime(plainDateTimeISO(temporalTimeZoneLike));
+  return ES.CreateTemporalTime(GetSlot(plainDateTimeISO(temporalTimeZoneLike), ISO_DATE_TIME).time);
 };
 const timeZoneId = () => {
   return ES.DefaultTimeZone();

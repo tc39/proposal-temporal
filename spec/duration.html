@@ -438,11 +438,10 @@
         1. If _plainRelativeTo_ is not *undefined*, then
           1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
           1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _normalizedDuration_.[[NormalizedTime]]).
-          1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
-          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, ~constrain~).
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoRelativeToDate_, MidnightTimeRecord()).
+          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainRelativeTo_.[[ISODate]], MidnightTimeRecord()).
           1. Let _targetDateTime_ be CombineISODateAndTimeRecord(_targetDate_, _targetTime_).
           1. Set _normalizedDuration_ to ? DifferencePlainDateTimeWithRounding(_isoDateTime_, _targetDateTime_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Return ? UnnormalizeDuration(_normalizedDuration_, _largestUnit_).
@@ -482,11 +481,10 @@
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
           1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _normalizedDuration_.[[NormalizedTime]]).
-          1. Let _isoRelativeToDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
-          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, ~constrain~).
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoRelativeToDate_, MidnightTimeRecord()).
+          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainRelativeTo_.[[ISODate]], MidnightTimeRecord()).
           1. Let _targetDateTime_ be CombineISODateAndTimeRecord(_targetDate_, _targetTime_).
           1. Let _total_ be ? DifferencePlainDateTimeWithTotal(_isoDateTime_, _targetDateTime_, _calendar_, _unit_).
         1. Else,
@@ -1573,9 +1571,8 @@
       <emu-alg>
         1. Let _yearsMonthsWeeksDuration_ be ! AdjustDateDurationRecord(_dateDuration_, 0).
         1. If DateDurationSign(_yearsMonthsWeeksDuration_) = 0, return _dateDuration_.[[Days]].
-        1. Let _isoDate_ be TemporalObjectToISODateRecord(_plainRelativeTo_).
-        1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _isoDate_, _yearsMonthsWeeksDuration_, ~constrain~).
-        1. Let _epochDays1_ be ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]]).
+        1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _plainRelativeTo_.[[ISODate]], _yearsMonthsWeeksDuration_, ~constrain~).
+        1. Let _epochDays1_ be ISODateToEpochDays(_plainRelativeTo_.[[ISODate]].[[Year]], _plainRelativeTo_.[[ISODate]].[[Month]] - 1, _plainRelativeTo_.[[ISODate]].[[Day]]).
         1. Let _epochDays2_ be ISODateToEpochDays(_later_.[[Year]], _later_.[[Month]] - 1, _later_.[[Day]]).
         1. Let _yearsMonthsWeeksInDays_ be _epochDays2_ - _epochDays1_.
         1. Return _dateDuration_.[[Days]] + _yearsMonthsWeeksInDays_.

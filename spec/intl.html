@@ -1287,8 +1287,7 @@
         </dl>
         <emu-alg>
           1. If _temporalDate_.[[Calendar]] is not _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
-          1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalDate_).
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, NoonTimeRecord()).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalDate_.[[ISODate]], NoonTimeRecord()).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainDateFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
@@ -1311,8 +1310,7 @@
         <emu-alg>
           1. If _temporalYearMonth_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
-          1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalYearMonth_).
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, NoonTimeRecord()).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalYearMonth_.[[ISODate]], NoonTimeRecord()).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainYearMonthFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
@@ -1335,8 +1333,7 @@
         <emu-alg>
           1. If _temporalMonthDay_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
-          1. Let _isoDate_ be TemporalObjectToISODateRecord(_temporalMonthDay_).
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, NoonTimeRecord()).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalMonthDay_.[[ISODate]], NoonTimeRecord()).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainMonthDayFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
@@ -1358,8 +1355,7 @@
         </dl>
         <emu-alg>
           1. Let _isoDate_ be CreateISODateRecord(1970, 1, 1).
-          1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: _temporalTime_.[[ISOHour]], [[Minute]]: _temporalTime_.[[ISOMinute]], [[Second]]: _temporalTime_.[[ISOSecond]], [[Millisecond]]: _temporalTime_.[[ISOMillisecond]], [[Microsecond]]: _temporalTime_.[[ISOMicrosecond]], [[Nanosecond]]: _temporalTime_.[[ISONanosecond]] }.
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _temporalTime_.[[Time]]).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainTimeFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
@@ -1382,8 +1378,7 @@
         <emu-alg>
           1. If _dateTime_.[[Calendar]] is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
-          1. Let _isoDateTime_ be PlainDateTimeToISODateTimeRecord(_dateTime_).
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
+          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _dateTime_.[[ISODateTime]], ~compatible~).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainDateTimeFormat]].
           1. Return Value Format Record {
             [[Format]]: _format_,

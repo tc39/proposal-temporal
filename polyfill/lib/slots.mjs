@@ -14,15 +14,9 @@ import Call from 'es-abstract/2024/Call.js';
 export const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
 
 // DateTime, Date, Time, YearMonth, MonthDay
-export const ISO_YEAR = 'slot-year';
-export const ISO_MONTH = 'slot-month';
-export const ISO_DAY = 'slot-day';
-export const ISO_HOUR = 'slot-hour';
-export const ISO_MINUTE = 'slot-minute';
-export const ISO_SECOND = 'slot-second';
-export const ISO_MILLISECOND = 'slot-millisecond';
-export const ISO_MICROSECOND = 'slot-microsecond';
-export const ISO_NANOSECOND = 'slot-nanosecond';
+export const ISO_DATE = 'slot-iso-date';
+export const ISO_DATE_TIME = 'slot-iso-date-time';
+export const TIME = 'slot-time';
 export const CALENDAR = 'slot-calendar';
 // Date, YearMonth, and MonthDay all have the same slots, disambiguation needed:
 export const DATE_BRAND = 'slot-date-brand';

@@ -549,8 +549,7 @@
           1. Let _epochNs_ be ? GetStartOfDay(_timeZone_, _isoDateTime_.[[ISODate]]).
         1. Else,
           1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
-          1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: _plainTime_.[[ISOHour]], [[Minute]]: _plainTime_.[[ISOMinute]], [[Second]]: _plainTime_.[[ISOSecond]], [[Millisecond]]: _plainTime_.[[ISOMillisecond]], [[Microsecond]]: _plainTime_.[[ISOMicrosecond]], [[Nanosecond]]: _plainTime_.[[ISONanosecond]] }.
-          1. Let _resultISODateTime_ be CombineISODateAndTimeRecord(_isoDateTime_.[[ISODate]], _time_).
+          1. Let _resultISODateTime_ be CombineISODateAndTimeRecord(_isoDateTime_.[[ISODate]], _plainTime_.[[Time]]).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _resultISODateTime_, ~compatible~).
         1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _calendar_).
       </emu-alg>
@@ -799,7 +798,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
-        1. Return ! CreateTemporalDate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]], _zonedDateTime_.[[Calendar]].).
+        1. Return ! CreateTemporalDate(_isoDateTime_.[[ISODate]], _zonedDateTime_.[[Calendar]].).
       </emu-alg>
     </emu-clause>
 
@@ -810,7 +809,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
-        1. Return ! CreateTemporalTime(_isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
+        1. Return ! CreateTemporalTime(_isoDateTime_.[[Time]]).
       </emu-alg>
     </emu-clause>
 
@@ -821,7 +820,7 @@
         1. Let _zonedDateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_zonedDateTime_, [[InitializedTemporalZonedDateTime]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[EpochNanoseconds]]).
-        1. Return ! CreateTemporalDateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], _zonedDateTime_.[[Calendar]]).
+        1. Return ! CreateTemporalDateTime(_isoDateTime_, _zonedDateTime_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>

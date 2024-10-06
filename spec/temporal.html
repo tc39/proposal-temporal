@@ -139,7 +139,7 @@
       <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
-        1. Return ! CreateTemporalDate(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], *"iso8601"*).
+        1. Return ! CreateTemporalDate(_dateTime_.[[ISODateTime]].[[ISODate]], *"iso8601"*).
       </emu-alg>
     </emu-clause>
 
@@ -148,7 +148,7 @@
       <p>This function performs the following steps when called:</p>
       <emu-alg>
         1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
-        1. Return ! CreateTemporalTime(_dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]]).
+        1. Return ! CreateTemporalTime(_dateTime_.[[ISODateTime]].[[Time]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -243,7 +243,7 @@
           1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_temporalTimeZoneLike_).
         1. Let _epochNs_ be SystemUTCEpochNanoseconds().
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNs_).
-        1. Return ! CreateTemporalDateTime(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], *"iso8601"*).
+        1. Return ! CreateTemporalDateTime(_isoDateTime_, *"iso8601"*).
       </emu-alg>
     </emu-clause>
 

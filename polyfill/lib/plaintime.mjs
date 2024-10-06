@@ -1,93 +1,57 @@
-/* global __debug__ */
-
 import {
   // error constructors
   RangeError as RangeErrorCtor,
   TypeError as TypeErrorCtor,
 
   // class static functions and methods
-  ArrayPrototypeEvery,
   ObjectAssign,
-  ObjectCreate,
-  ObjectDefineProperty,
-  SymbolToStringTag
+  ObjectCreate
 } from './primordials.mjs';
 
 import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
-import {
-  ISO_HOUR,
-  ISO_MINUTE,
-  ISO_SECOND,
-  ISO_MILLISECOND,
-  ISO_MICROSECOND,
-  ISO_NANOSECOND,
-  CreateSlots,
-  GetSlot,
-  SetSlot
-} from './slots.mjs';
+import { GetSlot, TIME } from './slots.mjs';
 
 export class PlainTime {
   constructor(isoHour = 0, isoMinute = 0, isoSecond = 0, isoMillisecond = 0, isoMicrosecond = 0, isoNanosecond = 0) {
-    isoHour = isoHour === undefined ? 0 : ES.ToIntegerWithTruncation(isoHour);
-    isoMinute = isoMinute === undefined ? 0 : ES.ToIntegerWithTruncation(isoMinute);
-    isoSecond = isoSecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoSecond);
-    isoMillisecond = isoMillisecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoMillisecond);
-    isoMicrosecond = isoMicrosecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoMicrosecond);
-    isoNanosecond = isoNanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoNanosecond);
+    const hour = isoHour === undefined ? 0 : ES.ToIntegerWithTruncation(isoHour);
+    const minute = isoMinute === undefined ? 0 : ES.ToIntegerWithTruncation(isoMinute);
+    const second = isoSecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoSecond);
+    const millisecond = isoMillisecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoMillisecond);
+    const microsecond = isoMicrosecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoMicrosecond);
+    const nanosecond = isoNanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(isoNanosecond);
 
-    ES.RejectTime(isoHour, isoMinute, isoSecond, isoMillisecond, isoMicrosecond, isoNanosecond);
-    CreateSlots(this);
-    SetSlot(this, ISO_HOUR, isoHour);
-    SetSlot(this, ISO_MINUTE, isoMinute);
-    SetSlot(this, ISO_SECOND, isoSecond);
-    SetSlot(this, ISO_MILLISECOND, isoMillisecond);
-    SetSlot(this, ISO_MICROSECOND, isoMicrosecond);
-    SetSlot(this, ISO_NANOSECOND, isoNanosecond);
+    ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    const time = { hour, minute, second, millisecond, microsecond, nanosecond };
 
-    if (typeof __debug__ !== 'undefined' && __debug__) {
-      const time = {
-        hour: isoHour,
-        minute: isoMinute,
-        second: isoSecond,
-        millisecond: isoMillisecond,
-        microsecond: isoMicrosecond,
-        nanosecond: isoNanosecond
-      };
-      ObjectDefineProperty(this, '_repr_', {
-        value: `${this[SymbolToStringTag]} <${ES.TimeRecordToString(time, 'auto')}>`,
-        writable: false,
-        enumerable: false,
-        configurable: false
-      });
-    }
+    ES.CreateTemporalTimeSlots(this, time);
   }
 
   get hour() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return GetSlot(this, ISO_HOUR);
+    return GetSlot(this, TIME).hour;
   }
   get minute() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return GetSlot(this, ISO_MINUTE);
+    return GetSlot(this, TIME).minute;
   }
   get second() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return GetSlot(this, ISO_SECOND);
+    return GetSlot(this, TIME).second;
   }
   get millisecond() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return GetSlot(this, ISO_MILLISECOND);
+    return GetSlot(this, TIME).millisecond;
   }
   get microsecond() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return GetSlot(this, ISO_MICROSECOND);
+    return GetSlot(this, TIME).microsecond;
   }
   get nanosecond() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return GetSlot(this, ISO_NANOSECOND);
+    return GetSlot(this, TIME).nanosecond;
   }
 
   with(temporalTimeLike, options = undefined) {
@@ -152,30 +116,13 @@ export class PlainTime {
     };
     ES.ValidateTemporalRoundingIncrement(roundingIncrement, MAX_INCREMENTS[smallestUnit], false);
 
-    const { hour, minute, second, millisecond, microsecond, nanosecond } = ES.RoundTime(
-      {
-        hour: GetSlot(this, ISO_HOUR),
-        minute: GetSlot(this, ISO_MINUTE),
-        second: GetSlot(this, ISO_SECOND),
-        millisecond: GetSlot(this, ISO_MILLISECOND),
-        microsecond: GetSlot(this, ISO_MICROSECOND),
-        nanosecond: GetSlot(this, ISO_NANOSECOND)
-      },
-      roundingIncrement,
-      smallestUnit,
-      roundingMode
-    );
-
-    return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
+    const time = ES.RoundTime(GetSlot(this, TIME), roundingIncrement, smallestUnit, roundingMode);
+    return ES.CreateTemporalTime(time);
   }
   equals(other) {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
     other = ES.ToTemporalTime(other);
-    return ES.Call(
-      ArrayPrototypeEvery,
-      [ISO_HOUR, ISO_MINUTE, ISO_SECOND, ISO_MILLISECOND, ISO_MICROSECOND, ISO_NANOSECOND],
-      [(slot) => GetSlot(this, slot) === GetSlot(other, slot)]
-    );
+    return ES.CompareTimeRecord(GetSlot(this, TIME), GetSlot(other, TIME)) === 0;
   }
 
   toString(options = undefined) {
@@ -186,32 +133,12 @@ export class PlainTime {
     const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
     if (smallestUnit === 'hour') throw new RangeErrorCtor('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
-    const time = ES.RoundTime(
-      {
-        hour: GetSlot(this, ISO_HOUR),
-        minute: GetSlot(this, ISO_MINUTE),
-        second: GetSlot(this, ISO_SECOND),
-        millisecond: GetSlot(this, ISO_MILLISECOND),
-        microsecond: GetSlot(this, ISO_MICROSECOND),
-        nanosecond: GetSlot(this, ISO_NANOSECOND)
-      },
-      increment,
-      unit,
-      roundingMode
-    );
+    const time = ES.RoundTime(GetSlot(this, TIME), increment, unit, roundingMode);
     return ES.TimeRecordToString(time, precision);
   }
   toJSON() {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    const time = {
-      hour: GetSlot(this, ISO_HOUR),
-      minute: GetSlot(this, ISO_MINUTE),
-      second: GetSlot(this, ISO_SECOND),
-      millisecond: GetSlot(this, ISO_MILLISECOND),
-      microsecond: GetSlot(this, ISO_MICROSECOND),
-      nanosecond: GetSlot(this, ISO_NANOSECOND)
-    };
-    return ES.TimeRecordToString(time, 'auto');
+    return ES.TimeRecordToString(GetSlot(this, TIME), 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
@@ -227,24 +154,7 @@ export class PlainTime {
   static compare(one, two) {
     one = ES.ToTemporalTime(one);
     two = ES.ToTemporalTime(two);
-    return ES.CompareTimeRecord(
-      {
-        hour: GetSlot(one, ISO_HOUR),
-        minute: GetSlot(one, ISO_MINUTE),
-        second: GetSlot(one, ISO_SECOND),
-        millisecond: GetSlot(one, ISO_MILLISECOND),
-        microsecond: GetSlot(one, ISO_MICROSECOND),
-        nanosecond: GetSlot(one, ISO_NANOSECOND)
-      },
-      {
-        hour: GetSlot(two, ISO_HOUR),
-        minute: GetSlot(two, ISO_MINUTE),
-        second: GetSlot(two, ISO_SECOND),
-        millisecond: GetSlot(two, ISO_MILLISECOND),
-        microsecond: GetSlot(two, ISO_MICROSECOND),
-        nanosecond: GetSlot(two, ISO_NANOSECOND)
-      }
-    );
+    return ES.CompareTimeRecord(GetSlot(one, TIME), GetSlot(two, TIME));
   }
 }
 
