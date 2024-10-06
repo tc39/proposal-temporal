@@ -561,7 +561,7 @@
         1. Let _isoDateTime_ be PlainDateTimeToISODateTimeRecord(_dateTime_).
         1. Let _result_ be RoundISODateTime(_isoDateTime_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. If ISODateTimeWithinLimits(_result_) is *false*, throw a *RangeError* exception.
-        1. Return TemporalDateTimeToString(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]], _result_.[[Hour]], _result_.[[Minute]], _result_.[[Second]], _result_.[[Millisecond]], _result_.[[Microsecond]], _result_.[[Nanosecond]], _dateTime_.[[Calendar]], _precision_.[[Precision]], _showCalendar_).
+        1. Return ISODateTimeToString(_result_, _dateTime_.[[Calendar]], _precision_.[[Precision]], _showCalendar_).
       </emu-alg>
     </emu-clause>
 
@@ -576,7 +576,8 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _dateTime_.[[Calendar]], ~auto~, ~auto~).
+        1. Let _isoDateTime_ be PlainDateTimeToISODateTimeRecord(_dateTime_).
+        1. Return ISODateTimeToString(_isoDateTime_, _dateTime_.[[Calendar]], ~auto~, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -586,7 +587,8 @@
       <emu-alg>
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
-        1. Return TemporalDateTimeToString(_dateTime_.[[ISOYear]], _dateTime_.[[ISOMonth]], _dateTime_.[[ISODay]], _dateTime_.[[ISOHour]], _dateTime_.[[ISOMinute]], _dateTime_.[[ISOSecond]], _dateTime_.[[ISOMillisecond]], _dateTime_.[[ISOMicrosecond]], _dateTime_.[[ISONanosecond]], _dateTime_.[[Calendar]], ~auto~, ~auto~).
+        1. Let _isoDateTime_ be PlainDateTimeToISODateTimeRecord(_dateTime_).
+        1. Return ISODateTimeToString(_isoDateTime_, _dateTime_.[[Calendar]], ~auto~, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -1015,18 +1017,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-temporaldatetimetostring" type="abstract operation">
+    <emu-clause id="sec-temporal-isodatetimetostring" type="abstract operation">
       <h1>
-        TemporalDateTimeToString (
-          _isoYear_: an integer,
-          _isoMonth_: an integer,
-          _isoDay_: an integer,
-          _hour_: an integer in the inclusive interval from 0 to 23,
-          _minute_: an integer in the inclusive interval from 0 to 59,
-          _second_: an integer in the inclusive interval from 0 to 59,
-          _millisecond_: an integer in the inclusive interval from 0 to 999,
-          _microsecond_: an integer in the inclusive interval from 0 to 999,
-          _nanosecond_: an integer in the inclusive interval from 0 to 999,
+        ISODateTimeToString (
+          _isoDateTime_: an ISO Date-Time Record,
           _calendar_: a calendar type,
           _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
           _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
@@ -1034,15 +1028,14 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It formats the internal slots of a Temporal.PlainDateTime into an ISO 8601 string, to the precision specified by _precision_.</dd>
+        <dd>It formats an ISO Date-Time Record into an ISO 8601 string, to the precision specified by _precision_.</dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_isoYear_, _isoMonth_, _isoDay_) is *true*.
-        1. Let _yearString_ be PadISOYear(_isoYear_).
-        1. Let _monthString_ be ToZeroPaddedDecimalString(_isoMonth_, 2).
-        1. Let _dayString_ be ToZeroPaddedDecimalString(_isoDay_, 2).
-        1. Let _subSecondNanoseconds_ be _millisecond_ × 10<sup>6</sup> + _microsecond_ × 10<sup>3</sup> + _nanosecond_.
-        1. Let _timeString_ be FormatTimeString(_hour_, _minute_, _second_, _subSecondNanoseconds_, _precision_).
+        1. Let _yearString_ be PadISOYear(_isoDateTime_.[[Year]]).
+        1. Let _monthString_ be ToZeroPaddedDecimalString(_isoDateTime_.[[Month]], 2).
+        1. Let _dayString_ be ToZeroPaddedDecimalString(_isoDateTime_.[[Day]], 2).
+        1. Let _subSecondNanoseconds_ be _isoDateTime_.[[Millisecond]] × 10<sup>6</sup> + _isoDateTime_.[[Microsecond]] × 10<sup>3</sup> + _isoDateTime_.[[Nanosecond]].
+        1. Let _timeString_ be FormatTimeString(_isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _subSecondNanoseconds_, _precision_).
         1. Let _calendarString_ be FormatCalendarAnnotation(_calendar_, _showCalendar_).
         1. Return the string-concatenation of _yearString_, the code unit 0x002D (HYPHEN-MINUS), _monthString_, the code unit 0x002D (HYPHEN-MINUS), _dayString_, 0x0054 (LATIN CAPITAL LETTER T), _timeString_, and _calendarString_.
       </emu-alg>

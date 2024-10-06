@@ -1076,7 +1076,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _epochNs_).
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNs_).
-        1. Let _dateTimeString_ be TemporalDateTimeToString(_isoDateTime_.[[Year]], _isoDateTime_.[[Month]], _isoDateTime_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]], *"iso8601"*, _precision_, ~never~).
+        1. Let _dateTimeString_ be ISODateTimeToString(_isoDateTime_, *"iso8601"*, _precision_, ~never~).
         1. If _showOffset_ is ~never~, then
           1. Let _offsetString_ be the empty String.
         1. Else,

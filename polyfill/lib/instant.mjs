@@ -33,7 +33,7 @@ export class Instant {
 
     if (typeof __debug__ !== 'undefined' && __debug__) {
       const iso = ES.GetISOPartsFromEpoch(ns);
-      const repr = ES.TemporalDateTimeToString(iso, 'iso8601', 'auto', 'never') + 'Z';
+      const repr = ES.ISODateTimeToString(iso, 'iso8601', 'auto', 'never') + 'Z';
       ObjectDefineProperty(this, '_repr_', {
         value: `${this[SymbolToStringTag]} <${repr}>`,
         writable: false,

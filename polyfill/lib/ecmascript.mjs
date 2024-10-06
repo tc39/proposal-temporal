@@ -1603,7 +1603,7 @@ export function InterpretISODateTimeOffset(
   // zone and date/time.
   if (offsetOpt === 'reject') {
     const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
-    const dtStr = TemporalDateTimeToString(dt, 'iso8601', 'auto');
+    const dtStr = ISODateTimeToString(dt, 'iso8601', 'auto');
     throw new RangeErrorCtor(`Offset ${offsetStr} is invalid for ${dtStr} in ${timeZone}`);
   }
   // fall through: offsetOpt === 'prefer', but the offset doesn't match
@@ -1738,7 +1738,7 @@ export function CreateTemporalDateTimeSlots(result, isoYear, isoMonth, isoDay, h
   SetSlot(result, CALENDAR, calendar);
 
   if (typeof __debug__ !== 'undefined' && __debug__) {
-    let repr = TemporalDateTimeToString(iso, calendar, 'auto');
+    let repr = ISODateTimeToString(iso, calendar, 'auto');
     ObjectDefineProperty(result, '_repr_', {
       value: `Temporal.PlainDateTime <${repr}>`,
       writable: false,
@@ -2183,7 +2183,7 @@ export function TemporalInstantToString(instant, timeZone, precision) {
   if (outputTimeZone === undefined) outputTimeZone = 'UTC';
   const epochNs = GetSlot(instant, EPOCHNANOSECONDS);
   const iso = GetISODateTimeFor(outputTimeZone, epochNs);
-  const dateTimeString = TemporalDateTimeToString(iso, 'iso8601', precision, 'never');
+  const dateTimeString = ISODateTimeToString(iso, 'iso8601', precision, 'never');
   let timeZoneString = 'Z';
   if (timeZone !== undefined) {
     const offsetNs = GetOffsetNanosecondsFor(outputTimeZone, epochNs);
@@ -2257,7 +2257,7 @@ export function TimeRecordToString({ hour, minute, second, millisecond, microsec
   return FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
 }
 
-export function TemporalDateTimeToString(isoDateTime, calendar, precision, showCalendar = 'auto') {
+export function ISODateTimeToString(isoDateTime, calendar, precision, showCalendar = 'auto') {
   let { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond } = isoDateTime;
   const yearString = ISOYearString(year);
   const monthString = ISODateTimePartString(month);
@@ -2314,7 +2314,7 @@ export function TemporalZonedDateTimeToString(
   const tz = GetSlot(zdt, TIME_ZONE);
   const offsetNs = GetOffsetNanosecondsFor(tz, epochNs);
   const iso = GetISODateTimeFor(tz, epochNs);
-  let dateTimeString = TemporalDateTimeToString(iso, 'iso8601', precision, 'never');
+  let dateTimeString = ISODateTimeToString(iso, 'iso8601', precision, 'never');
   if (showOffset !== 'never') {
     dateTimeString += FormatDateTimeUTCOffsetRounded(offsetNs);
   }
