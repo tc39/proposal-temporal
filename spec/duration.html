@@ -488,7 +488,9 @@
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _isoRelativeToDate_, _dateDuration_, ~constrain~).
-          1. Let _total_ be ? DifferencePlainDateTimeWithTotal(_isoRelativeToDate_.[[Year]], _isoRelativeToDate_.[[Month]], _isoRelativeToDate_.[[Day]], 0, 0, 0, 0, 0, 0, _targetDate_.[[Year]], _targetDate_.[[Month]], _targetDate_.[[Day]], _targetTime_.[[Hour]], _targetTime_.[[Minute]], _targetTime_.[[Second]], _targetTime_.[[Millisecond]], _targetTime_.[[Microsecond]], _targetTime_.[[Nanosecond]], _calendar_, _unit_).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoRelativeToDate_, _midnight_).
+          1. Let _targetDateTime_ be CombineISODateAndTimeRecord(_targetDate_, _targetTime_).
+          1. Let _total_ be ? DifferencePlainDateTimeWithTotal(_isoDateTime_, _targetDateTime_, _calendar_, _unit_).
         1. Else,
           1. Let _largestUnit_ be DefaultTemporalLargestUnit(_duration_).
           1. If IsCalendarUnit(_largestUnit_) is *true*, or IsCalendarUnit(_unit_) is *true*, throw a *RangeError* exception.
