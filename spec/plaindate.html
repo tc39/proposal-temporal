@@ -961,9 +961,10 @@
         1. Let _dateDifference_ be CalendarDateUntil(_temporalDate_.[[Calendar]], _isoDate_, _isoOther_, _settings_.[[LargestUnit]]).
         1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(_dateDifference_, ZeroTimeDuration()).
         1. If _settings_.[[SmallestUnit]] is not ~day~ or _settings_.[[RoundingIncrement]] ≠ 1, then
-          1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoOther_.[[Year]], _isoOther_.[[Month]], _isoOther_.[[Day]], 0, 0, 0, 0, 0, 0).
-          1. Let _midnight_ be Time Record { [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
+          1. Let _midnight_ be Time Record { [[Days]]: 0, [[Hour]]: 0, [[Minute]]: 0, [[Second]]: 0, [[Millisecond]]: 0, [[Microsecond]]: 0, [[Nanosecond]]: 0 }.
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _midnight_).
+          1. Let _isoDateTimeOther_ be CombineISODateAndTimeRecord(_isoOther_, _midnight_).
+          1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTimeOther_).
           1. Let _result_ be ? RoundRelativeDuration(_duration_, _destEpochNs_, _isoDateTime_, ~unset~, _temporalDate_.[[Calendar]], _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
           1. Set _duration_ to _result_.[[NormalizedDuration]].
         1. Let _result_ be ! UnnormalizeDuration(_duration_, ~day~).

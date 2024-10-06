@@ -840,7 +840,7 @@
       </emu-note>
       <emu-alg>
         1. If abs(ISODateToEpochDays(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]] - 1, _isoDateTime_.[[ISODate]].[[Day]])) > 10<sup>8</sup> + 1, return *false*.
-        1. Let _ns_ be ℝ(GetUTCEpochNanoseconds(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]])).
+        1. Let _ns_ be ℝ(GetUTCEpochNanoseconds(_isoDateTime_)).
         1. If _ns_ ≤ nsMinInstant - nsPerDay, then
           1. Return *false*.
         1. If _ns_ ≥ nsMaxInstant + nsPerDay, then
@@ -1101,7 +1101,7 @@
           1. Return ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
         1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
-        1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_.[[ISODate]].[[Year]], _isoDateTime2_.[[ISODate]].[[Month]], _isoDateTime2_.[[ISODate]].[[Day]], _isoDateTime2_.[[Time]].[[Hour]], _isoDateTime2_.[[Time]].[[Minute]], _isoDateTime2_.[[Time]].[[Second]], _isoDateTime2_.[[Time]].[[Millisecond]], _isoDateTime2_.[[Time]].[[Microsecond]], _isoDateTime2_.[[Time]].[[Nanosecond]]).
+        1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_).
         1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
     </emu-clause>
@@ -1124,7 +1124,7 @@
           1. Return 0.
         1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _unit_).
         1. If _unit_ is ~nanosecond~, return _diff_.[[NormalizedTime]].[[TotalNanoseconds]].
-        1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_.[[ISODate]].[[Year]], _isoDateTime2_.[[ISODate]].[[Month]], _isoDateTime2_.[[ISODate]].[[Day]], _isoDateTime2_.[[Time]].[[Hour]], _isoDateTime2_.[[Time]].[[Minute]], _isoDateTime2_.[[Time]].[[Second]], _isoDateTime2_.[[Time]].[[Millisecond]], _isoDateTime2_.[[Time]].[[Microsecond]], _isoDateTime2_.[[Time]].[[Nanosecond]]).
+        1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_).
         1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _unit_).
       </emu-alg>
     </emu-clause>

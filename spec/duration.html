@@ -1719,13 +1719,13 @@
         1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ > _r2_.
         1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _startDuration_, ~constrain~).
         1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~).
+        1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _isoDateTime_.[[Time]]).
+        1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
         1. If _timeZone_ is ~unset~, then
-          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
-          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]]).
+          1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_startDateTime_).
+          1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).
         1. Else,
-          1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _isoDateTime_.[[Time]]).
           1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
-          1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
           1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
         1. If _sign_ is 1, then
           1. Assert: _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_.
@@ -1881,10 +1881,10 @@
               1. Let _weeks_ be _duration_.[[Date]].[[Weeks]] + _sign_.
               1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, _weeks_).
             1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~).
+            1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
             1. If _timeZone_ is ~unset~, then
-              1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_end_.[[Year]], _end_.[[Month]], _end_.[[Day]], _isoDateTime_.[[Hour]], _isoDateTime_.[[Minute]], _isoDateTime_.[[Second]], _isoDateTime_.[[Millisecond]], _isoDateTime_.[[Microsecond]], _isoDateTime_.[[Nanosecond]]).
+              1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).
             1. Else,
-              1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
               1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
