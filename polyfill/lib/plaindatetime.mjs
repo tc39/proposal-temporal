@@ -356,7 +356,7 @@ export class PlainDateTime {
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     const result = ES.RoundISODateTime(ES.PlainDateTimeToISODateTimeRecord(this), increment, unit, roundingMode);
     ES.RejectDateTimeRange(result);
-    return ES.TemporalDateTimeToString(result, GetSlot(this, CALENDAR), precision, showCalendar);
+    return ES.ISODateTimeToString(result, GetSlot(this, CALENDAR), precision, showCalendar);
   }
   toJSON() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
@@ -371,7 +371,7 @@ export class PlainDateTime {
       microsecond: GetSlot(this, ISO_MICROSECOND),
       nanosecond: GetSlot(this, ISO_NANOSECOND)
     };
-    return ES.TemporalDateTimeToString(isoDateTime, GetSlot(this, CALENDAR), 'auto');
+    return ES.ISODateTimeToString(isoDateTime, GetSlot(this, CALENDAR), 'auto');
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
