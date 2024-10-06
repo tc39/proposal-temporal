@@ -586,7 +586,7 @@
         1. Let _firstDayIndex_ be the 1-based index of the first day of the month described by _fields_ (i.e., 1 unless the month's first day is skipped by this calendar.)
         1. Set _fields_.[[Day]] to _firstDayIndex_.
         1. Let _result_ be ? CalendarDateToISO(_calendar_, _fields_, _overflow_).
-        1. If ISOYearMonthWithinLimits(_result_.[[Year]], _result_.[[Month]]) is *false*, throw a *RangeError* exception.
+        1. If ISOYearMonthWithinLimits(_result_) is *false*, throw a *RangeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>

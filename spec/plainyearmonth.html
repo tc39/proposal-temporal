@@ -517,20 +517,19 @@
     <emu-clause id="sec-temporal-isoyearmonthwithinlimits" type="abstract operation">
       <h1>
         ISOYearMonthWithinLimits (
-          _year_: an integer,
-          _month_: an integer in the inclusive interval from 1 to 12,
+          _isoDate_: an ISO Date Record,
         ): a Boolean
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns *true* if its arguments represent a month within the range that a Temporal.PlainYearMonth object can represent, and *false* otherwise.</dd>
+        <dd>It returns *true* if its argument represents a month within the range that a Temporal.PlainYearMonth object can represent, and *false* otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If _year_ &lt; -271821 or _year_ > 275760, then
+        1. If _isoDate_.[[Year]] &lt; -271821 or _isoDate_.[[Year]] > 275760, then
           1. Return *false*.
-        1. If _year_ = -271821 and _month_ &lt; 4, then
+        1. If _isoDate_.[[Year]] = -271821 and _isoDate_.[[Month]] &lt; 4, then
           1. Return *false*.
-        1. If _year_ = 275760 and _month_ > 9, then
+        1. If _isoDate_.[[Year]] = 275760 and _isoDate_.[[Month]] > 9, then
           1. Return *false*.
         1. Return *true*.
       </emu-alg>
@@ -579,7 +578,8 @@
       </dl>
       <emu-alg>
         1. If IsValidISODate(_isoYear_, _isoMonth_, _referenceISODay_) is *false*, throw a *RangeError* exception.
-        1. If ISOYearMonthWithinLimits(_isoYear_, _isoMonth_) is *false*, throw a *RangeError* exception.
+        1. Let _isoDate_ be CreateISODateRecord(_isoYear_, _isoMonth_, _referenceISODay_).
+        1. If ISOYearMonthWithinLimits(_isoDate_) is *false*, throw a *RangeError* exception.
         1. If _newTarget_ is not present, set _newTarget_ to %Temporal.PlainYearMonth%.
         1. Let _object_ be ? OrdinaryCreateFromConstructor(_newTarget_, *"%Temporal.PlainYearMonth.prototype%"*, « [[InitializedTemporalYearMonth]], [[ISOYear]], [[ISOMonth]], [[ISODay]], [[Calendar]] »).
         1. Set _object_.[[ISOYear]] to _isoYear_.
