@@ -245,19 +245,18 @@ impl['iso8601'] = {
     };
     if (requestedFields.monthCode) date.monthCode = buildMonthCode(month);
     if (requestedFields.dayOfWeek) {
-      const m = month + (month < 3 ? 10 : -2);
-      const Y = year - (month < 3 ? 1 : 0);
+      // https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week#Disparate_variation
+      const shiftedMonth = month + (month < 3 ? 10 : -2);
+      const shiftedYear = year - (month < 3 ? 1 : 0);
 
-      const c = MathFloor(Y / 100);
-      const y = Y - c * 100;
-      const d = day;
+      const century = MathFloor(shiftedYear / 100);
+      const yearInCentury = shiftedYear - century * 100;
 
-      const pD = d;
-      const pM = MathFloor(2.6 * m - 0.2);
-      const pY = y + MathFloor(y / 4);
-      const pC = MathFloor(c / 4) - 2 * c;
+      const monthTerm = MathFloor(2.6 * shiftedMonth - 0.2);
+      const yearTerm = yearInCentury + MathFloor(yearInCentury / 4);
+      const centuryTerm = MathFloor(century / 4) - 2 * century;
 
-      const dow = (pD + pM + pY + pC) % 7;
+      const dow = (day + monthTerm + yearTerm + centuryTerm) % 7;
 
       date.dayOfWeek = dow + (dow <= 0 ? 7 : 0);
     }
