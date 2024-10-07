@@ -407,7 +407,7 @@
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. If ? IsPartialTemporalObject(_temporalDateTimeLike_) is *false*, throw a *TypeError* exception.
         1. Let _calendar_ be _dateTime_.[[Calendar]].
-        1. Let _fields_ be TemporalObjectToFields(_dateTime_).
+        1. Let _fields_ be ISODateToFields(_calendar_, _dateTime_.[[ISODateTime]].[[ISODate]], ~date~).
         1. Set _fields_.[[Hour]] to _dateTime_.[[ISODateTime]].[[Time]].[[Hour]].
         1. Set _fields_.[[Minute]] to _dateTime_.[[ISODateTime]].[[Time]].[[Minute]].
         1. Set _fields_.[[Second]] to _dateTime_.[[ISODateTime]].[[Time]].[[Second]].

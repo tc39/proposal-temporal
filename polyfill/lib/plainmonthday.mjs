@@ -40,7 +40,7 @@ export class PlainMonthDay {
     ES.RejectTemporalLikeObject(temporalMonthDayLike);
 
     const calendar = GetSlot(this, CALENDAR);
-    let fields = ES.TemporalObjectToFields(this);
+    let fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE), 'month-day');
     const partialMonthDay = ES.PrepareCalendarFields(
       calendar,
       temporalMonthDayLike,
@@ -82,7 +82,7 @@ export class PlainMonthDay {
     if (ES.Type(item) !== 'Object') throw new TypeErrorCtor('argument should be an object');
     const calendar = GetSlot(this, CALENDAR);
 
-    const fields = ES.TemporalObjectToFields(this);
+    const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE), 'month-day');
     const inputFields = ES.PrepareCalendarFields(calendar, item, ['year'], [], []);
     let mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
     const isoDate = ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');

@@ -1764,32 +1764,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-temporalobjecttofields" type="abstract operation">
-    <h1>
-      TemporalObjectToFields (
-        _temporalObject_: a Temporal.PlainDate, Temporal.PlainDateTime, Temporal.PlainMonthDay, or Temporal.PlainYearMonth,
-      ): a Calendar Fields Record
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd></dd>
-    </dl>
-    <emu-alg>
-      1. Let _calendar_ be _temporalObject_.[[Calendar]].
-      1. If _temporalObject_ has an [[InitializedTemporalDateTime]] internal slot, then
-        1. Let _isoDate_ be _temporalObject_.[[ISODateTime]].[[ISODate]].
-      1. Else,
-        1. Let _isoDate_ be _temporalObject_.[[ISODate]].
-      1. If _temporalObject_ has an [[InitializedTemporalYearMonth]] internal slot, then
-        1. Let _type_ be ~year-month~.
-      1. Else if _temporalObject_ has an [[InitializedTemporalMonthDay]] internal slot, then
-        1. Let _type_ be ~month-day~.
-      1. Else,
-        1. Let _type_ be ~date~.
-      1. Return ISODateToFields(_calendar_, _isoDate_, _type_).
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-isodatetofields" type="abstract operation">
     <h1>
       ISODateToFields (

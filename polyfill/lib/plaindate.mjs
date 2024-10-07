@@ -103,7 +103,7 @@ export class PlainDate {
     ES.RejectTemporalLikeObject(temporalDateLike);
 
     const calendar = GetSlot(this, CALENDAR);
-    let fields = ES.TemporalObjectToFields(this);
+    let fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE));
     const partialDate = ES.PrepareCalendarFields(
       calendar,
       temporalDateLike,
@@ -197,14 +197,14 @@ export class PlainDate {
   toPlainYearMonth() {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.TemporalObjectToFields(this);
+    const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE));
     const isoDate = ES.CalendarYearMonthFromFields(calendar, fields);
     return ES.CreateTemporalYearMonth(isoDate, calendar);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
-    const fields = ES.TemporalObjectToFields(this);
+    const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE));
     const isoDate = ES.CalendarMonthDayFromFields(calendar, fields);
     return ES.CreateTemporalMonthDay(isoDate, calendar);
   }

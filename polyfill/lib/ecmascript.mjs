@@ -1033,20 +1033,6 @@ export function TemporalUnitCategory(unit) {
   return 'time';
 }
 
-export function TemporalObjectToFields(temporalObject) {
-  const calendar = GetSlot(temporalObject, CALENDAR);
-  const isoDate = IsTemporalDateTime(temporalObject)
-    ? GetSlot(temporalObject, ISO_DATE_TIME).isoDate
-    : GetSlot(temporalObject, ISO_DATE);
-  let type = 'date';
-  if (IsTemporalYearMonth(temporalObject)) {
-    type = 'year-month';
-  } else if (IsTemporalMonthDay(temporalObject)) {
-    type = 'month-day';
-  }
-  return ISODateToFields(calendar, isoDate, type);
-}
-
 function calendarImplForID(calendar) {
   return GetIntrinsic('%calendarImpl%')(calendar);
 }
@@ -3709,10 +3695,10 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
     return new Duration();
   }
 
-  const thisFields = TemporalObjectToFields(yearMonth);
+  const thisFields = ISODateToFields(calendar, GetSlot(yearMonth, ISO_DATE), 'year-month');
   thisFields.day = 1;
   const thisDate = CalendarDateFromFields(calendar, thisFields, 'constrain');
-  const otherFields = TemporalObjectToFields(other);
+  const otherFields = ISODateToFields(calendar, GetSlot(other, ISO_DATE), 'year-month');
   otherFields.day = 1;
   const otherDate = CalendarDateFromFields(calendar, otherFields, 'constrain');
 
@@ -3921,7 +3907,7 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
   const sign = DurationSign(duration);
 
   const calendar = GetSlot(yearMonth, CALENDAR);
-  const fields = TemporalObjectToFields(yearMonth);
+  const fields = ISODateToFields(calendar, GetSlot(yearMonth, ISO_DATE), 'year-month');
   fields.day = 1;
   let startDate = CalendarDateFromFields(calendar, fields, 'constrain');
   if (sign < 0) {

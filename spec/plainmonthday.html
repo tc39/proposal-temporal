@@ -136,7 +136,7 @@
         1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
         1. If ? IsPartialTemporalObject(_temporalMonthDayLike_) is *false*, throw a *TypeError* exception.
         1. Let _calendar_ be _monthDay_.[[Calendar]].
-        1. Let _fields_ be TemporalObjectToFields(_monthDay_).
+        1. Let _fields_ be ISODateToFields(_calendar_, _monthDay_.[[ISODate]], ~month-day~).
         1. Let _partialMonthDay_ be ? PrepareCalendarFields(_calendar_, _temporalMonthDayLike_, « ~day~, ~month~, ~month-code~, ~year~ », « », ~partial~).
         1. Set _fields_ to CalendarMergeFields(_calendar_, _fields_, _partialMonthDay_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
@@ -219,7 +219,7 @@
         1. If _item_ is not an Object, then
           1. Throw a *TypeError* exception.
         1. Let _calendar_ be _monthDay_.[[Calendar]].
-        1. Let _fields_ be TemporalObjectToFields(_monthDay_).
+        1. Let _fields_ be ISODateToFields(_calendar_, _monthDay_.[[ISODate]], ~month-day~).
         1. Let _inputFields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~year~ », « », « »).
         1. Let _mergedFields_ be CalendarMergeFields(_calendar_, _fields_, _inputFields_).
         1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _mergedFields_, ~constrain~).
