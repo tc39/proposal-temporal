@@ -239,7 +239,7 @@
         1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
         1. If ? IsPartialTemporalObject(_temporalYearMonthLike_) is *false*, throw a *TypeError* exception.
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
+        1. Let _fields_ be ISODateToFields(_calendar_, _yearMonth_.[[ISODate]], ~year-month~).
         1. Let _partialYearMonth_ be ? PrepareCalendarFields(_calendar_, _temporalYearMonthLike_, « ~month~, ~month-code~, ~year~ », « », ~partial~).
         1. Set _fields_ to CalendarMergeFields(_calendar_, _fields_, _partialYearMonth_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
@@ -362,7 +362,7 @@
         1. If _item_ is not an Object, then
           1. Throw a *TypeError* exception.
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
+        1. Let _fields_ be ISODateToFields(_calendar_, _yearMonth_.[[ISODate]], ~year-month~).
         1. Let _inputFields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~ », « », « »).
         1. Let _mergedFields_ be CalendarMergeFields(_calendar_, _fields_, _inputFields_).
         1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _mergedFields_, ~constrain~).
@@ -602,10 +602,10 @@
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~date~, « ~week~, ~day~ », ~month~, ~year~).
         1. If CompareISODate(_yearMonth_.[[ISODate]], _other_.[[ISODate]]) = 0, then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _thisFields_ be TemporalObjectToFields(_yearMonth_).
+        1. Let _thisFields_ be ISODateToFields(_calendar_, _yearMonth_.[[ISODate]], ~year-month~).
         1. Set _thisFields_.[[Day]] to 1.
         1. Let _thisDate_ be ? CalendarDateFromFields(_calendar_, _thisFields_, ~constrain~).
-        1. Let _otherFields_ be TemporalObjectToFields(_other_).
+        1. Let _otherFields_ be ISODateToFields(_calendar_, _yearMonth_.[[ISODate]], ~year-month~).
         1. Set _otherFields_.[[Day]] to 1.
         1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_, ~constrain~).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _settings_.[[LargestUnit]]).
@@ -642,7 +642,7 @@
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _sign_ be DurationSign(_duration_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
-        1. Let _fields_ be TemporalObjectToFields(_yearMonth_).
+        1. Let _fields_ be ISODateToFields(_calendar_, _yearMonth_.[[ISODate]], ~year-month~).
         1. Set _fields_.[[Day]] to 1.
         1. Let _intermediateDate_ be ? CalendarDateFromFields(_calendar_, _fields_, ~constrain~).
         1. If _sign_ &lt; 0, then

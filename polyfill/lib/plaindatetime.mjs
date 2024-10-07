@@ -157,7 +157,7 @@ export class PlainDateTime {
     ES.RejectTemporalLikeObject(temporalDateTimeLike);
 
     const calendar = GetSlot(this, CALENDAR);
-    let fields = ES.TemporalObjectToFields(this);
+    let fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE_TIME).isoDate);
     const isoDateTime = GetSlot(this, ISO_DATE_TIME);
     fields.hour = isoDateTime.time.hour;
     fields.minute = isoDateTime.time.minute;
