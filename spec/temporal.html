@@ -114,7 +114,8 @@
       <h1>Temporal.Now.instant ( )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. Return SystemInstant().
+        1. Let _ns_ be SystemUTCEpochNanoseconds().
+        1. Return ! CreateTemporalInstant(_ns_).
       </emu-alg>
     </emu-clause>
 
@@ -131,7 +132,12 @@
       <h1>Temporal.Now.zonedDateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. Return ? SystemZonedDateTime(_temporalTimeZoneLike_).
+        1. If _temporalTimeZoneLike_ is *undefined*, then
+          1. Let _timeZone_ be SystemTimeZoneIdentifier().
+        1. Else,
+          1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_temporalTimeZoneLike_).
+        1. Let _ns_ be SystemUTCEpochNanoseconds().
+        1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, *"iso8601"*).
       </emu-alg>
     </emu-clause>
 
@@ -215,18 +221,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-systeminstant" type="abstract operation">
-      <h1>SystemInstant ( ): a Temporal.Instant</h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd></dd>
-      </dl>
-      <emu-alg>
-        1. Let _ns_ be SystemUTCEpochNanoseconds().
-        1. Return ! CreateTemporalInstant(_ns_).
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-systemdatetime" type="abstract operation">
       <h1>
         SystemDateTime (
@@ -244,26 +238,6 @@
           1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_temporalTimeZoneLike_).
         1. Let _epochNs_ be SystemUTCEpochNanoseconds().
         1. Return GetISODateTimeFor(_timeZone_, _epochNs_).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-systemzoneddatetime" type="abstract operation">
-      <h1>
-        SystemZonedDateTime (
-          _temporalTimeZoneLike_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.ZonedDateTime or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd></dd>
-      </dl>
-      <emu-alg>
-        1. If _temporalTimeZoneLike_ is *undefined*, then
-          1. Let _timeZone_ be SystemTimeZoneIdentifier().
-        1. Else,
-          1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_temporalTimeZoneLike_).
-        1. Let _ns_ be SystemUTCEpochNanoseconds().
-        1. Return ! CreateTemporalZonedDateTime(_ns_, _timeZone_, *"iso8601"*).
       </emu-alg>
     </emu-clause>
   </emu-clause>
