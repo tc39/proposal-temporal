@@ -11,7 +11,7 @@ import * as ES from './ecmascript.mjs';
 import { DateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
-import { CALENDAR, GetSlot, ISO_DATE_TIME, TIME } from './slots.mjs';
+import { CALENDAR, GetSlot, ISO_DATE_TIME } from './slots.mjs';
 
 export class PlainDateTime {
   constructor(
@@ -180,11 +180,8 @@ export class PlainDateTime {
   }
   withPlainTime(temporalTime = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
-    temporalTime = ES.ToTemporalTimeOrMidnight(temporalTime);
-    const isoDateTime = ES.CombineISODateAndTimeRecord(
-      GetSlot(this, ISO_DATE_TIME).isoDate,
-      GetSlot(temporalTime, TIME)
-    );
+    const time = ES.ToTimeRecordOrMidnight(temporalTime);
+    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(this, ISO_DATE_TIME).isoDate, time);
     return ES.CreateTemporalDateTime(isoDateTime, GetSlot(this, CALENDAR));
   }
   withCalendar(calendar) {

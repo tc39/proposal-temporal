@@ -581,19 +581,20 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-totemporaltimeormidnight" type="abstract operation">
+    <emu-clause id="sec-temporal-totimerecordormidnight" type="abstract operation">
       <h1>
-        ToTemporalTimeOrMidnight (
+        ToTimeRecordOrMidnight (
           _item_: an ECMAScript language value,
-        ): either a normal completion containing a `Temporal.PlainTime` or a throw completion
+        ): either a normal completion containing a Time Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>Converts _item_ to a new Temporal.PlainTime instance if possible, considering *undefined* to be the same as midnight, and throws otherwise.</dd>
+        <dd>Converts _item_ to a Time Record if possible, considering *undefined* to be the same as midnight, and throws otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If _item_ is *undefined*, return ! CreateTemporalTime(MidnightTimeRecord()).
-        1. Return ? ToTemporalTime(_item_).
+        1. If _item_ is *undefined*, return MidnightTimeRecord().
+        1. Let _plainTime_ be ? ToTemporalTime(_item_).
+        1. Return _plainTime_.[[Time]].
       </emu-alg>
     </emu-clause>
 
