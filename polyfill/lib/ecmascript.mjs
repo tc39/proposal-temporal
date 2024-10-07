@@ -709,14 +709,12 @@ export function RegulateTime(hour, minute, second, millisecond, microsecond, nan
       RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
       break;
     case 'constrain':
-      ({ hour, minute, second, millisecond, microsecond, nanosecond } = ConstrainTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      ));
+      hour = ConstrainToRange(hour, 0, 23);
+      minute = ConstrainToRange(minute, 0, 59);
+      second = ConstrainToRange(second, 0, 59);
+      millisecond = ConstrainToRange(millisecond, 0, 999);
+      microsecond = ConstrainToRange(microsecond, 0, 999);
+      nanosecond = ConstrainToRange(nanosecond, 0, 999);
       break;
   }
   return { hour, minute, second, millisecond, microsecond, nanosecond };
@@ -2731,16 +2729,6 @@ export function ConstrainISODate(year, month, day) {
   month = ConstrainToRange(month, 1, 12);
   day = ConstrainToRange(day, 1, ISODaysInMonth(year, month));
   return { year, month, day };
-}
-
-export function ConstrainTime(hour, minute, second, millisecond, microsecond, nanosecond) {
-  hour = ConstrainToRange(hour, 0, 23);
-  minute = ConstrainToRange(minute, 0, 59);
-  second = ConstrainToRange(second, 0, 59);
-  millisecond = ConstrainToRange(millisecond, 0, 999);
-  microsecond = ConstrainToRange(microsecond, 0, 999);
-  nanosecond = ConstrainToRange(nanosecond, 0, 999);
-  return { hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
 export function RejectToRange(value, min, max) {
