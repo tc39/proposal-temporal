@@ -1082,13 +1082,17 @@ export function TemporalObjectToFields(temporalObject) {
   return ISODateToFields(calendar, isoDate, type);
 }
 
+function calendarImplForID(calendar) {
+  return GetIntrinsic('%calendarImpl%')(calendar);
+}
+
 export function calendarImplForObj(temporalObj) {
   return GetIntrinsic('%calendarImpl%')(GetSlot(temporalObj, CALENDAR));
 }
 
 export function ISODateToFields(calendar, isoDate, type = 'date') {
   const fields = ObjectCreate(null);
-  const calendarImpl = GetIntrinsic('%calendarImpl%')(calendar);
+  const calendarImpl = calendarImplForID(calendar);
   const calendarDate = calendarImpl.isoToDate(isoDate, { year: true, monthCode: true, day: true });
 
   fields.monthCode = calendarDate.monthCode;
@@ -1102,7 +1106,7 @@ export function ISODateToFields(calendar, isoDate, type = 'date') {
 }
 
 export function PrepareCalendarFields(calendar, bag, calendarFieldNames, nonCalendarFieldNames, requiredFields) {
-  const extraFieldNames = GetIntrinsic('%calendarImpl%')(calendar).extraFields();
+  const extraFieldNames = calendarImplForID(calendar).extraFields();
   const fields = Call(ArrayPrototypeConcat, calendarFieldNames, [nonCalendarFieldNames, extraFieldNames]);
   const result = ObjectCreate(null);
   let any = false;
@@ -1841,7 +1845,7 @@ function CalendarFieldKeysPresent(fields) {
 
 export function CalendarMergeFields(calendar, fields, additionalFields) {
   const additionalKeys = CalendarFieldKeysPresent(additionalFields);
-  const overriddenKeys = GetIntrinsic('%calendarImpl%')(calendar).fieldKeysToIgnore(additionalKeys);
+  const overriddenKeys = calendarImplForID(calendar).fieldKeysToIgnore(additionalKeys);
   const merged = ObjectCreate(null);
   const fieldsKeys = CalendarFieldKeysPresent(fields);
   for (let ix = 0; ix < CALENDAR_FIELD_KEYS.length; ix++) {
@@ -1859,13 +1863,13 @@ export function CalendarMergeFields(calendar, fields, additionalFields) {
 }
 
 export function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
-  const result = GetIntrinsic('%calendarImpl%')(calendar).dateAdd(isoDate, dateDuration, overflow);
+  const result = calendarImplForID(calendar).dateAdd(isoDate, dateDuration, overflow);
   RejectDateRange(result.year, result.month, result.day);
   return result;
 }
 
 export function CalendarDateUntil(calendar, isoDate, isoOtherDate, largestUnit) {
-  return GetIntrinsic('%calendarImpl%')(calendar).dateUntil(isoDate, isoOtherDate, largestUnit);
+  return calendarImplForID(calendar).dateUntil(isoDate, isoOtherDate, largestUnit);
 }
 
 export function ToTemporalCalendarIdentifier(calendarLike) {
@@ -1905,7 +1909,7 @@ export function CalendarEquals(one, two) {
 }
 
 export function CalendarDateFromFields(calendar, fields, overflow) {
-  const calendarImpl = GetIntrinsic('%calendarImpl%')(calendar);
+  const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'date');
   const result = calendarImpl.dateToISO(fields, overflow);
   RejectDateRange(result.year, result.month, result.day);
@@ -1913,7 +1917,7 @@ export function CalendarDateFromFields(calendar, fields, overflow) {
 }
 
 export function CalendarYearMonthFromFields(calendar, fields, overflow) {
-  const calendarImpl = GetIntrinsic('%calendarImpl%')(calendar);
+  const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'year-month');
   fields.day = 1;
   const result = calendarImpl.dateToISO(fields, overflow);
@@ -1922,7 +1926,7 @@ export function CalendarYearMonthFromFields(calendar, fields, overflow) {
 }
 
 export function CalendarMonthDayFromFields(calendar, fields, overflow) {
-  const calendarImpl = GetIntrinsic('%calendarImpl%')(calendar);
+  const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'month-day');
   return calendarImpl.monthDayToISOReferenceDate(fields, overflow);
 }
