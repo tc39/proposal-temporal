@@ -291,7 +291,9 @@ function monthCodeNumberPart(monthCode) {
 }
 
 function buildMonthCode(month, leap = false) {
-  return `M${Call(StringPrototypePadStart, `${month}`, [2, '0'])}${leap ? 'L' : ''}`;
+  const digitPart = Call(StringPrototypePadStart, `${month}`, [2, '0']);
+  const leapMarker = leap ? 'L' : '';
+  return `M${digitPart}${leapMarker}`;
 }
 
 /**
