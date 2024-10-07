@@ -73,14 +73,7 @@
         1. Assert: _microsecond_ &lt; 1000.
         1. Let _nanosecond_ be _remainderNs_ modulo 1000.
         1. Let _isoDate_ be CreateISODateRecord(_year_, _month_, _day_).
-        1. Let _time_ be Time Record {
-          [[Hour]]: _hour_,
-          [[Minute]]: _minute_,
-          [[Second]]: _second_,
-          [[Millisecond]]: _millisecond_,
-          [[Microsecond]]: _microsecond_,
-          [[Nanosecond]]: _nanosecond_
-          }.
+        1. Let _time_ be CreateTimeRecord(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
         1. Return CombineISODateAndTimeRecord(_isoDate_, _time_).
       </emu-alg>
     </emu-clause>

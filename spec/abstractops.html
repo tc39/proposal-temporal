@@ -1520,11 +1520,10 @@
         1. Let _microsecondMV_ be 0.
         1. Let _nanosecondMV_ be 0.
       1. Assert: IsValidISODate(_yearMV_, _monthMV_, _dayMV_) is *true*.
-      1. Assert: IsValidTime(_hourMV_, _minuteMV_, _secondMV_, _millisecondMV_, _microsecondMV_, _nanosecondMV_) is *true*.
       1. If _hour_ is empty, then
         1. Let _time_ be ~start-of-day~.
       1. Else,
-        1. Let _time_ be Time Record { [[Days]]: 0, [[Hour]]: _hourMV_, [[Minute]]: _minuteMV_, [[Second]]: _secondMV_, [[Millisecond]]: _millisecondMV_, [[Microsecond]]: _microsecondMV_, [[Nanosecond]]: _nanosecondMV_ }.
+        1. Let _time_ be CreateTimeRecord(_hourMV_, _minuteMV_, _secondMV_, _millisecondMV_, _microsecondMV_, _nanosecondMV_).
       1. Let _timeZoneResult_ be ISO String Time Zone Parse Record { [[Z]]: *false*, [[OffsetString]]: ~empty~, [[TimeZoneAnnotation]]: ~empty~ }.
       1. If _parseResult_ contains a |TimeZoneIdentifier| Parse Node, then
         1. Let _identifier_ be the source text matched by the |TimeZoneIdentifier| Parse Node contained within _parseResult_.
