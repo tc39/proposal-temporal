@@ -122,7 +122,8 @@
       <h1>Temporal.Now.plainDateTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. Return ? SystemDateTime(_temporalTimeZoneLike_).
+        1. Let _isoDateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
+        1. Return ! CreateTemporalDateTime(_isoDateTime_, *"iso8601"*).
       </emu-alg>
     </emu-clause>
 
@@ -138,8 +139,8 @@
       <h1>Temporal.Now.plainDateISO ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
-        1. Return ! CreateTemporalDate(_dateTime_.[[ISODateTime]].[[ISODate]], *"iso8601"*).
+        1. Let _isoDateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
+        1. Return ! CreateTemporalDate(_isoDateTime_.[[ISODate]], *"iso8601"*).
       </emu-alg>
     </emu-clause>
 
@@ -147,8 +148,8 @@
       <h1>Temporal.Now.plainTimeISO ( [ _temporalTimeZoneLike_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. Let _dateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
-        1. Return ! CreateTemporalTime(_dateTime_.[[ISODateTime]].[[Time]]).
+        1. Let _isoDateTime_ be ? SystemDateTime(_temporalTimeZoneLike_).
+        1. Return ! CreateTemporalTime(_isoDateTime_.[[Time]]).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -230,7 +231,7 @@
       <h1>
         SystemDateTime (
           _temporalTimeZoneLike_: an ECMAScript language value,
-        ): either a normal completion containing a Temporal.PlainDateTime or a throw completion
+        ): either a normal completion containing an ISO Date-Time Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -242,8 +243,7 @@
         1. Else,
           1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_temporalTimeZoneLike_).
         1. Let _epochNs_ be SystemUTCEpochNanoseconds().
-        1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNs_).
-        1. Return ! CreateTemporalDateTime(_isoDateTime_, *"iso8601"*).
+        1. Return GetISODateTimeFor(_timeZone_, _epochNs_).
       </emu-alg>
     </emu-clause>
 
