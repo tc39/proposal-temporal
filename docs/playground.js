@@ -8639,24 +8639,6 @@
 	    nanosecond
 	  };
 	}
-	function RegulateISOYearMonth(year, month, overflow) {
-	  const referenceISODay = 1;
-	  switch (overflow) {
-	    case 'reject':
-	      RejectISODate(year, month, referenceISODay);
-	      break;
-	    case 'constrain':
-	      ({
-	        year,
-	        month
-	      } = ConstrainISODate(year, month));
-	      break;
-	  }
-	  return {
-	    year,
-	    month
-	  };
-	}
 	function ToTemporalPartialDurationRecord(temporalDurationLike) {
 	  if (Type$3(temporalDurationLike) !== 'Object') {
 	    throw new TypeError$1('invalid duration-like');
@@ -9052,20 +9034,32 @@
 	  }
 	  return ISODateToFields(calendar, isoDate, type);
 	}
+	function calendarImplForID(calendar) {
+	  return GetIntrinsic('%calendarImpl%')(calendar);
+	}
+	function calendarImplForObj(temporalObj) {
+	  return GetIntrinsic('%calendarImpl%')(GetSlot(temporalObj, CALENDAR));
+	}
 	function ISODateToFields(calendar, isoDate) {
 	  let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'date';
 	  const fields = ObjectCreate(null);
-	  fields.monthCode = CalendarMonthCode(calendar, isoDate);
+	  const calendarImpl = calendarImplForID(calendar);
+	  const calendarDate = calendarImpl.isoToDate(isoDate, {
+	    year: true,
+	    monthCode: true,
+	    day: true
+	  });
+	  fields.monthCode = calendarDate.monthCode;
 	  if (type === 'month-day' || type === 'date') {
-	    fields.day = CalendarDay(calendar, isoDate);
+	    fields.day = calendarDate.day;
 	  }
 	  if (type === 'year-month' || type === 'date') {
-	    fields.year = CalendarYear(calendar, isoDate);
+	    fields.year = calendarDate.year;
 	  }
 	  return fields;
 	}
 	function PrepareCalendarFields(calendar, bag, calendarFieldNames, nonCalendarFieldNames, requiredFields) {
-	  const extraFieldNames = GetIntrinsic('%calendarImpl%')(calendar).extraFields();
+	  const extraFieldNames = calendarImplForID(calendar).extraFields();
 	  const fields = Call$1(ArrayPrototypeConcat, calendarFieldNames, [nonCalendarFieldNames, extraFieldNames]);
 	  const result = ObjectCreate(null);
 	  let any = false;
@@ -9692,7 +9686,7 @@
 	}
 	function CalendarMergeFields(calendar, fields, additionalFields) {
 	  const additionalKeys = CalendarFieldKeysPresent(additionalFields);
-	  const overriddenKeys = GetIntrinsic('%calendarImpl%')(calendar).fieldKeysToIgnore(additionalKeys);
+	  const overriddenKeys = calendarImplForID(calendar).fieldKeysToIgnore(additionalKeys);
 	  const merged = ObjectCreate(null);
 	  const fieldsKeys = CalendarFieldKeysPresent(fields);
 	  for (let ix = 0; ix < CALENDAR_FIELD_KEYS.length; ix++) {
@@ -9709,55 +9703,12 @@
 	  return merged;
 	}
 	function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).dateAdd(isoDate, dateDuration, overflow);
+	  const result = calendarImplForID(calendar).dateAdd(isoDate, dateDuration, overflow);
+	  RejectDateRange(result.year, result.month, result.day);
+	  return result;
 	}
 	function CalendarDateUntil(calendar, isoDate, isoOtherDate, largestUnit) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).dateUntil(isoDate, isoOtherDate, largestUnit);
-	}
-	function CalendarYear(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).year(isoDate);
-	}
-	function CalendarMonth(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).month(isoDate);
-	}
-	function CalendarMonthCode(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).monthCode(isoDate);
-	}
-	function CalendarDay(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).day(isoDate);
-	}
-	function CalendarEra(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).era(isoDate);
-	}
-	function CalendarEraYear(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).eraYear(isoDate);
-	}
-	function CalendarDayOfWeek(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).dayOfWeek(isoDate);
-	}
-	function CalendarDayOfYear(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).dayOfYear(isoDate);
-	}
-	function CalendarWeekOfYear(calendar, isoDate) {
-	  return GetIntrinsic('%calendarDateWeekOfYear%')(calendar, isoDate).week;
-	}
-	function CalendarYearOfWeek(calendar, isoDate) {
-	  return GetIntrinsic('%calendarDateWeekOfYear%')(calendar, isoDate).year;
-	}
-	function CalendarDaysInWeek(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).daysInWeek(isoDate);
-	}
-	function CalendarDaysInMonth(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).daysInMonth(isoDate);
-	}
-	function CalendarDaysInYear(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).daysInYear(isoDate);
-	}
-	function CalendarMonthsInYear(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).monthsInYear(isoDate);
-	}
-	function CalendarInLeapYear(calendar, isoDate) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).inLeapYear(isoDate);
+	  return calendarImplForID(calendar).dateUntil(isoDate, isoOtherDate, largestUnit);
 	}
 	function ToTemporalCalendarIdentifier(calendarLike) {
 	  if (Type$3(calendarLike) === 'Object') {
@@ -9801,13 +9752,24 @@
 	  return CanonicalizeCalendar(one) === CanonicalizeCalendar(two);
 	}
 	function CalendarDateFromFields(calendar, fields, overflow) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).dateFromFields(fields, overflow);
+	  const calendarImpl = calendarImplForID(calendar);
+	  calendarImpl.resolveFields(fields, 'date');
+	  const result = calendarImpl.dateToISO(fields, overflow);
+	  RejectDateRange(result.year, result.month, result.day);
+	  return result;
 	}
 	function CalendarYearMonthFromFields(calendar, fields, overflow) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).yearMonthFromFields(fields, overflow);
+	  const calendarImpl = calendarImplForID(calendar);
+	  calendarImpl.resolveFields(fields, 'year-month');
+	  fields.day = 1;
+	  const result = calendarImpl.dateToISO(fields, overflow);
+	  RejectYearMonthRange(result.year, result.month);
+	  return result;
 	}
 	function CalendarMonthDayFromFields(calendar, fields, overflow) {
-	  return GetIntrinsic('%calendarImpl%')(calendar).monthDayFromFields(fields, overflow);
+	  const calendarImpl = calendarImplForID(calendar);
+	  calendarImpl.resolveFields(fields, 'month-day');
+	  return calendarImpl.monthDayToISOReferenceDate(fields, overflow);
 	}
 	function ToTemporalTimeZoneIdentifier(temporalTimeZoneLike) {
 	  if (Type$3(temporalTimeZoneLike) === 'Object') {
@@ -10824,10 +10786,6 @@
 	    throw new RangeError$1('total of duration time units cannot exceed 9007199254740991.999999999 s');
 	  }
 	}
-	function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
-	  const cmp = CompareISODate(y1, m1, d1, y2, m2, d2);
-	  return sign * cmp === 1;
-	}
 	function NormalizeDuration(duration) {
 	  const date = {
 	    years: GetSlot(duration, YEARS),
@@ -10957,51 +10915,6 @@
 	// Caution: month is 0-based
 	function ISODateToEpochDays(y, m, d) {
 	  return GetUTCEpochMilliseconds(y, m + 1, d, 0, 0, 0, 0) / DAY_MS;
-	}
-	function DifferenceISODate(y1, m1, d1, y2, m2, d2) {
-	  let largestUnit = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 'days';
-	  const sign = -CompareISODate(y1, m1, d1, y2, m2, d2);
-	  if (sign === 0) return ZeroDateDuration();
-	  let years = 0;
-	  let months = 0;
-	  let intermediate;
-	  if (largestUnit === 'year' || largestUnit === 'month') {
-	    // We can skip right to the neighbourhood of the correct number of years,
-	    // it'll be at least one less than y2 - y1 (unless it's zero)
-	    let candidateYears = y2 - y1;
-	    if (candidateYears !== 0) candidateYears -= sign;
-	    // loops at most twice
-	    while (!ISODateSurpasses(sign, y1 + candidateYears, m1, d1, y2, m2, d2)) {
-	      years = candidateYears;
-	      candidateYears += sign;
-	    }
-	    let candidateMonths = sign;
-	    intermediate = BalanceISOYearMonth(y1 + years, m1 + candidateMonths);
-	    // loops at most 12 times
-	    while (!ISODateSurpasses(sign, intermediate.year, intermediate.month, d1, y2, m2, d2)) {
-	      months = candidateMonths;
-	      candidateMonths += sign;
-	      intermediate = BalanceISOYearMonth(intermediate.year, intermediate.month + sign);
-	    }
-	    if (largestUnit === 'month') {
-	      months += years * 12;
-	      years = 0;
-	    }
-	  }
-	  intermediate = BalanceISOYearMonth(y1 + years, m1 + months);
-	  const constrained = ConstrainISODate(intermediate.year, intermediate.month, d1);
-	  let weeks = 0;
-	  let days = ISODateToEpochDays(y2, m2 - 1, d2) - ISODateToEpochDays(constrained.year, constrained.month - 1, constrained.day);
-	  if (largestUnit === 'week') {
-	    weeks = MathTrunc(days / 7);
-	    days %= 7;
-	  }
-	  return {
-	    years,
-	    months,
-	    weeks,
-	    days
-	  };
 	}
 	function DifferenceTime(h1, min1, s1, ms1, µs1, ns1, h2, min2, s2, ms2, µs2, ns2) {
 	  const hours = h2 - h1;
@@ -12190,8 +12103,15 @@
 	  }
 	  const calendar = impl[id];
 	  let yow = isoDate.year;
-	  const dayOfWeek = calendar.dayOfWeek(isoDate);
-	  const dayOfYear = calendar.dayOfYear(isoDate);
+	  const {
+	    dayOfWeek,
+	    dayOfYear,
+	    daysInYear
+	  } = calendar.isoToDate(isoDate, {
+	    dayOfWeek: true,
+	    dayOfYear: true,
+	    daysInYear: true
+	  });
 	  const fdow = id === 'iso8601' ? 1 : calendar.helper.getFirstDayOfWeek();
 	  const mdow = id === 'iso8601' ? 4 : calendar.helper.getMinimalDaysInFirstWeek();
 
@@ -12209,9 +12129,12 @@
 	  if (woy == 0) {
 	    // Check for last week of previous year; if true, handle the case for
 	    // first week of next year
-	    var prevDoy = dayOfYear + calendar.daysInYear(calendar.dateAdd(isoDate, {
+	    const prevYearCalendar = calendar.isoToDate(calendar.dateAdd(isoDate, {
 	      years: -1
-	    }, 'constrain'));
+	    }, 'constrain'), {
+	      daysInYear: true
+	    });
+	    var prevDoy = dayOfYear + prevYearCalendar.daysInYear;
 	    woy = weekNumber(fdow, mdow, prevDoy, dayOfWeek);
 	    yow--;
 	  } else {
@@ -12219,7 +12142,7 @@
 	    //          L-5                  L
 	    // doy: 359 360 361 362 363 364 365 001
 	    // dow:      1   2   3   4   5   6   7
-	    var lastDoy = calendar.daysInYear(isoDate);
+	    var lastDoy = daysInYear;
 	    if (dayOfYear >= lastDoy - 5) {
 	      var lastRelDow = (relDow + lastDoy - dayOfYear) % 7;
 	      if (lastRelDow < 0) {
@@ -12236,56 +12159,30 @@
 	    year: yow
 	  };
 	}
+	function ISODateSurpasses(sign, y1, m1, d1, y2, m2, d2) {
+	  const cmp = CompareISODate(y1, m1, d1, y2, m2, d2);
+	  return sign * cmp === 1;
+	}
 	const impl = {};
 	impl['iso8601'] = {
-	  dateFromFields(fields, overflow) {
-	    requireFields(fields, ['year', 'day']);
-	    let {
-	      year,
-	      month,
-	      day
-	    } = resolveNonLunisolarMonth(fields);
-	    ({
-	      year,
-	      month,
-	      day
-	    } = RegulateISODate(year, month, day, overflow));
-	    RejectDateRange(year, month, day);
-	    return {
-	      year,
-	      month,
-	      day
-	    };
+	  resolveFields(fields, type) {
+	    if ((type === 'date' || type === 'year-month') && fields.year === undefined) {
+	      throw new TypeError$1('year is required');
+	    }
+	    if ((type === 'date' || type === 'month-day') && fields.day === undefined) {
+	      throw new TypeError$1('day is required');
+	    }
+	    ObjectAssign(fields, resolveNonLunisolarMonth(fields));
 	  },
-	  yearMonthFromFields(fields, overflow) {
-	    requireFields(fields, ['year']);
-	    let {
-	      year,
-	      month
-	    } = resolveNonLunisolarMonth(fields);
-	    ({
-	      year,
-	      month
-	    } = RegulateISOYearMonth(year, month, overflow));
-	    RejectYearMonthRange(year, month);
-	    return {
-	      year,
-	      month,
-	      /* reference */day: 1
-	    };
+	  dateToISO(fields, overflow) {
+	    return RegulateISODate(fields.year, fields.month, fields.day, overflow);
 	  },
-	  monthDayFromFields(fields, overflow) {
-	    requireFields(fields, ['day']);
+	  monthDayToISOReferenceDate(fields, overflow) {
 	    const referenceISOYear = 1972;
-	    let {
-	      month,
-	      day,
-	      year
-	    } = resolveNonLunisolarMonth(fields);
-	    ({
+	    const {
 	      month,
 	      day
-	    } = RegulateISODate(year !== undefined ? year : referenceISOYear, month, day, overflow));
+	    } = RegulateISODate(fields.year ?? referenceISOYear, fields.month, fields.day, overflow);
 	    return {
 	      month,
 	      day,
@@ -12332,105 +12229,106 @@
 	      day
 	    } = RegulateISODate(year, month, day, overflow));
 	    day += days + 7 * weeks;
-	    ({
-	      year,
-	      month,
-	      day
-	    } = BalanceISODate(year, month, day));
-	    RejectDateRange(year, month, day);
-	    return {
-	      year,
-	      month,
-	      day
-	    };
+	    return BalanceISODate(year, month, day);
 	  },
 	  dateUntil(one, two, largestUnit) {
-	    return DifferenceISODate(one.year, one.month, one.day, two.year, two.month, two.day, largestUnit);
-	  },
-	  year(_ref3) {
-	    let {
-	      year
-	    } = _ref3;
-	    return year;
-	  },
-	  era() {
-	    return undefined;
-	  },
-	  eraYear() {
-	    return undefined;
-	  },
-	  month(_ref4) {
-	    let {
-	      month
-	    } = _ref4;
-	    return month;
-	  },
-	  monthCode(_ref5) {
-	    let {
-	      month
-	    } = _ref5;
-	    return buildMonthCode(month);
-	  },
-	  day(_ref6) {
-	    let {
-	      day
-	    } = _ref6;
-	    return day;
-	  },
-	  dayOfWeek(_ref7) {
-	    let {
-	      year,
-	      month,
-	      day
-	    } = _ref7;
-	    const m = month + (month < 3 ? 10 : -2);
-	    const Y = year - (month < 3 ? 1 : 0);
-	    const c = MathFloor(Y / 100);
-	    const y = Y - c * 100;
-	    const d = day;
-	    const pD = d;
-	    const pM = MathFloor(2.6 * m - 0.2);
-	    const pY = y + MathFloor(y / 4);
-	    const pC = MathFloor(c / 4) - 2 * c;
-	    const dow = (pD + pM + pY + pC) % 7;
-	    return dow + (dow <= 0 ? 7 : 0);
-	  },
-	  dayOfYear(_ref8) {
-	    let {
-	      year,
-	      month,
-	      day
-	    } = _ref8;
-	    let days = day;
-	    for (let m = month - 1; m > 0; m--) {
-	      days += this.daysInMonth({
-	        year,
-	        month: m
-	      });
+	    const sign = -CompareISODate(one.year, one.month, one.day, two.year, two.month, two.day);
+	    if (sign === 0) return {
+	      years: 0,
+	      months: 0,
+	      weeks: 0,
+	      days: 0
+	    };
+	    let years = 0;
+	    let months = 0;
+	    let intermediate;
+	    if (largestUnit === 'year' || largestUnit === 'month') {
+	      // We can skip right to the neighbourhood of the correct number of years,
+	      // it'll be at least one less than two.year - one.year (unless it's zero)
+	      let candidateYears = two.year - one.year;
+	      if (candidateYears !== 0) candidateYears -= sign;
+	      // loops at most twice
+	      while (!ISODateSurpasses(sign, one.year + candidateYears, one.month, one.day, two.year, two.month, two.day)) {
+	        years = candidateYears;
+	        candidateYears += sign;
+	      }
+	      let candidateMonths = sign;
+	      intermediate = BalanceISOYearMonth(one.year + years, one.month + candidateMonths);
+	      // loops at most 12 times
+	      while (!ISODateSurpasses(sign, intermediate.year, intermediate.month, one.day, two.year, two.month, two.day)) {
+	        months = candidateMonths;
+	        candidateMonths += sign;
+	        intermediate = BalanceISOYearMonth(intermediate.year, intermediate.month + sign);
+	      }
+	      if (largestUnit === 'month') {
+	        months += years * 12;
+	        years = 0;
+	      }
 	    }
-	    return days;
+	    intermediate = BalanceISOYearMonth(one.year + years, one.month + months);
+	    const constrained = ConstrainISODate(intermediate.year, intermediate.month, one.day);
+	    let weeks = 0;
+	    let days = ISODateToEpochDays(two.year, two.month - 1, two.day) - ISODateToEpochDays(constrained.year, constrained.month - 1, constrained.day);
+	    if (largestUnit === 'week') {
+	      weeks = MathTrunc(days / 7);
+	      days %= 7;
+	    }
+	    return {
+	      years,
+	      months,
+	      weeks,
+	      days
+	    };
 	  },
-	  daysInWeek() {
-	    return 7;
-	  },
-	  daysInMonth(_ref9) {
+	  isoToDate(_ref3, requestedFields) {
 	    let {
 	      year,
-	      month
-	    } = _ref9;
-	    return ISODaysInMonth(year, month);
-	  },
-	  daysInYear(isoDate) {
-	    return this.inLeapYear(isoDate) ? 366 : 365;
-	  },
-	  monthsInYear() {
-	    return 12;
-	  },
-	  inLeapYear(_ref10) {
-	    let {
-	      year
-	    } = _ref10;
-	    return LeapYear(year);
+	      month,
+	      day
+	    } = _ref3;
+	    // requestedFields parameter is not part of the spec text. It's an
+	    // illustration of one way implementations may choose to optimize this
+	    // operation.
+	    const date = {
+	      era: undefined,
+	      eraYear: undefined,
+	      year,
+	      month,
+	      day,
+	      daysInWeek: 7,
+	      monthsInYear: 12
+	    };
+	    if (requestedFields.monthCode) date.monthCode = buildMonthCode(month);
+	    if (requestedFields.dayOfWeek) {
+	      // https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week#Disparate_variation
+	      const shiftedMonth = month + (month < 3 ? 10 : -2);
+	      const shiftedYear = year - (month < 3 ? 1 : 0);
+	      const century = MathFloor(shiftedYear / 100);
+	      const yearInCentury = shiftedYear - century * 100;
+	      const monthTerm = MathFloor(2.6 * shiftedMonth - 0.2);
+	      const yearTerm = yearInCentury + MathFloor(yearInCentury / 4);
+	      const centuryTerm = MathFloor(century / 4) - 2 * century;
+	      const dow = (day + monthTerm + yearTerm + centuryTerm) % 7;
+	      date.dayOfWeek = dow + (dow <= 0 ? 7 : 0);
+	    }
+	    if (requestedFields.dayOfYear) {
+	      let days = day;
+	      for (let m = month - 1; m > 0; m--) {
+	        days += ISODaysInMonth(year, m);
+	      }
+	      date.dayOfYear = days;
+	    }
+	    if (requestedFields.weekOfYear) date.weekOfYear = calendarDateWeekOfYear('iso8601', {
+	      year,
+	      month,
+	      day
+	    });
+	    if (requestedFields.daysInMonth) date.daysInMonth = ISODaysInMonth(year, month);
+	    if (requestedFields.daysInYear || requestedFields.inLeapYear) {
+	      date.inLeapYear = LeapYear(year);
+	      date.daysInYear = date.inLeapYear ? 366 : 365;
+	    }
+	    return date;
 	  }
 	};
 
@@ -12448,15 +12346,9 @@
 	}
 	function buildMonthCode(month) {
 	  let leap = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-	  return `M${Call$1(StringPrototypePadStart, `${month}`, [2, '0'])}${leap ? 'L' : ''}`;
-	}
-	function requireFields(fields, requiredFieldNames) {
-	  for (let index = 0; index < requiredFieldNames.length; index++) {
-	    const fieldName = requiredFieldNames[index];
-	    if (fields[fieldName] === undefined) {
-	      throw new TypeError$1(`${fieldName} is required`);
-	    }
-	  }
+	  const digitPart = Call$1(StringPrototypePadStart, `${month}`, [2, '0']);
+	  const leapMarker = leap ? 'L' : '';
+	  return `M${digitPart}${leapMarker}`;
 	}
 
 	/**
@@ -12584,12 +12476,12 @@
 	  }
 	  return cache;
 	};
-	function toUtcIsoDateString(_ref11) {
+	function toUtcIsoDateString(_ref4) {
 	  let {
 	    isoYear,
 	    isoMonth,
 	    isoDay
-	  } = _ref11;
+	  } = _ref4;
 	  const yearString = ISOYearString(isoYear);
 	  const monthString = ISODateTimePartString(isoMonth);
 	  const dayString = ISODateTimePartString(isoDay);
@@ -13033,13 +12925,13 @@
 	    }
 	    return calendarDate;
 	  },
-	  addCalendar(calendarDate, _ref12, overflow, cache) {
+	  addCalendar(calendarDate, _ref5, overflow, cache) {
 	    let {
 	      years = 0,
 	      months = 0,
 	      weeks = 0,
 	      days = 0
-	    } = _ref12;
+	    } = _ref5;
 	    const {
 	      year,
 	      day,
@@ -13199,11 +13091,7 @@
 	  calendarDaysUntil(calendarOne, calendarTwo, cache) {
 	    const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', cache);
 	    const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', cache);
-	    return this.isoDaysUntil(oneIso, twoIso);
-	  },
-	  isoDaysUntil(oneIso, twoIso) {
-	    const duration = DifferenceISODate(oneIso.year, oneIso.month, oneIso.day, twoIso.year, twoIso.month, twoIso.day, 'day');
-	    return duration.days;
+	    return ISODateToEpochDays(twoIso.year, twoIso.month - 1, twoIso.day) - ISODateToEpochDays(oneIso.year, oneIso.month - 1, oneIso.day);
 	  },
 	  // Override if calendar uses eras
 	  hasEra: false,
@@ -13994,11 +13882,11 @@
 	        checkField('eraYear', eraYear);
 	      } else if (eraYear != null) {
 	        if (era === undefined) throw new RangeError$1('era and eraYear must be provided together');
-	        const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref13 => {
+	        const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref6 => {
 	          let {
 	            code,
 	            names = []
-	          } = _ref13;
+	          } = _ref6;
 	          return code === era || Call$1(ArrayPrototypeIncludes, names, [era]);
 	        }]);
 	        if (!matchingEra) throw new RangeError$1(`Era ${era} (ISO year ${eraYear}) was not matched by any era`);
@@ -14575,35 +14463,21 @@
 	    if (type === 'month-day') return [];
 	    return ['era', 'eraYear'];
 	  },
-	  dateFromFields(fields, overflow) {
-	    const cache = new OneObjectCache();
+	  resolveFields(fields /* , type */) {
 	    if (this.helper.calendarType !== 'lunisolar') {
+	      const cache = new OneObjectCache();
 	      const largestMonth = this.helper.monthsInYear(fields, cache);
 	      resolveNonLunisolarMonth(fields, undefined, largestMonth);
 	    }
+	  },
+	  dateToISO(fields, overflow) {
+	    const cache = new OneObjectCache();
 	    const result = this.helper.calendarToIsoDate(fields, overflow, cache);
 	    cache.setObject(result);
 	    return result;
 	  },
-	  yearMonthFromFields(fields, overflow) {
+	  monthDayToISOReferenceDate(fields, overflow) {
 	    const cache = new OneObjectCache();
-	    if (this.helper.calendarType !== 'lunisolar') {
-	      const largestMonth = this.helper.monthsInYear(fields, cache);
-	      resolveNonLunisolarMonth(fields, undefined, largestMonth);
-	    }
-	    const result = this.helper.calendarToIsoDate({
-	      ...fields,
-	      day: 1
-	    }, overflow, cache);
-	    cache.setObject(result);
-	    return result;
-	  },
-	  monthDayFromFields(fields, overflow) {
-	    const cache = new OneObjectCache();
-	    if (this.helper.calendarType !== 'lunisolar') {
-	      const largestMonth = this.helper.monthsInYear(fields, cache);
-	      resolveNonLunisolarMonth(fields, undefined, largestMonth);
-	    }
 	    const result = this.helper.monthDayFromFields(fields, overflow, cache);
 	    // result.year is a reference year where this month/day exists in this calendar
 	    cache.setObject(result);
@@ -14652,13 +14526,13 @@
 	    }
 	    return arrayFromSet(result);
 	  },
-	  dateAdd(isoDate, _ref14, overflow) {
+	  dateAdd(isoDate, _ref7, overflow) {
 	    let {
 	      years,
 	      months,
 	      weeks,
 	      days
-	    } = _ref14;
+	    } = _ref7;
 	    const cache = OneObjectCache.getCacheForObject(isoDate);
 	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
 	    const added = this.helper.addCalendar(calendarDate, {
@@ -14681,89 +14555,32 @@
 	    const result = this.helper.untilCalendar(calendarOne, calendarTwo, largestUnit, cacheOne);
 	    return result;
 	  },
-	  year(date) {
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    return calendarDate.year;
-	  },
-	  month(date) {
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    return calendarDate.month;
-	  },
-	  day(date) {
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    return calendarDate.day;
-	  },
-	  era(date) {
-	    if (!this.helper.hasEra) return undefined;
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    return calendarDate.era;
-	  },
-	  eraYear(date) {
-	    if (!this.helper.hasEra) return undefined;
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    return calendarDate.eraYear;
-	  },
-	  monthCode(date) {
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    return calendarDate.monthCode;
-	  },
-	  dayOfWeek(isoDate) {
-	    return impl['iso8601'].dayOfWeek(isoDate);
-	  },
-	  dayOfYear(isoDate) {
+	  isoToDate(isoDate, requestedFields) {
 	    const cache = OneObjectCache.getCacheForObject(isoDate);
 	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
-	    const startOfYear = this.helper.startOfCalendarYear(calendarDate);
-	    const diffDays = this.helper.calendarDaysUntil(startOfYear, calendarDate, cache);
-	    return diffDays + 1;
-	  },
-	  daysInWeek(date) {
-	    return impl['iso8601'].daysInWeek(date);
-	  },
-	  daysInMonth(date) {
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-
-	    // Easy case: if the helper knows the length without any heavy calculation.
-	    const max = this.helper.maximumMonthLength(calendarDate);
-	    const min = this.helper.minimumMonthLength(calendarDate);
-	    if (max === min) return max;
-
-	    // The harder case is where months vary every year, e.g. islamic calendars.
-	    // Find the answer by calculating the difference in days between the first
-	    // day of the current month and the first day of the next month.
-	    const startOfMonthCalendar = this.helper.startOfCalendarMonth(calendarDate);
-	    const startOfNextMonthCalendar = this.helper.addMonthsCalendar(startOfMonthCalendar, 1, 'constrain', cache);
-	    const result = this.helper.calendarDaysUntil(startOfMonthCalendar, startOfNextMonthCalendar, cache);
-	    return result;
-	  },
-	  daysInYear(isoDate) {
-	    const cache = OneObjectCache.getCacheForObject(isoDate);
-	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
-	    const startOfYearCalendar = this.helper.startOfCalendarYear(calendarDate);
-	    const startOfNextYearCalendar = this.helper.addCalendar(startOfYearCalendar, {
-	      years: 1
-	    }, 'constrain', cache);
-	    const result = this.helper.calendarDaysUntil(startOfYearCalendar, startOfNextYearCalendar, cache);
-	    return result;
-	  },
-	  monthsInYear(date) {
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    const result = this.helper.monthsInYear(calendarDate, cache);
-	    return result;
-	  },
-	  inLeapYear(date) {
-	    const cache = OneObjectCache.getCacheForObject(date);
-	    const calendarDate = this.helper.isoToCalendarDate(date, cache);
-	    const result = this.helper.inLeapYear(calendarDate, cache);
-	    return result;
+	    if (requestedFields.dayOfWeek) {
+	      calendarDate.dayOfWeek = impl['iso8601'].isoToDate(isoDate, {
+	        dayOfWeek: true
+	      }).dayOfWeek;
+	    }
+	    if (requestedFields.dayOfYear) {
+	      const startOfYear = this.helper.startOfCalendarYear(calendarDate);
+	      const diffDays = this.helper.calendarDaysUntil(startOfYear, calendarDate, cache);
+	      calendarDate.dayOfYear = diffDays + 1;
+	    }
+	    if (requestedFields.weekOfYear) calendarDate.weekOfYear = calendarDateWeekOfYear(this.helper.id, isoDate);
+	    calendarDate.daysInWeek = 7;
+	    if (requestedFields.daysInMonth) calendarDate.daysInMonth = this.helper.daysInMonth(calendarDate, cache);
+	    if (requestedFields.daysInYear) {
+	      const startOfYearCalendar = this.helper.startOfCalendarYear(calendarDate);
+	      const startOfNextYearCalendar = this.helper.addCalendar(startOfYearCalendar, {
+	        years: 1
+	      }, 'constrain', cache);
+	      calendarDate.daysInYear = this.helper.calendarDaysUntil(startOfYearCalendar, startOfNextYearCalendar, cache);
+	    }
+	    if (requestedFields.monthsInYear) calendarDate.monthsInYear = this.helper.monthsInYear(calendarDate, cache);
+	    if (requestedFields.inLeapYear) calendarDate.inLeapYear = this.helper.inLeapYear(calendarDate, cache);
+	    return calendarDate;
 	  }
 	};
 	impl['hebrew'] = ObjectAssign({}, nonIsoGeneralImpl, {
@@ -14819,7 +14636,6 @@
 	// Probably not what the intrinsics mechanism was intended for, but view this as
 	// an export of calendarImpl while avoiding circular dependencies
 	DefineIntrinsic('calendarImpl', calendarImpl);
-	DefineIntrinsic('calendarDateWeekOfYear', calendarDateWeekOfYear);
 
 	const DATE = Symbol$1('date');
 	const YM = Symbol$1('ym');
@@ -15542,77 +15358,107 @@
 	  get era() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarEra(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      era: true
+	    }).era;
 	  }
 	  get eraYear() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarEraYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      eraYear: true
+	    }).eraYear;
 	  }
 	  get year() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      year: true
+	    }).year;
 	  }
 	  get month() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonth(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      month: true
+	    }).month;
 	  }
 	  get monthCode() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      monthCode: true
+	    }).monthCode;
 	  }
 	  get day() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDay(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      day: true
+	    }).day;
 	  }
 	  get dayOfWeek() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDayOfWeek(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      dayOfWeek: true
+	    }).dayOfWeek;
 	  }
 	  get dayOfYear() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDayOfYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      dayOfYear: true
+	    }).dayOfYear;
 	  }
 	  get weekOfYear() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarWeekOfYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      weekOfYear: true
+	    }).weekOfYear.week;
 	  }
 	  get yearOfWeek() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarYearOfWeek(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      weekOfYear: true
+	    }).weekOfYear.year;
 	  }
 	  get daysInWeek() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInWeek(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInWeek: true
+	    }).daysInWeek;
 	  }
 	  get daysInMonth() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInMonth: true
+	    }).daysInMonth;
 	  }
 	  get daysInYear() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInYear: true
+	    }).daysInYear;
 	  }
 	  get monthsInYear() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      monthsInYear: true
+	    }).monthsInYear;
 	  }
 	  get inLeapYear() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarInLeapYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      inLeapYear: true
+	    }).inLeapYear;
 	  }
 	  with(temporalDateLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -15787,22 +15633,30 @@
 	  get year() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      year: true
+	    }).year;
 	  }
 	  get month() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonth(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      month: true
+	    }).month;
 	  }
 	  get monthCode() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      monthCode: true
+	    }).monthCode;
 	  }
 	  get day() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDay(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      day: true
+	    }).day;
 	  }
 	  get hour() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
@@ -15831,57 +15685,79 @@
 	  get era() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarEra(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      era: true
+	    }).era;
 	  }
 	  get eraYear() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarEraYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      eraYear: true
+	    }).eraYear;
 	  }
 	  get dayOfWeek() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDayOfWeek(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      dayOfWeek: true
+	    }).dayOfWeek;
 	  }
 	  get dayOfYear() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDayOfYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      dayOfYear: true
+	    }).dayOfYear;
 	  }
 	  get weekOfYear() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarWeekOfYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      weekOfYear: true
+	    }).weekOfYear.week;
 	  }
 	  get yearOfWeek() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarYearOfWeek(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      weekOfYear: true
+	    }).weekOfYear.year;
 	  }
 	  get daysInWeek() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInWeek(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInWeek: true
+	    }).daysInWeek;
 	  }
 	  get daysInYear() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInYear: true
+	    }).daysInYear;
 	  }
 	  get daysInMonth() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInMonth: true
+	    }).daysInMonth;
 	  }
 	  get monthsInYear() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      monthsInYear: true
+	    }).monthsInYear;
 	  }
 	  get inLeapYear() {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarInLeapYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      inLeapYear: true
+	    }).inLeapYear;
 	  }
 	  with(temporalDateTimeLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -16431,12 +16307,16 @@
 	  get monthCode() {
 	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      monthCode: true
+	    }).monthCode;
 	  }
 	  get day() {
 	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDay(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      day: true
+	    }).day;
 	  }
 	  get calendarId() {
 	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
@@ -16781,17 +16661,23 @@
 	  get year() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      year: true
+	    }).year;
 	  }
 	  get month() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonth(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      month: true
+	    }).month;
 	  }
 	  get monthCode() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonthCode(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      monthCode: true
+	    }).monthCode;
 	  }
 	  get calendarId() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
@@ -16800,32 +16686,44 @@
 	  get era() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarEra(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      era: true
+	    }).era;
 	  }
 	  get eraYear() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarEraYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      eraYear: true
+	    }).eraYear;
 	  }
 	  get daysInMonth() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInMonth: true
+	    }).daysInMonth;
 	  }
 	  get daysInYear() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarDaysInYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      daysInYear: true
+	    }).daysInYear;
 	  }
 	  get monthsInYear() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      monthsInYear: true
+	    }).monthsInYear;
 	  }
 	  get inLeapYear() {
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
 	    const isoDate = TemporalObjectToISODateRecord(this);
-	    return CalendarInLeapYear(GetSlot(this, CALENDAR), isoDate);
+	    return calendarImplForObj(this).isoToDate(isoDate, {
+	      inLeapYear: true
+	    }).inLeapYear;
 	  }
 	  with(temporalYearMonthLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -16957,19 +16855,27 @@
 	  }
 	  get year() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarYear(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      year: true
+	    }).year;
 	  }
 	  get month() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarMonth(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      month: true
+	    }).month;
 	  }
 	  get monthCode() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarMonthCode(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      monthCode: true
+	    }).monthCode;
 	  }
 	  get day() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarDay(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      day: true
+	    }).day;
 	  }
 	  get hour() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
@@ -16997,11 +16903,15 @@
 	  }
 	  get era() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarEra(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      era: true
+	    }).era;
 	  }
 	  get eraYear() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarEraYear(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      eraYear: true
+	    }).eraYear;
 	  }
 	  get epochMilliseconds() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
@@ -17014,19 +16924,27 @@
 	  }
 	  get dayOfWeek() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarDayOfWeek(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      dayOfWeek: true
+	    }).dayOfWeek;
 	  }
 	  get dayOfYear() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarDayOfYear(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      dayOfYear: true
+	    }).dayOfYear;
 	  }
 	  get weekOfYear() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarWeekOfYear(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      weekOfYear: true
+	    }).weekOfYear.week;
 	  }
 	  get yearOfWeek() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarYearOfWeek(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      weekOfYear: true
+	    }).weekOfYear.year;
 	  }
 	  get hoursInDay() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
@@ -17040,23 +16958,33 @@
 	  }
 	  get daysInWeek() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarDaysInWeek(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      daysInWeek: true
+	    }).daysInWeek;
 	  }
 	  get daysInMonth() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarDaysInMonth(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      daysInMonth: true
+	    }).daysInMonth;
 	  }
 	  get daysInYear() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarDaysInYear(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      daysInYear: true
+	    }).daysInYear;
 	  }
 	  get monthsInYear() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarMonthsInYear(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      monthsInYear: true
+	    }).monthsInYear;
 	  }
 	  get inLeapYear() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
-	    return CalendarInLeapYear(GetSlot(this, CALENDAR), date(this));
+	    return calendarImplForObj(this).isoToDate(date(this), {
+	      inLeapYear: true
+	    }).inLeapYear;
 	  }
 	  get offset() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
