@@ -1785,7 +1785,9 @@ export function CalendarYearMonthFromFields(calendar, fields, overflow) {
 export function CalendarMonthDayFromFields(calendar, fields, overflow) {
   const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'month-day');
-  return calendarImpl.monthDayToISOReferenceDate(fields, overflow);
+  const result = calendarImpl.monthDayToISOReferenceDate(fields, overflow);
+  RejectDateRange(result);
+  return result;
 }
 
 export function ToTemporalTimeZoneIdentifier(temporalTimeZoneLike) {
