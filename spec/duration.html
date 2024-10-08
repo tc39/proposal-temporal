@@ -893,7 +893,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _duration_ into its normalized form, for use in duration calculations that may involve time zones. The duration's days are kept separate and not converted into the [[NormalizedDuration]] field.</dd>
+        <dd>It converts _duration_ into its normalized form, for use in duration calculations that may involve time zones. The duration's days are kept separate and not converted into the [[NormalizedTime]] field.</dd>
       </dl>
       <emu-alg>
         1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
@@ -910,7 +910,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _duration_ into its normalized form, for use in duration calculations that do not involve time zones. The duration's days are assumed to be uniformly 24 hours, and the [[Date]].[[Days]] field of the returned Record is set to 0, while the [[NormalizedDuration]] field includes the days.</dd>
+        <dd>It converts _duration_ into its normalized form, for use in duration calculations that do not involve time zones. The duration's days are assumed to be uniformly 24 hours, and the [[Date]].[[Days]] field of the returned Record is set to 0, while the [[NormalizedTime]] field includes the days.</dd>
       </dl>
       <emu-alg>
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
