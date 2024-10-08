@@ -8921,7 +8921,7 @@
 	      };
 	    }
 	    calendar = GetTemporalCalendarIdentifierWithISODefault(relativeTo);
-	    const fields = PrepareCalendarFields(calendar, relativeTo, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'], []);
+	    const fields = PrepareCalendarFields(calendar, relativeTo, ['year', 'month', 'monthCode', 'day'], ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'], []);
 	    ({
 	      isoDate,
 	      time
@@ -9025,7 +9025,7 @@
 	  return fields;
 	}
 	function PrepareCalendarFields(calendar, bag, calendarFieldNames, nonCalendarFieldNames, requiredFields) {
-	  const extraFieldNames = calendarImplForID(calendar).extraFields();
+	  const extraFieldNames = calendarImplForID(calendar).extraFields(calendarFieldNames);
 	  const fields = Call$1(ArrayPrototypeConcat, calendarFieldNames, [nonCalendarFieldNames, extraFieldNames]);
 	  const result = ObjectCreate(null);
 	  let any = false;
@@ -9084,7 +9084,7 @@
 	      return CreateTemporalDate(GetSlot(item, ISO_DATE_TIME).isoDate, GetSlot(item, CALENDAR));
 	    }
 	    const calendar = GetTemporalCalendarIdentifierWithISODefault(item);
-	    const fields = PrepareCalendarFields(calendar, item, ['day', 'month', 'monthCode', 'year'], [], []);
+	    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode', 'day'], [], []);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    const isoDate = CalendarDateFromFields(calendar, fields, overflow);
 	    return CreateTemporalDate(isoDate, calendar);
@@ -9129,7 +9129,7 @@
 	      return CreateTemporalDateTime(CombineISODateAndTimeRecord(GetSlot(item, ISO_DATE), MidnightTimeRecord()), GetSlot(item, CALENDAR));
 	    }
 	    calendar = GetTemporalCalendarIdentifierWithISODefault(item);
-	    const fields = PrepareCalendarFields(calendar, item, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'], []);
+	    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode', 'day'], ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'], []);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    ({
 	      isoDate,
@@ -9240,7 +9240,7 @@
 	      if (calendar === undefined) calendar = 'iso8601';
 	      calendar = ToTemporalCalendarIdentifier(calendar);
 	    }
-	    const fields = PrepareCalendarFields(calendar, item, ['day', 'month', 'monthCode', 'year'], [], []);
+	    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode', 'day'], [], []);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    const isoDate = CalendarMonthDayFromFields(calendar, fields, overflow);
 	    return CreateTemporalMonthDay(isoDate, calendar);
@@ -9316,7 +9316,7 @@
 	      return CreateTemporalYearMonth(GetSlot(item, ISO_DATE), GetSlot(item, CALENDAR));
 	    }
 	    const calendar = GetTemporalCalendarIdentifierWithISODefault(item);
-	    const fields = PrepareCalendarFields(calendar, item, ['month', 'monthCode', 'year'], [], []);
+	    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode'], [], []);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    const isoDate = CalendarYearMonthFromFields(calendar, fields, overflow);
 	    return CreateTemporalYearMonth(isoDate, calendar);
@@ -9409,7 +9409,7 @@
 	      return CreateTemporalZonedDateTime(GetSlot(item, EPOCHNANOSECONDS), GetSlot(item, TIME_ZONE), GetSlot(item, CALENDAR));
 	    }
 	    calendar = GetTemporalCalendarIdentifierWithISODefault(item);
-	    const fields = PrepareCalendarFields(calendar, item, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second', 'timeZone'], ['timeZone']);
+	    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode', 'day'], ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'], ['timeZone']);
 	    ({
 	      offset,
 	      timeZone
@@ -9679,7 +9679,9 @@
 	function CalendarMonthDayFromFields(calendar, fields, overflow) {
 	  const calendarImpl = calendarImplForID(calendar);
 	  calendarImpl.resolveFields(fields, 'month-day');
-	  return calendarImpl.monthDayToISOReferenceDate(fields, overflow);
+	  const result = calendarImpl.monthDayToISOReferenceDate(fields, overflow);
+	  RejectDateRange(result);
+	  return result;
 	}
 	function ToTemporalTimeZoneIdentifier(temporalTimeZoneLike) {
 	  if (Type$3(temporalTimeZoneLike) === 'Object') {
@@ -14326,10 +14328,11 @@
 	 * ISO and non-ISO implementations vs. code that was very different.
 	 */
 	const nonIsoGeneralImpl = {
-	  extraFields() {
-	    let type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'date';
-	    if (type === 'month-day') return [];
-	    return ['era', 'eraYear'];
+	  extraFields(fields) {
+	    if (this.helper.hasEra && Call$1(ArrayPrototypeIncludes, fields, ['year'])) {
+	      return ['era', 'eraYear'];
+	    }
+	    return [];
 	  },
 	  resolveFields(fields /* , type */) {
 	    if (this.helper.calendarType !== 'lunisolar') {
@@ -15357,7 +15360,7 @@
 	    RejectTemporalLikeObject(temporalDateLike);
 	    const calendar = GetSlot(this, CALENDAR);
 	    let fields = ISODateToFields(calendar, GetSlot(this, ISO_DATE));
-	    const partialDate = PrepareCalendarFields(calendar, temporalDateLike, ['day', 'month', 'monthCode', 'year'], [], 'partial');
+	    const partialDate = PrepareCalendarFields(calendar, temporalDateLike, ['year', 'month', 'monthCode', 'day'], [], 'partial');
 	    fields = CalendarMergeFields(calendar, fields, partialDate);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    const isoDate = CalendarDateFromFields(calendar, fields, overflow);
@@ -15658,7 +15661,7 @@
 	    fields.millisecond = isoDateTime.time.millisecond;
 	    fields.microsecond = isoDateTime.time.microsecond;
 	    fields.nanosecond = isoDateTime.time.nanosecond;
-	    const partialDateTime = PrepareCalendarFields(calendar, temporalDateTimeLike, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second'], 'partial');
+	    const partialDateTime = PrepareCalendarFields(calendar, temporalDateTimeLike, ['year', 'month', 'monthCode', 'day'], ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'], 'partial');
 	    fields = CalendarMergeFields(calendar, fields, partialDateTime);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    const newDateTime = InterpretTemporalDateTimeFields(calendar, fields, overflow);
@@ -16180,7 +16183,7 @@
 	    RejectTemporalLikeObject(temporalMonthDayLike);
 	    const calendar = GetSlot(this, CALENDAR);
 	    let fields = ISODateToFields(calendar, GetSlot(this, ISO_DATE), 'month-day');
-	    const partialMonthDay = PrepareCalendarFields(calendar, temporalMonthDayLike, ['day', 'month', 'monthCode', 'year'], [], 'partial');
+	    const partialMonthDay = PrepareCalendarFields(calendar, temporalMonthDayLike, ['year', 'month', 'monthCode', 'day'], [], 'partial');
 	    fields = CalendarMergeFields(calendar, fields, partialMonthDay);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    const isoDate = CalendarMonthDayFromFields(calendar, fields, overflow);
@@ -16535,7 +16538,7 @@
 	    RejectTemporalLikeObject(temporalYearMonthLike);
 	    const calendar = GetSlot(this, CALENDAR);
 	    let fields = ISODateToFields(calendar, GetSlot(this, ISO_DATE), 'year-month');
-	    const partialYearMonth = PrepareCalendarFields(calendar, temporalYearMonthLike, ['month', 'monthCode', 'year'], [], 'partial');
+	    const partialYearMonth = PrepareCalendarFields(calendar, temporalYearMonthLike, ['year', 'month', 'monthCode'], [], 'partial');
 	    fields = CalendarMergeFields(calendar, fields, partialYearMonth);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
 	    const isoDate = CalendarYearMonthFromFields(calendar, fields, overflow);
@@ -16806,7 +16809,7 @@
 	    fields.microsecond = isoDateTime.time.microsecond;
 	    fields.nanosecond = isoDateTime.time.nanosecond;
 	    fields.offset = FormatUTCOffsetNanoseconds(offsetNs);
-	    const partialZonedDateTime = PrepareCalendarFields(calendar, temporalZonedDateTimeLike, ['day', 'month', 'monthCode', 'year'], ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'offset', 'second'], 'partial');
+	    const partialZonedDateTime = PrepareCalendarFields(calendar, temporalZonedDateTimeLike, ['year', 'month', 'monthCode', 'day'], ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset'], 'partial');
 	    fields = CalendarMergeFields(calendar, fields, partialZonedDateTime);
 	    const resolvedOptions = GetOptionsObject(options);
 	    const disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
