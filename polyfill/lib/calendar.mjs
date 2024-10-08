@@ -1860,9 +1860,11 @@ const helperDangi = { ...helperChinese, id: 'dangi' };
  * ISO and non-ISO implementations vs. code that was very different.
  */
 const nonIsoGeneralImpl = {
-  extraFields(type = 'date') {
-    if (type === 'month-day') return [];
-    return ['era', 'eraYear'];
+  extraFields(fields) {
+    if (this.helper.hasEra && Call(ArrayPrototypeIncludes, fields, ['year'])) {
+      return ['era', 'eraYear'];
+    }
+    return [];
   },
   resolveFields(fields /* , type */) {
     if (this.helper.calendarType !== 'lunisolar') {
