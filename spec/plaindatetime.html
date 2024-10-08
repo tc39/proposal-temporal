@@ -954,12 +954,12 @@
           _isoDateTime2_: an ISO Date-Time Record,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
-        ): either a normal completion containing a Normalized Duration Record or a throw completion
+        ): either a normal completion containing an Internal Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          The returned Normalized Duration Record contains the elapsed duration from a first date and time, until a second date and time, according to the reckoning of the given calendar.
+          The returned Internal Duration Record contains the elapsed duration from a first date and time, until a second date and time, according to the reckoning of the given calendar.
           The given date and time units are all in the ISO 8601 calendar.
         </dd>
       </dl>
@@ -992,7 +992,7 @@
           _roundingIncrement_: a positive integer,
           _smallestUnit_: a Temporal unit,
           _roundingMode_: a rounding mode,
-        ): either a normal completion containing a Normalized Duration Record or a throw completion
+        ): either a normal completion containing an Internal Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1051,8 +1051,8 @@
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, « », ~nanosecond~, ~day~).
         1. If CompareISODateTime(_dateTime_.[[ISODateTime]], _other_.[[ISODateTime]]) = 0, then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
-        1. Let _normalizedDuration_ be ? DifferencePlainDateTimeWithRounding(_dateTime_.[[ISODateTime]], _other_.[[ISODateTime]], _dateTime_.[[Calendar]], _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
-        1. Let _result_ be ? UnnormalizeDuration(_normalizedDuration_, _settings_.[[LargestUnit]]).
+        1. Let _internalDuration_ be ? DifferencePlainDateTimeWithRounding(_dateTime_.[[ISODateTime]], _other_.[[ISODateTime]], _dateTime_.[[Calendar]], _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
+        1. Let _result_ be ? UnnormalizeDuration(_internalDuration_, _settings_.[[LargestUnit]]).
         1. If _operation_ is ~since~, set _result_ to CreateNegatedTemporalDuration(_result_).
         1. Return _result_.
       </emu-alg>
@@ -1076,9 +1076,9 @@
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
-        1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-        1. Let _timeResult_ be AddTime(_dateTime_.[[ISODateTime]].[[Time]], _normalizedDuration_.[[NormalizedTime]]).
-        1. Let _dateDuration_ be ? AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _timeResult_.[[Days]]).
+        1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
+        1. Let _timeResult_ be AddTime(_dateTime_.[[ISODateTime]].[[Time]], _internalDuration_.[[NormalizedTime]]).
+        1. Let _dateDuration_ be ? AdjustDateDurationRecord(_internalDuration_.[[Date]], _timeResult_.[[Days]]).
         1. Let _addedDate_ be ? CalendarDateAdd(_dateTime_.[[Calendar]], _dateTime_.[[ISODateTime]].[[ISODate]], _dateDuration_, _overflow_).
         1. Let _result_ be CombineISODateAndTimeRecord(_addedDate_, _timeResult_).
         1. Return ? CreateTemporalDateTime(_result_, _dateTime_.[[Calendar]]).

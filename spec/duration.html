@@ -93,8 +93,8 @@
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _largestUnit1_ be DefaultTemporalLargestUnit(_one_).
         1. Let _largestUnit2_ be DefaultTemporalLargestUnit(_two_).
-        1. Let _duration1_ be NormalizeDuration(_one_).
-        1. Let _duration2_ be NormalizeDuration(_two_).
+        1. Let _duration1_ be ToInternalDurationRecord(_one_).
+        1. Let _duration2_ be ToInternalDurationRecord(_two_).
         1. If _zonedRelativeTo_ is not *undefined*, and either TemporalUnitCategory(_largestUnit1_) or TemporalUnitCategory(_largestUnit2_) is ~date~, then
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
@@ -427,29 +427,29 @@
         1. If _maximum_ is not ~unset~, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
         1. If _roundingIncrement_ > 1, and _largestUnit_ is not _smallestUnit_, and TemporalUnitCategory(_smallestUnit_) is ~date~, throw a *RangeError* exception.
         1. If _zonedRelativeTo_ is not *undefined*, then
-          1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
+          1. Let _internalDuration_ be ToInternalDurationRecord(_duration_).
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[EpochNanoseconds]].
-          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_, ~constrain~).
-          1. Set _normalizedDuration_ to ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _internalDuration_, ~constrain~).
+          1. Set _internalDuration_ to ? DifferenceZonedDateTimeWithRounding(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. If TemporalUnitCategory(_largestUnit_) is ~date~, set _largestUnit_ to ~hour~.
-          1. Return ? UnnormalizeDuration(_normalizedDuration_, _largestUnit_).
+          1. Return ? UnnormalizeDuration(_internalDuration_, _largestUnit_).
         1. If _plainRelativeTo_ is not *undefined*, then
-          1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _normalizedDuration_.[[NormalizedTime]]).
+          1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
+          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[NormalizedTime]]).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
+          1. Let _dateDuration_ be ! AdjustDateDurationRecord(_internalDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainRelativeTo_.[[ISODate]], MidnightTimeRecord()).
           1. Let _targetDateTime_ be CombineISODateAndTimeRecord(_targetDate_, _targetTime_).
-          1. Set _normalizedDuration_ to ? DifferencePlainDateTimeWithRounding(_isoDateTime_, _targetDateTime_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Return ? UnnormalizeDuration(_normalizedDuration_, _largestUnit_).
+          1. Set _internalDuration_ to ? DifferencePlainDateTimeWithRounding(_isoDateTime_, _targetDateTime_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+          1. Return ? UnnormalizeDuration(_internalDuration_, _largestUnit_).
         1. If IsCalendarUnit(_existingLargestUnit_) is *true*, or IsCalendarUnit(_largestUnit_) is *true*, throw a *RangeError* exception.
         1. Assert: IsCalendarUnit(_smallestUnit_) is *false*.
-        1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-        1. Set _normalizedDuration_ to ? RoundTimeDuration(_normalizedDuration_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
-        1. Return ? UnnormalizeDuration(_normalizedDuration_, _largestUnit_).
+        1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
+        1. Set _internalDuration_ to ? RoundTimeDuration(_internalDuration_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Return ? UnnormalizeDuration(_internalDuration_, _largestUnit_).
       </emu-alg>
     </emu-clause>
 
@@ -472,17 +472,17 @@
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
         1. Let _unit_ be ? GetTemporalUnitValuedOption(_totalOf_, *"unit"*, ~datetime~, ~required~).
         1. If _zonedRelativeTo_ is not *undefined*, then
-          1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
+          1. Let _internalDuration_ be ToInternalDurationRecord(_duration_).
           1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
           1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
           1. Let _relativeEpochNs_ be _zonedRelativeTo_.[[EpochNanoseconds]].
-          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _normalizedDuration_, ~constrain~).
+          1. Let _targetEpochNs_ be ? AddZonedDateTime(_relativeEpochNs_, _timeZone_, _calendar_, _internalDuration_, ~constrain~).
           1. Let _total_ be ? DifferenceZonedDateTimeWithTotal(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _unit_).
         1. Else if _plainRelativeTo_ is not *undefined*, then
-          1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _normalizedDuration_.[[NormalizedTime]]).
+          1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
+          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[NormalizedTime]]).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _dateDuration_ be ! AdjustDateDurationRecord(_normalizedDuration_.[[Date]], _targetTime_.[[Days]]).
+          1. Let _dateDuration_ be ! AdjustDateDurationRecord(_internalDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainRelativeTo_.[[ISODate]], MidnightTimeRecord()).
           1. Let _targetDateTime_ be CombineISODateAndTimeRecord(_targetDate_, _targetTime_).
@@ -490,8 +490,8 @@
         1. Else,
           1. Let _largestUnit_ be DefaultTemporalLargestUnit(_duration_).
           1. If IsCalendarUnit(_largestUnit_) is *true*, or IsCalendarUnit(_unit_) is *true*, throw a *RangeError* exception.
-          1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-          1. Let _total_ be TotalTimeDuration(_normalizedDuration_, _unit_).
+          1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
+          1. Let _total_ be TotalTimeDuration(_internalDuration_, _unit_).
         1. Return 𝔽(_total_).
       </emu-alg>
     </emu-clause>
@@ -512,10 +512,10 @@
         1. If _precision_.[[Unit]] is ~nanosecond~ or _precision_.[[Increment]] = 1, then
           1. Return TemporalDurationToString(_duration_, _precision_.[[Precision]]).
         1. Let _largestUnit_ be DefaultTemporalLargestUnit(_duration_).
-        1. Let _normalizedDuration_ be NormalizeDuration(_duration_).
-        1. Set _normalizedDuration_ to ? RoundTimeDuration(_normalizedDuration_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Let _internalDuration_ be ToInternalDurationRecord(_duration_).
+        1. Set _internalDuration_ to ? RoundTimeDuration(_internalDuration_, _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Let _roundedLargestUnit_ be LargerOfTwoTemporalUnits(_largestUnit_, ~second~).
-        1. Let _roundedDuration_ be ! UnnormalizeDuration(_normalizedDuration_, _roundedLargestUnit_).
+        1. Let _roundedDuration_ be ! UnnormalizeDuration(_internalDuration_, _roundedLargestUnit_).
         1. Return TemporalDurationToString(_roundedDuration_, _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
@@ -842,14 +842,14 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalized-duration-records">
-      <h1>Normalized Duration Records</h1>
+    <emu-clause id="sec-temporal-internal-duration-records">
+      <h1>Internal Duration Records</h1>
       <p>
-        A <dfn variants="Normalized Duration Records">Normalized Duration Record</dfn> is a Record value used to represent the combination of a Date Duration Record with a Normalized Time Duration Record.
+        A <dfn variants="Internal Duration Records">Internal Duration Record</dfn> is a Record value used to represent the combination of a Date Duration Record with a Normalized Time Duration Record.
         Such Records are used by operations that deal with both date and time portions of durations, such as RoundTimeDuration.
       </p>
-      <p>Normalized Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-duration-record-fields"></emu-xref>.</p>
-      <emu-table id="table-temporal-normalized-duration-record-fields" caption="Normalized Duration Record Fields">
+      <p>Internal Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-duration-record-fields"></emu-xref>.</p>
+      <emu-table id="table-temporal-normalized-duration-record-fields" caption="Internal Duration Record Fields">
         <table class="real-table">
           <tr>
             <th>Field Name</th>
@@ -885,15 +885,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizeduration" type="abstract operation">
+    <emu-clause id="sec-temporal-tointernaldurationrecord" type="abstract operation">
       <h1>
-        NormalizeDuration (
+        ToInternalDurationRecord (
           _duration_: a Temporal.Duration,
-        ): a Normalized Duration Record
+        ): an Internal Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _duration_ into its normalized form, for use in duration calculations that may involve time zones. The duration's days are kept separate and not converted into the [[NormalizedTime]] field.</dd>
+        <dd>It converts _duration_ into its internal form, for use in duration calculations that may involve time zones. The duration's days are kept separate and not converted into the [[NormalizedTime]] field.</dd>
       </dl>
       <emu-alg>
         1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
@@ -902,15 +902,15 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizedurationwith24hourdays" type="abstract operation">
+    <emu-clause id="sec-temporal-tointernaldurationrecordwith24hourdays" type="abstract operation">
       <h1>
-        NormalizeDurationWith24HourDays (
+        ToInternalDurationRecordWith24HourDays (
           _duration_: a Temporal.Duration,
-        ): a Normalized Duration Record
+        ): an Internal Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _duration_ into its normalized form, for use in duration calculations that do not involve time zones. The duration's days are assumed to be uniformly 24 hours, and the [[Date]].[[Days]] field of the returned Record is set to 0, while the [[NormalizedTime]] field includes the days.</dd>
+        <dd>It converts _duration_ into its internal form, for use in duration calculations that do not involve time zones. The duration's days are assumed to be uniformly 24 hours, and the [[Date]].[[Days]] field of the returned Record is set to 0, while the [[NormalizedTime]] field includes the days.</dd>
       </dl>
       <emu-alg>
         1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
@@ -920,34 +920,34 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizedurationwithouttime" type="abstract operation">
+    <emu-clause id="sec-temporal-todatedurationrecordwithouttime" type="abstract operation">
       <h1>
-        NormalizeDurationWithoutTime (
+        ToDateDurationRecordWithoutTime (
           _duration_: a Temporal.Duration,
         ): either a normal completion containing a Date Duration Record, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _duration_ into its normalized form, for use in date-only calculations. The duration's days are assumed to be uniformly 24 hours, and the [[Days]] field of the returned Record is set to the [[Days]] internal slot of _duration_, incremented by any whole days that _duration_'s time units added up to.</dd>
+        <dd>It converts _duration_ into only a date part, for use in date-only calculations. The duration's days are assumed to be uniformly 24 hours, and the [[Days]] field of the returned Record is set to the [[Days]] internal slot of _duration_, incremented by any whole days that _duration_'s time units added up to.</dd>
       </dl>
       <emu-alg>
-        1. Let _normalizedDuration_ be NormalizeDurationWith24HourDays(_duration_).
-        1. Let _days_ be truncate(NormalizedTimeDurationSeconds(_normalizedDuration_.[[NormalizedTime]]) / 86400).
-        1. Return ? CreateDateDurationRecord(_normalizedDuration_.[[Date]].[[Years]], _normalizedDuration_.[[Date]].[[Months]], _normalizedDuration_.[[Date]].[[Weeks]], _days_).
+        1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
+        1. Let _days_ be truncate(NormalizedTimeDurationSeconds(_internalDuration_.[[NormalizedTime]]) / 86400).
+        1. Return ? CreateDateDurationRecord(_internalDuration_.[[Date]].[[Years]], _internalDuration_.[[Date]].[[Months]], _internalDuration_.[[Date]].[[Weeks]], _days_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-unnormalizeduration" type="abstract operation">
       <h1>
         UnnormalizeDuration (
-          _normalizedDuration_: a Normalized Duration Record,
+          _internalDuration_: an Internal Duration Record,
           _largestUnit_: a Temporal unit,
         ): either a normal completion containing a Temporal.Duration, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It converts _normalizedDuration_ back into the form of a `Temporal.Duration` object, with each component stored separately.
+          It converts _internalDuration_ back into the form of a `Temporal.Duration` object, with each component stored separately.
           The time units are balanced up to _largestUnit_.
           The conversion may be lossy if _largestUnit_ is ~millisecond~, ~microsecond~, or ~nanosecond~.
           In that case, the internal slots of the returned Temporal.Duration may contain unsafe (but float64-representable) integers.
@@ -956,8 +956,8 @@
       </dl>
       <emu-alg>
         1. Let _days_, _hours_, _minutes_, _seconds_, _milliseconds_, and _microseconds_ be 0.
-        1. Let _sign_ be NormalizedTimeDurationSign(_normalizedDuration_.[[NormalizedTime]]).
-        1. Let _nanoseconds_ be abs(_normalizedDuration_.[[NormalizedTime]].[[TotalNanoseconds]]).
+        1. Let _sign_ be NormalizedTimeDurationSign(_internalDuration_.[[NormalizedTime]]).
+        1. Let _nanoseconds_ be abs(_internalDuration_.[[NormalizedTime]].[[TotalNanoseconds]]).
         1. If TemporalUnitCategory(_largestUnit_) is ~date~, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
@@ -1009,7 +1009,7 @@
         1. Else,
           1. Assert: _largestUnit_ is ~nanosecond~.
         1. NOTE: When _largestUnit_ is ~millisecond~, ~microsecond~, or ~nanosecond~, _milliseconds_, _microseconds_, or _nanoseconds_ may be an unsafe integer. In this case, care must be taken when implementing the calculation using floating point arithmetic. It can be implemented in C++ using `std::fma()`. String manipulation will also give an exact result, since the multiplication is by a power of 10.
-        1. Return ? CreateTemporalDuration(_normalizedDuration_.[[Date]].[[Years]], _normalizedDuration_.[[Date]].[[Months]], _normalizedDuration_.[[Date]].[[Weeks]], _normalizedDuration_.[[Date]].[[Days]] + _days_ × _sign_, _hours_ × _sign_, _minutes_ × _sign_, _seconds_ × _sign_, _milliseconds_ × _sign_, _microseconds_ × _sign_, _nanoseconds_ × _sign_).
+        1. Return ? CreateTemporalDuration(_internalDuration_.[[Date]].[[Years]], _internalDuration_.[[Date]].[[Months]], _internalDuration_.[[Date]].[[Weeks]], _internalDuration_.[[Date]].[[Days]] + _days_ × _sign_, _hours_ × _sign_, _minutes_ × _sign_, _seconds_ × _sign_, _milliseconds_ × _sign_, _microseconds_ × _sign_, _nanoseconds_ × _sign_).
       </emu-alg>
     </emu-clause>
 
@@ -1062,7 +1062,7 @@
         CombineDateAndNormalizedTimeDuration (
           _dateDuration_: a Date Duration Record,
           _norm_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Duration Record or a throw completion
+        ): either a normal completion containing an Internal Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1072,7 +1072,7 @@
         1. Let _dateSign_ be DateDurationSign(_dateDuration_).
         1. Let _timeSign_ be NormalizedTimeDurationSign(_norm_).
         1. If _dateSign_ ≠ 0 and _timeSign_ ≠ 0 and _dateSign_ ≠ _timeSign_, throw a *RangeError* exception.
-        1. Return Normalized Duration Record {
+        1. Return Internal Duration Record {
           [[Date]]: _dateDuration_,
           [[NormalizedTime]]: _norm_
           }.
@@ -1147,20 +1147,20 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizeddurationsign" type="abstract operation">
+    <emu-clause id="sec-temporal-internaldurationsign" type="abstract operation">
       <h1>
-        NormalizedDurationSign (
-          _normalizedDuration_: a Normalized Duration Record,
+        InternalDurationSign (
+          _internalDuration_: an Internal Duration Record,
         ): -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns 1 if the most significant non-zero field in the _normalizedDuration_ argument is positive, and -1 if the most significant non-zero field is negative. If all of _normalizedDuration_'s fields are zero, it returns 0.</dd>
+        <dd>It returns 1 if the most significant non-zero field in the _internalDuration_ argument is positive, and -1 if the most significant non-zero field is negative. If all of _internalDuration_'s fields are zero, it returns 0.</dd>
       </dl>
       <emu-alg>
-        1. Let _dateSign_ be DateDurationSign(_normalizedDuration_.[[Date]]).
+        1. Let _dateSign_ be DateDurationSign(_internalDuration_.[[Date]]).
         1. If _dateSign_ ≠ 0, return _dateSign_.
-        1. Return NormalizedTimeDurationSign(_normalizedDuration_.[[NormalizedTime]]).
+        1. Return NormalizedTimeDurationSign(_internalDuration_.[[NormalizedTime]]).
       </emu-alg>
     </emu-clause>
 
@@ -1582,16 +1582,16 @@
     <emu-clause id="sec-temporal-roundtimeduration" type="abstract operation">
       <h1>
         RoundTimeDuration (
-          _duration_: a Normalized Duration Record,
+          _duration_: an Internal Duration Record,
           _increment_: a positive integer,
           _unit_: a time unit or ~day~,
           _roundingMode_: a rounding mode,
-        ): either a normal completion containing a Normalized Duration Record, or a throw completion
+        ): either a normal completion containing an Internal Duration Record, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It rounds a _duration_ according to the rounding parameters _unit_, _increment_, and _roundingMode_, and returns the Normalized Duration Record result.
+          It rounds a _duration_ according to the rounding parameters _unit_, _increment_, and _roundingMode_, and returns the Internal Duration Record result.
         </dd>
       </dl>
       <emu-alg>
@@ -1637,7 +1637,7 @@
           </tr>
           <tr>
             <td>[[Duration]]</td>
-            <td>a Normalized Duration Record</td>
+            <td>an Internal Duration Record</td>
             <td>
               The resulting duration.
             </td>
@@ -1664,7 +1664,7 @@
       <h1>
         NudgeToCalendarUnit (
           _sign_: -1 or 1,
-          _duration_: a Normalized Duration Record,
+          _duration_: an Internal Duration Record,
           _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
@@ -1756,7 +1756,7 @@
       <h1>
         NudgeToZonedTime (
           _sign_: -1 or 1,
-          _duration_: a Normalized Duration Record,
+          _duration_: an Internal Duration Record,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier,
           _calendar_: a calendar type,
@@ -1801,7 +1801,7 @@
     <emu-clause id="sec-temporal-nudgetodayortime" type="abstract operation">
       <h1>
         NudgeToDayOrTime (
-          _duration_: a Normalized Duration Record,
+          _duration_: an Internal Duration Record,
           _destEpochNs_: a BigInt,
           _largestUnit_: a Temporal unit,
           _increment_: a positive integer,
@@ -1841,14 +1841,14 @@
       <h1>
         BubbleRelativeDuration (
           _sign_: -1 or 1,
-          _duration_: a Normalized Duration Record,
+          _duration_: an Internal Duration Record,
           _nudgedEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _largestUnit_: a date unit,
           _smallestUnit_: a date unit,
-        ): either a normal completion containing a Normalized Duration Record or a throw completion
+        ): either a normal completion containing an Internal Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1895,7 +1895,7 @@
     <emu-clause id="sec-temporal-roundrelativeduration" type="abstract operation">
       <h1>
         RoundRelativeDuration (
-          _duration_: a Normalized Duration Record,
+          _duration_: an Internal Duration Record,
           _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
@@ -1904,19 +1904,19 @@
           _increment_: a positive integer,
           _smallestUnit_: a Temporal unit,
           _roundingMode_: a rounding mode,
-        ): either a normal completion containing a Normalized Duration Record or a throw completion
+        ): either a normal completion containing an Internal Duration Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It rounds a duration _duration_ relative to _isoDateTime_ according to the rounding parameters _smallestUnit_, _increment_, and _roundingMode_, bubbles overflows up to the next highest unit until _largestUnit_, and returns a normalized duration.
+          It rounds a duration _duration_ relative to _isoDateTime_ according to the rounding parameters _smallestUnit_, _increment_, and _roundingMode_, bubbles overflows up to the next highest unit until _largestUnit_, and returns the rounded duration.
         </dd>
       </dl>
       <emu-alg>
         1. Let _irregularLengthUnit_ be *false*.
         1. If IsCalendarUnit(_smallestUnit_) is *true*, set _irregularLengthUnit_ to *true*.
         1. If _timeZone_ is not ~unset~ and _smallestUnit_ is ~day~, set _irregularLengthUnit_ to *true*.
-        1. If NormalizedDurationSign(_duration_) &lt; 0, let _sign_ be -1; else let _sign_ be 1.
+        1. If InternalDurationSign(_duration_) &lt; 0, let _sign_ be -1; else let _sign_ be 1.
         1. If _irregularLengthUnit_ is *true*, then
           1. Let _record_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _smallestUnit_, _roundingMode_).
           1. Let _nudgeResult_ be _record_.[[NudgeResult]].
@@ -1935,7 +1935,7 @@
     <emu-clause id="sec-temporal-totalrelativeduration" type="abstract operation">
       <h1>
         TotalRelativeDuration (
-          _duration_: a Normalized Duration Record,
+          _duration_: an Internal Duration Record,
           _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
@@ -1949,7 +1949,7 @@
       </dl>
       <emu-alg>
         1. If IsCalendarUnit(_unit_) is *true*, or _timeZone_ is not ~unset~ and _unit_ is ~day~, then
-          1. Let _sign_ be NormalizedDurationSign(_duration_).
+          1. Let _sign_ be InternalDurationSign(_duration_).
           1. Let _record_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _isoDateTime_, _timeZone_, _calendar_, 1, _unit_, ~trunc~).
           1. Return _record_.[[Total]].
         1. Let _norm_ be ! Add24HourDaysToNormalizedTimeDuration(_duration_.[[NormalizedTime]], _duration_.[[Date]].[[Days]]).
@@ -2021,8 +2021,8 @@
         1. Let _largestUnit2_ be DefaultTemporalLargestUnit(_other_).
         1. Let _largestUnit_ be LargerOfTwoTemporalUnits(_largestUnit1_, _largestUnit2_).
         1. If IsCalendarUnit(_largestUnit_) is *true*, throw a *RangeError* exception.
-        1. Let _d1_ be NormalizeDurationWith24HourDays(_duration_).
-        1. Let _d2_ be NormalizeDurationWith24HourDays(_other_).
+        1. Let _d1_ be ToInternalDurationRecordWith24HourDays(_duration_).
+        1. Let _d2_ be ToInternalDurationRecordWith24HourDays(_other_).
         1. Let _normResult_ be ? AddNormalizedTimeDuration(_d1_.[[NormalizedTime]], _d2_.[[NormalizedTime]]).
         1. Let _result_ be ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), _normResult_).
         1. Return ? UnnormalizeDuration(_result_, _largestUnit_).

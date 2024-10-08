@@ -231,7 +231,7 @@ export class Duration {
     }
 
     if (zonedRelativeTo) {
-      let duration = ES.NormalizeDuration(this);
+      let duration = ES.ToInternalDurationRecord(this);
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
@@ -251,7 +251,7 @@ export class Duration {
     }
 
     if (plainRelativeTo) {
-      let duration = ES.NormalizeDurationWith24HourDays(this);
+      let duration = ES.ToInternalDurationRecordWith24HourDays(this);
       const targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.norm);
 
       // Delegate the date part addition to the calendar
@@ -282,7 +282,7 @@ export class Duration {
       throw new RangeErrorCtor(`a starting point is required for ${largestUnit}s balancing`);
     }
     assert(!ES.IsCalendarUnit(smallestUnit), 'smallestUnit was larger than largestUnit');
-    let duration = ES.NormalizeDurationWith24HourDays(this);
+    let duration = ES.ToInternalDurationRecordWith24HourDays(this);
     duration = ES.RoundTimeDuration(duration, roundingIncrement, smallestUnit, roundingMode);
     return ES.UnnormalizeDuration(duration, largestUnit);
   }
@@ -301,7 +301,7 @@ export class Duration {
     const unit = ES.GetTemporalUnitValuedOption(totalOf, 'unit', 'datetime', ES.REQUIRED);
 
     if (zonedRelativeTo) {
-      const duration = ES.NormalizeDuration(this);
+      const duration = ES.ToInternalDurationRecord(this);
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const relativeEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
@@ -310,7 +310,7 @@ export class Duration {
     }
 
     if (plainRelativeTo) {
-      const duration = ES.NormalizeDurationWith24HourDays(this);
+      const duration = ES.ToInternalDurationRecordWith24HourDays(this);
       let targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.norm);
 
       // Delegate the date part addition to the calendar
@@ -332,7 +332,7 @@ export class Duration {
     if (ES.IsCalendarUnit(unit)) {
       throw new RangeErrorCtor(`a starting point is required for ${unit}s total`);
     }
-    const duration = ES.NormalizeDurationWith24HourDays(this);
+    const duration = ES.ToInternalDurationRecordWith24HourDays(this);
     return ES.TotalTimeDuration(duration.norm, unit);
   }
   toString(options = undefined) {
@@ -349,7 +349,7 @@ export class Duration {
     if (unit === 'nanosecond' && increment === 1) return ES.TemporalDurationToString(this, precision);
 
     const largestUnit = ES.DefaultTemporalLargestUnit(this);
-    let duration = ES.NormalizeDuration(this);
+    let duration = ES.ToInternalDurationRecord(this);
     duration = ES.RoundTimeDuration(duration, increment, unit, roundingMode);
     const roundedDuration = ES.UnnormalizeDuration(duration, ES.LargerOfTwoTemporalUnits(largestUnit, 'second'));
     return ES.TemporalDurationToString(roundedDuration, precision);
@@ -395,8 +395,8 @@ export class Duration {
 
     const largestUnit1 = ES.DefaultTemporalLargestUnit(one);
     const largestUnit2 = ES.DefaultTemporalLargestUnit(two);
-    const duration1 = ES.NormalizeDuration(one);
-    const duration2 = ES.NormalizeDuration(two);
+    const duration1 = ES.ToInternalDurationRecord(one);
+    const duration2 = ES.ToInternalDurationRecord(two);
 
     if (
       zonedRelativeTo &&
