@@ -173,13 +173,11 @@ export class ZonedDateTime {
     const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, epochNs);
     const isoDateTime = dateTime(this);
     let fields = ES.ISODateToFields(calendar, isoDateTime.isoDate);
-    fields.hour = isoDateTime.time.hour;
-    fields.minute = isoDateTime.time.minute;
-    fields.second = isoDateTime.time.second;
-    fields.millisecond = isoDateTime.time.millisecond;
-    fields.microsecond = isoDateTime.time.microsecond;
-    fields.nanosecond = isoDateTime.time.nanosecond;
-    fields.offset = ES.FormatUTCOffsetNanoseconds(offsetNs);
+    fields = {
+      ...fields,
+      ...isoDateTime.time,
+      offset: ES.FormatUTCOffsetNanoseconds(offsetNs)
+    };
     const partialZonedDateTime = ES.PrepareCalendarFields(
       calendar,
       temporalZonedDateTimeLike,
