@@ -50,7 +50,7 @@ export class TimeDuration {
     return new TimeDuration(diff);
   }
 
-  static normalize(h, min, s, ms, µs, ns) {
+  static fromComponents(h, min, s, ms, µs, ns) {
     const totalNs = bigInt(ns)
       .add(bigInt(µs).multiply(1e3))
       .add(bigInt(ms).multiply(1e6))

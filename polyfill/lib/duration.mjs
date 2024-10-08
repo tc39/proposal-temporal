@@ -252,7 +252,7 @@ export class Duration {
 
     if (plainRelativeTo) {
       let duration = ES.ToInternalDurationRecordWith24HourDays(this);
-      const targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.norm);
+      const targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.time);
 
       // Delegate the date part addition to the calendar
       const isoRelativeToDate = GetSlot(plainRelativeTo, ISO_DATE);
@@ -311,7 +311,7 @@ export class Duration {
 
     if (plainRelativeTo) {
       const duration = ES.ToInternalDurationRecordWith24HourDays(this);
-      let targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.norm);
+      let targetTime = ES.AddTime(ES.MidnightTimeRecord(), duration.time);
 
       // Delegate the date part addition to the calendar
       const isoRelativeToDate = GetSlot(plainRelativeTo, ISO_DATE);
@@ -333,7 +333,7 @@ export class Duration {
       throw new RangeErrorCtor(`a starting point is required for ${unit}s total`);
     }
     const duration = ES.ToInternalDurationRecordWith24HourDays(this);
-    return ES.TotalTimeDuration(duration.norm, unit);
+    return ES.TotalTimeDuration(duration.time, unit);
   }
   toString(options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeErrorCtor('invalid receiver');
@@ -423,9 +423,9 @@ export class Duration {
       d1 = ES.DateDurationDays(duration1.date, plainRelativeTo);
       d2 = ES.DateDurationDays(duration2.date, plainRelativeTo);
     }
-    const norm1 = duration1.norm.add24HourDays(d1);
-    const norm2 = duration2.norm.add24HourDays(d2);
-    return norm1.cmp(norm2);
+    const timeDuration1 = duration1.time.add24HourDays(d1);
+    const timeDuration2 = duration2.time.add24HourDays(d2);
+    return timeDuration1.cmp(timeDuration2);
   }
 }
 

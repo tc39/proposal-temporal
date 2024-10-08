@@ -110,9 +110,9 @@
         1. Else,
           1. Let _days1_ be _one_.[[Days]].
           1. Let _days2_ be _two_.[[Days]].
-        1. Let _norm1_ be ? Add24HourDaysToNormalizedTimeDuration(_duration1_.[[NormalizedTime]], _days1_).
-        1. Let _norm2_ be ? Add24HourDaysToNormalizedTimeDuration(_duration2_.[[NormalizedTime]], _days2_).
-        1. Return 𝔽(CompareNormalizedTimeDuration(_norm1_, _norm2_)).
+        1. Let _timeDuration1_ be ? Add24HourDaysToTimeDuration(_duration1_.[[Time]], _days1_).
+        1. Let _timeDuration2_ be ? Add24HourDaysToTimeDuration(_duration2_.[[Time]], _days2_).
+        1. Return 𝔽(CompareTimeDuration(_timeDuration1_, _timeDuration2_)).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -437,7 +437,7 @@
           1. Return ? TemporalDurationFromInternal(_internalDuration_, _largestUnit_).
         1. If _plainRelativeTo_ is not *undefined*, then
           1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
-          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[NormalizedTime]]).
+          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[Time]]).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_internalDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
@@ -480,7 +480,7 @@
           1. Let _total_ be ? DifferenceZonedDateTimeWithTotal(_relativeEpochNs_, _targetEpochNs_, _timeZone_, _calendar_, _unit_).
         1. Else if _plainRelativeTo_ is not *undefined*, then
           1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
-          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[NormalizedTime]]).
+          1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[Time]]).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_internalDuration_.[[Date]], _targetTime_.[[Days]]).
           1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
@@ -812,41 +812,18 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalized-time-duration-records">
-      <h1>Normalized Time Duration Records</h1>
-      <p>
-        A <dfn variants="Normalized Time Duration Records">Normalized Time Duration Record</dfn> is a Record value used to represent the portion of a Temporal.Duration object that deals with time units, but as a combined value.
-        Normalized Time Duration Records are produced by the abstract operation NormalizeTimeDuration, among others.
-      </p>
-      <p>Normalized Time Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-time-duration-record-fields"></emu-xref>.</p>
-      <emu-table id="table-temporal-normalized-time-duration-record-fields" caption="Normalized Time Duration Record Fields">
-        <table class="real-table">
-          <tr>
-            <th>Field Name</th>
-            <th>Value</th>
-            <th>Meaning</th>
-          </tr>
-          <tr>
-            <td>[[TotalNanoseconds]]</td>
-            <td>
-              an integer in the inclusive interval from -maxTimeDuration to maxTimeDuration, where
-              <emu-eqn id="eqn-maxTimeDuration" aoid="maxTimeDuration">
-                maxTimeDuration = 2<sup>53</sup> × 10<sup>9</sup> - 1 = 9,007,199,254,740,991,999,999,999
-              </emu-eqn>
-            </td>
-            <td>
-              The number of nanoseconds in the duration.
-            </td>
-          </tr>
-        </table>
-      </emu-table>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-internal-duration-records">
       <h1>Internal Duration Records</h1>
       <p>
-        A <dfn variants="Internal Duration Records">Internal Duration Record</dfn> is a Record value used to represent the combination of a Date Duration Record with a Normalized Time Duration Record.
+        A <dfn variants="Internal Duration Records">Internal Duration Record</dfn> is a Record value used to represent the combination of a Date Duration Record with a time duration.
         Such Records are used by operations that deal with both date and time portions of durations, such as RoundTimeDuration.
+      </p>
+      <p>
+        A <dfn>time duration</dfn> is an integer in the inclusive interval from -maxTimeDuration to maxTimeDuration, where
+        <emu-eqn id="eqn-maxTimeDuration" aoid="maxTimeDuration">
+          maxTimeDuration = 2<sup>53</sup> × 10<sup>9</sup> - 1 = 9,007,199,254,740,991,999,999,999
+        </emu-eqn>
+        It represents the portion of a Temporal.Duration object that deals with time units, but as a combined value of total nanoseconds.
       </p>
       <p>Internal Duration Records have the fields listed in <emu-xref href="#table-temporal-normalized-duration-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-normalized-duration-record-fields" caption="Internal Duration Record Fields">
@@ -864,8 +841,8 @@
             </td>
           </tr>
           <tr>
-            <td>[[NormalizedTime]]</td>
-            <td>a Normalized Time Duration Record</td>
+            <td>[[Time]]</td>
+            <td>a time duration</td>
             <td>
               The time portion of the duration.
             </td>
@@ -893,12 +870,12 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _duration_ into its internal form, for use in duration calculations that may involve time zones. The duration's days are kept separate and not converted into the [[NormalizedTime]] field.</dd>
+        <dd>It converts _duration_ into its internal form, for use in duration calculations that may involve time zones. The duration's days are kept separate and not converted into the [[Time]] field.</dd>
       </dl>
       <emu-alg>
         1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
-        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Return ! CombineDateAndNormalizedTimeDuration(_dateDuration_, _norm_).
+        1. Let _timeDuration_ be TimeDurationFromComponents(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Return ! CombineDateAndTimeDuration(_dateDuration_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
@@ -910,13 +887,13 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It converts _duration_ into its internal form, for use in duration calculations that do not involve time zones. The duration's days are assumed to be uniformly 24 hours, and the [[Date]].[[Days]] field of the returned Record is set to 0, while the [[NormalizedTime]] field includes the days.</dd>
+        <dd>It converts _duration_ into its internal form, for use in duration calculations that do not involve time zones. The duration's days are assumed to be uniformly 24 hours, and the [[Date]].[[Days]] field of the returned Record is set to 0, while the [[Time]] field includes the days.</dd>
       </dl>
       <emu-alg>
-        1. Let _norm_ be NormalizeTimeDuration(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Set _norm_ to ! Add24HourDaysToNormalizedTimeDuration(_norm_, _duration_.[[Days]]).
+        1. Let _timeDuration_ be TimeDurationFromComponents(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, _duration_.[[Days]]).
         1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], 0).
-        1. Return ! CombineDateAndNormalizedTimeDuration(_dateDuration_, _norm_).
+        1. Return ! CombineDateAndTimeDuration(_dateDuration_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
@@ -932,7 +909,7 @@
       </dl>
       <emu-alg>
         1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
-        1. Let _days_ be truncate(NormalizedTimeDurationSeconds(_internalDuration_.[[NormalizedTime]]) / 86400).
+        1. Let _days_ be truncate(TimeDurationSeconds(_internalDuration_.[[Time]]) / 86400).
         1. Return ? CreateDateDurationRecord(_internalDuration_.[[Date]].[[Years]], _internalDuration_.[[Date]].[[Months]], _internalDuration_.[[Date]].[[Weeks]], _days_).
       </emu-alg>
     </emu-clause>
@@ -956,8 +933,8 @@
       </dl>
       <emu-alg>
         1. Let _days_, _hours_, _minutes_, _seconds_, _milliseconds_, and _microseconds_ be 0.
-        1. Let _sign_ be NormalizedTimeDurationSign(_internalDuration_.[[NormalizedTime]]).
-        1. Let _nanoseconds_ be abs(_internalDuration_.[[NormalizedTime]].[[TotalNanoseconds]]).
+        1. Let _sign_ be TimeDurationSign(_internalDuration_.[[Time]]).
+        1. Let _nanoseconds_ be abs(_internalDuration_.[[Time]]).
         1. If TemporalUnitCategory(_largestUnit_) is ~date~, then
           1. Set _microseconds_ to floor(_nanoseconds_ / 1000).
           1. Set _nanoseconds_ to _nanoseconds_ modulo 1000.
@@ -1057,11 +1034,11 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-combinedateandnormalizedtimeduration" type="abstract operation">
+    <emu-clause id="sec-temporal-combinedateandtimeduration" type="abstract operation">
       <h1>
-        CombineDateAndNormalizedTimeDuration (
+        CombineDateAndTimeDuration (
           _dateDuration_: a Date Duration Record,
-          _norm_: a Normalized Time Duration Record,
+          _timeDuration_: a time duration,
         ): either a normal completion containing an Internal Duration Record or a throw completion
       </h1>
       <dl class="header">
@@ -1070,11 +1047,11 @@
       </dl>
       <emu-alg>
         1. Let _dateSign_ be DateDurationSign(_dateDuration_).
-        1. Let _timeSign_ be NormalizedTimeDurationSign(_norm_).
+        1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
         1. If _dateSign_ ≠ 0 and _timeSign_ ≠ 0 and _dateSign_ ≠ _timeSign_, throw a *RangeError* exception.
         1. Return Internal Duration Record {
           [[Date]]: _dateDuration_,
-          [[NormalizedTime]]: _norm_
+          [[Time]]: _timeDuration_
           }.
       </emu-alg>
     </emu-clause>
@@ -1160,7 +1137,7 @@
       <emu-alg>
         1. Let _dateSign_ be DateDurationSign(_internalDuration_.[[Date]]).
         1. If _dateSign_ ≠ 0, return _dateSign_.
-        1. Return NormalizedTimeDurationSign(_internalDuration_.[[NormalizedTime]]).
+        1. Return TimeDurationSign(_internalDuration_.[[Time]]).
       </emu-alg>
     </emu-clause>
 
@@ -1196,9 +1173,9 @@
         1. If abs(_years_) ≥ 2<sup>32</sup>, return *false*.
         1. If abs(_months_) ≥ 2<sup>32</sup>, return *false*.
         1. If abs(_weeks_) ≥ 2<sup>32</sup>, return *false*.
-        1. Let _normalizedSeconds_ be _days_ × 86,400 + _hours_ × 3600 + _minutes_ × 60 + _seconds_ + ℝ(𝔽(_milliseconds_)) × 10<sup>-3</sup> + ℝ(𝔽(_microseconds_)) × 10<sup>-6</sup> + ℝ(𝔽(_nanoseconds_)) × 10<sup>-9</sup>.
+        1. Let _totalFractionalSeconds_ be _days_ × 86,400 + _hours_ × 3600 + _minutes_ × 60 + _seconds_ + ℝ(𝔽(_milliseconds_)) × 10<sup>-3</sup> + ℝ(𝔽(_microseconds_)) × 10<sup>-6</sup> + ℝ(𝔽(_nanoseconds_)) × 10<sup>-9</sup>.
         1. NOTE: The above step cannot be implemented directly using floating-point arithmetic. Multiplying by 10<sup>-3</sup>, 10<sup>-6</sup>, and 10<sup>-9</sup> respectively may be imprecise when _milliseconds_, _microseconds_, or _nanoseconds_ is an unsafe integer. This multiplication can be implemented in C++ with an implementation of `std::remquo()` with sufficient bits in the quotient. String manipulation will also give an exact result, since the multiplication is by a power of 10.
-        1. If abs(_normalizedSeconds_) ≥ 2<sup>53</sup>, return *false*.
+        1. If abs(_totalFractionalSeconds_) ≥ 2<sup>53</sup>, return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -1320,23 +1297,23 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizetimeduration" type="abstract operation">
+    <emu-clause id="sec-temporal-timedurationfromcomponents" type="abstract operation">
       <h1>
-        NormalizeTimeDuration (
+        TimeDurationFromComponents (
           _hours_: an integer,
           _minutes_: an integer,
           _seconds_: an integer,
           _milliseconds_: an integer,
           _microseconds_: an integer,
           _nanoseconds_: an integer,
-        ): a Normalized Time Duration Record
+        ): a time duration
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          From the given units, it computes a normalized time duration consisting of whole seconds, and subseconds expressed in nanoseconds.
-          The normalized time duration can be stored losslessly in two 64-bit floating point numbers.
-          Alternatively, _normalizedSeconds_ × 10<sup>9</sup> + _subseconds_ can be stored as a 96-bit integer.
+          From the given units, it computes a time duration consisting of total nanoseconds.
+          The time duration can be stored losslessly in two 64-bit floating point numbers consisting of truncate(_nanoseconds_ / 10<sup>9</sup>) and remainder(_nanoseconds_, 10<sup>9</sup>).
+          Alternatively, _nanoseconds_ can be stored as a 96-bit integer.
         </dd>
       </dl>
       <emu-alg>
@@ -1346,145 +1323,145 @@
         1. Set _microseconds_ to _microseconds_ + _milliseconds_ × 1000.
         1. Set _nanoseconds_ to _nanoseconds_ + _microseconds_ × 1000.
         1. Assert: abs(_nanoseconds_) ≤ maxTimeDuration.
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _nanoseconds_ }.
+        1. Return _nanoseconds_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addnormalizedtimeduration" type="abstract operation">
+    <emu-clause id="sec-temporal-addtimeduration" type="abstract operation">
       <h1>
-        AddNormalizedTimeDuration (
-          _one_: a Normalized Time Duration Record,
-          _two_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
+        AddTimeDuration (
+          _one_: a time duration,
+          _two_: a time duration,
+        ): either a normal completion containing a time duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns a normalized time duration that is the sum of _one_ and _two_, throwing an exception if the result is greater than the maximum normalized time duration.</dd>
+        <dd>It returns a time duration that is the sum of _one_ and _two_, throwing an exception if the result is greater than the maximum time duration.</dd>
       </dl>
       <emu-alg>
-        1. Let _result_ be _one_.[[TotalNanoseconds]] + _two_.[[TotalNanoseconds]].
+        1. Let _result_ be _one_ + _two_.
         1. If abs(_result_) > maxTimeDuration, throw a *RangeError* exception.
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _result_ }.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-add24hourdaystonormalizedtimeduration" type="abstract operation">
       <h1>
-        Add24HourDaysToNormalizedTimeDuration (
-          _d_: a Normalized Time Duration Record,
+        Add24HourDaysToTimeDuration (
+          _d_: a time duration,
           _days_: an integer,
-        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
+        ): either a normal completion containing a time duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It returns a normalized time duration that is the sum of _d_ and the number of 24-hour days indicated by _days_, throwing an exception if the result is greater than the maximum normalized time duration.
+          It returns a time duration that is the sum of _d_ and the number of 24-hour days indicated by _days_, throwing an exception if the result is greater than the maximum time duration.
           This operation should not be used when adding days relative to a Temporal.ZonedDateTime, since the days may not be 24 hours long.
         </dd>
       </dl>
       <emu-alg>
-        1. Let _result_ be _d_.[[TotalNanoseconds]] + _days_ × nsPerDay.
+        1. Let _result_ be _d_ + _days_ × nsPerDay.
         1. If abs(_result_) > maxTimeDuration, throw a *RangeError* exception.
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _result_ }.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-addnormalizedtimedurationtoepochnanoseconds" type="abstract operation">
+    <emu-clause id="sec-temporal-addtimedurationtoepochnanoseconds" type="abstract operation">
       <h1>
-        AddNormalizedTimeDurationToEpochNanoseconds (
-          _d_: a Normalized Time Duration Record,
+        AddTimeDurationToEpochNanoseconds (
+          _d_: a time duration,
           _epochNs_: a BigInt,
         ): a BigInt
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It adds a normalized time duration _d_ to an exact time in nanoseconds since the epoch, _epochNs_, and returns a new exact time.
+          It adds a time duration _d_ to an exact time in nanoseconds since the epoch, _epochNs_, and returns a new exact time.
           The returned exact time is not required to be valid according to IsValidEpochNanoseconds.
         </dd>
       </dl>
       <emu-alg>
-        1. Return _epochNs_ + ℤ(_d_.[[TotalNanoseconds]]).
+        1. Return _epochNs_ + ℤ(_d_).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-comparenormalizedtimeduration" type="abstract operation">
+    <emu-clause id="sec-temporal-comparetimeduration" type="abstract operation">
       <h1>
-        CompareNormalizedTimeDuration (
-          _one_: a Normalized Time Duration Record,
-          _two_: a Normalized Time Duration Record,
+        CompareTimeDuration (
+          _one_: a time duration,
+          _two_: a time duration,
         ): -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It performs a comparison of two Normalized Time Duration Records.</dd>
+        <dd>It performs a comparison of two time durations.</dd>
       </dl>
       <emu-alg>
-        1. If _one_.[[TotalNanoseconds]] > _two_.[[TotalNanoseconds]], return 1.
-        1. If _one_.[[TotalNanoseconds]] &lt; _two_.[[TotalNanoseconds]], return -1.
+        1. If _one_ > _two_, return 1.
+        1. If _one_ &lt; _two_, return -1.
         1. Return 0.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-dividenormalizedtimeduration" type="abstract operation">
+    <emu-clause id="sec-temporal-dividetimeduration" type="abstract operation">
       <h1>
-        DivideNormalizedTimeDuration (
-          _d_: a Normalized Time Duration Record,
+        DivideTimeDuration (
+          _d_: a time duration,
           _divisor_: an integer,
         ): a mathematical value
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It divides the total number of nanoseconds in the normalized time duration _d_ by _divisor_.</dd>
+        <dd>It divides the total number of nanoseconds in the time duration _d_ by _divisor_.</dd>
       </dl>
       <emu-alg>
         1. Assert: _divisor_ ≠ 0.
-        1. NOTE: The following step cannot be implemented directly using floating-point arithmetic when 𝔽(_d_.[[TotalNanoseconds]]) is not a safe integer. The division can be implemented in C++ with the `__float128` type if the compiler supports it, or with software emulation such as in the <a href="https://bellard.org/softfp/">SoftFP</a> library.
-        1. Return _d_.[[TotalNanoseconds]] / _divisor_.
+        1. NOTE: The following step cannot be implemented directly using floating-point arithmetic when 𝔽(_d_) is not a safe integer. The division can be implemented in C++ with the `__float128` type if the compiler supports it, or with software emulation such as in the <a href="https://bellard.org/softfp/">SoftFP</a> library.
+        1. Return _d_ / _divisor_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizedtimedurationfromepochnanosecondsdifference" type="abstract operation">
+    <emu-clause id="sec-temporal-timedurationfromepochnanosecondsdifference" type="abstract operation">
       <h1>
-        NormalizedTimeDurationFromEpochNanosecondsDifference (
+        TimeDurationFromEpochNanosecondsDifference (
           _one_: a BigInt,
           _two_: a BigInt,
-        ): a Normalized Time Duration Record
+        ): a time duration
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It creates a Normalized Time Duration Record with the difference between two exact times in nanoseconds since the epoch, which must not be greater than the maximum normalized time duration.</dd>
+        <dd>The returned time duration is the difference between two exact times in nanoseconds since the epoch, which must not be greater than the maximum time duration.</dd>
       </dl>
       <emu-alg>
         1. Let _result_ be ℝ(_one_) - ℝ(_two_).
         1. Assert: abs(_result_) ≤ maxTimeDuration.
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _result_ }.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-roundnormalizedtimedurationtoincrement" type="abstract operation">
+    <emu-clause id="sec-temporal-roundtimedurationtoincrement" type="abstract operation">
       <h1>
-        RoundNormalizedTimeDurationToIncrement (
-          _d_: a Normalized Time Duration Record,
+        RoundTimeDurationToIncrement (
+          _d_: a time duration,
           _increment_: a positive integer,
           _roundingMode_: a rounding mode,
-        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
+        ): either a normal completion containing a time duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It rounds the total number of nanoseconds in the normalized time duration _d_ to the nearest multiple of _increment_, up or down according to _roundingMode_.</dd>
+        <dd>It rounds the total number of nanoseconds in the time duration _d_ to the nearest multiple of _increment_, up or down according to _roundingMode_.</dd>
       </dl>
       <emu-alg>
-        1. Let _rounded_ be RoundNumberToIncrement(_d_.[[TotalNanoseconds]], _increment_, _roundingMode_).
+        1. Let _rounded_ be RoundNumberToIncrement(_d_, _increment_, _roundingMode_).
         1. If abs(_rounded_) > maxTimeDuration, throw a *RangeError* exception.
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _rounded_ }.
+        1. Return _rounded_.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizedtimedurationseconds" type="abstract operation">
+    <emu-clause id="sec-temporal-timedurationseconds" type="abstract operation">
       <h1>
-        NormalizedTimeDurationSeconds (
-          _d_: a Normalized Time Duration Record,
+        TimeDurationSeconds (
+          _d_: a time duration,
         ): an integer in the interval from -2<sup>53</sup> (exclusive) to 2<sup>53</sup> (exclusive)
       </h1>
       <dl class="header">
@@ -1492,14 +1469,14 @@
         <dd>It returns the integer number of seconds in _d_.</dd>
       </dl>
       <emu-alg>
-        1. Return truncate(_d_.[[TotalNanoseconds]] / 10<sup>9</sup>).
+        1. Return truncate(_d_ / 10<sup>9</sup>).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizedtimedurationsign" type="abstract operation">
+    <emu-clause id="sec-temporal-timedurationsign" type="abstract operation">
       <h1>
-        NormalizedTimeDurationSign (
-          _d_: a Normalized Time Duration Record,
+        TimeDurationSign (
+          _d_: a time duration,
         ): -1, 0, or 1
       </h1>
       <dl class="header">
@@ -1507,16 +1484,16 @@
         <dd>It returns 0 if the duration is zero, or ±1 depending on the sign of the duration.</dd>
       </dl>
       <emu-alg>
-        1. If _d_.[[TotalNanoseconds]] &lt; 0, return -1.
-        1. If _d_.[[TotalNanoseconds]] > 0, return 1.
+        1. If _d_ &lt; 0, return -1.
+        1. If _d_ > 0, return 1.
         1. Return 0.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-normalizedtimedurationsubseconds" type="abstract operation">
+    <emu-clause id="sec-temporal-timedurationsubseconds" type="abstract operation">
       <h1>
-        NormalizedTimeDurationSubseconds (
-          _d_: a Normalized Time Duration Record,
+        TimeDurationSubseconds (
+          _d_: a time duration,
         ): an integer in the interval from -10<sup>9</sup> (exclusive) to 10<sup>9</sup> (exclusive)
       </h1>
       <dl class="header">
@@ -1524,36 +1501,36 @@
         <dd>It returns the integer number of nanoseconds in the subsecond part of _d_.</dd>
       </dl>
       <emu-alg>
-        1. Return remainder(_d_.[[TotalNanoseconds]], 10<sup>9</sup>).
+        1. Return remainder(_d_, 10<sup>9</sup>).
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-subtractnormalizedtimeduration" type="abstract operation">
+    <emu-clause id="sec-temporal-subtracttimeduration" type="abstract operation">
       <h1>
-        SubtractNormalizedTimeDuration (
-          _one_: a Normalized Time Duration Record,
-          _two_: a Normalized Time Duration Record,
-        ): either a normal completion containing a Normalized Time Duration Record or a throw completion
+        SubtractTimeDuration (
+          _one_: a time duration,
+          _two_: a time duration,
+        ): either a normal completion containing a time duration or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns a normalized time duration that is the difference between _one_ and _two_, throwing an exception if the result is greater than the maximum normalized time duration.</dd>
+        <dd>It returns a time duration that is the difference between _one_ and _two_, throwing an exception if the result is greater than the maximum time duration.</dd>
       </dl>
       <emu-alg>
-        1. Let _result_ be _one_.[[TotalNanoseconds]] - _two_.[[TotalNanoseconds]].
+        1. Let _result_ be _one_ - _two_.
         1. If abs(_result_) > maxTimeDuration, throw a *RangeError* exception.
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: _result_ }.
+        1. Return _result_.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-zerotimeduration" type="abstract operation">
-      <h1>ZeroTimeDuration ( ): a Normalized Time Duration Record</h1>
+      <h1>ZeroTimeDuration ( ): a time duration</h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It returns a normalized time duration of zero length.</dd>
+        <dd>It returns a time duration of zero length.</dd>
       </dl>
       <emu-alg>
-        1. Return Normalized Time Duration Record { [[TotalNanoseconds]]: 0 }.
+        1. Return 0.
       </emu-alg>
     </emu-clause>
 
@@ -1596,21 +1573,21 @@
       </dl>
       <emu-alg>
         1. If _unit_ is ~day~, then
-          1. Let _fractionalDays_ be _duration_.[[Date]].[[Days]] + DivideNormalizedTimeDuration(_duration_.[[NormalizedTime]], nsPerDay).
+          1. Let _fractionalDays_ be _duration_.[[Date]].[[Days]] + DivideTimeDuration(_duration_.[[Time]], nsPerDay).
           1. Let _days_ be RoundNumberToIncrement(_fractionalDays_, _increment_, _roundingMode_).
           1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _days_).
-          1. Return ! CombineDateAndNormalizedTimeDuration(_dateDuration_, ZeroTimeDuration()).
+          1. Return ! CombineDateAndTimeDuration(_dateDuration_, ZeroTimeDuration()).
         1. Assert: TemporalUnitCategory(_unit_) is ~time~.
         1. Let _divisor_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
-        1. Let _norm_ be ? RoundNormalizedTimeDurationToIncrement(_duration_.[[NormalizedTime]], _divisor_ × _increment_, _roundingMode_).
-        1. Return ? CombineDateAndNormalizedTimeDuration(_duration_.[[Date]], _norm_).
+        1. Let _rounded_ be ? RoundTimeDurationToIncrement(_duration_.[[Time]], _divisor_ × _increment_, _roundingMode_).
+        1. Return ? CombineDateAndTimeDuration(_duration_.[[Date]], _rounded_).
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-temporal-totaltimeduration" type="abstract operation">
       <h1>
         TotalTimeDuration (
-          _norm_: a Normalized Time Duration Record,
+          _timeDuration_: a time duration,
           _unit_: a time unit or ~day~,
         ): a mathematical value
       </h1>
@@ -1620,7 +1597,7 @@
       </dl>
       <emu-alg>
         1. Let _divisor_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
-        1. Return DivideNormalizedTimeDuration(_norm_, _divisor_).
+        1. Return DivideTimeDuration(_timeDuration_, _divisor_).
       </emu-alg>
     </emu-clause>
 
@@ -1729,7 +1706,7 @@
         1. Assert: _startEpochNs_ ≠ _endEpochNs_.
         1. Let _progress_ be (_destEpochNs_ - _startEpochNs_) / (_endEpochNs_ - _startEpochNs_).
         1. Let _total_ be _r1_ + _progress_ × _increment_ × _sign_.
-        1. NOTE: The above two steps cannot be implemented directly using floating-point arithmetic. This division can be implemented as if constructing Normalized Time Duration Records for the denominator and numerator of _total_ and performing one division operation with a floating-point result.
+        1. NOTE: The above two steps cannot be implemented directly using floating-point arithmetic. This division can be implemented as if expressing the denominator and numerator of _total_ as two time durations, and performing one division operation with a floating-point result.
         1. Assert: 0 ≤ _progress_ ≤ 1.
         1. If _sign_ &lt; 0, let _isNegative_ be ~negative~; else let _isNegative_ be ~positive~.
         1. Let _unsignedRoundingMode_ be GetUnsignedRoundingMode(_roundingMode_, _isNegative_).
@@ -1746,7 +1723,7 @@
           1. Let _didExpandCalendarUnit_ be *false*.
           1. Let _resultDuration_ be _startDuration_.
           1. Let _nudgedEpochNs_ be _startEpochNs_.
-        1. Set _resultDuration_ to ! CombineDateAndNormalizedTimeDuration(_resultDuration_, ZeroTimeDuration()).
+        1. Set _resultDuration_ to ! CombineDateAndTimeDuration(_resultDuration_, ZeroTimeDuration()).
         1. Let _nudgeResult_ be Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandCalendarUnit_ }.
         1. Return the Record { [[NudgeResult]]: _nudgeResult_, [[Total]]: _total_ }.
       </emu-alg>
@@ -1778,22 +1755,22 @@
         1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _isoDateTime_.[[Time]]).
         1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
         1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
-        1. Let _daySpan_ be NormalizedTimeDurationFromEpochNanosecondsDifference(_endEpochNs_, _startEpochNs_).
-        1. Assert: NormalizedTimeDurationSign(_daySpan_) = _sign_.
+        1. Let _daySpan_ be TimeDurationFromEpochNanosecondsDifference(_endEpochNs_, _startEpochNs_).
+        1. Assert: TimeDurationSign(_daySpan_) = _sign_.
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
-        1. Let _roundedNorm_ be ? RoundNormalizedTimeDurationToIncrement(_duration_.[[NormalizedTime]], _increment_ × _unitLength_, _roundingMode_).
-        1. Let _beyondDaySpan_ be ? SubtractNormalizedTimeDuration(_roundedNorm_, _daySpan_).
-        1. If NormalizedTimeDurationSign(_beyondDaySpan_) ≠ -_sign_, then
+        1. Let _roundedTimeDuration_ be ? RoundTimeDurationToIncrement(_duration_.[[Time]], _increment_ × _unitLength_, _roundingMode_).
+        1. Let _beyondDaySpan_ be ? SubtractTimeDuration(_roundedTimeDuration_, _daySpan_).
+        1. If TimeDurationSign(_beyondDaySpan_) ≠ -_sign_, then
           1. Let _didRoundBeyondDay_ be *true*.
           1. Let _dayDelta_ be _sign_.
-          1. Set _roundedNorm_ to ? RoundNormalizedTimeDurationToIncrement(_beyondDaySpan_, _increment_ × _unitLength_, _roundingMode_).
-          1. Let _nudgedEpochNs_ be AddNormalizedTimeDurationToEpochNanoseconds(_roundedNorm_, _endEpochNs_).
+          1. Set _roundedTimeDuration_ to ? RoundTimeDurationToIncrement(_beyondDaySpan_, _increment_ × _unitLength_, _roundingMode_).
+          1. Let _nudgedEpochNs_ be AddTimeDurationToEpochNanoseconds(_roundedTimeDuration_, _endEpochNs_).
         1. Else,
           1. Let _didRoundBeyondDay_ be *false*.
           1. Let _dayDelta_ be 0.
-          1. Let _nudgedEpochNs_ be AddNormalizedTimeDurationToEpochNanoseconds(_roundedNorm_, _startEpochNs_).
+          1. Let _nudgedEpochNs_ be AddTimeDurationToEpochNanoseconds(_roundedTimeDuration_, _startEpochNs_).
         1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _duration_.[[Date]].[[Days]] + _dayDelta_).
-        1. Let _resultDuration_ be ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _roundedNorm_).
+        1. Let _resultDuration_ be ? CombineDateAndTimeDuration(_dateDuration_, _roundedTimeDuration_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didRoundBeyondDay_ }.
       </emu-alg>
     </emu-clause>
@@ -1816,23 +1793,23 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _norm_ be ! Add24HourDaysToNormalizedTimeDuration(_duration_.[[NormalizedTime]], _duration_.[[Date]].[[Days]]).
+        1. Let _timeDuration_ be ! Add24HourDaysToTimeDuration(_duration_.[[Time]], _duration_.[[Date]].[[Days]]).
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _smallestUnit_.
-        1. Let _roundedNorm_ be ? RoundNormalizedTimeDurationToIncrement(_norm_, _unitLength_ × _increment_, _roundingMode_).
-        1. Let _diffNorm_ be ! SubtractNormalizedTimeDuration(_roundedNorm_, _norm_).
-        1. Let _wholeDays_ be truncate(DivideNormalizedTimeDuration(_norm_, nsPerDay)).
-        1. Let _roundedWholeDays_ be truncate(DivideNormalizedTimeDuration(_roundedNorm_, nsPerDay)).
+        1. Let _roundedNorm_ be ? RoundTimeDurationToIncrement(_timeDuration_, _unitLength_ × _increment_, _roundingMode_).
+        1. Let _diffNorm_ be ! SubtractTimeDuration(_roundedNorm_, _timeDuration_).
+        1. Let _wholeDays_ be truncate(DivideTimeDuration(_timeDuration_, nsPerDay)).
+        1. Let _roundedWholeDays_ be truncate(DivideTimeDuration(_roundedNorm_, nsPerDay)).
         1. Let _dayDelta_ be _roundedWholeDays_ - _wholeDays_.
         1. If _dayDelta_ &lt; 0, let _dayDeltaSign_ be -1; else if _dayDelta_ > 0, let _dayDeltaSign_ be 1; else let _dayDeltaSign_ be 0.
-        1. If _dayDeltaSign_ = NormalizedTimeDurationSign(_norm_), let _didExpandDays_ be *true*; else let _didExpandDays_ be *false*.
-        1. Let _nudgedEpochNs_ be AddNormalizedTimeDurationToEpochNanoseconds(_diffNorm_, _destEpochNs_).
+        1. If _dayDeltaSign_ = TimeDurationSign(_timeDuration_), let _didExpandDays_ be *true*; else let _didExpandDays_ be *false*.
+        1. Let _nudgedEpochNs_ be AddTimeDurationToEpochNanoseconds(_diffNorm_, _destEpochNs_).
         1. Let _days_ be 0.
         1. Let _remainder_ be _roundedNorm_.
         1. If TemporalUnitCategory(_largestUnit_) is ~date~, then
           1. Set _days_ to _roundedWholeDays_.
-          1. Set _remainder_ to ! SubtractNormalizedTimeDuration(_roundedNorm_, NormalizeTimeDuration(_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
+          1. Set _remainder_ to ! SubtractTimeDuration(_roundedNorm_, TimeDurationFromComponents(_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
         1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _days_).
-        1. Let _resultDuration_ be ? CombineDateAndNormalizedTimeDuration(_dateDuration_, _remainder_).
+        1. Let _resultDuration_ be ? CombineDateAndTimeDuration(_dateDuration_, _remainder_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandDays_ }.
       </emu-alg>
     </emu-clause>
@@ -1884,7 +1861,7 @@
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
             1. If _beyondEndSign_ ≠ -_sign_, then
-              1. Set _duration_ to ! CombineDateAndNormalizedTimeDuration(_endDuration_, ZeroTimeDuration()).
+              1. Set _duration_ to ! CombineDateAndTimeDuration(_endDuration_, ZeroTimeDuration()).
             1. Else,
               1. Set _done_ to *true*.
           1. Set _unitIndex_ to _unitIndex_ - 1.
@@ -1952,8 +1929,8 @@
           1. Let _sign_ be InternalDurationSign(_duration_).
           1. Let _record_ be ? NudgeToCalendarUnit(_sign_, _duration_, _destEpochNs_, _isoDateTime_, _timeZone_, _calendar_, 1, _unit_, ~trunc~).
           1. Return _record_.[[Total]].
-        1. Let _norm_ be ! Add24HourDaysToNormalizedTimeDuration(_duration_.[[NormalizedTime]], _duration_.[[Date]].[[Days]]).
-        1. Return TotalTimeDuration(_norm_, _unit_).
+        1. Let _timeDuration_ be ! Add24HourDaysToTimeDuration(_duration_.[[Time]], _duration_.[[Date]].[[Days]]).
+        1. Return TotalTimeDuration(_timeDuration_, _unit_).
       </emu-alg>
     </emu-clause>
 
@@ -1986,10 +1963,10 @@
           1. Set _timePart_ to the string concatenation of _timePart_, abs(_duration_.[[Minutes]]) formatted as a decimal number, and the code unit 0x004D (LATIN CAPITAL LETTER M).
         1. Let _zeroMinutesAndHigher_ be *false*.
         1. If DefaultTemporalLargestUnit(_duration_) is ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~, set _zeroMinutesAndHigher_ to *true*.
-        1. Let _normSeconds_ be NormalizeTimeDuration(0, 0, _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. If _normSeconds_.[[TotalNanoseconds]] ≠ 0, or _zeroMinutesAndHigher_ is *true*, or _precision_ is not ~auto~, then
-          1. Let _secondsPart_ be abs(NormalizedTimeDurationSeconds(_normSeconds_)) formatted as a decimal number.
-          1. Let _subSecondsPart_ be FormatFractionalSeconds(abs(NormalizedTimeDurationSubseconds(_normSeconds_)), _precision_).
+        1. Let _secondsDuration_ be TimeDurationFromComponents(0, 0, _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
+        1. If _secondsDuration_ ≠ 0, or _zeroMinutesAndHigher_ is *true*, or _precision_ is not ~auto~, then
+          1. Let _secondsPart_ be abs(TimeDurationSeconds(_secondsDuration_)) formatted as a decimal number.
+          1. Let _subSecondsPart_ be FormatFractionalSeconds(abs(TimeDurationSubseconds(_secondsDuration_)), _precision_).
           1. Set _timePart_ to the string concatenation of _timePart_, _secondsPart_, _subSecondsPart_, and the code unit 0x0053 (LATIN CAPITAL LETTER S).
         1. Let _signPart_ be the code unit 0x002D (HYPHEN-MINUS) if _sign_ &lt; 0, and otherwise the empty String.
         1. Let _result_ be the string concatenation of _signPart_, the code unit 0x0050 (LATIN CAPITAL LETTER P) and _datePart_.
@@ -2023,8 +2000,8 @@
         1. If IsCalendarUnit(_largestUnit_) is *true*, throw a *RangeError* exception.
         1. Let _d1_ be ToInternalDurationRecordWith24HourDays(_duration_).
         1. Let _d2_ be ToInternalDurationRecordWith24HourDays(_other_).
-        1. Let _normResult_ be ? AddNormalizedTimeDuration(_d1_.[[NormalizedTime]], _d2_.[[NormalizedTime]]).
-        1. Let _result_ be ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), _normResult_).
+        1. Let _timeResult_ be ? AddTimeDuration(_d1_.[[Time]], _d2_.[[Time]]).
+        1. Let _result_ be ! CombineDateAndTimeDuration(ZeroDateDuration(), _timeResult_).
         1. Return ? TemporalDurationFromInternal(_result_, _largestUnit_).
       </emu-alg>
     </emu-clause>
