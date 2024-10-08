@@ -1075,7 +1075,7 @@ export function ISODateToFields(calendar, isoDate, type = 'date') {
 }
 
 export function PrepareCalendarFields(calendar, bag, calendarFieldNames, nonCalendarFieldNames, requiredFields) {
-  const extraFieldNames = calendarImplForID(calendar).extraFields();
+  const extraFieldNames = calendarImplForID(calendar).extraFields(calendarFieldNames);
   const fields = Call(ArrayPrototypeConcat, calendarFieldNames, [nonCalendarFieldNames, extraFieldNames]);
   const result = ObjectCreate(null);
   let any = false;
