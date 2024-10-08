@@ -366,6 +366,66 @@
       </emu-table>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-preparecalendarfields" type="abstract operation">
+      <h1>
+        PrepareCalendarFields (
+          _calendar_: a calendar type,
+          _fields_: an Object,
+          _calendarFieldNames_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
+          _nonCalendarFieldNames_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
+          _requiredFieldNames_: ~partial~ or a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
+        ): either a normal completion containing a Calendar Fields Record, or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It returns the result of reading from _fields_ all of the property names corresponding to _calendarFieldNames_ and _nonCalendarFieldNames_, plus any extra fields required by the calendar.
+          The returned Record has a non-~unset~ value for each element of _fieldNames_ that corresponds with a non-*undefined* property on _fields_ used as the input for relevant conversion.
+          When _requiredFields_ is ~partial~, this operation throws if none of the properties are present with a non-*undefined* value.
+          When _requiredFields_ is a List, this operation throws if any of the properties named by it are absent or *undefined*.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Assert: If _requiredFieldNames_ is a List, _requiredFieldNames_ contains zero or one of each of the elements of _calendarFieldNames_ and _nonCalendarFieldNames_.
+        1. Let _fieldNames_ be the list-concatenation of _calendarFieldNames_ and _nonCalendarFieldNames_.
+        1. Let _extraFieldNames_ be CalendarExtraFields(_calendar_, _calendarFieldNames_).
+        1. Set _fieldNames_ to the list-concatenation of _fieldNames_ and _extraFieldNames_.
+        1. Assert: _fieldNames_ contains no duplicate elements.
+        1. Let _result_ be a Calendar Fields Record with all fields equal to ~unset~.
+        1. Let _any_ be *false*.
+        1. Let _sortedPropertyNames_ be a List whose elements are the values in the Property Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref> corresponding to the elements of _fieldNames_, sorted according to lexicographic code unit order.
+        1. For each property name _property_ of _sortedPropertyNames_, do
+          1. Let _key_ be the value in the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref> corresponding to the row whose Property Key value is _property_.
+          1. Let _value_ be ? Get(_fields_, _property_).
+          1. If _value_ is not *undefined*, then
+            1. Set _any_ to *true*.
+            1. Let _Conversion_ be the Conversion value of the same row.
+            1. If _Conversion_ is ~to-integer-with-truncation~, then
+              1. Set _value_ to ? ToIntegerWithTruncation(_value_).
+              1. Set _value_ to 𝔽(_value_).
+            1. Else if _Conversion_ is ~to-positive-integer-with-truncation~, then
+              1. Set _value_ to ? ToPositiveIntegerWithTruncation(_value_).
+              1. Set _value_ to 𝔽(_value_).
+            1. Else if _Conversion_ is ~to-string~, then
+              1. Set _value_ to ? ToString(_value_).
+            1. Else if _Conversion_ is ~to-temporal-time-zone-identifier~, then
+              1. Set _value_ to ? ToTemporalTimeZoneIdentifier(_value_).
+            1. Else if _Conversion_ is ~to-month-code~, then
+              1. Set _value_ to ? ToMonthCode(_value_).
+            1. Else,
+              1. Assert: _Conversion_ is ~to-offset-string~.
+              1. Set _value_ to ? ToOffsetString(_value_).
+            1. Set _result_'s field whose name is given in the Field Name column of the same row to _value_.
+          1. Else if _requiredFieldNames_ is a List, then
+            1. If _requiredFieldNames_ contains _key_, then
+              1. Throw a *TypeError* exception.
+            1. Set _result_'s field whose name is given in the Field Name column of the same row to the corresponding Default value of the same row.
+        1. If _requiredFieldNames_ is ~partial~ and _any_ is *false*, then
+          1. Throw a *TypeError* exception.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-calendarfieldkeyspresent" type="abstract operation">
       <h1>
         CalendarFieldKeysPresent (
