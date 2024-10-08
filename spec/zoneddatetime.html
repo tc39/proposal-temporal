@@ -1215,7 +1215,7 @@
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, « », ~nanosecond~, ~hour~).
         1. If TemporalUnitCategory(_settings_.[[LargestUnit]]) is not ~date~, then
           1. Let _internalDuration_ be DifferenceInstant(_zonedDateTime_.[[EpochNanoseconds]], _other_.[[EpochNanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
-          1. Let _result_ be ! UnnormalizeDuration(_internalDuration_, _settings_.[[LargestUnit]]).
+          1. Let _result_ be ! TemporalDurationFromInternal(_internalDuration_, _settings_.[[LargestUnit]]).
           1. If _operation_ is ~since~, set _result_ to CreateNegatedTemporalDuration(_result_).
           1. Return _result_.
         1. NOTE: To calculate differences in two different time zones, _settings_.[[LargestUnit]] must be a time unit, because day lengths can vary between time zones due to DST and other UTC offset shifts.
@@ -1224,7 +1224,7 @@
         1. If _zonedDateTime_.[[EpochNanoseconds]] = _other_.[[EpochNanoseconds]], then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _internalDuration_ be ? DifferenceZonedDateTimeWithRounding(_zonedDateTime_.[[EpochNanoseconds]], _other_.[[EpochNanoseconds]], _zonedDateTime_.[[TimeZone]], _zonedDateTime_.[[Calendar]], _settings_.[[LargestUnit]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
-        1. Let _result_ be ? UnnormalizeDuration(_internalDuration_, ~hour~).
+        1. Let _result_ be ? TemporalDurationFromInternal(_internalDuration_, ~hour~).
         1. If _operation_ is ~since~, set _result_ to CreateNegatedTemporalDuration(_result_).
         1. Return _result_.
       </emu-alg>

@@ -2859,7 +2859,7 @@ function ToDateDurationRecordWithoutTime(duration) {
   return { ...internalDuration.date, days };
 }
 
-export function UnnormalizeDuration(internalDuration, largestUnit) {
+export function TemporalDurationFromInternal(internalDuration, largestUnit) {
   const sign = internalDuration.norm.sign();
   let nanoseconds = internalDuration.norm.abs().subsec;
   let microseconds = 0;
@@ -3606,7 +3606,7 @@ export function DifferenceTemporalInstant(operation, instant, other, options) {
     settings.smallestUnit,
     settings.roundingMode
   );
-  let result = UnnormalizeDuration(duration, settings.largestUnit);
+  let result = TemporalDurationFromInternal(duration, settings.largestUnit);
   if (operation === 'since') result = CreateNegatedTemporalDuration(result);
   return result;
 }
@@ -3648,7 +3648,7 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
     );
   }
 
-  let result = UnnormalizeDuration(duration, 'day');
+  let result = TemporalDurationFromInternal(duration, 'day');
   if (operation === 'since') result = CreateNegatedTemporalDuration(result);
   return result;
 }
@@ -3679,7 +3679,7 @@ export function DifferenceTemporalPlainDateTime(operation, plainDateTime, other,
     settings.roundingMode
   );
 
-  let result = UnnormalizeDuration(duration, settings.largestUnit);
+  let result = TemporalDurationFromInternal(duration, settings.largestUnit);
   if (operation === 'since') result = CreateNegatedTemporalDuration(result);
   return result;
 }
@@ -3696,7 +3696,7 @@ export function DifferenceTemporalPlainTime(operation, plainTime, other, options
     duration = RoundTimeDuration(duration, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode);
   }
 
-  let result = UnnormalizeDuration(duration, settings.largestUnit);
+  let result = TemporalDurationFromInternal(duration, settings.largestUnit);
   if (operation === 'since') result = CreateNegatedTemporalDuration(result);
   return result;
 }
@@ -3743,7 +3743,7 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
     );
   }
 
-  let result = UnnormalizeDuration(duration, 'day');
+  let result = TemporalDurationFromInternal(duration, 'day');
   if (operation === 'since') result = CreateNegatedTemporalDuration(result);
   return result;
 }
@@ -3774,7 +3774,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
       settings.smallestUnit,
       settings.roundingMode
     );
-    result = UnnormalizeDuration(duration, settings.largestUnit);
+    result = TemporalDurationFromInternal(duration, settings.largestUnit);
   } else {
     const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
     if (!TimeZoneEquals(timeZone, GetSlot(other, TIME_ZONE))) {
@@ -3796,7 +3796,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
       settings.smallestUnit,
       settings.roundingMode
     );
-    result = UnnormalizeDuration(duration, 'hour');
+    result = TemporalDurationFromInternal(duration, 'hour');
   }
 
   if (operation === 'since') result = CreateNegatedTemporalDuration(result);
@@ -3854,7 +3854,7 @@ export function AddDurations(operation, duration, other) {
   const d1 = ToInternalDurationRecordWith24HourDays(duration);
   const d2 = ToInternalDurationRecordWith24HourDays(other);
   const result = CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), d1.norm.add(d2.norm));
-  return UnnormalizeDuration(result, largestUnit);
+  return TemporalDurationFromInternal(result, largestUnit);
 }
 
 export function AddDurationToInstant(operation, instant, durationLike) {
