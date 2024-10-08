@@ -1475,24 +1475,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-subtracttimeduration" type="abstract operation">
-      <h1>
-        SubtractTimeDuration (
-          _one_: a time duration,
-          _two_: a time duration,
-        ): either a normal completion containing a time duration or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It returns a time duration that is the difference between _one_ and _two_, throwing an exception if the result is greater than the maximum time duration.</dd>
-      </dl>
-      <emu-alg>
-        1. Let _result_ be _one_ - _two_.
-        1. If abs(_result_) > maxTimeDuration, throw a *RangeError* exception.
-        1. Return _result_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-zerotimeduration" type="abstract operation">
       <h1>ZeroTimeDuration ( ): a time duration</h1>
       <dl class="header">
@@ -1729,7 +1711,7 @@
         1. Assert: TimeDurationSign(_daySpan_) = _sign_.
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
         1. Let _roundedTimeDuration_ be ? RoundTimeDurationToIncrement(_duration_.[[Time]], _increment_ × _unitLength_, _roundingMode_).
-        1. Let _beyondDaySpan_ be ? SubtractTimeDuration(_roundedTimeDuration_, _daySpan_).
+        1. Let _beyondDaySpan_ be ? AddTimeDuration(_roundedTimeDuration_, -_daySpan_).
         1. If TimeDurationSign(_beyondDaySpan_) ≠ -_sign_, then
           1. Let _didRoundBeyondDay_ be *true*.
           1. Let _dayDelta_ be _sign_.
@@ -1766,7 +1748,7 @@
         1. Let _timeDuration_ be ! Add24HourDaysToTimeDuration(_duration_.[[Time]], _duration_.[[Date]].[[Days]]).
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _smallestUnit_.
         1. Let _roundedNorm_ be ? RoundTimeDurationToIncrement(_timeDuration_, _unitLength_ × _increment_, _roundingMode_).
-        1. Let _diffNorm_ be ! SubtractTimeDuration(_roundedNorm_, _timeDuration_).
+        1. Let _diffNorm_ be ! AddTimeDuration(_roundedNorm_, -_timeDuration_).
         1. Let _wholeDays_ be truncate(DivideTimeDuration(_timeDuration_, nsPerDay)).
         1. Let _roundedWholeDays_ be truncate(DivideTimeDuration(_roundedNorm_, nsPerDay)).
         1. Let _dayDelta_ be _roundedWholeDays_ - _wholeDays_.
@@ -1777,7 +1759,7 @@
         1. Let _remainder_ be _roundedNorm_.
         1. If TemporalUnitCategory(_largestUnit_) is ~date~, then
           1. Set _days_ to _roundedWholeDays_.
-          1. Set _remainder_ to ! SubtractTimeDuration(_roundedNorm_, TimeDurationFromComponents(_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
+          1. Set _remainder_ to ! AddTimeDuration(_roundedNorm_, TimeDurationFromComponents(-_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
         1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _days_).
         1. Let _resultDuration_ be ? CombineDateAndTimeDuration(_dateDuration_, _remainder_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandDays_ }.
