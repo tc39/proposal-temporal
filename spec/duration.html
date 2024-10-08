@@ -105,8 +105,8 @@
           1. Return *+0*<sub>𝔽</sub>.
         1. If IsCalendarUnit(_largestUnit1_) is *true* or IsCalendarUnit(_largestUnit2_) is *true*, then
           1. If _plainRelativeTo_ is *undefined*, throw a *RangeError* exception.
-          1. Let _days1_ be ? UnbalanceDateDurationRelative(_duration1_.[[Date]], _plainRelativeTo_).
-          1. Let _days2_ be ? UnbalanceDateDurationRelative(_duration2_.[[Date]], _plainRelativeTo_).
+          1. Let _days1_ be ? DateDurationDays(_duration1_.[[Date]], _plainRelativeTo_).
+          1. Let _days2_ be ? DateDurationDays(_duration2_.[[Date]], _plainRelativeTo_).
         1. Else,
           1. Let _days1_ be _one_.[[Days]].
           1. Let _days2_ be _two_.[[Days]].
@@ -1557,9 +1557,9 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-unbalancedatedurationrelative" type="abstract operation">
+    <emu-clause id="sec-temporal-datedurationdays" type="abstract operation">
       <h1>
-        UnbalanceDateDurationRelative (
+        DateDurationDays (
           _dateDuration_: a Date Duration Record,
           _plainRelativeTo_: a Temporal.PlainDate,
         ): either a normal completion containing an integer or a throw completion
