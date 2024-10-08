@@ -862,9 +862,8 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Let _second_ be _time_.[[Second]] + TimeDurationSeconds(_timeDuration_).
-        1. Let _nanosecond_ be _time_.[[Nanosecond]] + TimeDurationSubseconds(_timeDuration_).
-        1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _second_, _time_.[[Millisecond]], _time_.[[Microsecond]], _nanosecond_).
+        1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]] + _timeDuration_).
+        1. NOTE: If using floating points to implement this operation, add the time components separately before balancing to avoid errors with unsafe integers.
       </emu-alg>
     </emu-clause>
 
