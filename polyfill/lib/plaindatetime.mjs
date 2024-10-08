@@ -159,12 +159,7 @@ export class PlainDateTime {
     const calendar = GetSlot(this, CALENDAR);
     let fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE_TIME).isoDate);
     const isoDateTime = GetSlot(this, ISO_DATE_TIME);
-    fields.hour = isoDateTime.time.hour;
-    fields.minute = isoDateTime.time.minute;
-    fields.second = isoDateTime.time.second;
-    fields.millisecond = isoDateTime.time.millisecond;
-    fields.microsecond = isoDateTime.time.microsecond;
-    fields.nanosecond = isoDateTime.time.nanosecond;
+    fields = { ...fields, ...isoDateTime.time };
     const partialDateTime = ES.PrepareCalendarFields(
       calendar,
       temporalDateTimeLike,
