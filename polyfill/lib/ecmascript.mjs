@@ -1301,9 +1301,7 @@ export function ToTemporalInstant(item) {
     microsecond,
     nanosecond - offsetNanoseconds
   );
-  if (MathAbs(ISODateToEpochDays(balanced.isoDate.year, balanced.isoDate.month - 1, balanced.isoDate.day)) > 1e8) {
-    throw new RangeErrorCtor('date/time value is outside the supported range');
-  }
+  CheckISODaysRange(balanced.isoDate);
   const epochNanoseconds = GetUTCEpochNanoseconds(balanced);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
@@ -1441,17 +1439,13 @@ export function InterpretISODateTimeOffset(
       time.microsecond,
       time.nanosecond - offsetNs
     );
-    if (MathAbs(ISODateToEpochDays(balanced.year, balanced.month - 1, balanced.day)) > 1e8) {
-      throw new RangeErrorCtor('date/time outside of supported range');
-    }
+    CheckISODaysRange(balanced.isoDate);
     const epochNs = GetUTCEpochNanoseconds(balanced);
     ValidateEpochNanoseconds(epochNs);
     return epochNs;
   }
 
-  if (MathAbs(ISODateToEpochDays(isoDate.year, isoDate.month - 1, isoDate.day)) > 1e8) {
-    throw new RangeErrorCtor('date/time outside of supported range');
-  }
+  CheckISODaysRange(isoDate);
   const utcEpochNs = GetUTCEpochNanoseconds(dt);
 
   // "prefer" or "reject"
@@ -1936,19 +1930,13 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
       isoDateTime.time.microsecond,
       isoDateTime.time.nanosecond
     );
-    if (MathAbs(ISODateToEpochDays(balanced.isoDate.year, balanced.isoDate.month - 1, balanced.isoDate.day)) > 1e8) {
-      throw new RangeErrorCtor('date/time value is outside the supported range');
-    }
+    CheckISODaysRange(balanced.isoDate);
     const epochNs = GetUTCEpochNanoseconds(balanced);
     ValidateEpochNanoseconds(epochNs);
     return [epochNs];
   }
 
-  if (
-    MathAbs(ISODateToEpochDays(isoDateTime.isoDate.year, isoDateTime.isoDate.month - 1, isoDateTime.isoDate.day)) > 1e8
-  ) {
-    throw new RangeErrorCtor('date/time value is outside the supported range');
-  }
+  CheckISODaysRange(isoDateTime.isoDate);
   return GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
 }
 
@@ -2976,6 +2964,16 @@ function CombineDateAndNormalizedTimeDuration(dateDuration, norm) {
 // Caution: month is 0-based
 export function ISODateToEpochDays(y, m, d) {
   return GetUTCEpochMilliseconds(y, m + 1, d, 0, 0, 0, 0) / DAY_MS;
+}
+
+// This is needed before calling GetUTCEpochNanoseconds, because it uses MakeDay
+// which is ill-defined in how it handles large year numbers. If the issue
+// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
+// with no observable changes.
+function CheckISODaysRange({ year, month, day }) {
+  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
+    throw new RangeErrorCtor('date/time value is outside the supported range');
+  }
 }
 
 function DifferenceTime(time1, time2) {
