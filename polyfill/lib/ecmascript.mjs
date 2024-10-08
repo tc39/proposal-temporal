@@ -2564,7 +2564,7 @@ function DateDurationSign(dateDuration) {
   return 0;
 }
 
-function NormalizedDurationSign(duration) {
+function InternalDurationSign(duration) {
   const dateSign = DateDurationSign(duration.date);
   if (dateSign !== 0) return dateSign;
   return duration.norm.sign();
@@ -2805,7 +2805,7 @@ export function RejectDuration(y, mon, w, d, h, min, s, ms, µs, ns) {
   }
 }
 
-export function NormalizeDuration(duration) {
+export function ToInternalDurationRecord(duration) {
   const date = {
     years: GetSlot(duration, YEARS),
     months: GetSlot(duration, MONTHS),
@@ -2823,7 +2823,7 @@ export function NormalizeDuration(duration) {
   return { date, norm };
 }
 
-export function NormalizeDurationWith24HourDays(duration) {
+export function ToInternalDurationRecordWith24HourDays(duration) {
   const norm = TimeDuration.normalize(
     GetSlot(duration, HOURS),
     GetSlot(duration, MINUTES),
@@ -2841,13 +2841,13 @@ export function NormalizeDurationWith24HourDays(duration) {
   return { date, norm };
 }
 
-function NormalizeDurationWithoutTime(duration) {
-  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
-  const days = MathTrunc(normalizedDuration.norm.sec / 86400);
+function ToDateDurationRecordWithoutTime(duration) {
+  const internalDuration = ToInternalDurationRecordWith24HourDays(duration);
+  const days = MathTrunc(internalDuration.norm.sec / 86400);
   RejectDuration(
-    normalizedDuration.date.years,
-    normalizedDuration.date.months,
-    normalizedDuration.date.weeks,
+    internalDuration.date.years,
+    internalDuration.date.months,
+    internalDuration.date.weeks,
     days,
     0,
     0,
@@ -2856,15 +2856,15 @@ function NormalizeDurationWithoutTime(duration) {
     0,
     0
   );
-  return { ...normalizedDuration.date, days };
+  return { ...internalDuration.date, days };
 }
 
-export function UnnormalizeDuration(normalizedDuration, largestUnit) {
-  const sign = normalizedDuration.norm.sign();
-  let nanoseconds = normalizedDuration.norm.abs().subsec;
+export function UnnormalizeDuration(internalDuration, largestUnit) {
+  const sign = internalDuration.norm.sign();
+  let nanoseconds = internalDuration.norm.abs().subsec;
   let microseconds = 0;
   let milliseconds = 0;
-  let seconds = normalizedDuration.norm.abs().sec;
+  let seconds = internalDuration.norm.abs().sec;
   let minutes = 0;
   let hours = 0;
   let days = 0;
@@ -2939,10 +2939,10 @@ export function UnnormalizeDuration(normalizedDuration, largestUnit) {
 
   const TemporalDuration = GetIntrinsic('%Temporal.Duration%');
   return new TemporalDuration(
-    normalizedDuration.date.years,
-    normalizedDuration.date.months,
-    normalizedDuration.date.weeks,
-    normalizedDuration.date.days + sign * days,
+    internalDuration.date.years,
+    internalDuration.date.months,
+    internalDuration.date.weeks,
+    internalDuration.date.days + sign * days,
     sign * hours,
     sign * minutes,
     sign * seconds,
@@ -3014,7 +3014,7 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
   const dateDifference = CalendarDateUntil(calendar, isoDateTime1.isoDate, adjustedDate, dateLargestUnit);
   if (largestUnit !== dateLargestUnit) {
-    // largestUnit < days, so add the days in to the normalized duration
+    // largestUnit < days, so add the days in to the internal duration
     timeDuration = timeDuration.add24HourDays(dateDifference.days);
     dateDifference.days = 0;
   }
@@ -3381,7 +3381,7 @@ function RoundRelativeDuration(
   // >24 hours in its timezone. (should automatically end up like this if using
   // non-rounding since/until internal methods prior)
   const irregularLengthUnit = IsCalendarUnit(smallestUnit) || (timeZone && smallestUnit === 'day');
-  const sign = NormalizedDurationSign(duration) < 0 ? -1 : 1;
+  const sign = InternalDurationSign(duration) < 0 ? -1 : 1;
 
   let nudgeResult;
   if (irregularLengthUnit) {
@@ -3444,7 +3444,7 @@ function TotalRelativeDuration(duration, destEpochNs, isoDateTime, timeZone, cal
   // non-rounding since/until internal methods prior)
   if (IsCalendarUnit(unit) || (timeZone && unit === 'day')) {
     // Rounding an irregular-length unit? Use epoch-nanosecond-bounding technique
-    const sign = NormalizedDurationSign(duration) < 0 ? -1 : 1;
+    const sign = InternalDurationSign(duration) < 0 ? -1 : 1;
     return NudgeToCalendarUnit(sign, duration, destEpochNs, isoDateTime, timeZone, calendar, 1, unit, 'trunc').total;
   }
   // Rounding uniform-length days/hours/minutes/etc units. Simple nanosecond
@@ -3851,8 +3851,8 @@ export function AddDurations(operation, duration, other) {
     );
   }
 
-  const d1 = NormalizeDurationWith24HourDays(duration);
-  const d2 = NormalizeDurationWith24HourDays(other);
+  const d1 = ToInternalDurationRecordWith24HourDays(duration);
+  const d2 = ToInternalDurationRecordWith24HourDays(other);
   const result = CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), d1.norm.add(d2.norm));
   return UnnormalizeDuration(result, largestUnit);
 }
@@ -3866,8 +3866,8 @@ export function AddDurationToInstant(operation, instant, durationLike) {
       `Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`
     );
   }
-  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
-  const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), normalizedDuration.norm);
+  const internalDuration = ToInternalDurationRecordWith24HourDays(duration);
+  const ns = AddInstant(GetSlot(instant, EPOCHNANOSECONDS), internalDuration.norm);
   const Instant = GetIntrinsic('%Temporal.Instant%');
   return new Instant(ns);
 }
@@ -3877,7 +3877,7 @@ export function AddDurationToDate(operation, plainDate, durationLike, options) {
 
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
-  const dateDuration = NormalizeDurationWithoutTime(duration);
+  const dateDuration = ToDateDurationRecordWithoutTime(duration);
 
   const resolvedOptions = GetOptionsObject(options);
   const overflow = GetTemporalOverflowOption(resolvedOptions);
@@ -3894,12 +3894,12 @@ export function AddDurationToDateTime(operation, dateTime, durationLike, options
 
   const calendar = GetSlot(dateTime, CALENDAR);
 
-  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
+  const internalDuration = ToInternalDurationRecordWith24HourDays(duration);
 
   // Add the time part
   const isoDateTime = GetSlot(dateTime, ISO_DATE_TIME);
-  const timeResult = AddTime(isoDateTime.time, normalizedDuration.norm);
-  const dateDuration = AdjustDateDurationRecord(normalizedDuration.date, timeResult.deltaDays);
+  const timeResult = AddTime(isoDateTime.time, internalDuration.norm);
+  const dateDuration = AdjustDateDurationRecord(internalDuration.date, timeResult.deltaDays);
 
   // Delegate the date part addition to the calendar
   RejectDuration(dateDuration.years, dateDuration.months, dateDuration.weeks, dateDuration.days, 0, 0, 0, 0, 0, 0);
@@ -3912,10 +3912,10 @@ export function AddDurationToDateTime(operation, dateTime, durationLike, options
 export function AddDurationToTime(operation, temporalTime, durationLike) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
-  const normalizedDuration = NormalizeDurationWith24HourDays(duration);
+  const internalDuration = ToInternalDurationRecordWith24HourDays(duration);
   const { hour, minute, second, millisecond, microsecond, nanosecond } = AddTime(
     GetSlot(temporalTime, TIME),
-    normalizedDuration.norm
+    internalDuration.norm
   );
   const time = RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, 'reject');
   return CreateTemporalTime(time);
@@ -3936,7 +3936,7 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
     const nextMonth = CalendarDateAdd(calendar, startDate, { months: 1 }, 'constrain');
     startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
   }
-  const durationToAdd = NormalizeDurationWithoutTime(duration);
+  const durationToAdd = ToDateDurationRecordWithoutTime(duration);
   RejectDateRange(startDate);
   const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, overflow);
   const addedDateFields = ISODateToFields(calendar, addedDate, 'year-month');
@@ -3953,7 +3953,7 @@ export function AddDurationToZonedDateTime(operation, zonedDateTime, durationLik
   const overflow = GetTemporalOverflowOption(resolvedOptions);
   const timeZone = GetSlot(zonedDateTime, TIME_ZONE);
   const calendar = GetSlot(zonedDateTime, CALENDAR);
-  const normalized = NormalizeDuration(duration);
+  const normalized = ToInternalDurationRecord(duration);
   const epochNanoseconds = AddZonedDateTime(
     GetSlot(zonedDateTime, EPOCHNANOSECONDS),
     timeZone,
