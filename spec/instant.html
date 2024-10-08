@@ -414,7 +414,7 @@
         1. If _parsed_.[[TimeZone]].[[Z]] is *true*, let _offsetNanoseconds_ be 0; otherwise, let _offsetNanoseconds_ be ! ParseDateTimeUTCOffset(_parsed_.[[TimeZone]].[[OffsetString]]).
         1. If _parsed_.[[Time]] is ~start-of-day~, let _time_ be MidnightTimeRecord(); else let _time_ be _parsed_.[[Time]].
         1. Let _balanced_ be BalanceISODateTime(_parsed_.[[Year]], _parsed_.[[Month]], _parsed_.[[Day]], _time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]] - _offsetNanoseconds_).
-        1. If abs(ISODateToEpochDays(_balanced_.[[ISODate]].[[Year]], _balanced_.[[ISODate]].[[Month]] - 1, _balanced_.[[ISODate]].[[Day]])) > 10<sup>8</sup>, throw a *RangeError* exception.
+        1. Perform ? CheckISODaysRange(_balanced_.[[ISODate]]).
         1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_balanced_).
         1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalInstant(_epochNanoseconds_).
