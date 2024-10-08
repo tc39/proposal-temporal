@@ -135,7 +135,7 @@
               <p>The Year-Week Record's [[Year]] field is relative to the first day of a calendar-specific "epoch year", as in the Calendar Date Record's [[Year]] field, not relative to an era as in [[EraYear]].</p>
               <p>
                 Usually the Year-Week Record's [[Year]] field will contain the same value as the Calendar Date Record's [[Year]] field, but may contain the previous or next year if the week number in the Year-Week Record's [[Week]] field overlaps two different years.
-                See also ToISOWeekOfYear.
+                See also ISOWeekOfYear.
               </p>
               <p>The Year-Week Record contains *undefined* in [[Week]] and [[Year]] field for calendars that do not have a well-defined week calendar system.</p>
               <emu-note type="editor">
@@ -667,12 +667,10 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toisoweekofyear" type="abstract operation">
+    <emu-clause id="sec-temporal-isoweekofyear" type="abstract operation">
       <h1>
-        ToISOWeekOfYear (
-          _year_: an integer,
-          _month_: an integer,
-          _day_: an integer,
+        ISOWeekOfYear (
+          _isoDate_: an ISO Date Record,
         ): a Year-Week Record
       </h1>
       <dl class="header">
@@ -680,19 +678,20 @@
         <dd>It determines where a calendar day falls in the ISO 8601 week calendar and calculates its <em>calendar week of year</em>, which is the 1-based ordinal number of its calendar week within the corresponding <em>week calendar year</em> (which may differ from _year_ by up to 1 in either direction).</dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
+        1. Let _year_ be _isoDate_.[[Year]].
         1. Let _wednesday_ be 3.
         1. Let _thursday_ be 4.
         1. Let _friday_ be 5.
         1. Let _saturday_ be 6.
         1. Let _daysInWeek_ be 7.
         1. Let _maxWeekNumber_ be 53.
-        1. Let _dayOfYear_ be ToISODayOfYear(_year_, _month_, _day_).
-        1. Let _dayOfWeek_ be ToISODayOfWeek(_year_, _month_, _day_).
-        1. Let _week_ be floor((_dayOfYear_ + _daysInWeek_ - _dayOfWeek_ + _wednesday_ ) / _daysInWeek_).
+        1. Let _dayOfYear_ be ISODayOfYear(_isoDate_).
+        1. Let _dayOfWeek_ be ISODayOfWeek(_isoDate_).
+        1. Let _week_ be floor((_dayOfYear_ + _daysInWeek_ - _dayOfWeek_ + _wednesday_) / _daysInWeek_).
         1. If _week_ &lt; 1, then
           1. NOTE: This is the last week of the previous year.
-          1. Let _dayOfJan1st_ be ToISODayOfWeek(_year_, 1, 1).
+          1. Let _jan1st_ be CreateISODateRecord(_year_, 1, 1).
+          1. Let _dayOfJan1st_ be ISODayOfWeek(_jan1st_).
           1. If _dayOfJan1st_ = _friday_, then
             1. Return Year-Week Record { [[Week]]: _maxWeekNumber_, [[Year]]: _year_ - 1 }.
           1. If _dayOfJan1st_ = _saturday_, and MathematicalInLeapYear(EpochTimeForYear(_year_ - 1)) = 1, then
@@ -710,12 +709,10 @@
       <emu-note>For example, week calendar year 2020 includes both 31 December 2019 (a Tuesday belonging to its calendar week 1) and 1 January 2021 (a Friday belonging to its calendar week 53).</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toisodayofyear" type="abstract operation">
+    <emu-clause id="sec-temporal-isodayofyear" type="abstract operation">
       <h1>
-        ToISODayOfYear (
-          _year_: an integer,
-          _month_: an integer,
-          _day_: an integer,
+        ISODayOfYear (
+          _isoDate_: an ISO Date Record,
         ): an integer
       </h1>
       <dl class="header">
@@ -723,18 +720,15 @@
         <dd>It returns the ISO 8601 <em>calendar day of year</em> of a calendar day, which is its 1-based ordinal number within its ISO 8601 calendar year.</dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _epochDays_ be ISODateToEpochDays(_year_, _month_ - 1, _day_).
+        1. Let _epochDays_ be ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]]).
         1. Return EpochTimeToDayInYear(EpochDaysToEpochMs(_epochDays_, 0)) + 1.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-toisodayofweek" type="abstract operation">
+    <emu-clause id="sec-temporal-isodayofweek" type="abstract operation">
       <h1>
-        ToISODayOfWeek (
-          _year_: an integer,
-          _month_: an integer,
-          _day_: an integer,
+        ISODayOfWeek (
+          _isoDate_: an ISO Date Record,
         ): an integer
       </h1>
       <dl class="header">
@@ -742,8 +736,7 @@
         <dd>It returns the ISO 8601 <em>calendar day of week</em> of a calendar day, which is its 1-based ordinal position within the sequence of week calendar days that starts with Monday at 1 and ends with Sunday at 7.</dd>
       </dl>
       <emu-alg>
-        1. Assert: IsValidISODate(_year_, _month_, _day_) is *true*.
-        1. Let _epochDays_ be ISODateToEpochDays(_year_, _month_ - 1, _day_).
+        1. Let _epochDays_ be ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]]).
         1. Let _dayOfWeek_ be EpochTimeToWeekDay(EpochDaysToEpochMs(_epochDays_, 0)).
         1. If _dayOfWeek_ = 0, return 7.
         1. Return _dayOfWeek_.
@@ -847,9 +840,9 @@
               [[Month]]: _isoDate_.[[Month]],
               [[MonthCode]]: _monthCode_,
               [[Day]]: _isoDate_.[[Day]],
-              [[DayOfWeek]]: ToISODayOfWeek(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
-              [[DayOfYear]]: ToISODayOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
-              [[WeekOfYear]]: ToISOWeekOfYear(_isoDate_.[[Year]], _isoDate_.[[Month]], _isoDate_.[[Day]]),
+              [[DayOfWeek]]: ISODayOfWeek(_isoDate_),
+              [[DayOfYear]]: ISODayOfYear(_isoDate_),
+              [[WeekOfYear]]: ISOWeekOfYear(_isoDate_),
               [[DaysInWeek]]: 7,
               [[DaysInMonth]]: ISODaysInMonth(_isoDate_.[[Year]], _isoDate_.[[Month]]),
               [[DaysInYear]]: MathematicalDaysInYear(_isoDate_.[[Year]]),
