@@ -374,7 +374,7 @@
         1. If ? IsPartialTemporalObject(_temporalDateLike_) is *false*, throw a *TypeError* exception.
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _fields_ be ISODateToFields(_calendar_, _temporalDate_.[[ISODate]], ~date~).
-        1. Let _partialDate_ be ? PrepareCalendarFields(_calendar_, _temporalDateLike_, « ~day~, ~month~, ~month-code~, ~year~ », « », ~partial~).
+        1. Let _partialDate_ be ? PrepareCalendarFields(_calendar_, _temporalDateLike_, « ~year~, ~month~, ~month-code~, ~day~ », « », ~partial~).
         1. Set _fields_ to CalendarMergeFields(_calendar_, _fields_, _partialDate_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
@@ -673,7 +673,7 @@
             1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
             1. Return ! CreateTemporalDate(_item_.[[ISODateTime]].[[ISODate]], _item_.[[Calendar]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
-          1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », «», «»).
+          1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~year~, ~month~, ~month-code~, ~day~ », «», «»).
           1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
           1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
           1. Let _isoDate_ be ? CalendarDateFromFields(_calendar_, _fields_, _overflow_).

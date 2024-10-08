@@ -414,7 +414,7 @@
         1. Set _fields_.[[Millisecond]] to _dateTime_.[[ISODateTime]].[[Time]].[[Millisecond]].
         1. Set _fields_.[[Microsecond]] to _dateTime_.[[ISODateTime]].[[Time]].[[Microsecond]].
         1. Set _fields_.[[Nanosecond]] to _dateTime_.[[ISODateTime]].[[Time]].[[Nanosecond]].
-        1. Let _partialDateTime_ be ? PrepareCalendarFields(_calendar_, _temporalDateTimeLike_, « ~day~, ~month~, ~month-code~, ~year~ », « ~hour~, ~microsecond~, ~millisecond~, ~minute~, ~nanosecond~, ~second~ », ~partial~).
+        1. Let _partialDateTime_ be ? PrepareCalendarFields(_calendar_, _temporalDateTimeLike_, « ~year~, ~month~, ~month-code~, ~day~ », « ~hour~, ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~ », ~partial~).
         1. Set _fields_ to CalendarMergeFields(_calendar_, _fields_, _partialDateTime_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
@@ -817,7 +817,7 @@
             1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_item_.[[ISODate]], MidnightTimeRecord()).
             1. Return ? CreateTemporalDateTime(_isoDateTime_, _item_.[[Calendar]]).
           1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_item_).
-          1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~day~, ~month~, ~month-code~, ~year~ », « ~hour~, ~microsecond~, ~millisecond~, ~minute~, ~nanosecond~, ~second~ », «»).
+          1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~year~, ~month~, ~month-code~, ~day~ », « ~hour~, ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~ », «»).
           1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
           1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
           1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, _overflow_).
