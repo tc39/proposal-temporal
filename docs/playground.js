@@ -870,7 +870,8 @@
 	  getOwnPropertyNames: ObjectGetOwnPropertyNames,
 	  defineProperty: ObjectDefineProperty,
 	  defineProperties: ObjectDefineProperties,
-	  entries: ObjectEntries
+	  entries: ObjectEntries,
+	  keys: ObjectKeys
 	} = Object$1;
 	const {
 	  from: ArrayFrom,
@@ -8132,15 +8133,22 @@
 	  }
 	  return value;
 	}
-
-	// This function is an enum in the spec, but it's helpful to make it a
-	// function in the polyfill.
-	function ToPrimitiveAndRequireString(value) {
+	function ToSyntacticallyValidMonthCode(value) {
 	  value = ToPrimitive$2(value, String$1);
-	  return RequireString(value);
+	  RequireString(value);
+	  if (value.length < 3 || value.length > 4 || value[0] !== 'M' || Call$1(StringPrototypeIndexOf, '0123456789', [value[1]]) === -1 || Call$1(StringPrototypeIndexOf, '0123456789', [value[2]]) === -1 || value[1] + value[2] === '00' && value[3] !== 'L' || value[3] !== 'L' && value[3] !== undefined) {
+	    throw new RangeError(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
+	  }
+	  return value;
+	}
+	function ToOffsetString(value) {
+	  value = ToPrimitive$2(value, String$1);
+	  RequireString(value);
+	  ParseDateTimeUTCOffset(value);
+	  return value;
 	}
 	const CALENDAR_FIELD_KEYS = ['era', 'eraYear', 'year', 'month', 'monthCode', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'];
-	const BUILTIN_CASTS = new Map$1([['era', ToString$1], ['eraYear', ToIntegerWithTruncation], ['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToPrimitiveAndRequireString], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['offset', ToPrimitiveAndRequireString], ['timeZone', ToTemporalTimeZoneIdentifier]]);
+	const BUILTIN_CASTS = new Map$1([['era', ToString$1], ['eraYear', ToIntegerWithTruncation], ['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToSyntacticallyValidMonthCode], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['offset', ToOffsetString], ['timeZone', ToTemporalTimeZoneIdentifier]]);
 	const BUILTIN_DEFAULTS = new Map$1([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
 
 	// each item is [plural, singular, category, (length in ns)]
@@ -10031,12 +10039,12 @@
 	  return dateTimeString;
 	}
 	function IsOffsetTimeZoneIdentifier(string) {
-	  return Call$1(RegExpPrototypeTest, OFFSET, [string]);
+	  return Call$1(RegExpPrototypeTest, OFFSET_IDENTIFIER, [string]);
 	}
 	function ParseDateTimeUTCOffset(string) {
 	  const match = Call$1(RegExpPrototypeExec, OFFSET_WITH_PARTS, [string]);
 	  if (!match) {
-	    throw new RangeError$1(`invalid time zone offset: ${string}`);
+	    throw new RangeError$1(`invalid time zone offset: ${string}; must match ±HH:MM[:SS.SSSSSSSSS]`);
 	  }
 	  const sign = match[1] === '-' ? -1 : +1;
 	  const hours = +match[2];
@@ -14780,8 +14788,8 @@
 	  }
 	  return options;
 	}
-	function timeAmend(options) {
-	  options = amend(options, {
+	function timeAmend(originalOptions) {
+	  const options = amend(originalOptions, {
 	    year: false,
 	    month: false,
 	    day: false,
@@ -14789,8 +14797,20 @@
 	    timeZoneName: false,
 	    dateStyle: false
 	  });
+	  if (options.timeStyle === 'long' || options.timeStyle === 'full') {
+	    // Try to fake what timeStyle should do if not printing the time zone name
+	    delete options.timeStyle;
+	    ObjectAssign(options, {
+	      hour: 'numeric',
+	      minute: '2-digit',
+	      second: '2-digit'
+	    });
+	  }
 	  if (!hasTimeOptions(options)) {
-	    options = ObjectAssign({}, options, {
+	    if (hasAnyDateTimeOptions(originalOptions)) {
+	      throw new TypeError(`cannot format Temporal.PlainTime with options [${ObjectKeys(originalOptions)}]`);
+	    }
+	    ObjectAssign(options, {
 	      hour: 'numeric',
 	      minute: 'numeric',
 	      second: 'numeric'
@@ -14798,7 +14818,7 @@
 	  }
 	  return options;
 	}
-	function yearMonthAmend(options) {
+	function yearMonthAmend(originalOptions) {
 	  // Try to fake what dateStyle should do for dates without a day. This is not
 	  // accurate for locales that always print the era
 	  const dateStyleHacks = {
@@ -14819,7 +14839,7 @@
 	      month: 'long'
 	    }
 	  };
-	  options = amend(options, {
+	  const options = amend(originalOptions, {
 	    day: false,
 	    hour: false,
 	    minute: false,
@@ -14834,15 +14854,18 @@
 	    delete options.dateStyle;
 	    ObjectAssign(options, dateStyleHacks[style]);
 	  }
-	  if (!('year' in options || 'month' in options)) {
-	    options = ObjectAssign(options, {
+	  if (!('year' in options || 'month' in options || 'era' in options)) {
+	    if (hasAnyDateTimeOptions(originalOptions)) {
+	      throw new TypeError(`cannot format PlainYearMonth with options [${ObjectKeys(originalOptions)}]`);
+	    }
+	    ObjectAssign(options, {
 	      year: 'numeric',
 	      month: 'numeric'
 	    });
 	  }
 	  return options;
 	}
-	function monthDayAmend(options) {
+	function monthDayAmend(originalOptions) {
 	  // Try to fake what dateStyle should do for dates without a day
 	  const dateStyleHacks = {
 	    short: {
@@ -14862,7 +14885,7 @@
 	      day: 'numeric'
 	    }
 	  };
-	  options = amend(options, {
+	  const options = amend(originalOptions, {
 	    year: false,
 	    hour: false,
 	    minute: false,
@@ -14878,15 +14901,18 @@
 	    ObjectAssign(options, dateStyleHacks[style]);
 	  }
 	  if (!('month' in options || 'day' in options)) {
-	    options = ObjectAssign({}, options, {
+	    if (hasAnyDateTimeOptions(originalOptions)) {
+	      throw new TypeError(`cannot format PlainMonthDay with options [${ObjectKeys(originalOptions)}]`);
+	    }
+	    ObjectAssign(options, {
 	      month: 'numeric',
 	      day: 'numeric'
 	    });
 	  }
 	  return options;
 	}
-	function dateAmend(options) {
-	  options = amend(options, {
+	function dateAmend(originalOptions) {
+	  const options = amend(originalOptions, {
 	    hour: false,
 	    minute: false,
 	    second: false,
@@ -14895,7 +14921,10 @@
 	    timeStyle: false
 	  });
 	  if (!hasDateOptions(options)) {
-	    options = ObjectAssign({}, options, {
+	    if (hasAnyDateTimeOptions(originalOptions)) {
+	      throw new TypeError(`cannot format PlainDate with options [${ObjectKeys(originalOptions)}]`);
+	    }
+	    ObjectAssign(options, {
 	      year: 'numeric',
 	      month: 'numeric',
 	      day: 'numeric'
@@ -14903,12 +14932,24 @@
 	  }
 	  return options;
 	}
-	function datetimeAmend(options) {
-	  options = amend(options, {
+	function datetimeAmend(originalOptions) {
+	  const options = amend(originalOptions, {
 	    timeZoneName: false
 	  });
+	  if (options.timeStyle === 'long' || options.timeStyle === 'full') {
+	    // Try to fake what timeStyle should do if not printing the time zone name
+	    delete options.timeStyle;
+	    ObjectAssign(options, {
+	      hour: 'numeric',
+	      minute: '2-digit',
+	      second: '2-digit'
+	    });
+	  }
 	  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
-	    options = ObjectAssign({}, options, {
+	    if (hasAnyDateTimeOptions(originalOptions)) {
+	      throw new TypeError(`cannot format PlainDateTime with options [${ObjectKeys(originalOptions)}]`);
+	    }
+	    ObjectAssign(options, {
 	      year: 'numeric',
 	      month: 'numeric',
 	      day: 'numeric',
@@ -14933,10 +14974,13 @@
 	  return options;
 	}
 	function hasDateOptions(options) {
-	  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options;
+	  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options || 'era' in options;
 	}
 	function hasTimeOptions(options) {
-	  return 'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options || 'dayPeriod' in options;
+	  return 'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options || 'dayPeriod' in options || 'fractionalSecondDigits' in options;
+	}
+	function hasAnyDateTimeOptions(originalOptions) {
+	  return hasDateOptions(originalOptions) || hasTimeOptions(originalOptions) || 'dateStyle' in originalOptions || 'timeStyle' in originalOptions || 'timeZoneName' in originalOptions;
 	}
 	function isTemporalObject(obj) {
 	  return IsTemporalDate(obj) || IsTemporalTime(obj) || IsTemporalDateTime(obj) || IsTemporalZonedDateTime(obj) || IsTemporalYearMonth(obj) || IsTemporalMonthDay(obj) || IsTemporalInstant(obj);
@@ -16926,7 +16970,7 @@
 	    if (resolvedOptions.timeZone !== undefined) {
 	      throw new TypeError$1('ZonedDateTime toLocaleString does not accept a timeZone option');
 	    }
-	    if (optionsCopy.year === undefined && optionsCopy.month === undefined && optionsCopy.day === undefined && optionsCopy.weekday === undefined && optionsCopy.dateStyle === undefined && optionsCopy.hour === undefined && optionsCopy.minute === undefined && optionsCopy.second === undefined && optionsCopy.timeStyle === undefined && optionsCopy.dayPeriod === undefined && optionsCopy.timeZoneName === undefined) {
+	    if (optionsCopy.year === undefined && optionsCopy.month === undefined && optionsCopy.day === undefined && optionsCopy.era === undefined && optionsCopy.weekday === undefined && optionsCopy.dateStyle === undefined && optionsCopy.hour === undefined && optionsCopy.minute === undefined && optionsCopy.second === undefined && optionsCopy.fractionalSecondDigits === undefined && optionsCopy.timeStyle === undefined && optionsCopy.dayPeriod === undefined && optionsCopy.timeZoneName === undefined) {
 	      optionsCopy.timeZoneName = 'short';
 	      // The rest of the defaults will be filled in by formatting the Instant
 	    }
