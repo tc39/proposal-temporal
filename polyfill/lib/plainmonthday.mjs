@@ -44,7 +44,7 @@ export class PlainMonthDay {
     const partialMonthDay = ES.PrepareCalendarFields(
       calendar,
       temporalMonthDayLike,
-      ['day', 'month', 'monthCode', 'year'],
+      ['year', 'month', 'monthCode', 'day'],
       [],
       'partial'
     );

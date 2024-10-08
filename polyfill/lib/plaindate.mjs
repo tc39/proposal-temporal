@@ -107,7 +107,7 @@ export class PlainDate {
     const partialDate = ES.PrepareCalendarFields(
       calendar,
       temporalDateLike,
-      ['day', 'month', 'monthCode', 'year'],
+      ['year', 'month', 'monthCode', 'day'],
       [],
       'partial'
     );
