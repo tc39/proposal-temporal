@@ -420,8 +420,8 @@ export class Duration {
       if (!plainRelativeTo) {
         throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
       }
-      d1 = ES.UnbalanceDateDurationRelative(duration1.date, plainRelativeTo);
-      d2 = ES.UnbalanceDateDurationRelative(duration2.date, plainRelativeTo);
+      d1 = ES.DateDurationDays(duration1.date, plainRelativeTo);
+      d2 = ES.DateDurationDays(duration2.date, plainRelativeTo);
     }
     const norm1 = duration1.norm.add24HourDays(d1);
     const norm2 = duration2.norm.add24HourDays(d2);
