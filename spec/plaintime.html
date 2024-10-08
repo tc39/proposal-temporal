@@ -519,7 +519,7 @@
         DifferenceTime (
           _time1_: a Time Record,
           _time2_: a Time Record,
-        ): a Normalized Time Duration Record
+        ): a time duration
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -532,9 +532,9 @@
         1. Let _milliseconds_ be _time2_.[[Millisecond]] - _time1_.[[Millisecond]].
         1. Let _microseconds_ be _time2_.[[Microsecond]] - _time1_.[[Microsecond]].
         1. Let _nanoseconds_ be _time2_.[[Nanosecond]] - _time1_.[[Nanosecond]].
-        1. Let _norm_ be NormalizeTimeDuration(_hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
-        1. Assert: abs(_norm_.[[TotalNanoseconds]]) &lt; nsPerDay.
-        1. Return _norm_.
+        1. Let _timeDuration_ be TimeDurationFromComponents(_hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_).
+        1. Assert: abs(_timeDuration_) &lt; nsPerDay.
+        1. Return _timeDuration_.
       </emu-alg>
     </emu-clause>
 
@@ -854,7 +854,7 @@
       <h1>
         AddTime (
           _time_: a Time Record,
-          _norm_: a Normalized Time Duration Record,
+          _timeDuration_: a time duration,
         ): a Time Record
       </h1>
       <dl class="header">
@@ -862,8 +862,8 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Let _second_ be _time_.[[Second]] + NormalizedTimeDurationSeconds(_norm_).
-        1. Let _nanosecond_ be _time_.[[Nanosecond]] + NormalizedTimeDurationSubseconds(_norm_).
+        1. Let _second_ be _time_.[[Second]] + TimeDurationSeconds(_timeDuration_).
+        1. Let _nanosecond_ be _time_.[[Nanosecond]] + TimeDurationSubseconds(_timeDuration_).
         1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _second_, _time_.[[Millisecond]], _time_.[[Microsecond]], _nanosecond_).
       </emu-alg>
     </emu-clause>
@@ -931,8 +931,8 @@
         1. Set _other_ to ? ToTemporalTime(_other_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~time~, « », ~nanosecond~, ~hour~).
-        1. Let _norm_ be DifferenceTime(_temporalTime_.[[Time]], _other_.[[Time]]).
-        1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(ZeroDateDuration(), _norm_).
+        1. Let _timeDuration_ be DifferenceTime(_temporalTime_.[[Time]], _other_.[[Time]]).
+        1. Let _duration_ be ! CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
         1. If _settings_.[[SmallestUnit]] is not ~nanosecond~ or _settings_.[[RoundingIncrement]] ≠ 1, then
           1. Set _duration_ to ! RoundTimeDuration(_duration_, _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
         1. Let _result_ be ! TemporalDurationFromInternal(_duration_, _settings_.[[LargestUnit]]).
@@ -957,7 +957,7 @@
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Let _internalDuration_ be ToInternalDurationRecord(_duration_).
-        1. Let _result_ be AddTime(_temporalTime_.[[Time]], _internalDuration_.[[NormalizedTime]]).
+        1. Let _result_ be AddTime(_temporalTime_.[[Time]], _internalDuration_.[[Time]]).
         1. Return ! CreateTemporalTime(_result_).
       </emu-alg>
     </emu-clause>

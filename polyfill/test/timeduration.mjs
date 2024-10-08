@@ -82,40 +82,40 @@ describe('Normalized time duration', () => {
     });
   });
 
-  describe('normalize()', () => {
+  describe('fromComponents()', () => {
     it('basic', () => {
-      check(TimeDuration.normalize(1, 1, 1, 1, 1, 1), 3661, 1001001);
-      check(TimeDuration.normalize(-1, -1, -1, -1, -1, -1), -3661, -1001001);
+      check(TimeDuration.fromComponents(1, 1, 1, 1, 1, 1), 3661, 1001001);
+      check(TimeDuration.fromComponents(-1, -1, -1, -1, -1, -1), -3661, -1001001);
     });
 
     it('overflow from one unit to another', () => {
-      check(TimeDuration.normalize(1, 61, 61, 998, 1000, 1000), 7321, 999001000);
-      check(TimeDuration.normalize(-1, -61, -61, -998, -1000, -1000), -7321, -999001000);
+      check(TimeDuration.fromComponents(1, 61, 61, 998, 1000, 1000), 7321, 999001000);
+      check(TimeDuration.fromComponents(-1, -61, -61, -998, -1000, -1000), -7321, -999001000);
     });
 
     it('overflow from subseconds to seconds', () => {
-      check(TimeDuration.normalize(0, 0, 1, 1000, 0, 0), 2, 0);
-      check(TimeDuration.normalize(0, 0, -1, -1000, 0, 0), -2, 0);
+      check(TimeDuration.fromComponents(0, 0, 1, 1000, 0, 0), 2, 0);
+      check(TimeDuration.fromComponents(0, 0, -1, -1000, 0, 0), -2, 0);
     });
 
     it('multiple overflows from subseconds to seconds', () => {
-      check(TimeDuration.normalize(0, 0, 0, 1234567890, 1234567890, 1234567890), 1235803, 692457890);
-      check(TimeDuration.normalize(0, 0, 0, -1234567890, -1234567890, -1234567890), -1235803, -692457890);
+      check(TimeDuration.fromComponents(0, 0, 0, 1234567890, 1234567890, 1234567890), 1235803, 692457890);
+      check(TimeDuration.fromComponents(0, 0, 0, -1234567890, -1234567890, -1234567890), -1235803, -692457890);
     });
 
     it('fails on overflow', () => {
-      throws(() => TimeDuration.normalize(2501999792984, 0, 0, 0, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(-2501999792984, 0, 0, 0, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 150119987579017, 0, 0, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, -150119987579017, 0, 0, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, 2 ** 53, 0, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, -(2 ** 53), 0, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, Number.MAX_SAFE_INTEGER, 1000, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, -Number.MAX_SAFE_INTEGER, -1000, 0, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, Number.MAX_SAFE_INTEGER, 0, 1000000, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, -Number.MAX_SAFE_INTEGER, 0, -1000000, 0), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, Number.MAX_SAFE_INTEGER, 0, 0, 1000000000), RangeError);
-      throws(() => TimeDuration.normalize(0, 0, -Number.MAX_SAFE_INTEGER, 0, 0, -1000000000), RangeError);
+      throws(() => TimeDuration.fromComponents(2501999792984, 0, 0, 0, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(-2501999792984, 0, 0, 0, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 150119987579017, 0, 0, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, -150119987579017, 0, 0, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, 2 ** 53, 0, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, -(2 ** 53), 0, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, Number.MAX_SAFE_INTEGER, 1000, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, -Number.MAX_SAFE_INTEGER, -1000, 0, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, Number.MAX_SAFE_INTEGER, 0, 1000000, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, -Number.MAX_SAFE_INTEGER, 0, -1000000, 0), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, Number.MAX_SAFE_INTEGER, 0, 0, 1000000000), RangeError);
+      throws(() => TimeDuration.fromComponents(0, 0, -Number.MAX_SAFE_INTEGER, 0, 0, -1000000000), RangeError);
     });
   });
 
@@ -343,7 +343,7 @@ describe('Normalized time duration', () => {
     });
 
     it('quotient larger than seconds', () => {
-      const d = TimeDuration.normalize(25 + 5 * 24, 0, 86401, 333, 666, 999);
+      const d = TimeDuration.fromComponents(25 + 5 * 24, 0, 86401, 333, 666, 999);
       const { quotient, remainder } = d.divmod(86400e9);
       equal(quotient, 7);
       check(remainder, 3601, 333666999);
@@ -401,7 +401,7 @@ describe('Normalized time duration', () => {
     });
 
     it('quotient larger than seconds', () => {
-      const d = TimeDuration.normalize(25 + 5 * 24, 0, 86401, 333, 666, 999);
+      const d = TimeDuration.fromComponents(25 + 5 * 24, 0, 86401, 333, 666, 999);
       checkFloat(d.fdiv(86400e9), 7.041682102627303);
     });
 

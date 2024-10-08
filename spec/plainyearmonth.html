@@ -610,7 +610,7 @@
         1. Let _otherDate_ be ? CalendarDateFromFields(_calendar_, _otherFields_, ~constrain~).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _thisDate_, _otherDate_, _settings_.[[LargestUnit]]).
         1. Let _yearsMonthsDifference_ be ! AdjustDateDurationRecord(_dateDifference_, 0, 0).
-        1. Let _duration_ be ! CombineDateAndNormalizedTimeDuration(_yearsMonthsDifference_, ZeroTimeDuration()).
+        1. Let _duration_ be ! CombineDateAndTimeDuration(_yearsMonthsDifference_, ZeroTimeDuration()).
         1. If _settings_.[[SmallestUnit]] is not ~month~ or _settings_.[[RoundingIncrement]] ≠ 1, then
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_thisDate_, MidnightTimeRecord()).
           1. Let _isoDateTimeOther_ be CombineISODateAndTimeRecord(_otherDate_, MidnightTimeRecord()).

@@ -81,7 +81,7 @@ export function GetUnsignedRoundingMode(mode, sign) {
 }
 
 // Omits first step from spec algorithm so that it can be used both for
-// RoundNumberToIncrement and RoundNormalizedTimeDurationToIncrement
+// RoundNumberToIncrement and RoundTimeDurationToIncrement
 export function ApplyUnsignedRoundingMode(r1, r2, cmp, evenCardinality, unsignedRoundingMode) {
   if (unsignedRoundingMode === 'zero') return r1;
   if (unsignedRoundingMode === 'infinity') return r2;
