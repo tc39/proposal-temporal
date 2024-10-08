@@ -1475,17 +1475,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-zerotimeduration" type="abstract operation">
-      <h1>ZeroTimeDuration ( ): a time duration</h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It returns a time duration of zero length.</dd>
-      </dl>
-      <emu-alg>
-        1. Return 0.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-datedurationdays" type="abstract operation">
       <h1>
         DateDurationDays (
@@ -1528,7 +1517,7 @@
           1. Let _fractionalDays_ be _duration_.[[Date]].[[Days]] + DivideTimeDuration(_duration_.[[Time]], nsPerDay).
           1. Let _days_ be RoundNumberToIncrement(_fractionalDays_, _increment_, _roundingMode_).
           1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _days_).
-          1. Return ! CombineDateAndTimeDuration(_dateDuration_, ZeroTimeDuration()).
+          1. Return ! CombineDateAndTimeDuration(_dateDuration_, 0).
         1. Assert: TemporalUnitCategory(_unit_) is ~time~.
         1. Let _divisor_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
         1. Let _rounded_ be ? RoundTimeDurationToIncrement(_duration_.[[Time]], _divisor_ × _increment_, _roundingMode_).
@@ -1675,7 +1664,7 @@
           1. Let _didExpandCalendarUnit_ be *false*.
           1. Let _resultDuration_ be _startDuration_.
           1. Let _nudgedEpochNs_ be _startEpochNs_.
-        1. Set _resultDuration_ to ! CombineDateAndTimeDuration(_resultDuration_, ZeroTimeDuration()).
+        1. Set _resultDuration_ to ! CombineDateAndTimeDuration(_resultDuration_, 0).
         1. Let _nudgeResult_ be Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandCalendarUnit_ }.
         1. Return the Record { [[NudgeResult]]: _nudgeResult_, [[Total]]: _total_ }.
       </emu-alg>
@@ -1813,7 +1802,7 @@
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
             1. If _beyondEndSign_ ≠ -_sign_, then
-              1. Set _duration_ to ! CombineDateAndTimeDuration(_endDuration_, ZeroTimeDuration()).
+              1. Set _duration_ to ! CombineDateAndTimeDuration(_endDuration_, 0).
             1. Else,
               1. Set _done_ to *true*.
           1. Set _unitIndex_ to _unitIndex_ - 1.

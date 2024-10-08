@@ -1000,7 +1000,7 @@
       </dl>
       <emu-alg>
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
-          1. Return ! CombineDateAndTimeDuration(ZeroDateDuration(), ZeroTimeDuration()).
+          1. Return ! CombineDateAndTimeDuration(ZeroDateDuration(), 0).
         1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_).
