@@ -9218,9 +9218,7 @@
 	  // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
 	  const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
 	  const balanced = BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond - offsetNanoseconds);
-	  if (MathAbs(ISODateToEpochDays(balanced.isoDate.year, balanced.isoDate.month - 1, balanced.isoDate.day)) > 1e8) {
-	    throw new RangeError$1('date/time value is outside the supported range');
-	  }
+	  CheckISODaysRange(balanced.isoDate);
 	  const epochNanoseconds = GetUTCEpochNanoseconds(balanced);
 	  ValidateEpochNanoseconds(epochNanoseconds);
 	  return new TemporalInstant(epochNanoseconds);
@@ -9360,16 +9358,12 @@
 	  if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
 	    // Calculate the instant for the input's date/time and offset
 	    const balanced = BalanceISODateTime(isoDate.year, isoDate.month, isoDate.day, time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond - offsetNs);
-	    if (MathAbs(ISODateToEpochDays(balanced.year, balanced.month - 1, balanced.day)) > 1e8) {
-	      throw new RangeError$1('date/time outside of supported range');
-	    }
+	    CheckISODaysRange(balanced.isoDate);
 	    const epochNs = GetUTCEpochNanoseconds(balanced);
 	    ValidateEpochNanoseconds(epochNs);
 	    return epochNs;
 	  }
-	  if (MathAbs(ISODateToEpochDays(isoDate.year, isoDate.month - 1, isoDate.day)) > 1e8) {
-	    throw new RangeError$1('date/time outside of supported range');
-	  }
+	  CheckISODaysRange(isoDate);
 	  const utcEpochNs = GetUTCEpochNanoseconds(dt);
 
 	  // "prefer" or "reject"
@@ -9817,16 +9811,12 @@
 	  const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
 	  if (offsetMinutes !== undefined) {
 	    const balanced = BalanceISODateTime(isoDateTime.isoDate.year, isoDateTime.isoDate.month, isoDateTime.isoDate.day, isoDateTime.time.hour, isoDateTime.time.minute - offsetMinutes, isoDateTime.time.second, isoDateTime.time.millisecond, isoDateTime.time.microsecond, isoDateTime.time.nanosecond);
-	    if (MathAbs(ISODateToEpochDays(balanced.isoDate.year, balanced.isoDate.month - 1, balanced.isoDate.day)) > 1e8) {
-	      throw new RangeError$1('date/time value is outside the supported range');
-	    }
+	    CheckISODaysRange(balanced.isoDate);
 	    const epochNs = GetUTCEpochNanoseconds(balanced);
 	    ValidateEpochNanoseconds(epochNs);
 	    return [epochNs];
 	  }
-	  if (MathAbs(ISODateToEpochDays(isoDateTime.isoDate.year, isoDateTime.isoDate.month - 1, isoDateTime.isoDate.day)) > 1e8) {
-	    throw new RangeError$1('date/time value is outside the supported range');
-	  }
+	  CheckISODaysRange(isoDateTime.isoDate);
 	  return GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
 	}
 	function GetStartOfDay(timeZone, isoDate) {
@@ -10178,7 +10168,19 @@
 	  } = GetFormatterParts(id, epochMilliseconds);
 	  let millisecond = epochMilliseconds % 1000;
 	  if (millisecond < 0) millisecond += 1000;
-	  const utc = GetUTCEpochMilliseconds(year, month, day, hour, minute, second, millisecond);
+	  const utc = GetUTCEpochMilliseconds({
+	    isoDate: {
+	      year,
+	      month,
+	      day
+	    },
+	    time: {
+	      hour,
+	      minute,
+	      second,
+	      millisecond
+	    }
+	  });
 	  return (utc - epochMilliseconds) * 1e6;
 	}
 	function GetNamedTimeZoneOffsetNanoseconds(id, epochNanoseconds) {
@@ -10199,7 +10201,20 @@
 	  offsetNanoseconds = RoundNumberToIncrement(offsetNanoseconds, 60e9, 'halfExpand');
 	  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
 	}
-	function GetUTCEpochMilliseconds(year, month, day, hour, minute, second, millisecond) {
+	function GetUTCEpochMilliseconds(_ref6) {
+	  let {
+	    isoDate: {
+	      year,
+	      month,
+	      day
+	    },
+	    time: {
+	      hour,
+	      minute,
+	      second,
+	      millisecond /* ignored: microsecond, nanosecond */
+	    }
+	  } = _ref6;
 	  // The pattern of leap years in the ISO 8601 calendar repeats every 400
 	  // years. To avoid overflowing at the edges of the range, we reduce the year
 	  // to the remainder after dividing by 400, and then add back all the
@@ -10215,24 +10230,9 @@
 	  const ms = Call$1(DatePrototypeGetTime, legacyDate, []);
 	  return ms + MS_IN_400_YEAR_CYCLE * yearCycles;
 	}
-	function GetUTCEpochNanoseconds(_ref6) {
-	  let {
-	    isoDate: {
-	      year,
-	      month,
-	      day
-	    },
-	    time: {
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
-	    }
-	  } = _ref6;
-	  const ms = GetUTCEpochMilliseconds(year, month, day, hour, minute, second, millisecond);
-	  const subMs = microsecond * 1e3 + nanosecond;
+	function GetUTCEpochNanoseconds(isoDateTime) {
+	  const ms = GetUTCEpochMilliseconds(isoDateTime);
+	  const subMs = isoDateTime.time.microsecond * 1e3 + isoDateTime.time.nanosecond;
 	  return bigInt(ms).multiply(1e6).plus(subMs);
 	}
 	function GetISOPartsFromEpoch(epochNanoseconds) {
@@ -10826,8 +10826,35 @@
 	}
 
 	// Caution: month is 0-based
-	function ISODateToEpochDays(y, m, d) {
-	  return GetUTCEpochMilliseconds(y, m + 1, d, 0, 0, 0, 0) / DAY_MS;
+	function ISODateToEpochDays(year, month, day) {
+	  return GetUTCEpochMilliseconds({
+	    isoDate: {
+	      year,
+	      month: month + 1,
+	      day
+	    },
+	    time: {
+	      hour: 0,
+	      minute: 0,
+	      second: 0,
+	      millisecond: 0
+	    }
+	  }) / DAY_MS;
+	}
+
+	// This is needed before calling GetUTCEpochNanoseconds, because it uses MakeDay
+	// which is ill-defined in how it handles large year numbers. If the issue
+	// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
+	// with no observable changes.
+	function CheckISODaysRange(_ref8) {
+	  let {
+	    year,
+	    month,
+	    day
+	  } = _ref8;
+	  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
+	    throw new RangeError$1('date/time value is outside the supported range');
+	  }
 	}
 	function DifferenceTime(time1, time2) {
 	  const hours = time2.hour - time1.hour;
@@ -11481,7 +11508,7 @@
 	  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
 	  return result;
 	}
-	function AddTime(_ref8, norm) {
+	function AddTime(_ref9, norm) {
 	  let {
 	    hour,
 	    minute,
@@ -11489,7 +11516,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref8;
+	  } = _ref9;
 	  second += norm.sec;
 	  nanosecond += norm.subsec;
 	  return BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -11661,7 +11688,7 @@
 	  const incrementNs = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]) * increment;
 	  return RoundNumberToIncrementAsIfPositive(epochNs, incrementNs, roundingMode);
 	}
-	function RoundISODateTime(_ref9, increment, unit, roundingMode) {
+	function RoundISODateTime(_ref10, increment, unit, roundingMode) {
 	  let {
 	    isoDate: {
 	      year,
@@ -11676,7 +11703,7 @@
 	      microsecond,
 	      nanosecond
 	    }
-	  } = _ref9;
+	  } = _ref10;
 	  const time = RoundTime({
 	    hour,
 	    minute,
@@ -11688,7 +11715,7 @@
 	  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
 	  return CombineISODateAndTimeRecord(isoDate, time);
 	}
-	function RoundTime(_ref10, increment, unit, roundingMode) {
+	function RoundTime(_ref11, increment, unit, roundingMode) {
 	  let {
 	    hour,
 	    minute,
@@ -11696,7 +11723,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref10;
+	  } = _ref11;
 	  let quantity;
 	  switch (unit) {
 	    case 'day':
@@ -15655,12 +15682,10 @@
 	    const calendar = GetSlot(this, CALENDAR);
 	    let fields = ISODateToFields(calendar, GetSlot(this, ISO_DATE_TIME).isoDate);
 	    const isoDateTime = GetSlot(this, ISO_DATE_TIME);
-	    fields.hour = isoDateTime.time.hour;
-	    fields.minute = isoDateTime.time.minute;
-	    fields.second = isoDateTime.time.second;
-	    fields.millisecond = isoDateTime.time.millisecond;
-	    fields.microsecond = isoDateTime.time.microsecond;
-	    fields.nanosecond = isoDateTime.time.nanosecond;
+	    fields = {
+	      ...fields,
+	      ...isoDateTime.time
+	    };
 	    const partialDateTime = PrepareCalendarFields(calendar, temporalDateTimeLike, ['year', 'month', 'monthCode', 'day'], ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'], 'partial');
 	    fields = CalendarMergeFields(calendar, fields, partialDateTime);
 	    const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
@@ -16802,13 +16827,11 @@
 	    const offsetNs = GetOffsetNanosecondsFor(timeZone, epochNs);
 	    const isoDateTime = dateTime(this);
 	    let fields = ISODateToFields(calendar, isoDateTime.isoDate);
-	    fields.hour = isoDateTime.time.hour;
-	    fields.minute = isoDateTime.time.minute;
-	    fields.second = isoDateTime.time.second;
-	    fields.millisecond = isoDateTime.time.millisecond;
-	    fields.microsecond = isoDateTime.time.microsecond;
-	    fields.nanosecond = isoDateTime.time.nanosecond;
-	    fields.offset = FormatUTCOffsetNanoseconds(offsetNs);
+	    fields = {
+	      ...fields,
+	      ...isoDateTime.time,
+	      offset: FormatUTCOffsetNanoseconds(offsetNs)
+	    };
 	    const partialZonedDateTime = PrepareCalendarFields(calendar, temporalZonedDateTimeLike, ['year', 'month', 'monthCode', 'day'], ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset'], 'partial');
 	    fields = CalendarMergeFields(calendar, fields, partialZonedDateTime);
 	    const resolvedOptions = GetOptionsObject(options);
