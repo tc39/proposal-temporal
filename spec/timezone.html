@@ -320,7 +320,7 @@
         1. If _disambiguation_ is ~earlier~, then
           1. Let _timeDuration_ be TimeDurationFromComponents(0, 0, 0, 0, 0, -_nanoseconds_).
           1. Let _earlierTime_ be AddTime(_isoDateTime_.[[Time]], _timeDuration_).
-          1. Let _earlierDate_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _earlierTime_.[[Days]]).
+          1. Let _earlierDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _earlierTime_.[[Days]]).
           1. Let _earlierDateTime_ be CombineISODateAndTimeRecord(_earlierDate_, _earlierTime_).
           1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _earlierDateTime_).
           1. Assert: _possibleEpochNs_ is not empty.
@@ -328,7 +328,7 @@
         1. Assert: _disambiguation_ is ~compatible~ or ~later~.
         1. Let _timeDuration_ be TimeDurationFromComponents(0, 0, 0, 0, 0, _nanoseconds_).
         1. Let _laterTime_ be AddTime(_isoDateTime_.[[Time]], _timeDuration_).
-        1. Let _laterDate_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _laterTime_.[[Days]]).
+        1. Let _laterDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _laterTime_.[[Days]]).
         1. Let _laterDateTime_ be CombineISODateAndTimeRecord(_laterDate_, _laterTime_).
         1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _laterDateTime_).
         1. Set _n_ to _possibleEpochNs_'s length.

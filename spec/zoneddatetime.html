@@ -398,7 +398,7 @@
         1. Let _timeZone_ be _zonedDateTime_.[[TimeZone]].
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _zonedDateTime_.[[EpochNanoseconds]]).
         1. Let _today_ be _isoDateTime_.[[ISODate]].
-        1. Let _tomorrow_ be BalanceISODate(_today_.[[Year]], _today_.[[Month]], _today_.[[Day]] + 1).
+        1. Let _tomorrow_ be AddDaysToISODate(_today_, 1).
         1. Let _todayNs_ be ? GetStartOfDay(_timeZone_, _today_).
         1. Let _tomorrowNs_ be ? GetStartOfDay(_timeZone_, _tomorrow_).
         1. Let _diff_ be TimeDurationFromEpochNanosecondsDifference(_tomorrowNs_, _todayNs_).
@@ -651,7 +651,7 @@
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _thisNs_).
         1. If _smallestUnit_ is ~day~, then
           1. Let _dateStart_ be _isoDateTime_.[[ISODate]].
-          1. Let _dateEnd_ be BalanceISODate(_dateStart_.[[Year]], _dateStart_.[[Month]], _dateStart_.[[Day]] + 1).
+          1. Let _dateEnd_ be AddDaysToISODate(_dateStart_, 1).
           1. Let _startNs_ be ? GetStartOfDay(_timeZone_, _dateStart_).
           1. Assert: _thisNs_ ≥ _startNs_.
           1. Let _endNs_ be ? GetStartOfDay(_timeZone_, _dateEnd_).
@@ -1127,7 +1127,7 @@
         1. If TimeDurationSign(_timeDuration_) = -_sign_, set _dayCorrection_ to _dayCorrection_ + 1.
         1. Let _success_ be *false*.
         1. Repeat, while _dayCorrection_ ≤ _maxDayCorrection_ and _success_ is *false*,
-          1. Let _intermediateDate_ be BalanceISODate(_endDateTime_.[[ISODate]].[[Year]], _endDateTime_.[[ISODate]].[[Month]], _endDateTime_.[[ISODate]].[[Day]] - _dayCorrection_ × _sign_).
+          1. Let _intermediateDate_ be AddDaysToISODate(_endDateTime_.[[ISODate]], _dayCorrection_ × -_sign_).
           1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_intermediateDate_, _startDateTime_.[[Time]]).
           1. Let _intermediateNs_ be ? GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
           1. Set _timeDuration_ to TimeDurationFromEpochNanosecondsDifference(_ns2_, _intermediateNs_).

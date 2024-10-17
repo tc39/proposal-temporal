@@ -849,7 +849,7 @@
       </dl>
       <emu-alg>
         1. Let _balancedTime_ be BalanceTime(_isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]] + _nanoseconds_).
-        1. Let _balancedDate_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _balancedTime_.[[Days]]).
+        1. Let _balancedDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _balancedTime_.[[Days]]).
         1. Return CombineISODateAndTimeRecord(_balancedDate_, _balancedTime_).
       </emu-alg>
     </emu-clause>
@@ -935,7 +935,7 @@
       <emu-alg>
         1. Assert: ISODateTimeWithinLimits(_isoDateTime_) is *true*.
         1. Let _roundedTime_ be RoundTime(_isoDateTime_.[[Time]], _increment_, _unit_, _roundingMode_).
-        1. Let _balanceResult_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _roundedTime_.[[Days]]).
+        1. Let _balanceResult_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _roundedTime_.[[Days]]).
         1. Return CombineISODateAndTimeRecord(_balanceResult_, _roundedTime_).
       </emu-alg>
     </emu-clause>
@@ -963,8 +963,8 @@
         1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
         1. Let _dateSign_ be CompareISODate(_isoDateTime1_.[[ISODate]], _isoDateTime2_.[[ISODate]]).
         1. Let _adjustedDate_ be _isoDateTime2_.[[ISODate]].
-        1. If _timeSign_ = _dateSign_, then
-          1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] + _timeSign_).
+        1. If _timeSign_ = -_dateSign_, then
+          1. Set _adjustedDate_ to AddDaysToISODate(_adjustedDate_, _timeSign_).
           1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, -_timeSign_).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(~day~, _largestUnit_).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _isoDateTime1_.[[ISODate]], _adjustedDate_, _dateLargestUnit_).
