@@ -276,7 +276,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Perform ? CheckISODaysRange(_isoDateTime_).
+        1. Assert: ISODateTimeWithinLimits(_isoDateTime_) is *true*.
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
         1. Return ? DisambiguatePossibleEpochNanoseconds(_possibleEpochNs_, _timeZone_, _isoDateTime_, _disambiguation_).
       </emu-alg>
