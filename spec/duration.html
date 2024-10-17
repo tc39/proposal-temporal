@@ -1622,6 +1622,8 @@
           1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_startDateTime_).
           1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).
         1. Else,
+          1. Perform ? CheckISODaysRange(_startDateTime_).
+          1. Perform ? CheckISODaysRange(_endDateTime_).
           1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
           1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
         1. If _sign_ is 1, then
@@ -1676,8 +1678,10 @@
       <emu-alg>
         1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _duration_.[[Date]], ~constrain~).
         1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _isoDateTime_.[[Time]]).
+        1. Perform ? CheckISODaysRange(_startDateTime_).
         1. Let _endDate_ be AddDaysToISODate(_start_, _sign_).
         1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _isoDateTime_.[[Time]]).
+        1. Perform ? CheckISODaysRange(_endDateTime_).
         1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
         1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
         1. Let _daySpan_ be TimeDurationFromEpochNanosecondsDifference(_endEpochNs_, _startEpochNs_).
@@ -1782,6 +1786,7 @@
             1. If _timeZone_ is ~unset~, then
               1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).
             1. Else,
+              1. Perform ? CheckISODaysRange(_endDateTime_).
               1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
