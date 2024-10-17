@@ -906,7 +906,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Perform ? CheckISODaysRange(_isoDateTime_.[[ISODate]]).
+        1. Perform ? CheckISODaysRange(_isoDateTime_).
         1. If _offsetBehaviour_ is ~wall~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is ~ignore~, then
           1. Return ? GetEpochNanosecondsFor(_timeZone_, _isoDateTime_, _disambiguation_).
         1. If _offsetBehaviour_ is ~exact~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is ~use~, then
