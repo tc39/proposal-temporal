@@ -624,13 +624,11 @@
           1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
         1. Let _calendar_ be ? GetTemporalCalendarIdentifierWithISODefault(_value_).
         1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _value_, « ~year~, ~month~, ~month-code~, ~day~ », « ~hour~, ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~, ~offset~, ~time-zone~ », «»).
-        1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, ~constrain~).
+        1. Let _isoDateTime_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, ~constrain~).
         1. Let _timeZone_ be _fields_.[[TimeZone]].
         1. Let _offsetString_ be _fields_.[[OffsetString]].
         1. If _offsetString_ is ~unset~, then
           1. Set _offsetBehaviour_ to ~wall~.
-        1. Let _isoDate_ be _result_.[[ISODate]].
-        1. Let _time_ be _result_.[[Time]].
       1. Else,
         1. If _value_ is not a String, throw a *TypeError* exception.
         1. Let _result_ be ? ParseISODateTime(_value_, « |TemporalDateTimeString[+Zoned]|, |TemporalDateTimeString[~Zoned]| »).
@@ -650,14 +648,22 @@
         1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
         1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
         1. Let _time_ be _result_.[[Time]].
+        1. If _time_ is ~start-of-day~, then
+          1. If _timeZone_ is not ~unset~, then
+            1. Assert: _offsetBehaviour_ is ~wall~.
+            1. Let _epochNanoseconds_ be ? GetStartOfDay(_timeZone_, _isoDate_).
+            1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
+            1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
+          1. Set _time_ to MidnightTimeRecord().
+        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
       1. If _timeZone_ is ~unset~, then
-        1. Let _plainDate_ be ? CreateTemporalDate(_isoDate_, _calendar_).
+        1. Let _plainDate_ be ? CreateTemporalDate(_isoDateTime_.[[ISODate]], _calendar_).
         1. Return the Record { [[PlainRelativeTo]]: _plainDate_, [[ZonedRelativeTo]]: *undefined* }.
       1. If _offsetBehaviour_ is ~option~, then
         1. Let _offsetNs_ be ! ParseDateTimeUTCOffset(_offsetString_).
       1. Else,
         1. Let _offsetNs_ be 0.
-      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_isoDate_, _time_, _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
+      1. Let _epochNanoseconds_ be ? InterpretISODateTimeOffset(_isoDateTime_, _offsetBehaviour_, _offsetNs_, _timeZone_, ~compatible~, ~reject~, _matchBehaviour_).
       1. Let _zonedRelativeTo_ be ! CreateTemporalZonedDateTime(_epochNanoseconds_, _timeZone_, _calendar_).
       1. Return the Record { [[PlainRelativeTo]]: *undefined*, [[ZonedRelativeTo]]: _zonedRelativeTo_ }.
     </emu-alg>
