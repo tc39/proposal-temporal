@@ -294,6 +294,7 @@
         <dd>It chooses from a List of possible exact times the one indicated by the _disambiguation_ parameter.</dd>
       </dl>
       <emu-alg>
+        1. Assert: ISODateTimeWithinLimits(_isoDateTime_) is *true*.
         1. Let _n_ be _possibleEpochNs_'s length.
         1. If _n_ = 1, then
           1. Return _possibleEpochNs_[0].
