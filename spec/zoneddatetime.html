@@ -907,6 +907,7 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Perform ? CheckISODaysRange(_isoDate_).
         1. If _time_ is ~start-of-day~, then
           1. Assert: _offsetBehaviour_ is ~wall~.
           1. Assert: _offsetNanoseconds_ is 0.
@@ -915,13 +916,11 @@
         1. If _offsetBehaviour_ is ~wall~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is ~ignore~, then
           1. Return ? GetEpochNanosecondsFor(_timeZone_, _isoDateTime_, _disambiguation_).
         1. If _offsetBehaviour_ is ~exact~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is ~use~, then
-          1. Perform ? CheckISODaysRange(_isoDate_).
           1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_isoDateTime_) - _offsetNanoseconds_.
           1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
           1. Return _epochNanoseconds_.
         1. Assert: _offsetBehaviour_ is ~option~.
         1. Assert: _offsetOption_ is ~prefer~ or ~reject~.
-        1. Perform ? CheckISODaysRange(_isoDate_).
         1. Let _utcEpochNanoseconds_ be GetUTCEpochNanoseconds(_isoDateTime_).
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
         1. For each element _candidate_ of _possibleEpochNs_, do

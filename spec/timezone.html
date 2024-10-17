@@ -351,14 +351,13 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Perform ? CheckISODaysRange(_isoDateTime_.[[ISODate]]).
         1. Let _parseResult_ be ! ParseTimeZoneIdentifier(_timeZone_).
         1. If _parseResult_.[[OffsetMinutes]] is not ~empty~, then
           1. Let _offsetNanoseconds_ be _parseResult_.[[OffsetMinutes]] × 6 × 10<sup>10</sup>.
-          1. Perform ? CheckISODaysRange(_isoDateTime_.[[ISODate]]).
           1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_isoDateTime_) - _offsetNanoseconds_.
           1. Let _possibleEpochNanoseconds_ be « _epochNanoseconds_ ».
         1. Else,
-          1. Perform ? CheckISODaysRange(_isoDateTime_.[[ISODate]]).
           1. Let _possibleEpochNanoseconds_ be GetNamedTimeZoneEpochNanoseconds(_parseResult_.[[Name]], _isoDateTime_).
         1. For each value _epochNanoseconds_ in _possibleEpochNanoseconds_, do
           1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
