@@ -1120,19 +1120,19 @@
         1. If _ns1_ = _ns2_, return CombineDateAndTimeDuration(ZeroDateDuration(), 0).
         1. Let _startDateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
         1. Let _endDateTime_ be GetISODateTimeFor(_timeZone_, _ns2_).
-        1. If _ns2_ - _ns1_ &lt; 0, let _sign_ be -1; else let _sign_ be 1.
-        1. If _sign_ = 1, let _maxDayCorrection_ be 2; else let _maxDayCorrection_ be 1.
+        1. If _ns2_ - _ns1_ &lt; 0, let _sign_ be 1; else let _sign_ be -1.
+        1. If _sign_ = -1, let _maxDayCorrection_ be 2; else let _maxDayCorrection_ be 1.
         1. Let _dayCorrection_ be 0.
         1. Let _timeDuration_ be DifferenceTime(_startDateTime_.[[Time]], _endDateTime_.[[Time]]).
-        1. If TimeDurationSign(_timeDuration_) = -_sign_, set _dayCorrection_ to _dayCorrection_ + 1.
+        1. If TimeDurationSign(_timeDuration_) = _sign_, set _dayCorrection_ to _dayCorrection_ + 1.
         1. Let _success_ be *false*.
         1. Repeat, while _dayCorrection_ ≤ _maxDayCorrection_ and _success_ is *false*,
-          1. Let _intermediateDate_ be AddDaysToISODate(_endDateTime_.[[ISODate]], _dayCorrection_ × -_sign_).
+          1. Let _intermediateDate_ be AddDaysToISODate(_endDateTime_.[[ISODate]], _dayCorrection_ × _sign_).
           1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_intermediateDate_, _startDateTime_.[[Time]]).
           1. Let _intermediateNs_ be ? GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
           1. Set _timeDuration_ to TimeDurationFromEpochNanosecondsDifference(_ns2_, _intermediateNs_).
           1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
-          1. If _sign_ ≠ -_timeSign_, then
+          1. If _sign_ ≠ _timeSign_, then
             1. Set _success_ to *true*.
           1. Set _dayCorrection_ to _dayCorrection_ + 1.
         1. Assert: _success_ is *true*.
