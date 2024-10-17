@@ -836,18 +836,11 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balanceisodatetime" type="abstract operation">
+    <emu-clause id="sec-temporal-addoffsetnanosecondstoisodatetime" type="abstract operation">
       <h1>
-        BalanceISODateTime (
-          _year_: an integer,
-          _month_: an integer,
-          _day_: an integer,
-          _hour_: an integer,
-          _minute_: an integer,
-          _second_: an integer,
-          _millisecond_: an integer,
-          _microsecond_: an integer,
-          _nanosecond_: an integer,
+        AddOffsetNanosecondsToISODateTime (
+          _isoDateTime_: an ISO Date-Time Record,
+          _nanoseconds_: an integer in the interval from -86400 × 10<sup>9</sup> (exclusive) to 86400 × 10<sup>9</sup> (exclusive),
         ): an ISO Date-Time Record
       </h1>
       <dl class="header">
@@ -855,8 +848,8 @@
         <dd></dd>
       </dl>
       <emu-alg>
-        1. Let _balancedTime_ be BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. Let _balancedDate_ be BalanceISODate(_year_, _month_, _day_ + _balancedTime_.[[Days]]).
+        1. Let _balancedTime_ be BalanceTime(_isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]] + _nanoseconds_).
+        1. Let _balancedDate_ be BalanceISODate(_isoDateTime_.[[ISODate]].[[Year]], _isoDateTime_.[[ISODate]].[[Month]], _isoDateTime_.[[ISODate]].[[Day]] + _balancedTime_.[[Days]]).
         1. Return CombineISODateAndTimeRecord(_balancedDate_, _balancedTime_).
       </emu-alg>
     </emu-clause>
