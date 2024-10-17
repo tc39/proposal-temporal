@@ -586,8 +586,8 @@
         1. If _calendar_ is *"iso8601"*, then
           1. Let _intermediate_ be BalanceISOYearMonth(_isoDate_.[[Year]] + _duration_.[[Years]], _isoDate_.[[Month]] + _duration_.[[Months]]).
           1. Set _intermediate_ to ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _isoDate_.[[Day]], _overflow_).
-          1. Let _d_ be _intermediate_.[[Day]] + _duration_.[[Days]] + 7 × _duration_.[[Weeks]].
-          1. Let _result_ be BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+          1. Let _days_ be _duration_.[[Days]] + 7 × _duration_.[[Weeks]].
+          1. Let _result_ be AddDaysToISODate(_intermediate_, _days_).
         1. Else,
           1. Let _result_ be ? NonISODateAdd(_calendar_, _isoDate_, _duration_, _overflow_).
         1. If ISODateWithinLimits(_result_) is *false*, throw a *RangeError* exception.
