@@ -276,6 +276,7 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Perform ? CheckISODaysRange(_isoDateTime_).
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
         1. Return ? DisambiguatePossibleEpochNanoseconds(_possibleEpochNs_, _timeZone_, _isoDateTime_, _disambiguation_).
       </emu-alg>
@@ -324,6 +325,7 @@
           1. Let _earlierTime_ be AddTime(_isoDateTime_.[[Time]], _timeDuration_).
           1. Let _earlierDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _earlierTime_.[[Days]]).
           1. Let _earlierDateTime_ be CombineISODateAndTimeRecord(_earlierDate_, _earlierTime_).
+          1. Perform ? CheckISODaysRange(_earlierDateTime_).
           1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _earlierDateTime_).
           1. Assert: _possibleEpochNs_ is not empty.
           1. Return _possibleEpochNs_[0].
@@ -332,6 +334,7 @@
         1. Let _laterTime_ be AddTime(_isoDateTime_.[[Time]], _timeDuration_).
         1. Let _laterDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _laterTime_.[[Days]]).
         1. Let _laterDateTime_ be CombineISODateAndTimeRecord(_laterDate_, _laterTime_).
+        1. Perform ? CheckISODaysRange(_laterDateTime_).
         1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _laterDateTime_).
         1. Set _n_ to _possibleEpochNs_'s length.
         1. Assert: _n_ ≠ 0.
@@ -353,7 +356,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Perform ? CheckISODaysRange(_isoDateTime_).
+        1. Assert: ISODateTimeWithinLimits(_isoDateTime_) is *true*.
         1. Let _parseResult_ be ! ParseTimeZoneIdentifier(_timeZone_).
         1. If _parseResult_.[[OffsetMinutes]] is not ~empty~, then
           1. Let _offsetNanoseconds_ be _parseResult_.[[OffsetMinutes]] × 6 × 10<sup>10</sup>.
@@ -380,6 +383,7 @@
       </dl>
       <emu-alg>
         1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, MidnightTimeRecord()).
+        1. Perform ? CheckISODaysRange(_isoDateTime_).
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
         1. If _possibleEpochNs_ is not empty, return _possibleEpochNs_[0].
         1. Assert: IsOffsetTimeZoneIdentifier(_timeZone_) is *false*.
