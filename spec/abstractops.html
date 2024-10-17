@@ -108,27 +108,6 @@
     <emu-note type="editor"> Note that the operation EpochTimeToMonthInYear(_t_) uses 0-based months unlike rest of Temporal since it's intended to be unified with MonthFromTime(_t_) when the above mentioned issue is fixed.</emu-note>
   </emu-clause>
 
-  <emu-clause id="sec-checkisodaysrange" type="abstract operation">
-    <h1>
-      CheckISODaysRange (
-        _isoDateTime_: an ISO Date-Time Record,
-      ): either a normal completion containing ~unused~ or a throw completion
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd>It checks that the given date-time is within the range of 10<sup>8</sup> days from the epoch.</dd>
-    </dl>
-    <emu-alg>
-      1. If ISODateTimeWithinLimits(_isoDateTime_) is *false*, then
-        1. Throw a *RangeError* exception.
-      1. Return ~unused~.
-    </emu-alg>
-    <emu-note type="editor">
-      This operation is solely present to ensure that GetUTCEpochNanoseconds is not called with numbers that are too large.
-      This operation can be removed with no observable effect when https://github.com/tc39/ecma262/issues/1087 is fixed.
-    </emu-note>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-units">
     <h1>Units</h1>
     <p>

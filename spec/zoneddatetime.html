@@ -550,7 +550,7 @@
         1. Else,
           1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
           1. Let _resultISODateTime_ be CombineISODateAndTimeRecord(_isoDateTime_.[[ISODate]], _plainTime_.[[Time]]).
-          1. Perform ? CheckISODaysRange(_resultISODateTime_).
+          1. If ISODateTimeWithinLimits(_resultISODateTime_) is *false*, throw a *RangeError* exception.
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _resultISODateTime_, ~compatible~).
         1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _calendar_).
       </emu-alg>
@@ -907,7 +907,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Perform ? CheckISODaysRange(_isoDateTime_).
+        1. If ISODateTimeWithinLimits(_isoDateTime_) is *false*, throw a *RangeError* exception.
         1. If _offsetBehaviour_ is ~wall~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is ~ignore~, then
           1. Return ? GetEpochNanosecondsFor(_timeZone_, _isoDateTime_, _disambiguation_).
         1. If _offsetBehaviour_ is ~exact~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is ~use~, then
@@ -1092,7 +1092,7 @@
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNanoseconds_).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _duration_.[[Date]], _overflow_).
         1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_addedDate_, _isoDateTime_.[[Time]]).
-        1. Perform ? CheckISODaysRange(_intermediateDateTime_).
+        1. If ISODateTimeWithinLimits(_intermediateDateTime_) is *false*, throw a *RangeError* exception.
         1. Let _intermediateNs_ be ! GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
         1. Return ? AddInstant(_intermediateNs_, _duration_.[[Time]]).
       </emu-alg>
@@ -1129,7 +1129,7 @@
         1. Repeat, while _dayCorrection_ ≤ _maxDayCorrection_ and _success_ is *false*,
           1. Let _intermediateDate_ be AddDaysToISODate(_endDateTime_.[[ISODate]], _dayCorrection_ × _sign_).
           1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_intermediateDate_, _startDateTime_.[[Time]]).
-          1. Perform ? CheckISODaysRange(_intermediateDateTime_).
+          1. If ISODateTimeWithinLimits(_intermediateDateTime_) is *false*, throw a *RangeError* exception.
           1. Let _intermediateNs_ be ? GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
           1. Set _timeDuration_ to TimeDurationFromEpochNanosecondsDifference(_ns2_, _intermediateNs_).
           1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
