@@ -415,7 +415,7 @@
         1. If _parsed_.[[Time]] is ~start-of-day~, let _time_ be MidnightTimeRecord(); else let _time_ be _parsed_.[[Time]].
         1. Let _isoDate_ be CreateISODateRecord(_parsed_.[[Year]], _parsed_.[[Month]], _parsed_.[[Day]]).
         1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
-        1. Perform ? CheckISODaysRange(_isoDateTime_).
+        1. If ISODateTimeWithinLimits(_isoDateTime_) is *false*, throw a *RangeError* exception.
         1. Let _epochNanoseconds_ be GetUTCEpochNanoseconds(_isoDateTime_) - _offsetNanoseconds_.
         1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ! CreateTemporalInstant(_epochNanoseconds_).
