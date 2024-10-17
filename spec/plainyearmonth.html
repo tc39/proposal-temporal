@@ -649,7 +649,7 @@
         1. If _sign_ &lt; 0, then
           1. Let _oneMonthDuration_ be ! CreateDateDurationRecord(0, 1, 0, 0).
           1. Let _nextMonth_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _oneMonthDuration_, ~constrain~).
-          1. Let _date_ be BalanceISODate(_nextMonth_.[[Year]], _nextMonth_.[[Month]], _nextMonth_.[[Day]] - 1).
+          1. Let _date_ be AddDaysToISODate(_nextMonth_, -1).
           1. Assert: ISODateWithinLimits(_date_) is *true*.
         1. Else,
           1. Let _date_ be _intermediateDate_.
