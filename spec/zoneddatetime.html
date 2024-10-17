@@ -1092,7 +1092,7 @@
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNanoseconds_).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _duration_.[[Date]], _overflow_).
         1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_addedDate_, _isoDateTime_.[[Time]]).
-        1. If ISODateTimeWithinLimits(_intermediateDateTime_) is *false*, throw a *RangeError* exception.
+        1. Perform ? CheckISODaysRange(_intermediateDateTime_).
         1. Let _intermediateNs_ be ! GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
         1. Return ? AddInstant(_intermediateNs_, _duration_.[[Time]]).
       </emu-alg>
