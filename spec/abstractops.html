@@ -119,13 +119,13 @@
       <dd>It checks that the given date is within the range of 10<sup>8</sup> days from the epoch.</dd>
     </dl>
     <emu-alg>
-      1. If abs(ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]])) > 10<sup>8</sup>, then
+      1. Let _dateTime_ be CombineISODateAndTimeRecord(_isoDate_, MidnightTimeRecord()).
+      1. If ISODateTimeWithinLimits(_dateTime_) is *false*, then
         1. Throw a *RangeError* exception.
       1. Return ~unused~.
     </emu-alg>
     <emu-note type="editor">
       This operation is solely present to ensure that GetUTCEpochNanoseconds is not called with numbers that are too large.
-      It is distinct from ISODateWithinLimits, which uses GetUTCEpochNanoseconds.
       This operation can be removed with no observable effect when https://github.com/tc39/ecma262/issues/1087 is fixed.
     </emu-note>
   </emu-clause>
