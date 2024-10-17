@@ -257,8 +257,10 @@
       <emu-alg>
         1. Assert: IsValidEpochNanoseconds(_epochNs_) is *true*.
         1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _epochNs_).
-        1. Let _result_ be GetISOPartsFromEpoch(ℝ(_epochNs_)).
-        1. Return AddOffsetNanosecondsToISODateTime(_result_, _offsetNanoseconds_).
+        1. Let _isoDateTime_ be GetISOPartsFromEpoch(ℝ(_epochNs_)).
+        1. Let _balancedTime_ be BalanceTime(_isoDateTime_.[[Time]].[[Hour]], _isoDateTime_.[[Time]].[[Minute]], _isoDateTime_.[[Time]].[[Second]], _isoDateTime_.[[Time]].[[Millisecond]], _isoDateTime_.[[Time]].[[Microsecond]], _isoDateTime_.[[Time]].[[Nanosecond]] + _offsetNanoseconds_).
+        1. Let _balancedDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _balancedTime_.[[Days]]).
+        1. Return CombineISODateAndTimeRecord(_balancedDate_, _balancedTime_).
       </emu-alg>
     </emu-clause>
 
