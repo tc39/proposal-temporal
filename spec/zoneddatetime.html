@@ -550,6 +550,7 @@
         1. Else,
           1. Let _plainTime_ be ? ToTemporalTime(_plainTimeLike_).
           1. Let _resultISODateTime_ be CombineISODateAndTimeRecord(_isoDateTime_.[[ISODate]], _plainTime_.[[Time]]).
+          1. Perform ? CheckISODaysRange(_resultISODateTime_).
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _resultISODateTime_, ~compatible~).
         1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _calendar_).
       </emu-alg>
@@ -1128,6 +1129,7 @@
         1. Repeat, while _dayCorrection_ ≤ _maxDayCorrection_ and _success_ is *false*,
           1. Let _intermediateDate_ be AddDaysToISODate(_endDateTime_.[[ISODate]], _dayCorrection_ × _sign_).
           1. Let _intermediateDateTime_ be CombineISODateAndTimeRecord(_intermediateDate_, _startDateTime_.[[Time]]).
+          1. Perform ? CheckISODaysRange(_intermediateDateTime_).
           1. Let _intermediateNs_ be ? GetEpochNanosecondsFor(_timeZone_, _intermediateDateTime_, ~compatible~).
           1. Set _timeDuration_ to TimeDurationFromEpochNanosecondsDifference(_ns2_, _intermediateNs_).
           1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
