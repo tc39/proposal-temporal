@@ -1085,6 +1085,7 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidEpochNanoseconds(_epochNanoseconds_) is *true*.
         1. If DateDurationSign(_duration_.[[Date]]) = 0, then
           1. Return ? AddInstant(_epochNanoseconds_, _duration_.[[Time]]).
         1. Let _isoDateTime_ be GetISODateTimeFor(_timeZone_, _epochNanoseconds_).
@@ -1113,6 +1114,8 @@
         </dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidEpochNanoseconds(_ns1_) is *true*.
+        1. Assert: IsValidEpochNanoseconds(_ns2_) is *true*.
         1. If _ns1_ = _ns2_, return CombineDateAndTimeDuration(ZeroDateDuration(), 0).
         1. Let _startDateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
         1. Let _endDateTime_ be GetISODateTimeFor(_timeZone_, _ns2_).
@@ -1156,6 +1159,8 @@
         <dd></dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidEpochNanoseconds(_ns1_) is *true*.
+        1. Assert: IsValidEpochNanoseconds(_ns2_) is *true*.
         1. If TemporalUnitCategory(_largestUnit_) is ~time~, then
           1. Return DifferenceInstant(_ns1_, _ns2_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_).
@@ -1180,6 +1185,8 @@
         <dd></dd>
       </dl>
       <emu-alg>
+        1. Assert: IsValidEpochNanoseconds(_ns1_) is *true*.
+        1. Assert: IsValidEpochNanoseconds(_ns2_) is *true*.
         1. If TemporalUnitCategory(_unit_) is ~time~, then
           1. Let _difference_ be TimeDurationFromEpochNanosecondsDifference(_ns2_, _ns1_).
           1. Return TotalTimeDuration(_difference_, _unit_).
