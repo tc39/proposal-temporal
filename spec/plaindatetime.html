@@ -442,7 +442,7 @@
         1. Let _dateTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
         1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_calendarLike_).
-        1. Return ? CreateTemporalDateTime(_dateTime_.[[ISODateTime]], _calendar_).
+        1. Return ! CreateTemporalDateTime(_dateTime_.[[ISODateTime]], _calendar_).
       </emu-alg>
     </emu-clause>
 
