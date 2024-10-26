@@ -298,7 +298,7 @@ If timezone-aware results are not needed, then use another type like `Temporal.I
 
 Timestamp strings like `2022-02-28T03:06:00+02:00` or `2022-02-28T03:06:00Z` are normally parsed by `Temporal.Instant`.
 Because the data model of `Temporal.Instant` is limited to the number of nanoseconds since January 1, 1970 UTC), the offset is not stored when parsing a string into a `Temporal.Instant`.
-If the offset of the string is needed, use `Temporal.Instant.toZonedDateTime()` with the string as the time zone:
+If the offset of the string is needed, use `Temporal.Instant.toZonedDateTimeISO()` with the string as the time zone:
 
 ```javascript
 s = `2022-02-28T03:06:00Z`;

@@ -4,8 +4,8 @@ const instant = legacyDate.toTemporalInstant();
 assert.equal(instant.epochMilliseconds, legacyDate.getTime());
 assert.equal(instant.toString(), '1970-01-01T00:00:01Z');
 
-// If you need a ZonedDateTime, use the toZonedDateTime() or
-// toZonedDateTimeISO() method of the resulting Instant.
+// If you need a ZonedDateTime, use the toZonedDateTimeISO()
+// method of the resulting Instant.
 // You will need to specify a time zone, because legacy Date only
 // stores an exact time, and does not store a time zone.
 
