@@ -463,7 +463,7 @@
           _ns1_: a BigInt,
           _ns2_: a BigInt,
           _roundingIncrement_: a positive integer,
-          _smallestUnit_: a time unit or ~day~,
+          _smallestUnit_: a time unit,
           _roundingMode_: a rounding mode,
         ): an Internal Duration Record
       </h1>
@@ -473,8 +473,8 @@
       </dl>
       <emu-alg>
         1. Let _timeDuration_ be TimeDurationFromEpochNanosecondsDifference(_ns2_, _ns1_).
-        1. Let _internalDuration_ be ! CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
-        1. Return ! RoundTimeDuration(_internalDuration_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Set _timeDuration_ to ! RoundTimeDuration(_timeDuration_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Return ! CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
       </emu-alg>
     </emu-clause>
 
