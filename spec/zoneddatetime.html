@@ -659,7 +659,7 @@
           1. Let _dayLengthNs_ be ℝ(_endNs_ - _startNs_).
           1. Let _dayProgressNs_ be TimeDurationFromEpochNanosecondsDifference(_thisNs_, _startNs_).
           1. Let _roundedDayNs_ be ! RoundTimeDurationToIncrement(_dayProgressNs_, _dayLengthNs_, _roundingMode_).
-          1. Let _epochNanoseconds_ be _startNs_ + _roundedDayNs_.[[TotalNanoseconds]].
+          1. Let _epochNanoseconds_ be AddTimeDurationToEpochNanoseconds(_startNs_, _roundedDayNs_).
         1. Else,
           1. Let _roundResult_ be RoundISODateTime(_isoDateTime_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
           1. Let _offsetNanoseconds_ be GetOffsetNanosecondsFor(_timeZone_, _thisNs_).
