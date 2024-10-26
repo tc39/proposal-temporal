@@ -2762,6 +2762,15 @@ export function RejectDateTimeRange(isoDateTime) {
   }
 }
 
+// Same as above, but throws a different, non-user-facing error
+function AssertISODateTimeWithinLimits(isoDateTime) {
+  const ns = GetUTCEpochNanoseconds(isoDateTime);
+  assert(
+    ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX),
+    `${ISODateTimeToString(isoDateTime)} is outside the representable range`
+  );
+}
+
 // In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
 // responsible for throwing. In the polyfill, ValidateEpochNanoseconds takes its
 // place so that we can DRY the throwing code.
@@ -3000,6 +3009,8 @@ function DifferenceInstant(ns1, ns2, increment, smallestUnit, roundingMode) {
 }
 
 function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit) {
+  AssertISODateTimeWithinLimits(isoDateTime1);
+  AssertISODateTimeWithinLimits(isoDateTime2);
   let timeDuration = DifferenceTime(isoDateTime1.time, isoDateTime2.time);
 
   const timeSign = timeDuration.sign();
@@ -4006,13 +4017,10 @@ export function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
   return RoundNumberToIncrementAsIfPositive(epochNs, incrementNs, roundingMode);
 }
 
-export function RoundISODateTime(
-  { isoDate: { year, month, day }, time: { hour, minute, second, millisecond, microsecond, nanosecond } },
-  increment,
-  unit,
-  roundingMode
-) {
-  const time = RoundTime({ hour, minute, second, millisecond, microsecond, nanosecond }, increment, unit, roundingMode);
+export function RoundISODateTime(isoDateTime, increment, unit, roundingMode) {
+  AssertISODateTimeWithinLimits(isoDateTime);
+  const { year, month, day } = isoDateTime.isoDate;
+  const time = RoundTime(isoDateTime.time, increment, unit, roundingMode);
   const isoDate = BalanceISODate(year, month, day + time.deltaDays);
   return CombineISODateAndTimeRecord(isoDate, time);
 }
