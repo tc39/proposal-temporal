@@ -288,7 +288,7 @@ export class Duration {
       // First convert time units up to days
       const DAY_NANOS = 86400 * 1e9;
       const { quotient, remainder } = internalDuration.time.divmod(DAY_NANOS);
-      let days = internalDuration.date.days + quotient + remainder.fdiv(DAY_NANOS);
+      let days = internalDuration.date.days + quotient + ES.TotalTimeDuration(remainder, 'day');
       days = ES.RoundNumberToIncrement(days, roundingIncrement, roundingMode);
       const dateDuration = { years: 0, months: 0, weeks: 0, days };
       internalDuration = ES.CombineDateAndTimeDuration(dateDuration, TimeDuration.ZERO);

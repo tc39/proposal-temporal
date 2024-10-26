@@ -129,7 +129,7 @@ export class ZonedDateTime {
     const todayNs = ES.GetStartOfDay(timeZone, today);
     const tomorrowNs = ES.GetStartOfDay(timeZone, tomorrow);
     const diff = TimeDuration.fromEpochNsDiff(tomorrowNs, todayNs);
-    return diff.fdiv(3.6e12);
+    return ES.TotalTimeDuration(diff, 'hour');
   }
   get daysInWeek() {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
