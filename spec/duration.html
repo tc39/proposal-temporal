@@ -449,7 +449,7 @@
         1. Assert: IsCalendarUnit(_smallestUnit_) is *false*.
         1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
         1. If _smallestUnit_ is ~day~, then
-          1. Let _fractionalDays_ be DivideTimeDuration(_internalDuration_.[[Time]], nsPerDay).
+          1. Let _fractionalDays_ be TotalTimeDuration(_internalDuration_.[[Time]], ~day~).
           1. Let _days_ be RoundNumberToIncrement(_fractionalDays_, _roundingIncrement_, _roundingMode_).
           1. Let _dateDuration_ be ? CreateDateDurationRecord(0, 0, 0, _days_).
           1. Set _internalDuration_ to ! CombineDateAndTimeDuration(_dateDuration_, 0).
@@ -1411,24 +1411,6 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-dividetimeduration" type="abstract operation">
-      <h1>
-        DivideTimeDuration (
-          _d_: a time duration,
-          _divisor_: an integer,
-        ): a mathematical value
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It divides the total number of nanoseconds in the time duration _d_ by _divisor_.</dd>
-      </dl>
-      <emu-alg>
-        1. Assert: _divisor_ ≠ 0.
-        1. NOTE: The following step cannot be implemented directly using floating-point arithmetic when 𝔽(_d_) is not a safe integer. The division can be implemented in C++ with the `__float128` type if the compiler supports it, or with software emulation such as in the <a href="https://bellard.org/softfp/">SoftFP</a> library.
-        1. Return _d_ / _divisor_.
-      </emu-alg>
-    </emu-clause>
-
     <emu-clause id="sec-temporal-timedurationfromepochnanosecondsdifference" type="abstract operation">
       <h1>
         TimeDurationFromEpochNanosecondsDifference (
@@ -1539,7 +1521,8 @@
       </dl>
       <emu-alg>
         1. Let _divisor_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
-        1. Return DivideTimeDuration(_timeDuration_, _divisor_).
+        1. NOTE: The following step cannot be implemented directly using floating-point arithmetic when 𝔽(_timeDuration_) is not a safe integer. The division can be implemented in C++ with the `__float128` type if the compiler supports it, or with software emulation such as in the <a href="https://bellard.org/softfp/">SoftFP</a> library.
+        1. Return _timeDuration_ / _divisor_.
       </emu-alg>
     </emu-clause>
 
@@ -1739,8 +1722,8 @@
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _smallestUnit_.
         1. Let _roundedTime_ be ? RoundTimeDurationToIncrement(_timeDuration_, _unitLength_ × _increment_, _roundingMode_).
         1. Let _diffTime_ be ! AddTimeDuration(_roundedTime_, -_timeDuration_).
-        1. Let _wholeDays_ be truncate(DivideTimeDuration(_timeDuration_, nsPerDay)).
-        1. Let _roundedWholeDays_ be truncate(DivideTimeDuration(_roundedTime_, nsPerDay)).
+        1. Let _wholeDays_ be truncate(TotalTimeDuration(_timeDuration_, ~day~)).
+        1. Let _roundedWholeDays_ be truncate(TotalTimeDuration(_roundedTime_, ~day~)).
         1. Let _dayDelta_ be _roundedWholeDays_ - _wholeDays_.
         1. If _dayDelta_ &lt; 0, let _dayDeltaSign_ be -1; else if _dayDelta_ > 0, let _dayDeltaSign_ be 1; else let _dayDeltaSign_ be 0.
         1. If _dayDeltaSign_ = TimeDurationSign(_timeDuration_), let _didExpandDays_ be *true*; else let _didExpandDays_ be *false*.

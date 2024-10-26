@@ -402,7 +402,7 @@
         1. Let _todayNs_ be ? GetStartOfDay(_timeZone_, _today_).
         1. Let _tomorrowNs_ be ? GetStartOfDay(_timeZone_, _tomorrow_).
         1. Let _diff_ be TimeDurationFromEpochNanosecondsDifference(_tomorrowNs_, _todayNs_).
-        1. Return 𝔽(DivideTimeDuration(_diff_, 3.6 × 10<sup>12</sup>)).
+        1. Return 𝔽(TotalTimeDuration(_diff_, ~hour~)).
       </emu-alg>
     </emu-clause>
 
