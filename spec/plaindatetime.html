@@ -1025,7 +1025,7 @@
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
           1. Return 0.
         1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _unit_).
-        1. If _unit_ is ~nanosecond~, return _diff_.[[Time]].[[TotalNanoseconds]].
+        1. If _unit_ is ~nanosecond~, return _diff_.[[Time]].
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_).
         1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _unit_).
       </emu-alg>
