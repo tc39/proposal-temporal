@@ -3270,21 +3270,21 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
   const timeDuration = duration.time.add24HourDays(duration.date.days);
   // Convert to nanoseconds and round
   const unitLength = Call(MapPrototypeGet, NS_PER_TIME_UNIT, [smallestUnit]);
-  const roundedNorm = timeDuration.round(increment * unitLength, roundingMode);
-  const diffNorm = roundedNorm.subtract(timeDuration);
+  const roundedTime = timeDuration.round(increment * unitLength, roundingMode);
+  const diffTime = roundedTime.subtract(timeDuration);
 
   // Determine if whole days expanded
   const { quotient: wholeDays } = timeDuration.divmod(DAY_NANOS);
-  const { quotient: roundedWholeDays } = roundedNorm.divmod(DAY_NANOS);
+  const { quotient: roundedWholeDays } = roundedTime.divmod(DAY_NANOS);
   const didExpandDays = MathSign(roundedWholeDays - wholeDays) === timeDuration.sign();
 
-  const nudgedEpochNs = diffNorm.addToEpochNs(destEpochNs);
+  const nudgedEpochNs = diffTime.addToEpochNs(destEpochNs);
 
   let days = 0;
-  let remainder = roundedNorm;
+  let remainder = roundedTime;
   if (TemporalUnitCategory(largestUnit) === 'date') {
     days = roundedWholeDays;
-    remainder = roundedNorm.add(TimeDuration.fromComponents(-roundedWholeDays * 24, 0, 0, 0, 0, 0));
+    remainder = roundedTime.add(TimeDuration.fromComponents(-roundedWholeDays * 24, 0, 0, 0, 0, 0));
   }
 
   const dateDuration = AdjustDateDurationRecord(duration.date, days);
