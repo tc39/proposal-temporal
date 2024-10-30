@@ -55,7 +55,7 @@ Conversions to narrower types like `Temporal.PlainDate` or `Temporal.PlainTime` 
 ```javascript
 date = new Date(2019, 11, 31, 18, 30);  // => Tue Dec 31 2019 18:30:00 GMT-0800 (Pacific Standard Time)
 instant = date.toTemporalInstant();     // => 2020-01-01T02:30:00Z
-zonedDateTime = instant.toZonedDateTimeISO(Temporal.Now.timeZone());
+zonedDateTime = instant.toZonedDateTimeISO(Temporal.Now.timeZoneId());
                                         // => 2019-12-31T18:30:00-08:00[America/Los_Angeles]
 zonedDateTime.day;                      // => 31
 dateOnly = zonedDateTime.toPlainDate(); // => 2019-12-31
@@ -63,7 +63,7 @@ dateOnly = zonedDateTime.toPlainDate(); // => 2019-12-31
 <!-- prettier-ignore-end -->
 
 Bugs in `Date`=>`Temporal` conversions can be caused by picking the wrong time zone when converting from `Temporal.Instant` to `Temporal.ZonedDateTime`.
-For example, the example above constructs the `Date` using local-timezone parameters, so it uses the system time zone: `Temporal.Now.timeZone()`.
+For example, the example above constructs the `Date` using local-timezone parameters, so it uses the system time zone: `Temporal.Now.timeZoneId()`.
 But if the `Date` had been initialized with a string like `'2019-12-31'`, then getting the same date back in a `Temporal.PlainDate` would require using the `'UTC'` time zone instead.
 
 For discussion and code examples about picking the correct time zone, and also about `Date`<=>`Temporal` interoperability in general, see [Converting between `Temporal` types and legacy `Date`](cookbook.md#converting-between-temporal-types-and-legacy-date) in the documentation cookbook.
