@@ -502,12 +502,12 @@ The combination of `roundingIncrement` and `smallestUnit` must make an increment
 
 The `roundingMode` option controls how the rounding is performed.
 
-- `ceil`, `expand`: Always round up, towards the end of time.
-- `floor`, `trunc`: Always round down, towards the beginning of time.
-- `halfCeil`, `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
-  When there is a tie, round up, like `ceil`.
-- `halfFloor`, `halfTrunc`: Round to the nearest of the allowed values, like `halfExpand`, but when there is a tie, round down, like `floor`.
-- `halfEven`: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of `roundingIncrement`.
+- `'ceil'`, `'expand'`: Always round up, towards the end of time.
+- `'floor'`, `'trunc'`: Always round down, towards the beginning of time.
+- `'halfCeil'`, `'halfExpand'`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+  When there is a tie, round up, like `'ceil'`.
+- `'halfFloor'`, `'halfTrunc'`: Round to the nearest of the allowed values, like `'halfExpand'`, but when there is a tie, round down, like `'floor'`.
+- `'halfEven'`: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of `roundingIncrement`.
   For example, with a `roundingIncrement` of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).
 
 Several pairs of modes behave the same as each other, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.

@@ -88,8 +88,8 @@ datetime = new Temporal.PlainDateTime(2020, 3, 14, 13, 37); // => 2020-03-14T13:
 - `options` (optional object): An object with properties representing options for constructing the date and time.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values if `item` is an object.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDateTime` object.
 
@@ -112,16 +112,16 @@ If the string isn't valid according to ISO 8601, then a `RangeError` will be thr
 
 The `overflow` option works as follows, if `item` is an object:
 
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`).
-- In `reject` mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`) will cause the function to throw a `RangeError`.
+- In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`).
+- In `'reject'` mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`) will cause the function to throw a `RangeError`.
 
 The `overflow` option is ignored if `item` is a string.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
-> In the default `constrain` mode and when parsing an ISO 8601 string, this will be converted to 59.
-> In `reject` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
+> In the default `'constrain'` mode and when parsing an ISO 8601 string, this will be converted to 59.
+> In `'reject'` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `'reject'`.
 
 > **NOTE**: The allowed values for the `item.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
 
@@ -455,8 +455,8 @@ dt.with({ year: 2100 }).inLeapYear; // => false
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDateTime` object.
 
@@ -533,8 +533,8 @@ dt.withCalendar('iso8601'); // => 1995-12-07T03:24:30.0000035
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDateTime` object which is the date and time indicated by `datetime` plus `duration`.
 
@@ -547,8 +547,8 @@ Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
 
-- In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
+- In `'constrain'` mode (the default), out-of-range values are clamped to the nearest in-range value.
+- In `'reject'` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -573,8 +573,8 @@ dt.add({ months: 1 }, { overflow: 'reject' }); // => throws
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `overflow` (string): How to deal with subtractions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDateTime` object which is the time indicated by `datetime` minus `duration`.
 
@@ -587,8 +587,8 @@ Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
 
-- In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
+- In `'constrain'` mode (the default), out-of-range values are clamped to the nearest in-range value.
+- In `'reject'` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -756,12 +756,12 @@ If `smallestUnit` is `'day'`, then 1 is the only allowed value for `roundingIncr
 
 The `roundingMode` option controls how the rounding is performed.
 
-- `ceil`, `expand`: Always round up, towards the end of time.
-- `floor`, `trunc`: Always round down, towards the beginning of time.
-- `halfCeil`, `halfExpand`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
-  When there is a tie, round up, like `ceil`.
-- `halfFloor`, `halfTrunc`: Round to the nearest of the allowed values, like `halfExpand`, but when there is a tie, round down, like `floor`.
-- `halfEven`: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of `roundingIncrement`.
+- `'ceil'`, `'expand'`: Always round up, towards the end of time.
+- `'floor'`, `'trunc'`: Always round down, towards the beginning of time.
+- `'halfCeil'`, `'halfExpand'`: Round to the nearest of the values allowed by `roundingIncrement` and `smallestUnit`.
+  When there is a tie, round up, like `'ceil'`.
+- `'halfFloor'`, `'halfTrunc'`: Round to the nearest of the allowed values, like `'halfExpand'`, but when there is a tie, round down, like `'floor'`.
+- `'halfEven'`: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of `roundingIncrement`.
   For example, with a `roundingIncrement` of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).
 
 Several pairs of modes behave the same as each other, but are both included for consistency with `Temporal.Duration.round()`, where they are not the same.

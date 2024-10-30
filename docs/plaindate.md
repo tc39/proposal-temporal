@@ -58,8 +58,8 @@ date = new Temporal.PlainDate(2020, 3, 14); // => 2020-03-14
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values if `item` is an object.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDate` object.
 
@@ -81,8 +81,8 @@ If the string isn't valid according to ISO 8601, then a `RangeError` will be thr
 
 The `overflow` option works as follows, if `item` is an object:
 
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`).
-- In `reject` mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`) will cause the function to throw a `RangeError`.
+- In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`).
+- In `'reject'` mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`) will cause the function to throw a `RangeError`.
 
 The `overflow` option is ignored if `item` is a string.
 
@@ -364,8 +364,8 @@ date.with({ year: 2100 }).inLeapYear; // => false
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDate` object.
 
@@ -414,8 +414,8 @@ date.withCalendar('iso8601'); // => 2006-08-24
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `overflow` (optional string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDate` object which is the date indicated by `date` plus `duration`.
 
@@ -431,8 +431,8 @@ Some additions may be ambiguous, because months have different lengths.
 For example, adding one month to August 31 would result in September 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
 
-- In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
+- In `'constrain'` mode (the default), out-of-range values are clamped to the nearest in-range value.
+- In `'reject'` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDate` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -457,8 +457,8 @@ date.add({ months: 1 }, { overflow: 'reject' }); // => throws
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `overflow` (string): How to deal with subtractions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainDate` object which is the date indicated by `date` minus `duration`.
 
@@ -474,8 +474,8 @@ Some subtractions may be ambiguous, because months have different lengths.
 For example, subtracting one month from July 31 would result in June 31, which doesn't exist.
 For these cases, the `overflow` option tells what to do:
 
-- In `constrain` mode (the default), out-of-range values are clamped to the nearest in-range value.
-- In `reject` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
+- In `'constrain'` mode (the default), out-of-range values are clamped to the nearest in-range value.
+- In `'reject'` mode, an addition that would result in an out-of-range value fails, and a `RangeError` is thrown.
 
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDate` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -521,8 +521,8 @@ If `other` is not a `Temporal.PlainDate` object, then it will be converted to on
 
 The `largestUnit` option controls how the resulting duration is expressed.
 The returned `Temporal.Duration` object will not have any nonzero fields that are larger than the unit in `largestUnit`.
-A difference of two years will become 24 months when `largestUnit` is `"months"`, for example.
-However, a difference of two months will still be two months even if `largestUnit` is `"years"`.
+A difference of two years will become 24 months when `largestUnit` is `'months'`, for example.
+However, a difference of two months will still be two months even if `largestUnit` is `'years'`.
 A value of `'auto'` means `'day'`, unless `smallestUnit` is `'year'`, `'month'`, or `'week'`, in which case `largestUnit` is equal to `smallestUnit`.
 
 By default, the largest unit in the result is days.

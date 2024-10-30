@@ -59,8 +59,8 @@ md = new Temporal.PlainMonthDay(2, 29); // => 02-29
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values if `item` is an object.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainMonthDay` object.
 
@@ -83,8 +83,8 @@ A `RangeError` will also be thrown for strings that contain a `Z` in place of a 
 
 The `overflow` option works as follows, if `item` is an object:
 
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value, with "nearest" defined by the calendar.
-- In `reject` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
+- In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value, with "nearest" defined by the calendar.
+- In `'reject'` mode, the presence of out-of-range values will cause the function to throw a `RangeError`.
   If `day`, `month` and `year` are provided, that calendar date must exist in the provided calendar or a `RangeError` will be thrown.
 
 The `overflow` option is ignored if `item` is a string.
@@ -180,8 +180,8 @@ The `calendarId` read-only property gives the calendar that the `monthCode` and 
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 There are two ways to change the month: providing `monthCode` or `month`.
 If `month` is used and `calendar` is provided, then `year` must be provided as well because `month` is ambiguous in some calendars without knowing the year.
@@ -193,8 +193,8 @@ This method creates a new `Temporal.PlainMonthDay` which is a copy of `monthDay`
 
 The `overflow` option tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as "June 31":
 
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.
-- In `reject` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
+- In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.
+- In `'reject'` mode, the presence of out-of-range values will cause the constructor to throw a `RangeError`.
 
 > **NOTE:** For the purpose of this method, February is treated as having 29 days, so that it remains possible to construct a `Temporal.PlainMonthDay` for February 29.
 
