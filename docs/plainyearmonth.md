@@ -62,8 +62,8 @@ ym = new Temporal.PlainYearMonth(2019, 6);
 - `options` (optional object): An object with properties representing options for constructing the date.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values if `item` is an object.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainYearMonth` object.
 
@@ -83,8 +83,8 @@ A `RangeError` will also be thrown for strings that contain a `Z` in place of a 
 
 The `overflow` option works as follows, if `item` is an object:
 
-- In `constrain` mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`).
-- In `reject` mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`) will cause the function to throw a `RangeError`.
+- In `'constrain'` mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`).
+- In `'reject'` mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute `era` and `eraYear` with appropriate values for the `item`) will cause the function to throw a `RangeError`.
 
 The `overflow` option is ignored if `item` is a string.
 
@@ -290,8 +290,8 @@ ym.with({ year: 2100 }).inLeapYear; // => false
 - `options` (optional object): An object with properties representing options for the operation.
   The following options are recognized:
   - `overflow` (string): How to deal with out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainYearMonth` object.
 
@@ -323,8 +323,8 @@ ym.with({ month: 12 }); // => 2019-12
 - `options` (optional object): An object with properties representing options for the addition.
   The following options are recognized:
   - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainYearMonth` object which is the month indicated by `yearMonth` plus `duration`.
 
@@ -359,8 +359,8 @@ ym.add({ years: 20, months: 4 }); // => 2039-10
 - `options` (optional object): An object with properties representing options for the subtraction.
   The following options are recognized:
   - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.PlainYearMonth` object which is the month indicated by `yearMonth` minus `duration`.
 

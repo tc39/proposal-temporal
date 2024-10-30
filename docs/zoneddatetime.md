@@ -184,7 +184,7 @@ Additionally, if the result is earlier or later than the range of dates that `Te
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
 > In the default `'constrain'` mode and when parsing an ISO 8601 string, this will be converted to 59.
-> In `'reject'` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `reject`.
+> In `'reject'` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `'reject'`.
 
 If the input contains a time zone offset, in rare cases it's possible for those values to conflict for a particular local date and time.
 For example, this could happen if the definition of a time zone is changed (e.g. to abolish DST) after storing a `Temporal.ZonedDateTime` as a string representing a far-future event.
@@ -873,8 +873,8 @@ zdt.withCalendar('gregory').eraYear; // => 1995
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object which may have some or all of the following properties:
   - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object representing the sum of `zonedDateTime` plus `duration`.
 
@@ -936,8 +936,8 @@ laterHours.since(zdt, { largestUnit: 'hour' }).hours; // => 24
 - `duration` (object): A `Temporal.Duration` object or a duration-like object.
 - `options` (optional object): An object which may have some or all of the following properties:
   - `overflow` (string): How to deal with additions that result in out-of-range values.
-    Allowed values are `constrain` and `reject`.
-    The default is `constrain`.
+    Allowed values are `'constrain'` and `'reject'`.
+    The default is `'constrain'`.
 
 **Returns:** a new `Temporal.ZonedDateTime` object representing the result of `zonedDateTime` minus `duration`.
 

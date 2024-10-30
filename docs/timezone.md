@@ -301,7 +301,7 @@ In this case, then the `offset` option to [`Temporal.ZonedDateTime.from`](./zone
   See the documentation of `with()` for more details about why this option is used.
 - `'reject'`: Throw a `RangeError` if the offset is not valid for the provided date and time in the provided time zone.
 
-The default is `reject` for [`Temporal.ZonedDateTime.from`](./zoneddatetime.md#from) because there is no obvious default solution.
+The default is `'reject'` for [`Temporal.ZonedDateTime.from`](./zoneddatetime.md#from) because there is no obvious default solution.
 Instead, the developer needs to decide how to fix the now-invalid data.
 
 For [`Temporal.ZonedDateTime.with`](./zoneddatetime.md#with) the default is `'prefer'`.
