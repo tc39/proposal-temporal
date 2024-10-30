@@ -17,7 +17,7 @@ assert.equal(instant.toString(), '1970-01-01T00:00:01Z');
 
 // To use the system's local time zone, which corresponds to using
 // legacy Date's getFullYear(), getMonth(), etc. methods, pass
-// Temporal.Now.timeZone() as the time zone. In a browser, this
+// Temporal.Now.timeZoneId() as the time zone. In a browser, this
 // will be the user's time zone, but on a server the value may not
 // be what you expect, so avoid doing this in a server context.
 

@@ -13,7 +13,7 @@ The `Temporal.Now` object has several methods which give information about the c
 
 ## Methods
 
-### Temporal.Now.**zonedDateTimeISO**(_timeZone_: object | string = Temporal.Now.timeZone()) : Temporal.ZonedDateTime
+### Temporal.Now.**zonedDateTimeISO**(_timeZone_: object | string = Temporal.Now.timeZoneId()) : Temporal.ZonedDateTime
 
 **Parameters:**
 
@@ -93,7 +93,7 @@ console.log(`At ${nextTransition} the offset will change from UTC ${before} to $
 // At 2025-03-09T03:00:00-07:00[America/Los_Angeles] the offset will change from UTC -08:00 to -07:00
 ```
 
-### Temporal.Now.**plainDateTimeISO**(_timeZone_: object | string = Temporal.Now.timeZone()) : Temporal.PlainDateTime
+### Temporal.Now.**plainDateTimeISO**(_timeZone_: object | string = Temporal.Now.timeZoneId()) : Temporal.PlainDateTime
 
 **Parameters:**
 
@@ -129,7 +129,7 @@ Object.entries(financialCentres).forEach(([name, timeZone]) => {
 ```
 <!-- prettier-ignore-end -->
 
-### Temporal.Now.**plainDateISO**(_timeZone_: object | string = Temporal.Now.timeZone()) : Temporal.PlainDate
+### Temporal.Now.**plainDateISO**(_timeZone_: object | string = Temporal.Now.timeZoneId()) : Temporal.PlainDate
 
 **Parameters:**
 
@@ -156,7 +156,7 @@ date = Temporal.Now.plainDateISO().withCalendar('persian');
 if (date.month === 1 && date.day === 1) console.log('New year!');
 ```
 
-### Temporal.Now.**plainTimeISO**(_timeZone_: object | string = Temporal.Now.timeZone()) : Temporal.PlainTime
+### Temporal.Now.**plainTimeISO**(_timeZone_: object | string = Temporal.Now.timeZoneId()) : Temporal.PlainTime
 
 **Parameters:**
 
