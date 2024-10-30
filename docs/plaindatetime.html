@@ -306,8 +306,8 @@ datetime <span class="token operator">=</span> <span class="token keyword">new</
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date and time.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values if <code>item</code> is an object.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -325,15 +325,15 @@ Time zone or UTC offset information will be ignored, with one exception: if a st
 <p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>).</li>
-<li>In <code>reject</code> mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>) will cause the function to throw a <code>RangeError</code>.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>).</li>
+<li>In <code>&#39;reject&#39;</code> mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>) will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
 <p>The <code>overflow</code> option is ignored if <code>item</code> is a string.</p>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
-In the default <code>constrain</code> mode and when parsing an ISO 8601 string, this will be converted to 59.
-In <code>reject</code> mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.</p>
+In the default <code>&#39;constrain&#39;</code> mode and when parsing an ISO 8601 string, this will be converted to 59.
+In <code>&#39;reject&#39;</code> mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>&#39;reject&#39;</code>.</p>
 </blockquote>
 <blockquote>
 <p><strong>NOTE</strong>: The allowed values for the <code>item.month</code> property start at 1, which is different from legacy <code>Date</code> where months are represented by zero-based indices (0 to 11).</p>
@@ -540,8 +540,8 @@ dt<span class="token punctuation">.</span><span class="token function">with</spa
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -593,8 +593,8 @@ dt<span class="token punctuation">.</span><span class="token function">withCalen
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -606,8 +606,8 @@ If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it
 For example, adding one month to August 31 would result in September 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>&#39;reject&#39;</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
@@ -623,8 +623,8 @@ dt<span class="token punctuation">.</span><span class="token function">add</span
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with subtractions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -636,8 +636,8 @@ If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it
 For example, subtracting one month from July 31 would result in June 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>&#39;reject&#39;</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDateTime</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
@@ -774,12 +774,12 @@ Instead of 60 minutes, use 1 hour.)</p>
 <p>If <code>smallestUnit</code> is <code>&#39;day&#39;</code>, then 1 is the only allowed value for <code>roundingIncrement</code>.</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
 <ul>
-<li><code>ceil</code>, <code>expand</code>: Always round up, towards the end of time.</li>
-<li><code>floor</code>, <code>trunc</code>: Always round down, towards the beginning of time.</li>
-<li><code>halfCeil</code>, <code>halfExpand</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
-When there is a tie, round up, like <code>ceil</code>.</li>
-<li><code>halfFloor</code>, <code>halfTrunc</code>: Round to the nearest of the allowed values, like <code>halfExpand</code>, but when there is a tie, round down, like <code>floor</code>.</li>
-<li><code>halfEven</code>: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of <code>roundingIncrement</code>.
+<li><code>&#39;ceil&#39;</code>, <code>&#39;expand&#39;</code>: Always round up, towards the end of time.</li>
+<li><code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>: Always round down, towards the beginning of time.</li>
+<li><code>&#39;halfCeil&#39;</code>, <code>&#39;halfExpand&#39;</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+When there is a tie, round up, like <code>&#39;ceil&#39;</code>.</li>
+<li><code>&#39;halfFloor&#39;</code>, <code>&#39;halfTrunc&#39;</code>: Round to the nearest of the allowed values, like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round down, like <code>&#39;floor&#39;</code>.</li>
+<li><code>&#39;halfEven&#39;</code>: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of <code>roundingIncrement</code>.
 For example, with a <code>roundingIncrement</code> of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).</li>
 </ul>
 <p>Several pairs of modes behave the same as each other, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.</p>

@@ -225,8 +225,8 @@ time <span class="token operator">=</span> <span class="token keyword">new</span
 <li><code>options</code> (optional object): An object with properties representing options for constructing the time.
 The following options are recognized:<ul>
 <li><code>overflow</code> (optional string): How to deal with out-of-range values if <code>item</code> is an object.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -242,14 +242,14 @@ Time zone or UTC offset information will also be ignored, with one exception: if
 <p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC time&quot;: <code>Temporal.Instant.from(item).toZonedDateTimeISO(&#39;UTC&#39;).toPlainTime()</code>.</p>
 <p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), any out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>&#39;reject&#39;</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
 <p>The <code>overflow</code> option is ignored if <code>item</code> is a string.</p>
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, times coming from other software may have a <code>second</code> value of 60.
-In the default <code>constrain</code> mode, this will be converted to 59.
-In <code>reject</code> mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.
+In the default <code>&#39;constrain&#39;</code> mode, this will be converted to 59.
+In <code>&#39;reject&#39;</code> mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>&#39;reject&#39;</code>.
 However, if parsing an ISO 8601 string with a seconds component of <code>:60</code>, then it will always result in a <code>second</code> value of 59, in accordance with POSIX.</p>
 </blockquote>
 <p>Example usage:</p>
@@ -342,8 +342,8 @@ time<span class="token punctuation">.</span>nanosecond<span class="token punctua
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -488,12 +488,12 @@ The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, an
 Instead of 60 minutes, use 1 hour.)</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
 <ul>
-<li><code>ceil</code>, <code>expand</code>: Always round up, towards 23:59:59.999999999.</li>
-<li><code>floor</code>, <code>trunc</code>: Always round down, towards 00:00.</li>
-<li><code>halfCeil</code>, <code>halfExpand</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
-When there is a tie, round up, like <code>ceil</code>.</li>
-<li><code>halfFloor</code>, <code>halfTrunc</code>: Round to the nearest of the allowed values, like <code>halfExpand</code>, but when there is a tie, round down, like <code>floor</code>.</li>
-<li><code>halfEven</code>: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of <code>roundingIncrement</code>.
+<li><code>&#39;ceil&#39;</code>, <code>&#39;expand&#39;</code>: Always round up, towards 23:59:59.999999999.</li>
+<li><code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>: Always round down, towards 00:00.</li>
+<li><code>&#39;halfCeil&#39;</code>, <code>&#39;halfExpand&#39;</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+When there is a tie, round up, like <code>&#39;ceil&#39;</code>.</li>
+<li><code>&#39;halfFloor&#39;</code>, <code>&#39;halfTrunc&#39;</code>: Round to the nearest of the allowed values, like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round down, like <code>&#39;floor&#39;</code>.</li>
+<li><code>&#39;halfEven&#39;</code>: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of <code>roundingIncrement</code>.
 For example, with a <code>roundingIncrement</code> of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).</li>
 </ul>
 <p>Several pairs of modes behave the same as each other, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.</p>

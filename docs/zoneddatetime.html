@@ -382,7 +382,7 @@ Instead of using <code>Temporal.ZonedDateTime</code> with an offset time zone, i
 <blockquote>
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, dates coming from other software may have a <code>second</code> value of 60.
 In the default <code>&#39;constrain&#39;</code> mode and when parsing an ISO 8601 string, this will be converted to 59.
-In <code>&#39;reject&#39;</code> mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>reject</code>.</p>
+In <code>&#39;reject&#39;</code> mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>&#39;reject&#39;</code>.</p>
 </blockquote>
 <p>If the input contains a time zone offset, in rare cases it&#39;s possible for those values to conflict for a particular local date and time.
 For example, this could happen if the definition of a time zone is changed (e.g. to abolish DST) after storing a <code>Temporal.ZonedDateTime</code> as a string representing a far-future event.
@@ -844,8 +844,8 @@ zdt<span class="token punctuation">.</span><span class="token function">withCale
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>
 <li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -899,8 +899,8 @@ laterHours<span class="token punctuation">.</span><span class="token function">s
 <li><code>duration</code> (object): A <code>Temporal.Duration</code> object or a duration-like object.</li>
 <li><code>options</code> (optional object): An object which may have some or all of the following properties:<ul>
 <li><code>overflow</code> (string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>

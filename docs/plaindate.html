@@ -261,8 +261,8 @@ date <span class="token operator">=</span> <span class="token keyword">new</span
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values if <code>item</code> is an object.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -282,8 +282,8 @@ Time zone or UTC offset information will also be ignored, with one exception: if
 <p>If the string isn&#39;t valid according to ISO 8601, then a <code>RangeError</code> will be thrown regardless of the value of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>).</li>
-<li>In <code>reject</code> mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>) will cause the function to throw a <code>RangeError</code>.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), any out-of-range values are clamped to the nearest in-range value (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>).</li>
+<li>In <code>&#39;reject&#39;</code> mode, the presence of out-of-range values (after assuming extension of eras over arbitrary years to substitute <code>era</code> and <code>eraYear</code> with appropriate values for the <code>item</code>) will cause the function to throw a <code>RangeError</code>.</li>
 </ul>
 <p>The <code>overflow</code> option is ignored if <code>item</code> is a string.</p>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDate</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this function will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
@@ -449,8 +449,8 @@ date<span class="token punctuation">.</span><span class="token function">with</s
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -484,8 +484,8 @@ date<span class="token punctuation">.</span><span class="token function">withCal
 <li><code>options</code> (optional object): An object with properties representing options for the addition.
 The following options are recognized:<ul>
 <li><code>overflow</code> (optional string): How to deal with additions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -499,8 +499,8 @@ Effectively, this means that adding things like <code>{ minutes: 5 }</code> will
 For example, adding one month to August 31 would result in September 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>&#39;reject&#39;</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDate</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>Adding a negative duration is equivalent to subtracting the absolute value of that duration.</p>
@@ -516,8 +516,8 @@ date<span class="token punctuation">.</span><span class="token function">add</sp
 <li><code>options</code> (optional object): An object with properties representing options for the subtraction.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with subtractions that result in out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -531,8 +531,8 @@ Effectively, this means that subtracting things like <code>{ minutes: 5 }</code>
 For example, subtracting one month from July 31 would result in June 31, which doesn&#39;t exist.
 For these cases, the <code>overflow</code> option tells what to do:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
-<li>In <code>reject</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), out-of-range values are clamped to the nearest in-range value.</li>
+<li>In <code>&#39;reject&#39;</code> mode, an addition that would result in an out-of-range value fails, and a <code>RangeError</code> is thrown.</li>
 </ul>
 <p>Additionally, if the result is earlier or later than the range of dates that <code>Temporal.PlainDate</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>Subtracting a negative duration is equivalent to adding the absolute value of that duration.</p>
@@ -568,8 +568,8 @@ If using the default <code>options</code>, adding the returned <code>Temporal.Du
 <p>If <code>other</code> is not a <code>Temporal.PlainDate</code> object, then it will be converted to one as if it were passed to <code>Temporal.PlainDate.from()</code>.</p>
 <p>The <code>largestUnit</code> option controls how the resulting duration is expressed.
 The returned <code>Temporal.Duration</code> object will not have any nonzero fields that are larger than the unit in <code>largestUnit</code>.
-A difference of two years will become 24 months when <code>largestUnit</code> is <code>&quot;months&quot;</code>, for example.
-However, a difference of two months will still be two months even if <code>largestUnit</code> is <code>&quot;years&quot;</code>.
+A difference of two years will become 24 months when <code>largestUnit</code> is <code>&#39;months&#39;</code>, for example.
+However, a difference of two months will still be two months even if <code>largestUnit</code> is <code>&#39;years&#39;</code>.
 A value of <code>&#39;auto&#39;</code> means <code>&#39;day&#39;</code>, unless <code>smallestUnit</code> is <code>&#39;year&#39;</code>, <code>&#39;month&#39;</code>, or <code>&#39;week&#39;</code>, in which case <code>largestUnit</code> is equal to <code>smallestUnit</code>.</p>
 <p>By default, the largest unit in the result is days.
 This is because months and years can be different lengths depending on which month is meant and whether the year is a leap year.</p>

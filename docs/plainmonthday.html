@@ -221,8 +221,8 @@ md <span class="token operator">=</span> <span class="token keyword">new</span> 
 <li><code>options</code> (optional object): An object with properties representing options for constructing the date.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values if <code>item</code> is an object.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -244,8 +244,8 @@ Any other parts of the string are optional and will be ignored.</p>
 A <code>RangeError</code> will also be thrown for strings that contain a <code>Z</code> in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.</p>
 <p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value, with &quot;nearest&quot; defined by the calendar.</li>
-<li>In <code>reject</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.
+<li>In <code>&#39;constrain&#39;</code> mode (the default), any out-of-range values are clamped to the nearest in-range value, with &quot;nearest&quot; defined by the calendar.</li>
+<li>In <code>&#39;reject&#39;</code> mode, the presence of out-of-range values will cause the function to throw a <code>RangeError</code>.
 If <code>day</code>, <code>month</code> and <code>year</code> are provided, that calendar date must exist in the provided calendar or a <code>RangeError</code> will be thrown.</li>
 </ul>
 <p>The <code>overflow</code> option is ignored if <code>item</code> is a string.</p>
@@ -317,8 +317,8 @@ md<span class="token punctuation">.</span>month<span class="token punctuation">;
 <li><code>options</code> (optional object): An object with properties representing options for the operation.
 The following options are recognized:<ul>
 <li><code>overflow</code> (string): How to deal with out-of-range values.
-Allowed values are <code>constrain</code> and <code>reject</code>.
-The default is <code>constrain</code>.</li>
+Allowed values are <code>&#39;constrain&#39;</code> and <code>&#39;reject&#39;</code>.
+The default is <code>&#39;constrain&#39;</code>.</li>
 </ul>
 </li>
 </ul>
@@ -329,8 +329,8 @@ If <code>monthCode</code> is provided in addition to <code>month</code> and/or <
 <p>This method creates a new <code>Temporal.PlainMonthDay</code> which is a copy of <code>monthDay</code>, but any properties present on <code>monthDayLike</code> override the ones already present on <code>monthDay</code>.</p>
 <p>The <code>overflow</code> option tells what should happen when out-of-range values are given or when the result would be an invalid month-day combination, such as &quot;June 31&quot;:</p>
 <ul>
-<li>In <code>constrain</code> mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.</li>
-<li>In <code>reject</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
+<li>In <code>&#39;constrain&#39;</code> mode (the default), any out-of-range values are clamped to the nearest in-range value, so June 31 would become June 30.</li>
+<li>In <code>&#39;reject&#39;</code> mode, the presence of out-of-range values will cause the constructor to throw a <code>RangeError</code>.</li>
 </ul>
 <blockquote>
 <p><strong>NOTE:</strong> For the purpose of this method, February is treated as having 29 days, so that it remains possible to construct a <code>Temporal.PlainMonthDay</code> for February 29.</p>

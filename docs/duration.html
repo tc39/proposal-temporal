@@ -547,21 +547,21 @@ The valid values in this case are 1 (default), 2, 3, 4, 5, 6, 10, 12, 15, 20, an
 Instead of 60 minutes, use 1 hour.</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
 <ul>
-<li><code>halfExpand</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
-When there is a tie, round away from zero like <code>ceil</code> for positive durations and like <code>floor</code> for negative durations.
+<li><code>&#39;halfExpand&#39;</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+When there is a tie, round away from zero like <code>&#39;ceil&#39;</code> for positive durations and like <code>&#39;floor&#39;</code> for negative durations.
 This is the default, and matches how rounding is often taught in school.</li>
-<li><code>ceil</code>: Always round towards positive infinity.
+<li><code>&#39;ceil&#39;</code>: Always round towards positive infinity.
 For negative durations this option will decrease the absolute value of the duration which may be unexpected.
-To round away from zero, use <code>expand</code>.</li>
-<li><code>expand</code>:  Always round away from zero like <code>ceil</code> for positive durations and like <code>floor</code> for negative durations.</li>
-<li><code>trunc</code>: Always round towards zero, chopping off the part after the decimal point.</li>
-<li><code>floor</code>: Always round down, towards negative infinity.
-This mode acts the same as <code>trunc</code> for positive durations but for negative durations it will increase the absolute value of the result which may be unexpected.
-For this reason, <code>trunc</code> is recommended for most &quot;round down&quot; use cases.</li>
-<li><code>halfCeil</code>: Round to the nearest of the allowed values like <code>halfExpand</code>, but when there is a tie, round towards positive infinity like <code>ceil</code>.</li>
-<li><code>halfFloor</code>: Round to the nearest of the allowed values like <code>halfExpand</code>, but when there is a tie, round towards negative infinity like <code>floor</code>.</li>
-<li><code>halfTrunc</code>: Round to the nearest of the allowed values like <code>halfExpand</code>, but when there is a tie, round towards zero like <code>trunc</code>.</li>
-<li><code>halfEven</code>: Round to the nearest of the allowed values like <code>halfExpand</code>, but when there is a tie, round towards the value that is an even multiple of the <code>roundingIncrement</code>.
+To round away from zero, use <code>&#39;expand&#39;</code>.</li>
+<li><code>&#39;expand&#39;</code>:  Always round away from zero like <code>&#39;ceil&#39;</code> for positive durations and like <code>&#39;floor&#39;</code> for negative durations.</li>
+<li><code>&#39;trunc&#39;</code>: Always round towards zero, chopping off the part after the decimal point.</li>
+<li><code>&#39;floor&#39;</code>: Always round down, towards negative infinity.
+This mode acts the same as <code>&#39;trunc&#39;</code> for positive durations but for negative durations it will increase the absolute value of the result which may be unexpected.
+For this reason, <code>&#39;trunc&#39;</code> is recommended for most &quot;round down&quot; use cases.</li>
+<li><code>&#39;halfCeil&#39;</code>: Round to the nearest of the allowed values like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round towards positive infinity like <code>&#39;ceil&#39;</code>.</li>
+<li><code>&#39;halfFloor&#39;</code>: Round to the nearest of the allowed values like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round towards negative infinity like <code>&#39;floor&#39;</code>.</li>
+<li><code>&#39;halfTrunc&#39;</code>: Round to the nearest of the allowed values like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round towards zero like <code>&#39;trunc&#39;</code>.</li>
+<li><code>&#39;halfEven&#39;</code>: Round to the nearest of the allowed values like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round towards the value that is an even multiple of the <code>roundingIncrement</code>.
 For example, with a <code>roundingIncrement</code> of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).</li>
 </ul>
 <p>The <code>relativeTo</code> option gives the starting point used when converting between or rounding to years, months, weeks, or days.

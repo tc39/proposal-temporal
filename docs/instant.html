@@ -545,12 +545,12 @@ For example, to round to increments of a half hour, use <code>smallestUnit: &#39
 25 minutes, and 7 seconds are both not allowed.)</p>
 <p>The <code>roundingMode</code> option controls how the rounding is performed.</p>
 <ul>
-<li><code>ceil</code>, <code>expand</code>: Always round up, towards the end of time.</li>
-<li><code>floor</code>, <code>trunc</code>: Always round down, towards the beginning of time.</li>
-<li><code>halfCeil</code>, <code>halfExpand</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
-When there is a tie, round up, like <code>ceil</code>.</li>
-<li><code>halfFloor</code>, <code>halfTrunc</code>: Round to the nearest of the allowed values, like <code>halfExpand</code>, but when there is a tie, round down, like <code>floor</code>.</li>
-<li><code>halfEven</code>: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of <code>roundingIncrement</code>.
+<li><code>&#39;ceil&#39;</code>, <code>&#39;expand&#39;</code>: Always round up, towards the end of time.</li>
+<li><code>&#39;floor&#39;</code>, <code>&#39;trunc&#39;</code>: Always round down, towards the beginning of time.</li>
+<li><code>&#39;halfCeil&#39;</code>, <code>&#39;halfExpand&#39;</code>: Round to the nearest of the values allowed by <code>roundingIncrement</code> and <code>smallestUnit</code>.
+When there is a tie, round up, like <code>&#39;ceil&#39;</code>.</li>
+<li><code>&#39;halfFloor&#39;</code>, <code>&#39;halfTrunc&#39;</code>: Round to the nearest of the allowed values, like <code>&#39;halfExpand&#39;</code>, but when there is a tie, round down, like <code>&#39;floor&#39;</code>.</li>
+<li><code>&#39;halfEven&#39;</code>: Round to the nearest of the allowed values, but when there is a tie, round towards the value that is an even multiple of <code>roundingIncrement</code>.
 For example, with a <code>roundingIncrement</code> of 2, the number 7 would round up to 8 instead of down to 6, because 8 is an even multiple of 2 (2 × 4 = 8, and 4 is even), whereas 6 is an odd multiple (2 × 3 = 6, and 3 is odd).</li>
 </ul>
 <p>Several pairs of modes behave the same as each other, but are both included for consistency with <code>Temporal.Duration.round()</code>, where they are not the same.</p>

@@ -404,7 +404,7 @@ This option is rarely used when calling <code>from()</code>.
 See the documentation of <code>with()</code> for more details about why this option is used.</li>
 <li><code>&#39;reject&#39;</code>: Throw a <code>RangeError</code> if the offset is not valid for the provided date and time in the provided time zone.</li>
 </ul>
-<p>The default is <code>reject</code> for <a href="./zoneddatetime.html#from"><code>Temporal.ZonedDateTime.from</code></a> because there is no obvious default solution.
+<p>The default is <code>&#39;reject&#39;</code> for <a href="./zoneddatetime.html#from"><code>Temporal.ZonedDateTime.from</code></a> because there is no obvious default solution.
 Instead, the developer needs to decide how to fix the now-invalid data.</p>
 <p>For <a href="./zoneddatetime.html#with"><code>Temporal.ZonedDateTime.with</code></a> the default is <code>&#39;prefer&#39;</code>.
 This default is helpful to prevent DST disambiguation from causing unexpected one-hour changes in exact time after making small changes to clock time fields.
