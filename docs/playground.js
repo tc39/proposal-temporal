@@ -10868,11 +10868,9 @@
 	  return timeDuration;
 	}
 	function DifferenceInstant(ns1, ns2, increment, smallestUnit, roundingMode) {
-	  const diff = {
-	    date: ZeroDateDuration(),
-	    time: TimeDuration.fromEpochNsDiff(ns2, ns1)
-	  };
-	  return RoundTimeDuration(diff, increment, smallestUnit, roundingMode);
+	  let timeDuration = TimeDuration.fromEpochNsDiff(ns2, ns1);
+	  timeDuration = RoundTimeDuration(timeDuration, increment, smallestUnit, roundingMode);
+	  return CombineDateAndTimeDuration(ZeroDateDuration(), timeDuration);
 	}
 	function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit) {
 	  let timeDuration = DifferenceTime(isoDateTime1.time, isoDateTime2.time);
@@ -11434,13 +11432,8 @@
 	  const resolvedOptions = GetOptionsObject(options);
 	  const settings = GetDifferenceSettings(operation, resolvedOptions, 'time', [], 'nanosecond', 'hour');
 	  let timeDuration = DifferenceTime(GetSlot(plainTime, TIME), GetSlot(other, TIME));
-	  let duration = {
-	    date: ZeroDateDuration(),
-	    time: timeDuration
-	  };
-	  if (settings.smallestUnit !== 'nanosecond' || settings.roundingIncrement !== 1) {
-	    duration = RoundTimeDuration(duration, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode);
-	  }
+	  timeDuration = RoundTimeDuration(timeDuration, settings.roundingIncrement, settings.smallestUnit, settings.roundingMode);
+	  const duration = CombineDateAndTimeDuration(ZeroDateDuration(), timeDuration);
 	  let result = TemporalDurationFromInternal(duration, settings.largestUnit);
 	  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
 	  return result;
@@ -11772,22 +11765,10 @@
 	      return BalanceTime(hour, minute, second, millisecond, microsecond, result);
 	  }
 	}
-	function RoundTimeDuration(duration, increment, unit, roundingMode) {
-	  // unit must not be a calendar unit
-	  if (unit === 'day') {
-	    // First convert time units up to days
-	    const {
-	      quotient,
-	      remainder
-	    } = duration.time.divmod(DAY_NANOS);
-	    let days = duration.date.days + quotient + remainder.fdiv(DAY_NANOS);
-	    days = RoundNumberToIncrement(days, increment, roundingMode);
-	    const dateDuration = AdjustDateDurationRecord(duration.date, days);
-	    return CombineDateAndTimeDuration(dateDuration, TimeDuration.ZERO);
-	  }
+	function RoundTimeDuration(timeDuration, increment, unit, roundingMode) {
+	  // unit must be a time unit
 	  const divisor = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]);
-	  const timeDuration = duration.time.round(divisor * increment, roundingMode);
-	  return CombineDateAndTimeDuration(duration.date, timeDuration);
+	  return timeDuration.round(divisor * increment, roundingMode);
 	}
 	function TotalTimeDuration(timeDuration, unit) {
 	  const divisor = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]);
@@ -16031,9 +16012,28 @@
 	      throw new RangeError$1(`a starting point is required for ${largestUnit}s balancing`);
 	    }
 	    assert(!IsCalendarUnit(smallestUnit), 'smallestUnit was larger than largestUnit');
-	    let duration = ToInternalDurationRecordWith24HourDays(this);
-	    duration = RoundTimeDuration(duration, roundingIncrement, smallestUnit, roundingMode);
-	    return TemporalDurationFromInternal(duration, largestUnit);
+	    let internalDuration = ToInternalDurationRecordWith24HourDays(this);
+	    if (smallestUnit === 'day') {
+	      // First convert time units up to days
+	      const DAY_NANOS = 86400 * 1e9;
+	      const {
+	        quotient,
+	        remainder
+	      } = internalDuration.time.divmod(DAY_NANOS);
+	      let days = internalDuration.date.days + quotient + remainder.fdiv(DAY_NANOS);
+	      days = RoundNumberToIncrement(days, roundingIncrement, roundingMode);
+	      const dateDuration = {
+	        years: 0,
+	        months: 0,
+	        weeks: 0,
+	        days
+	      };
+	      internalDuration = CombineDateAndTimeDuration(dateDuration, TimeDuration.ZERO);
+	    } else {
+	      const timeDuration = RoundTimeDuration(internalDuration.time, roundingIncrement, smallestUnit, roundingMode);
+	      internalDuration = CombineDateAndTimeDuration(ZeroDateDuration(), timeDuration);
+	    }
+	    return TemporalDurationFromInternal(internalDuration, largestUnit);
 	  }
 	  total(totalOf) {
 	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
@@ -16100,9 +16100,10 @@
 	    } = ToSecondsStringPrecisionRecord(smallestUnit, digits);
 	    if (unit === 'nanosecond' && increment === 1) return TemporalDurationToString(this, precision);
 	    const largestUnit = DefaultTemporalLargestUnit(this);
-	    let duration = ToInternalDurationRecord(this);
-	    duration = RoundTimeDuration(duration, increment, unit, roundingMode);
-	    const roundedDuration = TemporalDurationFromInternal(duration, LargerOfTwoTemporalUnits(largestUnit, 'second'));
+	    let internalDuration = ToInternalDurationRecord(this);
+	    const timeDuration = RoundTimeDuration(internalDuration.time, increment, unit, roundingMode);
+	    internalDuration = CombineDateAndTimeDuration(internalDuration.date, timeDuration);
+	    const roundedDuration = TemporalDurationFromInternal(internalDuration, LargerOfTwoTemporalUnits(largestUnit, 'second'));
 	    return TemporalDurationToString(roundedDuration, precision);
 	  }
 	  toJSON() {
