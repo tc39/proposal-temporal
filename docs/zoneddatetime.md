@@ -673,6 +673,14 @@ If a time zone offset transition happens exactly at midnight, the transition wil
 
 Note that transitions that skip entire days (like the 2011 [change](https://en.wikipedia.org/wiki/Time_in_Samoa#2011_time_zone_change) of `Pacific/Apia` to the opposite side of the International Date Line) will return `24` because there are 24 real-world hours between one day's midnight and the next day's midnight.
 
+When the same day starts twice (due to an offset transition), `hoursInDay` reflects the total amount of time between the first start of the day, and the second end of the day. For example, on 2010-11-07 at 00:00:59 (1 minute after midnight), the `America/St_Johns` time zone transitioned from offset `-02:30` to offset `-03:30`, meaning that the time transitioned to 23:01:00 on the previous day. After 1 hour of wall-clock time passed, 2010-11-07 began again:
+
+```javascript
+const zdt = Temporal.ZonedDateTime.from('2010-11-07T23:00:00-03:30[America/St_Johns]);
+zdt.hoursInDay; // 25
+```
+Similar examples include `America/Goose_Bay` before 2010, `America/Moncton` before 2006, `Pacific/Guam` and `Pacific/Saipan` in 1969, and `America/Phoenix` in 1944.
+
 Usage example:
 
 <!-- prettier-ignore-start -->
@@ -1186,6 +1194,13 @@ The local time of the result is almost always `00:00`, but in rare cases it coul
 ```javascript
 const zdt = Temporal.ZonedDateTime.from('2015-10-18T12:00-02:00[America/Sao_Paulo]');
 zdt.startOfDay(); // => 2015-10-18T01:00:00-02:00[America/Sao_Paulo]
+```
+
+When the same day starts twice (due to an offset transition), the earlier time is used for `startOfDay`. For example, the `America/St_Johns` time zone transitioned from offset `-02:30` to offset `-03:30` on 2010-11-07:
+
+```javascript
+const zdt = Temporal.ZonedDateTime.from('2010-11-07T23:00:00-03:30[America/St_Johns]');
+zdt.startOfDay(); // 2010-11-07T00:00:00-02:30[America/St_Johns]
 ```
 
 Usage example:
