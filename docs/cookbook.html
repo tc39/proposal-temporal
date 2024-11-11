@@ -187,8 +187,8 @@ Math<span class="token punctuation">.</span><span class="token function">floor</
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span>epochMilliseconds<span class="token punctuation">,</span> legacyDate<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 assert<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span>instant<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">'1970-01-01T00:00:01Z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token comment">// If you need a ZonedDateTime, use the toZonedDateTime() or</span>
-<span class="token comment">// toZonedDateTimeISO() method of the resulting Instant.</span>
+<span class="token comment">// If you need a ZonedDateTime, use the toZonedDateTimeISO()</span>
+<span class="token comment">// method of the resulting Instant.</span>
 <span class="token comment">// You will need to specify a time zone, because legacy Date only</span>
 <span class="token comment">// stores an exact time, and does not store a time zone.</span>
 

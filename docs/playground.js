@@ -10669,6 +10669,12 @@
 	  }
 	}
 
+	// Same as above, but throws a different, non-user-facing error
+	function AssertISODateTimeWithinLimits(isoDateTime) {
+	  const ns = GetUTCEpochNanoseconds(isoDateTime);
+	  assert(ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX), `${ISODateTimeToString(isoDateTime)} is outside the representable range`);
+	}
+
 	// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
 	// responsible for throwing. In the polyfill, ValidateEpochNanoseconds takes its
 	// place so that we can DRY the throwing code.
@@ -10887,6 +10893,8 @@
 	  return CombineDateAndTimeDuration(ZeroDateDuration(), timeDuration);
 	}
 	function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit) {
+	  AssertISODateTimeWithinLimits(isoDateTime1);
+	  AssertISODateTimeWithinLimits(isoDateTime2);
 	  let timeDuration = DifferenceTime(isoDateTime1.time, isoDateTime2.time);
 	  const timeSign = timeDuration.sign();
 	  const dateSign = CompareISODate(isoDateTime2.isoDate, isoDateTime1.isoDate);
@@ -11141,8 +11149,8 @@
 	  const timeDuration = duration.time.add24HourDays(duration.date.days);
 	  // Convert to nanoseconds and round
 	  const unitLength = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [smallestUnit]);
-	  const roundedNorm = timeDuration.round(increment * unitLength, roundingMode);
-	  const diffNorm = roundedNorm.subtract(timeDuration);
+	  const roundedTime = timeDuration.round(increment * unitLength, roundingMode);
+	  const diffTime = roundedTime.subtract(timeDuration);
 
 	  // Determine if whole days expanded
 	  const {
@@ -11150,14 +11158,14 @@
 	  } = timeDuration.divmod(DAY_NANOS);
 	  const {
 	    quotient: roundedWholeDays
-	  } = roundedNorm.divmod(DAY_NANOS);
+	  } = roundedTime.divmod(DAY_NANOS);
 	  const didExpandDays = MathSign(roundedWholeDays - wholeDays) === timeDuration.sign();
-	  const nudgedEpochNs = diffNorm.addToEpochNs(destEpochNs);
+	  const nudgedEpochNs = diffTime.addToEpochNs(destEpochNs);
 	  let days = 0;
-	  let remainder = roundedNorm;
+	  let remainder = roundedTime;
 	  if (TemporalUnitCategory(largestUnit) === 'date') {
 	    days = roundedWholeDays;
-	    remainder = roundedNorm.add(TimeDuration.fromComponents(-roundedWholeDays * 24, 0, 0, 0, 0, 0));
+	    remainder = roundedTime.add(TimeDuration.fromComponents(-roundedWholeDays * 24, 0, 0, 0, 0, 0));
 	  }
 	  const dateDuration = AdjustDateDurationRecord(duration.date, days);
 	  return {
@@ -11695,34 +11703,18 @@
 	  const incrementNs = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]) * increment;
 	  return RoundNumberToIncrementAsIfPositive(epochNs, incrementNs, roundingMode);
 	}
-	function RoundISODateTime(_ref10, increment, unit, roundingMode) {
-	  let {
-	    isoDate: {
-	      year,
-	      month,
-	      day
-	    },
-	    time: {
-	      hour,
-	      minute,
-	      second,
-	      millisecond,
-	      microsecond,
-	      nanosecond
-	    }
-	  } = _ref10;
-	  const time = RoundTime({
-	    hour,
-	    minute,
-	    second,
-	    millisecond,
-	    microsecond,
-	    nanosecond
-	  }, increment, unit, roundingMode);
+	function RoundISODateTime(isoDateTime, increment, unit, roundingMode) {
+	  AssertISODateTimeWithinLimits(isoDateTime);
+	  const {
+	    year,
+	    month,
+	    day
+	  } = isoDateTime.isoDate;
+	  const time = RoundTime(isoDateTime.time, increment, unit, roundingMode);
 	  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
 	  return CombineISODateAndTimeRecord(isoDate, time);
 	}
-	function RoundTime(_ref11, increment, unit, roundingMode) {
+	function RoundTime(_ref10, increment, unit, roundingMode) {
 	  let {
 	    hour,
 	    minute,
@@ -11730,7 +11722,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref11;
+	  } = _ref10;
 	  let quantity;
 	  switch (unit) {
 	    case 'day':
@@ -16034,7 +16026,7 @@
 	        quotient,
 	        remainder
 	      } = internalDuration.time.divmod(DAY_NANOS);
-	      let days = internalDuration.date.days + quotient + remainder.fdiv(DAY_NANOS);
+	      let days = internalDuration.date.days + quotient + TotalTimeDuration(remainder, 'day');
 	      days = RoundNumberToIncrement(days, roundingIncrement, roundingMode);
 	      const dateDuration = {
 	        years: 0,
@@ -16788,7 +16780,7 @@
 	    const todayNs = GetStartOfDay(timeZone, today);
 	    const tomorrowNs = GetStartOfDay(timeZone, tomorrow);
 	    const diff = TimeDuration.fromEpochNsDiff(tomorrowNs, todayNs);
-	    return diff.fdiv(3.6e12);
+	    return TotalTimeDuration(diff, 'hour');
 	  }
 	  get daysInWeek() {
 	    if (!IsTemporalZonedDateTime(this)) throw new TypeError$1('invalid receiver');
@@ -16949,7 +16941,8 @@
 	      assert(thisNs.lt(endNs), 'cannot produce an instant during a day that occurs on or after end-of-day instant');
 	      const dayLengthNs = endNs.subtract(startNs);
 	      const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
-	      epochNanoseconds = dayProgressNs.round(dayLengthNs, roundingMode).add(new TimeDuration(startNs)).totalNs;
+	      const roundedDayNs = dayProgressNs.round(dayLengthNs, roundingMode);
+	      epochNanoseconds = roundedDayNs.addToEpochNs(startNs);
 	    } else {
 	      // smallestUnit < day
 	      // Round based on ISO-calendar time units
