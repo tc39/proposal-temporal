@@ -5012,10 +5012,21 @@
 	var inspectCustom = utilInspect.custom;
 	var inspectSymbol = isSymbol$2(inspectCustom) ? inspectCustom : null;
 
+	var quotes = {
+	    __proto__: null,
+	    'double': '"',
+	    single: "'"
+	};
+	var quoteREs = {
+	    __proto__: null,
+	    'double': /(["\\])/g,
+	    single: /(['\\])/g
+	};
+
 	var objectInspect = function inspect_(obj, options, depth, seen) {
 	    var opts = options || {};
 
-	    if (has(opts, 'quoteStyle') && (opts.quoteStyle !== 'single' && opts.quoteStyle !== 'double')) {
+	    if (has(opts, 'quoteStyle') && !has(quotes, opts.quoteStyle)) {
 	        throw new TypeError('option "quoteStyle" must be "single" or "double"');
 	    }
 	    if (
@@ -5210,7 +5221,8 @@
 	};
 
 	function wrapQuotes(s, defaultStyle, opts) {
-	    var quoteChar = (opts.quoteStyle || defaultStyle) === 'double' ? '"' : "'";
+	    var style = opts.quoteStyle || defaultStyle;
+	    var quoteChar = quotes[style];
 	    return quoteChar + s + quoteChar;
 	}
 
@@ -5368,8 +5380,10 @@
 	        var trailer = '... ' + remaining + ' more character' + (remaining > 1 ? 's' : '');
 	        return inspectString($slice.call(str, 0, opts.maxStringLength), opts) + trailer;
 	    }
+	    var quoteRE = quoteREs[opts.quoteStyle || 'single'];
+	    quoteRE.lastIndex = 0;
 	    // eslint-disable-next-line no-control-regex
-	    var s = $replace.call($replace.call(str, /(['\\])/g, '\\$1'), /[\x00-\x1f]/g, lowbyte);
+	    var s = $replace.call($replace.call(str, quoteRE, '\\$1'), /[\x00-\x1f]/g, lowbyte);
 	    return wrapQuotes(s, 'single', opts);
 	}
 
@@ -17111,10 +17125,20 @@
 		ZonedDateTime: ZonedDateTime
 	});
 
-	function toTemporalInstant() {
-	  const epochNanoseconds = bigInt(Call$1(DatePrototypeValueOf, this, [])).multiply(1e6);
-	  return new Instant(BigIntIfAvailable(epochNanoseconds));
+	// By default, a plain function can be called as a constructor. A method such as
+	// Date.prototype.toTemporalInstant should not be able to. We could check
+	// new.target in the body of toTemporalInstant, but that is not sufficient for
+	// preventing construction when passing it as the newTarget parameter of
+	// Reflect.construct. So we create it as a method of an otherwise unused class,
+	// and monkeypatch it onto Date.prototype.
+
+	class LegacyDateImpl {
+	  toTemporalInstant() {
+	    const epochNanoseconds = bigInt(Call$1(DatePrototypeValueOf, this, [])).multiply(1e6);
+	    return new Instant(BigIntIfAvailable(epochNanoseconds));
+	  }
 	}
+	const toTemporalInstant = LegacyDateImpl.prototype.toTemporalInstant;
 
 	// This is an alternate entry point that polyfills Temporal onto the global
 	// object. This is used only for the browser playground and the test262 tests.
