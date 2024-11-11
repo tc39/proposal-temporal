@@ -11324,7 +11324,7 @@
 	function DifferenceZonedDateTimeWithRounding(ns1, ns2, timeZone, calendar, largestUnit, roundingIncrement, smallestUnit, roundingMode) {
 	  if (TemporalUnitCategory(largestUnit) === 'time') {
 	    // The user is only asking for a time difference, so return difference of instants.
-	    return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, largestUnit);
+	    return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
 	  }
 	  const duration = DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit);
 	  if (smallestUnit === 'nanosecond' && roundingIncrement === 1) return duration;
