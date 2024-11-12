@@ -325,7 +325,7 @@
       </dl>
       <emu-alg>
         1. Let _date_ be MakeDay(𝔽(<del>_year_</del><ins>_isoDateTime_.[[ISODate]].[[Year]]</ins>), 𝔽(<del>_month_</del><ins>_isoDateTime_.[[ISODate]].[[Month]]</ins> - 1), 𝔽(<del>_day_</del><ins>_isoDateTime_.[[ISODate]].[[Day]]</ins>)).
-        1. Let _time_ be MakeTime(𝔽(<del>_hour_</del><ins>_isoDateTime_.[[Time]].[[Hour]]</ins>), 𝔽(<del>_minute_</del><ins>_isoDateTime_.[[Time]].[[Minute]]</ins>), 𝔽(<del>_second_</del><ins>_isoDateTime_.[[Time]].[[Second]]</ins>), 𝔽(<del>_millisecond_</del><ins>_isoDateTime_.[[Time]].[[Milliecond]]</ins>)).
+        1. Let _time_ be MakeTime(𝔽(<del>_hour_</del><ins>_isoDateTime_.[[Time]].[[Hour]]</ins>), 𝔽(<del>_minute_</del><ins>_isoDateTime_.[[Time]].[[Minute]]</ins>), 𝔽(<del>_second_</del><ins>_isoDateTime_.[[Time]].[[Second]]</ins>), 𝔽(<del>_millisecond_</del><ins>_isoDateTime_.[[Time]].[[Millisecond]]</ins>)).
         1. Let _ms_ be MakeDate(_date_, _time_).
         1. Assert: _ms_ is an integral Number.
         1. Return ℤ(ℝ(_ms_) × 10<sup>6</sup> + <del>_microsecond_</del><ins>_isoDateTime_.[[Time]].[[Microsecond]]</ins> × 10<sup>3</sup> + <del>_nanosecond_</del><ins>_isoDateTime_.[[Time]].[[Nanosecond]]</ins>).
