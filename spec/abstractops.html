@@ -626,7 +626,7 @@
         1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _value_, « ~year~, ~month~, ~month-code~, ~day~ », « ~hour~, ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~, ~offset~, ~time-zone~ », «»).
         1. Let _result_ be ? InterpretTemporalDateTimeFields(_calendar_, _fields_, ~constrain~).
         1. Let _timeZone_ be _fields_.[[TimeZone]].
-        1. Let _offsetString_ be _fields_.[[Offset]].
+        1. Let _offsetString_ be _fields_.[[OffsetString]].
         1. If _offsetString_ is ~unset~, then
           1. Set _offsetBehaviour_ to ~wall~.
         1. Let _isoDate_ be _result_.[[ISODate]].
