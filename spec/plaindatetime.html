@@ -968,9 +968,9 @@
         1. Assert: ISODateTimeWithinLimits(_isoDateTime2_) is *true*.
         1. Let _timeDuration_ be DifferenceTime(_isoDateTime1_.[[Time]], _isoDateTime2_.[[Time]]).
         1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
-        1. Let _dateSign_ be CompareISODate(_isoDateTime2_.[[ISODate]], _isoDateTime1_.[[ISODate]]).
+        1. Let _dateSign_ be CompareISODate(_isoDateTime1_.[[ISODate]], _isoDateTime2_.[[ISODate]]).
         1. Let _adjustedDate_ be _isoDateTime2_.[[ISODate]].
-        1. If _timeSign_ = -_dateSign_, then
+        1. If _timeSign_ = _dateSign_, then
           1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] + _timeSign_).
           1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, -_timeSign_).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(~day~, _largestUnit_).
