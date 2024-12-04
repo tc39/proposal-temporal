@@ -652,7 +652,7 @@
           1. Assert: ISODateWithinLimits(_date_) is *true*.
         1. Else,
           1. Let _date_ be _intermediateDate_.
-        1. Let _durationToAdd_ be ? ToDateDurationRecordWithoutTime(_duration_).
+        1. Let _durationToAdd_ be ToDateDurationRecordWithoutTime(_duration_).
         1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _overflow_).
         1. Let _addedDateFields_ be ISODateToFields(_calendar_, _addedDate_, ~year-month~).
         1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _overflow_).
