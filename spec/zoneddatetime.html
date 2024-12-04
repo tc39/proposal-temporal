@@ -1213,7 +1213,7 @@
           1. Throw a *RangeError* exception.
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _settings_ be ? GetDifferenceSettings(_operation_, _resolvedOptions_, ~datetime~, « », ~nanosecond~, ~hour~).
-        1. If TemporalUnitCategory(_settings_.[[LargestUnit]]) is not ~date~, then
+        1. If TemporalUnitCategory(_settings_.[[LargestUnit]]) is ~time~, then
           1. Let _internalDuration_ be DifferenceInstant(_zonedDateTime_.[[EpochNanoseconds]], _other_.[[EpochNanoseconds]], _settings_.[[RoundingIncrement]], _settings_.[[SmallestUnit]], _settings_.[[RoundingMode]]).
           1. Let _result_ be ! TemporalDurationFromInternal(_internalDuration_, _settings_.[[LargestUnit]]).
           1. If _operation_ is ~since~, set _result_ to CreateNegatedTemporalDuration(_result_).
