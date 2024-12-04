@@ -3014,11 +3014,11 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
   let timeDuration = DifferenceTime(isoDateTime1.time, isoDateTime2.time);
 
   const timeSign = timeDuration.sign();
-  const dateSign = CompareISODate(isoDateTime2.isoDate, isoDateTime1.isoDate);
+  const dateSign = CompareISODate(isoDateTime1.isoDate, isoDateTime2.isoDate);
 
   // back-off a day from date2 so that the signs of the date and time diff match
   let adjustedDate = isoDateTime2.isoDate;
-  if (dateSign === -timeSign) {
+  if (dateSign === timeSign) {
     adjustedDate = BalanceISODate(adjustedDate.year, adjustedDate.month, adjustedDate.day + timeSign);
     timeDuration = timeDuration.add24HourDays(-timeSign);
   }
