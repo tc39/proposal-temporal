@@ -954,7 +954,7 @@
           _isoDateTime2_: an ISO Date-Time Record,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
-        ): either a normal completion containing an Internal Duration Record or a throw completion
+        ): an Internal Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -972,13 +972,13 @@
         1. Let _adjustedDate_ be _isoDateTime2_.[[ISODate]].
         1. If _timeSign_ = -_dateSign_, then
           1. Set _adjustedDate_ to BalanceISODate(_adjustedDate_.[[Year]], _adjustedDate_.[[Month]], _adjustedDate_.[[Day]] + _timeSign_).
-          1. Set _timeDuration_ to ? Add24HourDaysToTimeDuration(_timeDuration_, -_timeSign_).
+          1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, -_timeSign_).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(~day~, _largestUnit_).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _isoDateTime1_.[[ISODate]], _adjustedDate_, _dateLargestUnit_).
         1. If _largestUnit_ is not _dateLargestUnit_, then
-          1. Set _timeDuration_ to ? Add24HourDaysToTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
+          1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
           1. Set _dateDifference_.[[Days]] to 0.
-        1. Return ? CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
+        1. Return ! CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
@@ -1001,7 +1001,7 @@
       <emu-alg>
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
           1. Return ! CombineDateAndTimeDuration(ZeroDateDuration(), 0).
-        1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _largestUnit_).
+        1. Let _diff_ be DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_).
         1. Return ? RoundRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
@@ -1024,7 +1024,7 @@
       <emu-alg>
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
           1. Return 0.
-        1. Let _diff_ be ? DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _unit_).
+        1. Let _diff_ be DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _unit_).
         1. If _unit_ is ~nanosecond~, return _diff_.[[Time]].
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_).
         1. Return ? TotalRelativeDuration(_diff_, _destEpochNs_, _isoDateTime1_, ~unset~, _calendar_, _unit_).

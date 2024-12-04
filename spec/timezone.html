@@ -382,7 +382,7 @@
         1. Let _possibleEpochNs_ be ? GetPossibleEpochNanoseconds(_timeZone_, _isoDateTime_).
         1. If _possibleEpochNs_ is not empty, return _possibleEpochNs_[0].
         1. Assert: IsOffsetTimeZoneIdentifier(_timeZone_) is *false*.
-        1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_), where _isoDateTimeAfter_ is the ISO Date-Time Record for which ! DifferenceISODateTime(_isoDateTime_, _isoDateTimeAfter_, *"iso8601"*, ~hour~).[[Time]] is the smallest possible value > 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
+        1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_), where _isoDateTimeAfter_ is the ISO Date-Time Record for which DifferenceISODateTime(_isoDateTime_, _isoDateTimeAfter_, *"iso8601"*, ~hour~).[[Time]] is the smallest possible value > 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
         1. Assert: _possibleEpochNsAfter_'s length = 1.
         1. Return _possibleEpochNsAfter_[0].
       </emu-alg>
