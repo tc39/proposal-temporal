@@ -909,7 +909,7 @@
       <h1>
         ToDateDurationRecordWithoutTime (
           _duration_: a Temporal.Duration,
-        ): either a normal completion containing a Date Duration Record, or a throw completion
+        ): a Date Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -918,7 +918,7 @@
       <emu-alg>
         1. Let _internalDuration_ be ToInternalDurationRecordWith24HourDays(_duration_).
         1. Let _days_ be truncate(_internalDuration_.[[Time]] / nsPerDay).
-        1. Return ? CreateDateDurationRecord(_internalDuration_.[[Date]].[[Years]], _internalDuration_.[[Date]].[[Months]], _internalDuration_.[[Date]].[[Weeks]], _days_).
+        1. Return ! CreateDateDurationRecord(_internalDuration_.[[Date]].[[Years]], _internalDuration_.[[Date]].[[Months]], _internalDuration_.[[Date]].[[Weeks]], _days_).
       </emu-alg>
     </emu-clause>
 

@@ -927,7 +927,7 @@
         1. Let _calendar_ be _temporalDate_.[[Calendar]].
         1. Let _duration_ be ? ToTemporalDuration(_temporalDurationLike_).
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
-        1. Let _dateDuration_ be ? ToDateDurationRecordWithoutTime(_duration_).
+        1. Let _dateDuration_ be ToDateDurationRecordWithoutTime(_duration_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _result_ be ? CalendarDateAdd(_calendar_, _temporalDate_.[[ISODate]], _dateDuration_, _overflow_).
