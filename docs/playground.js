@@ -65,11 +65,13 @@
 	/** @type {import('./uri')} */
 	var uri = URIError;
 
+	/** @type {import('./shams')} */
 	/* eslint complexity: [2, 18], max-statements: [2, 33] */
 	var shams$1 = function hasSymbols() {
 		if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
 		if (typeof Symbol.iterator === 'symbol') { return true; }
 
+		/** @type {{ [k in symbol]?: unknown }} */
 		var obj = {};
 		var sym = Symbol('test');
 		var symObj = Object(sym);
@@ -88,7 +90,7 @@
 
 		var symVal = 42;
 		obj[sym] = symVal;
-		for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
+		for (var _ in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
 		if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
 
 		if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
@@ -99,7 +101,8 @@
 		if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
 
 		if (typeof Object.getOwnPropertyDescriptor === 'function') {
-			var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+			// eslint-disable-next-line no-extra-parens
+			var descriptor = /** @type {PropertyDescriptor} */ (Object.getOwnPropertyDescriptor(obj, sym));
 			if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
 		}
 
@@ -109,6 +112,7 @@
 	var origSymbol = typeof Symbol !== 'undefined' && Symbol;
 	var hasSymbolSham = shams$1;
 
+	/** @type {import('.')} */
 	var hasSymbols$4 = function hasNativeSymbols() {
 		if (typeof origSymbol !== 'function') { return false; }
 		if (typeof Symbol !== 'function') { return false; }
@@ -123,19 +127,19 @@
 		foo: {}
 	};
 
-	var $Object$1 = Object;
+	// @ts-expect-error: TS errors on an inherited property for some reason
+	var result = { __proto__: test }.foo === test.foo
+		&& !(test instanceof Object);
 
 	/** @type {import('.')} */
 	var hasProto$1 = function hasProto() {
-		// @ts-expect-error: TS errors on an inherited property for some reason
-		return { __proto__: test }.foo === test.foo
-			&& !(test instanceof $Object$1);
+		return result;
 	};
 
 	/* eslint no-invalid-this: 1 */
 
 	var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
-	var toStr$5 = Object.prototype.toString;
+	var toStr$4 = Object.prototype.toString;
 	var max = Math.max;
 	var funcType = '[object Function]';
 
@@ -173,7 +177,7 @@
 
 	var implementation$3 = function bind(that) {
 	    var target = this;
-	    if (typeof target !== 'function' || toStr$5.apply(target) !== funcType) {
+	    if (typeof target !== 'function' || toStr$4.apply(target) !== funcType) {
 	        throw new TypeError(ERROR_MESSAGE + target);
 	    }
 	    var args = slicy(arguments, 1);
@@ -610,9 +614,11 @@
 		return esDefineProperty;
 	}
 
-	var GetIntrinsic$a = getIntrinsic;
+	/** @type {import('./gOPD')} */
+	var gOPD$1 = Object.getOwnPropertyDescriptor;
 
-	var $gOPD = GetIntrinsic$a('%Object.getOwnPropertyDescriptor%', true);
+	/** @type {import('.')} */
+	var $gOPD = gOPD$1;
 
 	if ($gOPD) {
 		try {
@@ -787,7 +793,7 @@
 
 	var $indexOf = callBind$1(GetIntrinsic$8('String.prototype.indexOf'));
 
-	var callBound$3 = function callBoundIntrinsic(name, allowMissing) {
+	var callBound$4 = function callBoundIntrinsic(name, allowMissing) {
 		var intrinsic = GetIntrinsic$8(name, !!allowMissing);
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
 			return callBind$1(intrinsic);
@@ -800,23 +806,23 @@
 	var $Array = GetIntrinsic$7('%Array%');
 
 	// eslint-disable-next-line global-require
-	var toStr$4 = !$Array.isArray && callBound$3('Object.prototype.toString');
+	var toStr$3 = !$Array.isArray && callBound$4('Object.prototype.toString');
 
 	var IsArray$3 = $Array.isArray || function IsArray(argument) {
-		return toStr$4(argument) === '[object Array]';
+		return toStr$3(argument) === '[object Array]';
 	};
 
 	// https://262.ecma-international.org/6.0/#sec-isarray
 	var IsArray$2 = IsArray$3;
 
 	var GetIntrinsic$6 = getIntrinsic;
-	var callBound$2 = callBound$3;
+	var callBound$3 = callBound$4;
 
 	var $TypeError$6 = type;
 
 	var IsArray$1 = IsArray$2;
 
-	var $apply = GetIntrinsic$6('%Reflect.apply%', true) || callBound$2('Function.prototype.apply');
+	var $apply = GetIntrinsic$6('%Reflect.apply%', true) || callBound$3('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
@@ -1278,11 +1284,11 @@
 	var GetIntrinsic$5 = getIntrinsic;
 
 	var callBind = callBindExports;
-	var callBound$1 = callBound$3;
+	var callBound$2 = callBound$4;
 
 	var $ownKeys = GetIntrinsic$5('%Reflect.ownKeys%', true);
 	var $pushApply = callBind.apply(GetIntrinsic$5('%Array.prototype.push%'));
-	var $SymbolValueOf = callBound$1('Symbol.prototype.valueOf', true);
+	var $SymbolValueOf = callBound$2('Symbol.prototype.valueOf', true);
 	var $gOPN = GetIntrinsic$5('%Object.getOwnPropertyNames%', true);
 	var $gOPS = $SymbolValueOf ? GetIntrinsic$5('%Object.getOwnPropertySymbols%') : null;
 
@@ -1473,7 +1479,7 @@
 			return false;
 		}
 	};
-	var toStr$3 = Object.prototype.toString;
+	var toStr$2 = Object.prototype.toString;
 	var objectClass = '[object Object]';
 	var fnClass = '[object Function]';
 	var genClass = '[object GeneratorFunction]';
@@ -1488,13 +1494,13 @@
 	if (typeof document === 'object') {
 		// Firefox 3 canonicalizes DDA to undefined when it's not accessed directly
 		var all = document.all;
-		if (toStr$3.call(all) === toStr$3.call(document.all)) {
+		if (toStr$2.call(all) === toStr$2.call(document.all)) {
 			isDDA = function isDocumentDotAll(value) {
 				/* globals document: false */
 				// in IE 6-8, typeof document.all is "object" and it's truthy
 				if ((isIE68 || !value) && (typeof value === 'undefined' || typeof value === 'object')) {
 					try {
-						var str = toStr$3.call(value);
+						var str = toStr$2.call(value);
 						return (
 							str === ddaClass
 							|| str === ddaClass2
@@ -1526,7 +1532,7 @@
 			if (typeof value !== 'function' && typeof value !== 'object') { return false; }
 			if (hasToStringTag$1) { return tryFunctionObject(value); }
 			if (isES6ClassFn(value)) { return false; }
-			var strClass = toStr$3.call(value);
+			var strClass = toStr$2.call(value);
 			if (strClass !== fnClass && strClass !== genClass && !(/^\[object HTML/).test(strClass)) { return false; }
 			return tryFunctionObject(value);
 		};
@@ -1634,7 +1640,7 @@
 		// eslint-disable-next-line global-require
 		var isArray = hasArrayLengthDefineBug && IsArray$3;
 
-		var callBound = callBound$3;
+		var callBound = callBound$4;
 
 		var $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
 
@@ -5208,7 +5214,7 @@
 	        var ys = arrObjKeys(obj, inspect);
 	        var isPlainObject = gPO ? gPO(obj) === Object.prototype : obj instanceof Object || obj.constructor === Object;
 	        var protoTag = obj instanceof Object ? '' : 'null prototype';
-	        var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr$2(obj), 8, -1) : protoTag ? 'Object' : '';
+	        var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr$1(obj), 8, -1) : protoTag ? 'Object' : '';
 	        var constructorTag = isPlainObject || typeof obj.constructor !== 'function' ? '' : obj.constructor.name ? obj.constructor.name + ' ' : '';
 	        var tag = constructorTag + (stringTag || protoTag ? '[' + $join.call($concat.call([], stringTag || [], protoTag || []), ': ') + '] ' : '');
 	        if (ys.length === 0) { return tag + '{}'; }
@@ -5230,13 +5236,13 @@
 	    return $replace.call(String(s), /"/g, '&quot;');
 	}
 
-	function isArray(obj) { return toStr$2(obj) === '[object Array]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isDate$1(obj) { return toStr$2(obj) === '[object Date]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isRegExp(obj) { return toStr$2(obj) === '[object RegExp]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isError(obj) { return toStr$2(obj) === '[object Error]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isString(obj) { return toStr$2(obj) === '[object String]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isNumber(obj) { return toStr$2(obj) === '[object Number]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isBoolean(obj) { return toStr$2(obj) === '[object Boolean]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function isArray(obj) { return toStr$1(obj) === '[object Array]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function isDate$1(obj) { return toStr$1(obj) === '[object Date]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function isRegExp(obj) { return toStr$1(obj) === '[object RegExp]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function isError(obj) { return toStr$1(obj) === '[object Error]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function isString(obj) { return toStr$1(obj) === '[object String]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function isNumber(obj) { return toStr$1(obj) === '[object Number]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function isBoolean(obj) { return toStr$1(obj) === '[object Boolean]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
 
 	// Symbol and BigInt do have Symbol.toStringTag by spec, so that can't be used to eliminate false positives
 	function isSymbol$2(obj) {
@@ -5272,7 +5278,7 @@
 	    return hasOwn$1.call(obj, key);
 	}
 
-	function toStr$2(obj) {
+	function toStr$1(obj) {
 	    return objectToString.call(obj);
 	}
 
@@ -5560,6 +5566,7 @@
 
 	var IsIntegralNumber$2 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber$1);
 
+	/** @type {(value: unknown) => value is null | undefined | string | symbol | number | boolean | bigint} */
 	var isPrimitive$2 = function isPrimitive(value) {
 		return value === null || (typeof value !== 'function' && typeof value !== 'object');
 	};
@@ -5581,7 +5588,7 @@
 		}
 	};
 
-	var toStr$1 = Object.prototype.toString;
+	var toStr = Object.prototype.toString;
 	var dateClass = '[object Date]';
 	var hasToStringTag = shams();
 
@@ -5589,29 +5596,135 @@
 		if (typeof value !== 'object' || value === null) {
 			return false;
 		}
-		return hasToStringTag ? tryDateObject(value) : toStr$1.call(value) === dateClass;
+		return hasToStringTag ? tryDateObject(value) : toStr.call(value) === dateClass;
 	};
 
 	var isSymbol$1 = {exports: {}};
 
-	var toStr = Object.prototype.toString;
+	var isRegex;
+	var hasRequiredIsRegex;
+
+	function requireIsRegex () {
+		if (hasRequiredIsRegex) return isRegex;
+		hasRequiredIsRegex = 1;
+
+		var callBound = callBound$4;
+		var hasToStringTag = shams();
+		var hasOwn = hasown;
+		var gOPD = gopd$1;
+
+		/** @type {import('.')} */
+		var fn;
+
+		if (hasToStringTag) {
+			/** @type {(receiver: ThisParameterType<typeof RegExp.prototype.exec>, ...args: Parameters<typeof RegExp.prototype.exec>) => ReturnType<typeof RegExp.prototype.exec>} */
+			var $exec = callBound('RegExp.prototype.exec');
+			/** @type {object} */
+			var isRegexMarker = {};
+
+			var throwRegexMarker = function () {
+				throw isRegexMarker;
+			};
+			/** @type {{ toString(): never, valueOf(): never, [Symbol.toPrimitive]?(): never }} */
+			var badStringifier = {
+				toString: throwRegexMarker,
+				valueOf: throwRegexMarker
+			};
+
+			if (typeof Symbol.toPrimitive === 'symbol') {
+				badStringifier[Symbol.toPrimitive] = throwRegexMarker;
+			}
+
+			/** @type {import('.')} */
+			// @ts-expect-error TS can't figure out that the $exec call always throws
+			// eslint-disable-next-line consistent-return
+			fn = function isRegex(value) {
+				if (!value || typeof value !== 'object') {
+					return false;
+				}
+
+				// eslint-disable-next-line no-extra-parens
+				var descriptor = /** @type {NonNullable<typeof gOPD>} */ (gOPD)(/** @type {{ lastIndex?: unknown }} */ (value), 'lastIndex');
+				var hasLastIndexDataProperty = descriptor && hasOwn(descriptor, 'value');
+				if (!hasLastIndexDataProperty) {
+					return false;
+				}
+
+				try {
+					// eslint-disable-next-line no-extra-parens
+					$exec(value, /** @type {string} */ (/** @type {unknown} */ (badStringifier)));
+				} catch (e) {
+					return e === isRegexMarker;
+				}
+			};
+		} else {
+			/** @type {(receiver: ThisParameterType<typeof Object.prototype.toString>, ...args: Parameters<typeof Object.prototype.toString>) => ReturnType<typeof Object.prototype.toString>} */
+			var $toString = callBound('Object.prototype.toString');
+			/** @const @type {'[object RegExp]'} */
+			var regexClass = '[object RegExp]';
+
+			/** @type {import('.')} */
+			fn = function isRegex(value) {
+				// In older browsers, typeof regex incorrectly returns 'function'
+				if (!value || (typeof value !== 'object' && typeof value !== 'function')) {
+					return false;
+				}
+
+				return $toString(value) === regexClass;
+			};
+		}
+
+		isRegex = fn;
+		return isRegex;
+	}
+
+	var safeRegexTest$1;
+	var hasRequiredSafeRegexTest;
+
+	function requireSafeRegexTest () {
+		if (hasRequiredSafeRegexTest) return safeRegexTest$1;
+		hasRequiredSafeRegexTest = 1;
+
+		var callBound = callBound$4;
+		var isRegex = requireIsRegex();
+
+		var $exec = callBound('RegExp.prototype.exec');
+		var $TypeError = type;
+
+		safeRegexTest$1 = function regexTester(regex) {
+			if (!isRegex(regex)) {
+				throw new $TypeError('`regex` must be a RegExp');
+			}
+			return function test(s) {
+				return $exec(regex, s) !== null;
+			};
+		};
+		return safeRegexTest$1;
+	}
+
+	var callBound$1 = callBound$4;
+	var $toString = callBound$1('Object.prototype.toString');
 	var hasSymbols$1 = hasSymbols$4();
+	var safeRegexTest = requireSafeRegexTest();
 
 	if (hasSymbols$1) {
-		var symToStr = Symbol.prototype.toString;
-		var symStringRegex = /^Symbol\(.*\)$/;
+		var $symToStr = callBound$1('Symbol.prototype.toString');
+		var isSymString = safeRegexTest(/^Symbol\(.*\)$/);
+
+		/** @type {(value: object) => value is Symbol} */
 		var isSymbolObject = function isRealSymbolObject(value) {
 			if (typeof value.valueOf() !== 'symbol') {
 				return false;
 			}
-			return symStringRegex.test(symToStr.call(value));
+			return isSymString($symToStr(value));
 		};
 
+		/** @type {import('.')} */
 		isSymbol$1.exports = function isSymbol(value) {
 			if (typeof value === 'symbol') {
 				return true;
 			}
-			if (toStr.call(value) !== '[object Symbol]') {
+			if (!value || typeof value !== 'object' || $toString(value) !== '[object Symbol]') {
 				return false;
 			}
 			try {
@@ -5621,7 +5734,7 @@
 			}
 		};
 	} else {
-
+		/** @type {import('.')} */
 		isSymbol$1.exports = function isSymbol(value) {
 			// this environment does not support Symbols.
 			return false ;
@@ -5637,6 +5750,7 @@
 	var isDate = isDateObject;
 	var isSymbol = isSymbolExports;
 
+	/** @type {(O: { valueOf?: () => unknown, toString?: () => unknown }, hint: 'number' | 'string' | 'default') => null | undefined | string | symbol | number | boolean | bigint} */
 	var ordinaryToPrimitive = function OrdinaryToPrimitive(O, hint) {
 		if (typeof O === 'undefined' || O === null) {
 			throw new TypeError('Cannot call method on ' + O);
@@ -5644,6 +5758,7 @@
 		if (typeof hint !== 'string' || (hint !== 'number' && hint !== 'string')) {
 			throw new TypeError('hint must be "string" or "number"');
 		}
+		/** @type {('toString' | 'valueOf')[]} */
 		var methodNames = hint === 'string' ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
 		var method, result, i;
 		for (i = 0; i < methodNames.length; ++i) {
@@ -5658,22 +5773,25 @@
 		throw new TypeError('No default value');
 	};
 
+	/** @type {<K extends PropertyKey>(O: Record<K, unknown>, P: K) => Function | undefined} */
 	var GetMethod = function GetMethod(O, P) {
 		var func = O[P];
 		if (func !== null && typeof func !== 'undefined') {
 			if (!isCallable(func)) {
-				throw new TypeError(func + ' returned for property ' + P + ' of object ' + O + ' is not a function');
+				throw new TypeError(func + ' returned for property ' + String(P) + ' of object ' + O + ' is not a function');
 			}
 			return func;
 		}
 		return void 0;
 	};
 
+	/** @type {import('./es2015')} */
 	// http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
 	var es2015 = function ToPrimitive(input) {
 		if (isPrimitive$1(input)) {
 			return input;
 		}
+		/** @type {'default' | 'string' | 'number'} */
 		var hint = 'default';
 		if (arguments.length > 1) {
 			if (arguments[1] === String) {
@@ -5686,7 +5804,8 @@
 		var exoticToPrim;
 		if (hasSymbols) {
 			if (Symbol.toPrimitive) {
-				exoticToPrim = GetMethod(input, Symbol.toPrimitive);
+				// eslint-disable-next-line no-extra-parens
+				exoticToPrim = GetMethod(/** @type {Record<PropertyKey, unknown>} */ (input), Symbol.toPrimitive);
 			} else if (isSymbol(input)) {
 				exoticToPrim = Symbol.prototype.valueOf;
 			}
@@ -5701,7 +5820,8 @@
 		if (hint === 'default' && (isDate(input) || isSymbol(input))) {
 			hint = 'string';
 		}
-		return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
+		// eslint-disable-next-line no-extra-parens
+		return ordinaryToPrimitive(/** @type {object} */ (input), hint === 'default' ? 'number' : hint);
 	};
 
 	var toPrimitive = es2015;
@@ -5716,96 +5836,6 @@
 	};
 
 	var ToPrimitive$2 = /*@__PURE__*/getDefaultExportFromCjs(ToPrimitive$1);
-
-	var isRegex;
-	var hasRequiredIsRegex;
-
-	function requireIsRegex () {
-		if (hasRequiredIsRegex) return isRegex;
-		hasRequiredIsRegex = 1;
-
-		var callBound = callBound$3;
-		var hasToStringTag = shams();
-		var has;
-		var $exec;
-		var isRegexMarker;
-		var badStringifier;
-
-		if (hasToStringTag) {
-			has = callBound('Object.prototype.hasOwnProperty');
-			$exec = callBound('RegExp.prototype.exec');
-			isRegexMarker = {};
-
-			var throwRegexMarker = function () {
-				throw isRegexMarker;
-			};
-			badStringifier = {
-				toString: throwRegexMarker,
-				valueOf: throwRegexMarker
-			};
-
-			if (typeof Symbol.toPrimitive === 'symbol') {
-				badStringifier[Symbol.toPrimitive] = throwRegexMarker;
-			}
-		}
-
-		var $toString = callBound('Object.prototype.toString');
-		var gOPD = Object.getOwnPropertyDescriptor;
-		var regexClass = '[object RegExp]';
-
-		isRegex = hasToStringTag
-			// eslint-disable-next-line consistent-return
-			? function isRegex(value) {
-				if (!value || typeof value !== 'object') {
-					return false;
-				}
-
-				var descriptor = gOPD(value, 'lastIndex');
-				var hasLastIndexDataProperty = descriptor && has(descriptor, 'value');
-				if (!hasLastIndexDataProperty) {
-					return false;
-				}
-
-				try {
-					$exec(value, badStringifier);
-				} catch (e) {
-					return e === isRegexMarker;
-				}
-			}
-			: function isRegex(value) {
-				// In older browsers, typeof regex incorrectly returns 'function'
-				if (!value || (typeof value !== 'object' && typeof value !== 'function')) {
-					return false;
-				}
-
-				return $toString(value) === regexClass;
-			};
-		return isRegex;
-	}
-
-	var safeRegexTest;
-	var hasRequiredSafeRegexTest;
-
-	function requireSafeRegexTest () {
-		if (hasRequiredSafeRegexTest) return safeRegexTest;
-		hasRequiredSafeRegexTest = 1;
-
-		var callBound = callBound$3;
-		var isRegex = requireIsRegex();
-
-		var $exec = callBound('RegExp.prototype.exec');
-		var $TypeError = type;
-
-		safeRegexTest = function regexTester(regex) {
-			if (!isRegex(regex)) {
-				throw new $TypeError('`regex` must be a RegExp');
-			}
-			return function test(s) {
-				return $exec(regex, s) !== null;
-			};
-		};
-		return safeRegexTest;
-	}
 
 	var defineProperties_1;
 	var hasRequiredDefineProperties;
@@ -5897,7 +5927,7 @@
 
 		var RequireObjectCoercible = RequireObjectCoercible$1;
 		var ToString$1 = ToString;
-		var callBound = callBound$3;
+		var callBound = callBound$4;
 		var $replace = callBound('String.prototype.replace');
 
 		var mvsIsWS = (/^\s$/).test('\u180E');
@@ -6011,7 +6041,7 @@
 		var $TypeError = type;
 		var $parseInteger = GetIntrinsic('%parseInt%');
 
-		var callBound = callBound$3;
+		var callBound = callBound$4;
 		var regexTester = requireSafeRegexTest();
 
 		var $strSlice = callBound('String.prototype.slice');
@@ -6095,7 +6125,7 @@
 
 	var $TypeError$1 = type;
 
-	var callBound = callBound$3;
+	var callBound = callBound$4;
 	var forEach = forEach$1;
 	var every = every$1;
 	var some = some$1;
@@ -6217,7 +6247,7 @@
 
 		var $TypeError = type;
 
-		var callBound = callBound$3;
+		var callBound = callBound$4;
 
 		var isInteger = requireIsInteger();
 
