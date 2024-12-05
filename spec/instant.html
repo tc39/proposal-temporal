@@ -474,7 +474,7 @@
       <emu-alg>
         1. Let _timeDuration_ be TimeDurationFromEpochNanosecondsDifference(_ns2_, _ns1_).
         1. Set _timeDuration_ to ! RoundTimeDuration(_timeDuration_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
-        1. Return ! CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
+        1. Return CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
       </emu-alg>
     </emu-clause>
 

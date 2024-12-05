@@ -452,10 +452,10 @@
           1. Let _fractionalDays_ be TotalTimeDuration(_internalDuration_.[[Time]], ~day~).
           1. Let _days_ be RoundNumberToIncrement(_fractionalDays_, _roundingIncrement_, _roundingMode_).
           1. Let _dateDuration_ be ? CreateDateDurationRecord(0, 0, 0, _days_).
-          1. Set _internalDuration_ to ! CombineDateAndTimeDuration(_dateDuration_, 0).
+          1. Set _internalDuration_ to CombineDateAndTimeDuration(_dateDuration_, 0).
         1. Else,
           1. Let _timeDuration_ be ? RoundTimeDuration(_internalDuration_.[[Time]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
-          1. Set _internalDuration_ to ! CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
+          1. Set _internalDuration_ to CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
         1. Return ? TemporalDurationFromInternal(_internalDuration_, _largestUnit_).
       </emu-alg>
     </emu-clause>
@@ -521,7 +521,7 @@
         1. Let _largestUnit_ be DefaultTemporalLargestUnit(_duration_).
         1. Let _internalDuration_ be ToInternalDurationRecord(_duration_).
         1. Let _timeDuration_ be ? RoundTimeDuration(_internalDuration_.[[Time]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
-        1. Set _internalDuration_ to ! CombineDateAndTimeDuration(_internalDuration_.[[Date]], _timeDuration_).
+        1. Set _internalDuration_ to CombineDateAndTimeDuration(_internalDuration_.[[Date]], _timeDuration_).
         1. Let _roundedLargestUnit_ be LargerOfTwoTemporalUnits(_largestUnit_, ~second~).
         1. Let _roundedDuration_ be ? TemporalDurationFromInternal(_internalDuration_, _roundedLargestUnit_).
         1. Return TemporalDurationToString(_roundedDuration_, _precision_.[[Precision]]).
@@ -883,7 +883,7 @@
       <emu-alg>
         1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]]).
         1. Let _timeDuration_ be TimeDurationFromComponents(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
-        1. Return ! CombineDateAndTimeDuration(_dateDuration_, _timeDuration_).
+        1. Return CombineDateAndTimeDuration(_dateDuration_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
@@ -901,7 +901,7 @@
         1. Let _timeDuration_ be TimeDurationFromComponents(_duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]]).
         1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, _duration_.[[Days]]).
         1. Let _dateDuration_ be ! CreateDateDurationRecord(_duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], 0).
-        1. Return ! CombineDateAndTimeDuration(_dateDuration_, _timeDuration_).
+        1. Return CombineDateAndTimeDuration(_dateDuration_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
@@ -1047,7 +1047,7 @@
         CombineDateAndTimeDuration (
           _dateDuration_: a Date Duration Record,
           _timeDuration_: a time duration,
-        ): either a normal completion containing an Internal Duration Record or a throw completion
+        ): an Internal Duration Record
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1056,7 +1056,7 @@
       <emu-alg>
         1. Let _dateSign_ be DateDurationSign(_dateDuration_).
         1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
-        1. If _dateSign_ ≠ 0 and _timeSign_ ≠ 0 and _dateSign_ ≠ _timeSign_, throw a *RangeError* exception.
+        1. Assert: If _dateSign_ ≠ 0 and _timeSign_ ≠ 0, _dateSign_ = _timeSign_.
         1. Return Internal Duration Record {
           [[Date]]: _dateDuration_,
           [[Time]]: _timeDuration_
@@ -1648,7 +1648,7 @@
           1. Let _didExpandCalendarUnit_ be *false*.
           1. Let _resultDuration_ be _startDuration_.
           1. Let _nudgedEpochNs_ be _startEpochNs_.
-        1. Set _resultDuration_ to ! CombineDateAndTimeDuration(_resultDuration_, 0).
+        1. Set _resultDuration_ to CombineDateAndTimeDuration(_resultDuration_, 0).
         1. Let _nudgeResult_ be Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandCalendarUnit_ }.
         1. Return the Record { [[NudgeResult]]: _nudgeResult_, [[Total]]: _total_ }.
       </emu-alg>
@@ -1695,7 +1695,7 @@
           1. Let _dayDelta_ be 0.
           1. Let _nudgedEpochNs_ be AddTimeDurationToEpochNanoseconds(_roundedTimeDuration_, _startEpochNs_).
         1. Let _dateDuration_ be ! AdjustDateDurationRecord(_duration_.[[Date]], _duration_.[[Date]].[[Days]] + _dayDelta_).
-        1. Let _resultDuration_ be ! CombineDateAndTimeDuration(_dateDuration_, _roundedTimeDuration_).
+        1. Let _resultDuration_ be CombineDateAndTimeDuration(_dateDuration_, _roundedTimeDuration_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didRoundBeyondDay_ }.
       </emu-alg>
     </emu-clause>
@@ -1734,7 +1734,7 @@
           1. Set _days_ to _roundedWholeDays_.
           1. Set _remainder_ to ! AddTimeDuration(_roundedTime_, TimeDurationFromComponents(-_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
         1. Let _dateDuration_ be ! AdjustDateDurationRecord(_duration_.[[Date]], _days_).
-        1. Let _resultDuration_ be ! CombineDateAndTimeDuration(_dateDuration_, _remainder_).
+        1. Let _resultDuration_ be CombineDateAndTimeDuration(_dateDuration_, _remainder_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandDays_ }.
       </emu-alg>
     </emu-clause>
@@ -1786,7 +1786,7 @@
             1. Let _beyondEnd_ be _nudgedEpochNs_ - _endEpochNs_.
             1. If _beyondEnd_ &lt; 0, let _beyondEndSign_ be -1; else if _beyondEnd_ > 0, let _beyondEndSign_ be 1; else let _beyondEndSign_ be 0.
             1. If _beyondEndSign_ ≠ -_sign_, then
-              1. Set _duration_ to ! CombineDateAndTimeDuration(_endDuration_, 0).
+              1. Set _duration_ to CombineDateAndTimeDuration(_endDuration_, 0).
             1. Else,
               1. Set _done_ to *true*.
           1. Set _unitIndex_ to _unitIndex_ - 1.
@@ -1926,7 +1926,7 @@
         1. Let _d1_ be ToInternalDurationRecordWith24HourDays(_duration_).
         1. Let _d2_ be ToInternalDurationRecordWith24HourDays(_other_).
         1. Let _timeResult_ be ? AddTimeDuration(_d1_.[[Time]], _d2_.[[Time]]).
-        1. Let _result_ be ! CombineDateAndTimeDuration(ZeroDateDuration(), _timeResult_).
+        1. Let _result_ be CombineDateAndTimeDuration(ZeroDateDuration(), _timeResult_).
         1. Return ? TemporalDurationFromInternal(_result_, _largestUnit_).
       </emu-alg>
     </emu-clause>
