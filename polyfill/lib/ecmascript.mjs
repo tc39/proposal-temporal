@@ -2964,9 +2964,10 @@ export function TemporalDurationFromInternal(internalDuration, largestUnit) {
 export function CombineDateAndTimeDuration(dateDuration, timeDuration) {
   const dateSign = DateDurationSign(dateDuration);
   const timeSign = timeDuration.sign();
-  if (dateSign !== 0 && timeSign !== 0 && dateSign !== timeSign) {
-    throw new RangeErrorCtor('mixed-sign values not allowed as duration fields');
-  }
+  assert(
+    dateSign === 0 || timeSign === 0 || dateSign === timeSign,
+    'should not be able to create mixed sign duration fields here'
+  );
   return { date: dateDuration, time: timeDuration };
 }
 

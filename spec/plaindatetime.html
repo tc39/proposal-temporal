@@ -978,7 +978,7 @@
         1. If _largestUnit_ is not _dateLargestUnit_, then
           1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, _dateDifference_.[[Days]]).
           1. Set _dateDifference_.[[Days]] to 0.
-        1. Return ! CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
+        1. Return CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
@@ -1000,7 +1000,7 @@
       </dl>
       <emu-alg>
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, then
-          1. Return ! CombineDateAndTimeDuration(ZeroDateDuration(), 0).
+          1. Return CombineDateAndTimeDuration(ZeroDateDuration(), 0).
         1. Let _diff_ be DifferenceISODateTime(_isoDateTime1_, _isoDateTime2_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _diff_.
         1. Let _destEpochNs_ be GetUTCEpochNanoseconds(_isoDateTime2_).

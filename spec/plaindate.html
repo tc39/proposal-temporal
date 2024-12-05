@@ -898,7 +898,7 @@
         1. If CompareISODate(_temporalDate_.[[ISODate]], _other_.[[ISODate]]) = 0, then
           1. Return ! CreateTemporalDuration(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).
         1. Let _dateDifference_ be CalendarDateUntil(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]], _other_.[[ISODate]], _settings_.[[LargestUnit]]).
-        1. Let _duration_ be ! CombineDateAndTimeDuration(_dateDifference_, 0).
+        1. Let _duration_ be CombineDateAndTimeDuration(_dateDifference_, 0).
         1. If _settings_.[[SmallestUnit]] is not ~day~ or _settings_.[[RoundingIncrement]] ≠ 1, then
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalDate_.[[ISODate]], MidnightTimeRecord()).
           1. Let _isoDateTimeOther_ be CombineISODateAndTimeRecord(_other_.[[ISODate]], MidnightTimeRecord()).

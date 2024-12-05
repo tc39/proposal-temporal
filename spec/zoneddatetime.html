@@ -1118,7 +1118,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _ns1_ = _ns2_, return ! CombineDateAndTimeDuration(ZeroDateDuration(), 0).
+        1. If _ns1_ = _ns2_, return CombineDateAndTimeDuration(ZeroDateDuration(), 0).
         1. Let _startDateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
         1. Let _endDateTime_ be GetISODateTimeFor(_timeZone_, _ns2_).
         1. If _ns2_ - _ns1_ &lt; 0, let _sign_ be -1; else let _sign_ be 1.
@@ -1139,7 +1139,7 @@
         1. Assert: _success_ is *true*.
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(_largestUnit_, ~day~).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _startDateTime_.[[ISODate]], _intermediateDateTime_.[[ISODate]], _dateLargestUnit_).
-        1. Return ! CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
+        1. Return CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
