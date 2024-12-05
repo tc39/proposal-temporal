@@ -1733,7 +1733,7 @@
         1. If TemporalUnitCategory(_largestUnit_) is ~date~, then
           1. Set _days_ to _roundedWholeDays_.
           1. Set _remainder_ to ! AddTimeDuration(_roundedTime_, TimeDurationFromComponents(-_roundedWholeDays_ * HoursPerDay, 0, 0, 0, 0, 0)).
-        1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _days_).
+        1. Let _dateDuration_ be ! AdjustDateDurationRecord(_duration_.[[Date]], _days_).
         1. Let _resultDuration_ be ? CombineDateAndTimeDuration(_dateDuration_, _remainder_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didExpandDays_ }.
       </emu-alg>
