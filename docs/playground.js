@@ -10866,9 +10866,7 @@
 	function CombineDateAndTimeDuration(dateDuration, timeDuration) {
 	  const dateSign = DateDurationSign(dateDuration);
 	  const timeSign = timeDuration.sign();
-	  if (dateSign !== 0 && timeSign !== 0 && dateSign !== timeSign) {
-	    throw new RangeError$1('mixed-sign values not allowed as duration fields');
-	  }
+	  assert(dateSign === 0 || timeSign === 0 || dateSign === timeSign, 'should not be able to create mixed sign duration fields here');
 	  return {
 	    date: dateDuration,
 	    time: timeDuration
@@ -10927,11 +10925,11 @@
 	  AssertISODateTimeWithinLimits(isoDateTime2);
 	  let timeDuration = DifferenceTime(isoDateTime1.time, isoDateTime2.time);
 	  const timeSign = timeDuration.sign();
-	  const dateSign = CompareISODate(isoDateTime2.isoDate, isoDateTime1.isoDate);
+	  const dateSign = CompareISODate(isoDateTime1.isoDate, isoDateTime2.isoDate);
 
 	  // back-off a day from date2 so that the signs of the date and time diff match
 	  let adjustedDate = isoDateTime2.isoDate;
-	  if (dateSign === -timeSign) {
+	  if (dateSign === timeSign) {
 	    adjustedDate = BalanceISODate(adjustedDate.year, adjustedDate.month, adjustedDate.day + timeSign);
 	    timeDuration = timeDuration.add24HourDays(-timeSign);
 	  }
