@@ -3479,6 +3479,8 @@ export function DifferencePlainDateTimeWithRounding(
     return { date: ZeroDateDuration(), time: TimeDuration.ZERO };
   }
 
+  RejectDateTimeRange(isoDateTime1);
+  RejectDateTimeRange(isoDateTime2);
   const duration = DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit);
 
   if (smallestUnit === 'nanosecond' && roundingIncrement === 1) return duration;
@@ -3500,6 +3502,8 @@ export function DifferencePlainDateTimeWithRounding(
 export function DifferencePlainDateTimeWithTotal(isoDateTime1, isoDateTime2, calendar, unit) {
   if (CompareISODateTime(isoDateTime1, isoDateTime2) == 0) return 0;
 
+  RejectDateTimeRange(isoDateTime1);
+  RejectDateTimeRange(isoDateTime2);
   const duration = DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, unit);
 
   if (unit === 'nanosecond') return duration.time.totalNs.toJSNumber();
