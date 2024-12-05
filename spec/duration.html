@@ -1684,7 +1684,7 @@
         1. Assert: TimeDurationSign(_daySpan_) = _sign_.
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
         1. Let _roundedTimeDuration_ be ? RoundTimeDurationToIncrement(_duration_.[[Time]], _increment_ × _unitLength_, _roundingMode_).
-        1. Let _beyondDaySpan_ be ? AddTimeDuration(_roundedTimeDuration_, -_daySpan_).
+        1. Let _beyondDaySpan_ be ! AddTimeDuration(_roundedTimeDuration_, -_daySpan_).
         1. If TimeDurationSign(_beyondDaySpan_) ≠ -_sign_, then
           1. Let _didRoundBeyondDay_ be *true*.
           1. Let _dayDelta_ be _sign_.
