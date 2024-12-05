@@ -1694,7 +1694,7 @@
           1. Let _didRoundBeyondDay_ be *false*.
           1. Let _dayDelta_ be 0.
           1. Let _nudgedEpochNs_ be AddTimeDurationToEpochNanoseconds(_roundedTimeDuration_, _startEpochNs_).
-        1. Let _dateDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _duration_.[[Date]].[[Days]] + _dayDelta_).
+        1. Let _dateDuration_ be ! AdjustDateDurationRecord(_duration_.[[Date]], _duration_.[[Date]].[[Days]] + _dayDelta_).
         1. Let _resultDuration_ be ? CombineDateAndTimeDuration(_dateDuration_, _roundedTimeDuration_).
         1. Return Duration Nudge Result Record { [[Duration]]: _resultDuration_, [[NudgedEpochNs]]: _nudgedEpochNs_, [[DidExpandCalendarUnit]]: _didRoundBeyondDay_ }.
       </emu-alg>
