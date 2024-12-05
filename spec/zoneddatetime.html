@@ -1139,7 +1139,7 @@
         1. Assert: _success_ is *true*.
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(_largestUnit_, ~day~).
         1. Let _dateDifference_ be CalendarDateUntil(_calendar_, _startDateTime_.[[ISODate]], _intermediateDateTime_.[[ISODate]], _dateLargestUnit_).
-        1. Return ? CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
+        1. Return ! CombineDateAndTimeDuration(_dateDifference_, _timeDuration_).
       </emu-alg>
     </emu-clause>
 
