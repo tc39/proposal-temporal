@@ -9,6 +9,7 @@ import {
   SymbolFor,
   SymbolToStringTag
 } from './primordials.mjs';
+import { GetSlot, ORIGINAL } from './slots.mjs';
 
 import Call from 'es-abstract/2024/Call.js';
 
@@ -17,6 +18,9 @@ import ESGetIntrinsic from 'es-abstract/GetIntrinsic.js';
 const INTRINSICS = {};
 
 const customUtilInspectFormatters = {
+  ['Intl.DateTimeFormat'](depth, options, inspect) {
+    return inspect(GetSlot(this, ORIGINAL), { depth, ...options });
+  },
   ['Temporal.Duration'](depth, options) {
     const descr = options.stylize(this._repr_, 'special');
     if (depth < 1) return descr;

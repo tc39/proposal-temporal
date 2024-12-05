@@ -30,6 +30,7 @@ import {
   EPOCHNANOSECONDS,
   ISO_DATE,
   ISO_DATE_TIME,
+  ORIGINAL,
   SetSlot,
   TIME,
   CALENDAR
@@ -41,7 +42,6 @@ const MD = SymbolCtor('md');
 const TIME_FMT = SymbolCtor('time');
 const DATETIME = SymbolCtor('datetime');
 const INST = SymbolCtor('instant');
-const ORIGINAL = SymbolCtor('original');
 const TZ_CANONICAL = SymbolCtor('timezone-canonical');
 const TZ_ORIGINAL = SymbolCtor('timezone-original');
 const CAL_ID = SymbolCtor('calendar-id');

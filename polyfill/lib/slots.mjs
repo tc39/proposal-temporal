@@ -38,6 +38,9 @@ export const MILLISECONDS = 'slot-milliseconds';
 export const MICROSECONDS = 'slot-microseconds';
 export const NANOSECONDS = 'slot-nanoseconds';
 
+// Intl.DateTimeFormat
+export const ORIGINAL = 'slot-original';
+
 const slots = new WeakMapCtor();
 export function CreateSlots(container) {
   Call(WeakMapPrototypeSet, slots, [container, ObjectCreate(null)]);
