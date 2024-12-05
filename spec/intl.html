@@ -865,7 +865,7 @@
               1. Set _formatOptions_.[[&lt;_prop_>]] to _value_.
               1. Set _needDefaults_ to *false*.
           1. If _needDefaults_ is *true*, then
-            1. If _anyPresent_ is *true*, return *null*.
+            1. If _anyPresent_ is *true* and _inherit_ is ~relevant~, return *null*.
             1. For each property name _prop_ of _defaultOptions_, do
               1. Set _formatOptions_.[[&lt;_prop_>]] to *"numeric"*.
             1. If _defaults_ is ~zoned-date-time~, then
