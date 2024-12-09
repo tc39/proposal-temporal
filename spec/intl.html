@@ -50,47 +50,6 @@
     </emu-clause>
   </del>
 
-  <emu-clause id="intl-object">
-    <h1>The Intl Object</h1>
-    <p>[...]</p>
-
-    <emu-clause id="sec-function-properties-of-the-intl-object">
-      <h1>Function Properties of the Intl Object</h1>
-      <p>[...]</p>
-
-      <emu-clause id="sec-intl.supportedvaluesof">
-        <h1>Intl.supportedValuesOf ( _key_ )</h1>
-
-        <p>When the `supportedValuesOf` method is called with argument _key_ , the following steps are taken:</p>
-
-        <emu-alg>
-          1. Let _key_ be ? ToString(_key_).
-          1. If _key_ is *"calendar"*, then
-            1. Let _list_ be a new empty List.
-            1. For each element _identifier_ of AvailableCalendars(), do
-              1. Let _canonical_ be CanonicalizeUValue(*"ca"*, _identifier_).
-              1. If _identifier_ is _canonical_, then
-                1. Append _identifier_ to _list_.
-          1. Else if _key_ is *"collation"*, then
-            1. Let _list_ be AvailableCanonicalCollations( ).
-          1. Else if _key_ is *"currency"*, then
-            1. Let _list_ be AvailableCanonicalCurrencies( ).
-          1. Else if _key_ is *"numberingSystem"*, then
-            1. Let _list_ be AvailableCanonicalNumberingSystems( ).
-          1. Else if _key_ is *"timeZone"*, then
-            1. <del>Let _list_ be AvailablePrimaryTimeZoneIdentifiers( ).</del>
-            1. <ins>Let _timeZones_ be AvailableNamedTimeZoneIdentifiers().</ins>
-            1. [declared="record"] <ins>Let _list_ be a List consisting of every element _record_ of _timeZones_ for which _record_.[[Identifier]] = _record_.[[PrimaryIdentifier]].</ins>
-          1. Else if _key_ is *"unit"*, then
-            1. Let _list_ be AvailableCanonicalUnits( ).
-          1. Else,
-            1. Throw a *RangeError* exception.
-          1. Return CreateArrayFromList( _list_ ).
-        </emu-alg>
-      </emu-clause>
-    </emu-clause>
-  </emu-clause>
-
   <emu-clause id="sec-ecma402-abstract-operations">
     <h1><a href="https://tc39.es/ecma402/#sec-abstract-operations">Abstract Operations</a></h1>
 
