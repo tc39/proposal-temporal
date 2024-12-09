@@ -730,14 +730,18 @@
         <dd>It interprets _x_ as <del>a time value as specified in es2024, <emu-xref href="#sec-time-values-and-time-range"></emu-xref></del><ins>an epoch time</ins>, and creates the corresponding parts according to the <ins>type of _x_,</ins> effective locale<ins>,</ins> and the formatting options of _dateTimeFormat_.</dd>
       </dl>
       <emu-alg>
+        1. <del>Let _x_ be TimeClip(_x_).</del>
+        1. <del>If _x_ is *NaN*, throw a *RangeError* exception.</del>
+        1. <del>Let _epochNanoseconds_ be ℤ(ℝ(_x_) × 10<sup>6</sup>).</del>
         1. <del>Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].</del>
-        1. <ins>Let _xFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
-        1. <ins>Let _format_ be _xFormatRecord_.[[Format]].</ins>
+        1. <ins>Let _formatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
+        1. <ins>Let _epochNanoseconds_ be _formatRecord_.[[EpochNanoseconds]].</ins>
+        1. <ins>Let _format_ be _formatRecord_.[[Format]].</ins>
         1. If <ins>_format_ has a field [[hour]] and</ins> _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
           1. Let _pattern_ be _format_.[[pattern12]].
         1. Else,
           1. Let _pattern_ be _format_.[[pattern]].
-        1. Let _result_ be <del>?</del> FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, <del>_x_</del><ins>_xFormatRecord_.[[EpochNanoseconds]]</ins>).
+        1. Let _result_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _epochNanoseconds_).
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -800,12 +804,16 @@
         1. <del>If _x_ is *NaN*, throw a *RangeError* exception.</del>
         1. <del>Let _y_ be TimeClip(_y_).</del>
         1. <del>If _y_ is *NaN*, throw a *RangeError* exception.</del>
+        1. <del>Let _xEpochNanoseconds_ be ℤ(ℝ(_x_) × 10<sup>6</sup>).</del>
+        1. <del>Let _yEpochNanoseconds_ be ℤ(ℝ(_y_) × 10<sup>6</sup>).</del>
         1. <ins>If IsTemporalObject(_x_) is *true* or IsTemporalObject(_y_) is *true*, then</ins>
           1. <ins>If SameTemporalType(_x_, _y_) is *false*, throw a *TypeError* exception.</ins>
         1. <ins>Let _xFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _x_).</ins>
         1. <ins>Let _yFormatRecord_ be ? HandleDateTimeValue(_dateTimeFormat_, _y_).</ins>
-        1. Let _tm1_ be ToLocalTime(<del>ℤ(ℝ(_x_) × 10<sup>6</sup>)</del><ins>_xFormatRecord_.[[EpochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
-        1. Let _tm2_ be ToLocalTime(<del>ℤ(ℝ(_y_) × 10<sup>6</sup>)</del><ins>_yFormatRecord_.[[EpochNanoseconds]]</ins>, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. <ins>Let _xEpochNanoseconds_ be _xFormatRecord_.[[EpochNanoseconds]].</ins>
+        1. <ins>Let _yEpochNanoseconds_ be _yFormatRecord_.[[EpochNanoseconds]].</ins>
+        1. Let _tm1_ be ToLocalTime(_xEpochNanoseconds_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
+        1. Let _tm2_ be ToLocalTime(_yEpochNanoseconds_, _dateTimeFormat_.[[Calendar]], _dateTimeFormat_.[[TimeZone]]).
         1. <del>Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].</del>
         1. <ins>Let _format_ be _xFormatRecord_.[[Format]].</ins>
         1. <ins>Assert: _format_ is equal to _yFormatRecord_.[[Format]].</ins>
@@ -846,7 +854,7 @@
               1. Set _relevantFieldsEqual_ to *false*.
         1. If _relevantFieldsEqual_ is *true*, then
           1. Let _collapsedResult_ be a new empty List.
-          1. Let _resultParts_ be <del>!</del> FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _x_).
+          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _xEpochNanoseconds_).
           1. For each Record { [[Type]], [[Value]] } _r_ of _resultParts_, do
             1. Append the Record { [[Type]]: _r_.[[Type]], [[Value]]: _r_.[[Value]], [[Source]]: *"shared"* } to _collapsedResult_.
           1. Return _collapsedResult_.
@@ -857,10 +865,10 @@
           1. Let _pattern_ be _rangePatternPart_.[[Pattern]].
           1. Let _source_ be _rangePatternPart_.[[Source]].
           1. If _source_ is *"startRange"* or *"shared"*, then
-            1. Let _z_ be _x_.
+            1. Let _z_ be _xEpochNanoseconds_.
           1. Else,
-            1. Let _z_ be _y_.
-          1. Let _resultParts_ be <del>!</del> FormatDateTimePattern(_dateTimeFormat_, _selectedRangePattern_, _pattern_, _z_).
+            1. Let _z_ be _yEpochNanoseconds_.
+          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _selectedRangePattern_, _pattern_, _z_).
           1. For each Record { [[Type]], [[Value]] } _r_ of _resultParts_, do
             1. Append the Record { [[Type]]: _r_.[[Type]], [[Value]]: _r_.[[Value]], [[Source]]: _source_ } to _rangeResult_.
         1. Return _rangeResult_.
