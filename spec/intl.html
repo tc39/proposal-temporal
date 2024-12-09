@@ -1264,55 +1264,6 @@
         1. Return ? FormatDateTimeRangeToParts(_dtf_, _x_, _y_).
       </emu-alg>
     </emu-clause>
-
-    <emu-clause id="sec-intl.datetimeformat.prototype.resolvedoptions">
-      <h1>Intl.DateTimeFormat.prototype.resolvedOptions ( )</h1>
-
-      <p>This function provides access to the locale and options computed during initialization of the object.</p>
-
-      <emu-alg>
-        1. Let _dtf_ be the *this* value.
-        1. If the implementation supports the normative optional constructor mode of <emu-xref href="#legacy-constructor"></emu-xref>, then
-          1. Set _dtf_ to ? UnwrapDateTimeFormat(_dtf_).
-        1. Perform ? RequireInternalSlot(_dtf_, [[InitializedDateTimeFormat]]).
-        1. <ins>Let _format_ be _dtf_.[[DateTimeFormat]].</ins>
-        1. Let _options_ be OrdinaryObjectCreate(%Object.prototype%).
-        1. For each row of <emu-xref href="#table-datetimeformat-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
-          1. Let _p_ be the Property value of the current row.
-          1. If there is an Internal Slot value in the current row, then
-            1. <del>Let _v_ be the value of _dtf_'s internal slot whose name is the Internal Slot value of the current row.</del>
-            1. <ins>If _p_ is neither *"hourCycle"* nor *"hour12"*, or if _format_ has a field [[hour]], then</ins>
-              1. <ins>Let _v_ be the value of _dtf_'s internal slot whose name is the Internal Slot value of the current row.</ins>
-            1. <ins>Else,</ins>
-              1. <ins>Let _v_ be *undefined*.</ins>
-          1. Else,
-            1. <del>Let _format_ be _dtf_.[[DateTimeFormat]].</del>
-            1. If _format_ has a field [[&lt;_p_>]] and _dtf_.[[DateStyle]] is *undefined* and _dtf_.[[TimeStyle]] is *undefined*, then
-              1. Let _v_ be _format_.[[&lt;_p_>]].
-            1. Else,
-              1. Let _v_ be *undefined*.
-          1. If _v_ is not *undefined*, then
-            1. If there is a Conversion value in the current row, then
-              1. Let _conversion_ be the Conversion value of the current row.
-              1. If _conversion_ is ~hour12~, then
-                1. If _v_ is *"h11"* or *"h12"*, set _v_ to *true*. Otherwise, set _v_ to *false*.
-              1. Else,
-                1. Assert: _conversion_ is ~number~.
-                1. Set _v_ to 𝔽(_v_).
-            1. Perform ! CreateDataPropertyOrThrow(_options_, _p_, _v_).
-        1. Return _options_.
-      </emu-alg>
-
-      <p>For web compatibility reasons, if the property *"hourCycle"* is set, the *"hour12"* property should be set to *true* when *"hourCycle"* is *"h11"* or *"h12"*, or to *false* when *"hourCycle"* is *"h23"* or *"h24"*.</p>
-
-      <emu-note>
-        In this version of the API, the *"timeZone"* property will be the identifier of the host environment's time zone if no *"timeZone"* property was provided in the options object provided to the Intl.DateTimeFormat constructor. The first edition left the *"timeZone"* property *undefined* in this case.
-      </emu-note>
-
-      <emu-note>
-        For compatibility with versions prior to the fifth edition, the *"hour12"* property is set in addition to the *"hourCycle"* property.
-      </emu-note>
-    </emu-clause>
   </emu-clause>
 
   <emu-clause id="sec-properties-of-intl-datetimeformat-instances">
