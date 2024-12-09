@@ -1202,7 +1202,7 @@
         1. If IsTimeZoneOffsetString(_timeZoneIdentifier_) is *true*, then
           1. Let _offsetNs_ be <del>ParseTimeZoneOffsetString</del><ins>! ParseDateTimeUTCOffset</ins>(_timeZoneIdentifier_).
         1. Else,
-          1. Assert: IsValidTimeZoneName(_timeZoneIdentifier_) is *true*.
+          1. Assert: GetAvailableNamedTimeZoneIdentifier(_timeZoneIdentifier_) is not ~empty~.
           1. Let _offsetNs_ be GetNamedTimeZoneOffsetNanoseconds(_timeZoneIdentifier_, _epochNs_).
         1. Let _tz_ be ℝ(_epochNs_) + _offsetNs_.
         1. If _calendar_ is *"gregory"*, then
