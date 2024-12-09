@@ -477,10 +477,10 @@
         1. Let _calendar_ be _result_.[[Calendar]].
         1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
         1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
-        1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
-        1. Set _result_ to ISODateToFields(_calendar_, _isoDate_, ~year-month~).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
+        1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
+        1. Set _result_ to ISODateToFields(_calendar_, _isoDate_, ~year-month~).
         1. NOTE: The following operation is called with ~constrain~ regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[Day]] field of the [[ISODate]] internal slot of the result.
         1. Set _isoDate_ to ? CalendarYearMonthFromFields(_calendar_, _result_, ~constrain~).
         1. Return ! CreateTemporalYearMonth(_isoDate_, _calendar_).
