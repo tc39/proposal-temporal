@@ -701,18 +701,18 @@
           1. Let _styles_ be _resolvedLocaleData_.[[styles]].[[&lt;_resolvedCalendar_>]].
           1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _styles_).
           1. <ins>If _dateStyle_ is not *undefined*, then</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]] »).</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[era]], [[year]], [[month]] »).</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[month]], [[day]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[era]], [[year]], [[month]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[month]], [[day]] »).</ins>
           1. <ins>Else,</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to *null*.</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to *null*.</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to *null*.</ins>
           1. <ins>If _timeStyle_ is not *undefined*, then</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
           1. <ins>Else,</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to *null*.</ins>
-          1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _matcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]], [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
+          1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]], [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
           1. <ins>Set _dateTimeFormat_.[[TemporalInstantFormat]] to _bestFormat_.</ins>
         1. Else,
           1. <del>Let _needDefaults_ be *true*.</del>
