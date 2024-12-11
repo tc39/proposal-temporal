@@ -65,76 +65,110 @@
 	/** @type {import('./uri')} */
 	var uri = URIError;
 
-	/** @type {import('./shams')} */
-	/* eslint complexity: [2, 18], max-statements: [2, 33] */
-	var shams$1 = function hasSymbols() {
-		if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
-		if (typeof Symbol.iterator === 'symbol') { return true; }
+	/** @type {import('./gOPD')} */
+	var gOPD$1 = Object.getOwnPropertyDescriptor;
 
-		/** @type {{ [k in symbol]?: unknown }} */
-		var obj = {};
-		var sym = Symbol('test');
-		var symObj = Object(sym);
-		if (typeof sym === 'string') { return false; }
+	/** @type {import('.')} */
+	var $gOPD$1 = gOPD$1;
 
-		if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
-		if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
-
-		// temp disabled per https://github.com/ljharb/object.assign/issues/17
-		// if (sym instanceof Symbol) { return false; }
-		// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
-		// if (!(symObj instanceof Symbol)) { return false; }
-
-		// if (typeof Symbol.prototype.toString !== 'function') { return false; }
-		// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
-
-		var symVal = 42;
-		obj[sym] = symVal;
-		for (var _ in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
-		if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
-
-		if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
-
-		var syms = Object.getOwnPropertySymbols(obj);
-		if (syms.length !== 1 || syms[0] !== sym) { return false; }
-
-		if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
-
-		if (typeof Object.getOwnPropertyDescriptor === 'function') {
-			// eslint-disable-next-line no-extra-parens
-			var descriptor = /** @type {PropertyDescriptor} */ (Object.getOwnPropertyDescriptor(obj, sym));
-			if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
+	if ($gOPD$1) {
+		try {
+			$gOPD$1([], 'length');
+		} catch (e) {
+			// IE 8 has a broken gOPD
+			$gOPD$1 = null;
 		}
+	}
 
-		return true;
-	};
-
-	var origSymbol = typeof Symbol !== 'undefined' && Symbol;
-	var hasSymbolSham = shams$1;
+	var gopd$1 = $gOPD$1;
 
 	/** @type {import('.')} */
-	var hasSymbols$4 = function hasNativeSymbols() {
-		if (typeof origSymbol !== 'function') { return false; }
-		if (typeof Symbol !== 'function') { return false; }
-		if (typeof origSymbol('foo') !== 'symbol') { return false; }
-		if (typeof Symbol('bar') !== 'symbol') { return false; }
+	var $defineProperty$3 = Object.defineProperty || false;
+	if ($defineProperty$3) {
+		try {
+			$defineProperty$3({}, 'a', { value: 1 });
+		} catch (e) {
+			// IE 8 has a broken defineProperty
+			$defineProperty$3 = false;
+		}
+	}
 
-		return hasSymbolSham();
-	};
+	var esDefineProperty = $defineProperty$3;
 
-	var test = {
-		__proto__: null,
-		foo: {}
-	};
+	var shams$1;
+	var hasRequiredShams;
 
-	// @ts-expect-error: TS errors on an inherited property for some reason
-	var result = { __proto__: test }.foo === test.foo
-		&& !(test instanceof Object);
+	function requireShams () {
+		if (hasRequiredShams) return shams$1;
+		hasRequiredShams = 1;
 
-	/** @type {import('.')} */
-	var hasProto$1 = function hasProto() {
-		return result;
-	};
+		/** @type {import('./shams')} */
+		/* eslint complexity: [2, 18], max-statements: [2, 33] */
+		shams$1 = function hasSymbols() {
+			if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
+			if (typeof Symbol.iterator === 'symbol') { return true; }
+
+			/** @type {{ [k in symbol]?: unknown }} */
+			var obj = {};
+			var sym = Symbol('test');
+			var symObj = Object(sym);
+			if (typeof sym === 'string') { return false; }
+
+			if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
+			if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
+
+			// temp disabled per https://github.com/ljharb/object.assign/issues/17
+			// if (sym instanceof Symbol) { return false; }
+			// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+			// if (!(symObj instanceof Symbol)) { return false; }
+
+			// if (typeof Symbol.prototype.toString !== 'function') { return false; }
+			// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+
+			var symVal = 42;
+			obj[sym] = symVal;
+			for (var _ in obj) { return false; } // eslint-disable-line no-restricted-syntax, no-unreachable-loop
+			if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
+
+			if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
+
+			var syms = Object.getOwnPropertySymbols(obj);
+			if (syms.length !== 1 || syms[0] !== sym) { return false; }
+
+			if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
+
+			if (typeof Object.getOwnPropertyDescriptor === 'function') {
+				// eslint-disable-next-line no-extra-parens
+				var descriptor = /** @type {PropertyDescriptor} */ (Object.getOwnPropertyDescriptor(obj, sym));
+				if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
+			}
+
+			return true;
+		};
+		return shams$1;
+	}
+
+	var hasSymbols$4;
+	var hasRequiredHasSymbols;
+
+	function requireHasSymbols () {
+		if (hasRequiredHasSymbols) return hasSymbols$4;
+		hasRequiredHasSymbols = 1;
+
+		var origSymbol = typeof Symbol !== 'undefined' && Symbol;
+		var hasSymbolSham = requireShams();
+
+		/** @type {import('.')} */
+		hasSymbols$4 = function hasNativeSymbols() {
+			if (typeof origSymbol !== 'function') { return false; }
+			if (typeof Symbol !== 'function') { return false; }
+			if (typeof origSymbol('foo') !== 'symbol') { return false; }
+			if (typeof Symbol('bar') !== 'symbol') { return false; }
+
+			return hasSymbolSham();
+		};
+		return hasSymbols$4;
+	}
 
 	/* eslint no-invalid-this: 1 */
 
@@ -223,12 +257,93 @@
 
 	var functionBind = Function.prototype.bind || implementation$2;
 
-	var call = Function.prototype.call;
-	var $hasOwn = Object.prototype.hasOwnProperty;
+	var functionCall;
+	var hasRequiredFunctionCall;
+
+	function requireFunctionCall () {
+		if (hasRequiredFunctionCall) return functionCall;
+		hasRequiredFunctionCall = 1;
+
+		/** @type {import('./functionCall')} */
+		functionCall = Function.prototype.call;
+		return functionCall;
+	}
+
+	var functionApply;
+	var hasRequiredFunctionApply;
+
+	function requireFunctionApply () {
+		if (hasRequiredFunctionApply) return functionApply;
+		hasRequiredFunctionApply = 1;
+
+		/** @type {import('./functionApply')} */
+		functionApply = Function.prototype.apply;
+		return functionApply;
+	}
+
+	/** @type {import('./reflectApply')} */
+	var reflectApply$1 = typeof Reflect !== 'undefined' && Reflect && Reflect.apply;
+
 	var bind$4 = functionBind;
 
+	var $apply$3 = requireFunctionApply();
+	var $call$2 = requireFunctionCall();
+	var $reflectApply = reflectApply$1;
+
+	/** @type {import('./actualApply')} */
+	var actualApply$1 = $reflectApply || bind$4.call($call$2, $apply$3);
+
+	var bind$3 = functionBind;
+	var $TypeError$a = type;
+
+	var $call$1 = requireFunctionCall();
+	var $actualApply = actualApply$1;
+
 	/** @type {import('.')} */
-	var hasown = bind$4.call(call, $hasOwn);
+	var callBindApplyHelpers = function callBindBasic(args) {
+		if (args.length < 1 || typeof args[0] !== 'function') {
+			throw new $TypeError$a('a function is required');
+		}
+		return $actualApply(bind$3, $call$1, args);
+	};
+
+	var get;
+	var hasRequiredGet$1;
+
+	function requireGet$1 () {
+		if (hasRequiredGet$1) return get;
+		hasRequiredGet$1 = 1;
+
+		var callBind = callBindApplyHelpers;
+		var gOPD = gopd$1;
+
+		// eslint-disable-next-line no-extra-parens, no-proto
+		var hasProtoAccessor = /** @type {{ __proto__?: typeof Array.prototype }} */ ([]).__proto__ === Array.prototype;
+
+		// eslint-disable-next-line no-extra-parens
+		var desc = hasProtoAccessor && gOPD && gOPD(Object.prototype, /** @type {keyof typeof Object.prototype} */ ('__proto__'));
+
+		var $Object = Object;
+		var $getPrototypeOf = $Object.getPrototypeOf;
+
+		/** @type {import('./get')} */
+		get = desc && typeof desc.get === 'function'
+			? callBind([desc.get])
+			: typeof $getPrototypeOf === 'function'
+				? /** @type {import('./get')} */ function getDunder(value) {
+					// eslint-disable-next-line eqeqeq
+					return $getPrototypeOf(value == null ? value : $Object(value));
+				}
+				: false;
+		return get;
+	}
+
+	var call = Function.prototype.call;
+	var $hasOwn = Object.prototype.hasOwnProperty;
+	var bind$2 = functionBind;
+
+	/** @type {import('.')} */
+	var hasown = bind$2.call(call, $hasOwn);
 
 	var undefined$1;
 
@@ -237,7 +352,7 @@
 	var $RangeError$1 = requireRange();
 	var $ReferenceError = ref;
 	var $SyntaxError$1 = syntax;
-	var $TypeError$a = type;
+	var $TypeError$9 = type;
 	var $URIError = uri;
 
 	var $Function = Function;
@@ -249,19 +364,13 @@
 		} catch (e) {}
 	};
 
-	var $gOPD$1 = Object.getOwnPropertyDescriptor;
-	if ($gOPD$1) {
-		try {
-			$gOPD$1({}, '');
-		} catch (e) {
-			$gOPD$1 = null; // this is IE 8, which has a broken gOPD
-		}
-	}
+	var $gOPD = gopd$1;
+	var $defineProperty$2 = esDefineProperty;
 
 	var throwTypeError = function () {
-		throw new $TypeError$a();
+		throw new $TypeError$9();
 	};
-	var ThrowTypeError = $gOPD$1
+	var ThrowTypeError = $gOPD
 		? (function () {
 			try {
 				// eslint-disable-next-line no-unused-expressions, no-caller, no-restricted-properties
@@ -270,7 +379,7 @@
 			} catch (calleeThrows) {
 				try {
 					// IE 8 throws on Object.getOwnPropertyDescriptor(arguments, '')
-					return $gOPD$1(arguments, 'callee').get;
+					return $gOPD(arguments, 'callee').get;
 				} catch (gOPDthrows) {
 					return throwTypeError;
 				}
@@ -278,14 +387,15 @@
 		}())
 		: throwTypeError;
 
-	var hasSymbols$3 = hasSymbols$4();
-	var hasProto = hasProto$1();
+	var hasSymbols$3 = requireHasSymbols()();
+	var getDunderProto = requireGet$1();
 
-	var getProto = Object.getPrototypeOf || (
-		hasProto
-			? function (x) { return x.__proto__; } // eslint-disable-line no-proto
-			: null
-	);
+	var getProto = (typeof Reflect === 'function' && Reflect.getPrototypeOf)
+		|| Object.getPrototypeOf
+		|| getDunderProto;
+
+	var $apply$2 = requireFunctionApply();
+	var $call = requireFunctionCall();
 
 	var needsEval = {};
 
@@ -333,6 +443,7 @@
 		'%Math%': Math,
 		'%Number%': Number,
 		'%Object%': Object,
+		'%Object.getOwnPropertyDescriptor%': $gOPD,
 		'%parseFloat%': parseFloat,
 		'%parseInt%': parseInt,
 		'%Promise%': typeof Promise === 'undefined' ? undefined$1 : Promise,
@@ -350,7 +461,7 @@
 		'%SyntaxError%': $SyntaxError$1,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
-		'%TypeError%': $TypeError$a,
+		'%TypeError%': $TypeError$9,
 		'%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
 		'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
 		'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
@@ -358,7 +469,11 @@
 		'%URIError%': $URIError,
 		'%WeakMap%': typeof WeakMap === 'undefined' ? undefined$1 : WeakMap,
 		'%WeakRef%': typeof WeakRef === 'undefined' ? undefined$1 : WeakRef,
-		'%WeakSet%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet
+		'%WeakSet%': typeof WeakSet === 'undefined' ? undefined$1 : WeakSet,
+
+		'%Function.prototype.call%': $call,
+		'%Function.prototype.apply%': $apply$2,
+		'%Object.defineProperty%': $defineProperty$2
 	};
 
 	if (getProto) {
@@ -451,13 +566,13 @@
 		'%WeakSetPrototype%': ['WeakSet', 'prototype']
 	};
 
-	var bind$3 = functionBind;
+	var bind$1 = functionBind;
 	var hasOwn$2 = hasown;
-	var $concat$1 = bind$3.call(Function.call, Array.prototype.concat);
-	var $spliceApply = bind$3.call(Function.apply, Array.prototype.splice);
-	var $replace$1 = bind$3.call(Function.call, String.prototype.replace);
-	var $strSlice = bind$3.call(Function.call, String.prototype.slice);
-	var $exec = bind$3.call(Function.call, RegExp.prototype.exec);
+	var $concat$1 = bind$1.call($call, Array.prototype.concat);
+	var $spliceApply = bind$1.call($apply$2, Array.prototype.splice);
+	var $replace$1 = bind$1.call($call, String.prototype.replace);
+	var $strSlice = bind$1.call($call, String.prototype.slice);
+	var $exec = bind$1.call($call, RegExp.prototype.exec);
 
 	/* adapted from https://github.com/lodash/lodash/blob/4.17.15/dist/lodash.js#L6735-L6744 */
 	var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
@@ -492,7 +607,7 @@
 				value = doEval(intrinsicName);
 			}
 			if (typeof value === 'undefined' && !allowMissing) {
-				throw new $TypeError$a('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+				throw new $TypeError$9('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
 			}
 
 			return {
@@ -507,10 +622,10 @@
 
 	var getIntrinsic = function GetIntrinsic(name, allowMissing) {
 		if (typeof name !== 'string' || name.length === 0) {
-			throw new $TypeError$a('intrinsic name must be a non-empty string');
+			throw new $TypeError$9('intrinsic name must be a non-empty string');
 		}
 		if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
-			throw new $TypeError$a('"allowMissing" argument must be a boolean');
+			throw new $TypeError$9('"allowMissing" argument must be a boolean');
 		}
 
 		if ($exec(/^%?[^%]*%?$/, name) === null) {
@@ -555,12 +670,12 @@
 			} else if (value != null) {
 				if (!(part in value)) {
 					if (!allowMissing) {
-						throw new $TypeError$a('base intrinsic for ' + name + ' exists, but the property is not available.');
+						throw new $TypeError$9('base intrinsic for ' + name + ' exists, but the property is not available.');
 					}
 					return void undefined$1;
 				}
-				if ($gOPD$1 && (i + 1) >= parts.length) {
-					var desc = $gOPD$1(value, part);
+				if ($gOPD && (i + 1) >= parts.length) {
+					var desc = $gOPD(value, part);
 					isOwn = !!desc;
 
 					// By convention, when a data property is converted to an accessor
@@ -590,42 +705,10 @@
 
 	var callBind$2 = {exports: {}};
 
-	var GetIntrinsic$a = getIntrinsic;
-
-	/** @type {import('.')} */
-	var $defineProperty$2 = GetIntrinsic$a('%Object.defineProperty%', true) || false;
-	if ($defineProperty$2) {
-		try {
-			$defineProperty$2({}, 'a', { value: 1 });
-		} catch (e) {
-			// IE 8 has a broken defineProperty
-			$defineProperty$2 = false;
-		}
-	}
-
-	var esDefineProperty = $defineProperty$2;
-
-	/** @type {import('./gOPD')} */
-	var gOPD$1 = Object.getOwnPropertyDescriptor;
-
-	/** @type {import('.')} */
-	var $gOPD = gOPD$1;
-
-	if ($gOPD) {
-		try {
-			$gOPD([], 'length');
-		} catch (e) {
-			// IE 8 has a broken gOPD
-			$gOPD = null;
-		}
-	}
-
-	var gopd$1 = $gOPD;
-
 	var $defineProperty$1 = esDefineProperty;
 
 	var $SyntaxError = syntax;
-	var $TypeError$9 = type;
+	var $TypeError$8 = type;
 
 	var gopd = gopd$1;
 
@@ -636,22 +719,22 @@
 		value
 	) {
 		if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) {
-			throw new $TypeError$9('`obj` must be an object or a function`');
+			throw new $TypeError$8('`obj` must be an object or a function`');
 		}
 		if (typeof property !== 'string' && typeof property !== 'symbol') {
-			throw new $TypeError$9('`property` must be a string or a symbol`');
+			throw new $TypeError$8('`property` must be a string or a symbol`');
 		}
 		if (arguments.length > 3 && typeof arguments[3] !== 'boolean' && arguments[3] !== null) {
-			throw new $TypeError$9('`nonEnumerable`, if provided, must be a boolean or null');
+			throw new $TypeError$8('`nonEnumerable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 4 && typeof arguments[4] !== 'boolean' && arguments[4] !== null) {
-			throw new $TypeError$9('`nonWritable`, if provided, must be a boolean or null');
+			throw new $TypeError$8('`nonWritable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 5 && typeof arguments[5] !== 'boolean' && arguments[5] !== null) {
-			throw new $TypeError$9('`nonConfigurable`, if provided, must be a boolean or null');
+			throw new $TypeError$8('`nonConfigurable`, if provided, must be a boolean or null');
 		}
 		if (arguments.length > 6 && typeof arguments[6] !== 'boolean') {
-			throw new $TypeError$9('`loose`, if provided, must be a boolean');
+			throw new $TypeError$8('`loose`, if provided, must be a boolean');
 		}
 
 		var nonEnumerable = arguments.length > 3 ? arguments[3] : null;
@@ -703,16 +786,16 @@
 	var hasDescriptors = hasPropertyDescriptors_1();
 	var gOPD = gopd$1;
 
-	var $TypeError$8 = type;
+	var $TypeError$7 = type;
 	var $floor$2 = GetIntrinsic$9('%Math.floor%');
 
 	/** @type {import('.')} */
 	var setFunctionLength = function setFunctionLength(fn, length) {
 		if (typeof fn !== 'function') {
-			throw new $TypeError$8('`fn` is not a function');
+			throw new $TypeError$7('`fn` is not a function');
 		}
 		if (typeof length !== 'number' || length < 0 || length > 0xFFFFFFFF || $floor$2(length) !== length) {
-			throw new $TypeError$8('`length` must be a positive 32-bit integer');
+			throw new $TypeError$7('`length` must be a positive 32-bit integer');
 		}
 
 		var loose = arguments.length > 2 && !!arguments[2];
@@ -739,40 +822,8 @@
 		return fn;
 	};
 
-	/** @type {import('./functionCall')} */
-	var functionCall = Function.prototype.call;
-
-	/** @type {import('./functionApply')} */
-	var functionApply = Function.prototype.apply;
-
-	/** @type {import('./reflectApply')} */
-	var reflectApply$1 = typeof Reflect === 'function' && Reflect.apply;
-
-	var bind$2 = functionBind;
-
-	var $apply$2 = functionApply;
-	var $call$1 = functionCall;
-	var $reflectApply = reflectApply$1;
-
-	/** @type {import('./actualApply')} */
-	var actualApply$1 = $reflectApply || bind$2.call($call$1, $apply$2);
-
-	var bind$1 = functionBind;
-	var $TypeError$7 = type;
-
-	var $call = functionCall;
-	var $actualApply = actualApply$1;
-
-	/** @type {import('.')} */
-	var callBindApplyHelpers = function callBindBasic(args) {
-		if (args.length < 1 || typeof args[0] !== 'function') {
-			throw new $TypeError$7('a function is required');
-		}
-		return $actualApply(bind$1, $call, args);
-	};
-
 	var bind = functionBind;
-	var $apply$1 = functionApply;
+	var $apply$1 = requireFunctionApply();
 	var actualApply = actualApply$1;
 
 	/** @type {import('./applyBind')} */
@@ -5636,7 +5687,7 @@
 		return value === null || (typeof value !== 'function' && typeof value !== 'object');
 	};
 
-	var hasSymbols$2 = shams$1;
+	var hasSymbols$2 = requireShams();
 
 	/** @type {import('.')} */
 	var shams = function hasToStringTagShams() {
@@ -5769,7 +5820,7 @@
 
 	var callBound$1 = callBound$4;
 	var $toString = callBound$1('Object.prototype.toString');
-	var hasSymbols$1 = hasSymbols$4();
+	var hasSymbols$1 = requireHasSymbols()();
 	var safeRegexTest = requireSafeRegexTest();
 
 	if (hasSymbols$1) {
@@ -17093,14 +17144,10 @@
 	      optionsCopy.timeZoneName = 'short';
 	      // The rest of the defaults will be filled in by formatting the Instant
 	    }
-	    const timeZoneIdentifier = GetSlot(this, TIME_ZONE);
-	    if (IsOffsetTimeZoneIdentifier(timeZoneIdentifier)) {
+	    optionsCopy.timeZone = GetSlot(this, TIME_ZONE);
+	    if (IsOffsetTimeZoneIdentifier(optionsCopy.timeZone)) {
 	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
 	      throw new RangeError$1('toLocaleString does not currently support offset time zones');
-	    } else {
-	      const record = GetAvailableNamedTimeZoneIdentifier(timeZoneIdentifier);
-	      if (!record) throw new RangeError$1("toLocaleString formats built-in time zones, not ".concat(timeZoneIdentifier));
-	      optionsCopy.timeZone = record.identifier;
 	    }
 	    const formatter = new DateTimeFormat(locales, optionsCopy);
 	    const localeCalendarIdentifier = Call$1(customResolvedOptions, formatter, []).calendar;
