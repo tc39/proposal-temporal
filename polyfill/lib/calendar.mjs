@@ -457,20 +457,35 @@ const nonIsoHelperBase = {
     }
     return this.formatter;
   },
+  getCalendarParts(isoString) {
+    let dateTimeFormat = this.getFormatter();
+    let legacyDate = new DateCtor(isoString);
+
+    // PlainDate's minimum date -271821-04-19 is one day beyond legacy Date's
+    // minimum -271821-04-20, because of accommodating all Instants in all time
+    // zones. If we have -271821-04-19, instead format -271821-04-20 in a time
+    // zone that pushes the result into the previous day. This is a slow path
+    // because we create a new Intl.DateTimeFormat.
+    if (isoString === '-271821-04-19T00:00Z') {
+      const options = dateTimeFormat.resolvedOptions();
+      dateTimeFormat = new IntlDateTimeFormat(options.locale, { ...options, timeZone: 'Etc/GMT+1' });
+      legacyDate = new DateCtor('-271821-04-20T00:00Z');
+    }
+
+    try {
+      return ES.Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [legacyDate]);
+    } catch (e) {
+      throw new RangeErrorCtor(`Invalid ISO date: ${isoString}`);
+    }
+  },
   isoToCalendarDate(isoDate, cache) {
     const { year: isoYear, month: isoMonth, day: isoDay } = isoDate;
     const key = JSONStringify({ func: 'isoToCalendarDate', isoYear, isoMonth, isoDay, id: this.id });
     const cached = cache.get(key);
     if (cached) return cached;
 
-    const dateTimeFormat = this.getFormatter();
-    let parts, isoString;
-    try {
-      isoString = toUtcIsoDateString({ isoYear, isoMonth, isoDay });
-      parts = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [new DateCtor(isoString)]);
-    } catch (e) {
-      throw new RangeErrorCtor(`Invalid ISO date: ${JSONStringify({ isoYear, isoMonth, isoDay })}`);
-    }
+    const isoString = toUtcIsoDateString({ isoYear, isoMonth, isoDay });
+    const parts = this.getCalendarParts(isoString);
     const result = {};
     for (let i = 0; i < parts.length; i++) {
       let { type, value } = parts[i];
