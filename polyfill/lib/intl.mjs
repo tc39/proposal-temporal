@@ -255,9 +255,17 @@ function formatToParts(datetime, ...rest) {
 }
 
 function formatRange(a, b) {
+  if (a === undefined || b === undefined) {
+    throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange requires two values');
+  }
+  a = toDateTimeFormattable(a);
+  b = toDateTimeFormattable(b);
   let formatArgs = [a, b];
   let formatter;
-  if (isTemporalObject(a) || isTemporalObject(b)) {
+  if (isTemporalObject(a) !== isTemporalObject(b)) {
+    throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
+  }
+  if (isTemporalObject(a)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
@@ -275,9 +283,17 @@ function formatRange(a, b) {
 }
 
 function formatRangeToParts(a, b) {
+  if (a === undefined || b === undefined) {
+    throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange requires two values');
+  }
+  a = toDateTimeFormattable(a);
+  b = toDateTimeFormattable(b);
   let formatArgs = [a, b];
   let formatter;
-  if (isTemporalObject(a) || isTemporalObject(b)) {
+  if (isTemporalObject(a) !== isTemporalObject(b)) {
+    throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
+  }
+  if (isTemporalObject(a)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
@@ -510,6 +526,11 @@ function isTemporalObject(obj) {
     ES.IsTemporalMonthDay(obj) ||
     ES.IsTemporalInstant(obj)
   );
+}
+
+function toDateTimeFormattable(value) {
+  if (isTemporalObject(value)) return value;
+  return ES.ToNumber(value);
 }
 
 function sameTemporalType(x, y) {
