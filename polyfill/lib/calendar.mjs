@@ -948,6 +948,9 @@ const nonIsoHelperBase = {
   },
   // Override if calendar uses eras
   hasEra: false,
+  // Override this to shortcut the search space if certain month codes only
+  // occur long in the past
+  monthDaySearchStartYear: (/* monthCode, day */) => 1972,
   monthDayFromFields(fields, overflow, cache) {
     let { era, eraYear, year, month, monthCode, day } = fields;
     if (month !== undefined && year === undefined && (!this.hasEra || era === undefined || eraYear === undefined)) {
@@ -961,10 +964,15 @@ const nonIsoHelperBase = {
     let isoYear, isoMonth, isoDay;
     let closestCalendar, closestIso;
     // Look backwards starting from one of the calendar years spanning ISO year
-    // 1972, up to 100 calendar years prior, to find a year that has this month
+    // 1972, up to 20 calendar years prior, to find a year that has this month
     // and day. Normal months and days will match immediately, but for leap days
-    // and leap months we may have to look for a while.
-    const startDateIso = { year: 1972, month: 12, day: 31 };
+    // and leap months we may have to look for a while. For searches longer than
+    // 20 years, override the start date in monthDaySearchStartYear.
+    const startDateIso = {
+      year: this.monthDaySearchStartYear(monthCode, day),
+      month: 12,
+      day: 31
+    };
     const calendarOfStartDateIso = this.isoToCalendarDate(startDateIso, cache);
     // Note: relies on lexicographical ordering of monthCodes
     const calendarYear =
@@ -972,7 +980,7 @@ const nonIsoHelperBase = {
       (calendarOfStartDateIso.monthCode === monthCode && calendarOfStartDateIso.day >= day)
         ? calendarOfStartDateIso.year
         : calendarOfStartDateIso.year - 1;
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 20; i++) {
       let testCalendarDate = this.adjustCalendarDate({ day, monthCode, year: calendarYear - i }, cache);
       const isoDate = this.calendarToIsoDate(testCalendarDate, 'constrain', cache);
       const roundTripCalendarDate = this.isoToCalendarDate(isoDate, cache);
@@ -1708,6 +1716,40 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   },
   minimumMonthLength: (/* calendarDate */) => 29,
   maximumMonthLength: (/* calendarDate */) => 30,
+  monthDaySearchStartYear(monthCode, day) {
+    // Note that ICU4C actually has _no_ years in which leap months M01L and
+    // M09L through M12L have 30 days. The values marked with (*) here are years
+    // in which the leap month occurs with 29 days. ICU4C disagrees with ICU4X
+    // here and it is not clear which is correct.
+    switch (monthCode) {
+      case 'M01L':
+        return 1651; // *
+      case 'M02L':
+        return day < 30 ? 1947 : 1765;
+      case 'M03L':
+        return day < 30 ? 1966 : 1955;
+      case 'M04L':
+        return day < 30 ? 1963 : 1944;
+      case 'M05L':
+        return day < 30 ? 1971 : 1952;
+      case 'M06L':
+        return day < 30 ? 1960 : 1941;
+      case 'M07L':
+        return day < 30 ? 1968 : 1938;
+      case 'M08L':
+        return day < 30 ? 1957 : 1718;
+      case 'M09L':
+        return 1832; // *
+      case 'M10L':
+        return 1870; // *
+      case 'M11L':
+        return 1814; // *
+      case 'M12L':
+        return 1890; // *
+      default:
+        return 1972;
+    }
+  },
   getMonthList(calendarYear, cache) {
     if (calendarYear === undefined) {
       throw new TypeErrorCtor('Missing year');
