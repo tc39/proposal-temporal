@@ -69,6 +69,7 @@ import {
   StringPrototypeCharCodeAt,
   StringPrototypeIndexOf,
   StringPrototypeMatch,
+  StringPrototypePadStart,
   StringPrototypeReplace,
   StringPrototypeSlice,
   StringPrototypeSplit,
@@ -85,7 +86,6 @@ import ToNumber from 'es-abstract/2024/ToNumber.js';
 import ToObject from 'es-abstract/2024/ToObject.js';
 import ToPrimitive from 'es-abstract/2024/ToPrimitive.js';
 import ToString from 'es-abstract/2024/ToString.js';
-import ToZeroPaddedDecimalString from 'es-abstract/2024/ToZeroPaddedDecimalString.js';
 import Type from 'es-abstract/2024/Type.js';
 
 import { assert, assertNotReached } from './assert.mjs';
@@ -1961,6 +1961,12 @@ export function GetStartOfDay(timeZone, isoDate) {
   const dayBefore = utcns.minus(DAY_NANOS);
   ValidateEpochNanoseconds(dayBefore);
   return GetNamedTimeZoneNextTransition(timeZone, dayBefore);
+}
+
+// Fast version of es-abstract ToZeroPaddedDecimalString without assertions
+function ToZeroPaddedDecimalString(n, minLength) {
+  const s = StringCtor(n);
+  return Call(StringPrototypePadStart, s, [minLength, '0']);
 }
 
 export function ISOYearString(year) {
