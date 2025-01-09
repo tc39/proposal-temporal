@@ -1789,6 +1789,7 @@ export function ToTemporalTimeZoneIdentifier(temporalTimeZoneLike) {
     if (IsTemporalZonedDateTime(temporalTimeZoneLike)) return GetSlot(temporalTimeZoneLike, TIME_ZONE);
   }
   const timeZoneString = RequireString(temporalTimeZoneLike);
+  if (timeZoneString === 'UTC') return 'UTC'; // UTC fast path
 
   const { tzName, offsetMinutes } = ParseTemporalTimeZoneString(timeZoneString);
   if (offsetMinutes !== undefined) {
@@ -1917,6 +1918,12 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 }
 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
+  // UTC fast path
+  if (timeZone === 'UTC') {
+    CheckISODaysRange(isoDateTime.isoDate);
+    return [GetUTCEpochNanoseconds(isoDateTime)];
+  }
+
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
   if (offsetMinutes !== undefined) {
     const balanced = BalanceISODateTime(
@@ -2367,6 +2374,8 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
 }
 
 export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
+  if (id === 'UTC') return null; // UTC fast path
+
   // Optimization: we floor the instant to the previous millisecond boundary
   // so that we can do Number math instead of BigInt math. This assumes that
   // time zone transitions don't happen in the middle of a millisecond.
@@ -2406,6 +2415,8 @@ export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
 }
 
 export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
+  if (id === 'UTC') return null; // UTC fast path
+
   // Optimization: we raise the instant to the next millisecond boundary so
   // that we can do Number math instead of BigInt math. This assumes that time
   // zone transitions don't happen in the middle of a millisecond.
