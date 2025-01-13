@@ -30,12 +30,10 @@ intl402/DateTimeFormat/canonicalize-utc-timezone.js
 # https://unicode-org.atlassian.net/browse/ICU-23007
 staging/sm/Temporal/PlainDate/from-constrain-hebrew.js
 
-# Test is incorrect as per https://github.com/tc39/proposal-temporal/issues/2865
-staging/sm/Temporal/PlainDate/from-constrain-japanese.js
+# Test is incorrect, no reason why this date should not exist; seems to be
+# working around an ICU4X bug
+staging/sm/Temporal/PlainDate/from-islamic-umalqura.js
 
 # Faulty leap month calculations in Chinese calendar in ICU4C
 # https://unicode-org.atlassian.net/browse/ICU-22230
 staging/sm/Temporal/PlainMonthDay/from-chinese-leap-month-uncommon.js
-
-# Test is incorrect as per https://github.com/tc39/proposal-temporal/issues/2864
-staging/sm/Temporal/PlainMonthDay/from-gregory.js
