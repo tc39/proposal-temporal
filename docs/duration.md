@@ -685,7 +685,6 @@ This method overrides `Object.prototype.toLocaleString()` to provide a human-rea
 The `locales` and `options` arguments are the same as in the constructor to [`Intl.DurationFormat`](http://tc39.es/proposal-intl-duration-format/).
 
 > **NOTE**: This method requires that your JavaScript environment supports `Intl.DurationFormat`.
-> That is still an early-stage proposal and at the time of writing it is not supported anywhere.
 > If `Intl.DurationFormat` is not available, then the output of this method is the same as that of `duration.toString()`, and the `locales` and `options` arguments are ignored.
 
 Usage examples:
