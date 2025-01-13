@@ -868,7 +868,7 @@
             1. If _anyPresent_ is *true* and _inherit_ is ~relevant~, return *null*.
             1. For each property name _prop_ of _defaultOptions_, do
               1. Set _formatOptions_.[[&lt;_prop_>]] to *"numeric"*.
-            1. If _defaults_ is ~zoned-date-time~, then
+            1. If _defaults_ is ~zoned-date-time~ and _formatOptions_.[[timeZoneName]] is *undefined*, then
               1. Set _formatOptions_.[[timeZoneName]] to *"short"*.
           1. If _matcher_ is *"basic"*, then
             1. Let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_).
