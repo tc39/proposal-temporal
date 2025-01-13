@@ -2216,6 +2216,11 @@ export function GetAvailableNamedTimeZoneIdentifier(identifier) {
     return undefined;
   }
 
+  // Special case this legacy identifier that is listed both in `backzone` and
+  // `backward` in the TZDB. Work around implementations that incorrectly use
+  // the `backward` data.
+  if (lower === 'antarctica/south_pole') primaryIdentifier = 'Antarctica/McMurdo';
+
   // Some legacy identifiers are aliases in ICU but not legal IANA identifiers.
   // Reject them even if the implementation's Intl supports them, as they are
   // not present in the IANA time zone database.
