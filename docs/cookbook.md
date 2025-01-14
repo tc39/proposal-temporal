@@ -160,7 +160,7 @@ Sorting other `Temporal` types would work exactly the same way.
 
 ### Sort ISO date/time strings
 
-Sort a list of ISO 8601 date/time strings, for example to place log entries in order.
+Sort a list of ISO 8601 or RFC 9557 date/time strings, for example to place log entries in order.
 
 <!-- prettier-ignore-start -->
 ```javascript

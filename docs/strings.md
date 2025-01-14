@@ -111,7 +111,7 @@ For example:
 
 Because of this format's long-term industry adoption, it was chosen for use in ECMAScript `Temporal` for both input and output.
 
-Although neither ISO-8601 nor RFC 3339 specifications currently use this syntax, it's on a standards track led by the [IETF SEDATE](https://datatracker.ietf.org/wg/sedate/about/) working group which includes ECMAScript `Temporal` champions as well as other industry participants.
+Although neither ISO 8601 nor RFC 3339 specifications use this syntax, it's standardized in [RFC 9557](https://datatracker.ietf.org/doc/html/rfc9557).
 
 The time zone ID itself follows the rules of the time zone database, usually called TZDB.
 

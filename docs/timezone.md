@@ -21,7 +21,7 @@ Every wall-clock time is defined using a **UTC Offset**: the amount of exact tim
 For example, on January 19, 2020 in California, the UTC Offset (or "offset" for short) was `-08:00` which means that wall-clock time in San Francisco was 8 hours behind UTC, so 10:00AM locally on that day was 18:00 UTC.
 However the same calendar date and wall-clock time India would have an offset of `+05:30`: 5½ hours later than UTC.
 
-[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) and [RFC 3339](https://tools.ietf.org/html/rfc3339) define standard representations for exact times as a date and time value, e.g. `2020-09-06T17:35:24.485Z`. The `Z` suffix indicates that this is an exact UTC time.
+[RFC 9557](https://datatracker.ietf.org/doc/html/rfc9557), [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601), and [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) define standard representations for exact times as a date and time value, e.g. `2020-09-06T17:35:24.485Z`. The `Z` suffix indicates that this is an exact UTC time.
 
 Temporal has two types that store exact time: `Temporal.Instant` (which only stores exact time and no other information) and `Temporal.ZonedDateTime` which stores exact time, a time zone, and a calendar system
 

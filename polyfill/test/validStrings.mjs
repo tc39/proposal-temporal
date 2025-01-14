@@ -1,4 +1,4 @@
-// Generates 1000 valid ISO 8601 strings according to the EBNF grammar and
+// Generates 1000 valid RFC 9557 strings according to the EBNF grammar and
 // tries to parse them
 
 // Run with:
