@@ -901,7 +901,7 @@
             In the case of more than one possible exact time, or no possible exact time, an answer is determined using _offsetBehaviour_, _disambiguation_ and _offsetOption_.
           </p>
           <p>
-            As a special case when parsing ISO 8601 strings which are only required to specify time zone offsets to minutes precision, if _matchBehaviour_ is ~match minutes~, then a value for _offsetNanoseconds_ that is rounded to the nearest minute will be accepted in those cases where _offsetNanoseconds_ is compared against _timeZone_'s offset.
+            As a special case when parsing RFC 9557 strings which are only required to specify time zone offsets to minutes precision, if _matchBehaviour_ is ~match minutes~, then a value for _offsetNanoseconds_ that is rounded to the nearest minute will be accepted in those cases where _offsetNanoseconds_ is compared against _timeZone_'s offset.
             If _matchBehaviour_ is ~match exactly~, then this does not happen.
           </p>
         </dd>
@@ -1045,7 +1045,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It returns an ISO 8601 string representation of its argument, including a time zone name annotation and calendar annotation, which are extensions to the ISO 8601 format.
+          It returns an RFC 9557 string representation of its argument, including a time zone name annotation and calendar annotation, which are extensions to the ISO 8601 format.
         </dd>
       </dl>
       <emu-alg>

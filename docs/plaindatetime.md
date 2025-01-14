@@ -103,12 +103,16 @@ Default values for other missing fields are determined by the calendar.
 If the `calendar` property is not present, it's assumed to be `'iso8601'` (identifying the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates)).
 Any other missing properties will be assumed to be 0 (for time fields).
 
-If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
+If the value is not an object, it must be a string, which is expected to be in RFC 9557 format, or a subset of that format that includes at least the date portion.
 Time zone or UTC offset information will be ignored, with one exception: if a string contains a `Z` in place of a numeric UTC offset, then a `RangeError` will be thrown because interpreting these strings as a local date and time is usually a bug. `Temporal.Instant.from` should be used instead to parse these strings, and the result's `toZonedDateTimeISO` method can be used to obtain a timezone-local date and time.
+
+Note that ISO 8601 and RFC 3339 formats are also subsets of RFC 9557, so will also work.
+Temporal additionally accepts a few ISO 8601 extensions that RFC 9557 does not, like the use of 6-digit years.
+For more info, see [RFC 9557 / ISO 8601 Grammar](https://tc39.es/proposal-temporal/#sec-temporal-iso8601grammar).
 
 In unusual cases of needing date or time components of `Z`-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone `'UTC'`. For example, the following code returns a "UTC date": `Temporal.Instant.from(item).toZonedDateTimeISO('UTC').toPlainDate()`.
 
-If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
+If the string isn't a valid subset of the RFC 9557 format, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
 The `overflow` option works as follows, if `item` is an object:
 
@@ -120,7 +124,7 @@ The `overflow` option is ignored if `item` is a string.
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
-> In the default `'constrain'` mode and when parsing an ISO 8601 string, this will be converted to 59.
+> In the default `'constrain'` mode and when parsing an RFC 9557 string, this will be converted to 59.
 > In `'reject'` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `'reject'`.
 
 > **NOTE**: The allowed values for the `item.month` property start at 1, which is different from legacy `Date` where months are represented by zero-based indices (0 to 11).
@@ -833,7 +837,7 @@ dt1.equals(dt1); // => true
     Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`.
 
-**Returns:** a string in the ISO 8601 date format representing `datetime`.
+**Returns:** a string in the RFC 9557 date format representing `datetime`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `datetime`.
 The string can be passed to `Temporal.PlainDateTime.from()` to create a new `Temporal.PlainDateTime` object.
@@ -846,6 +850,7 @@ Note that rounding may change the value of other units as well.
 
 Normally, a calendar annotation is shown when `datetime`'s calendar is not the ISO 8601 calendar.
 By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
+With `calendarName: 'never'` the output string will additionally be valid in the ISO 8601 and RFC 3339 date formats.
 Normally not necessary, a value of `'critical'` is equivalent to `'always'` but the annotation will contain an additional `!` for certain interoperation use cases.
 For more information on the calendar annotation, see [the `Temporal` string formats documentation](./strings.md#calendar-systems).
 
@@ -903,7 +908,7 @@ dt.toLocaleString('en-US-u-nu-fullwide-hc-h12'); // => '１２/７/１９９５,
 
 ### datetime.**toJSON**() : string
 
-**Returns:** a string in the ISO 8601 date format representing `datetime`.
+**Returns:** a string in the RFC 9557 date format representing `datetime`.
 
 This method is the same as `datetime.toString()`.
 It is usually not called directly, but it can be called automatically by `JSON.stringify()`.

@@ -568,8 +568,8 @@ export namespace Temporal {
    * the {@link https://en.wikipedia.org/wiki/Unix_time|Unix epoch} (midnight
    * UTC on January 1, 1970). However, a `Temporal.Instant` can be created from
    * any of several expressions that refer to a single point in time, including
-   * an {@link https://en.wikipedia.org/wiki/ISO_8601|ISO 8601 string} with a
-   * time zone offset such as '2020-01-23T17:04:36.491865121-08:00'.
+   * an {@link https://datatracker.ietf.org/doc/html/rfc9557|RFC 9557 string}
+   * with a time zone offset such as '2020-01-23T17:04:36.491865121-08:00'.
    *
    * See https://tc39.es/proposal-temporal/docs/instant.html for more details.
    */

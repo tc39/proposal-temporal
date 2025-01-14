@@ -73,12 +73,16 @@ If the value is any other object, it:
   If `month` is used and `calendar` is provided, then `year` must be provided as well because `month` is ambiguous in some calendars without knowing the year.
 - May have a `calendar` property. If omitted, the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates) will be used by default.
 
-If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
+If the value is not an object, it must be a string, which is expected to be in RFC 9557 format, or a subset of that format that includes at least the month and day.
 For the ISO 8601 calendar, only the month and day will be parsed from the string.
 For other calendars, the year and calendar are also parsed in addition to month and day.
 Any other parts of the string are optional and will be ignored.
 
-If the string isn't valid according to ISO 8601, then a `RangeError` will be thrown regardless of the value of `overflow`.
+Note that ISO 8601 and RFC 3339 formats are also subsets of RFC 9557, so will also work.
+Temporal additionally accepts a few ISO 8601 extensions that RFC 9557 does not, like the use of 6-digit years.
+For more info, see [RFC 9557 / ISO 8601 Grammar](https://tc39.es/proposal-temporal/#sec-temporal-iso8601grammar).
+
+If the string isn't a valid subset of the RFC 9557 format, then a `RangeError` will be thrown regardless of the value of `overflow`.
 A `RangeError` will also be thrown for strings that contain a `Z` in place of a numeric UTC offset, because interpreting these strings as a local date is usually a bug.
 
 The `overflow` option works as follows, if `item` is an object:
@@ -254,13 +258,14 @@ md2.equals({ monthCode: 'M02', day: 29 }); // => true
     Valid values are `'auto'`, `'always'`, `'never'`, and `'critical'`.
     The default is `'auto'`.
 
-**Returns:** a string in the ISO 8601 date format representing `monthDay`.
+**Returns:** a string in the RFC 9557 date format representing `monthDay`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `monthDay`.
 The string can be passed to `Temporal.PlainMonthDay.from()` to create a new `Temporal.PlainMonthDay` object.
 
 Normally, a calendar annotation is shown when `monthDay`'s calendar is not the ISO 8601 calendar.
 By setting the `calendarName` option to `'always'` or `'never'` this can be overridden to always or never show the annotation, respectively.
+With `calendarName: 'never'` the output string will additionally be valid in the ISO 8601 and RFC 3339 date formats.
 Normally not necessary, a value of `'critical'` is equivalent to `'always'` but the annotation will contain an additional `!` for certain interoperation use cases.
 For more information on the calendar annotation, see [the `Temporal` string formats documentation](./strings.md#calendar-systems).
 
@@ -314,7 +319,7 @@ md.toLocaleString(`en-US-u-nu-fullwide-ca-${calendar}`); // => '８/２４'
 
 ### monthDay.**toJSON**() : string
 
-**Returns:** a string in the ISO 8601 date format representing `monthDay`.
+**Returns:** a string in the RFC 9557 date format representing `monthDay`.
 
 This method is the same as `monthDay.toString()`.
 It is usually not called directly, but it can be called automatically by `JSON.stringify()`.

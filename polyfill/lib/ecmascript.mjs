@@ -447,10 +447,10 @@ function processAnnotations(annotations) {
 export function ParseISODateTime(isoString) {
   // ZDT is the superset of fields for every other Temporal type
   const match = Call(RegExpPrototypeExec, PARSE.zoneddatetime, [isoString]);
-  if (!match) throw new RangeErrorCtor(`invalid ISO 8601 string: ${isoString}`);
+  if (!match) throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}`);
   const calendar = processAnnotations(match[16]);
   let yearString = match[1];
-  if (yearString === '-000000') throw new RangeErrorCtor(`invalid ISO 8601 string: ${isoString}`);
+  if (yearString === '-000000') throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}`);
   const year = +yearString;
   const month = +(match[2] ?? match[4] ?? 1);
   const day = +(match[3] ?? match[5] ?? 1);
@@ -542,7 +542,7 @@ export function ParseTemporalTimeString(isoString) {
       return { hour, minute, second, millisecond, microsecond, nanosecond };
     }
   }
-  throw new RangeErrorCtor(`invalid ISO 8601 time-only string ${isoString}; may need a T prefix`);
+  throw new RangeErrorCtor(`invalid RFC 9557 time-only string ${isoString}; may need a T prefix`);
 }
 
 export function ParseTemporalYearMonthString(isoString) {
@@ -551,7 +551,7 @@ export function ParseTemporalYearMonthString(isoString) {
   if (match) {
     calendar = processAnnotations(match[3]);
     let yearString = match[1];
-    if (yearString === '-000000') throw new RangeErrorCtor(`invalid ISO 8601 string: ${isoString}`);
+    if (yearString === '-000000') throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}`);
     year = +yearString;
     month = +match[2];
     referenceISODay = 1;

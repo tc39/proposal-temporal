@@ -60,9 +60,13 @@ Any missing ones will be assumed to be 0.
 
 If the `calendar` property is present, it must be the string `'iso8601'` or the [ISO 8601 calendar](https://en.wikipedia.org/wiki/ISO_8601#Dates), for future compatibility.
 
-If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
-If the string designates a date, it will be ignored.
+If the value is not an object, it must be a string, which is expected to be in RFC 9557 format, or a subset of that format that includes at least the time.
+If the string designates a date, the date will be ignored.
 Time zone or UTC offset information will also be ignored, with one exception: if a string contains a `Z` in place of a numeric UTC offset, then a `RangeError` will be thrown because interpreting these strings as a local time is usually a bug. `Temporal.Instant.from` should be used instead to parse these strings, and the result's `toZonedDateTimeISO` method can be used to obtain a timezone-local date and time.
+
+Note that ISO 8601 and RFC 3339 formats are also subsets of RFC 9557, so will also work.
+Temporal additionally accepts a few ISO 8601 extensions that RFC 9557 does not, like the use of 6-digit years.
+For more info, see [RFC 9557 / ISO 8601 Grammar](https://tc39.es/proposal-temporal/#sec-temporal-iso8601grammar).
 
 In unusual cases of needing date or time components of `Z`-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone `'UTC'`. For example, the following code returns a "UTC time": `Temporal.Instant.from(item).toZonedDateTimeISO('UTC').toPlainTime()`.
 
@@ -76,7 +80,7 @@ The `overflow` option is ignored if `item` is a string.
 > **NOTE**: Although Temporal does not deal with leap seconds, times coming from other software may have a `second` value of 60.
 > In the default `'constrain'` mode, this will be converted to 59.
 > In `'reject'` mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don't use `'reject'`.
-> However, if parsing an ISO 8601 string with a seconds component of `:60`, then it will always result in a `second` value of 59, in accordance with POSIX.
+> However, if parsing an RFC 9557 string with a seconds component of `:60`, then it will always result in a `second` value of 59, in accordance with POSIX.
 
 Example usage:
 
@@ -474,7 +478,7 @@ time.equals(time); // => true
     Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`.
 
-**Returns:** a string in the ISO 8601 time format representing `time`.
+**Returns:** a string valid in the RFC 9557, ISO 8601, and RFC 3339 time formats representing `time`.
 
 This method overrides the `Object.prototype.toString()` method and provides a convenient, unambiguous string representation of `time`.
 The string can be passed to `Temporal.PlainTime.from()` to create a new `Temporal.PlainTime` object.
@@ -527,7 +531,7 @@ time.toLocaleString('en-US-u-nu-fullwide-hc-h24'); // => '１９:３９:０９'
 
 ### time.**toJSON**() : string
 
-**Returns:** a string in the ISO 8601 date format representing `time`.
+**Returns:** a string in the RFC 9557 and ISO 8601 time format representing `time`.
 
 This method is the same as `time.toString()`.
 It is usually not called directly, but it can be called automatically by `JSON.stringify()`.

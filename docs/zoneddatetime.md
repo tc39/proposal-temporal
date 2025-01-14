@@ -136,7 +136,7 @@ Date/time values will be interpreted in context of the provided offset and/or ti
 Date/time values in object inputs will be interpreted in the context of `calendar`.
 However, date/time values in string inputs are always interpreted in the context of the ISO 8601 calendar.
 
-If the value is not an object, it must be a string, which is expected to be an ISO 8601 string that includes a time zone ID in brackets, and an optional calendar.
+If the value is not an object, it must be a string, which is expected to be an RFC 9557 string that includes a time zone ID in brackets, and an optional calendar.
 For example:
 
 ```
@@ -146,7 +146,10 @@ For example:
 If the string isn't valid, then a `RangeError` will be thrown regardless of the value of `overflow`.
 
 Note that this string format (albeit limited to the ISO 8601 calendar system) is also used by `java.time` and some other time-zone-aware libraries.
-For more information on `Temporal`'s extensions to the ISO 8601 / RFC 3339 string format and the progress towards becoming a published standard, see [String Parsing, Serialization, and Formatting](./strings.md).
+For more information on RFC 9557's extensions to the ISO 8601 / RFC 3339 string format, see [String Parsing, Serialization, and Formatting](./strings.md).
+
+Temporal additionally accepts a few ISO 8601 extensions that RFC 9557 does not, like the use of 6-digit years.
+For more info, see [RFC 9557 / ISO 8601 Grammar](https://tc39.es/proposal-temporal/#sec-temporal-iso8601grammar).
 
 The time zone ID is always required.
 `2020-08-05T20:06:13+09:00` and `2020-08-05T11:06:13Z` are not valid inputs to this method because they don't include a time zone ID in square brackets.
@@ -183,7 +186,7 @@ The `overflow` option is ignored if `item` is a string.
 Additionally, if the result is earlier or later than the range of dates that `Temporal.PlainDateTime` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
 > **NOTE**: Although Temporal does not deal with leap seconds, dates coming from other software may have a `second` value of 60.
-> In the default `'constrain'` mode and when parsing an ISO 8601 string, this will be converted to 59.
+> In the default `'constrain'` mode and when parsing an RFC 9557 string, this will be converted to 59.
 > In `'reject'` mode, this function will throw, so if you have to interoperate with times that may contain leap seconds, don't use `'reject'`.
 
 If the input contains a time zone offset, in rare cases it's possible for those values to conflict for a particular local date and time.
@@ -1354,7 +1357,7 @@ zeroOffset.equals(zdt1.withTimeZone('+00')); // => true
     Valid values are `'ceil'`, `'floor'`, `'expand'`, `'trunc'`, `'halfCeil'`, `'halfFloor'`, `'halfExpand'`, `'halfTrunc'`, and `'halfEven'`.
     The default is `'trunc'`.
 
-**Returns:** a string containing an ISO 8601 date+time+offset format, a bracketed time zone suffix, and (if the calendar is not `iso8601`) a calendar suffix.
+**Returns:** a string containing an RFC 9557 date+time+offset format with a bracketed time zone suffix, and (if the calendar is not `iso8601`) a calendar suffix.
 
 Examples:
 
@@ -1380,8 +1383,10 @@ Likewise, passing `'never'` to the `timeZoneName` or `offset` options controls w
 If the time zone offset is shown, it is always shown rounded to the nearest minute.
 The `timeZoneName` option can additionally be `'critical'` which will add an additional `!` to the annotation, similar to `calendarName`.
 
+With `calendarName: 'never', timeZoneName: 'never'` the output string will additionally be valid in the ISO 8601 and RFC 3339 date formats.
+
 The string format output by this method can be parsed by [`java.time.ZonedDateTime`](https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html) as long as the calendar annotation is not output and `'critical'` is not used.
-For more information on `Temporal`'s extensions to the ISO 8601 / RFC 3339 string format and the progress towards becoming a published standard, see [String Parsing, Serialization, and Formatting](./strings.md).
+For more information on RFC 9557's extensions to the ISO 8601 / RFC 3339 string format, see [String Parsing, Serialization, and Formatting](./strings.md).
 
 Example usage:
 
@@ -1427,7 +1432,7 @@ zdt.toLocaleString('en-US-u-nu-fullwide-hc-h12'); // => '１２/１/２０１９
 
 ### zonedDateTime.**toJSON**() : string
 
-**Returns:** a string in the ISO 8601 date format representing `zonedDateTime`.
+**Returns:** a string in the RFC 9557 date format representing `zonedDateTime`.
 
 This method is the same as `zonedDateTime.toString()`.
 It is usually not called directly, but it can be called automatically by `JSON.stringify()`.

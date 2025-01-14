@@ -221,7 +221,7 @@ See [Calendars in Temporal](./calendars.md) for detailed documentation.
 
 All `Temporal` types have a string representation for persistence and interoperability.
 The correspondence between types and machine-readable strings is shown below.
-For more information about string parsing, serialization, and formatting in `Temporal` (including how Temporal is using industry standards like ISO 8601 and RFC 3339), see [String Parsing, Serialization, and Formatting](./strings.md).
+For more information about string parsing, serialization, and formatting in `Temporal` (including how Temporal is using industry standards like ISO 8601, RFC 3339, and RFC 9557), see [String Parsing, Serialization, and Formatting](./strings.md).
 
 <img src="persistence-model.svg">
 
