@@ -94,7 +94,7 @@ Temporal's string serialization is based on these existing standards, with excep
 These standard formats also match the [formats accepted by the HTML `<time>` element](https://developer.mozilla.org/en-US/docs/Web/API/HTMLTimeElement/dateTime).
 For IANA time zones and non-Gregorian calendars, a standards-track extension to RFC 3339 is being worked on as part of the [IETF SEDATE](https://datatracker.ietf.org/wg/sedate/about/) working group.
 
-Because neither ISO 8601 nor RFC 3339 include a standardized month/day format (for birthdays, holidays, etc.), Temporal relies on the [HTML standard's yearless date format](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#parse-a-yearless-date-component) which accepts strings like `12-25` and `--12-25`.
+Because ISO 8601 does not include a standardized month/day format (for birthdays, holidays, etc.), Temporal relies on the [HTML standard's yearless date format](https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#parse-a-yearless-date-component) which accepts strings like `12-25` and `--12-25` and is also defined in RFC 3339.
 Using the HTML standard format also ensures that `Temporal.PlainMonthDay` can be used as input to the HTML `<time>` element.
 
 The sections below explain the proposed extensions to RFC 3339 for time zones and calendars.
