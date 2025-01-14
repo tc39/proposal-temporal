@@ -38,7 +38,7 @@
 
       <emu-note type="editor">This section replaces the <a href="https://tc39.es/ecma-402/#sec-time-zone-names">Time Zone Names</a> section in ECMA-402.</emu-note>
       <p>
-        Implementations that adopt this specification are time zone aware: they use the IANA Time Zone Database <a href="https://www.iana.org/time-zones/">https://www.iana.org/time-zones/</a> to supply time zone identifiers and data used in ECMAScript calculations and formatting.
+        Implementations that adopt this specification are time zone aware: they use the IANA Time Zone Database <a href="https://www.iana.org/time-zones/">https://www.iana.org/time-zones/</a> to supply available time zone identifiers and data used in ECMAScript calculations and formatting.
         This section defines how the IANA Time Zone Database should be used by time zone aware implementations.
       </p>
       <p>
@@ -84,7 +84,7 @@
 
       <emu-note>
         <p>
-          The IANA Time Zone Database offers build options that affect which time zone identifiers are primary.
+          The IANA Time Zone Database offers build options that affect which available time zone identifiers are primary.
           The default build options merge different countries' time zones, for example *"Atlantic/Reykjavik"* being a Link to the Zone *"Africa/Abidjan"*.
           Geographically and politically distinct locations are likely to introduce divergent time zone rules in a future version of the IANA Time Zone Database.
           Therefore, it is recommended that ECMAScript implementations instead use build options such as <code>PACKRATDATA=backzone PACKRATLIST=zone.tab</code> or a similar alternative that ensures at least one primary identifier for each <a href="https://www.iso.org/glossary-for-iso-3166.html">ISO 3166-1 Alpha-2</a> country code.
@@ -1642,7 +1642,7 @@
       <li>[[Locale]] is a String value with the language tag of the locale whose localization is used for formatting.</li>
       <li>[[Calendar]] is a String value representing the <a href="https://unicode.org/reports/tr35/#UnicodeCalendarIdentifier">Unicode Calendar Identifier</a> used for formatting.</li>
       <li>[[NumberingSystem]] is a String value representing the <a href="https://unicode.org/reports/tr35/#UnicodeNumberSystemIdentifier">Unicode Number System Identifier</a> used for formatting.</li>
-      <li>[[TimeZone]] is a String value used for formatting that is either a time zone identifier from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format.</li>
+      <li>[[TimeZone]] is a String value used for formatting that is <del>either a</del> <ins>an available</ins> time zone identifier <del>from the IANA Time Zone Database or a UTC offset in ISO 8601 extended format</del>.</li>
       <li>[[HourCycle]] is a String value indicating whether the 12-hour format (*"h11"*, *"h12"*) or the 24-hour format (*"h23"*, *"h24"*) should be used. *"h11"* and *"h23"* start with hour 0 and go up to 11 and 23 respectively. *"h12"* and *"h24"* start with hour 1 and go up to 12 and 24.<del> [[HourCycle]] is only used when [[DateTimeFormat]] has an [[hour]] field.</del></li>
       <li>[[DateStyle]], [[TimeStyle]] are each either *undefined*, or a String value with values *"full"*, *"long"*, *"medium"*, or *"short"*.</li>
       <li>[[DateTimeFormat]] is a DateTime Format Record.</li>
