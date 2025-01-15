@@ -236,9 +236,12 @@ If the value is another <code>Temporal.PlainTime</code> object, a new object rep
 If the value is any other object, a <code>Temporal.PlainTime</code> will be constructed from the values of any <code>hour</code>, <code>minute</code>, <code>second</code>, <code>millisecond</code>, <code>microsecond</code>, and <code>nanosecond</code> properties that are present.
 Any missing ones will be assumed to be 0.</p>
 <p>If the <code>calendar</code> property is present, it must be the string <code>&#39;iso8601&#39;</code> or the <a href="https://en.wikipedia.org/wiki/ISO_8601#Dates">ISO 8601 calendar</a>, for future compatibility.</p>
-<p>If the value is not an object, it must be a string, which is expected to be in ISO 8601 format.
-If the string designates a date, it will be ignored.
+<p>If the value is not an object, it must be a string, which is expected to be in RFC 9557 format, or a subset of that format that includes at least the time.
+If the string designates a date, the date will be ignored.
 Time zone or UTC offset information will also be ignored, with one exception: if a string contains a <code>Z</code> in place of a numeric UTC offset, then a <code>RangeError</code> will be thrown because interpreting these strings as a local time is usually a bug. <code>Temporal.Instant.from</code> should be used instead to parse these strings, and the result&#39;s <code>toZonedDateTimeISO</code> method can be used to obtain a timezone-local date and time.</p>
+<p>Note that ISO 8601 and RFC 3339 formats are also subsets of RFC 9557, so will also work.
+Temporal additionally accepts a few ISO 8601 extensions that RFC 9557 does not, like the use of 6-digit years.
+For more info, see <a href="https://tc39.es/proposal-temporal/#sec-temporal-iso8601grammar">RFC 9557 / ISO 8601 Grammar</a>.</p>
 <p>In unusual cases of needing date or time components of <code>Z</code>-terminated timestamp strings (e.g. daily rollover of a UTC-timestamped log file), use the time zone <code>&#39;UTC&#39;</code>. For example, the following code returns a &quot;UTC time&quot;: <code>Temporal.Instant.from(item).toZonedDateTimeISO(&#39;UTC&#39;).toPlainTime()</code>.</p>
 <p>The <code>overflow</code> option works as follows, if <code>item</code> is an object:</p>
 <ul>
@@ -250,7 +253,7 @@ Time zone or UTC offset information will also be ignored, with one exception: if
 <p><strong>NOTE</strong>: Although Temporal does not deal with leap seconds, times coming from other software may have a <code>second</code> value of 60.
 In the default <code>&#39;constrain&#39;</code> mode, this will be converted to 59.
 In <code>&#39;reject&#39;</code> mode, the constructor will throw, so if you have to interoperate with times that may contain leap seconds, don&#39;t use <code>&#39;reject&#39;</code>.
-However, if parsing an ISO 8601 string with a seconds component of <code>:60</code>, then it will always result in a <code>second</code> value of 59, in accordance with POSIX.</p>
+However, if parsing an RFC 9557 string with a seconds component of <code>:60</code>, then it will always result in a <code>second</code> value of 59, in accordance with POSIX.</p>
 </blockquote>
 <p>Example usage:</p>
 <!-- prettier-ignore-start -->
@@ -542,7 +545,7 @@ The default is <code>&#39;trunc&#39;</code>.</li>
 </ul>
 </li>
 </ul>
-<p><strong>Returns:</strong> a string in the ISO 8601 time format representing <code>time</code>.</p>
+<p><strong>Returns:</strong> a string valid in the RFC 9557, ISO 8601, and RFC 3339 time formats representing <code>time</code>.</p>
 <p>This method overrides the <code>Object.prototype.toString()</code> method and provides a convenient, unambiguous string representation of <code>time</code>.
 The string can be passed to <code>Temporal.PlainTime.from()</code> to create a new <code>Temporal.PlainTime</code> object.</p>
 <p>The output precision can be controlled with the <code>fractionalSecondDigits</code> or <code>smallestUnit</code> option.
@@ -576,7 +579,7 @@ time<span class="token punctuation">.</span><span class="token function">toStrin
 time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// example output: '7:39:09 PM'</span>
 time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// example output: '19:39:09'</span>
 time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'de-DE'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">timeZone</span><span class="token operator">:</span> <span class="token string">'Europe/Berlin'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '19:39:09'</span>
-time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-US-u-nu-fullwide-hc-h24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '１９:３９:０９'</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>time.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> a string in the ISO 8601 date format representing <code>time</code>.</p>
+time<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token string">'en-US-u-nu-fullwide-hc-h24'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// => '１９:３９:０９'</span></code></pre><h3 id="toJSON"><a class="heading-link" href="#toJSON"></a>time.<strong>toJSON</strong>() : string</h3><p><strong>Returns:</strong> a string in the RFC 9557 and ISO 8601 time format representing <code>time</code>.</p>
 <p>This method is the same as <code>time.toString()</code>.
 It is usually not called directly, but it can be called automatically by <code>JSON.stringify()</code>.</p>
 <p>The reverse operation, recovering a <code>Temporal.PlainTime</code> object from a string, is <code>Temporal.PlainTime.from()</code>, but it cannot be called automatically by <code>JSON.parse()</code>.

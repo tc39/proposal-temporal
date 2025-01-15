@@ -405,7 +405,7 @@ assert<span class="token punctuation">.</span><span class="token function">deepE
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 
-<h3 id="sort-iso-datetime-strings"><a class="heading-link" href="#sort-iso-datetime-strings"></a>Sort ISO date/time strings</h3><p>Sort a list of ISO 8601 date/time strings, for example to place log entries in order.</p>
+<h3 id="sort-iso-datetime-strings"><a class="heading-link" href="#sort-iso-datetime-strings"></a>Sort ISO date/time strings</h3><p>Sort a list of ISO 8601 or RFC 9557 date/time strings, for example to place log entries in order.</p>
 <!-- prettier-ignore-start -->
 <pre class="language-javascript"><code class="language-javascript"><span class="token comment">/**
  * sortInstantStrings will sort an array of strings (each of which is
@@ -1008,12 +1008,25 @@ timeZones<span class="token punctuation">.</span><span class="token function">fo
 const params = new URL(document.location).searchParams;
 const futuredateParam = params.get('futuredate');
 
-// If you have Intl.DurationFormat, then you can do this with
-// until.toLocaleString() and untilMonths.toLocaleString(). This
-// example will be updated when that becomes possible. For now, we can
-// generate the string only in English.
+// Workaround to generate the string if the browser does not have
+// Intl.DurationFormat. The workaround works only in English.
 function englishPlural(n, singular, plural) {
   return `${n} ${n === 1 ? singular : plural}`;
+}
+function formatDays(duration) {
+  if (typeof Intl.DurationFormat === 'undefined') {
+    return englishPlural(duration.days, 'day', 'days');
+  }
+  return duration.toLocaleString();
+}
+function formatMonths(duration) {
+  if (typeof Intl.DurationFormat === 'undefined') {
+    return (
+      `${englishPlural(duration.months, 'month', 'months')}` +
+      (duration.days !== 0 ? `, ${englishPlural(duration.days, 'day', 'days')}` : '')
+    );
+  }
+  return duration.toLocaleString();
 }
 
 // When form data posted:
@@ -1024,11 +1037,7 @@ if (futuredateParam !== null) {
   const until = today.until(futureDate, { largestUnit: 'day' });
   const untilMonths = until.round({ largestUnit: 'month', relativeTo: today });
 
-  const dayString = englishPlural(until.days, 'day', 'days');
-  const monthString =
-    `${englishPlural(untilMonths.months, 'month', 'months')}` +
-    (untilMonths.days !== 0 ? `, ${englishPlural(untilMonths.days, 'day', 'days')}` : '');
-
+  const dayString = formatDays(until);
   const results = document.getElementById('futuredate-results');
   results.innerHTML = `
     <p>From and including: <strong>${today.toLocaleString()}</strong></p>
@@ -1036,7 +1045,7 @@ if (futuredateParam !== null) {
     <h4>Result: ${dayString}</h4>
     <p>It is ${dayString} from the start date to the end date, but not
     including the end date.</p>
-    <p>Or ${monthString} excluding the end date.</p>
+    <p>Or ${formatMonths(untilMonths)} excluding the end date.</p>
   `;
 }
 
@@ -1048,12 +1057,25 @@ if (futuredateParam !== null) {
 <span class="token keyword">const</span> params <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">URL</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span>location<span class="token punctuation">)</span><span class="token punctuation">.</span>searchParams<span class="token punctuation">;</span>
 <span class="token keyword">const</span> futuredateParam <span class="token operator">=</span> params<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'futuredate'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token comment">// If you have Intl.DurationFormat, then you can do this with</span>
-<span class="token comment">// until.toLocaleString() and untilMonths.toLocaleString(). This</span>
-<span class="token comment">// example will be updated when that becomes possible. For now, we can</span>
-<span class="token comment">// generate the string only in English.</span>
+<span class="token comment">// Workaround to generate the string if the browser does not have</span>
+<span class="token comment">// Intl.DurationFormat. The workaround works only in English.</span>
 <span class="token keyword">function</span> <span class="token function">englishPlural</span><span class="token punctuation">(</span><span class="token parameter">n<span class="token punctuation">,</span> singular<span class="token punctuation">,</span> plural</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>n <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">?</span> singular <span class="token operator">:</span> plural<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">formatDays</span><span class="token punctuation">(</span><span class="token parameter">duration</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> Intl<span class="token punctuation">.</span>DurationFormat <span class="token operator">===</span> <span class="token string">'undefined'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">englishPlural</span><span class="token punctuation">(</span>duration<span class="token punctuation">.</span>days<span class="token punctuation">,</span> <span class="token string">'day'</span><span class="token punctuation">,</span> <span class="token string">'days'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">formatMonths</span><span class="token punctuation">(</span><span class="token parameter">duration</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> Intl<span class="token punctuation">.</span>DurationFormat <span class="token operator">===</span> <span class="token string">'undefined'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">englishPlural</span><span class="token punctuation">(</span>duration<span class="token punctuation">.</span>months<span class="token punctuation">,</span> <span class="token string">'month'</span><span class="token punctuation">,</span> <span class="token string">'months'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span> <span class="token operator">+</span>
+      <span class="token punctuation">(</span>duration<span class="token punctuation">.</span>days <span class="token operator">!==</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">englishPlural</span><span class="token punctuation">(</span>duration<span class="token punctuation">.</span>days<span class="token punctuation">,</span> <span class="token string">'day'</span><span class="token punctuation">,</span> <span class="token string">'days'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span> <span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 <span class="token comment">// When form data posted:</span>
@@ -1064,11 +1086,7 @@ if (futuredateParam !== null) {
   <span class="token keyword">const</span> until <span class="token operator">=</span> today<span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>futureDate<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">largestUnit</span><span class="token operator">:</span> <span class="token string">'day'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> untilMonths <span class="token operator">=</span> until<span class="token punctuation">.</span><span class="token function">round</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">largestUnit</span><span class="token operator">:</span> <span class="token string">'month'</span><span class="token punctuation">,</span> <span class="token literal-property property">relativeTo</span><span class="token operator">:</span> today <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  <span class="token keyword">const</span> dayString <span class="token operator">=</span> <span class="token function">englishPlural</span><span class="token punctuation">(</span>until<span class="token punctuation">.</span>days<span class="token punctuation">,</span> <span class="token string">'day'</span><span class="token punctuation">,</span> <span class="token string">'days'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">const</span> monthString <span class="token operator">=</span>
-    <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">englishPlural</span><span class="token punctuation">(</span>untilMonths<span class="token punctuation">.</span>months<span class="token punctuation">,</span> <span class="token string">'month'</span><span class="token punctuation">,</span> <span class="token string">'months'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span> <span class="token operator">+</span>
-    <span class="token punctuation">(</span>untilMonths<span class="token punctuation">.</span>days <span class="token operator">!==</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">englishPlural</span><span class="token punctuation">(</span>untilMonths<span class="token punctuation">.</span>days<span class="token punctuation">,</span> <span class="token string">'day'</span><span class="token punctuation">,</span> <span class="token string">'days'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span> <span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
+  <span class="token keyword">const</span> dayString <span class="token operator">=</span> <span class="token function">formatDays</span><span class="token punctuation">(</span>until<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> results <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'futuredate-results'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   results<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
     &lt;p>From and including: &lt;strong></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>today<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/strong>&lt;/p>
@@ -1076,7 +1094,7 @@ if (futuredateParam !== null) {
     &lt;h4>Result: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dayString<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/h4>
     &lt;p>It is </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>dayString<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> from the start date to the end date, but not
     including the end date.&lt;/p>
-    &lt;p>Or </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>monthString<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> excluding the end date.&lt;/p>
+    &lt;p>Or </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">formatMonths</span><span class="token punctuation">(</span>untilMonths<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> excluding the end date.&lt;/p>
   </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </code></pre><!-- prettier-ignore-end -->
@@ -1096,8 +1114,6 @@ assert<span class="token punctuation">.</span><span class="token function">equal
 <span class="token comment">// Example of using it in a countdown:</span>
 
 <span class="token keyword">const</span> duration <span class="token operator">=</span> Temporal<span class="token punctuation">.</span>Now<span class="token punctuation">.</span><span class="token function">instant</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">until</span><span class="token punctuation">(</span>Temporal<span class="token punctuation">.</span>Instant<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span><span class="token string">'2020-04-01T13:00-07:00[America/Los_Angeles]'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// Note that this does not work unless you have Intl.DurationFormat, which is</span>
-<span class="token comment">// still an early-stage proposal.</span>
 <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">It's </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>duration<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>duration<span class="token punctuation">.</span>sign <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">?</span> <span class="token string">'until'</span> <span class="token operator">:</span> <span class="token string">'since'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> the TC39 Temporal presentation</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
 </code></pre><!-- prettier-ignore-end -->
 

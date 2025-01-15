@@ -266,14 +266,14 @@ These representations are based on existing industry standards, with a few stand
 Temporal&#39;s string serialization is based on these existing standards, with exception of IANA Time Zones (like <code>Europe/Paris</code>) and non-Gregorian calendars like Hebrew or Chinese.
 These standard formats also match the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLTimeElement/dateTime">formats accepted by the HTML <code>&lt;time&gt;</code> element</a>.
 For IANA time zones and non-Gregorian calendars, a standards-track extension to RFC 3339 is being worked on as part of the <a href="https://datatracker.ietf.org/wg/sedate/about/">IETF SEDATE</a> working group.</p>
-<p>Because neither ISO 8601 nor RFC 3339 include a standardized month/day format (for birthdays, holidays, etc.), Temporal relies on the <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#parse-a-yearless-date-component">HTML standard&#39;s yearless date format</a> which accepts strings like <code>12-25</code> and <code>--12-25</code>.
+<p>Because ISO 8601 does not include a standardized month/day format (for birthdays, holidays, etc.), Temporal relies on the <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#parse-a-yearless-date-component">HTML standard&#39;s yearless date format</a> which accepts strings like <code>12-25</code> and <code>--12-25</code> and is also defined in RFC 3339.
 Using the HTML standard format also ensures that <code>Temporal.PlainMonthDay</code> can be used as input to the HTML <code>&lt;time&gt;</code> element.</p>
 <p>The sections below explain the proposed extensions to RFC 3339 for time zones and calendars.</p>
 <h3 id="iana-time-zone-names"><a class="heading-link" href="#iana-time-zone-names"></a>IANA time zone names</h3><p>For many years, a popular way to combine a timestamp and a time zone into a single string has been the format used in the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html#parse-java.lang.CharSequence-">Java standard library</a>.
 Before this format was adopted by Java in <a href="https://jcp.org/en/jsr/detail?id=310">JSR-310</a> in 2014, other open-source libraries like <a href="https://www.joda.org/joda-time/">Joda Time</a> (which JSR-310 was based on) used the same format.
 For example:</p>
 <pre><code>2007-12-03T10:15:30+01:00[Europe/Paris]</code></pre><p>Because of this format&#39;s long-term industry adoption, it was chosen for use in ECMAScript <code>Temporal</code> for both input and output.</p>
-<p>Although neither ISO-8601 nor RFC 3339 specifications currently use this syntax, it&#39;s on a standards track led by the <a href="https://datatracker.ietf.org/wg/sedate/about/">IETF SEDATE</a> working group which includes ECMAScript <code>Temporal</code> champions as well as other industry participants.</p>
+<p>Although neither ISO 8601 nor RFC 3339 specifications use this syntax, it&#39;s standardized in <a href="https://datatracker.ietf.org/doc/html/rfc9557">RFC 9557</a>.</p>
 <p>The time zone ID itself follows the rules of the time zone database, usually called TZDB.</p>
 <blockquote>
 <p>Use only valid POSIX file name components (i.e., the parts of names other than <code>&#39;/&#39;</code>).
