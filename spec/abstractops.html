@@ -1586,11 +1586,10 @@
       1. If _parseResult_ is a normal completion, then
         1. Let _calendar_ be _parseResult_.[[Value]].[[Calendar]].
         1. If _calendar_ is ~empty~, return *"iso8601"*.
-        1. Else, return _calendar_.
-      1. Else,
-        1. Set _parseResult_ to ParseText(StringToCodePoints(_string_), |AnnotationValue|).
-        1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
-        1. Else, return _string_.
+        1. Return _calendar_.
+      1. Set _parseResult_ to ParseText(StringToCodePoints(_string_), |AnnotationValue|).
+      1. If _parseResult_ is a List of errors, throw a *RangeError* exception.
+      1. Return _string_.
     </emu-alg>
   </emu-clause>
 
