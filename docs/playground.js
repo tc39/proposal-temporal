@@ -5331,13 +5331,16 @@
 	    return $replace.call(String(s), /"/g, '&quot;');
 	}
 
-	function isArray(obj) { return toStr$1(obj) === '[object Array]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isDate$1(obj) { return toStr$1(obj) === '[object Date]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isRegExp(obj) { return toStr$1(obj) === '[object RegExp]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isError(obj) { return toStr$1(obj) === '[object Error]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isString(obj) { return toStr$1(obj) === '[object String]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isNumber(obj) { return toStr$1(obj) === '[object Number]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
-	function isBoolean(obj) { return toStr$1(obj) === '[object Boolean]' && (!toStringTag || !(typeof obj === 'object' && toStringTag in obj)); }
+	function canTrustToString(obj) {
+	    return !toStringTag || !(typeof obj === 'object' && (toStringTag in obj || typeof obj[toStringTag] !== 'undefined'));
+	}
+	function isArray(obj) { return toStr$1(obj) === '[object Array]' && canTrustToString(obj); }
+	function isDate$1(obj) { return toStr$1(obj) === '[object Date]' && canTrustToString(obj); }
+	function isRegExp(obj) { return toStr$1(obj) === '[object RegExp]' && canTrustToString(obj); }
+	function isError(obj) { return toStr$1(obj) === '[object Error]' && canTrustToString(obj); }
+	function isString(obj) { return toStr$1(obj) === '[object String]' && canTrustToString(obj); }
+	function isNumber(obj) { return toStr$1(obj) === '[object Number]' && canTrustToString(obj); }
+	function isBoolean(obj) { return toStr$1(obj) === '[object Boolean]' && canTrustToString(obj); }
 
 	// Symbol and BigInt do have Symbol.toStringTag by spec, so that can't be used to eliminate false positives
 	function isSymbol$2(obj) {
@@ -9567,13 +9570,15 @@
 	  } = ParseTemporalYearMonthString(RequireString(item));
 	  if (calendar === undefined) calendar = 'iso8601';
 	  calendar = CanonicalizeCalendar(calendar);
-	  const result = ISODateToFields(calendar, {
+	  GetTemporalOverflowOption(GetOptionsObject(options));
+	  let isoDate = {
 	    year,
 	    month,
 	    day: referenceISODay
-	  }, 'year-month');
-	  GetTemporalOverflowOption(GetOptionsObject(options));
-	  const isoDate = CalendarYearMonthFromFields(calendar, result, 'constrain');
+	  };
+	  RejectYearMonthRange(isoDate);
+	  const result = ISODateToFields(calendar, isoDate, 'year-month');
+	  isoDate = CalendarYearMonthFromFields(calendar, result, 'constrain');
 	  return CreateTemporalYearMonth(isoDate, calendar);
 	}
 	function InterpretISODateTimeOffset(isoDate, time, offsetBehaviour, offsetNs, timeZone, disambiguation, offsetOpt, matchMinute) {
