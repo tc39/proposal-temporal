@@ -93,6 +93,11 @@ export const {
   formatToParts: IntlDateTimeFormatPrototypeFormatToParts,
   resolvedOptions: IntlDateTimeFormatPrototypeResolvedOptions
 } = IntlDateTimeFormat?.prototype || ObjectCreate(null);
+export const IntlDurationFormatPrototype = IntlDurationFormat?.prototype ?? ObjectCreate(null);
+export const {
+  format: IntlDurationFormatPrototypeFormat,
+  resolvedOptions: IntlDurationFormatPrototypeResolvedOptions
+} = IntlDurationFormatPrototype;
 export const { stringify: JSONStringify } = JSON;
 export const {
   prototype: { entries: MapPrototypeEntries, get: MapPrototypeGet, has: MapPrototypeHas, set: MapPrototypeSet }

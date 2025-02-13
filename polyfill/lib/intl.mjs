@@ -14,6 +14,9 @@ import {
   IntlDateTimeFormatPrototypeFormatRangeToParts,
   IntlDateTimeFormatPrototypeFormatToParts,
   IntlDateTimeFormatPrototypeResolvedOptions,
+  IntlDurationFormatPrototype,
+  IntlDurationFormatPrototypeFormat,
+  IntlDurationFormatPrototypeResolvedOptions,
   ObjectAssign,
   ObjectCreate,
   ObjectDefineProperties,
@@ -25,14 +28,24 @@ import * as ES from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   CreateSlots,
+  DAYS,
   GetSlot,
   HasSlot,
   EPOCHNANOSECONDS,
+  HOURS,
   ISO_DATE,
   ISO_DATE_TIME,
+  MICROSECONDS,
+  MILLISECONDS,
+  MINUTES,
+  MONTHS,
+  NANOSECONDS,
   ORIGINAL,
+  SECONDS,
   SetSlot,
   TIME,
+  WEEKS,
+  YEARS,
   CALENDAR
 } from './slots.mjs';
 
@@ -631,4 +644,26 @@ function extractOverrides(temporalObj, main) {
   }
 
   return {};
+}
+
+function temporalDurationToCompatibilityRecord(duration) {
+  const record = ObjectCreate(null);
+  record.years = GetSlot(duration, YEARS);
+  record.months = GetSlot(duration, MONTHS);
+  record.weeks = GetSlot(duration, WEEKS);
+  record.days = GetSlot(duration, DAYS);
+  record.hours = GetSlot(duration, HOURS);
+  record.minutes = GetSlot(duration, MINUTES);
+  record.seconds = GetSlot(duration, SECONDS);
+  record.milliseconds = GetSlot(duration, MILLISECONDS);
+  record.microseconds = GetSlot(duration, MICROSECONDS);
+  record.nanoseconds = GetSlot(duration, NANOSECONDS);
+  return record;
+}
+
+export function ModifiedIntlDurationFormatPrototypeFormat(durationLike) {
+  ES.Call(IntlDurationFormatPrototypeResolvedOptions, this); // brand check
+  const duration = ES.ToTemporalDuration(durationLike);
+  const record = temporalDurationToCompatibilityRecord(duration);
+  return ES.Call(IntlDurationFormatPrototypeFormat, this, [record]);
 }
