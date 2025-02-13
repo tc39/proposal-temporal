@@ -1,0 +1,37 @@
+[
+  {
+    "location": "https://tc39.es/ecma402/",
+    "entries": [
+      {
+        "type": "op",
+        "aoid": "FormatNumericHours",
+        "id": "sec-formatnumerichours"
+      },
+      {
+        "type": "op",
+        "aoid": "FormatNumericMinutes",
+        "id": "sec-formatnumericminutes"
+      },
+      {
+        "type": "op",
+        "aoid": "FormatNumericSeconds",
+        "id": "sec-formatnumericseconds"
+      },
+      {
+        "type": "op",
+        "aoid": "NextUnitFractional",
+        "id": "sec-nextunitfractional"
+      },
+      {
+        "type": "op",
+        "aoid": "ListFormatParts",
+        "id": "sec-listformatparts"
+      },
+      {
+        "type": "clause",
+        "number": "Table 21",
+        "id": "table-partition-duration-format-pattern"
+      }
+    ]
+  }
+]
