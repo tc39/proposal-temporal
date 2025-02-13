@@ -18,6 +18,7 @@ import {
 } from './primordials.mjs';
 import { assert } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
+import { ModifiedIntlDurationFormatPrototypeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
   YEARS,
@@ -377,7 +378,8 @@ export class Duration {
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalDuration(this)) throw new TypeErrorCtor('invalid receiver');
     if (typeof IntlDurationFormat === 'function') {
-      return new IntlDurationFormat(locales, options).format(this);
+      const formatter = new IntlDurationFormat(locales, options);
+      return ES.Call(ModifiedIntlDurationFormatPrototypeFormat, formatter, [this]);
     }
     warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
     return ES.TemporalDurationToString(this, 'auto');
