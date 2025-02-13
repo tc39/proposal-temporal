@@ -1306,10 +1306,88 @@
     <h1><a href="https://tc39.es/ecma402/#sec-intl-durationformat-abstracts">Abstract Operations for DurationFormat Objects</a></h1>
 
     <emu-note type="editor">
-      <p>These definitions are moved into ECMA-262.</p>
+      <p>The deleted definitions of ToIntegerIfIntegral, DurationSign, and IsValidDuration are moved into ECMA-262.</p>
     </emu-note>
 
     <del class="block">
+
+      <emu-clause id="sec-duration-records-deleted">
+        <h1>Duration Records</h1>
+        <p>A <dfn variants="Duration Records">Duration Record</dfn> is a Record value used to represent a Duration.</p>
+        <p>Duration Records have the fields listed in <emu-xref href="#table-duration-record-fields"></emu-xref></p>
+        <emu-table id="table-duration-record-fields" caption="Duration Record Fields">
+          <table class="real-table">
+            <tr>
+              <th>Field</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>[[Years]]</td>
+              <td>
+                The number of years in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Months]]</td>
+              <td>
+                The number of months in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Weeks]]</td>
+              <td>
+                The number of weeks in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Days]]</td>
+              <td>
+                The number of days in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Hours]]</td>
+              <td>
+                The number of hours in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Minutes]]</td>
+              <td>
+                The number of minutes in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Seconds]]</td>
+              <td>
+                The number of seconds in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Milliseconds]]</td>
+              <td>
+                The number of milliseconds in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Microseconds]]</td>
+              <td>
+                The number of microseconds in the duration.
+              </td>
+            </tr>
+            <tr>
+              <td>[[Nanoseconds]]</td>
+              <td>
+                The number of nanoseconds in the duration.
+              </td>
+            </tr>
+          </table>
+        </emu-table>
+      </emu-clause>
+    </del>
+
+    <del class="block">
+
       <emu-clause id="sec-tointegerifintegral-deleted" type="abstract operation">
         <h1>
           ToIntegerIfIntegral (
@@ -1331,6 +1409,76 @@
     </del>
 
     <del class="block">
+
+      <emu-clause id="sec-todurationrecord-deleted" type="abstract operation">
+        <h1>
+          ToDurationRecord (
+            _input_: an ECMAScript language value,
+          ): either a normal completion containing a Duration Record, or an abrupt completion
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It converts a given object that represents a Duration into a Duration Record.</dd>
+        </dl>
+
+        <emu-alg>
+          1. If _input_ is not an Object, then
+            1. If _input_ is a String, throw a *RangeError* exception.
+            1. Throw a *TypeError* exception.
+          1. Let _result_ be a new Duration Record with each field set to 0.
+          1. Let _days_ be ? Get(_input_, *"days"*).
+          1. If _days_ is not *undefined*, set _result_.[[Days]] to ? ToIntegerIfIntegral(_days_).
+          1. Let _hours_ be ? Get(_input_, *"hours"*).
+          1. If _hours_ is not *undefined*, set _result_.[[Hours]] to ? ToIntegerIfIntegral(_hours_).
+          1. Let _microseconds_ be ? Get(_input_, *"microseconds"*).
+          1. If _microseconds_ is not *undefined*, set _result_.[[Microseconds]] to ? ToIntegerIfIntegral(_microseconds_).
+          1. Let _milliseconds_ be ? Get(_input_, *"milliseconds"*).
+          1. If _milliseconds_ is not *undefined*, set _result_.[[Milliseconds]] to ? ToIntegerIfIntegral(_milliseconds_).
+          1. Let _minutes_ be ? Get(_input_, *"minutes"*).
+          1. If _minutes_ is not *undefined*, set _result_.[[Minutes]] to ? ToIntegerIfIntegral(_minutes_).
+          1. Let _months_ be ? Get(_input_, *"months"*).
+          1. If _months_ is not *undefined*, set _result_.[[Months]] to ? ToIntegerIfIntegral(_months_).
+          1. Let _nanoseconds_ be ? Get(_input_, *"nanoseconds"*).
+          1. If _nanoseconds_ is not *undefined*, set _result_.[[Nanoseconds]] to ? ToIntegerIfIntegral(_nanoseconds_).
+          1. Let _seconds_ be ? Get(_input_, *"seconds"*).
+          1. If _seconds_ is not *undefined*, set _result_.[[Seconds]] to ? ToIntegerIfIntegral(_seconds_).
+          1. Let _weeks_ be ? Get(_input_, *"weeks"*).
+          1. If _weeks_ is not *undefined*, set _result_.[[Weeks]] to ? ToIntegerIfIntegral(_weeks_).
+          1. Let _years_ be ? Get(_input_, *"years"*).
+          1. If _years_ is not *undefined*, set _result_.[[Years]] to ? ToIntegerIfIntegral(_years_).
+          1. If _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, and _nanoseconds_ are all *undefined*, throw a *TypeError* exception.
+          1. If IsValidDuration( _result_.[[Years]], _result_.[[Months]], _result_.[[Weeks]], _result_.[[Days]], _result_.[[Hours]], _result_.[[Minutes]], _result_.[[Seconds]], _result_.[[Milliseconds]], _result_.[[Microseconds]], _result_.[[Nanoseconds]]) is *false*, then
+            1. Throw a *RangeError* exception.
+          1. Return _result_.
+        </emu-alg>
+      </emu-clause>
+    </del>
+
+    <del class="block">
+
+      <emu-clause id="sec-durationsign-deleted" type="abstract operation">
+        <h1>
+          DurationSign (
+            _duration_: a Duration Record,
+          ): -1, 0, or 1
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It returns 1 if the most significant non-zero element in its arguments is positive, and -1 if the most significant non-zero element is negative. If all of its arguments are zero, it returns 0.</dd>
+          <dt>redefinition</dt>
+          <dd>true</dd>
+        </dl>
+        <emu-alg>
+          1. For each value _v_ of « _duration_.[[Years]], _duration_.[[Months]], _duration_.[[Weeks]], _duration_.[[Days]], _duration_.[[Hours]], _duration_.[[Minutes]], _duration_.[[Seconds]], _duration_.[[Milliseconds]], _duration_.[[Microseconds]], _duration_.[[Nanoseconds]] », do
+            1. If _v_ &lt; 0, return -1.
+            1. If _v_ > 0, return 1.
+          1. Return 0.
+        </emu-alg>
+      </emu-clause>
+    </del>
+
+    <del class="block">
+
       <emu-clause id="sec-isvalidduration-deleted" type="abstract operation">
         <h1>
           IsValidDuration (
@@ -1372,6 +1520,201 @@
         </emu-alg>
       </emu-clause>
     </del>
+
+    <emu-clause id="sec-computefractionaldigits" oldids="sec-addfractionaldigits" type="abstract operation">
+      <h1>
+        ComputeFractionalDigits (
+          _durationFormat_: a DurationFormat Object,
+          _duration_: a <del>Duration Record</del><ins>Temporal.Duration</ins>,
+        ): a mathematical value
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It computes the sum of all values in _durationFormat_ units with *"fractional"* style, expressed as a fraction of the smallest unit of _durationFormat_ that does not use *"fractional"* style.</dd>
+      </dl>
+
+      <emu-alg>
+        1. Let _result_ be 0.
+        1. Let _exponent_ be 3.
+        1. For each row of <emu-xref href="#table-partition-duration-format-pattern"></emu-xref>, except the header row, in table order, do
+          1. Let _style_ be the value of _durationFormat_'s internal slot whose name is the Style Slot value of the current row.
+          1. If _style_ is *"fractional"*, then
+            1. Assert: The Unit value of the current row is *"milliseconds"*, *"microseconds"*, or *"nanoseconds"*.
+            1. Let _value_ be the value of _duration_'s field whose name is the Value Field value of the current row.
+            1. Set _value_ to _value_ / 10<sup>_exponent_</sup>.
+            1. Set _result_ to _result_ + _value_.
+            1. Set _exponent_ to _exponent_ + 3.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-formatnumericunits" type="abstract operation">
+      <h1>
+        FormatNumericUnits (
+          _durationFormat_: a DurationFormat Object,
+          _duration_: a <del>Duration Record</del><ins>Temporal.Duration</ins>,
+          _firstNumericUnit_: a String,
+          _signDisplayed_: a Boolean,
+        ): a List of Records
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates the parts representing the elements of _duration_ that use *"numeric"* or *"2-digit"* style according to the effective locale and the formatting options of _durationFormat_.</dd>
+      </dl>
+
+      <emu-alg>
+        1. Assert: _firstNumericUnit_ is *"hours"*, *"minutes"*, or *"seconds"*.
+        1. Let _numericPartsList_ be a new empty List.
+        1. Let _hoursValue_ be _duration_.[[Hours]].
+        1. Let _hoursDisplay_ be _durationFormat_.[[HoursDisplay]].
+        1. Let _minutesValue_ be _duration_.[[Minutes]].
+        1. Let _minutesDisplay_ be _durationFormat_.[[MinutesDisplay]].
+        1. Let _secondsValue_ be _duration_.[[Seconds]].
+        1. If _duration_.[[Milliseconds]] is not 0 or _duration_.[[Microseconds]] is not 0 or _duration_.[[Nanoseconds]] is not 0, then
+          1. Set _secondsValue_ to _secondsValue_ + ComputeFractionalDigits(_durationFormat_, _duration_).
+        1. Let _secondsDisplay_ be _durationFormat_.[[SecondsDisplay]].
+        1. Let _hoursFormatted_ be *false*.
+        1. If _firstNumericUnit_ is *"hours"*, then
+          1. If _hoursValue_ is not 0 or _hoursDisplay_ is *"always"*, then
+            1. Set _hoursFormatted_ to *true*.
+        1. If _secondsValue_ is not 0 or _secondsDisplay_ is *"always"*, then
+          1. Let _secondsFormatted_ be *true*.
+        1. Else,
+          1. Let _secondsFormatted_ be *false*.
+        1. Let _minutesFormatted_ be *false*.
+        1. If _firstNumericUnit_ is *"hours"* or _firstNumericUnit_ is *"minutes"*, then
+          1. If _hoursFormatted_ is *true* and _secondsFormatted_ is *true*, then
+            1. Set _minutesFormatted_ to *true*.
+          1. Else if _minutesValue_ is not 0 or _minutesDisplay_ is *"always"*, then
+            1. Set _minutesFormatted_ to *true*.
+        1. If _hoursFormatted_ is *true*, then
+          1. If _signDisplayed_ is *true*, then
+            1. If _hoursValue_ is 0 and DurationSign(_duration_) is -1, then
+              1. Set _hoursValue_ to ~negative-zero~.
+          1. Let _hoursParts_ be FormatNumericHours(_durationFormat_, _hoursValue_, _signDisplayed_).
+          1. Set _numericPartsList_ to the list-concatenation of _numericPartsList_ and _hoursParts_.
+          1. Set _signDisplayed_ to *false*.
+        1. If _minutesFormatted_ is *true*, then
+          1. If _signDisplayed_ is *true*, then
+            1. If _minutesValue_ is 0 and DurationSign(_duration_) is -1, then
+              1. Set _minutesValue_ to ~negative-zero~.
+          1. Let _minutesParts_ be FormatNumericMinutes(_durationFormat_, _minutesValue_, _hoursFormatted_, _signDisplayed_).
+          1. Set _numericPartsList_ to the list-concatenation of _numericPartsList_ and _minutesParts_.
+          1. Set _signDisplayed_ to *false*.
+        1. If _secondsFormatted_ is *true*, then
+          1. Let _secondsParts_ be FormatNumericSeconds(_durationFormat_, _secondsValue_, _minutesFormatted_, _signDisplayed_).
+          1. Set _numericPartsList_ to the list-concatenation of _numericPartsList_ and _secondsParts_.
+        1. Return _numericPartsList_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-partitiondurationformatpattern" type="abstract operation">
+      <h1>
+        PartitionDurationFormatPattern (
+          _durationFormat_: a DurationFormat,
+          _duration_: a <del>Duration Record</del><ins>Temporal.Duration</ins>,
+        ): a List
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates the corresponding parts for _duration_ according to the effective locale and the formatting options of _durationFormat_.</dd>
+      </dl>
+
+      <emu-alg>
+        1. Let _result_ be a new empty List.
+        1. Let _signDisplayed_ be *true*.
+        1. Let _numericUnitFound_ be *false*.
+        1. While _numericUnitFound_ is *false*, repeat for each row in <emu-xref href="#table-partition-duration-format-pattern"></emu-xref> in table order, except the header row:
+          1. Let _value_ be the value of _duration_'s field whose name is the Value Field value of the current row.
+          1. Let _style_ be the value of _durationFormat_'s internal slot whose name is the Style Slot value of the current row.
+          1. Let _display_ be the value of _durationFormat_'s internal slot whose name is the Display Slot value of the current row.
+          1. Let _unit_ be the Unit value of the current row.
+          1. If _style_ is *"numeric"* or *"2-digit"*, then
+            1. Append FormatNumericUnits(_durationFormat_, _duration_, _unit_, _signDisplayed_) to _result_.
+            1. Let _numericPartsList_ be FormatNumericUnits(_durationFormat_, _duration_, _unit_, _signDisplayed_).
+            1. If _numericPartsList_ is not empty, append _numericPartsList_ to _result_.
+            1. Set _numericUnitFound_ to *true*.
+          1. Else,
+            1. Let _nfOpts_ be OrdinaryObjectCreate(*null*).
+            1. If _unit_ is *"seconds"*, *"milliseconds"*, or *"microseconds"*, then
+              1. If NextUnitFractional(_durationFormat_, _unit_) is *true*, then
+                1. Set _value_ to _value_ + ComputeFractionalDigits(_durationFormat_, _duration_).
+                1. If _durationFormat_.[[FractionalDigits]] is *undefined*, then
+                  1. Let _maximumFractionDigits_ be *9*<sub>𝔽</sub>.
+                  1. Let _minimumFractionDigits_ be *+0*<sub>𝔽</sub>.
+                1. Else,
+                  1. Let _maximumFractionDigits_ be _durationFormat_.[[FractionalDigits]].
+                  1. Let _minimumFractionDigits_ be _durationFormat_.[[FractionalDigits]].
+                1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"maximumFractionDigits"*, _maximumFractionDigits_).
+                1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"minimumFractionDigits"*, _minimumFractionDigits_).
+                1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"roundingMode"*, *"trunc"*).
+                1. Set _numericUnitFound_ to *true*.
+            1. If _value_ is not 0 or _display_ is *"always"*, then
+              1. Let _numberingSystem_ be _durationFormat_.[[NumberingSystem]].
+              1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"numberingSystem"*, _numberingSystem_).
+              1. If _signDisplayed_ is *true*, then
+                1. Set _signDisplayed_ to *false*.
+                1. If _value_ is 0 and DurationSign(_duration_) is -1, then
+                  1. Set _value_ to ~negative-zero~.
+              1. Else,
+                1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"signDisplay"*, *"never"*).
+              1. Let _numberFormatUnit_ be the NumberFormat Unit value of the current row.
+              1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"style"*, *"unit"*).
+              1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"unit"*, _numberFormatUnit_).
+              1. Perform ! CreateDataPropertyOrThrow(_nfOpts_, *"unitDisplay"*, _style_).
+              1. Let _nf_ be ! Construct(%Intl.NumberFormat%, « _durationFormat_.[[Locale]], _nfOpts_ »).
+              1. Let _parts_ be PartitionNumberPattern(_nf_, _value_).
+              1. Let _list_ be a new empty List.
+              1. For each Record { [[Type]], [[Value]] } _part_ of _parts_, do
+                1. Append the Record { [[Type]]: _part_.[[Type]], [[Value]]: _part_.[[Value]], [[Unit]]: _numberFormatUnit_ } to _list_.
+              1. Append _list_ to _result_.
+        1. Return ListFormatParts(_durationFormat_, _result_).
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-ecma402-properties-of-intl-durationformat-prototype-object">
+    <h1><a href="https://tc39.es/ecma402/#sec-properties-of-intl-durationformat-prototype-object">Properties of the Intl.DurationFormat Prototype Object</a></h1>
+
+    <emu-clause id="sec-Intl.DurationFormat.prototype.format">
+      <h1>Intl.DurationFormat.prototype.format ( <del>_duration_</del><ins>_durationLike_</ins> )</h1>
+
+      <p>When the `format` method is called with an argument <del>_duration_</del><ins>_durationLike_</ins>, the following steps are taken:</p>
+
+      <emu-alg>
+        1. Let _df_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_df_, [[InitializedDurationFormat]]).
+        1. Let <del>_record_</del><ins>_duration_</ins> be ? <del>ToDurationRecord(_duration_)</del><ins>ToTemporalDuration(_durationLike_)</ins>.
+        1. Let _parts_ be PartitionDurationFormatPattern(_df_, <del>_record_</del><ins>_duration_</ins>).
+        1. Let _result_ be the empty String.
+        1. For each Record { [[Type]], [[Value]], [[Unit]] } _part_ in _parts_, do
+          1. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.DurationFormat.prototype.formatToParts">
+      <h1>Intl.DurationFormat.prototype.formatToParts ( <del>_duration_</del><ins>_durationLike_</ins> )</h1>
+
+      <p>When the `formatToParts` method is called with an argument <del>_duration_</del><ins>_durationLike_</ins>, the following steps are taken:</p>
+
+      <emu-alg>
+        1. Let _df_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_df_, [[InitializedDurationFormat]]).
+        1. Let <del>_record_</del><ins>_duration_</ins> be ? <del>ToDurationRecord(_duration_)</del><ins>ToTemporalDuration(_durationLike_)</ins>.
+        1. Let _parts_ be PartitionDurationFormatPattern(_df_, <del>_record_</del><ins>_duration_</ins>).
+        1. Let _result_ be ! ArrayCreate(0).
+        1. Let _n_ be 0.
+        1. For each Record { [[Type]], [[Value]], [[Unit]] } _part_ in _parts_, do
+          1. Let _obj_ be OrdinaryObjectCreate(%Object.prototype%).
+          1. Perform ! CreateDataPropertyOrThrow(_obj_, *"type"*, _part_.[[Type]]).
+          1. Perform ! CreateDataPropertyOrThrow(_obj_, *"value"*, _part_.[[Value]]).
+          1. If _part_.[[Unit]] is not ~empty~, perform ! CreateDataPropertyOrThrow(_obj_, *"unit"*, _part_.[[Unit]]).
+          1. Perform ! CreateDataPropertyOrThrow(_result_, ! ToString(_n_), _obj_).
+          1. Set _n_ to _n_ + 1.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
   </emu-clause>
 
   <emu-clause id="locale-sensitive-functions">
