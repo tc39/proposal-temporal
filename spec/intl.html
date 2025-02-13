@@ -1302,6 +1302,35 @@
     <p>Finally, Intl.DateTimeFormat instances have a [[BoundFormat]] internal slot that caches the function returned by the format accessor (<emu-xref href="#sec-intl.datetimeformat.prototype.format"></emu-xref>).</p>
   </emu-clause>
 
+  <emu-clause id="sec-ecma402-intl-durationformat-abstracts">
+    <h1><a href="https://tc39.es/ecma402/#sec-intl-durationformat-abstracts">Abstract Operations for DurationFormat Objects</a></h1>
+
+    <emu-note type="editor">
+      <p>These definitions are moved into ECMA-262.</p>
+    </emu-note>
+
+    <del class="block">
+      <emu-clause id="sec-tointegerifintegral-deleted" type="abstract operation">
+        <h1>
+          ToIntegerIfIntegral (
+            _argument_: an ECMAScript language value,
+          ): either a normal completion containing an integer or a throw completion
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It converts _argument_ to an integer representing its Number value, or throws a *RangeError* when that value is not <emu-xref href="#integral-number">integral</emu-xref>.</dd>
+          <dt>redefinition</dt>
+          <dd>true</dd>
+        </dl>
+        <emu-alg>
+          1. Let _number_ be ? ToNumber(_argument_).
+          1. If _number_ is not an integral Number, throw a *RangeError* exception.
+          1. Return ℝ(_number_).
+        </emu-alg>
+      </emu-clause>
+    </del>
+  </emu-clause>
+
   <emu-clause id="locale-sensitive-functions">
     <h1><a href="https://tc39.es/ecma402/#locale-sensitive-functions">Locale Sensitive Functions of the ECMAScript Language Specification</a></h1>
 

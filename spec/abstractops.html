@@ -1769,23 +1769,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-tointegerifintegral" type="abstract operation">
-    <h1>
-      ToIntegerIfIntegral (
-        _argument_: an ECMAScript language value,
-      ): either a normal completion containing an integer or a throw completion
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd>It converts _argument_ to an integer representing its Number value, or throws a *RangeError* when that value is not <emu-xref href="#integral-number">integral</emu-xref>.</dd>
-    </dl>
-    <emu-alg>
-      1. Let _number_ be ? ToNumber(_argument_).
-      1. If _number_ is not an integral Number, throw a *RangeError* exception.
-      1. Return ℝ(_number_).
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-tomonthcode" type="abstract operation">
     <h1>
       ToMonthCode (
