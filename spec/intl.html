@@ -1329,6 +1329,49 @@
         </emu-alg>
       </emu-clause>
     </del>
+
+    <del class="block">
+      <emu-clause id="sec-isvalidduration-deleted" type="abstract operation">
+        <h1>
+          IsValidDuration (
+            _years_: an integer,
+            _months_: an integer,
+            _weeks_: an integer,
+            _days_: an integer,
+            _hours_: an integer,
+            _minutes_: an integer,
+            _seconds_: an integer,
+            _milliseconds_: an integer,
+            _microseconds_: an integer,
+            _nanoseconds_: an integer,
+          ): a Boolean
+        </h1>
+        <dl class="header">
+          <dt>description</dt>
+          <dd>It returns *true* if its arguments form valid input from which to construct a Duration Record, and *false* otherwise.</dd>
+          <dt>redefinition</dt>
+          <dd>true</dd>
+        </dl>
+        <emu-alg>
+          1. Let _sign_ be 0.
+          1. For each value _v_ of « _years_, _months_, _weeks_, _days_, _hours_, _minutes_, _seconds_, _milliseconds_, _microseconds_, _nanoseconds_ », do
+            1. If 𝔽(_v_) is not finite, return *false*.
+            1. If _v_ &lt; 0, then
+              1. If _sign_ > 0, return *false*.
+              1. Set _sign_ to -1.
+            1. Else if _v_ > 0, then
+              1. If _sign_ &lt; 0, return *false*.
+              1. Set _sign_ to 1.
+          1. If abs(_years_) ≥ 2<sup>32</sup>, return *false*.
+          1. If abs(_months_) ≥ 2<sup>32</sup>, return *false*.
+          1. If abs(_weeks_) ≥ 2<sup>32</sup>, return *false*.
+          1. Let _normalizedSeconds_ be _days_ × 86,400 + _hours_ × 3600 + _minutes_ × 60 + _seconds_ + ℝ(𝔽(_milliseconds_)) × 10<sup>-3</sup> + ℝ(𝔽(_microseconds_)) × 10<sup>-6</sup> + ℝ(𝔽(_nanoseconds_)) × 10<sup>-9</sup>.
+          1. NOTE: The above step cannot be implemented directly using floating-point arithmetic. Multiplying by 10<sup>-3</sup>, 10<sup>-6</sup>, and 10<sup>-9</sup> respectively may be imprecise when _milliseconds_, _microseconds_, or _nanoseconds_ is an unsafe integer. This multiplication can be implemented in C++ with an implementation of `std::remquo()` with sufficient bits in the quotient. String manipulation will also give an exact result, since the multiplication is by a power of 10.
+          1. If abs(_normalizedSeconds_) ≥ 2<sup>53</sup>, return *false*.
+          1. Return *true*.
+        </emu-alg>
+      </emu-clause>
+    </del>
   </emu-clause>
 
   <emu-clause id="locale-sensitive-functions">
