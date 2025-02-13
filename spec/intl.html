@@ -1727,12 +1727,18 @@
 
         <emu-clause id="sup-temporal.duration.prototype.tolocalestring">
           <h1>Temporal.Duration.prototype.toLocaleString ( [ _locales_ [ , _options_ ] ] )</h1>
-          <emu-note type="editor">
-            <p>
-              This function is currently not specified.
-              See <a href="https://tc39.es/proposal-intl-duration-format/">the Intl.DurationFormat proposal</a>.
-            </p>
-          </emu-note>
+          <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.duration.prototype.tolocalestring"></emu-xref>.</p>
+          <p>This method performs the following steps when called:</p>
+          <emu-alg>
+            1. Let _duration_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
+            1. Let _formatter_ be ? Construct(%Intl.DurationFormat%, « _locales_, _options_ »).
+            1. Let _parts_ be PartitionDurationFormatPattern(_formatter_, _duration_).
+            1. Let _result_ be the empty String.
+            1. For each Record { [[Type]], [[Value]], [[Unit]] } _part_ in _parts_, do
+              1. Set _result_ to the string-concatenation of _result_ and _part_.[[Value]].
+            1. Return _result_.
+          </emu-alg>
         </emu-clause>
       </emu-clause>
 
