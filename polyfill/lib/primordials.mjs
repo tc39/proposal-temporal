@@ -96,6 +96,7 @@ export const {
 export const IntlDurationFormatPrototype = IntlDurationFormat?.prototype ?? ObjectCreate(null);
 export const {
   format: IntlDurationFormatPrototypeFormat,
+  formatToParts: IntlDurationFormatPrototypeFormatToParts,
   resolvedOptions: IntlDurationFormatPrototypeResolvedOptions
 } = IntlDurationFormatPrototype;
 export const { stringify: JSONStringify } = JSON;

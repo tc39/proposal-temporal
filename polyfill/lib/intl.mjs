@@ -16,6 +16,7 @@ import {
   IntlDateTimeFormatPrototypeResolvedOptions,
   IntlDurationFormatPrototype,
   IntlDurationFormatPrototypeFormat,
+  IntlDurationFormatPrototypeFormatToParts,
   IntlDurationFormatPrototypeResolvedOptions,
   ObjectAssign,
   ObjectCreate,
@@ -666,4 +667,14 @@ export function ModifiedIntlDurationFormatPrototypeFormat(durationLike) {
   const duration = ES.ToTemporalDuration(durationLike);
   const record = temporalDurationToCompatibilityRecord(duration);
   return ES.Call(IntlDurationFormatPrototypeFormat, this, [record]);
+}
+
+if (IntlDurationFormatPrototype) {
+  IntlDurationFormatPrototype.format = ModifiedIntlDurationFormatPrototypeFormat;
+  IntlDurationFormatPrototype.formatToParts = function formatToParts(durationLike) {
+    ES.Call(IntlDurationFormatPrototypeResolvedOptions, this); // brand check
+    const duration = ES.ToTemporalDuration(durationLike);
+    const record = temporalDurationToCompatibilityRecord(duration);
+    return ES.Call(IntlDurationFormatPrototypeFormatToParts, this, [record]);
+  };
 }
