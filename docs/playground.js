@@ -361,7 +361,7 @@
 	var $call$1 = requireFunctionCall();
 	var $actualApply = actualApply;
 
-	/** @type {import('.')} */
+	/** @type {(args: [Function, thisArg?: unknown, ...args: unknown[]]) => Function} TODO FIXME, find a way to use import('.') */
 	var callBindApplyHelpers = function callBindBasic(args) {
 		if (args.length < 1 || typeof args[0] !== 'function') {
 			throw new $TypeError$9('a function is required');
@@ -976,6 +976,12 @@
 	  formatToParts: IntlDateTimeFormatPrototypeFormatToParts,
 	  resolvedOptions: IntlDateTimeFormatPrototypeResolvedOptions
 	} = IntlDateTimeFormat?.prototype || ObjectCreate(null);
+	const IntlDurationFormatPrototype = IntlDurationFormat?.prototype ?? ObjectCreate(null);
+	const {
+	  format: IntlDurationFormatPrototypeFormat,
+	  formatToParts: IntlDurationFormatPrototypeFormatToParts,
+	  resolvedOptions: IntlDurationFormatPrototypeResolvedOptions
+	} = IntlDurationFormatPrototype;
 	const {
 	  stringify: JSONStringify
 	} = JSON$1;
@@ -15467,10 +15473,40 @@
 	  }
 	  return {};
 	}
+	function temporalDurationToCompatibilityRecord(duration) {
+	  const record = ObjectCreate(null);
+	  record.years = GetSlot(duration, YEARS);
+	  record.months = GetSlot(duration, MONTHS);
+	  record.weeks = GetSlot(duration, WEEKS);
+	  record.days = GetSlot(duration, DAYS);
+	  record.hours = GetSlot(duration, HOURS);
+	  record.minutes = GetSlot(duration, MINUTES);
+	  record.seconds = GetSlot(duration, SECONDS);
+	  record.milliseconds = GetSlot(duration, MILLISECONDS);
+	  record.microseconds = GetSlot(duration, MICROSECONDS);
+	  record.nanoseconds = GetSlot(duration, NANOSECONDS);
+	  return record;
+	}
+	function ModifiedIntlDurationFormatPrototypeFormat(durationLike) {
+	  Call$1(IntlDurationFormatPrototypeResolvedOptions, this); // brand check
+	  const duration = ToTemporalDuration(durationLike);
+	  const record = temporalDurationToCompatibilityRecord(duration);
+	  return Call$1(IntlDurationFormatPrototypeFormat, this, [record]);
+	}
+	if (IntlDurationFormatPrototype) {
+	  IntlDurationFormatPrototype.format = ModifiedIntlDurationFormatPrototypeFormat;
+	  IntlDurationFormatPrototype.formatToParts = function formatToParts(durationLike) {
+	    Call$1(IntlDurationFormatPrototypeResolvedOptions, this); // brand check
+	    const duration = ToTemporalDuration(durationLike);
+	    const record = temporalDurationToCompatibilityRecord(duration);
+	    return Call$1(IntlDurationFormatPrototypeFormatToParts, this, [record]);
+	  };
+	}
 
 	var Intl = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		DateTimeFormat: DateTimeFormat
+		DateTimeFormat: DateTimeFormat,
+		ModifiedIntlDurationFormatPrototypeFormat: ModifiedIntlDurationFormatPrototypeFormat
 	});
 
 	/* global true */
@@ -16501,7 +16537,8 @@
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalDuration(this)) throw new TypeError$1('invalid receiver');
 	    if (typeof IntlDurationFormat === 'function') {
-	      return new IntlDurationFormat(locales, options).format(this);
+	      const formatter = new IntlDurationFormat(locales, options);
+	      return Call$1(ModifiedIntlDurationFormatPrototypeFormat, formatter, [this]);
 	    }
 	    warn('Temporal.Duration.prototype.toLocaleString() requires Intl.DurationFormat.');
 	    return TemporalDurationToString(this, 'auto');
