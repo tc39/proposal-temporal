@@ -1816,11 +1816,8 @@ export function FormatUTCOffsetNanoseconds(offsetNs) {
 
 export function GetISODateTimeFor(timeZone, epochNs) {
   const offsetNs = GetOffsetNanosecondsFor(timeZone, epochNs);
-  let {
-    isoDate: { year, month, day },
-    time: { hour, minute, second, millisecond, microsecond, nanosecond }
-  } = GetISOPartsFromEpoch(epochNs);
-  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond + offsetNs);
+  const result = GetISOPartsFromEpoch(epochNs);
+  return AddOffsetNanosecondsToISODateTime(result, offsetNs);
 }
 
 export function GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation) {
@@ -2345,7 +2342,9 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
     time: { millisecond, microsecond, nanosecond }
   } = GetISOPartsFromEpoch(epochNanoseconds);
   const { year, month, day, hour, minute, second } = GetFormatterParts(id, epochMilliseconds);
-  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+  const time = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
+  return CombineISODateAndTimeRecord(isoDate, time);
 }
 
 export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
@@ -2607,10 +2606,12 @@ export function BalanceISODate(year, month, day) {
   return { year, month, day };
 }
 
-export function BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-  const time = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
-  return CombineISODateAndTimeRecord(isoDate, time);
+export function AddOffsetNanosecondsToISODateTime({ isoDate, time }, nanoseconds) {
+  const { year, month, day } = isoDate;
+  const { hour, minute, second, millisecond, microsecond, nanosecond } = time;
+  const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond + nanoseconds);
+  const balancedDate = BalanceISODate(year, month, day + balancedTime.deltaDays);
+  return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
 export function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
