@@ -1741,9 +1741,13 @@ export function ToTemporalCalendarIdentifier(calendarLike) {
     ({ calendar } = ParseISODateTime(identifier));
   } catch {
     try {
-      ({ calendar } = ParseTemporalYearMonthString(identifier));
+      ({ calendar } = ParseTemporalTimeString(identifier));
     } catch {
-      ({ calendar } = ParseTemporalMonthDayString(identifier));
+      try {
+        ({ calendar } = ParseTemporalYearMonthString(identifier));
+      } catch {
+        ({ calendar } = ParseTemporalMonthDayString(identifier));
+      }
     }
   }
   if (!calendar) calendar = 'iso8601';
