@@ -184,9 +184,9 @@ impl['iso8601'] = {
     year += years;
     month += months;
     ({ year, month } = ES.BalanceISOYearMonth(year, month));
-    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
-    day += days + 7 * weeks;
-    return ES.BalanceISODate(year, month, day);
+    const intermediate = ES.RegulateISODate(year, month, day, overflow);
+    const additionalDays = days + 7 * weeks;
+    return ES.AddDaysToISODate(intermediate, additionalDays);
   },
   dateUntil(one, two, largestUnit) {
     const sign = -ES.CompareISODate(one, two);
@@ -782,7 +782,7 @@ const nonIsoHelperBase = {
     return this.isoToCalendarDate(isoDate, cache);
   },
   addDaysIso(isoDate, days) {
-    const added = ES.BalanceISODate(isoDate.year, isoDate.month, isoDate.day + days);
+    const added = ES.AddDaysToISODate(isoDate, days);
     return added;
   },
   addDaysCalendar(calendarDate, days, cache) {
@@ -1264,11 +1264,12 @@ const helperIndian = ObjectAssign({}, nonIsoHelperBase, {
     // calendar fast!
     calendarDate = this.adjustCalendarDate(calendarDate);
     const monthInfo = this.getMonthInfo(calendarDate);
-    const isoYear = calendarDate.year + 78 + (monthInfo.nextYear ? 1 : 0);
-    const isoMonth = monthInfo.month;
-    const isoDay = monthInfo.day;
-    const isoDate = ES.BalanceISODate(isoYear, isoMonth, isoDay + calendarDate.day - 1);
-    return isoDate;
+    const isoDate = {
+      year: calendarDate.year + 78 + (monthInfo.nextYear ? 1 : 0),
+      month: monthInfo.month,
+      day: monthInfo.day
+    };
+    return ES.AddDaysToISODate(isoDate, calendarDate.day - 1);
   },
   // https://bugs.chromium.org/p/v8/issues/detail?id=10529 causes Intl's Indian
   // calendar output to fail for all dates before 0001-01-01 ISO.  For example,
