@@ -1833,7 +1833,7 @@ export function GetISODateTimeFor(timeZone, epochNs) {
 }
 
 export function GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation) {
-  CheckISODaysRange(isoDateTime);
+  AssertISODateTimeWithinLimits(isoDateTime);
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   return DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, isoDateTime, disambiguation);
 }
@@ -2982,7 +2982,7 @@ export function ISODateToEpochDays(year, month, day) {
 // which is ill-defined in how it handles large year numbers. If the issue
 // https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 // with no observable changes.
-function CheckISODaysRange({ isoDate: { year, month, day }, time }) {
+export function CheckISODaysRange({ isoDate: { year, month, day }, time }) {
   if (year > -271821 && year < 275760) return;
   if (year === -271821) {
     if (month > 4) return;
@@ -3091,6 +3091,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
 
     // Incorporate time parts from dtStart
     intermediateDateTime = CombineISODateAndTimeRecord(intermediateDate, isoDtStart.time);
+    CheckISODaysRange(intermediateDateTime);
 
     // Convert intermediate datetime to epoch-nanoseconds (may disambiguate)
     const intermediateNs = GetEpochNanosecondsFor(timeZone, intermediateDateTime, 'compatible');
@@ -3186,6 +3187,8 @@ function NudgeToCalendarUnit(
   const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
   const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
   if (timeZone) {
+    CheckISODaysRange(startDateTime);
+    CheckISODaysRange(endDateTime);
     startEpochNs = GetEpochNanosecondsFor(timeZone, startDateTime, 'compatible');
     endEpochNs = GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible');
   } else {
@@ -3234,8 +3237,10 @@ function NudgeToZonedTime(sign, duration, isoDateTime, timeZone, calendar, incre
   // Apply to origin, output start/end of the day as PlainDateTimes
   const start = CalendarDateAdd(calendar, isoDateTime.isoDate, duration.date, 'constrain');
   const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
+  CheckISODaysRange(startDateTime);
   const endDate = AddDaysToISODate(start, sign);
   const endDateTime = CombineISODateAndTimeRecord(endDate, isoDateTime.time);
+  CheckISODaysRange(endDateTime);
 
   // Compute the epoch-nanosecond start/end of the final whole-day interval
   // If duration has negative sign, startEpochNs will be after endEpochNs
@@ -3370,6 +3375,7 @@ function BubbleRelativeDuration(
     const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
     let endEpochNs;
     if (timeZone) {
+      CheckISODaysRange(endDateTime);
       endEpochNs = GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible');
     } else {
       endEpochNs = GetUTCEpochNanoseconds(endDateTime);
