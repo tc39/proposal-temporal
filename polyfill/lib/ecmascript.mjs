@@ -3016,7 +3016,7 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
 export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
   const nsDiff = ns2.subtract(ns1);
   if (nsDiff.isZero()) return { date: ZeroDateDuration(), time: TimeDuration.ZERO };
-  const sign = nsDiff.lt(0) ? -1 : 1;
+  const sign = nsDiff.lt(0) ? 1 : -1;
 
   // Convert start/end instants to datetimes
   const isoDtStart = GetISODateTimeFor(timeZone, ns1);
@@ -3037,18 +3037,18 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   // Only the forward direction allows for an additional 1 day correction caused by a push-forward
   // 'compatible' DST transition causing the wall-clock to overshoot again.
   // This max value is inclusive.
-  let maxDayCorrection = sign === 1 ? 2 : 1;
+  let maxDayCorrection = sign === -1 ? 2 : 1;
 
   // Detect ISO wall-clock overshoot.
   // If the diff of the ISO wall-clock times is opposite to the overall diff's sign,
   // we are guaranteed to need at least one day correction.
   let timeDuration = DifferenceTime(isoDtStart.time, isoDtEnd.time);
-  if (timeDuration.sign() === -sign) {
+  if (timeDuration.sign() === sign) {
     dayCorrection++;
   }
 
   for (; dayCorrection <= maxDayCorrection; dayCorrection++) {
-    const intermediateDate = AddDaysToISODate(isoDtEnd.isoDate, dayCorrection * -sign);
+    const intermediateDate = AddDaysToISODate(isoDtEnd.isoDate, dayCorrection * sign);
 
     // Incorporate time parts from dtStart
     intermediateDateTime = CombineISODateAndTimeRecord(intermediateDate, isoDtStart.time);
@@ -3061,7 +3061,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
 
     // Did intermediateNs NOT surpass ns2?
     // If so, exit the loop with success (without incrementing dayCorrection past maxDayCorrection)
-    if (timeDuration.sign() !== -sign) {
+    if (timeDuration.sign() !== sign) {
       break;
     }
   }
