@@ -1826,6 +1826,7 @@ export function FormatUTCOffsetNanoseconds(offsetNs) {
 }
 
 export function GetISODateTimeFor(timeZone, epochNs) {
+  AssertEpochNanoseconds(epochNs);
   const offsetNs = GetOffsetNanosecondsFor(timeZone, epochNs);
   const result = GetISOPartsFromEpoch(epochNs);
   return AddOffsetNanosecondsToISODateTime(result, offsetNs);
@@ -2768,6 +2769,10 @@ export function ValidateEpochNanoseconds(epochNanoseconds) {
   }
 }
 
+function AssertEpochNanoseconds(epochNanoseconds) {
+  assert(epochNanoseconds.geq(NS_MIN) && epochNanoseconds.leq(NS_MAX), 'epoch nanoseconds should not be out of range');
+}
+
 function RejectYearMonthRange({ year, month }) {
   RejectToRange(year, YEAR_MIN, YEAR_MAX);
   if (year === YEAR_MIN) {
@@ -3041,6 +3046,9 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
 }
 
 export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
+  AssertEpochNanoseconds(ns1);
+  AssertEpochNanoseconds(ns2);
+
   const nsDiff = ns2.subtract(ns1);
   if (nsDiff.isZero()) return { date: ZeroDateDuration(), time: TimeDuration.ZERO };
   const sign = nsDiff.lt(0) ? 1 : -1;
@@ -3524,6 +3532,9 @@ export function DifferenceZonedDateTimeWithRounding(
   smallestUnit,
   roundingMode
 ) {
+  AssertEpochNanoseconds(ns1);
+  AssertEpochNanoseconds(ns2);
+
   if (TemporalUnitCategory(largestUnit) === 'time') {
     // The user is only asking for a time difference, so return difference of instants.
     return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
@@ -3548,6 +3559,9 @@ export function DifferenceZonedDateTimeWithRounding(
 }
 
 export function DifferenceZonedDateTimeWithTotal(ns1, ns2, timeZone, calendar, unit) {
+  AssertEpochNanoseconds(ns1);
+  AssertEpochNanoseconds(ns2);
+
   if (TemporalUnitCategory(unit) === 'time') {
     // The user is only asking for a time difference, so return difference of instants.
     return TotalTimeDuration(TimeDuration.fromEpochNsDiff(ns2, ns1), unit);
@@ -3838,6 +3852,8 @@ export function AddInstant(epochNanoseconds, timeDuration) {
 }
 
 export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow = 'constrain') {
+  AssertEpochNanoseconds(epochNs);
+
   // If only time is to be added, then use Instant math. It's not OK to fall
   // through to the date/time code below because compatible disambiguation in
   // the PlainDateTime=>Instant conversion will change the offset of any
