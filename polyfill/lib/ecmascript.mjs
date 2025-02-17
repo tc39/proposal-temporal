@@ -1828,8 +1828,11 @@ export function FormatUTCOffsetNanoseconds(offsetNs) {
 export function GetISODateTimeFor(timeZone, epochNs) {
   AssertEpochNanoseconds(epochNs);
   const offsetNs = GetOffsetNanosecondsFor(timeZone, epochNs);
-  const result = GetISOPartsFromEpoch(epochNs);
-  return AddOffsetNanosecondsToISODateTime(result, offsetNs);
+  const { isoDate, time } = GetISOPartsFromEpoch(epochNs);
+  const { hour, minute, second, millisecond, microsecond, nanosecond } = time;
+  const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond + offsetNs);
+  const balancedDate = AddDaysToISODate(isoDate, balancedTime.deltaDays);
+  return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
 export function GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation) {
@@ -2611,13 +2614,6 @@ export function AddDaysToISODate(isoDate, days) {
   }
 
   return { year, month, day };
-}
-
-export function AddOffsetNanosecondsToISODateTime({ isoDate, time }, nanoseconds) {
-  const { hour, minute, second, millisecond, microsecond, nanosecond } = time;
-  const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond + nanoseconds);
-  const balancedDate = AddDaysToISODate(isoDate, balancedTime.deltaDays);
-  return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
 export function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
