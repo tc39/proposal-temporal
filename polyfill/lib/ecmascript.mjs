@@ -2294,8 +2294,32 @@ export function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {
 
 function GetUTCEpochMilliseconds({
   isoDate: { year, month, day },
-  time: { hour, minute, second, millisecond /* ignored: microsecond, nanosecond */ }
+  time: { hour, minute, second, millisecond, microsecond, nanosecond }
 }) {
+  // assert this should not be called with an isoDateTime that would cause UB in
+  // ecma-262
+  const foo = new Error().stack + `${year}-${month}-${day} ${hour}:${minute}:${second}.${millisecond}`;
+  if (year < -271821 || year > 275760) throw foo + ' year out of range';
+  if (year === -271821) {
+    if (month < 4) throw foo + ' month too early';
+    if (month === 4 && day < 19) throw foo + ' day too early';
+    if (
+      month === 4 &&
+      day === 19 &&
+      hour === 0 &&
+      minute === 0 &&
+      second === 0 &&
+      millisecond === 0 &&
+      microsecond === 0 &&
+      nanosecond === 0
+    ) {
+      throw foo + ' time of midnight on earliest day';
+    }
+  } else if (year === 275760) {
+    if (month > 9) throw foo + ' month too late';
+    if (month === 9 && day > 13) throw foo + ' day too late';
+  }
+
   // The pattern of leap years in the ISO 8601 calendar repeats every 400
   // years. To avoid overflowing at the edges of the range, we reduce the year
   // to the remainder after dividing by 400, and then add back all the
@@ -2742,13 +2766,27 @@ export function RejectDateTime(year, month, day, hour, minute, second, milliseco
 }
 
 export function RejectDateTimeRange(isoDateTime) {
-  const ns = GetUTCEpochNanoseconds(isoDateTime);
-  if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
-    // Because PlainDateTime's range is wider than Instant's range, the line
-    // below will always throw. Calling `ValidateEpochNanoseconds` avoids
-    // repeating the same error message twice.
-    ValidateEpochNanoseconds(ns);
+  const { year, month, day } = isoDateTime.isoDate;
+  const { hour, minute, second, millisecond, microsecond, nanosecond } = isoDateTime.time;
+  if (year > -271821 && year < 275760) return;
+  if (year === -271821) {
+    if (month > 4) return;
+    if (month === 4 && day > 19) return;
+    if (
+      month === 4 &&
+      day === 19 &&
+      (hour !== 0 || minute !== 0 || second !== 0 || millisecond !== 0 || microsecond !== 0 || nanosecond !== 0)
+    ) {
+      return;
+    }
+  } else if (year === 275760) {
+    if (month < 9) return;
+    if (month === 9 && day <= 13) return;
   }
+  throw new RangeErrorCtor(
+    `date/time value ${year}-${month}-${day} ${hour}:${minute}:${second}.` +
+      `${millisecond}.${microsecond}.${nanosecond} is outside of supported range`
+  );
 }
 
 // Same as above, but throws a different, non-user-facing error
@@ -2966,6 +3004,7 @@ export function CombineDateAndTimeDuration(dateDuration, timeDuration) {
 
 // Caution: month is 0-based
 export function ISODateToEpochDays(year, month, day) {
+  if (year === -271821 && month === 3 && day === 19) return -1e8;
   return (
     GetUTCEpochMilliseconds({
       isoDate: { year, month: month + 1, day },
