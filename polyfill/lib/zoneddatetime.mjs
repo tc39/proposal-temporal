@@ -219,7 +219,7 @@ export class ZonedDateTime {
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
       const dt = ES.CombineISODateAndTimeRecord(iso, GetSlot(temporalTime, TIME));
-      ES.CheckISODaysRange(dt);
+      ES.RejectDateTimeRange(dt);
       epochNs = ES.GetEpochNanosecondsFor(timeZone, dt, 'compatible');
     }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
