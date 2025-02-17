@@ -2961,10 +2961,17 @@ export function ISODateToEpochDays(year, month, day) {
 // which is ill-defined in how it handles large year numbers. If the issue
 // https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 // with no observable changes.
-function CheckISODaysRange({ year, month, day }) {
-  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
-    throw new RangeErrorCtor('date/time value is outside the supported range');
+function CheckISODaysRange(isoDate) {
+  const { year, month, day } = CombineISODateAndTimeRecord(isoDate, MidnightTimeRecord()).isoDate;
+  if (year > -271821 && year < 275760) return;
+  if (year === -271821) {
+    if (month > 4) return;
+    if (month === 4 && day > 19) return;
+  } else if (year === 275760) {
+    if (month < 9) return;
+    if (month === 9 && day <= 13) return;
   }
+  throw new RangeErrorCtor(`date/time value ${year}-${month}-${day} is outside the supported range`);
 }
 
 function DifferenceTime(time1, time2) {
