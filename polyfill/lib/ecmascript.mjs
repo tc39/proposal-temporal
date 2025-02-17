@@ -3875,6 +3875,7 @@ export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow
   const dt = GetISODateTimeFor(timeZone, epochNs);
   const addedDate = CalendarDateAdd(calendar, dt.isoDate, duration.date, overflow);
   const dtIntermediate = CombineISODateAndTimeRecord(addedDate, dt.time);
+  CheckISODaysRange(dtIntermediate);
 
   // Note that 'compatible' is used below because this disambiguation behavior
   // is required by RFC 5545.
