@@ -1297,7 +1297,7 @@ export function ToTemporalInstant(item) {
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
   const isoDate = { year, month, day };
   const isoDateTime = { isoDate, time: time === 'start-of-day' ? MidnightTimeRecord() : time };
-  CheckISODaysRange(isoDate);
+  CheckISODaysRange(isoDateTime);
   const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
@@ -1403,7 +1403,7 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
-  CheckISODaysRange(isoDateTime.isoDate);
+  CheckISODaysRange(isoDateTime);
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
@@ -1892,7 +1892,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 }
 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
-  CheckISODaysRange(isoDateTime.isoDate);
+  CheckISODaysRange(isoDateTime);
 
   // UTC fast path
   if (timeZone === 'UTC') return [GetUTCEpochNanoseconds(isoDateTime)];
@@ -2972,12 +2972,23 @@ export function ISODateToEpochDays(year, month, day) {
 // which is ill-defined in how it handles large year numbers. If the issue
 // https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 // with no observable changes.
-function CheckISODaysRange(isoDate) {
-  const { year, month, day } = CombineISODateAndTimeRecord(isoDate, MidnightTimeRecord()).isoDate;
+function CheckISODaysRange({ isoDate: { year, month, day }, time }) {
   if (year > -271821 && year < 275760) return;
   if (year === -271821) {
     if (month > 4) return;
     if (month === 4 && day > 19) return;
+    if (
+      month === 4 &&
+      day === 19 &&
+      time.hour !== 0 &&
+      time.minute !== 0 &&
+      time.second !== 0 &&
+      time.millisecond !== 0 &&
+      time.microsecond !== 0 &&
+      time.nanosecond !== 0
+    ) {
+      return;
+    }
   } else if (year === 275760) {
     if (month < 9) return;
     if (month === 9 && day <= 13) return;
