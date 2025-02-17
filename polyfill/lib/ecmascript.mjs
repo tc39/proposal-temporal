@@ -1391,6 +1391,8 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
+  CheckISODaysRange(isoDate);
+
   // start-of-day signifies that we had a string such as YYYY-MM-DD[Zone]. It is
   // grammatically not possible to specify a UTC offset in that string, so the
   // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
@@ -1413,13 +1415,11 @@ export function InterpretISODateTimeOffset(
   // for this timezone and date/time.
   if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
     // Calculate the instant for the input's date/time and offset
-    CheckISODaysRange(isoDate);
     const epochNs = GetUTCEpochNanoseconds(dt).subtract(offsetNs);
     ValidateEpochNanoseconds(epochNs);
     return epochNs;
   }
 
-  CheckISODaysRange(isoDate);
   const utcEpochNs = GetUTCEpochNanoseconds(dt);
 
   // "prefer" or "reject"
@@ -1881,22 +1881,19 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 }
 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
+  CheckISODaysRange(isoDateTime.isoDate);
+
   // UTC fast path
-  if (timeZone === 'UTC') {
-    CheckISODaysRange(isoDateTime.isoDate);
-    return [GetUTCEpochNanoseconds(isoDateTime)];
-  }
+  if (timeZone === 'UTC') return [GetUTCEpochNanoseconds(isoDateTime)];
 
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
   if (offsetMinutes !== undefined) {
     const offsetNanoseconds = offsetMinutes * 60e9;
-    CheckISODaysRange(isoDateTime.isoDate);
     const epochNs = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
     ValidateEpochNanoseconds(epochNs);
     return [epochNs];
   }
 
-  CheckISODaysRange(isoDateTime.isoDate);
   return GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
 }
 
