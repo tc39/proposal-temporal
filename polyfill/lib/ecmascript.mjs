@@ -1838,6 +1838,7 @@ export function GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation) {
 
 // TODO: See if this logic can be removed in favour of GetNamedTimeZoneEpochNanoseconds
 export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, isoDateTime, disambiguation) {
+  AssertISODateTimeWithinLimits(isoDateTime);
   const numInstants = possibleEpochNs.length;
 
   if (numInstants === 1) return possibleEpochNs[0];
