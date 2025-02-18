@@ -67,7 +67,7 @@ zdt.withTimeZone('Europe/Paris')
   .toPlainDate()
   .subtract({ years: 3000 })
   .toLocaleString('fr-FR', { calendar: 'gregory', dateStyle: 'long' });
-  // => "28 février 2022"
+  // => "28 février 979"
 
 zdt.withTimeZone('America/New_York')
   .toPlainDate()
