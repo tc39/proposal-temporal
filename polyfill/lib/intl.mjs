@@ -137,6 +137,11 @@ function createDateTimeFormat(dtf, locale, options) {
     for (const prop in clonedResolved) {
       if (!ES.HasOwnProperty(options, prop)) delete clonedResolved[prop];
     }
+    // hour12/hourCycle don't show up in resolvedOptions() unless the chosen
+    // format includes an hour component, so copy them explicitly in case they
+    // would otherwise be lost
+    clonedResolved.hour12 = options.hour12;
+    clonedResolved.hourCycle = options.hourCycle;
     SetSlot(dtf, OPTIONS, clonedResolved);
   } else {
     SetSlot(dtf, OPTIONS, options);
@@ -467,6 +472,19 @@ function datetimeAmend(originalOptions) {
     // Try to fake what timeStyle should do if not printing the time zone name
     delete options.timeStyle;
     ObjectAssign(options, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+
+    // If moving to a fake timeStyle while dateStyle is present, we also have to
+    // move to a fake dateStyle. dateStyle is mutually exclusive with hour etc.
+    if (options.dateStyle) {
+      const dateStyleHacks = {
+        short: { year: 'numeric', month: 'numeric', day: 'numeric' },
+        medium: { year: 'numeric', month: 'short', day: 'numeric' },
+        long: { year: 'numeric', month: 'long', day: 'numeric' },
+        full: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }
+      };
+      ObjectAssign(options, dateStyleHacks[options.dateStyle]);
+      delete options.dateStyle;
+    }
   }
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
