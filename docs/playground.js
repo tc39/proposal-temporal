@@ -9501,8 +9501,7 @@
 	  if (calendar === undefined) calendar = 'iso8601';
 	  calendar = CanonicalizeCalendar(calendar);
 	  GetTemporalOverflowOption(GetOptionsObject(options));
-	  if (referenceISOYear === undefined) {
-	    assert(calendar === 'iso8601', `missing year with non-"iso8601" calendar identifier ${calendar}`);
+	  if (calendar === 'iso8601') {
 	    const isoCalendarReferenceYear = 1972; // First leap year after Unix epoch
 	    return CreateTemporalMonthDay({
 	      year: isoCalendarReferenceYear,
@@ -9510,12 +9509,14 @@
 	      day
 	    }, calendar);
 	  }
-	  const result = ISODateToFields(calendar, {
+	  let isoDate = {
 	    year: referenceISOYear,
 	    month,
 	    day
-	  }, 'month-day');
-	  const isoDate = CalendarMonthDayFromFields(calendar, result, 'constrain');
+	  };
+	  RejectDateRange(isoDate);
+	  const result = ISODateToFields(calendar, isoDate, 'month-day');
+	  isoDate = CalendarMonthDayFromFields(calendar, result, 'constrain');
 	  return CreateTemporalMonthDay(isoDate, calendar);
 	}
 	function ToTemporalTime(item) {
