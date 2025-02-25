@@ -539,6 +539,7 @@
 		'%Error%': $Error,
 		'%eval%': eval, // eslint-disable-line no-eval
 		'%EvalError%': $EvalError,
+		'%Float16Array%': typeof Float16Array === 'undefined' ? undefined$1 : Float16Array,
 		'%Float32Array%': typeof Float32Array === 'undefined' ? undefined$1 : Float32Array,
 		'%Float64Array%': typeof Float64Array === 'undefined' ? undefined$1 : Float64Array,
 		'%FinalizationRegistry%': typeof FinalizationRegistry === 'undefined' ? undefined$1 : FinalizationRegistry,
@@ -9886,11 +9887,17 @@
 	    try {
 	      ({
 	        calendar
-	      } = ParseTemporalYearMonthString(identifier));
+	      } = ParseTemporalTimeString(identifier));
 	    } catch {
-	      ({
-	        calendar
-	      } = ParseTemporalMonthDayString(identifier));
+	      try {
+	        ({
+	          calendar
+	        } = ParseTemporalYearMonthString(identifier));
+	      } catch {
+	        ({
+	          calendar
+	        } = ParseTemporalMonthDayString(identifier));
+	      }
 	    }
 	  }
 	  if (!calendar) calendar = 'iso8601';
@@ -14955,6 +14962,11 @@
 	    for (const prop in clonedResolved) {
 	      if (!HasOwnProperty$1(options, prop)) delete clonedResolved[prop];
 	    }
+	    // hour12/hourCycle don't show up in resolvedOptions() unless the chosen
+	    // format includes an hour component, so copy them explicitly in case they
+	    // would otherwise be lost
+	    clonedResolved.hour12 = options.hour12;
+	    clonedResolved.hourCycle = options.hourCycle;
 	    SetSlot(dtf, OPTIONS, clonedResolved);
 	  } else {
 	    SetSlot(dtf, OPTIONS, options);
@@ -15344,6 +15356,36 @@
 	      minute: '2-digit',
 	      second: '2-digit'
 	    });
+
+	    // If moving to a fake timeStyle while dateStyle is present, we also have to
+	    // move to a fake dateStyle. dateStyle is mutually exclusive with hour etc.
+	    if (options.dateStyle) {
+	      const dateStyleHacks = {
+	        short: {
+	          year: 'numeric',
+	          month: 'numeric',
+	          day: 'numeric'
+	        },
+	        medium: {
+	          year: 'numeric',
+	          month: 'short',
+	          day: 'numeric'
+	        },
+	        long: {
+	          year: 'numeric',
+	          month: 'long',
+	          day: 'numeric'
+	        },
+	        full: {
+	          year: 'numeric',
+	          month: 'long',
+	          day: 'numeric',
+	          weekday: 'long'
+	        }
+	      };
+	      ObjectAssign(options, dateStyleHacks[options.dateStyle]);
+	      delete options.dateStyle;
+	    }
 	  }
 	  if (!hasTimeOptions(options) && !hasDateOptions(options)) {
 	    if (hasAnyDateTimeOptions(originalOptions)) {
