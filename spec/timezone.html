@@ -88,7 +88,7 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the first time zone transition after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the first time zone transition strictly after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
         The operation returns *null* if no such transition exists for which _t_ ≤ ℤ(nsMaxInstant).
       </p>
       <p>
@@ -113,7 +113,7 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the last time zone transition before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the last time zone transition strictly before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
         The operation returns *null* if no such transition exists for which _t_ ≥ ℤ(nsMinInstant).
       </p>
       <p>
