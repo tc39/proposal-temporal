@@ -398,7 +398,7 @@ function yearMonthAmend(originalOptions) {
     timeZoneName: false,
     timeStyle: false
   });
-  if ('dateStyle' in options) {
+  if ('dateStyle' in options && options.dateStyle) {
     const style = options.dateStyle;
     delete options.dateStyle;
     ObjectAssign(options, dateStyleHacks[style]);
@@ -430,7 +430,7 @@ function monthDayAmend(originalOptions) {
     timeZoneName: false,
     timeStyle: false
   });
-  if ('dateStyle' in options) {
+  if ('dateStyle' in options && options.dateStyle) {
     const style = options.dateStyle;
     delete options.dateStyle;
     ObjectAssign(options, dateStyleHacks[style]);
