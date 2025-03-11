@@ -1455,7 +1455,7 @@ export function InterpretISODateTimeOffset(
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
   for (let index = 0; index < possibleEpochNs.length; index++) {
     const candidate = possibleEpochNs[index];
-    const candidateOffset = utcEpochNs - candidate;
+    const candidateOffset = utcEpochNs.subtract(candidate).toNumber();
     const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
     if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
       return candidate;
@@ -4022,8 +4022,7 @@ export function RoundNumberToIncrement(quantity, increment, mode) {
   const cmp = ComparisonResult(MathAbs(remainder * 2) - increment);
   const even = r1 % 2 === 0;
   const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
-  const rounded =
-    MathAbs(quantity) === r1 * increment ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+  const rounded = remainder === 0 ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
   return increment * (sign === 'positive' ? rounded : -rounded);
 }
 
@@ -4038,11 +4037,12 @@ export function RoundNumberToIncrementAsIfPositive(quantity, increment, mode) {
     r1 = quotient;
     r2 = quotient.add(1);
   }
+  // Similar to the comparison in RoundNumberToIncrement, but multiplied by an
+  // extra sign to make sure we treat it as positive
   const cmp = remainder.times(2).abs().compare(increment) * (quantity.lt(0) ? -1 : 1);
-  const even = r1.isEven();
-  const rounded = quotient.times(increment).eq(quantity)
+  const rounded = remainder.isZero()
     ? quotient
-    : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+    : ApplyUnsignedRoundingMode(r1, r2, cmp, r1.isEven(), unsignedRoundingMode);
   return rounded.times(increment);
 }
 
