@@ -114,9 +114,7 @@ export namespace Temporal {
     offset?: 'use' | 'prefer' | 'ignore' | 'reject' | undefined;
   };
 
-  export type ZonedDateTimeAssignmentOptions = Partial<
-    AssignmentOptions & ToInstantOptions & OffsetDisambiguationOptions
-  >;
+  export type ZonedDateTimeAssignmentOptions = AssignmentOptions & ToInstantOptions & OffsetDisambiguationOptions;
 
   /**
    * Options for arithmetic operations like `add()` and `subtract()`
@@ -187,20 +185,16 @@ export namespace Temporal {
     calendarName?: 'auto' | 'always' | 'never' | 'critical' | undefined;
   };
 
-  export type CalendarTypeToStringOptions = Partial<ToStringPrecisionOptions & ShowCalendarOption>;
+  export type CalendarTypeToStringOptions = ToStringPrecisionOptions & ShowCalendarOption;
 
-  export type ZonedDateTimeToStringOptions = Partial<
-    CalendarTypeToStringOptions & {
-      timeZoneName?: 'auto' | 'never' | 'critical' | undefined;
-      offset?: 'auto' | 'never' | undefined;
-    }
-  >;
+  export type ZonedDateTimeToStringOptions = CalendarTypeToStringOptions & {
+    timeZoneName?: 'auto' | 'never' | 'critical' | undefined;
+    offset?: 'auto' | 'never' | undefined;
+  };
 
-  export type InstantToStringOptions = Partial<
-    ToStringPrecisionOptions & {
-      timeZone: TimeZoneLike;
-    }
-  >;
+  export type InstantToStringOptions = ToStringPrecisionOptions & {
+    timeZone?: TimeZoneLike | undefined;
+  };
 
   /**
    * Options to control the result of `until()` and `since()` methods in
