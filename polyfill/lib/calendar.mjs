@@ -1199,7 +1199,7 @@ const helperPersian = ObjectAssign({}, nonIsoHelperBase, {
     if (month === 12) return 30;
     return month <= 6 ? 31 : 30;
   },
-  maximumLengthOfMonthCodeInAnyYear(monthCode) {
+  maxLengthOfMonthCodeInAnyYear(monthCode) {
     const month = +ES.Call(StringPrototypeSlice, monthCode, [1]);
     return month <= 6 ? 31 : 30;
   },
@@ -1761,10 +1761,9 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   },
   minimumMonthLength: (/* calendarDate */) => 29,
   maximumMonthLength: (/* calendarDate */) => 30,
-  maxLengthOfMonthCodeInAnyYear(calendarDate) {
+  maxLengthOfMonthCodeInAnyYear(monthCode) {
     // See note below about ICU4C vs ICU4X. It is possible this override should
     // always return 30.
-    const { monthCode } = calendarDate;
     if (
       monthCode === 'M01L' ||
       monthCode === 'M09L' ||
