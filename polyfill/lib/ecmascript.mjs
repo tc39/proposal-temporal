@@ -1455,7 +1455,7 @@ export function InterpretISODateTimeOffset(
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
   for (let index = 0; index < possibleEpochNs.length; index++) {
     const candidate = possibleEpochNs[index];
-    const candidateOffset = utcEpochNs - candidate;
+    const candidateOffset = utcEpochNs.subtract(candidate).toJSNumber();
     const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
     if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
       return candidate;
