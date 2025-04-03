@@ -4022,8 +4022,7 @@ export function RoundNumberToIncrement(quantity, increment, mode) {
   const cmp = ComparisonResult(MathAbs(remainder * 2) - increment);
   const even = r1 % 2 === 0;
   const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
-  const rounded =
-    MathAbs(quantity) === r1 * increment ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+  const rounded = remainder === 0 ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
   return increment * (sign === 'positive' ? rounded : -rounded);
 }
 
@@ -4042,7 +4041,7 @@ export function RoundNumberToIncrementAsIfPositive(quantity, increment, mode) {
   // extra sign to make sure we treat it as positive
   const cmp = remainder.times(2).abs().compare(increment) * (quantity.lt(0) ? -1 : 1);
   const even = r1.isEven();
-  const rounded = quotient.times(increment).eq(quantity)
+  const rounded = remainder.isZero()
     ? quotient
     : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
   return rounded.times(increment);
