@@ -4038,6 +4038,8 @@ export function RoundNumberToIncrementAsIfPositive(quantity, increment, mode) {
     r1 = quotient;
     r2 = quotient.add(1);
   }
+  // Similar to the comparison in RoundNumberToIncrement, but multiplied by an
+  // extra sign to make sure we treat it as positive
   const cmp = remainder.times(2).abs().compare(increment) * (quantity.lt(0) ? -1 : 1);
   const even = r1.isEven();
   const rounded = quotient.times(increment).eq(quantity)
