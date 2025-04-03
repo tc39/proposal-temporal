@@ -120,7 +120,7 @@ export class TimeDuration {
     const cmp = remainder.multiply(2).abs().compare(increment);
     const even = quotient.isEven();
     const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
-    const rounded = this.totalNs.abs().eq(r1) ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+    const rounded = remainder.isZero() ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
     const result = sign === 'positive' ? rounded : rounded.multiply(-1);
     return TimeDuration.#validateNew(result, 'rounding');
   }
