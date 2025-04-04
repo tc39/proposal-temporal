@@ -168,13 +168,13 @@ function createDateTimeFormat(dtf, locale, options) {
     SetSlot(dtf, TZ_ORIGINAL, ro.timeZone);
   } else {
     const id = ES.ToString(timeZoneOption);
-    if (ES.IsOffsetTimeZoneIdentifier(id)) {
-      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-      throw new RangeErrorCtor('Intl.DateTimeFormat does not currently support offset time zones');
+    if (id.startsWith('−')) {
+      // The initial (Node 23) implementation of offset time zones allowed use
+      // of the Unicode minus sign, which was disallowed by a later spec change.
+      throw new RangeError('Unicode minus (U+2212) is not supported in time zone offsets');
     }
-    const record = ES.GetAvailableNamedTimeZoneIdentifier(id);
-    if (!record) throw new RangeErrorCtor(`Intl.DateTimeFormat formats built-in time zones, not ${id}`);
-    SetSlot(dtf, TZ_ORIGINAL, record.identifier);
+    // store a normalized identifier
+    SetSlot(dtf, TZ_ORIGINAL, ES.ToTemporalTimeZoneIdentifier(id));
   }
 }
 
