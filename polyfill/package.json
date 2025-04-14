@@ -7,7 +7,7 @@
   "browser": "dist/index.umd.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "node --loader ./test/resolve.source.mjs ./test/all.mjs",
+    "test": "node ./test/all.mjs",
     "test-cookbook": "npm run build && TEST=all npm run test-cookbook-one",
     "test-cookbook-one": "node --loader ./test/resolve.cookbook.mjs ../docs/cookbook/$TEST.mjs",
     "test262": "npm run build262 && node runtest262.mjs",
