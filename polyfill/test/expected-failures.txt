@@ -13,11 +13,8 @@ intl402/DateTimeFormat/proto-from-ctor-realm.js
 # https://github.com/tc39/ecma402/issues/402
 intl402/DateTimeFormat/prototype/resolvedOptions/hourCycle-default.js
 
-# Fails until CLDR 46 (released 2024-10-24) makes its way into a Node.js release
-staging/Intl402/Temporal/old/non-iso-calendars.js
-
-# https://github.com/tc39/test262/pull/4336
-intl402/DateTimeFormat/canonicalize-utc-timezone.js
+# https://github.com/tc39/ecma402/issues/534
+staging/Intl402/Temporal/old/non-iso-calendars-ethiopic.js
 
 # Possibly faulty calculations for year 0 in Hebrew calendar in ICU4C
 # https://unicode-org.atlassian.net/browse/ICU-23007
