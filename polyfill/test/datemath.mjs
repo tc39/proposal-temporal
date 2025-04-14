@@ -14,7 +14,7 @@ const { reporter } = Pretty;
 import { strict as assert } from 'assert';
 const { equal } = assert;
 
-import * as Temporal from 'proposal-temporal';
+import * as Temporal from '../lib/temporal.mjs';
 
 describe('Date.since(simple, simple)', () => {
   build('Before Leap Day', '2020-01-03', '2020-02-15');
