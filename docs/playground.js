@@ -835,10 +835,11 @@
 
 	/** @type {import('.')} */
 	var callBound$4 = function callBoundIntrinsic(name, allowMissing) {
-		// eslint-disable-next-line no-extra-parens
-		var intrinsic = /** @type {Parameters<typeof callBindBasic>[0][0]} */ (GetIntrinsic$7(name, !!allowMissing));
+		/* eslint no-extra-parens: 0 */
+
+		var intrinsic = /** @type {(this: unknown, ...args: unknown[]) => unknown} */ (GetIntrinsic$7(name, !!allowMissing));
 		if (typeof intrinsic === 'function' && $indexOf(name, '.prototype.') > -1) {
-			return callBindBasic([intrinsic]);
+			return callBindBasic(/** @type {const} */ ([intrinsic]));
 		}
 		return intrinsic;
 	};
@@ -14992,13 +14993,13 @@
 	    SetSlot(dtf, TZ_ORIGINAL, ro.timeZone);
 	  } else {
 	    const id = ToString$1(timeZoneOption);
-	    if (IsOffsetTimeZoneIdentifier(id)) {
-	      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-	      throw new RangeError$1('Intl.DateTimeFormat does not currently support offset time zones');
+	    if (id.startsWith('−')) {
+	      // The initial (Node 23) implementation of offset time zones allowed use
+	      // of the Unicode minus sign, which was disallowed by a later spec change.
+	      throw new RangeError('Unicode minus (U+2212) is not supported in time zone offsets');
 	    }
-	    const record = GetAvailableNamedTimeZoneIdentifier(id);
-	    if (!record) throw new RangeError$1(`Intl.DateTimeFormat formats built-in time zones, not ${id}`);
-	    SetSlot(dtf, TZ_ORIGINAL, record.identifier);
+	    // store a normalized identifier
+	    SetSlot(dtf, TZ_ORIGINAL, ToTemporalTimeZoneIdentifier(id));
 	  }
 	}
 	class DateTimeFormatImpl {
