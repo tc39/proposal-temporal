@@ -88,12 +88,13 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the first time zone transition strictly after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the first time zone UTC offset transition strictly after _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
         The operation returns *null* if no such transition exists for which _t_ ≤ ℤ(nsMaxInstant).
       </p>
       <p>
         A transition is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
         The returned value _t_ represents the first nanosecond where the new UTC offset is used in this time zone, not the last nanosecond where the previous UTC offset is used.
+        In other words, GetOffsetNanosecondsFor(_timeZone_, _t_) ≠ GetOffsetNanosecondsFor(_timeZone_, _t_ - 1).
       </p>
       <p>Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.</p>
       <p>The minimum implementation of GetNamedTimeZoneNextTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:</p>
@@ -113,12 +114,13 @@
       <dl class="header">
       </dl>
       <p>
-        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the last time zone transition strictly before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
+        The returned value _t_ represents the number of nanoseconds since the epoch that corresponds to the last time zone UTC offset transition strictly before _epochNanoseconds_ in the IANA time zone identified by _timeZoneIdentifier_.
         The operation returns *null* if no such transition exists for which _t_ ≥ ℤ(nsMinInstant).
       </p>
       <p>
         A transition is a point in time where the UTC offset of a time zone changes, for example when Daylight Saving Time starts or stops.
         The returned value _t_ represents the first nanosecond where the new UTC offset is used in this time zone, not the last nanosecond where the previous UTC offset is used.
+        In other words, GetOffsetNanosecondsFor(_timeZone_, _t_) ≠ GetOffsetNanosecondsFor(_timeZone_, _t_ - 1).
       </p>
       <p>Given the same values of _timeZoneIdentifier_ and _epochNanoseconds_, the result must be the same for the lifetime of the surrounding agent.</p>
       <p>The minimum implementation of GetNamedTimeZonePreviousTransition for ECMAScript implementations that do not include local political rules for any time zones performs the following steps when called:</p>
