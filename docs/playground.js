@@ -8279,7 +8279,7 @@
 	    const cmp = remainder.multiply(2).abs().compare(increment);
 	    const even = quotient.isEven();
 	    const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
-	    const rounded = this.totalNs.abs().eq(r1) ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	    const rounded = remainder.isZero() ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
 	    const result = sign === 'positive' ? rounded : rounded.multiply(-1);
 	    return TimeDuration.#validateNew(result, 'rounding');
 	  }
@@ -9624,7 +9624,7 @@
 	  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
 	  for (let index = 0; index < possibleEpochNs.length; index++) {
 	    const candidate = possibleEpochNs[index];
-	    const candidateOffset = utcEpochNs - candidate;
+	    const candidateOffset = utcEpochNs.subtract(candidate).toJSNumber();
 	    const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
 	    if (candidateOffset === offsetNs || matchMinute && roundedCandidateOffset === offsetNs) {
 	      return candidate;
@@ -11947,7 +11947,7 @@
 	  const cmp = ComparisonResult(MathAbs(remainder * 2) - increment);
 	  const even = r1 % 2 === 0;
 	  const unsignedRoundingMode = GetUnsignedRoundingMode(mode, sign);
-	  const rounded = MathAbs(quantity) === r1 * increment ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	  const rounded = remainder === 0 ? r1 : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
 	  return increment * (sign === 'positive' ? rounded : -rounded);
 	}
 	function RoundNumberToIncrementAsIfPositive(quantity, increment, mode) {
@@ -11964,9 +11964,10 @@
 	    r1 = quotient;
 	    r2 = quotient.add(1);
 	  }
+	  // Similar to the comparison in RoundNumberToIncrement, but multiplied by an
+	  // extra sign to make sure we treat it as positive
 	  const cmp = remainder.times(2).abs().compare(increment) * (quantity.lt(0) ? -1 : 1);
-	  const even = r1.isEven();
-	  const rounded = quotient.times(increment).eq(quantity) ? quotient : ApplyUnsignedRoundingMode(r1, r2, cmp, even, unsignedRoundingMode);
+	  const rounded = remainder.isZero() ? quotient : ApplyUnsignedRoundingMode(r1, r2, cmp, r1.isEven(), unsignedRoundingMode);
 	  return rounded.times(increment);
 	}
 	function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
@@ -11984,7 +11985,7 @@
 	  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
 	  return CombineISODateAndTimeRecord(isoDate, time);
 	}
-	function RoundTime(_ref10, increment, unit, roundingMode) {
+	function RoundTime(_ref0, increment, unit, roundingMode) {
 	  let {
 	    hour,
 	    minute,
@@ -11992,7 +11993,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref10;
+	  } = _ref0;
 	  let quantity;
 	  switch (unit) {
 	    case 'day':
@@ -13668,7 +13669,7 @@
 	    if (month === 12) return 30;
 	    return month <= 6 ? 31 : 30;
 	  },
-	  maximumLengthOfMonthCodeInAnyYear(monthCode) {
+	  maxLengthOfMonthCodeInAnyYear(monthCode) {
 	    const month = +Call$1(StringPrototypeSlice, monthCode, [1]);
 	    return month <= 6 ? 31 : 30;
 	  },
@@ -14462,12 +14463,9 @@
 	  },
 	  minimumMonthLength: (/* calendarDate */) => 29,
 	  maximumMonthLength: (/* calendarDate */) => 30,
-	  maxLengthOfMonthCodeInAnyYear(calendarDate) {
+	  maxLengthOfMonthCodeInAnyYear(monthCode) {
 	    // See note below about ICU4C vs ICU4X. It is possible this override should
 	    // always return 30.
-	    const {
-	      monthCode
-	    } = calendarDate;
 	    if (monthCode === 'M01L' || monthCode === 'M09L' || monthCode === 'M10L' || monthCode === 'M11L' || monthCode === 'M12L') {
 	      return 29;
 	    }
