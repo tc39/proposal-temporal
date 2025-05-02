@@ -993,7 +993,14 @@ export function GetTemporalRelativeToOption(options) {
       } else if (!offset) {
         offsetBehaviour = 'wall';
       }
+      // Allow imprecise offset matching unless the provided offset is precise
       matchMinutes = true;
+      if (offset) {
+        const offsetParseResult = Call(RegExpPrototypeExec, OFFSET_WITH_PARTS, [offset]);
+        assert(offsetParseResult, 'offset string must re-parse');
+        const offsetSecondsPart = offsetParseResult[4];
+        if (offsetSecondsPart) matchMinutes = false;
+      }
     } else if (z) {
       throw new RangeErrorCtor(
         'Z designator not supported for PlainDate relativeTo; either remove the Z or add a bracketed time zone'
@@ -1521,7 +1528,14 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     }
     if (!calendar) calendar = 'iso8601';
     calendar = CanonicalizeCalendar(calendar);
-    matchMinute = true; // ISO strings may specify offset with less precision
+    // Allow imprecise offset matching unless the provided offset is precise
+    matchMinute = true;
+    if (offset) {
+      const offsetParseResult = Call(RegExpPrototypeExec, OFFSET_WITH_PARTS, [offset]);
+      assert(offsetParseResult, 'offset string must re-parse');
+      const offsetSecondsPart = offsetParseResult[4];
+      if (offsetSecondsPart) matchMinute = false;
+    }
     const resolvedOptions = GetOptionsObject(options);
     disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
