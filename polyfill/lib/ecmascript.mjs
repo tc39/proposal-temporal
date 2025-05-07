@@ -993,7 +993,14 @@ export function GetTemporalRelativeToOption(options) {
       } else if (!offset) {
         offsetBehaviour = 'wall';
       }
+      // Allow imprecise offset matching unless the provided offset is precise
       matchMinutes = true;
+      if (offset) {
+        const offsetParseResult = Call(RegExpPrototypeExec, OFFSET_WITH_PARTS, [offset]);
+        assert(offsetParseResult, 'offset string must re-parse');
+        const offsetSecondsPart = offsetParseResult[4];
+        if (offsetSecondsPart) matchMinutes = false;
+      }
     } else if (z) {
       throw new RangeErrorCtor(
         'Z designator not supported for PlainDate relativeTo; either remove the Z or add a bracketed time zone'
