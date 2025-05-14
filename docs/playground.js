@@ -12262,16 +12262,14 @@
 	  });
 	}
 	function calendarDateWeekOfYear(id, isoDate) {
-	  // Supports only Gregorian and ISO8601 calendar; can be updated to add support for other calendars.
+	  // Supports only ISO8601 calendar; can be updated to add support for other calendars.
 	  // Returns undefined for calendars without a well-defined week calendar system.
 	  // eslint-disable-next-line max-len
 	  // Also see: https://github.com/unicode-org/icu/blob/ab72ab1d4a3c3f9beeb7d92b0c7817ca93dfdb04/icu4c/source/i18n/calendar.cpp#L1606
-	  if (id !== 'gregory' && id !== 'iso8601') {
-	    return {
-	      week: undefined,
-	      year: undefined
-	    };
-	  }
+	  if (id !== 'iso8601') return {
+	    week: undefined,
+	    year: undefined
+	  };
 	  const calendar = impl[id];
 	  let yow = isoDate.year;
 	  const {
@@ -12283,8 +12281,8 @@
 	    dayOfYear: true,
 	    daysInYear: true
 	  });
-	  const fdow = id === 'iso8601' ? 1 : calendar.helper.getFirstDayOfWeek();
-	  const mdow = id === 'iso8601' ? 4 : calendar.helper.getMinimalDaysInFirstWeek();
+	  const fdow = 1;
+	  const mdow = 4;
 
 	  // For both the input date and the first day of its calendar year, calculate the day of week
 	  // relative to first day of week in the relevant calendar (e.g., in iso8601, relative to Monday).
@@ -14337,12 +14335,6 @@
 	      era,
 	      eraYear
 	    };
-	  },
-	  getFirstDayOfWeek() {
-	    return 1;
-	  },
-	  getMinimalDaysInFirstWeek() {
-	    return 1;
 	  }
 	});
 	const helperJapanese = ObjectAssign(
