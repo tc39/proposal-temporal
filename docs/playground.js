@@ -1072,6 +1072,7 @@
 	} = console$1;
 	const now = performance$1 && performance$1.now ? performance$1.now.bind(performance$1) : Date$1.now;
 
+	/** @type {import('./isObject')} */
 	var isObject$4 = function isObject(x) {
 		return !!x && (typeof x === 'function' || typeof x === 'object');
 	};
@@ -1116,30 +1117,6 @@
 	};
 
 	var Type$1 = /*@__PURE__*/getDefaultExportFromCjs(Type);
-
-	var forEach$1 = function forEach(array, callback) {
-		for (var i = 0; i < array.length; i += 1) {
-			callback(array[i], i, array); // eslint-disable-line callback-return
-		}
-	};
-
-	var every$1 = function every(array, predicate) {
-		for (var i = 0; i < array.length; i += 1) {
-			if (!predicate(array[i], i, array)) {
-				return false;
-			}
-		}
-		return true;
-	};
-
-	var some$1 = function some(array, predicate) {
-		for (var i = 0; i < array.length; i += 1) {
-			if (predicate(array[i], i, array)) {
-				return true;
-			}
-		}
-		return false;
-	};
 
 	var toString$1 = {}.toString;
 
@@ -1374,6 +1351,30 @@
 			safePushApply(sourceKeys, $gOPS(source));
 		}
 		return sourceKeys;
+	};
+
+	var forEach$1 = function forEach(array, callback) {
+		for (var i = 0; i < array.length; i += 1) {
+			callback(array[i], i, array); // eslint-disable-line callback-return
+		}
+	};
+
+	var every$1 = function every(array, predicate) {
+		for (var i = 0; i < array.length; i += 1) {
+			if (!predicate(array[i], i, array)) {
+				return false;
+			}
+		}
+		return true;
+	};
+
+	var some$1 = function some(array, predicate) {
+		for (var i = 0; i < array.length; i += 1) {
+			if (predicate(array[i], i, array)) {
+				return true;
+			}
+		}
+		return false;
 	};
 
 	var isPropertyKey$2 = function isPropertyKey(argument) {
@@ -1623,11 +1624,10 @@
 		var hasOwn = hasown;
 
 		var $TypeError = type;
+		var isObject = isObject$4;
 
 		var IsCallable$1 = IsCallable;
 		var ToBoolean = requireToBoolean();
-
-		var isObject = isObject$4;
 
 		// https://262.ecma-international.org/5.1/#sec-8.10.5
 
@@ -1936,6 +1936,7 @@
 		hasRequiredValidateAndApplyPropertyDescriptor = 1;
 
 		var $TypeError = type;
+		var isObject = isObject$4;
 
 		var DefineOwnProperty = requireDefineOwnProperty();
 		var isFullyPopulatedPropertyDescriptor = requireIsFullyPopulatedPropertyDescriptor();
@@ -1947,9 +1948,6 @@
 		var IsGenericDescriptor = requireIsGenericDescriptor();
 		var isPropertyKey = isPropertyKey$2;
 		var SameValue = requireSameValue();
-		var Type$1 = Type;
-
-		var isObject = isObject$4;
 
 		// https://262.ecma-international.org/13.0/#sec-validateandapplypropertydescriptor
 
@@ -1957,7 +1955,6 @@
 
 		// eslint-disable-next-line max-lines-per-function, max-statements
 		ValidateAndApplyPropertyDescriptor = function ValidateAndApplyPropertyDescriptor(O, P, extensible, Desc, current) {
-			var oType = Type$1(O);
 			if (typeof O !== 'undefined' && !isObject(O)) {
 				throw new $TypeError('Assertion failed: O must be undefined or an Object');
 			}
@@ -1978,7 +1975,7 @@
 				if (!extensible) {
 					return false; // step 2.a
 				}
-				if (oType === 'Undefined') {
+				if (typeof O === 'undefined') {
 					return true; // step 2.b
 				}
 				if (IsAccessorDescriptor(Desc)) { // step 2.c
@@ -2055,7 +2052,7 @@
 			}
 
 			// 6. If O is not undefined, then
-			if (oType !== 'Undefined') {
+			if (typeof O !== 'undefined') {
 				var configurable;
 				var enumerable;
 				if (IsDataDescriptor(current) && IsAccessorDescriptor(Desc)) { // step 6.a
@@ -2120,6 +2117,7 @@
 		var $gOPD = gopd;
 		var $SyntaxError = syntax;
 		var $TypeError = type;
+		var isObject = isObject$4;
 
 		var isPropertyDescriptor = requirePropertyDescriptor();
 
@@ -2129,8 +2127,6 @@
 		var ToPropertyDescriptor = requireToPropertyDescriptor();
 		var SameValue = requireSameValue();
 		var ValidateAndApplyPropertyDescriptor = requireValidateAndApplyPropertyDescriptor();
-
-		var isObject = isObject$4;
 
 		// https://262.ecma-international.org/6.0/#sec-ordinarydefineownproperty
 
@@ -2181,11 +2177,10 @@
 		hasRequiredCreateDataProperty = 1;
 
 		var $TypeError = type;
+		var isObject = isObject$4;
 
 		var isPropertyKey = isPropertyKey$2;
 		var OrdinaryDefineOwnProperty = requireOrdinaryDefineOwnProperty();
-
-		var isObject = isObject$4;
 
 		// https://262.ecma-international.org/6.0/#sec-createdataproperty
 
@@ -2215,10 +2210,10 @@
 		hasRequiredCreateDataPropertyOrThrow = 1;
 
 		var $TypeError = type;
+		var isObject = isObject$4;
 
 		var CreateDataProperty = requireCreateDataProperty();
 
-		var isObject = isObject$4;
 		var isPropertyKey = isPropertyKey$2;
 
 		// // https://262.ecma-international.org/14.0/#sec-createdatapropertyorthrow
@@ -5606,8 +5601,9 @@
 
 		var inspect = objectInspect;
 
-		var isObject = isObject$4;
 		var isPropertyKey = isPropertyKey$2;
+
+		var isObject = isObject$4;
 
 		// https://262.ecma-international.org/6.0/#sec-get-o-p
 
@@ -5625,58 +5621,6 @@
 		};
 		return Get$1;
 	}
-
-	// var modulo = require('./modulo');
-	var $floor = floor$3;
-
-	// http://262.ecma-international.org/11.0/#eqn-floor
-
-	var floor$1 = function floor(x) {
-		// return x - modulo(x, 1);
-		if (typeof x === 'bigint') {
-			return x;
-		}
-		return $floor(x);
-	};
-
-	var floor = floor$1;
-
-	var $TypeError$5 = type;
-
-	// https://262.ecma-international.org/14.0/#eqn-truncate
-
-	var truncate$1 = function truncate(x) {
-		if (typeof x !== 'number' && typeof x !== 'bigint') {
-			throw new $TypeError$5('argument must be a Number or a BigInt');
-		}
-		var result = x < 0 ? -floor(-x) : floor(x);
-		return result === 0 ? 0 : result; // in the spec, these are math values, so we filter out -0 here
-	};
-
-	var $isNaN = require_isNaN();
-
-	/** @type {import('./isFinite')} */
-	var _isFinite = function isFinite(x) {
-		return (typeof x === 'number' || typeof x === 'bigint')
-	        && !$isNaN(x)
-	        && x !== Infinity
-	        && x !== -Infinity;
-	};
-
-	var truncate = truncate$1;
-
-	var $isFinite = _isFinite;
-
-	// https://262.ecma-international.org/14.0/#sec-isintegralnumber
-
-	var IsIntegralNumber$1 = function IsIntegralNumber(argument) {
-		if (typeof argument !== 'number' || !$isFinite(argument)) {
-			return false;
-		}
-		return truncate(argument) === argument;
-	};
-
-	var IsIntegralNumber$2 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber$1);
 
 	/** @type {(value: unknown) => value is null | undefined | string | symbol | number | boolean | bigint} */
 	var isPrimitive$2 = function isPrimitive(value) {
@@ -6186,12 +6130,12 @@
 		return defineProperties_1;
 	}
 
-	var $TypeError$4 = type;
+	var $TypeError$5 = type;
 
 	/** @type {import('./RequireObjectCoercible')} */
 	var RequireObjectCoercible$1 = function RequireObjectCoercible(value) {
 		if (value == null) {
-			throw new $TypeError$4((arguments.length > 0 && arguments[1]) || ('Cannot call method on ' + value));
+			throw new $TypeError$5((arguments.length > 0 && arguments[1]) || ('Cannot call method on ' + value));
 		}
 		return value;
 	};
@@ -6199,13 +6143,13 @@
 	var GetIntrinsic$3 = getIntrinsic;
 
 	var $String = GetIntrinsic$3('%String%');
-	var $TypeError$3 = type;
+	var $TypeError$4 = type;
 
 	// https://262.ecma-international.org/6.0/#sec-tostring
 
 	var ToString = function ToString(argument) {
 		if (typeof argument === 'symbol') {
-			throw new $TypeError$3('Cannot convert a Symbol value to a string');
+			throw new $TypeError$4('Cannot convert a Symbol value to a string');
 		}
 		return $String(argument);
 	};
@@ -6379,7 +6323,7 @@
 
 	var GetIntrinsic$2 = getIntrinsic;
 
-	var $TypeError$2 = type;
+	var $TypeError$3 = type;
 	var $Number = GetIntrinsic$2('%Number%');
 	var isPrimitive = requireIsPrimitive();
 
@@ -6391,10 +6335,10 @@
 	var ToNumber$1 = function ToNumber(argument) {
 		var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number);
 		if (typeof value === 'symbol') {
-			throw new $TypeError$2('Cannot convert a Symbol value to a number');
+			throw new $TypeError$3('Cannot convert a Symbol value to a number');
 		}
 		if (typeof value === 'bigint') {
-			throw new $TypeError$2('Conversion from \'BigInt\' to \'number\' is not allowed.');
+			throw new $TypeError$3('Conversion from \'BigInt\' to \'number\' is not allowed.');
 		}
 		if (typeof value === 'string') {
 			return StringToNumber(value);
@@ -6419,36 +6363,70 @@
 
 	var ToObject$2 = /*@__PURE__*/getDefaultExportFromCjs(ToObject$1);
 
-	var $TypeError$1 = type;
+	var $isNaN = require_isNaN();
 
+	/** @type {import('./isFinite')} */
+	var _isFinite = function isFinite(x) {
+		return (typeof x === 'number' || typeof x === 'bigint')
+	        && !$isNaN(x)
+	        && x !== Infinity
+	        && x !== -Infinity;
+	};
+
+	var isInteger$1;
+	var hasRequiredIsInteger;
+
+	function requireIsInteger () {
+		if (hasRequiredIsInteger) return isInteger$1;
+		hasRequiredIsInteger = 1;
+
+		var $abs = abs$1;
+		var $floor = floor$3;
+
+		var $isNaN = require_isNaN();
+		var $isFinite = _isFinite;
+
+		/** @type {import('./isInteger')} */
+		isInteger$1 = function isInteger(argument) {
+			if (typeof argument !== 'number' || $isNaN(argument) || !$isFinite(argument)) {
+				return false;
+			}
+			var absValue = $abs(argument);
+			return $floor(absValue) === absValue;
+		};
+		return isInteger$1;
+	}
+
+	var $TypeError$2 = type;
+	var isObject$1 = isObject$4;
 	var callBound = callBound$4;
+	var OwnPropertyKeys = ownKeys;
+
 	var forEach = forEach$1;
 	var every = every$1;
 	var some = some$1;
-	var OwnPropertyKeys = ownKeys;
 
 	var $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
 
 	var CreateDataPropertyOrThrow = requireCreateDataPropertyOrThrow();
 	var Get = requireGet();
 	var IsArray = IsArray$2;
-	var IsIntegralNumber = IsIntegralNumber$1;
 	var isPropertyKey$1 = isPropertyKey$2;
 	var SameValue = requireSameValue();
 	var ToNumber = ToNumber$1;
 	var ToObject = ToObject$1;
 
-	var isObject$1 = isObject$4;
+	var isInteger = requireIsInteger();
 
 	// https://262.ecma-international.org/12.0/#sec-copydataproperties
 
 	var CopyDataProperties = function CopyDataProperties(target, source, excludedItems) {
 		if (!isObject$1(target)) {
-			throw new $TypeError$1('Assertion failed: "target" must be an Object');
+			throw new $TypeError$2('Assertion failed: "target" must be an Object');
 		}
 
 		if (!IsArray(excludedItems) || !every(excludedItems, isPropertyKey$1)) {
-			throw new $TypeError$1('Assertion failed: "excludedItems" must be a List of Property Keys');
+			throw new $TypeError$2('Assertion failed: "excludedItems" must be a List of Property Keys');
 		}
 
 		if (typeof source === 'undefined' || source === null) {
@@ -6476,7 +6454,7 @@
 			// this is to handle string keys being non-enumerable in older engines
 				typeof source === 'string'
 				&& nextKey >= 0
-				&& IsIntegralNumber(ToNumber(nextKey))
+				&& isInteger(ToNumber(nextKey))
 			);
 			if (excluded === false && enumerable) {
 				var propValue = Get(from, nextKey);
@@ -6489,26 +6467,68 @@
 
 	var CopyDataProperties$1 = /*@__PURE__*/getDefaultExportFromCjs(CopyDataProperties);
 
-	var $TypeError = type;
+	var $TypeError$1 = type;
 
 	var hasOwn = hasown;
-
 	var isObject = isObject$4;
+
 	var isPropertyKey = isPropertyKey$2;
 
 	// https://262.ecma-international.org/6.0/#sec-hasownproperty
 
 	var HasOwnProperty = function HasOwnProperty(O, P) {
 		if (!isObject(O)) {
-			throw new $TypeError('Assertion failed: `O` must be an Object');
+			throw new $TypeError$1('Assertion failed: `O` must be an Object');
 		}
 		if (!isPropertyKey(P)) {
-			throw new $TypeError('Assertion failed: `P` must be a Property Key');
+			throw new $TypeError$1('Assertion failed: `P` must be a Property Key');
 		}
 		return hasOwn(O, P);
 	};
 
 	var HasOwnProperty$1 = /*@__PURE__*/getDefaultExportFromCjs(HasOwnProperty);
+
+	// var modulo = require('./modulo');
+	var $floor = floor$3;
+
+	// http://262.ecma-international.org/11.0/#eqn-floor
+
+	var floor$1 = function floor(x) {
+		// return x - modulo(x, 1);
+		if (typeof x === 'bigint') {
+			return x;
+		}
+		return $floor(x);
+	};
+
+	var floor = floor$1;
+
+	var $TypeError = type;
+
+	// https://262.ecma-international.org/14.0/#eqn-truncate
+
+	var truncate$1 = function truncate(x) {
+		if (typeof x !== 'number' && typeof x !== 'bigint') {
+			throw new $TypeError('argument must be a Number or a BigInt');
+		}
+		var result = x < 0 ? -floor(-x) : floor(x);
+		return result === 0 ? 0 : result; // in the spec, these are math values, so we filter out -0 here
+	};
+
+	var truncate = truncate$1;
+
+	var $isFinite = _isFinite;
+
+	// https://262.ecma-international.org/14.0/#sec-isintegralnumber
+
+	var IsIntegralNumber = function IsIntegralNumber(argument) {
+		if (typeof argument !== 'number' || !$isFinite(argument)) {
+			return false;
+		}
+		return truncate(argument) === argument;
+	};
+
+	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
 
 	function assert(condition, message) {
 	  if (!condition) throw new Error$1(`assertion failure: ${message}`);
@@ -8370,7 +8390,7 @@
 	function ToIntegerIfIntegral(value) {
 	  const number = ToNumber$2(value);
 	  if (!NumberIsFinite(number)) throw new RangeError$1('infinity is out of range');
-	  if (!IsIntegralNumber$2(number)) throw new RangeError$1(`unsupported fractional value ${value}`);
+	  if (!IsIntegralNumber$1(number)) throw new RangeError$1(`unsupported fractional value ${value}`);
 	  if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
 	  return number;
 	}
