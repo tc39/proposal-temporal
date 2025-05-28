@@ -11,6 +11,12 @@ Nonetheless, changes may occur as the result of feedback from implementation in 
 Editorial changes to the spec and bug fixes to the spec, tests, and docs are also ongoing, as is customary for Stage 3 proposals.
 Additional tests and documentation content are also being added during Stage 3.
 
+Implementation status:
+
+- [SpiderMonkey/Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1912511): [shipping](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/139#javascript) in Firefox 139
+- [V8/Chrome](https://crbug.com/42201538) + [Node.js](https://github.com/nodejs/node/issues/57127)
+- [JavaScriptCore/Safari](https://bugs.webkit.org/show_bug.cgi?id=223166)
+
 ## Champions
 
 - Philipp Dunkel ([@pipobscure](https://github.com/pipobscure))
