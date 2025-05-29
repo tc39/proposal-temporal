@@ -16,6 +16,8 @@ Implementation status:
 - [SpiderMonkey/Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1912511): [shipping](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/139#javascript) in Firefox 139
 - [V8/Chrome](https://crbug.com/42201538) + [Node.js](https://github.com/nodejs/node/issues/57127)
 - [JavaScriptCore/Safari](https://bugs.webkit.org/show_bug.cgi?id=223166)
+- [Boa](https://github.com/boa-dev/boa/issues/1804)
+- [GraalJS](https://github.com/oracle/graaljs/issues/851)
 
 ## Champions
 
