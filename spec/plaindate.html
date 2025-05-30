@@ -773,23 +773,22 @@
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-balanceisodate" type="abstract operation">
+    <emu-clause id="sec-temporal-adddaystoisodate" type="abstract operation">
       <h1>
-        BalanceISODate (
-          _year_: an integer,
-          _month_: an integer,
-          _day_: an integer,
+        AddDaysToISODate (
+          _isoDate_: an ISO Date Record,
+          _days_: an integer,
         ): an ISO Date Record
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It converts the given _year_, _month_, and _day_ into a valid calendar date in the ISO 8601 calendar as given by IsValidISODate, by overflowing out-of-range _month_ or _day_ values into the next-highest unit.
+          It adds _days_ to _isoDate_ into a valid calendar date in the ISO 8601 calendar as given by IsValidISODate, by overflowing out-of-range month or day values into the next-highest unit.
           This date may be outside the range given by ISODateTimeWithinLimits.
         </dd>
       </dl>
       <emu-alg>
-        1. Let _epochDays_ be ISODateToEpochDays(_year_, _month_ - 1, _day_).
+        1. Let _epochDays_ be ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]]) + _days_.
         1. Let _ms_ be EpochDaysToEpochMs(_epochDays_, 0).
         1. Return CreateISODateRecord(EpochTimeToEpochYear(_ms_), EpochTimeToMonthInYear(_ms_) + 1, EpochTimeToDate(_ms_)).
       </emu-alg>
