@@ -27,3 +27,8 @@ staging/sm/Temporal/PlainDate/from-islamic-umalqura.js
 # Faulty leap month calculations in Chinese calendar in ICU4C
 # https://unicode-org.atlassian.net/browse/ICU-22230
 staging/sm/Temporal/PlainMonthDay/from-chinese-leap-month-uncommon.js
+
+# https://github.com/tc39/test262/commit/95d90bf9f2f519cad3305e3948cbb1663b0b667a
+# Fails on V8, no upstream bug open yet
+intl402/DateTimeFormat/prototype/resolvedOptions/resolved-calendar-unicode-extensions-and-options.js
+intl402/DateTimeFormat/prototype/resolvedOptions/resolved-numbering-system-unicode-extensions-and-options.js
