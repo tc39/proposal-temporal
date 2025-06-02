@@ -121,7 +121,7 @@ async function render(markdownFile, head, tail, basePath) {
 
   const renderer = new CustomRenderer();
   let htmlText = _head + marked.parse(markdownText, { renderer }) + _tail;
-  htmlText = htmlText.replace(/^<!-- toc -->$/m, () => renderer.renderTOC());
+  htmlText = htmlText.replace(/<!-- toc -->$/m, () => renderer.renderTOC());
 
   const htmlFile = path.resolve('../out/docs', markdownFile.replace(/\.md$/, '') + '.html');
   console.log(`${markdownFile} => ${htmlFile}`);
