@@ -130,7 +130,122 @@
       </strong> the main API reference going forward.
       Or see our <strong><a href="cookbook.html">cookbook</a></strong>.
     </div>
-<h1 id="temporal-cookbook"><a class="heading-link" href="#temporal-cookbook"></a><code>Temporal</code> Cookbook</h3><h2 id="overview"><a class="heading-link" href="#overview"></a>Overview</h3><!-- toc -->
+<h1 id="temporal-cookbook"><a class="heading-link" href="#temporal-cookbook"></a><code>Temporal</code> Cookbook</h3><h2 id="overview"><a class="heading-link" href="#overview"></a>Overview</h3><ul>
+<li><a href="#overview">Overview</a>
+</li>
+<li><a href="#running-the-cookbook-files">Running the cookbook files</a>
+</li>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a>
+<ul>
+<li><a href="#current-date-and-time">Current date and time</a>
+</li>
+<li><a href="#unix-timestamp">Unix timestamp</a>
+</li>
+</ul>
+</li>
+<li><a href="#converting-between-temporal-types-and-legacy-date">Converting between Temporal types and legacy Date</a>
+<ul>
+<li><a href="#legacy-date--temporalinstant-andor-temporalzoneddatetime">Legacy Date = Temporal.Instant and/or Temporal.ZonedDateTime</a>
+</li>
+<li><a href="#date-only-values-legacy-date--temporalplaindate">Date-only values: legacy Date = Temporal.PlainDate</a>
+</li>
+<li><a href="#temporal-types--legacy-date">Temporal types = legacy Date</a>
+</li>
+</ul>
+</li>
+<li><a href="#construction">Construction</a>
+<ul>
+<li><a href="#calendar-input-element">Calendar input element</a>
+</li>
+</ul>
+</li>
+<li><a href="#converting-between-types">Converting between types</a>
+<ul>
+<li><a href="#noon-on-a-particular-date">Noon on a particular date</a>
+</li>
+<li><a href="#birthday-in-2030">Birthday in 2030</a>
+</li>
+</ul>
+</li>
+<li><a href="#serialization">Serialization</a>
+<ul>
+<li><a href="#zoned-instant-from-instant-and-time-zone">Zoned instant from instant and time zone</a>
+</li>
+</ul>
+</li>
+<li><a href="#sorting">Sorting</a>
+<ul>
+<li><a href="#sort-plaindatetime-values">Sort PlainDateTime values</a>
+</li>
+<li><a href="#sort-iso-datetime-strings">Sort ISO date/time strings</a>
+</li>
+</ul>
+</li>
+<li><a href="#rounding">Rounding</a>
+<ul>
+<li><a href="#round-a-time-down-to-whole-hours">Round a time down to whole hours</a>
+</li>
+<li><a href="#round-a-date-to-the-nearest-start-of-the-month">Round a date to the nearest start of the month</a>
+</li>
+</ul>
+</li>
+<li><a href="#time-zone-conversion">Time zone conversion</a>
+<ul>
+<li><a href="#preserving-local-time">Preserving local time</a>
+</li>
+<li><a href="#preserving-exact-time">Preserving exact time</a>
+</li>
+<li><a href="#daily-occurrence-in-local-time">Daily occurrence in local time</a>
+</li>
+<li><a href="#utc-offset-for-a-zoned-event-as-a-string">UTC offset for a zoned event, as a string</a>
+</li>
+<li><a href="#utc-offset-for-a-zoned-event-as-a-number-of-seconds">UTC offset for a zoned event, as a number of seconds</a>
+</li>
+<li><a href="#offset-between-two-time-zones-at-an-exact-time">Offset between two time zones at an exact time</a>
+</li>
+<li><a href="#dealing-with-dates-and-times-in-a-fixed-location">Dealing with dates and times in a fixed location</a>
+</li>
+<li><a href="#book-a-meeting-across-time-zones">Book a meeting across time zones</a>
+</li>
+</ul>
+</li>
+<li><a href="#arithmetic">Arithmetic</a>
+<ul>
+<li><a href="#how-many-days-until-a-future-date">How many days until a future date</a>
+</li>
+<li><a href="#unit-constrained-duration-between-now-and-a-pastfuture-zoned-event">Unit-constrained duration between now and a past/future zoned event</a>
+</li>
+<li><a href="#next-offset-transition-in-a-time-zone">Next offset transition in a time zone</a>
+</li>
+<li><a href="#comparison-of-an-exact-time-to-business-hours">Comparison of an exact time to business hours</a>
+</li>
+<li><a href="#flight-arrivaldepartureduration">Flight arrival/departure/duration</a>
+</li>
+<li><a href="#push-back-a-launch-date">Push back a launch date</a>
+</li>
+<li><a href="#schedule-a-reminder-ahead-of-matching-a-record-setting-duration">Schedule a reminder ahead of matching a record-setting duration</a>
+</li>
+<li><a href="#nth-weekday-of-the-month">Nth weekday of the month</a>
+</li>
+<li><a href="#manipulating-the-day-of-the-month">Manipulating the day of the month</a>
+</li>
+<li><a href="#same-date-in-another-month">Same date in another month</a>
+</li>
+<li><a href="#next-weekly-occurrence">Next weekly occurrence</a>
+</li>
+<li><a href="#weekday-of-yearly-occurrence">Weekday of yearly occurrence</a>
+</li>
+</ul>
+</li>
+<li><a href="#advanced-use-cases">Advanced use cases</a>
+<ul>
+<li><a href="#extra-expanded-years">Extra-expanded years</a>
+</li>
+<li><a href="#adjustable-hijri-calendar">Adjustable Hijri calendar</a>
+</li>
+</ul>
+</li>
+</ul>
 
 <h2 id="running-the-cookbook-files"><a class="heading-link" href="#running-the-cookbook-files"></a>Running the cookbook files</h3><p>Running cookbook files: see instructions in <a href="https://github.com/tc39/proposal-temporal/tree/main/polyfill#running-cookbook-files">../polyfill/README.md</a></p>
 <h2 id="frequently-asked-questions"><a class="heading-link" href="#frequently-asked-questions"></a>Frequently Asked Questions</h3><p>These are some of the most common tasks that people ask questions about on StackOverflow with legacy <code>Date</code>.
