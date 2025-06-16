@@ -27,8 +27,7 @@
       <h1>Temporal.PlainDateTime ( _isoYear_, _isoMonth_, _isoDay_ [ , _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ [ , _calendar_ ] ] ] ] ] ] ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. Set _isoYear_ to ? ToIntegerWithTruncation(_isoYear_).
         1. Set _isoMonth_ to ? ToIntegerWithTruncation(_isoMonth_).
         1. Set _isoDay_ to ? ToIntegerWithTruncation(_isoDay_).

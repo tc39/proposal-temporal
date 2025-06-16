@@ -30,8 +30,7 @@
       <h1>Temporal.PlainTime ( [ _hour_ [ , _minute_ [ , _second_ [ , _millisecond_ [ , _microsecond_ [ , _nanosecond_ ] ] ] ] ] ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. If _hour_ is *undefined*, set _hour_ to 0; else set _hour_ to ? ToIntegerWithTruncation(_hour_).
         1. If _minute_ is *undefined*, set _minute_ to 0; else set _minute_ to ? ToIntegerWithTruncation(_minute_).
         1. If _second_ is *undefined*, set _second_ to 0; else set _second_ to ? ToIntegerWithTruncation(_second_).

@@ -34,8 +34,7 @@
       <h1>Temporal.Duration ( [ _years_ [ , _months_ [ , _weeks_ [ , _days_ [ , _hours_ [ , _minutes_ [ , _seconds_ [ , _milliseconds_ [ , _microseconds_ [ , _nanoseconds_ ] ] ] ] ] ] ] ] ] ] )</h1>
       <p>The `Temporal.Duration` function performs the following steps when called:</p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. If _years_ is *undefined*, let _y_ be 0; else let _y_ be ? ToIntegerIfIntegral(_years_).
         1. If _months_ is *undefined*, let _mo_ be 0; else let _mo_ be ? ToIntegerIfIntegral(_months_).
         1. If _weeks_ is *undefined*, let _w_ be 0; else let _w_ be ? ToIntegerIfIntegral(_weeks_).
