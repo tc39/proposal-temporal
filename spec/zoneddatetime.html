@@ -27,8 +27,7 @@
       <h1>Temporal.ZonedDateTime ( _epochNanoseconds_, _timeZone_ [ , _calendar_ ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. Set _epochNanoseconds_ to ? ToBigInt(_epochNanoseconds_).
         1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. If _timeZone_ is not a String, throw a *TypeError* exception.

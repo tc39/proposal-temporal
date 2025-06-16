@@ -27,8 +27,7 @@
       <h1>Temporal.PlainYearMonth ( _isoYear_, _isoMonth_ [ , _calendar_ [ , _referenceISODay_ ] ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. If _referenceISODay_ is *undefined*, then
           1. Set _referenceISODay_ to *1*<sub>𝔽</sub>.
         1. Let _y_ be ? ToIntegerWithTruncation(_isoYear_).

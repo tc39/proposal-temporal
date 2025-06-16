@@ -27,8 +27,7 @@
       <h1>Temporal.Instant ( _epochNanoseconds_ )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. Let _epochNanoseconds_ be ? ToBigInt(_epochNanoseconds_).
         1. If IsValidEpochNanoseconds(_epochNanoseconds_) is *false*, throw a *RangeError* exception.
         1. Return ? CreateTemporalInstant(_epochNanoseconds_, NewTarget).

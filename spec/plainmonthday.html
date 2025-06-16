@@ -27,8 +27,7 @@
       <h1>Temporal.PlainMonthDay ( _isoMonth_, _isoDay_ [ , _calendar_ [ , _referenceISOYear_ ] ] )</h1>
       <p>This function performs the following steps when called:</p>
       <emu-alg>
-        1. If NewTarget is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. If _referenceISOYear_ is *undefined*, then
           1. Set _referenceISOYear_ to *1972*<sub>𝔽</sub> (the first ISO 8601 leap year after the epoch).
         1. Let _m_ be ? ToIntegerWithTruncation(_isoMonth_).
