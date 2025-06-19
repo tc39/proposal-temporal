@@ -18,6 +18,7 @@ Implementation status:
 - [JavaScriptCore/Safari](https://bugs.webkit.org/show_bug.cgi?id=223166)
 - [Boa](https://github.com/boa-dev/boa/issues/1804)
 - [GraalJS](https://github.com/oracle/graaljs/issues/851)
+- [Kiesel](https://codeberg.org/kiesel-js/kiesel/issues/124)
 
 ## Champions
 
