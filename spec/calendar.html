@@ -495,8 +495,8 @@
         1. If _calendar_ is *"iso8601"*, then
           1. Let _intermediate_ be BalanceISOYearMonth(_isoDate_.[[Year]] + _duration_.[[Years]], _isoDate_.[[Month]] + _duration_.[[Months]]).
           1. Set _intermediate_ to ? RegulateISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _isoDate_.[[Day]], _overflow_).
-          1. Let _d_ be _intermediate_.[[Day]] + _duration_.[[Days]] + 7 × _duration_.[[Weeks]].
-          1. Let _result_ be BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _d_).
+          1. Let _days_ be _duration_.[[Days]] + 7 × _duration_.[[Weeks]].
+          1. Let _result_ be AddDaysToISODate(_intermediate_, _days_).
         1. Else,
           1. Let _result_ be an implementation-defined ISO Date Record, or throw a *RangeError* exception, as described below.
         1. If ISODateWithinLimits(_result_) is *false*, throw a *RangeError* exception.
@@ -547,18 +547,18 @@
           1. Let _weeks_ be 0.
           1. If _largestUnit_ is ~week~, then
             1. Let _candidateWeeks_ be _sign_.
-            1. Set _intermediate_ to BalanceISODate(_constrained_.[[Year]], _constrained_.[[Month]], _constrained_.[[Day]] + 7 × _candidateWeeks_).
+            1. Set _intermediate_ to AddDaysToISODate(_constrained_, 7 × _candidateWeeks_).
             1. Repeat, while ISODateSurpasses(_sign_, _intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _two_) is *false*,
               1. Set _weeks_ to _candidateWeeks_.
               1. Set _candidateWeeks_ to _candidateWeeks_ + sign.
-              1. Set _intermediate_ to BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]] + 7 × _sign_).
+              1. Set _intermediate_ to AddDaysToISODate(_intermediate_, 7 × _sign_).
           1. Let _days_ be 0.
           1. Let _candidateDays_ be _sign_.
-          1. Set _intermediate_ to BalanceISODate(_constrained_.[[Year]], _constrained_.[[Month]], _constrained_.[[Day]] + 7 × _weeks_ + _candidateDays_).
+          1. Set _intermediate_ to AddDaysToISODate(_constrained_, 7 × _weeks_ + _candidateDays_).
           1. Repeat, while ISODateSurpasses(_sign_, _intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]], _two_) is *false*,
             1. Set _days_ to _candidateDays_.
             1. Set _candidateDays_ to _candidateDays_ + _sign_.
-            1. Set _intermediate_ to BalanceISODate(_intermediate_.[[Year]], _intermediate_.[[Month]], _intermediate_.[[Day]] + _sign_).
+            1. Set _intermediate_ to AddDaysToISODate(_intermediate_, _sign_).
           1. Return ! CreateDateDurationRecord(_years_, _months_, _weeks_, _days_).
         1. Return an implementation-defined Date Duration Record as described above.
       </emu-alg>
