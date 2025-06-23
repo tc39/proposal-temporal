@@ -110,9 +110,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return _temporalDate_.[[Calendar]].
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return _plainDate_.[[Calendar]].
       </emu-alg>
     </emu-clause>
 
@@ -151,9 +151,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[Year]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[Year]]).
       </emu-alg>
     </emu-clause>
 
@@ -164,9 +164,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[Month]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[Month]]).
       </emu-alg>
     </emu-clause>
 
@@ -177,9 +177,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[MonthCode]].
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[MonthCode]].
       </emu-alg>
     </emu-clause>
 
@@ -190,9 +190,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[Day]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[Day]]).
       </emu-alg>
     </emu-clause>
 
@@ -203,9 +203,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[DayOfWeek]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[DayOfWeek]]).
       </emu-alg>
     </emu-clause>
 
@@ -216,9 +216,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[DayOfYear]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[DayOfYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -229,9 +229,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _result_ be CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[WeekOfYear]].[[Week]].
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Let _result_ be CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[WeekOfYear]].[[Week]].
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -244,9 +244,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _result_ be CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[WeekOfYear]].[[Year]].
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Let _result_ be CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[WeekOfYear]].[[Year]].
         1. If _result_ is *undefined*, return *undefined*.
         1. Return 𝔽(_result_).
       </emu-alg>
@@ -259,9 +259,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[DaysInWeek]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[DaysInWeek]]).
       </emu-alg>
     </emu-clause>
 
@@ -272,9 +272,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[DaysInMonth]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[DaysInMonth]]).
       </emu-alg>
     </emu-clause>
 
@@ -285,9 +285,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[DaysInYear]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[DaysInYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -298,9 +298,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return 𝔽(CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[MonthsInYear]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return 𝔽(CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[MonthsInYear]]).
       </emu-alg>
     </emu-clause>
 
@@ -311,9 +311,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return CalendarISOToDate(_temporalDate_.[[Calendar]], _temporalDate_.[[ISODate]]).[[InLeapYear]].
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return CalendarISOToDate(_plainDate_.[[Calendar]], _plainDate_.[[ISODate]]).[[InLeapYear]].
       </emu-alg>
     </emu-clause>
 
@@ -321,10 +321,10 @@
       <h1>Temporal.PlainDate.prototype.toPlainYearMonth ( )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _fields_ be ISODateToFields(_calendar_, _temporalDate_.[[ISODate]], ~date~).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Let _calendar_ be _plainDate_.[[Calendar]].
+        1. Let _fields_ be ISODateToFields(_calendar_, _plainDate_.[[ISODate]], ~date~).
         1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _fields_, ~constrain~).
         1. Return ! CreateTemporalYearMonth(_isoDate_, _calendar_).
         1. NOTE: The call to CalendarYearMonthFromFields is necessary in order to create a PlainYearMonth object with the [[Day]] field of the [[ISODate]] internal slot set correctly.
@@ -335,10 +335,10 @@
       <h1>Temporal.PlainDate.prototype.toPlainMonthDay ( )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _fields_ be ISODateToFields(_calendar_, _temporalDate_.[[ISODate]], ~date~).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Let _calendar_ be _plainDate_.[[Calendar]].
+        1. Let _fields_ be ISODateToFields(_calendar_, _plainDate_.[[ISODate]], ~date~).
         1. Let _isoDate_ be ? CalendarMonthDayFromFields(_calendar_, _fields_, ~constrain~).
         1. Return ! CreateTemporalMonthDay(_isoDate_, _calendar_).
         1. NOTE: The call to CalendarMonthDayFromFields is necessary in order to create a PlainMonthDay object with the [[Year]] field of the [[ISODate]] internal slot set correctly.
@@ -349,9 +349,9 @@
       <h1>Temporal.PlainDate.prototype.add ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return ? AddDurationToDate(~add~, _temporalDate_, _temporalDurationLike_, _options_).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return ? AddDurationToDate(~add~, _plainDate_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -359,9 +359,9 @@
       <h1>Temporal.PlainDate.prototype.subtract ( _temporalDurationLike_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return ? AddDurationToDate(~subtract~, _temporalDate_, _temporalDurationLike_, _options_).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return ? AddDurationToDate(~subtract~, _plainDate_, _temporalDurationLike_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -369,11 +369,11 @@
       <h1>Temporal.PlainDate.prototype.with ( _temporalDateLike_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
         1. If ? IsPartialTemporalObject(_temporalDateLike_) is *false*, throw a *TypeError* exception.
-        1. Let _calendar_ be _temporalDate_.[[Calendar]].
-        1. Let _fields_ be ISODateToFields(_calendar_, _temporalDate_.[[ISODate]], ~date~).
+        1. Let _calendar_ be _plainDate_.[[Calendar]].
+        1. Let _fields_ be ISODateToFields(_calendar_, _plainDate_.[[ISODate]], ~date~).
         1. Let _partialDate_ be ? PrepareCalendarFields(_calendar_, _temporalDateLike_, « ~year~, ~month~, ~month-code~, ~day~ », « », ~partial~).
         1. Set _fields_ to CalendarMergeFields(_calendar_, _fields_, _partialDate_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
@@ -387,10 +387,10 @@
       <h1>Temporal.PlainDate.prototype.withCalendar ( _calendarLike_ )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
         1. Let _calendar_ be ? ToTemporalCalendarIdentifier(_calendarLike_).
-        1. Return ! CreateTemporalDate(_temporalDate_.[[ISODate]], _calendar_).
+        1. Return ! CreateTemporalDate(_plainDate_.[[ISODate]], _calendar_).
       </emu-alg>
     </emu-clause>
 
@@ -398,9 +398,9 @@
       <h1>Temporal.PlainDate.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return ? DifferenceTemporalPlainDate(~until~, _temporalDate_, _other_, _options_).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return ? DifferenceTemporalPlainDate(~until~, _plainDate_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -408,9 +408,9 @@
       <h1>Temporal.PlainDate.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return ? DifferenceTemporalPlainDate(~since~, _temporalDate_, _other_, _options_).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return ? DifferenceTemporalPlainDate(~since~, _plainDate_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -418,11 +418,11 @@
       <h1>Temporal.PlainDate.prototype.equals ( _other_ )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
         1. Set _other_ to ? ToTemporalDate(_other_).
-        1. If CompareISODate(_temporalDate_.[[ISODate]], _other_.[[ISODate]]) ≠ 0, return *false*.
-        1. Return CalendarEquals(_temporalDate_.[[Calendar]], _other_.[[Calendar]]).
+        1. If CompareISODate(_plainDate_.[[ISODate]], _other_.[[ISODate]]) ≠ 0, return *false*.
+        1. Return CalendarEquals(_plainDate_.[[Calendar]], _other_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -430,11 +430,11 @@
       <h1>Temporal.PlainDate.prototype.toPlainDateTime ( [ _temporalTime_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
         1. Let _time_ be ? ToTimeRecordOrMidnight(_temporalTime_).
-        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalDate_.[[ISODate]], _time_).
-        1. Return ? CreateTemporalDateTime(_isoDateTime_, _temporalDate_.[[Calendar]]).
+        1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainDate_.[[ISODate]], _time_).
+        1. Return ? CreateTemporalDateTime(_isoDateTime_, _plainDate_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -442,8 +442,8 @@
       <h1>Temporal.PlainDate.prototype.toZonedDateTime ( _item_ )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
         1. If _item_ is an Object, then
           1. Let _timeZoneLike_ be ? Get(_item_, *"timeZone"*).
           1. If _timeZoneLike_ is *undefined*, then
@@ -456,13 +456,13 @@
           1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_item_).
           1. Let _temporalTime_ be *undefined*.
         1. If _temporalTime_ is *undefined*, then
-          1. Let _epochNs_ be ? GetStartOfDay(_timeZone_, _temporalDate_.[[ISODate]]).
+          1. Let _epochNs_ be ? GetStartOfDay(_timeZone_, _plainDate_.[[ISODate]]).
         1. Else,
           1. Set _temporalTime_ to ? ToTemporalTime(_temporalTime_).
-          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalDate_.[[ISODate]], _temporalTime_.[[Time]]).
+          1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainDate_.[[ISODate]], _temporalTime_.[[Time]]).
           1. If ISODateTimeWithinLimits(_isoDateTime_) is *false*, throw a *RangeError* exception.
           1. Let _epochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _isoDateTime_, ~compatible~).
-        1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _temporalDate_.[[Calendar]]).
+        1. Return ! CreateTemporalZonedDateTime(_epochNs_, _timeZone_, _plainDate_.[[Calendar]]).
       </emu-alg>
     </emu-clause>
 
@@ -470,11 +470,11 @@
       <h1>Temporal.PlainDate.prototype.toString ( [ _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _showCalendar_ be ? GetTemporalShowCalendarNameOption(_resolvedOptions_).
-        1. Return TemporalDateToString(_temporalDate_, _showCalendar_).
+        1. Return TemporalDateToString(_plainDate_, _showCalendar_).
       </emu-alg>
     </emu-clause>
 
@@ -487,9 +487,9 @@
       <p>The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.</p>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return TemporalDateToString(_temporalDate_, ~auto~).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return TemporalDateToString(_plainDate_, ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -497,9 +497,9 @@
       <h1>Temporal.PlainDate.prototype.toJSON ( )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalDate_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
-        1. Return TemporalDateToString(_temporalDate_, ~auto~).
+        1. Let _plainDate_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
+        1. Return TemporalDateToString(_plainDate_, ~auto~).
       </emu-alg>
     </emu-clause>
 
