@@ -105,9 +105,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return 𝔽(_temporalTime_.[[Time]].[[Hour]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return 𝔽(_plainTime_.[[Time]].[[Hour]]).
       </emu-alg>
     </emu-clause>
 
@@ -118,9 +118,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return 𝔽(_temporalTime_.[[Time]].[[Minute]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return 𝔽(_plainTime_.[[Time]].[[Minute]]).
       </emu-alg>
     </emu-clause>
 
@@ -131,9 +131,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return 𝔽(_temporalTime_.[[Time]].[[Second]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return 𝔽(_plainTime_.[[Time]].[[Second]]).
       </emu-alg>
     </emu-clause>
 
@@ -144,9 +144,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return 𝔽(_temporalTime_.[[Time]].[[Millisecond]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return 𝔽(_plainTime_.[[Time]].[[Millisecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -157,9 +157,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return 𝔽(_temporalTime_.[[Time]].[[Microsecond]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return 𝔽(_plainTime_.[[Time]].[[Microsecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -170,9 +170,9 @@
         Its get accessor function performs the following steps:
       </p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return 𝔽(_temporalTime_.[[Time]].[[Nanosecond]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return 𝔽(_plainTime_.[[Time]].[[Nanosecond]]).
       </emu-alg>
     </emu-clause>
 
@@ -180,9 +180,9 @@
       <h1>Temporal.PlainTime.prototype.add ( _temporalDurationLike_ )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? AddDurationToTime(~add~, _temporalTime_, _temporalDurationLike_).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return ? AddDurationToTime(~add~, _plainTime_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -190,9 +190,9 @@
       <h1>Temporal.PlainTime.prototype.subtract ( _temporalDurationLike_ )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? AddDurationToTime(~subtract~, _temporalTime_, _temporalDurationLike_).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return ? AddDurationToTime(~subtract~, _plainTime_, _temporalDurationLike_).
       </emu-alg>
     </emu-clause>
 
@@ -200,34 +200,34 @@
       <h1>Temporal.PlainTime.prototype.with ( _temporalTimeLike_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
         1. If ? IsPartialTemporalObject(_temporalTimeLike_) is *false*, throw a *TypeError* exception.
         1. Let _partialTime_ be ? ToTemporalTimeRecord(_temporalTimeLike_, ~partial~).
         1. If _partialTime_.[[Hour]] is not *undefined*, then
           1. Let _hour_ be _partialTime_.[[Hour]].
         1. Else,
-          1. Let _hour_ be _temporalTime_.[[Time]].[[Hour]].
+          1. Let _hour_ be _plainTime_.[[Time]].[[Hour]].
         1. If _partialTime_.[[Minute]] is not *undefined*, then
           1. Let _minute_ be _partialTime_.[[Minute]].
         1. Else,
-          1. Let _minute_ be _temporalTime_.[[Time]].[[Minute]].
+          1. Let _minute_ be _plainTime_.[[Time]].[[Minute]].
         1. If _partialTime_.[[Second]] is not *undefined*, then
           1. Let _second_ be _partialTime_.[[Second]].
         1. Else,
-          1. Let _second_ be _temporalTime_.[[Time]].[[Second]].
+          1. Let _second_ be _plainTime_.[[Time]].[[Second]].
         1. If _partialTime_.[[Millisecond]] is not *undefined*, then
           1. Let _millisecond_ be _partialTime_.[[Millisecond]].
         1. Else,
-          1. Let _millisecond_ be _temporalTime_.[[Time]].[[Millisecond]].
+          1. Let _millisecond_ be _plainTime_.[[Time]].[[Millisecond]].
         1. If _partialTime_.[[Microsecond]] is not *undefined*, then
           1. Let _microsecond_ be _partialTime_.[[Microsecond]].
         1. Else,
-          1. Let _microsecond_ be _temporalTime_.[[Time]].[[Microsecond]].
+          1. Let _microsecond_ be _plainTime_.[[Time]].[[Microsecond]].
         1. If _partialTime_.[[Nanosecond]] is not *undefined*, then
           1. Let _nanosecond_ be _partialTime_.[[Nanosecond]].
         1. Else,
-          1. Let _nanosecond_ be _temporalTime_.[[Time]].[[Nanosecond]].
+          1. Let _nanosecond_ be _plainTime_.[[Time]].[[Nanosecond]].
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
         1. Let _result_ be ? RegulateTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_, _overflow_).
@@ -239,9 +239,9 @@
       <h1>Temporal.PlainTime.prototype.until ( _other_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? DifferenceTemporalPlainTime(~until~, _temporalTime_, _other_, _options_).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return ? DifferenceTemporalPlainTime(~until~, _plainTime_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -249,9 +249,9 @@
       <h1>Temporal.PlainTime.prototype.since ( _other_ [ , _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return ? DifferenceTemporalPlainTime(~since~, _temporalTime_, _other_, _options_).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return ? DifferenceTemporalPlainTime(~since~, _plainTime_, _other_, _options_).
       </emu-alg>
     </emu-clause>
 
@@ -259,8 +259,8 @@
       <h1>Temporal.PlainTime.prototype.round ( _roundTo_ )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
         1. If _roundTo_ is *undefined*, then
           1. Throw a *TypeError* exception.
         1. If _roundTo_ is a String, then
@@ -276,7 +276,7 @@
         1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. Assert: _maximum_ is not ~unset~.
         1. Perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
-        1. Let _result_ be RoundTime(_temporalTime_.[[Time]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Let _result_ be RoundTime(_plainTime_.[[Time]], _roundingIncrement_, _smallestUnit_, _roundingMode_).
         1. Return ! CreateTemporalTime(_result_).
       </emu-alg>
     </emu-clause>
@@ -285,10 +285,10 @@
       <h1>Temporal.PlainTime.prototype.equals ( _other_ )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
         1. Set _other_ to ? ToTemporalTime(_other_).
-        1. If CompareTimeRecord(_temporalTime_.[[Time]], _other_.[[Time]]) = 0, return *true*.
+        1. If CompareTimeRecord(_plainTime_.[[Time]], _other_.[[Time]]) = 0, return *true*.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
@@ -297,8 +297,8 @@
       <h1>Temporal.PlainTime.prototype.toString ( [ _options_ ] )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalFractionalSecondDigitsOption reads *"fractionalSecondDigits"* and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_resolvedOptions_).
@@ -306,7 +306,7 @@
         1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_resolvedOptions_, *"smallestUnit"*, ~time~, ~unset~).
         1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _precision_ be ToSecondsStringPrecisionRecord(_smallestUnit_, _digits_).
-        1. Let _roundResult_ be RoundTime(_temporalTime_.[[Time]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
+        1. Let _roundResult_ be RoundTime(_plainTime_.[[Time]], _precision_.[[Increment]], _precision_.[[Unit]], _roundingMode_).
         1. Return TimeRecordToString(_roundResult_, _precision_.[[Precision]]).
       </emu-alg>
     </emu-clause>
@@ -320,9 +320,9 @@
       <p>The meanings of the optional parameters to this method are defined in the ECMA-402 specification; implementations that do not include ECMA-402 support must not use those parameter positions for anything else.</p>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return TimeRecordToString(_temporalTime_.[[Time]], ~auto~).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return TimeRecordToString(_plainTime_.[[Time]], ~auto~).
       </emu-alg>
     </emu-clause>
 
@@ -330,9 +330,9 @@
       <h1>Temporal.PlainTime.prototype.toJSON ( )</h1>
       <p>This method performs the following steps when called:</p>
       <emu-alg>
-        1. Let _temporalTime_ be the *this* value.
-        1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
-        1. Return TimeRecordToString(_temporalTime_.[[Time]], ~auto~).
+        1. Let _plainTime_ be the *this* value.
+        1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
+        1. Return TimeRecordToString(_plainTime_.[[Time]], ~auto~).
       </emu-alg>
     </emu-clause>
 

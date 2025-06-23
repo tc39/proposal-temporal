@@ -1766,10 +1766,10 @@
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plaindate.prototype.tolocalestring"></emu-xref>.</p>
           <p>This method performs the following steps when called:</p>
           <emu-alg>
-            1. Let _temporalDate_ be the *this* value.
-            1. Perform ? RequireInternalSlot(_temporalDate_, [[InitializedTemporalDate]]).
+            1. Let _plainDate_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainDate_, [[InitializedTemporalDate]]).
             1. Let _dateFormat_ be ? CreateDateTimeFormat(%Intl.DateTimeFormat%, _locales_, _options_, ~date~, ~date~).
-            1. Return ? FormatDateTime(_dateFormat_, _temporalDate_).
+            1. Return ? FormatDateTime(_dateFormat_, _plainDate_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
@@ -1782,10 +1782,10 @@
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plaindatetime.prototype.tolocalestring"></emu-xref>.</p>
           <p>This method performs the following steps when called:</p>
           <emu-alg>
-            1. Let _dateTime_ be the *this* value.
-            1. Perform ? RequireInternalSlot(_dateTime_, [[InitializedTemporalDateTime]]).
+            1. Let _plainDateTime_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainDateTime_, [[InitializedTemporalDateTime]]).
             1. Let _dateFormat_ be ? CreateDateTimeFormat(%Intl.DateTimeFormat%, _locales_, _options_, ~any~, ~all~).
-            1. Return ? FormatDateTime(_dateFormat_, _dateTime_).
+            1. Return ? FormatDateTime(_dateFormat_, _plainDateTime_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
@@ -1798,10 +1798,10 @@
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plainmonthday.prototype.tolocalestring"></emu-xref>.</p>
           <p>This method performs the following steps when called:</p>
           <emu-alg>
-            1. Let _monthDay_ be the *this* value.
-            1. Perform ? RequireInternalSlot(_monthDay_, [[InitializedTemporalMonthDay]]).
+            1. Let _plainMonthDay_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainMonthDay_, [[InitializedTemporalMonthDay]]).
             1. Let _dateFormat_ be ? CreateDateTimeFormat(%Intl.DateTimeFormat%, _locales_, _options_, ~date~, ~date~).
-            1. Return ? FormatDateTime(_dateFormat_, _monthDay_).
+            1. Return ? FormatDateTime(_dateFormat_, _plainMonthDay_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
@@ -1814,10 +1814,10 @@
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plaintime.prototype.tolocalestring"></emu-xref>.</p>
           <p>This method performs the following steps when called:</p>
           <emu-alg>
-            1. Let _temporalTime_ be the *this* value.
-            1. Perform ? RequireInternalSlot(_temporalTime_, [[InitializedTemporalTime]]).
+            1. Let _plainTime_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
             1. Let _dateFormat_ be ? CreateDateTimeFormat(%Intl.DateTimeFormat%, _locales_, _options_, ~time~, ~time~).
-            1. Return ? FormatDateTime(_dateFormat_, _temporalTime_).
+            1. Return ? FormatDateTime(_dateFormat_, _plainTime_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
@@ -1830,10 +1830,10 @@
           <p>This definition supersedes the definition provided in <emu-xref href="#sec-temporal.plainyearmonth.prototype.tolocalestring"></emu-xref>.</p>
           <p>This method performs the following steps when called:</p>
           <emu-alg>
-            1. Let _yearMonth_ be the *this* value.
-            1. Perform ? RequireInternalSlot(_yearMonth_, [[InitializedTemporalYearMonth]]).
+            1. Let _plainYearMonth_ be the *this* value.
+            1. Perform ? RequireInternalSlot(_plainYearMonth_, [[InitializedTemporalYearMonth]]).
             1. Let _dateFormat_ be ? CreateDateTimeFormat(%Intl.DateTimeFormat%, _locales_, _options_, ~date~, ~date~).
-            1. Return ? FormatDateTime(_dateFormat_, _yearMonth_).
+            1. Return ? FormatDateTime(_dateFormat_, _plainYearMonth_).
           </emu-alg>
         </emu-clause>
       </emu-clause>
