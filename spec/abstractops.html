@@ -1108,7 +1108,9 @@
       DateYear :::
         DecimalDigit DecimalDigit DecimalDigit DecimalDigit
         ASCIISign DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
-
+    </emu-grammar>
+    <p>Note the prohibition on negative zero in <emu-xref href="#sec-temporal-iso8601grammar-static-semantics-early-errors"></emu-xref>.</p>
+    <emu-grammar type="definition">
       DateMonth :::
         `0` NonZeroDigit
         `10`
@@ -1129,10 +1131,14 @@
       DateSpecMonthDay :::
         `--`? DateMonth DateSeparator[+Extended] DateDay
         `--`? DateMonth DateSeparator[~Extended] DateDay
-
+    </emu-grammar>
+    <p>Note the prohibition on invalid combinations of month and day in <emu-xref href="#sec-temporal-iso8601grammar-static-semantics-early-errors"></emu-xref>.</p>
+    <emu-grammar type="definition">
       DateSpec[Extended] :::
         DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
-
+    </emu-grammar>
+    <p>Note the prohibition on invalid combinations of month and day in <emu-xref href="#sec-temporal-iso8601grammar-static-semantics-early-errors"></emu-xref>.</p>
+    <emu-grammar type="definition">
       Date :::
         DateSpec[+Extended]
         DateSpec[~Extended]
@@ -1224,7 +1230,9 @@
       AnnotatedTime :::
         TimeDesignator Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
         Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
-
+    </emu-grammar>
+    <p>Note the disambiguation between the second alternative without |TimeDesignator|, and |DateSpecMonthDay|/|DateSpecYearMonth| in <emu-xref href="#sec-temporal-iso8601grammar-static-semantics-early-errors"></emu-xref>.</p>
+    <emu-grammar type="definition">
       AnnotatedDateTime[Zoned, TimeRequired] :::
         [~Zoned] DateTime[~Z, ?TimeRequired] TimeZoneAnnotation? Annotations?
         [+Zoned] DateTime[+Z, ?TimeRequired] TimeZoneAnnotation Annotations?
