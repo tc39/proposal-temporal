@@ -193,7 +193,8 @@
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetRoundingIncrementOption reads *"roundingIncrement"* and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _roundingIncrement_ be ? GetRoundingIncrementOption(_roundTo_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_roundTo_, ~half-expand~).
-        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~time~, ~required~).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"smallestUnit"*, ~required~).
+        1. Perform ? ValidateTemporalUnitValue(_smallestUnit_, ~time~).
         1. If _smallestUnit_ is ~hour~, then
           1. Let _maximum_ be HoursPerDay.
         1. Else if _smallestUnit_ is ~minute~, then
@@ -235,7 +236,8 @@
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalFractionalSecondDigitsOption reads *"fractionalSecondDigits"* and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _digits_ be ? GetTemporalFractionalSecondDigitsOption(_resolvedOptions_).
         1. Let _roundingMode_ be ? GetRoundingModeOption(_resolvedOptions_, ~trunc~).
-        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_resolvedOptions_, *"smallestUnit"*, ~time~, ~unset~).
+        1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_resolvedOptions_, *"smallestUnit"*, ~unset~).
+        1. Perform ? ValidateTemporalUnitValue(_smallestUnit_, ~time~, « ~unset~ »).
         1. If _smallestUnit_ is ~hour~, throw a *RangeError* exception.
         1. Let _timeZone_ be ? Get(_resolvedOptions_, *"timeZone"*).
         1. If _timeZone_ is not *undefined*, then
