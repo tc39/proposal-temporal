@@ -584,6 +584,7 @@
       <dd>It validates that the result of GetTemporalUnitValuedOption is <emu-not-ref>covered</emu-not-ref> by the union of _unitGroup_ and _extraValues_.</dd>
     </dl>
     <emu-alg>
+      1. If _value_ is ~unset~, return ~unused~.
       1. If _extraValues_ is present and _extraValues_ contains _value_, return ~unused~.
       1. Let _category_ be the value in the “Category” column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose “Value” column contains _value_. If there is no such row, throw a *RangeError* exception.
       1. If _category_ is ~date~ and _unitGroup_ is ~date~ or ~datetime~, return ~unused~.
@@ -1864,7 +1865,7 @@
     <emu-alg>
       1. NOTE: The following steps read options and perform independent validation in alphabetical order.
       1. Let _largestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"largestUnit"*, ~unset~).
-      1. Perform ? ValidateTemporalUnitValue(_largestUnit_, _unitGroup_, « ~unset~ »).
+      1. Perform ? ValidateTemporalUnitValue(_largestUnit_, _unitGroup_).
       1. If _largestUnit_ is ~unset~, then
         1. Set _largestUnit_ to ~auto~.
       1. If _disallowedUnits_ contains _largestUnit_, throw a *RangeError* exception.
@@ -1873,7 +1874,7 @@
       1. If _operation_ is ~since~, then
         1. Set _roundingMode_ to NegateRoundingMode(_roundingMode_).
       1. Let _smallestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"smallestUnit"*, ~unset~).
-      1. Perform ? ValidateTemporalUnitValue(_smallestUnit_, _unitGroup_, « ~unset~ »).
+      1. Perform ? ValidateTemporalUnitValue(_smallestUnit_, _unitGroup_).
       1. If _smallestUnit_ is ~unset~, then
         1. Set _smallestUnit_ to _fallbackSmallestUnit_.
       1. If _disallowedUnits_ contains _smallestUnit_, throw a *RangeError* exception.
