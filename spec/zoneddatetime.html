@@ -954,7 +954,7 @@
       </dl>
       <emu-alg>
         1. If _options_ is not present, set _options_ to *undefined*.
-        1. Let _offsetBehaviour_ be ~option~.
+        1. Let _hasUTCDesignator_ be *false*.
         1. Let _matchBehaviour_ be ~match-exactly~.
         1. If _item_ is an Object, then
           1. If _item_ has an [[InitializedTemporalZonedDateTime]] internal slot, then
@@ -968,8 +968,6 @@
           1. Let _fields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~year~, ~month~, ~month-code~, ~day~ », « ~hour~, ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~, ~offset~, ~time-zone~ », « ~time-zone~ »).
           1. Let _timeZone_ be _fields_.[[TimeZone]].
           1. Let _offsetString_ be _fields_.[[OffsetString]].
-          1. If _offsetString_ is ~unset~, then
-            1. Set _offsetBehaviour_ to ~wall~.
           1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
           1. Let _disambiguation_ be ? GetTemporalDisambiguationOption(_resolvedOptions_).
           1. Let _offsetOption_ be ? GetTemporalOffsetOption(_resolvedOptions_, ~reject~).
@@ -985,9 +983,7 @@
           1. Let _timeZone_ be ? ToTemporalTimeZoneIdentifier(_annotation_).
           1. Let _offsetString_ be _result_.[[TimeZone]].[[OffsetString]].
           1. If _result_.[[TimeZone]].[[Z]] is *true*, then
-            1. Set _offsetBehaviour_ to ~exact~.
-          1. Else if _offsetString_ is ~empty~, then
-            1. Set _offsetBehaviour_ to ~wall~.
+            1. Set _hasUTCDesignator_ to *true*.
           1. Let _calendar_ be _result_.[[Calendar]].
           1. If _calendar_ is ~empty~, set _calendar_ to *"iso8601"*.
           1. Set _calendar_ to ? CanonicalizeCalendar(_calendar_).
@@ -1002,6 +998,12 @@
           1. Perform ? GetTemporalOverflowOption(_resolvedOptions_).
           1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
           1. Let _time_ be _result_.[[Time]].
+        1. If _hasUTCDesignator_ is *true*, then
+          1. Let _offsetBehaviour_ be ~exact~.
+        1. Else if _offsetString_ is ~empty~ or _offsetString_ is ~unset~, then
+          1. Let _offsetBehaviour_ be ~wall~.
+        1. Else,
+          1. Let _offsetBehaviour_ be ~option~.
         1. Let _offsetNanoseconds_ be 0.
         1. If _offsetBehaviour_ is ~option~, then
           1. Set _offsetNanoseconds_ to ! ParseDateTimeUTCOffset(_offsetString_).
