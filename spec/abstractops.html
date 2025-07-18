@@ -557,12 +557,8 @@
     </dl>
     <p>Both singular and plural unit names are accepted, but only the singular form is used internally.</p>
     <emu-alg>
-      1. Let _allowedStrings_ be « *"auto"* ».
-      1. For each row of <emu-xref href="#table-temporal-units"></emu-xref>, except the header row, in table order, do
-        1. Let _singularName_ be the value in the "Singular property name" column of the row.
-        1. Append _singularName_ to _allowedStrings_.
-        1. Let _pluralName_ be the value in the "Plural property name" column of the row.
-        1. Append _pluralName_ to _allowedStrings_.
+      1. Let _allowedStrings_ be a List containing all values in the "Singular property name" and "Plural property name" columns of <emu-xref href="#table-temporal-units"></emu-xref>, except the header row.
+      1. Append *"auto"* to _allowedStrings_.
       1. NOTE: For each singular Temporal unit name that is contained within _allowedStrings_, the corresponding plural name is also contained within it.
       1. If _default_ is ~unset~, then
         1. Let _defaultValue_ be *undefined*.
