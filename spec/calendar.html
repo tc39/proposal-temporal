@@ -532,24 +532,24 @@
           1. Let _intermediate_ be _one_.
           1. Repeat, while CompareISODate(_intermediate_, _two_) != _sign_,
             1. Set _duration_.[[Years]] to _duration_.[[Years]] + _sign_.
-            1. Set _intermediate_ to CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
+            1. Set _intermediate_ to ! CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
           1. Set _duration_.[[Years]] to _duration_.[[Years]] - _sign_.
         1. If _largestUnit_ is ~year~ or _largestUnit_ is ~month~, then
           1. Let _intermediate_ be _one_.
           1. Repeat, while CompareISODate(_intermediate_, _two_) != _sign_,
             1. Set _duration_.[[Months]] to _duration_.[[Months]] + _sign_.
-            1. Set _intermediate_ to CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
+            1. Set _intermediate_ to ! CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
           1. Set _duration_.[[Months]] to _duration_.[[Months]] - _sign_.
         1. If _largestUnit_ is ~week~, then
           1. Let _intermediate_ be _one_.
           1. Repeat, while CompareISODate(_intermediate_, _two_) != _sign_,
             1. Set _duration_.[[Weeks]] to _duration_.[[Weeks]] + _sign_.
-            1. Set _intermediate_ to CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
+            1. Set _intermediate_ to ! CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
           1. Set _duration_.[[Weeks]] to _duration_.[[Weeks]] - _sign_.
         1. Let _intermediate_ be _one_.
         1. Repeat, while CompareISODate(_intermediate_, _two_) != _sign_,
           1. Set _duration_.[[Days]] to _duration_.[[Days]] + _sign_.
-          1. Set _intermediate_ to CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
+          1. Set _intermediate_ to ! CalendarDateAdd(_calendar_, _one_, _duration_, ~constrain~).
         1. Set _duration_.[[Days]] to _duration_.[[Days]] - _sign_.
         1. Return ! _duration_.
       </emu-alg>
