@@ -527,7 +527,7 @@
       <emu-alg>
         1. Let _sign_ be -CompareISODate(_one_, _two_).
         1. If _sign_ = 0, return ZeroDateDuration().
-        1. Let _duration_ be CreateDateDurationRecord(0, 0, 0, 0).
+        1. Let _duration_ be ! CreateDateDurationRecord(0, 0, 0, 0).
         1. If _largestUnit_ is ~year~, then
           1. Let _intermediate_ be _one_.
           1. Repeat, while CompareISODate(_intermediate_, _two_) != _sign_,
