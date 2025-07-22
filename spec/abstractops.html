@@ -1866,7 +1866,7 @@
     <emu-alg>
       1. NOTE: The following steps read options and perform independent validation in alphabetical order.
       1. Let _largestUnit_ be ? GetTemporalUnitValuedOption(_options_, *"largestUnit"*, ~unset~).
-      1. Perform ? ValidateTemporalUnitValue(_largestUnit_, _unitGroup_).
+      1. Perform ? ValidateTemporalUnitValue(_largestUnit_, _unitGroup_, « ~auto~ »).
       1. If _largestUnit_ is ~unset~, then
         1. Set _largestUnit_ to ~auto~.
       1. If _disallowedUnits_ contains _largestUnit_, throw a *RangeError* exception.
