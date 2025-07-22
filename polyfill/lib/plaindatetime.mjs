@@ -212,7 +212,8 @@ export class PlainDateTime {
     }
     const roundingIncrement = ES.GetRoundingIncrementOption(roundTo);
     const roundingMode = ES.GetRoundingModeOption(roundTo, 'halfExpand');
-    const smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', ES.REQUIRED, ['day']);
+    const smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', ES.REQUIRED);
+    ES.ValidateTemporalUnitValue(smallestUnit, 'time', ['day']);
     const maximumIncrements = {
       day: 1,
       hour: 24,
@@ -246,7 +247,8 @@ export class PlainDateTime {
     const showCalendar = ES.GetTemporalShowCalendarNameOption(resolvedOptions);
     const digits = ES.GetTemporalFractionalSecondDigitsOption(resolvedOptions);
     const roundingMode = ES.GetRoundingModeOption(resolvedOptions, 'trunc');
-    const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+    const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+    ES.ValidateTemporalUnitValue(smallestUnit, 'time');
     if (smallestUnit === 'hour') throw new RangeErrorCtor('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     const result = ES.RoundISODateTime(GetSlot(this, ISO_DATE_TIME), increment, unit, roundingMode);

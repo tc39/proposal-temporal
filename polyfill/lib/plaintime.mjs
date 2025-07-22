@@ -105,7 +105,8 @@ export class PlainTime {
     }
     const roundingIncrement = ES.GetRoundingIncrementOption(roundTo);
     const roundingMode = ES.GetRoundingModeOption(roundTo, 'halfExpand');
-    const smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', ES.REQUIRED);
+    const smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', ES.REQUIRED);
+    ES.ValidateTemporalUnitValue(smallestUnit, 'time');
     const MAX_INCREMENTS = {
       hour: 24,
       minute: 60,
@@ -130,7 +131,8 @@ export class PlainTime {
     const resolvedOptions = ES.GetOptionsObject(options);
     const digits = ES.GetTemporalFractionalSecondDigitsOption(resolvedOptions);
     const roundingMode = ES.GetRoundingModeOption(resolvedOptions, 'trunc');
-    const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+    const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+    ES.ValidateTemporalUnitValue(smallestUnit, 'time');
     if (smallestUnit === 'hour') throw new RangeErrorCtor('smallestUnit must be a time unit other than "hour"');
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     const time = ES.RoundTime(GetSlot(this, TIME), increment, unit, roundingMode);
