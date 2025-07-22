@@ -317,7 +317,6 @@ const TEMPORAL_UNITS = [
 ];
 const SINGULAR_FOR = new MapCtor(TEMPORAL_UNITS);
 // Iterable destructuring is acceptable in this first-run code.
-const PLURAL_FOR = new MapCtor(Call(ArrayPrototypeMap, TEMPORAL_UNITS, [([p, s]) => [s, p]]));
 const UNITS_DESCENDING = Call(ArrayPrototypeMap, TEMPORAL_UNITS, [([, s]) => s]);
 const NS_PER_TIME_UNIT = new MapCtor(
   Call(ArrayPrototypeFlatMap, TEMPORAL_UNITS, [([, s, , l]) => (l ? [[s, l]] : [])])
@@ -918,36 +917,33 @@ export function ToSecondsStringPrecisionRecord(smallestUnit, precision) {
 
 export const REQUIRED = SymbolCtor('~required~');
 
-export function GetTemporalUnitValuedOption(options, key, unitGroup, requiredOrDefault, extraValues = []) {
-  const allowedSingular = [];
+export function GetTemporalUnitValuedOption(options, key, requiredOrUndefined = undefined) {
+  const allowedStrings = [];
   for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
     const unitInfo = TEMPORAL_UNITS[index];
+    const plural = unitInfo[0];
     const singular = unitInfo[1];
-    const category = unitInfo[2];
-    if (unitGroup === 'datetime' || unitGroup === category) {
-      Call(ArrayPrototypePush, allowedSingular, [singular]);
-    }
+    Call(ArrayPrototypePush, allowedStrings, [singular, plural]);
   }
-  Call(ArrayPrototypePush, allowedSingular, extraValues);
-  let defaultVal = requiredOrDefault;
-  if (defaultVal === REQUIRED) {
-    defaultVal = undefined;
-  } else if (defaultVal !== undefined) {
-    Call(ArrayPrototypePush, allowedSingular, [defaultVal]);
-  }
-  const allowedValues = [];
-  Call(ArrayPrototypePush, allowedValues, allowedSingular);
-  for (let index = 0; index < allowedSingular.length; index++) {
-    const singular = allowedSingular[index];
-    const plural = Call(MapPrototypeGet, PLURAL_FOR, [singular]);
-    if (plural !== undefined) Call(ArrayPrototypePush, allowedValues, [plural]);
-  }
-  let retval = GetOption(options, key, allowedValues, defaultVal);
-  if (retval === undefined && requiredOrDefault === REQUIRED) {
-    throw new RangeErrorCtor(`${key} is required`);
-  }
+  Call(ArrayPrototypePush, allowedStrings, ['auto']);
+  let retval = GetOption(options, key, allowedStrings, requiredOrUndefined);
+  if (retval === undefined) return undefined;
   if (Call(MapPrototypeHas, SINGULAR_FOR, [retval])) retval = Call(MapPrototypeGet, SINGULAR_FOR, [retval]);
   return retval;
+}
+
+export function ValidateTemporalUnitValue(value, unitGroup, extraValues = []) {
+  if (value === undefined) return;
+  if (Call(ArrayPrototypeIncludes, extraValues, [value])) return;
+  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
+    const unitInfo = TEMPORAL_UNITS[index];
+    const singular = unitInfo[0];
+    const plural = unitInfo[1];
+    const category = unitInfo[2];
+    if (value !== singular && value !== plural) continue;
+    if (unitGroup === 'datetime' || unitGroup === category) return;
+  }
+  throw new RangeErrorCtor(`${value} not allowed as a ${unitGroup} unit`);
 }
 
 export function GetTemporalRelativeToOption(options) {
@@ -3640,7 +3636,9 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
     []
   ]);
 
-  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit', group, 'auto');
+  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit');
+  ValidateTemporalUnitValue(largestUnit, group, ['auto']);
+  if (!largestUnit) largestUnit = 'auto';
   if (Call(ArrayPrototypeIncludes, disallowed, [largestUnit])) {
     throw new RangeErrorCtor(
       `largestUnit must be one of ${Call(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${largestUnit}`
@@ -3652,7 +3650,9 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
   let roundingMode = GetRoundingModeOption(options, 'trunc');
   if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
 
-  const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', group, fallbackSmallest);
+  let smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit');
+  ValidateTemporalUnitValue(smallestUnit, group);
+  if (!smallestUnit) smallestUnit = fallbackSmallest;
   if (Call(ArrayPrototypeIncludes, disallowed, [smallestUnit])) {
     throw new RangeErrorCtor(
       `smallestUnit must be one of ${Call(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${smallestUnit}`

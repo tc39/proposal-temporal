@@ -193,11 +193,13 @@ export class Duration {
       roundTo = ES.GetOptionsObject(roundTo);
     }
 
-    let largestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
+    let largestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'largestUnit');
+    ES.ValidateTemporalUnitValue(largestUnit, 'datetime', ['auto']);
     let { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption(roundTo);
     const roundingIncrement = ES.GetRoundingIncrementOption(roundTo);
     const roundingMode = ES.GetRoundingModeOption(roundTo, 'halfExpand');
-    let smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'datetime', undefined);
+    let smallestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'smallestUnit');
+    ES.ValidateTemporalUnitValue(smallestUnit, 'datetime');
 
     let smallestUnitPresent = true;
     if (!smallestUnit) {
@@ -311,7 +313,8 @@ export class Duration {
       totalOf = ES.GetOptionsObject(totalOf);
     }
     let { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption(totalOf);
-    const unit = ES.GetTemporalUnitValuedOption(totalOf, 'unit', 'datetime', ES.REQUIRED);
+    const unit = ES.GetTemporalUnitValuedOption(totalOf, 'unit', ES.REQUIRED);
+    ES.ValidateTemporalUnitValue(unit, 'datetime');
 
     if (zonedRelativeTo) {
       const duration = ES.ToInternalDurationRecord(this);
@@ -353,7 +356,8 @@ export class Duration {
     const resolvedOptions = ES.GetOptionsObject(options);
     const digits = ES.GetTemporalFractionalSecondDigitsOption(resolvedOptions);
     const roundingMode = ES.GetRoundingModeOption(resolvedOptions, 'trunc');
-    const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+    const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+    ES.ValidateTemporalUnitValue(smallestUnit, 'time');
     if (smallestUnit === 'hour' || smallestUnit === 'minute') {
       throw new RangeErrorCtor('smallestUnit must be a time unit other than "hours" or "minutes"');
     }
