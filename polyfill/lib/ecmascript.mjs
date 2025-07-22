@@ -1480,7 +1480,7 @@ export function InterpretISODateTimeOffset(
 export function ToTemporalZonedDateTime(item, options = undefined) {
   let isoDate, time, timeZone, offset, calendar;
   let matchMinute = false;
-  let offsetBehaviour = 'option';
+  let hasUTCDesignator = false;
   let disambiguation, offsetOpt;
   if (Type(item) === 'Object') {
     if (IsTemporalZonedDateTime(item)) {
@@ -1503,9 +1503,6 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
       ['timeZone']
     );
     ({ offset, timeZone } = fields);
-    if (offset === undefined) {
-      offsetBehaviour = 'wall';
-    }
     const resolvedOptions = GetOptionsObject(options);
     disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
@@ -1517,11 +1514,7 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
       RequireString(item)
     ));
     timeZone = ToTemporalTimeZoneIdentifier(tzAnnotation);
-    if (z) {
-      offsetBehaviour = 'exact';
-    } else if (!offset) {
-      offsetBehaviour = 'wall';
-    }
+    if (z) hasUTCDesignator = true;
     if (!calendar) calendar = 'iso8601';
     calendar = CanonicalizeCalendar(calendar);
     // Allow imprecise offset matching unless the provided offset is precise
@@ -1537,6 +1530,12 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
     GetTemporalOverflowOption(resolvedOptions); // validate and ignore
     isoDate = { year, month, day };
+  }
+  let offsetBehaviour = 'option';
+  if (hasUTCDesignator) {
+    offsetBehaviour = 'exact';
+  } else if (!offset) {
+    offsetBehaviour = 'wall';
   }
   let offsetNs = 0;
   if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
