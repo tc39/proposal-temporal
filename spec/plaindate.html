@@ -711,7 +711,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _yearMonth_ be BalanceISOYearMonth(_baseDate_.[[Year]] + years, _baseDate_.[[Month]] + months).
+        1. Let _yearMonth_ be BalanceISOYearMonth(_baseDate_.[[Year]] + _years_, _baseDate_.[[Month]] + _months_).
         1. If _weeks_ is not 0 or _days_ is not 0, then
           1. Let _regulatedDate_ be ! RegulateISODate(_yearMonth_.[[Year]], _yearMonth_.[[Month]], _baseDate_.[[Day]], ~constrain~).
           1. Let _balancedDate_ be BalanceISODate(_regulatedDate_.[[Year]], _regulatedDate_.[[Month]], _regulatedDate_.[[Day]] + 7 * _weeks_ + _days_).
