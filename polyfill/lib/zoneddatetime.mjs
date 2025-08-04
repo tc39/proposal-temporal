@@ -349,9 +349,9 @@ export class ZonedDateTime {
     const showOffset = ES.GetTemporalShowOffsetOption(resolvedOptions);
     const roundingMode = ES.GetRoundingModeOption(resolvedOptions, 'trunc');
     const smallestUnit = ES.GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+    const showTimeZone = ES.GetTemporalShowTimeZoneNameOption(resolvedOptions);
     ES.ValidateTemporalUnitValue(smallestUnit, 'time');
     if (smallestUnit === 'hour') throw new RangeErrorCtor('smallestUnit must be a time unit other than "hour"');
-    const showTimeZone = ES.GetTemporalShowTimeZoneNameOption(resolvedOptions);
     const { precision, unit, increment } = ES.ToSecondsStringPrecisionRecord(smallestUnit, digits);
     return ES.TemporalZonedDateTimeToString(this, precision, showCalendar, showTimeZone, showOffset, {
       unit,
