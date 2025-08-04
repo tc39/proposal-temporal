@@ -12362,7 +12362,19 @@
 	    year: yow
 	  };
 	}
-	function ISODateSurpasses(sign, y1, m1, d1, isoDate2) {
+	function ISODateSurpasses(sign, baseDate, isoDate2, years, months, weeks, days) {
+	  const yearMonth = BalanceISOYearMonth(baseDate.year + years, baseDate.month + months);
+	  let y1 = yearMonth.year;
+	  let m1 = yearMonth.month;
+	  let d1 = baseDate.day;
+	  if (weeks !== 0 || days !== 0) {
+	    const regulatedDate = RegulateISODate(y1, m1, d1, 'constrain');
+	    ({
+	      year: y1,
+	      month: m1,
+	      day: d1
+	    } = BalanceISODate(regulatedDate.year, regulatedDate.month, regulatedDate.day + 7 * weeks + days));
+	  }
 	  if (y1 !== isoDate2.year) {
 	    if (sign * (y1 - isoDate2.year) > 0) return true;
 	  } else if (m1 !== isoDate2.month) {
@@ -12450,31 +12462,28 @@
 	    };
 	    let years = 0;
 	    let months = 0;
-	    let intermediate;
 	    if (largestUnit === 'year' || largestUnit === 'month') {
 	      // We can skip right to the neighbourhood of the correct number of years,
 	      // it'll be at least one less than two.year - one.year (unless it's zero)
 	      let candidateYears = two.year - one.year;
 	      if (candidateYears !== 0) candidateYears -= sign;
 	      // loops at most twice
-	      while (!ISODateSurpasses(sign, one.year + candidateYears, one.month, one.day, two)) {
+	      while (!ISODateSurpasses(sign, one, two, candidateYears, 0, 0, 0)) {
 	        years = candidateYears;
 	        candidateYears += sign;
 	      }
 	      let candidateMonths = sign;
-	      intermediate = BalanceISOYearMonth(one.year + years, one.month + candidateMonths);
 	      // loops at most 12 times
-	      while (!ISODateSurpasses(sign, intermediate.year, intermediate.month, one.day, two)) {
+	      while (!ISODateSurpasses(sign, one, two, years, candidateMonths, 0, 0)) {
 	        months = candidateMonths;
 	        candidateMonths += sign;
-	        intermediate = BalanceISOYearMonth(intermediate.year, intermediate.month + sign);
 	      }
 	      if (largestUnit === 'month') {
 	        months += years * 12;
 	        years = 0;
 	      }
 	    }
-	    intermediate = BalanceISOYearMonth(one.year + years, one.month + months);
+	    const intermediate = BalanceISOYearMonth(one.year + years, one.month + months);
 	    const constrained = ConstrainISODate(intermediate.year, intermediate.month, one.day);
 	    let weeks = 0;
 	    let days = ISODateToEpochDays(two.year, two.month - 1, two.day) - ISODateToEpochDays(constrained.year, constrained.month - 1, constrained.day);
