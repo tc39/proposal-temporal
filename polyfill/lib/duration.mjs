@@ -194,7 +194,6 @@ export class Duration {
     }
 
     let largestUnit = ES.GetTemporalUnitValuedOption(roundTo, 'largestUnit');
-    ES.ValidateTemporalUnitValue(largestUnit, 'datetime', ['auto']);
     let { plainRelativeTo, zonedRelativeTo } = ES.GetTemporalRelativeToOption(roundTo);
     const roundingIncrement = ES.GetRoundingIncrementOption(roundTo);
     const roundingMode = ES.GetRoundingModeOption(roundTo, 'halfExpand');

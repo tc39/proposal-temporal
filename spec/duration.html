@@ -403,7 +403,6 @@
         1. Let _largestUnitPresent_ be *true*.
         1. NOTE: The following steps read options and perform independent validation in alphabetical order (GetTemporalRelativeToOption reads *"relativeTo"*, GetRoundingIncrementOption reads *"roundingIncrement"* and GetRoundingModeOption reads *"roundingMode"*).
         1. Let _largestUnit_ be ? GetTemporalUnitValuedOption(_roundTo_, *"largestUnit"*, ~unset~).
-        1. Perform ? ValidateTemporalUnitValue(_largestUnit_, ~datetime~, « ~auto~ »).
         1. Let _relativeToRecord_ be ? GetTemporalRelativeToOption(_roundTo_).
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
