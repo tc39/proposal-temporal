@@ -8426,16 +8426,12 @@
 	const TEMPORAL_UNITS = [['years', 'year', 'date'], ['months', 'month', 'date'], ['weeks', 'week', 'date'], ['days', 'day', 'date', DAY_NANOS], ['hours', 'hour', 'time', 3600e9], ['minutes', 'minute', 'time', 60e9], ['seconds', 'second', 'time', 1e9], ['milliseconds', 'millisecond', 'time', 1e6], ['microseconds', 'microsecond', 'time', 1e3], ['nanoseconds', 'nanosecond', 'time', 1]];
 	const SINGULAR_FOR = new Map$1(TEMPORAL_UNITS);
 	// Iterable destructuring is acceptable in this first-run code.
-	const PLURAL_FOR = new Map$1(Call$1(ArrayPrototypeMap, TEMPORAL_UNITS, [_ref => {
-	  let [p, s] = _ref;
-	  return [s, p];
-	}]));
-	const UNITS_DESCENDING = Call$1(ArrayPrototypeMap, TEMPORAL_UNITS, [_ref2 => {
-	  let [, s] = _ref2;
+	const UNITS_DESCENDING = Call$1(ArrayPrototypeMap, TEMPORAL_UNITS, [_ref => {
+	  let [, s] = _ref;
 	  return s;
 	}]);
-	const NS_PER_TIME_UNIT = new Map$1(Call$1(ArrayPrototypeFlatMap, TEMPORAL_UNITS, [_ref3 => {
-	  let [, s,, l] = _ref3;
+	const NS_PER_TIME_UNIT = new Map$1(Call$1(ArrayPrototypeFlatMap, TEMPORAL_UNITS, [_ref2 => {
+	  let [, s,, l] = _ref2;
 	  return l ? [[s, l]] : [];
 	}]));
 	const DURATION_FIELDS = ['days', 'hours', 'microseconds', 'milliseconds', 'minutes', 'months', 'nanoseconds', 'seconds', 'weeks', 'years'];
@@ -8940,13 +8936,13 @@
 	  }
 	  return result;
 	}
-	function AdjustDateDurationRecord(_ref4, newDays, newWeeks, newMonths) {
+	function AdjustDateDurationRecord(_ref3, newDays, newWeeks, newMonths) {
 	  let {
 	    years,
 	    months,
 	    weeks,
 	    days
-	  } = _ref4;
+	  } = _ref3;
 	  return {
 	    years,
 	    months: newMonths ?? months,
@@ -9134,37 +9130,34 @@
 	  }
 	}
 	const REQUIRED = Symbol$1('~required~');
-	function GetTemporalUnitValuedOption(options, key, unitGroup, requiredOrDefault) {
-	  let extraValues = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
-	  const allowedSingular = [];
+	function GetTemporalUnitValuedOption(options, key) {
+	  let requiredOrUndefined = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+	  const allowedStrings = [];
 	  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
 	    const unitInfo = TEMPORAL_UNITS[index];
+	    const plural = unitInfo[0];
 	    const singular = unitInfo[1];
-	    const category = unitInfo[2];
-	    if (unitGroup === 'datetime' || unitGroup === category) {
-	      Call$1(ArrayPrototypePush, allowedSingular, [singular]);
-	    }
+	    Call$1(ArrayPrototypePush, allowedStrings, [singular, plural]);
 	  }
-	  Call$1(ArrayPrototypePush, allowedSingular, extraValues);
-	  let defaultVal = requiredOrDefault;
-	  if (defaultVal === REQUIRED) {
-	    defaultVal = undefined;
-	  } else if (defaultVal !== undefined) {
-	    Call$1(ArrayPrototypePush, allowedSingular, [defaultVal]);
-	  }
-	  const allowedValues = [];
-	  Call$1(ArrayPrototypePush, allowedValues, allowedSingular);
-	  for (let index = 0; index < allowedSingular.length; index++) {
-	    const singular = allowedSingular[index];
-	    const plural = Call$1(MapPrototypeGet, PLURAL_FOR, [singular]);
-	    if (plural !== undefined) Call$1(ArrayPrototypePush, allowedValues, [plural]);
-	  }
-	  let retval = GetOption(options, key, allowedValues, defaultVal);
-	  if (retval === undefined && requiredOrDefault === REQUIRED) {
-	    throw new RangeError$1(`${key} is required`);
-	  }
+	  Call$1(ArrayPrototypePush, allowedStrings, ['auto']);
+	  let retval = GetOption(options, key, allowedStrings, requiredOrUndefined);
+	  if (retval === undefined) return undefined;
 	  if (Call$1(MapPrototypeHas, SINGULAR_FOR, [retval])) retval = Call$1(MapPrototypeGet, SINGULAR_FOR, [retval]);
 	  return retval;
+	}
+	function ValidateTemporalUnitValue(value, unitGroup) {
+	  let extraValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+	  if (value === undefined) return;
+	  if (Call$1(ArrayPrototypeIncludes, extraValues, [value])) return;
+	  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
+	    const unitInfo = TEMPORAL_UNITS[index];
+	    const singular = unitInfo[0];
+	    const plural = unitInfo[1];
+	    const category = unitInfo[2];
+	    if (value !== singular && value !== plural) continue;
+	    if (unitGroup === 'datetime' || unitGroup === category) return;
+	  }
+	  throw new RangeError$1(`${value} not allowed as a ${unitGroup} unit`);
 	}
 	function GetTemporalRelativeToOption(options) {
 	  // returns: {
@@ -9673,7 +9666,7 @@
 	  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	  let isoDate, time, timeZone, offset, calendar;
 	  let matchMinute = false;
-	  let offsetBehaviour = 'option';
+	  let hasUTCDesignator = false;
 	  let disambiguation, offsetOpt;
 	  if (Type$1(item) === 'Object') {
 	    if (IsTemporalZonedDateTime(item)) {
@@ -9689,9 +9682,6 @@
 	      offset,
 	      timeZone
 	    } = fields);
-	    if (offset === undefined) {
-	      offsetBehaviour = 'wall';
-	    }
 	    const resolvedOptions = GetOptionsObject(options);
 	    disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
 	    offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
@@ -9713,11 +9703,7 @@
 	      calendar
 	    } = ParseTemporalZonedDateTimeString(RequireString(item)));
 	    timeZone = ToTemporalTimeZoneIdentifier(tzAnnotation);
-	    if (z) {
-	      offsetBehaviour = 'exact';
-	    } else if (!offset) {
-	      offsetBehaviour = 'wall';
-	    }
+	    if (z) hasUTCDesignator = true;
 	    if (!calendar) calendar = 'iso8601';
 	    calendar = CanonicalizeCalendar(calendar);
 	    // Allow imprecise offset matching unless the provided offset is precise
@@ -9737,6 +9723,12 @@
 	      month,
 	      day
 	    };
+	  }
+	  let offsetBehaviour = 'option';
+	  if (hasUTCDesignator) {
+	    offsetBehaviour = 'exact';
+	  } else if (!offset) {
+	    offsetBehaviour = 'wall';
 	  }
 	  let offsetNs = 0;
 	  if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
@@ -10234,7 +10226,7 @@
 	  const calendar = FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
 	  return `${yearString}-${monthString}-${dayString}${calendar}`;
 	}
-	function TimeRecordToString(_ref5, precision) {
+	function TimeRecordToString(_ref4, precision) {
 	  let {
 	    hour,
 	    minute,
@@ -10242,7 +10234,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref5;
+	  } = _ref4;
 	  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
 	  return FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
 	}
@@ -10513,7 +10505,7 @@
 	  offsetNanoseconds = RoundNumberToIncrement(offsetNanoseconds, 60e9, 'halfExpand');
 	  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
 	}
-	function GetUTCEpochMilliseconds(_ref6) {
+	function GetUTCEpochMilliseconds(_ref5) {
 	  let {
 	    isoDate: {
 	      year,
@@ -10526,7 +10518,7 @@
 	      second,
 	      millisecond /* ignored: microsecond, nanosecond */
 	    }
-	  } = _ref6;
+	  } = _ref5;
 	  // The pattern of leap years in the ISO 8601 calendar repeats every 400
 	  // years. To avoid overflowing at the edges of the range, we reduce the year
 	  // to the remainder after dividing by 400, and then add back all the
@@ -11007,11 +10999,11 @@
 	    throw new RangeError$1('date/time value is outside of supported range');
 	  }
 	}
-	function RejectYearMonthRange(_ref7) {
+	function RejectYearMonthRange(_ref6) {
 	  let {
 	    year,
 	    month
-	  } = _ref7;
+	  } = _ref6;
 	  RejectToRange(year, YEAR_MIN, YEAR_MAX);
 	  if (year === YEAR_MIN) {
 	    RejectToRange(month, 4, 12);
@@ -11188,12 +11180,12 @@
 	// which is ill-defined in how it handles large year numbers. If the issue
 	// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 	// with no observable changes.
-	function CheckISODaysRange(_ref8) {
+	function CheckISODaysRange(_ref7) {
 	  let {
 	    year,
 	    month,
 	    day
-	  } = _ref8;
+	  } = _ref7;
 	  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
 	    throw new RangeError$1('date/time value is outside the supported range');
 	  }
@@ -11684,14 +11676,18 @@
 	    }
 	    return allowed;
 	  }, []]);
-	  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit', group, 'auto');
+	  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit');
+	  ValidateTemporalUnitValue(largestUnit, group, ['auto']);
+	  if (!largestUnit) largestUnit = 'auto';
 	  if (Call$1(ArrayPrototypeIncludes, disallowed, [largestUnit])) {
 	    throw new RangeError$1(`largestUnit must be one of ${Call$1(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${largestUnit}`);
 	  }
 	  const roundingIncrement = GetRoundingIncrementOption(options);
 	  let roundingMode = GetRoundingModeOption(options, 'trunc');
 	  if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
-	  const smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit', group, fallbackSmallest);
+	  let smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit');
+	  ValidateTemporalUnitValue(smallestUnit, group);
+	  if (!smallestUnit) smallestUnit = fallbackSmallest;
 	  if (Call$1(ArrayPrototypeIncludes, disallowed, [smallestUnit])) {
 	    throw new RangeError$1(`smallestUnit must be one of ${Call$1(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${smallestUnit}`);
 	  }
@@ -11849,7 +11845,7 @@
 	  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
 	  return result;
 	}
-	function AddTime(_ref9, timeDuration) {
+	function AddTime(_ref8, timeDuration) {
 	  let {
 	    hour,
 	    minute,
@@ -11857,7 +11853,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref9;
+	  } = _ref8;
 	  second += timeDuration.sec;
 	  nanosecond += timeDuration.subsec;
 	  return BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -12041,7 +12037,7 @@
 	  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
 	  return CombineISODateAndTimeRecord(isoDate, time);
 	}
-	function RoundTime(_ref0, increment, unit, roundingMode) {
+	function RoundTime(_ref9, increment, unit, roundingMode) {
 	  let {
 	    hour,
 	    minute,
@@ -12049,7 +12045,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref0;
+	  } = _ref9;
 	  let quantity;
 	  switch (unit) {
 	    case 'day':
@@ -15671,7 +15667,8 @@
 	    }
 	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
 	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED);
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', REQUIRED);
+	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    const maximumIncrements = {
 	      hour: 24,
 	      minute: 1440,
@@ -15698,7 +15695,8 @@
 	    const resolvedOptions = GetOptionsObject(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(resolvedOptions);
 	    const roundingMode = GetRoundingModeOption(resolvedOptions, 'trunc');
-	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    let timeZone = resolvedOptions.timeZone;
 	    if (timeZone !== undefined) timeZone = ToTemporalTimeZoneIdentifier(timeZone);
@@ -16238,7 +16236,8 @@
 	    }
 	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
 	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED, ['day']);
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', REQUIRED);
+	    ValidateTemporalUnitValue(smallestUnit, 'time', ['day']);
 	    const maximumIncrements = {
 	      day: 1,
 	      hour: 24,
@@ -16271,7 +16270,8 @@
 	    const showCalendar = GetTemporalShowCalendarNameOption(resolvedOptions);
 	    const digits = GetTemporalFractionalSecondDigitsOption(resolvedOptions);
 	    const roundingMode = GetRoundingModeOption(resolvedOptions, 'trunc');
-	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    const {
 	      precision,
@@ -16461,14 +16461,16 @@
 	    } else {
 	      roundTo = GetOptionsObject(roundTo);
 	    }
-	    let largestUnit = GetTemporalUnitValuedOption(roundTo, 'largestUnit', 'datetime', undefined, ['auto']);
+	    let largestUnit = GetTemporalUnitValuedOption(roundTo, 'largestUnit');
+	    ValidateTemporalUnitValue(largestUnit, 'datetime', ['auto']);
 	    let {
 	      plainRelativeTo,
 	      zonedRelativeTo
 	    } = GetTemporalRelativeToOption(roundTo);
 	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
 	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
-	    let smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'datetime', undefined);
+	    let smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit');
+	    ValidateTemporalUnitValue(smallestUnit, 'datetime');
 	    let smallestUnitPresent = true;
 	    if (!smallestUnit) {
 	      smallestUnitPresent = false;
@@ -16570,7 +16572,8 @@
 	      plainRelativeTo,
 	      zonedRelativeTo
 	    } = GetTemporalRelativeToOption(totalOf);
-	    const unit = GetTemporalUnitValuedOption(totalOf, 'unit', 'datetime', REQUIRED);
+	    const unit = GetTemporalUnitValuedOption(totalOf, 'unit', REQUIRED);
+	    ValidateTemporalUnitValue(unit, 'datetime');
 	    if (zonedRelativeTo) {
 	      const duration = ToInternalDurationRecord(this);
 	      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
@@ -16610,7 +16613,8 @@
 	    const resolvedOptions = GetOptionsObject(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(resolvedOptions);
 	    const roundingMode = GetRoundingModeOption(resolvedOptions, 'trunc');
-	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    if (smallestUnit === 'hour' || smallestUnit === 'minute') {
 	      throw new RangeError$1('smallestUnit must be a time unit other than "hours" or "minutes"');
 	    }
@@ -16935,7 +16939,8 @@
 	    }
 	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
 	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED);
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', REQUIRED);
+	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    const MAX_INCREMENTS = {
 	      hour: 24,
 	      minute: 60,
@@ -16959,7 +16964,8 @@
 	    const resolvedOptions = GetOptionsObject(options);
 	    const digits = GetTemporalFractionalSecondDigitsOption(resolvedOptions);
 	    const roundingMode = GetRoundingModeOption(resolvedOptions, 'trunc');
-	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    const {
 	      precision,
@@ -17424,7 +17430,8 @@
 	    }
 	    const roundingIncrement = GetRoundingIncrementOption(roundTo);
 	    const roundingMode = GetRoundingModeOption(roundTo, 'halfExpand');
-	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', 'time', REQUIRED, ['day']);
+	    const smallestUnit = GetTemporalUnitValuedOption(roundTo, 'smallestUnit', REQUIRED);
+	    ValidateTemporalUnitValue(smallestUnit, 'time', ['day']);
 	    const maximumIncrements = {
 	      day: 1,
 	      hour: 24,
@@ -17491,7 +17498,8 @@
 	    const digits = GetTemporalFractionalSecondDigitsOption(resolvedOptions);
 	    const showOffset = GetTemporalShowOffsetOption(resolvedOptions);
 	    const roundingMode = GetRoundingModeOption(resolvedOptions, 'trunc');
-	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit', 'time', undefined);
+	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
 	    const showTimeZone = GetTemporalShowTimeZoneNameOption(resolvedOptions);
 	    const {
