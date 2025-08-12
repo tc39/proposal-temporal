@@ -235,7 +235,7 @@ export function RequireString(value) {
   return value;
 }
 
-function ToMonthCode(value) {
+export function ToMonthCode(value) {
   value = ToPrimitive(value, StringCtor);
   RequireString(value);
   if (
