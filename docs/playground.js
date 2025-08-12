@@ -16462,7 +16462,6 @@
 	      roundTo = GetOptionsObject(roundTo);
 	    }
 	    let largestUnit = GetTemporalUnitValuedOption(roundTo, 'largestUnit');
-	    ValidateTemporalUnitValue(largestUnit, 'datetime', ['auto']);
 	    let {
 	      plainRelativeTo,
 	      zonedRelativeTo
