@@ -43,6 +43,59 @@
     </emu-clause>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-month-codes">
+    <h1>Month Codes</h1>
+
+    <emu-clause id="sec-temporal-parsemonthcode" type="abstract operation">
+      <h1>
+        ParseMonthCode (
+          _monthCode_: a String,
+        ): a Record with fields [[MonthNumber]] (an integer) and [[IsLeapMonth]] (a Boolean)
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It parses a valid month code string (such as one returned by ToMonthCode or CreateMonthCode) into its parts.
+        </dd>
+      </dl>
+      <p>It performs the following steps when called:</p>
+      <emu-alg>
+        1. If the length of _monthCode_ is 3, then
+          1. Let _isLeapMonth_ be *false*.
+        1. Else,
+          1. Assert: The length of _monthCode_ is 4.
+          1. Let _isLeapMonth_ be *true*.
+        1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1 to 3.
+        1. Let _monthNumber_ be ℝ(StringToNumber(_monthCodeDigits_)).
+        1. Return the Record { [[MonthNumber]]: _monthNumber_, [[IsLeapMonth]]: _isLeapMonth_ }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-createmonthcode" type="abstract operation">
+      <h1>
+        CreateMonthCode (
+          _monthNumber_: an integer in the inclusive interval from 0 to 99,
+          _isLeapMonth_: a Boolean,
+        ): a String
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It creates a month code with the given month number and leap month flag.
+        </dd>
+      </dl>
+      <p>It performs the following steps when called:</p>
+      <emu-alg>
+        1. Assert: If _isLeapMonth_ is *false*, _monthNumber_ > 0.
+        1. Let _numberPart_ be ToZeroPaddedDecimalString(_monthNumber_, 2).
+        1. If _isLeapMonth_ is *true*, then
+          1. Return the string-concatenation of the code unit 0x004D (LATIN CAPITAL LETTER M), _numberPart_, and the code unit 0x004C (LATIN CAPITAL LETTER L).
+        1. Else,
+          1. Return the string-concatenation of the code unit 0x004D (LATIN CAPITAL LETTER M) and _numberPart_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-calendar-abstract-ops">
     <h1>Abstract Operations</h1>
 
@@ -973,15 +1026,13 @@
       </dl>
       <emu-alg>
         1. If _calendar_ is *"iso8601"*, then
-          1. Let _monthNumberPart_ be ToZeroPaddedDecimalString(_isoDate_.[[Month]], 2).
-          1. Let _monthCode_ be the string-concatenation of *"M"* and _monthNumberPart_.
           1. If MathematicalInLeapYear(EpochTimeForYear(_isoDate_.[[Year]])) = 1, let _inLeapYear_ be *true*; else let _inLeapYear_ be *false*.
           1. Return Calendar Date Record {
               [[Era]]: *undefined*,
               [[EraYear]]: *undefined*,
               [[Year]]: _isoDate_.[[Year]],
               [[Month]]: _isoDate_.[[Month]],
-              [[MonthCode]]: _monthCode_,
+              [[MonthCode]]: CreateMonthCode(_isoDate_.[[Month]], *false*),
               [[Day]]: _isoDate_.[[Day]],
               [[DayOfWeek]]: ISODayOfWeek(_isoDate_),
               [[DayOfYear]]: ISODayOfYear(_isoDate_),
@@ -1173,15 +1224,12 @@
           1. If _monthCode_ is ~unset~, then
             1. If _month_ is ~unset~, throw a *TypeError* exception.
             1. Return ~unused~.
-          1. Assert: _monthCode_ is a String.
-          1. NOTE: The ISO 8601 calendar does not include leap months.
-          1. If the length of _monthCode_ is not 3, throw a *RangeError* exception.
-          1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
-          1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1.
-          1. If ParseText(StringToCodePoints(_monthCodeDigits_), |DateMonth|) is a List of errors, throw a *RangeError* exception.
-          1. Let _monthCodeInteger_ be ℝ(StringToNumber(_monthCodeDigits_)).
-          1. If _month_ is not ~unset~ and _month_ ≠ _monthCodeInteger_, throw a *RangeError* exception.
-          1. Set _fields_.[[Month]] to _monthCodeInteger_.
+          1. Perform ? ToMonthCode(_monthCode_).
+          1. Let _parsedMonthCode_ be ParseMonthCode(_monthCode_).
+          1. If _parsedMonthCode_.[[IsLeapMonth]] is *true*, throw a *RangeError* exception.
+          1. If _parsedMonthCode_.[[MonthNumber]] > 12, throw a *RangeError* exception.
+          1. If _month_ is not ~unset~ and _month_ ≠ _parsedMonthCode_.[[MonthNumber]], throw a *RangeError* exception.
+          1. Set _fields_.[[Month]] to _parsedMonthCode_.[[MonthNumber]].
         1. Else,
           1. Perform ? NonISOResolveFields(_calendar_, _fields_, _type_).
         1. Return ~unused~.
