@@ -1778,13 +1778,12 @@
     <h1>
       ToMonthCode (
         _argument_: an ECMAScript language value,
-      ): either a normal completion containing a String or a throw completion
+      ): either a normal completion containing a month code or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
       <dd>
-        It converts _argument_ to a String, or throws a *TypeError* if that is not possible.
-        It also requires that the String is a syntactically valid month code, or throws a *RangeError* if it is not.
+        It converts _argument_ to a month code, or throws a *TypeError* if conversion to String fails, or throws a *RangeError* if the result is not a syntactically valid month code.
         The month code is not guaranteed to be correct in the context of any particular calendar; for example, some calendars do not have leap months.
       </dd>
     </dl>
