@@ -235,7 +235,7 @@ export function RequireString(value) {
   return value;
 }
 
-function ToSyntacticallyValidMonthCode(value) {
+function ToMonthCode(value) {
   value = ToPrimitive(value, StringCtor);
   RequireString(value);
   if (
@@ -281,7 +281,7 @@ const BUILTIN_CASTS = new MapCtor([
   ['eraYear', ToIntegerWithTruncation],
   ['year', ToIntegerWithTruncation],
   ['month', ToPositiveIntegerWithTruncation],
-  ['monthCode', ToSyntacticallyValidMonthCode],
+  ['monthCode', ToMonthCode],
   ['day', ToPositiveIntegerWithTruncation],
   ['hour', ToIntegerWithTruncation],
   ['minute', ToIntegerWithTruncation],
