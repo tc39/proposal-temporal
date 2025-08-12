@@ -247,7 +247,7 @@ function ToSyntacticallyValidMonthCode(value) {
     (value[1] + value[2] === '00' && value[3] !== 'L') ||
     (value[3] !== 'L' && value[3] !== undefined)
   ) {
-    throw new RangeError(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
+    throw new RangeErrorCtor(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
   }
   return value;
 }
