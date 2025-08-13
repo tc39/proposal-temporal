@@ -82,19 +82,22 @@
       <emu-alg>
         1. Let _monthCode_ be ? ToPrimitive(_argument_, ~string~).
         1. If _monthCode_ is not a String, throw a *TypeError* exception.
-        1. If the length of _monthCode_ is not 3 or 4, throw a *RangeError* exception.
-        1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
-        1. If the second code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
-        1. If the third code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
+        1. If ParseText(StringToCodePoints(_monthCode_), |MonthCode|) is a List of errors, throw a *RangeError* exception.
         1. Let _isLeapMonth_ be *false*.
         1. If the length of _monthCode_ is 4, then
-          1. If the fourth code unit of _monthCode_ is not 0x004C (LATIN CAPITAL LETTER L), throw a *RangeError* exception.
+          1. Assert: The fourth code unit of _monthCode_ is 0x004C (LATIN CAPITAL LETTER L).
           1. Set _isLeapMonth_ to *true*.
         1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1 to 3.
         1. Let _monthNumber_ be ℝ(StringToNumber(_monthCodeDigits_)).
         1. If _monthNumber_ is 0 and _isLeapMonth_ is *false*, throw a *RangeError* exception.
         1. Return the Record { [[MonthNumber]]: _monthNumber_, [[IsLeapMonth]]: _isLeapMonth_ }.
       </emu-alg>
+      <emu-grammar type="definition">
+        MonthCode :::
+          `M00L`
+          `M0` NonZeroDigit `L`?
+          `M` NonZeroDigit DecimalDigit `L`?
+      </emu-grammar>
     </emu-clause>
 
     <emu-clause id="sec-temporal-createmonthcode" type="abstract operation">

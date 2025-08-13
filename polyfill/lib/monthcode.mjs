@@ -2,31 +2,24 @@ import {
   String as StringCtor,
   RangeError as RangeErrorCtor,
   TypeError as TypeErrorCtor,
-  StringPrototypeIndexOf,
   StringPrototypePadStart,
-  StringPrototypeSlice
+  RegExpPrototypeExec
 } from './primordials.mjs';
 
 import Call from 'es-abstract/2024/Call.js';
 import ToPrimitive from 'es-abstract/2024/ToPrimitive.js';
 
+import { monthCode as MONTH_CODE_REGEX } from './regex.mjs';
+
 export function ParseMonthCode(argument) {
   const value = ToPrimitive(argument, StringCtor);
   if (typeof value !== 'string') throw new TypeErrorCtor('month code must be a string');
-  if (
-    value.length < 3 ||
-    value.length > 4 ||
-    value[0] !== 'M' ||
-    Call(StringPrototypeIndexOf, '0123456789', [value[1]]) === -1 ||
-    Call(StringPrototypeIndexOf, '0123456789', [value[2]]) === -1 ||
-    (value[1] + value[2] === '00' && value[3] !== 'L') ||
-    (value[3] !== 'L' && value[3] !== undefined)
-  ) {
-    throw new RangeErrorCtor(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
-  }
-  const isLeapMonth = value.length === 4;
-  const monthNumber = +Call(StringPrototypeSlice, value, [1, 3]);
-  return { monthNumber, isLeapMonth };
+  const match = Call(RegExpPrototypeExec, MONTH_CODE_REGEX, [value]);
+  if (!match) throw new RangeErrorCtor(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
+  return {
+    monthNumber: +(match[1] ?? match[3] ?? match[5]),
+    isLeapMonth: (match[2] ?? match[4] ?? match[6]) === 'L'
+  };
 }
 
 export function CreateMonthCode(monthNumber, isLeapMonth) {
