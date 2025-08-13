@@ -857,8 +857,9 @@ export function GetTemporalFractionalSecondDigitsOption(options) {
   let digitsValue = options.fractionalSecondDigits;
   if (digitsValue === undefined) return 'auto';
   if (Type(digitsValue) !== 'Number') {
-    if (ToString(digitsValue) !== 'auto') {
-      throw new RangeErrorCtor(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsValue}`);
+    const digitsString = ToString(digitsValue);
+    if (digitsString !== 'auto') {
+      throw new RangeErrorCtor(`fractionalSecondDigits must be 'auto' or 0 through 9, not ${digitsString}`);
     }
     return 'auto';
   }
