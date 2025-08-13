@@ -67,7 +67,6 @@ import {
   SetPrototypeHas,
   StringFromCharCode,
   StringPrototypeCharCodeAt,
-  StringPrototypeIndexOf,
   StringPrototypeMatch,
   StringPrototypePadStart,
   StringPrototypeReplace,
@@ -96,6 +95,7 @@ import {
   GetUnsignedRoundingMode,
   TruncatingDivModByPowerOf10
 } from './math.mjs';
+import { CreateMonthCode, ParseMonthCode } from './monthcode.mjs';
 import { TimeDuration } from './timeduration.mjs';
 import {
   CreateSlots,
@@ -235,21 +235,9 @@ export function RequireString(value) {
   return value;
 }
 
-export function ToMonthCode(value) {
-  value = ToPrimitive(value, StringCtor);
-  RequireString(value);
-  if (
-    value.length < 3 ||
-    value.length > 4 ||
-    value[0] !== 'M' ||
-    Call(StringPrototypeIndexOf, '0123456789', [value[1]]) === -1 ||
-    Call(StringPrototypeIndexOf, '0123456789', [value[2]]) === -1 ||
-    (value[1] + value[2] === '00' && value[3] !== 'L') ||
-    (value[3] !== 'L' && value[3] !== undefined)
-  ) {
-    throw new RangeErrorCtor(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
-  }
-  return value;
+function ToMonthCode(value) {
+  const { monthNumber, isLeapMonth } = ParseMonthCode(value);
+  return CreateMonthCode(monthNumber, isLeapMonth);
 }
 
 function ToOffsetString(value) {

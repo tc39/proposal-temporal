@@ -37,9 +37,7 @@ import {
   SetPrototypeValues,
   StringPrototypeIndexOf,
   StringPrototypeNormalize,
-  StringPrototypePadStart,
   StringPrototypeReplace,
-  StringPrototypeSlice,
   StringPrototypeSplit,
   StringPrototypeToLowerCase,
   SymbolIterator,
@@ -57,6 +55,7 @@ import Type from 'es-abstract/2024/Type.js';
 
 import * as ES from './ecmascript.mjs';
 import { DefineIntrinsic } from './intrinsicclass.mjs';
+import { CreateMonthCode, ParseMonthCode } from './monthcode.mjs';
 
 function arrayFromSet(src) {
   const valuesIterator = Call(SetPrototypeValues, src, []);
@@ -289,17 +288,6 @@ impl['iso8601'] = {
 // Note: other built-in calendars than iso8601 are not part of the Temporal
 // proposal for ECMA-262. These calendars will be standardized as part of
 // ECMA-402.
-
-function ParseMonthCode(monthCode) {
-  const isLeapMonth = monthCode.length === 4;
-  const monthNumber = +Call(StringPrototypeSlice, monthCode, [1, 3]);
-  return { monthNumber, isLeapMonth };
-}
-
-function CreateMonthCode(monthNumber, isLeapMonth) {
-  const numberPart = Call(StringPrototypePadStart, `${monthNumber}`, [2, '0']);
-  return isLeapMonth ? `M${numberPart}L` : `M${numberPart}`;
-}
 
 /**
  * Safely merge a month, monthCode pair into an integer month.
@@ -602,7 +590,6 @@ const nonIsoHelperBase = {
           `monthCode must be a string, not ${ES.Call(StringPrototypeToLowerCase, Type(monthCode), [])}`
         );
       }
-      ES.ToMonthCode(monthCode);
       const { monthNumber } = ParseMonthCode(monthCode);
       if (monthNumber < 1 || monthNumber > 13) throw new RangeErrorCtor(`Invalid monthCode: ${monthCode}`);
     }
