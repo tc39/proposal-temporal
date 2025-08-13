@@ -68,24 +68,31 @@
     <emu-clause id="sec-temporal-parsemonthcode" type="abstract operation">
       <h1>
         ParseMonthCode (
-          _monthCode_: a month code,
-        ): a Record with fields [[MonthNumber]] (an integer) and [[IsLeapMonth]] (a Boolean)
+          _argument_: an ECMAScript language value,
+        ): either a normal completion containing a Record with fields [[MonthNumber]] (an integer) and [[IsLeapMonth]] (a Boolean) or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It parses a valid month code string (such as one returned by ToMonthCode or CreateMonthCode) into its parts.
+          It converts _argument_ to a month code and parses it into its parts, or throws a *TypeError* if conversion to String fails, or throws a *RangeError* if the result is not a syntactically valid month code.
+          The month code is not guaranteed to be correct in the context of any particular calendar; for example, some calendars do not have leap months.
         </dd>
       </dl>
       <p>It performs the following steps when called:</p>
       <emu-alg>
-        1. If the length of _monthCode_ is 3, then
-          1. Let _isLeapMonth_ be *false*.
-        1. Else,
-          1. Assert: The length of _monthCode_ is 4.
-          1. Let _isLeapMonth_ be *true*.
+        1. Let _monthCode_ be ? ToPrimitive(_argument_, ~string~).
+        1. If _monthCode_ is not a String, throw a *TypeError* exception.
+        1. If the length of _monthCode_ is not 3 or 4, throw a *RangeError* exception.
+        1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
+        1. If the second code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
+        1. If the third code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
+        1. Let _isLeapMonth_ be *false*.
+        1. If the length of _monthCode_ is 4, then
+          1. If the fourth code unit of _monthCode_ is not 0x004C (LATIN CAPITAL LETTER L), throw a *RangeError* exception.
+          1. Set _isLeapMonth_ to *true*.
         1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1 to 3.
         1. Let _monthNumber_ be ℝ(StringToNumber(_monthCodeDigits_)).
+        1. If _monthNumber_ is 0 and _isLeapMonth_ is *false*, throw a *RangeError* exception.
         1. Return the Record { [[MonthNumber]]: _monthNumber_, [[IsLeapMonth]]: _isLeapMonth_ }.
       </emu-alg>
     </emu-clause>
@@ -474,7 +481,8 @@
             1. Else if _Conversion_ is ~to-temporal-time-zone-identifier~, then
               1. Set _value_ to ? ToTemporalTimeZoneIdentifier(_value_).
             1. Else if _Conversion_ is ~to-month-code~, then
-              1. Set _value_ to ? ToMonthCode(_value_).
+              1. Let _parsed_ be ? ParseMonthCode(_value_).
+              1. Set _value_ to CreateMonthCode(_parsed_.[[MonthNumber]], _parsed_.[[IsLeapMonth]]).
             1. Else,
               1. Assert: _Conversion_ is ~to-offset-string~.
               1. Set _value_ to ? ToOffsetString(_value_).
@@ -1240,8 +1248,8 @@
           1. If _monthCode_ is ~unset~, then
             1. If _month_ is ~unset~, throw a *TypeError* exception.
             1. Return ~unused~.
-          1. Perform ? ToMonthCode(_monthCode_).
-          1. Let _parsedMonthCode_ be ParseMonthCode(_monthCode_).
+          1. Assert: _monthCode_ is a String.
+          1. Let _parsedMonthCode_ be ? ParseMonthCode(_monthCode_).
           1. If _parsedMonthCode_.[[IsLeapMonth]] is *true*, throw a *RangeError* exception.
           1. If _parsedMonthCode_.[[MonthNumber]] > 12, throw a *RangeError* exception.
           1. If _month_ is not ~unset~ and _month_ ≠ _parsedMonthCode_.[[MonthNumber]], throw a *RangeError* exception.

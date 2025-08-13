@@ -1774,34 +1774,6 @@
     </emu-alg>
   </emu-clause>
 
-  <emu-clause id="sec-temporal-tomonthcode" type="abstract operation">
-    <h1>
-      ToMonthCode (
-        _argument_: an ECMAScript language value,
-      ): either a normal completion containing a month code or a throw completion
-    </h1>
-    <dl class="header">
-      <dt>description</dt>
-      <dd>
-        It converts _argument_ to a month code, or throws a *TypeError* if conversion to String fails, or throws a *RangeError* if the result is not a syntactically valid month code.
-        The month code is not guaranteed to be correct in the context of any particular calendar; for example, some calendars do not have leap months.
-      </dd>
-    </dl>
-    <emu-alg>
-      1. Let _monthCode_ be ? ToPrimitive(_argument_, ~string~).
-      1. If _monthCode_ is not a String, throw a *TypeError* exception.
-      1. If the length of _monthCode_ is not 3 or 4, throw a *RangeError* exception.
-      1. If the first code unit of _monthCode_ is not 0x004D (LATIN CAPITAL LETTER M), throw a *RangeError* exception.
-      1. If the second code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
-      1. If the third code unit of _monthCode_ is not in the inclusive interval from 0x0030 (DIGIT ZERO) to 0x0039 (DIGIT NINE), throw a *RangeError* exception.
-      1. If the length of _monthCode_ is 4 and the fourth code unit of _monthCode_ is not 0x004C (LATIN CAPITAL LETTER L), throw a *RangeError* exception.
-      1. Let _monthCodeDigits_ be the substring of monthCode from 1 to 3.
-      1. Let _monthCodeInteger_ be ℝ(StringToNumber(_monthCodeDigits_)).
-      1. If _monthCodeInteger_ is 0 and the length of _monthCode_ is not 4, throw a *RangeError* exception.
-      1. Return _monthCode_.
-    </emu-alg>
-  </emu-clause>
-
   <emu-clause id="sec-temporal-tooffsetstring" type="abstract operation">
     <h1>
       ToOffsetString (
