@@ -6748,6 +6748,55 @@
 	  return evenCardinality ? r1 : r2;
 	}
 
+	const offsetIdentifierNoCapture = /(?:[+-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
+	const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
+	const timeZoneID = new RegExp$1(`(?:${offsetIdentifierNoCapture.source}|(?:${tzComponent.source})(?:\\/(?:${tzComponent.source}))*)`);
+	const yearpart = /(?:[+-]\d{6}|\d{4})/;
+	const monthpart = /(?:0[1-9]|1[0-2])/;
+	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
+	const datesplit = new RegExp$1(`(${yearpart.source})(?:-(${monthpart.source})-(${daypart.source})|(${monthpart.source})(${daypart.source}))`);
+	const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
+	const offsetWithParts = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
+	const offset = /((?:[+-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
+	const offsetpart = new RegExp$1(`([zZ])|${offset.source}?`);
+	const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
+	const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
+	const zoneddatetime = new RegExp$1(Call$1(ArrayPrototypeJoin, [`^${datesplit.source}`, `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`, `(?:\\[!?(${timeZoneID.source})\\])?`, `((?:${annotation.source})*)$`], ['']));
+	const time = new RegExp$1(Call$1(ArrayPrototypeJoin, [`^[tT]?${timesplit.source}`, `(?:${offsetpart.source})?`, `(?:\\[!?${timeZoneID.source}\\])?`, `((?:${annotation.source})*)$`], ['']));
+
+	// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
+	// annotations are still allowed, and will throw if the calendar annotation is
+	// not ISO.
+	// Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
+	// with the reference fields.
+	// YYYYMM forbidden by ISO 8601 because ambiguous with YYMMDD, but allowed by
+	// RFC 3339 and we don't allow 2-digit years, so we allow it.
+	// Not ambiguous with HHMMSS because that requires a 'T' prefix
+	// UTC offsets are not allowed, because they are not allowed with any date-only
+	// format; also, YYYY-MM-UU is ambiguous with YYYY-MM-DD
+	const yearmonth = new RegExp$1(`^(${yearpart.source})-?(${monthpart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
+	const monthday = new RegExp$1(`^(?:--)?(${monthpart.source})-?(${daypart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
+	const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
+	const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
+	const durationTime = new RegExp$1(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
+	const duration = new RegExp$1(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
+	const monthCode = /^M(?:(00)(L)|(0[1-9])(L)?|([1-9][0-9])(L)?)$/;
+
+	function ParseMonthCode(argument) {
+	  const value = ToPrimitive$2(argument, String$1);
+	  if (typeof value !== 'string') throw new TypeError$1('month code must be a string');
+	  const match = Call$1(RegExpPrototypeExec, monthCode, [value]);
+	  if (!match) throw new RangeError$1(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
+	  return {
+	    monthNumber: +(match[1] ?? match[3] ?? match[5]),
+	    isLeapMonth: (match[2] ?? match[4] ?? match[6]) === 'L'
+	  };
+	}
+	function CreateMonthCode(monthNumber, isLeapMonth) {
+	  const numberPart = Call$1(StringPrototypePadStart, `${monthNumber}`, [2, '0']);
+	  return isLeapMonth ? `M${numberPart}L` : `M${numberPart}`;
+	}
+
 	var BigInteger = {exports: {}};
 
 	(function (module) {
@@ -8311,39 +8360,6 @@
 	  }
 	}
 
-	const offsetIdentifierNoCapture = /(?:[+-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
-	const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
-	const timeZoneID = new RegExp$1(`(?:${offsetIdentifierNoCapture.source}|(?:${tzComponent.source})(?:\\/(?:${tzComponent.source}))*)`);
-	const yearpart = /(?:[+-]\d{6}|\d{4})/;
-	const monthpart = /(?:0[1-9]|1[0-2])/;
-	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
-	const datesplit = new RegExp$1(`(${yearpart.source})(?:-(${monthpart.source})-(${daypart.source})|(${monthpart.source})(${daypart.source}))`);
-	const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-	const offsetWithParts = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-	const offset = /((?:[+-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
-	const offsetpart = new RegExp$1(`([zZ])|${offset.source}?`);
-	const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
-	const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
-	const zoneddatetime = new RegExp$1(Call$1(ArrayPrototypeJoin, [`^${datesplit.source}`, `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`, `(?:\\[!?(${timeZoneID.source})\\])?`, `((?:${annotation.source})*)$`], ['']));
-	const time = new RegExp$1(Call$1(ArrayPrototypeJoin, [`^[tT]?${timesplit.source}`, `(?:${offsetpart.source})?`, `(?:\\[!?${timeZoneID.source}\\])?`, `((?:${annotation.source})*)$`], ['']));
-
-	// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
-	// annotations are still allowed, and will throw if the calendar annotation is
-	// not ISO.
-	// Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
-	// with the reference fields.
-	// YYYYMM forbidden by ISO 8601 because ambiguous with YYMMDD, but allowed by
-	// RFC 3339 and we don't allow 2-digit years, so we allow it.
-	// Not ambiguous with HHMMSS because that requires a 'T' prefix
-	// UTC offsets are not allowed, because they are not allowed with any date-only
-	// format; also, YYYY-MM-UU is ambiguous with YYYY-MM-DD
-	const yearmonth = new RegExp$1(`^(${yearpart.source})-?(${monthpart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
-	const monthday = new RegExp$1(`^(?:--)?(${monthpart.source})-?(${daypart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`);
-	const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
-	const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
-	const durationTime = new RegExp$1(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
-	const duration = new RegExp$1(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
-
 	/* global true */
 
 	const DAY_MS = 86400_000;
@@ -8404,13 +8420,12 @@
 	  }
 	  return value;
 	}
-	function ToSyntacticallyValidMonthCode(value) {
-	  value = ToPrimitive$2(value, String$1);
-	  RequireString(value);
-	  if (value.length < 3 || value.length > 4 || value[0] !== 'M' || Call$1(StringPrototypeIndexOf, '0123456789', [value[1]]) === -1 || Call$1(StringPrototypeIndexOf, '0123456789', [value[2]]) === -1 || value[1] + value[2] === '00' && value[3] !== 'L' || value[3] !== 'L' && value[3] !== undefined) {
-	    throw new RangeError(`bad month code ${value}; must match M01-M99 or M00L-M99L`);
-	  }
-	  return value;
+	function ToMonthCode(value) {
+	  const {
+	    monthNumber,
+	    isLeapMonth
+	  } = ParseMonthCode(value);
+	  return CreateMonthCode(monthNumber, isLeapMonth);
 	}
 	function ToOffsetString(value) {
 	  value = ToPrimitive$2(value, String$1);
@@ -8419,7 +8434,7 @@
 	  return value;
 	}
 	const CALENDAR_FIELD_KEYS = ['era', 'eraYear', 'year', 'month', 'monthCode', 'day', 'hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'];
-	const BUILTIN_CASTS = new Map$1([['era', ToString$1], ['eraYear', ToIntegerWithTruncation], ['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToSyntacticallyValidMonthCode], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['offset', ToOffsetString], ['timeZone', ToTemporalTimeZoneIdentifier]]);
+	const BUILTIN_CASTS = new Map$1([['era', ToString$1], ['eraYear', ToIntegerWithTruncation], ['year', ToIntegerWithTruncation], ['month', ToPositiveIntegerWithTruncation], ['monthCode', ToMonthCode], ['day', ToPositiveIntegerWithTruncation], ['hour', ToIntegerWithTruncation], ['minute', ToIntegerWithTruncation], ['second', ToIntegerWithTruncation], ['millisecond', ToIntegerWithTruncation], ['microsecond', ToIntegerWithTruncation], ['nanosecond', ToIntegerWithTruncation], ['offset', ToOffsetString], ['timeZone', ToTemporalTimeZoneIdentifier]]);
 	const BUILTIN_DEFAULTS = new Map$1([['hour', 0], ['minute', 0], ['second', 0], ['millisecond', 0], ['microsecond', 0], ['nanosecond', 0]]);
 
 	// each item is [plural, singular, category, (length in ns)]
@@ -12512,7 +12527,7 @@
 	      daysInWeek: 7,
 	      monthsInYear: 12
 	    };
-	    if (requestedFields.monthCode) date.monthCode = buildMonthCode(month);
+	    if (requestedFields.monthCode) date.monthCode = CreateMonthCode(month, false);
 	    if (requestedFields.dayOfWeek) {
 	      // https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week#Disparate_variation
 	      const shiftedMonth = month + (month < 3 ? 10 : -2);
@@ -12550,21 +12565,6 @@
 	// proposal for ECMA-262. These calendars will be standardized as part of
 	// ECMA-402.
 
-	function monthCodeNumberPart(monthCode) {
-	  if (!Call$1(StringPrototypeStartsWith, monthCode, ['M'])) {
-	    throw new RangeError$1(`Invalid month code: ${monthCode}.  Month codes must start with M.`);
-	  }
-	  const month = +Call$1(StringPrototypeSlice, monthCode, [1]);
-	  if (NumberIsNaN(month)) throw new RangeError$1(`Invalid month code: ${monthCode}`);
-	  return month;
-	}
-	function buildMonthCode(month) {
-	  let leap = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-	  const digitPart = Call$1(StringPrototypePadStart, `${month}`, [2, '0']);
-	  const leapMarker = leap ? 'L' : '';
-	  return `M${digitPart}${leapMarker}`;
-	}
-
 	/**
 	 * Safely merge a month, monthCode pair into an integer month.
 	 * If both are present, make sure they match.
@@ -12584,16 +12584,22 @@
 	    // rely on this function to constrain/reject out-of-range `month` values.
 	    if (overflow === 'reject') RejectToRange(month, 1, monthsPerYear);
 	    if (overflow === 'constrain') month = ConstrainToRange(month, 1, monthsPerYear);
-	    monthCode = buildMonthCode(month);
+	    monthCode = CreateMonthCode(month, false);
 	  } else {
-	    const numberPart = monthCodeNumberPart(monthCode);
-	    if (monthCode !== buildMonthCode(numberPart)) {
+	    const {
+	      monthNumber,
+	      isLeapMonth
+	    } = ParseMonthCode(monthCode);
+	    if (isLeapMonth) {
+	      throw new RangeError$1(`Invalid monthCode: ${monthCode}. Leap months do not exist in this calendar`);
+	    }
+	    if (monthCode !== CreateMonthCode(monthNumber, false)) {
 	      throw new RangeError$1(`Invalid month code: ${monthCode}`);
 	    }
-	    if (month !== undefined && month !== numberPart) {
+	    if (month !== undefined && month !== monthNumber) {
 	      throw new RangeError$1(`monthCode ${monthCode} and month ${month} must match if both are present`);
 	    }
-	    month = numberPart;
+	    month = monthNumber;
 	    if (month < 1 || month > monthsPerYear) throw new RangeError$1(`Invalid monthCode: ${monthCode}`);
 	  }
 	  return {
@@ -12893,9 +12899,10 @@
 	      if (typeof monthCode !== 'string') {
 	        throw new RangeError$1(`monthCode must be a string, not ${Call$1(StringPrototypeToLowerCase, Type$1(monthCode), [])}`);
 	      }
-	      if (!Call$1(RegExpPrototypeTest, /^M([01]?\d)(L?)$/, [monthCode])) {
-	        throw new RangeError$1(`Invalid monthCode: ${monthCode}`);
-	      }
+	      const {
+	        monthNumber
+	      } = ParseMonthCode(monthCode);
+	      if (monthNumber < 1 || monthNumber > 13) throw new RangeError$1(`Invalid monthCode: ${monthCode}`);
 	    }
 	    if (this.hasEra) {
 	      if (calendarDate['era'] === undefined !== (calendarDate['eraYear'] === undefined)) {
@@ -13548,9 +13555,9 @@
 	    if (this.inLeapYear({
 	      year
 	    })) {
-	      return month === 6 ? buildMonthCode(5, true) : buildMonthCode(month < 6 ? month : month - 1);
+	      return month === 6 ? CreateMonthCode(5, true) : CreateMonthCode(month < 6 ? month : month - 1, false);
 	    } else {
-	      return buildMonthCode(month);
+	      return CreateMonthCode(month, false);
 	    }
 	  },
 	  adjustCalendarDate(calendarDate, cache) {
@@ -13591,8 +13598,12 @@
 	      // that all fields are present.
 	      this.validateCalendarDate(calendarDate);
 	      if (month === undefined) {
-	        if (Call$1(StringPrototypeEndsWith, monthCode, ['L'])) {
-	          if (monthCode !== 'M05L') {
+	        const {
+	          monthNumber,
+	          isLeapMonth
+	        } = ParseMonthCode(monthCode);
+	        if (isLeapMonth) {
+	          if (monthNumber !== 5) {
 	            throw new RangeError$1(`Hebrew leap month must have monthCode M05L, not ${monthCode}`);
 	          }
 	          month = 6;
@@ -13608,7 +13619,7 @@
 	            }
 	          }
 	        } else {
-	          month = monthCodeNumberPart(monthCode);
+	          month = monthNumber;
 	          // if leap month is before this one, the month index is one more than the month code
 	          if (this.inLeapYear({
 	            year
@@ -13729,8 +13740,7 @@
 	    return month <= 6 ? 31 : 30;
 	  },
 	  maxLengthOfMonthCodeInAnyYear(monthCode) {
-	    const month = +Call$1(StringPrototypeSlice, monthCode, [1]);
-	    return month <= 6 ? 31 : 30;
+	    return ParseMonthCode(monthCode).monthNumber <= 6 ? 31 : 30;
 	  },
 	  estimateIsoDate(calendarDate) {
 	    const {
@@ -13765,8 +13775,7 @@
 	    return this.getMonthInfo(calendarDate).length;
 	  },
 	  maxLengthOfMonthCodeInAnyYear(monthCode) {
-	    const month = +Call$1(StringPrototypeSlice, monthCode, [1]);
-	    let monthInfo = this.months[month];
+	    let monthInfo = this.months[ParseMonthCode(monthCode).monthNumber];
 	    monthInfo = monthInfo.leap ?? monthInfo;
 	    return monthInfo.length;
 	  },
@@ -14043,7 +14052,7 @@
 	      return this.minimumMonthLength(calendarDate);
 	    },
 	    maxLengthOfMonthCodeInAnyYear(monthCode) {
-	      const month = +Call$1(StringPrototypeSlice, monthCode, [1]);
+	      const month = ParseMonthCode(monthCode).monthNumber;
 	      return [undefined, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 	    },
 	    estimateIsoDate(calendarDate) {
@@ -14086,7 +14095,7 @@
 	      return this.minimumMonthLength(calendarDate);
 	    },
 	    maxLengthOfMonthCodeInAnyYear(monthCode) {
-	      const month = +Call$1(StringPrototypeSlice, monthCode, [1]);
+	      const month = ParseMonthCode(monthCode).monthNumber;
 	      return [undefined, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 	    },
 	    /** Fill in missing parts of the (year, era, eraYear) tuple */
@@ -14189,7 +14198,7 @@
 	      } = calendarDate;
 	      if (month === undefined) calendarDate = {
 	        ...calendarDate,
-	        month: monthCodeNumberPart(monthCode)
+	        month: ParseMonthCode(monthCode).monthNumber
 	      };
 	      this.validateCalendarDate(calendarDate);
 	      calendarDate = this.completeEraYear(calendarDate);
@@ -14230,7 +14239,7 @@
 	        month,
 	        day
 	      } = isoDate;
-	      const monthCode = buildMonthCode(month);
+	      const monthCode = CreateMonthCode(month, false);
 	      const year = isoYear - this.anchorEra.isoEpoch.year + 1;
 	      return this.completeEraYear({
 	        year,
@@ -14683,7 +14692,7 @@
 	      // "bis" suffix used only by the Chinese/Dangi calendar to indicate a leap
 	      // month. Below we'll normalize the output.
 	      if (monthExtra && monthExtra !== 'bis') throw new RangeError$1(`Unexpected leap month suffix: ${monthExtra}`);
-	      const monthCode = buildMonthCode(month, monthExtra !== undefined);
+	      const monthCode = CreateMonthCode(month, monthExtra !== undefined);
 	      const monthString = `${month}${monthExtra || ''}`;
 	      const months = this.getMonthList(year, cache);
 	      const monthInfo = months[monthString];
@@ -14701,18 +14710,20 @@
 	      this.validateCalendarDate(calendarDate);
 	      if (month === undefined) {
 	        const months = this.getMonthList(year, cache);
-	        let numberPart = Call$1(StringPrototypeReplace, monthCode, [/^M|L$/g, ch => ch === 'L' ? 'bis' : '']);
-	        if (numberPart[0] === '0') numberPart = Call$1(StringPrototypeSlice, numberPart, [1]);
+	        const {
+	          monthNumber,
+	          isLeapMonth
+	        } = ParseMonthCode(monthCode);
+	        const numberPart = `${monthNumber}${isLeapMonth ? 'bis' : ''}`;
 	        let monthInfo = months[numberPart];
 	        month = monthInfo && monthInfo.monthIndex;
 	        // If this leap month isn't present in this year, constrain to the same
 	        // day of the previous month.
-	        if (month === undefined && Call$1(StringPrototypeEndsWith, monthCode, ['L']) && monthCode != 'M13L' && overflow === 'constrain') {
-	          const withoutML = Call$1(StringPrototypeReplace, monthCode, [/^M0?|L$/g, '']);
-	          monthInfo = months[withoutML];
+	        if (month === undefined && isLeapMonth && monthNumber !== 13 && overflow === 'constrain') {
+	          monthInfo = months[monthNumber];
 	          if (monthInfo) {
 	            month = monthInfo.monthIndex;
-	            monthCode = buildMonthCode(withoutML);
+	            monthCode = CreateMonthCode(monthNumber, false);
 	          }
 	        }
 	        if (month === undefined) {
@@ -14733,12 +14744,15 @@
 	        if (matchingMonthEntry === undefined) {
 	          throw new RangeError$1(`Invalid month ${month} in Chinese year ${year}`);
 	        }
-	        monthCode = buildMonthCode(Call$1(StringPrototypeReplace, matchingMonthEntry[0], ['bis', '']), Call$1(StringPrototypeIndexOf, matchingMonthEntry[0], ['bis']) !== -1);
+	        monthCode = CreateMonthCode(Call$1(StringPrototypeReplace, matchingMonthEntry[0], ['bis', '']), Call$1(StringPrototypeIndexOf, matchingMonthEntry[0], ['bis']) !== -1);
 	      } else {
 	        // Both month and monthCode are present. Make sure they don't conflict.
 	        const months = this.getMonthList(year, cache);
-	        let numberPart = Call$1(StringPrototypeReplace, monthCode, [/^M|L$/g, ch => ch === 'L' ? 'bis' : '']);
-	        if (numberPart[0] === '0') numberPart = Call$1(StringPrototypeSlice, numberPart, [1]);
+	        const {
+	          monthNumber,
+	          isLeapMonth
+	        } = ParseMonthCode(monthCode);
+	        const numberPart = `${monthNumber}${isLeapMonth ? 'bis' : ''}`;
 	        const monthInfo = months[numberPart];
 	        if (!monthInfo) throw new RangeError$1(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
 	        if (month !== monthInfo.monthIndex) {
