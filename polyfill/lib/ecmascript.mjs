@@ -3624,6 +3624,10 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
   ]);
 
   let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit');
+  const roundingIncrement = GetRoundingIncrementOption(options);
+  let roundingMode = GetRoundingModeOption(options, 'trunc');
+  let smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit');
+
   ValidateTemporalUnitValue(largestUnit, group, ['auto']);
   if (!largestUnit) largestUnit = 'auto';
   if (Call(ArrayPrototypeIncludes, disallowed, [largestUnit])) {
@@ -3632,12 +3636,8 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
     );
   }
 
-  const roundingIncrement = GetRoundingIncrementOption(options);
-
-  let roundingMode = GetRoundingModeOption(options, 'trunc');
   if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
 
-  let smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit');
   ValidateTemporalUnitValue(smallestUnit, group);
   if (!smallestUnit) smallestUnit = fallbackSmallest;
   if (Call(ArrayPrototypeIncludes, disallowed, [smallestUnit])) {
