@@ -147,11 +147,9 @@ const BEFORE_FIRST_DST = DateUTC(1847, 0, 1); // 1847-01-01T00:00:00Z
 const BUILTIN_CALENDAR_IDS = [
   'iso8601',
   'hebrew',
-  'islamic',
   'islamic-umalqura',
   'islamic-tbla',
   'islamic-civil',
-  'islamic-rgsa',
   'islamicc',
   'persian',
   'ethiopic',
