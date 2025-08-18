@@ -1147,7 +1147,6 @@ const helperHebrew = ObjectAssign({}, nonIsoHelperBase, {
  * same 12 months in the same order.
  */
 const helperIslamic = ObjectAssign({}, nonIsoHelperBase, {
-  id: 'islamic',
   calendarType: 'lunar',
   inLeapYear(calendarDate, cache) {
     const startOfYearCalendar = { year: calendarDate.year, month: 1, monthCode: 'M01', day: 1 };
@@ -2067,10 +2066,9 @@ const nonIsoGeneralImpl = {
 };
 
 impl['hebrew'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperHebrew });
-impl['islamic'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperIslamic });
 ES.Call(
   ArrayPrototypeForEach,
-  ['islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamic-rgsa', 'islamicc'],
+  ['islamic-umalqura', 'islamic-tbla', 'islamic-civil', 'islamicc'],
   [
     (id) => {
       impl[id] = ObjectAssign({}, nonIsoGeneralImpl, { helper: { ...helperIslamic, id } });
