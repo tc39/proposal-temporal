@@ -13,6 +13,7 @@ import {
   ArrayFrom,
   ArrayPrototypeFilter,
   ArrayPrototypeFind,
+  ArrayPrototypeFindIndex,
   ArrayPrototypeForEach,
   ArrayPrototypeIncludes,
   ArrayPrototypeIndexOf,
@@ -604,9 +605,14 @@ const nonIsoHelperBase = {
     const eraFromYear = (year) => {
       let eraYear;
       const adjustedCalendarDate = { ...calendarDate, year };
-      const matchingEra = ES.Call(ArrayPrototypeFind, this.eras, [
+      const ix = ES.Call(ArrayPrototypeFindIndex, this.eras, [
         (e, i) => {
           if (i === this.eras.length - 1) {
+            if (e.skip) {
+              // This last era is only present for legacy ICU data. Treat the
+              // previous era as the last era.
+              e = this.eras[i - 1];
+            }
             if (e.reverseOf) {
               // This is a reverse-sign era (like BCE) which must be the oldest
               // era. Count years backwards.
@@ -627,7 +633,9 @@ const nonIsoHelperBase = {
           return false;
         }
       ]);
-      if (!matchingEra) throw new RangeErrorCtor(`Year ${year} was not matched by any era`);
+      if (ix === -1) throw new RangeErrorCtor(`Year ${year} was not matched by any era`);
+      let matchingEra = this.eras[ix];
+      if (matchingEra.skip) matchingEra = this.eras[ix - 1];
       return { eraYear, era: matchingEra.code, eraNames: matchingEra.names };
     };
 
@@ -1607,7 +1615,21 @@ const makeHelperOrthodox = (id, originalEras) => {
 const helperEthioaa = ObjectAssign(
   makeHelperOrthodox('ethioaa', [{ code: 'aa', names: ['mundi'], isoEpoch: { year: -5492, month: 7, day: 17 } }])
 );
-const helperCoptic = makeHelperOrthodox('coptic', [{ code: 'am', isoEpoch: { year: 284, month: 8, day: 29 } }]);
+const copticLegacyEra0 = Symbol('era0');
+const helperCoptic = ObjectAssign(
+  makeHelperOrthodox('coptic', [
+    // Empty era to accommodate old versions of ICU data having ERA0 and ERA1.
+    // Both map to AM
+    { code: 'am', isoEpoch: { year: 284, month: 8, day: 29 } },
+    { code: copticLegacyEra0, reverseOf: 'am', skip: true }
+  ]),
+  {
+    reviseIntlEra(calendarDate /*, isoDate */) {
+      let { era, eraYear } = calendarDate;
+      return { era: 'am', eraYear: era === copticLegacyEra0 ? 1 - eraYear : eraYear };
+    }
+  }
+);
 // Anchor is currently the older era to match ethioaa, but should it be the newer era?
 // See https://github.com/tc39/ecma402/issues/534 for discussion.
 const helperEthiopic = makeHelperOrthodox('ethiopic', [
