@@ -22,7 +22,8 @@ import {
   ObjectCreate,
   ObjectDefineProperties,
   ObjectDefineProperty,
-  ObjectKeys
+  ObjectKeys,
+  warn
 } from './primordials.mjs';
 import { assert } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
@@ -115,8 +116,29 @@ function createDateTimeFormat(dtf, locale, options) {
     options = ObjectCreate(null);
   }
 
-  const original = new IntlDateTimeFormat(locale, options);
-  const ro = ES.Call(IntlDateTimeFormatPrototypeResolvedOptions, original, []);
+  let original = new IntlDateTimeFormat(locale, options);
+  let ro = ES.Call(IntlDateTimeFormatPrototypeResolvedOptions, original, []);
+
+  // If the original Intl.DateTimeFormat resolvedOptions isn't new enough to
+  // reject the unshipped IDs, log a warning and re-do it. Fallbacks are based
+  // on discussion https://github.com/tc39/proposal-intl-era-monthcode/issues/29
+  const fallbacks = [
+    ['islamic', 'islamic-tbla'],
+    ['islamic-rgsa', 'islamic-umalqura']
+  ];
+  for (let ix = 0; ix < fallbacks.length; ix++) {
+    const id = fallbacks[ix][0];
+    const substitute = fallbacks[ix][1];
+    if (ro.calendar === id) {
+      options.calendar = substitute;
+      warn(
+        `"${id}" calendar ID does not specify the calendar algorithm. "${substitute}" was used. ` +
+          'Please specify one of "islamic-umalqura", "islamic-tbla", or "islamic-civil" explicitly.'
+      );
+      original = new IntlDateTimeFormat(locale, options);
+      ro = ES.Call(IntlDateTimeFormatPrototypeResolvedOptions, original, []);
+    }
+  }
 
   CreateSlots(dtf);
 
