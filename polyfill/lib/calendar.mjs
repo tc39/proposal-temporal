@@ -334,6 +334,26 @@ function weekNumber(firstDayOfWeek, minimalDaysInFirstWeek, desiredDay, dayOfWee
 // about non-ISO calendars. However, non-ISO calendar implementation is subject
 // to change because these calendars are implementation-defined.
 
+const eraInfo = [
+  'buddhist',
+  'coptic',
+  'ethioaa',
+  'ethiopic',
+  'gregory',
+  'hebrew',
+  'indian',
+  'islamic-civil',
+  'islamic-tbla',
+  'islamic-umalqura',
+  'japanese',
+  'persian',
+  'roc'
+];
+
+function CalendarSupportsEra(calendar) {
+  return Call(ArrayPrototypeIncludes, eraInfo, [calendar]);
+}
+
 /**
  * This prototype implementation of non-ISO calendars makes many repeated calls
  * to Intl APIs which may be slow (e.g. >0.2ms). This trivial cache will speed
@@ -473,11 +493,12 @@ const nonIsoHelperBase = {
 
     const isoString = toUtcIsoDateString({ isoYear, isoMonth, isoDay });
     const parts = this.getCalendarParts(isoString);
+    const hasEra = CalendarSupportsEra(this.id);
     const result = {};
     for (let i = 0; i < parts.length; i++) {
       let { type, value } = parts[i];
       if (type === 'year' || type === 'relatedYear') {
-        if (this.hasEra) {
+        if (hasEra) {
           result.eraYear = +value;
         } else {
           result.year = +value;
@@ -515,7 +536,7 @@ const nonIsoHelperBase = {
         if (matches[2]) result.monthExtra = matches[2];
       }
       if (type === 'day') result.day = +value;
-      if (this.hasEra && type === 'era' && value != null && value !== '') {
+      if (hasEra && type === 'era' && value != null && value !== '') {
         // The convention for Temporal era values is lowercase, so following
         // that convention in this prototype. Punctuation is removed, accented
         // letters are normalized, and spaces are replaced with dashes.
@@ -531,7 +552,7 @@ const nonIsoHelperBase = {
         result.era = value;
       }
     }
-    if (this.hasEra && result.eraYear === undefined) {
+    if (hasEra && result.eraYear === undefined) {
       // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
       // output of Intl.DateTimeFormat.formatToParts.
       throw new RangeErrorCtor(
@@ -539,7 +560,7 @@ const nonIsoHelperBase = {
       );
     }
     // Translate old ICU era codes "ERA0" etc. into canonical era names.
-    if (this.hasEra) {
+    if (hasEra) {
       const replacement = ES.Call(ArrayPrototypeFind, this.eras, [(e) => result.era === e.genericName]);
       if (replacement) result.era = replacement.code;
     }
@@ -590,7 +611,7 @@ const nonIsoHelperBase = {
       const { monthNumber } = ParseMonthCode(monthCode);
       if (monthNumber < 1 || monthNumber > 13) throw new RangeErrorCtor(`Invalid monthCode: ${monthCode}`);
     }
-    if (this.hasEra) {
+    if (CalendarSupportsEra(this.id)) {
       if ((calendarDate['era'] === undefined) !== (calendarDate['eraYear'] === undefined)) {
         throw new TypeErrorCtor('properties era and eraYear must be provided together');
       }
@@ -689,7 +710,7 @@ const nonIsoHelperBase = {
     let { month, monthCode } = calendarDate;
     ({ month, monthCode } = resolveNonLunisolarMonth(calendarDate, overflow, largestMonth));
     calendarDate = { ...calendarDate, month, monthCode };
-    if (this.hasEra) calendarDate = this.completeEraYear(calendarDate);
+    if (CalendarSupportsEra(this.id)) calendarDate = this.completeEraYear(calendarDate);
     return calendarDate;
   },
   regulateMonthDayNaive(calendarDate, overflow, cache) {
@@ -827,7 +848,7 @@ const nonIsoHelperBase = {
       date.month === undefined ||
       date.day === undefined ||
       date.monthCode === undefined ||
-      (this.hasEra && (date.era === undefined || date.eraYear === undefined))
+      (CalendarSupportsEra(this.id) && (date.era === undefined || date.eraYear === undefined))
     ) {
       throw new RangeErrorCtor('Unexpected missing property');
     }
@@ -1009,17 +1030,16 @@ const nonIsoHelperBase = {
       ES.ISODateToEpochDays(oneIso.year, oneIso.month - 1, oneIso.day)
     );
   },
-  // Override if calendar uses eras
-  hasEra: false,
   // Override this to shortcut the search space if certain month codes only
   // occur long in the past
   monthDaySearchStartYear: (/* monthCode, day */) => 1972,
   monthDayFromFields(fields, overflow, cache) {
     let { era, eraYear, year, month, monthCode, day } = fields;
-    if (month !== undefined && year === undefined && (!this.hasEra || era === undefined || eraYear === undefined)) {
+    const hasEra = CalendarSupportsEra(this.id);
+    if (month !== undefined && year === undefined && (!hasEra || era === undefined || eraYear === undefined)) {
       throw new TypeErrorCtor('when month is present, year (or era and eraYear) are required');
     }
-    if (monthCode === undefined || year !== undefined || (this.hasEra && eraYear !== undefined)) {
+    if (monthCode === undefined || year !== undefined || (hasEra && eraYear !== undefined)) {
       // Apply overflow behaviour to year/month/day, to get correct monthCode/day
       ({ monthCode, day } = this.isoToCalendarDate(this.calendarToIsoDate(fields, overflow, cache), cache));
     }
@@ -1085,7 +1105,6 @@ function makeNonISOHelper(eras, helper) {
 const helperHebrew = makeNonISOHelper([{ code: 'am', isoEpoch: { year: -3760, month: 9, day: 8 } }], {
   id: 'hebrew',
   calendarType: 'lunisolar',
-  hasEra: true,
   inLeapYear(calendarDate /*, cache */) {
     const { year } = calendarDate;
     // FYI: In addition to adding a month in leap years, the Hebrew calendar
@@ -1231,7 +1250,6 @@ const helperIslamic = makeNonISOHelper(
   ],
   {
     calendarType: 'lunar',
-    hasEra: true,
     inLeapYear(calendarDate, cache) {
       const startOfYearCalendar = { year: calendarDate.year, month: 1, monthCode: 'M01', day: 1 };
       const startOfNextYearCalendar = { year: calendarDate.year + 1, month: 1, monthCode: 'M01', day: 1 };
@@ -1256,7 +1274,6 @@ const helperIslamic = makeNonISOHelper(
 const helperPersian = makeNonISOHelper([{ code: 'ap', isoEpoch: { year: 622, month: 3, day: 22 } }], {
   id: 'persian',
   calendarType: 'solar',
-  hasEra: true,
   inLeapYear(calendarDate, cache) {
     // If the last month has 30 days, it's a leap year.
     return this.daysInMonth({ year: calendarDate.year, month: 12, day: 1 }, cache) === 30;
@@ -1286,7 +1303,6 @@ const helperPersian = makeNonISOHelper([{ code: 'ap', isoEpoch: { year: 622, mon
 const helperIndian = makeNonISOHelper([{ code: 'shaka', isoEpoch: { year: 79, month: 3, day: 23 } }], {
   id: 'indian',
   calendarType: 'solar',
-  hasEra: true,
   inLeapYear(calendarDate /*, cache*/) {
     // From https://en.wikipedia.org/wiki/Indian_national_calendar:
     // Years are counted in the Saka era, which starts its year 0 in the year 78
@@ -1514,7 +1530,6 @@ const makeHelperGregorian = (id, originalEras) => {
   const { eras, anchorEra } = adjustEras(originalEras);
   return ObjectAssign({}, nonIsoHelperBase, {
     id,
-    hasEra: true,
     eras,
     anchorEra,
     calendarType: 'solar',
@@ -1935,7 +1950,7 @@ const helperDangi = { ...helperChinese, id: 'dangi' };
  */
 const nonIsoGeneralImpl = {
   extraFields(fields) {
-    if (this.helper.hasEra && Call(ArrayPrototypeIncludes, fields, ['year'])) {
+    if (CalendarSupportsEra(this.helper.id) && Call(ArrayPrototypeIncludes, fields, ['year'])) {
       return ['era', 'eraYear'];
     }
     return [];
