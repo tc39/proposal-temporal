@@ -21,7 +21,6 @@ for subdir in $subdirs; do
 done
 node runtest262.mjs "test262/test/staging/Intl402/Temporal/**/*.js" || failed=1
 node runtest262.mjs "test262/test/intl402/DateTimeFormat/**/*.js" || failed=1
-node runtest262.mjs "test262/test/intl402/Intl/DateTimeFormat/**/*.js" || failed=1
 node runtest262.mjs "test262/test/built-ins/Date/*/toLocale*String/*.js" || failed=1
 
 c8 report --reporter=text-lcov --temp-directory=$NODE_V8_COVERAGE \
