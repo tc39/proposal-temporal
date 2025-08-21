@@ -1929,7 +1929,7 @@ const helperDangi = { ...helperChinese, id: 'dangi' };
 
 /**
  * Common implementation of all non-ISO calendars.
- * Per-calendar id and logic live in `id` and `helper` properties attached later.
+ * Per-calendar id and logic live the `helper` property attached later.
  * This split allowed an easy separation between code that was similar between
  * ISO and non-ISO implementations vs. code that was very different.
  */
