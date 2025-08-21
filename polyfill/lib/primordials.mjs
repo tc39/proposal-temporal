@@ -35,6 +35,7 @@ export const {
   defineProperty: ObjectDefineProperty,
   defineProperties: ObjectDefineProperties,
   entries: ObjectEntries,
+  hasOwn: ObjectHasOwn,
   keys: ObjectKeys
 } = Object;
 
