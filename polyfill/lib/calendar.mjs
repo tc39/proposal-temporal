@@ -33,6 +33,7 @@ import {
   MathSign,
   ObjectAssign,
   ObjectEntries,
+  ObjectHasOwn,
   RegExpPrototypeExec,
   SetPrototypeAdd,
   SetPrototypeValues,
@@ -334,24 +335,74 @@ function weekNumber(firstDayOfWeek, minimalDaysInFirstWeek, desiredDay, dayOfWee
 // about non-ISO calendars. However, non-ISO calendar implementation is subject
 // to change because these calendars are implementation-defined.
 
-const eraInfo = [
-  'buddhist',
-  'coptic',
-  'ethioaa',
-  'ethiopic',
-  'gregory',
-  'hebrew',
-  'indian',
-  'islamic-civil',
-  'islamic-tbla',
-  'islamic-umalqura',
-  'japanese',
-  'persian',
-  'roc'
-];
+const eraInfo = {
+  buddhist: {
+    be: {}
+  },
+  coptic: {
+    am: {}
+  },
+  ethioaa: {
+    aa: { aliases: ['mundi'] }
+  },
+  ethiopic: {
+    am: { aliases: ['incar'] },
+    aa: { aliases: ['mundi'] }
+  },
+  gregory: {
+    ce: { aliases: ['ad'] },
+    bce: { aliases: ['bc'] }
+  },
+  hebrew: {
+    am: {}
+  },
+  indian: {
+    shaka: {}
+  },
+  'islamic-civil': {
+    ah: {},
+    bh: {}
+  },
+  'islamic-tbla': {
+    ah: {},
+    bh: {}
+  },
+  'islamic-umalqura': {
+    ah: {},
+    bh: {}
+  },
+  japanese: {
+    reiwa: {},
+    heisei: {},
+    showa: {},
+    taisho: {},
+    meiji: {},
+    ce: { aliases: ['ad'] },
+    bce: { aliases: ['bc'] }
+  },
+  persian: {
+    ap: {}
+  },
+  roc: {
+    roc: { aliases: ['minguo'] },
+    broc: { aliases: ['before-roc', 'minguo-qian'] }
+  }
+};
 
 function CalendarSupportsEra(calendar) {
-  return Call(ArrayPrototypeIncludes, eraInfo, [calendar]);
+  return ObjectHasOwn(eraInfo, calendar);
+}
+
+function CanonicalizeEraInCalendar(calendar, era) {
+  const eras = eraInfo[calendar];
+  const entries = ObjectEntries(eras);
+  for (let ix = 0; ix < entries.length; ix++) {
+    const canonicalName = entries[ix][0];
+    const info = entries[ix][1];
+    if (era === canonicalName) return era;
+    if (info.aliases && Call(ArrayPrototypeIncludes, info.aliases, [era])) return canonicalName;
+  }
+  return undefined;
 }
 
 /**
@@ -653,27 +704,22 @@ const nonIsoHelperBase = {
       if (ix === -1) throw new RangeErrorCtor(`Year ${year} was not matched by any era`);
       let matchingEra = this.eras[ix];
       if (matchingEra.skip) matchingEra = this.eras[ix - 1];
-      return { eraYear, era: matchingEra.code, eraNames: matchingEra.names };
+      return { eraYear, era: matchingEra.code };
     };
 
     let { year, eraYear, era } = calendarDate;
     if (year !== undefined) {
       const matchData = eraFromYear(year);
       ({ eraYear, era } = matchData);
-      if (
-        calendarDate.era !== undefined &&
-        calendarDate.era !== era &&
-        !Call(ArrayPrototypeIncludes, matchData?.eraNames ?? [], [calendarDate.era])
-      ) {
+      if (calendarDate.era !== undefined && CanonicalizeEraInCalendar(this.id, calendarDate.era) !== era) {
         throw new RangeErrorCtor(`Input era ${calendarDate.era} doesn't match calculated value ${era}`);
       }
       if (calendarDate.eraYear !== undefined && calendarDate.eraYear !== eraYear) {
         throw new RangeErrorCtor(`Input eraYear ${calendarDate.eraYear} doesn't match calculated value ${eraYear}`);
       }
     } else if (eraYear !== undefined) {
-      const matchingEra = Call(ArrayPrototypeFind, this.eras, [
-        ({ code, names = [] }) => code === era || Call(ArrayPrototypeIncludes, names, [era])
-      ]);
+      const canonicalName = CanonicalizeEraInCalendar(this.id, era);
+      const matchingEra = Call(ArrayPrototypeFind, this.eras, [({ code }) => code === canonicalName]);
       if (!matchingEra) throw new RangeErrorCtor(`Era ${era} (ISO year ${eraYear}) was not matched by any era`);
       if (matchingEra.reverseOf) {
         year = matchingEra.anchorEpoch.year - eraYear;
@@ -1394,13 +1440,6 @@ const helperIndian = makeNonISOHelper([{ code: 'shaka', isoEpoch: { year: 79, mo
  *   // See https://tc39.es/proposal-intl-era-monthcode/#table-eras
  *   code: string;
  *
- *   // Names are additionally accepted as alternate era codes on input, and the
- *   // first name is also output in error messages (and may be the era code if
- *   // desired.)
- *   // See https://tc39.es/proposal-intl-era-monthcode/#table-eras
- *   // If absent, this field defaults to a single element matching the code.
- *   names: string[];
- *
  *   // alternate name of the era used in old versions of ICU data
  *   // format is `era{n}` where n is the zero-based index of the era
  *   // with the oldest era being 0.
@@ -1624,7 +1663,7 @@ const makeHelperOrthodox = (id, originalEras) => {
 // - Ethiopic has an additional second era that starts at the same date as the
 //   zero era of ethioaa.
 const helperEthioaa = ObjectAssign(
-  makeHelperOrthodox('ethioaa', [{ code: 'aa', names: ['mundi'], isoEpoch: { year: -5492, month: 7, day: 17 } }])
+  makeHelperOrthodox('ethioaa', [{ code: 'aa', isoEpoch: { year: -5492, month: 7, day: 17 } }])
 );
 const copticLegacyEra0 = Symbol('era0');
 const helperCoptic = ObjectAssign(
@@ -1644,13 +1683,13 @@ const helperCoptic = ObjectAssign(
 // Anchor is currently the older era to match ethioaa, but should it be the newer era?
 // See https://github.com/tc39/ecma402/issues/534 for discussion.
 const helperEthiopic = makeHelperOrthodox('ethiopic', [
-  { code: 'aa', names: ['mundi'], isoEpoch: { year: -5492, month: 7, day: 17 } },
-  { code: 'am', names: ['incar'], isoEpoch: { year: 8, month: 8, day: 27 }, anchorEpoch: { year: 5501 } }
+  { code: 'aa', isoEpoch: { year: -5492, month: 7, day: 17 } },
+  { code: 'am', isoEpoch: { year: 8, month: 8, day: 27 }, anchorEpoch: { year: 5501 } }
 ]);
 
 const helperRoc = makeHelperSameMonthDayAsGregorian('roc', [
-  { code: 'roc', names: ['minguo'], isoEpoch: { year: 1912, month: 1, day: 1 } },
-  { code: 'broc', names: ['before-roc', 'minguo-qian'], reverseOf: 'roc' }
+  { code: 'roc', isoEpoch: { year: 1912, month: 1, day: 1 } },
+  { code: 'broc', reverseOf: 'roc' }
 ]);
 
 const helperBuddhist = ObjectAssign(
@@ -1659,8 +1698,8 @@ const helperBuddhist = ObjectAssign(
 
 const helperGregory = ObjectAssign(
   makeHelperSameMonthDayAsGregorian('gregory', [
-    { code: 'ce', names: ['ad'], isoEpoch: { year: 1, month: 1, day: 1 } },
-    { code: 'bce', names: ['bc'], reverseOf: 'ce' }
+    { code: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
+    { code: 'bce', reverseOf: 'ce' }
   ]),
   {
     reviseIntlEra(calendarDate /*, isoDate*/) {
@@ -1714,8 +1753,8 @@ const helperJapanese = ObjectAssign(
     { code: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
     { code: 'taisho', isoEpoch: { year: 1912, month: 7, day: 30 }, anchorEpoch: { year: 1912, month: 7, day: 30 } },
     { code: 'meiji', isoEpoch: { year: 1868, month: 9, day: 8 }, anchorEpoch: { year: 1868, month: 9, day: 8 } },
-    { code: 'ce', names: ['ad'], isoEpoch: { year: 1, month: 1, day: 1 } },
-    { code: 'bce', names: ['bc'], reverseOf: 'ce' }
+    { code: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
+    { code: 'bce', reverseOf: 'ce' }
   ]),
   {
     erasBeginMidYear: true,
