@@ -286,10 +286,6 @@ impl['iso8601'] = {
   }
 };
 
-// Note: other built-in calendars than iso8601 are not part of the Temporal
-// proposal for ECMA-262. These calendars will be standardized as part of
-// ECMA-402.
-
 /**
  * Safely merge a month, monthCode pair into an integer month.
  * If both are present, make sure they match.
