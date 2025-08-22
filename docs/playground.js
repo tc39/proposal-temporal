@@ -11695,15 +11695,15 @@
 	    return allowed;
 	  }, []]);
 	  let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit');
+	  const roundingIncrement = GetRoundingIncrementOption(options);
+	  let roundingMode = GetRoundingModeOption(options, 'trunc');
+	  let smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit');
 	  ValidateTemporalUnitValue(largestUnit, group, ['auto']);
 	  if (!largestUnit) largestUnit = 'auto';
 	  if (Call$1(ArrayPrototypeIncludes, disallowed, [largestUnit])) {
 	    throw new RangeError$1(`largestUnit must be one of ${Call$1(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${largestUnit}`);
 	  }
-	  const roundingIncrement = GetRoundingIncrementOption(options);
-	  let roundingMode = GetRoundingModeOption(options, 'trunc');
 	  if (op === 'since') roundingMode = NegateRoundingMode(roundingMode);
-	  let smallestUnit = GetTemporalUnitValuedOption(options, 'smallestUnit');
 	  ValidateTemporalUnitValue(smallestUnit, group);
 	  if (!smallestUnit) smallestUnit = fallbackSmallest;
 	  if (Call$1(ArrayPrototypeIncludes, disallowed, [smallestUnit])) {
@@ -15840,9 +15840,9 @@
 	    const digits = GetTemporalFractionalSecondDigitsOption(resolvedOptions);
 	    const roundingMode = GetRoundingModeOption(resolvedOptions, 'trunc');
 	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+	    let timeZone = resolvedOptions.timeZone;
 	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
-	    let timeZone = resolvedOptions.timeZone;
 	    if (timeZone !== undefined) timeZone = ToTemporalTimeZoneIdentifier(timeZone);
 	    const {
 	      precision,
@@ -17642,9 +17642,9 @@
 	    const showOffset = GetTemporalShowOffsetOption(resolvedOptions);
 	    const roundingMode = GetRoundingModeOption(resolvedOptions, 'trunc');
 	    const smallestUnit = GetTemporalUnitValuedOption(resolvedOptions, 'smallestUnit');
+	    const showTimeZone = GetTemporalShowTimeZoneNameOption(resolvedOptions);
 	    ValidateTemporalUnitValue(smallestUnit, 'time');
 	    if (smallestUnit === 'hour') throw new RangeError$1('smallestUnit must be a time unit other than "hour"');
-	    const showTimeZone = GetTemporalShowTimeZoneNameOption(resolvedOptions);
 	    const {
 	      precision,
 	      unit,
