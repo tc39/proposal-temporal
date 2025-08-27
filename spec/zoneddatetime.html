@@ -1128,6 +1128,9 @@
         1. If _ns1_ = _ns2_, return CombineDateAndTimeDuration(ZeroDateDuration(), 0).
         1. Let _startDateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
         1. Let _endDateTime_ be GetISODateTimeFor(_timeZone_, _ns2_).
+        1. If CompareISODate(_startDateTime_.[[ISODate]], _endDateTime_.[[ISODate]]) = 0, then
+          1. Let _timeDuration_ be TimeDurationFromEpochNanosecondsDifference(_ns2_, _ns1_).
+          1. Return CombineDateAndTimeDuration(ZeroDateDuration(), _timeDuration_).
         1. If _ns2_ - _ns1_ &lt; 0, let _sign_ be -1; else let _sign_ be 1.
         1. If _sign_ = 1, let _maxDayCorrection_ be 2; else let _maxDayCorrection_ be 1.
         1. Let _dayCorrection_ be 0.
@@ -1173,7 +1176,7 @@
         1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZone_, _calendar_, _largestUnit_).
         1. If _smallestUnit_ is ~nanosecond~ and _roundingIncrement_ = 1, return _difference_.
         1. Let _dateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
-        1. Return ? RoundRelativeDuration(_difference_, _ns2_, _dateTime_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
+        1. Return ? RoundRelativeDuration(_difference_, _ns1_, _ns2_, _dateTime_, _timeZone_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
       </emu-alg>
     </emu-clause>
 
@@ -1197,7 +1200,7 @@
           1. Return TotalTimeDuration(_difference_, _unit_).
         1. Let _difference_ be ? DifferenceZonedDateTime(_ns1_, _ns2_, _timeZone_, _calendar_, _unit_).
         1. Let _dateTime_ be GetISODateTimeFor(_timeZone_, _ns1_).
-        1. Return ? TotalRelativeDuration(_difference_, _ns2_, _dateTime_, _timeZone_, _calendar_, _unit_).
+        1. Return ? TotalRelativeDuration(_difference_, _ns1_, _ns2_, _dateTime_, _timeZone_, _calendar_, _unit_).
       </emu-alg>
     </emu-clause>
 
