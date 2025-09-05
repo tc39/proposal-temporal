@@ -8,6 +8,7 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "node ./test/all.mjs",
+    "test-thorough": "test/thorough/all.sh",
     "test-cookbook": "npm run build && TEST=all npm run test-cookbook-one",
     "test-cookbook-one": "node --require=./script.js --require=../docs/cookbook/assert.js ../docs/cookbook/$TEST.mjs",
     "test262": "npm run build262 && node runtest262.mjs",
@@ -78,6 +79,7 @@
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-replace": "^5.0.2",
     "c8": "^7.14.0",
+    "progress": "^2.0.3",
     "rollup": "^3.23.1",
     "rollup-plugin-node-polyfills": "^0.2.1"
   },
