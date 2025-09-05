@@ -8,8 +8,7 @@
 import Demitasse from '@pipobscure/demitasse';
 import Pretty from '@pipobscure/demitasse-pretty';
 
-// exhaustive date arithmetic tests, not suitable for test262
-import './datemath.mjs';
+import '../lib/temporal.mjs';
 
 // tests of internals, not suitable for test262
 import './ecmascript.mjs';
