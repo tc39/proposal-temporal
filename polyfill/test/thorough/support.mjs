@@ -108,6 +108,33 @@ export const interestingMonthDays = [
   [12, 31] // last day of year
 ];
 
+export const interestingTimes = [
+  [], // midnight
+  [0, 0, 0, 0, 0, 1], // 1 ns after midnight
+  [0, 0, 0, 0, 1], // 1 µs after midnight
+  [0, 0, 0, 1], // 1 ms after midnight
+  [0, 0, 1], // 1 s after midnight
+  [0, 1], // 1 minute after midnight
+  [0, 57, 27, 747, 612, 578],
+  [1], // 1 hour after midnight
+  [5, 38, 49, 848, 112, 687],
+  [6, 20, 46, 408, 452, 805],
+  [9, 17, 14, 520, 674, 386],
+  [11, 25, 43, 957, 69, 27],
+  [12], // noon
+  [12, 3, 50, 616, 122, 145],
+  [12, 48, 16, 240, 708, 441],
+  [17, 1, 51, 609, 471, 506],
+  [19, 38, 54, 588, 485, 756],
+  [21, 7, 53, 438, 330, 45],
+  [23], // 1 hour to midnight
+  [23, 59], // 1 minute to midnight
+  [23, 59, 59], // 1 second to midnight
+  [23, 59, 59, 999], // 1 ms to midnight
+  [23, 59, 59, 999, 999], // 1 µs to midnight
+  [23, 59, 59, 999, 999, 999] // 1 ns to midnight
+];
+
 export const interestingYears = [
   2020, // recent leap year
   2016, // another recent leap year
