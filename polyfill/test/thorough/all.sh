@@ -16,7 +16,8 @@ interpreter=${1-node}
 there_were_errors=0
 for test in \
   datedifference \
-  gregorian
+  gregorian \
+  timedifference
 do
   echo "== Running $test.mjs =="
   $interpreter "$test.mjs" || there_were_errors=1
