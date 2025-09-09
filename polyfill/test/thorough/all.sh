@@ -16,6 +16,7 @@ interpreter=${1-node}
 there_were_errors=0
 for test in \
   datedifference \
+  datetimedifference \
   gregorian \
   timedifference
 do

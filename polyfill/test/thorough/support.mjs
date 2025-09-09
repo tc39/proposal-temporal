@@ -85,6 +85,18 @@ export function createDateSkippingInvalidCombinations(y, m, d) {
   }
 }
 
+export const interestingDateTimes = [
+  [2025, 9, 9, 13, 40, 18, 199, 6, 994], // a recent datetime
+  [2025, 9, 8, 14, 41, 19, 200, 7, 995], // earlier date but later time
+  [2025, 9, 10, 12, 39, 17, 198, 5, 993], // later date but earlier time
+  [1970, 1, 1], // wall time at UTC epoch
+  [1969, 12, 31, 23, 59, 59, 999, 999, 999], // wall time 1 ns before UTC epoch
+  [2554, 7, 22, 2, 31, 7, 470, 371, 171], // wall time at >2**64 epoch ns
+  [1385, 6, 11, 2, 31, 7, 470, 371, 171], // wall time at <-2**64 epoch ns
+  [-271821, 4, 19, 0, 0, 0, 0, 0, 1], // earliest supported datetime
+  [275760, 9, 13, 23, 59, 59, 999, 999, 999] // latest supported datetime
+];
+
 export const interestingMonthDays = [
   [1, 1], // first day of year
   [1, 3], // early day in Jan
