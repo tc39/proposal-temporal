@@ -85,6 +85,18 @@ export function createDateSkippingInvalidCombinations(y, m, d) {
   }
 }
 
+export function createYearMonthSkippingInvalidCombinations(y, m) {
+  // Note: -271821-04 is allowed, but difference arithmetic cannot be performed
+  // on it due to -271821-04-01 being out of range
+  if (y === -271821 && m < 5) return null; // too early for supported range
+  try {
+    return new temporalImpl.PlainYearMonth(y, m);
+  } catch (e) {
+    if (y === 275760 && m > 9) return null; // too late for supported range
+    throw new Error(`${y}-${m} is invalid: ${e}`);
+  }
+}
+
 export const interestingDateTimes = [
   [2025, 9, 9, 13, 40, 18, 199, 6, 994], // a recent datetime
   [2025, 9, 8, 14, 41, 19, 200, 7, 995], // earlier date but later time

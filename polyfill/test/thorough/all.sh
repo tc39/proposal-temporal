@@ -18,7 +18,8 @@ for test in \
   datedifference \
   datetimedifference \
   gregorian \
-  timedifference
+  timedifference \
+  yearmonthdifference
 do
   echo "== Running $test.mjs =="
   $interpreter "$test.mjs" || there_were_errors=1
