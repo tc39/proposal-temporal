@@ -109,6 +109,43 @@ export const interestingDateTimes = [
   [275760, 9, 13, 23, 59, 59, 999, 999, 999] // latest supported datetime
 ];
 
+export const interestingEpochNs = [
+  1_000_000_000_000_000_000n, // round number after epoch
+  -1_000_000_000_000_000_000n, // round number before epoch
+  1n, // just after epoch
+  0n, // epoch
+  -1n, // just before epoch
+  2n ** 64n, // maxuint64 + 1
+  2n ** 64n - 1n, // maxuint64
+  -(2n ** 64n), // -maxuint64 - 1
+  -(2n ** 64n - 1n), // -maxuint64
+  2n ** 63n, // maxint64 + 1
+  2n ** 63n - 1n, // maxint64
+  -(2n ** 63n + 1n), // minint64 - 1
+  -(2n ** 63n), // minint64
+  2n ** 32n, // maxuint32 + 1
+  2n ** 32n - 1n, // maxuint32
+  -(2n ** 32n), // -maxuint32 - 1
+  -(2n ** 32n - 1n), // -maxuint32
+  2n ** 31n, // maxint32 + 1
+  2n ** 31n - 1n, // maxint32
+  -(2n ** 31n + 1n), // minint32 - 1
+  -(2n ** 31n), // minint32
+  2n ** 53n + 123_456_789n, // max safe integer plus some sentinel digits
+  -(2n ** 53n + 987_654_321n), // min safe integer plus some sentinel digits
+  2n ** 31n * 1_000_000_000n, // year 2038 problem
+  (2n ** 31n + 1n) * 1_000_000_000n, // year 2038 problem + 1 s
+  -(2n ** 31n * 1_000_000_000n), // negative year 2038 problem
+  -((2n ** 31n + 1n) * 1_000_000_000n), // negative year 2038 problem - 1 s
+  253402300799000000000n, // 9999-12-31T23:59:59Z, common max in other systems
+  253402300800000000000n, // 010000-01-01T00Z, above + 1 s
+  -62135596800000000000n, // 0001-01-01T00Z, common min in other systems
+  -62198755200000000000n, // -000001-01-01T00Z, year 1 BCE
+  86400n * 100_000_000n * 1_000_000_000n, // last supported epoch ns
+  -(86400n * 100_000_000n * 1_000_000_000n), // earliest supported epoch ns
+  -(86400n * 99_999_999n * 1_000_000_000n) // earliest supported epoch ns + 1 d
+];
+
 export const interestingMonthDays = [
   [1, 1], // first day of year
   [1, 3], // early day in Jan

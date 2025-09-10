@@ -18,6 +18,7 @@ for test in \
   datedifference \
   datetimedifference \
   gregorian \
+  instantdifference \
   timedifference \
   yearmonthdifference
 do
