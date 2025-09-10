@@ -2074,13 +2074,17 @@ export function TemporalDurationToString(duration, precision) {
   return result;
 }
 
-export function TemporalDateToString(date, showCalendar = 'auto') {
-  const { year, month, day } = GetSlot(date, ISO_DATE);
+function ISODateToString({ year, month, day }) {
   const yearString = ISOYearString(year);
   const monthString = ISODateTimePartString(month);
   const dayString = ISODateTimePartString(day);
+  return `${yearString}-${monthString}-${dayString}`;
+}
+
+export function TemporalDateToString(date, showCalendar = 'auto') {
+  const dateString = ISODateToString(GetSlot(date, ISO_DATE));
   const calendar = FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
-  return `${yearString}-${monthString}-${dayString}${calendar}`;
+  return dateString + calendar;
 }
 
 export function TimeRecordToString({ hour, minute, second, millisecond, microsecond, nanosecond }, precision) {
@@ -2783,7 +2787,12 @@ export function RejectISODate(year, month, day) {
 
 function RejectDateRange(isoDate) {
   // Noon avoids trouble at edges of DateTime range (excludes midnight)
-  RejectDateTimeRange(CombineISODateAndTimeRecord(isoDate, NoonTimeRecord()));
+  const isoDateTime = CombineISODateAndTimeRecord(isoDate, NoonTimeRecord());
+  const ns = GetUTCEpochNanoseconds(isoDateTime);
+  if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
+    const dateString = ISODateToString(isoDateTime.isoDate);
+    throw new RangeErrorCtor(`${dateString} is outside of supported range`);
+  }
 }
 
 export function RejectTime(hour, minute, second, millisecond, microsecond, nanosecond) {
@@ -2803,10 +2812,8 @@ export function RejectDateTime(year, month, day, hour, minute, second, milliseco
 export function RejectDateTimeRange(isoDateTime) {
   const ns = GetUTCEpochNanoseconds(isoDateTime);
   if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
-    // Because PlainDateTime's range is wider than Instant's range, the line
-    // below will always throw. Calling `ValidateEpochNanoseconds` avoids
-    // repeating the same error message twice.
-    ValidateEpochNanoseconds(ns);
+    const dateTimeString = ISODateTimeToString(isoDateTime, undefined, undefined, 'never');
+    throw new RangeErrorCtor(`${dateTimeString} is outside of supported range`);
   }
 }
 
@@ -2815,7 +2822,7 @@ function AssertISODateTimeWithinLimits(isoDateTime) {
   const ns = GetUTCEpochNanoseconds(isoDateTime);
   assert(
     ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX),
-    `${ISODateTimeToString(isoDateTime)} is outside the representable range`
+    `${ISODateTimeToString(isoDateTime, undefined, undefined, 'never')} is outside the representable range`
   );
 }
 
