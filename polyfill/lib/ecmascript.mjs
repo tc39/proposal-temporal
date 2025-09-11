@@ -2546,10 +2546,14 @@ function GetNamedTimeZoneEpochNanoseconds(id, isoDateTime) {
   // Get the offset of one day before and after the requested calendar date and
   // clock time, avoiding overflows if near the edge of the Instant range.
   let ns = GetUTCEpochNanoseconds(isoDateTime);
+  // Note, ns may be up to DAY_NANOS outside the NS_MIN...NS_MAX range here,
+  // even if isoDateTime represents a valid wall time in a non-UTC time zone.
+  // The TZDB does not describe any transitions that would occur in that extra
+  // day, so we just clip in order not to throw in GetFormatterParts.
   let nsEarlier = ns.minus(DAY_NANOS);
-  if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
+  if (nsEarlier.lesser(NS_MIN)) nsEarlier = NS_MIN;
   let nsLater = ns.plus(DAY_NANOS);
-  if (nsLater.greater(NS_MAX)) nsLater = ns;
+  if (nsLater.greater(NS_MAX)) nsLater = NS_MAX;
   const earlierOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, nsEarlier);
   const laterOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, nsLater);
 
