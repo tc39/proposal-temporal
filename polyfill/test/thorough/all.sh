@@ -20,7 +20,8 @@ for test in \
   gregorian \
   instantdifference \
   timedifference \
-  yearmonthdifference
+  yearmonthdifference \
+  zoneddifference
 do
   echo "== Running $test.mjs =="
   $interpreter "$test.mjs" || there_were_errors=1

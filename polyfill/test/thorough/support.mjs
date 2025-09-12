@@ -215,6 +215,29 @@ export const interestingYears = [
   275760 // last supported year
 ];
 
+export const interestingZonedDateTimes = [
+  ['America/Vancouver', 2025, 3, 9, 3, 0, 0, 0, 0, 0, -7], // recent spring-forward, negative offset
+  ['America/Vancouver', 2025, 3, 9, 3, 0, 0, 0, 0, 1, -7], // 1 ns after
+  ['America/Vancouver', 2025, 3, 9, 1, 59, 59, 999, 999, 999, -8], // 1 ns before
+  ['America/Vancouver', 2024, 11, 3, 1, 0, 0, 0, 0, 0, -8], // recent fall-back, negative offset
+  ['America/Vancouver', 2024, 11, 3, 1, 0, 0, 0, 0, 1, -8], // 1 ns after
+  ['America/Vancouver', 2024, 11, 3, 1, 59, 59, 999, 999, 999, -7], // 1 ns before
+  ['Europe/Amsterdam', 2025, 3, 30, 3, 0, 0, 0, 0, 0, +2], // recent spring-forward, positive offset
+  ['Europe/Amsterdam', 2025, 3, 30, 3, 0, 0, 0, 0, 1, +2], // 1 ns after
+  ['Europe/Amsterdam', 2025, 3, 30, 1, 59, 59, 999, 999, 999, +1], // 1 ns before
+  ['Europe/Amsterdam', 2024, 10, 27, 2, 0, 0, 0, 0, 0, +1], // recent fall-back, positive offset
+  ['Europe/Amsterdam', 2024, 10, 27, 2, 0, 0, 0, 0, 1, +1], // 1 ns after
+  ['Europe/Amsterdam', 2024, 10, 27, 2, 59, 59, 999, 999, 999, +2], // 1 ns before
+  ['Pacific/Kiritimati', 2023, 7, 16, 16, 23, 11, 704, 192, 385, +14], // current most positive UTC offset on Earth
+  ['Pacific/Niue', 2023, 7, 15, 15, 16, 23, 11, 704, 192, -11], // same instant, current most negative UTC offset
+  ['Asia/Kathmandu', 2023, 6, 17, 9, 47, 33, 648, 291, 574, +5, 45], // non-whole-hour UTC offset
+  ['Africa/Algiers', 2024, 2, 29, 1, 36, 49, 862, 917, 305, +1], // recent leap day
+  ['Antarctica/Troll', 1987, 12, 31, 23, 59, 59, 999, 999, 999, 0], // last instant of year
+  ['Antarctica/Casey', 1988, 1, 1, 0, 0, 0, 0, 0, 0, +8], // first instant of year
+  ['Pacific/Apia', 2011, 12, 31, 0, 0, 0, 0, 0, 0, +14], // international date line change
+  ['Pacific/Apia', 2011, 12, 29, 23, 59, 59, 999, 999, 999, -10] // 1 ns before
+];
+
 // If process.hrtime is not available, misuse Temporal.Now
 const nowBigInt = globalThis.process?.hrtime.bigint ?? (() => temporalImpl.Now.instant().epochNanoseconds);
 
