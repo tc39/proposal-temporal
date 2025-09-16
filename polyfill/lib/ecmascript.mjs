@@ -1946,7 +1946,6 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
     return [epochNs];
   }
 
-  CheckISODaysRange(isoDateTime.isoDate);
   return GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
 }
 
