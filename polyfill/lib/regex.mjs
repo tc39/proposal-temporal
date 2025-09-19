@@ -69,5 +69,3 @@ const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
 const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
 const durationTime = new RegExpCtor(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
 export const duration = new RegExpCtor(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
-
-export const monthCode = /^M(?:(00)(L)|(0[1-9])(L)?|([1-9][0-9])(L)?)$/;
