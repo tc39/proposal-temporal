@@ -495,6 +495,15 @@ class OneObjectCache {
     Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
     this.report();
   }
+  static generateCalendarToISOKey(id, { year, month, day }, overflow) {
+    return JSONStringify({ func: 'calendarToIsoDate', year, month, day, overflow, id });
+  }
+  static generateISOToCalendarKey(id, { year, month, day }) {
+    return JSONStringify({ func: 'isoToCalendarDate', year, month, day, id });
+  }
+  static generateMonthListKey(id, year) {
+    return JSONStringify({ func: 'getMonthList', year, id });
+  }
 }
 OneObjectCache.objectMap = new WeakMapCtor();
 OneObjectCache.MAX_CACHE_ENTRIES = 1000;
@@ -574,7 +583,7 @@ const nonIsoHelperBase = {
   },
   isoToCalendarDate(isoDate, cache) {
     const { year: isoYear, month: isoMonth, day: isoDay } = isoDate;
-    const key = JSONStringify({ func: 'isoToCalendarDate', isoYear, isoMonth, isoDay, id: this.id });
+    const key = OneObjectCache.generateISOToCalendarKey(this.id, isoDate);
     const cached = cache.get(key);
     if (cached) return cached;
 
@@ -668,14 +677,7 @@ const nonIsoHelperBase = {
     cache.set(key, calendarDate);
     // Also cache the reverse mapping
     const cacheReverse = (overflow) => {
-      const keyReverse = JSONStringify({
-        func: 'calendarToIsoDate',
-        year: calendarDate.year,
-        month: calendarDate.month,
-        day: calendarDate.day,
-        overflow,
-        id: this.id
-      });
+      const keyReverse = OneObjectCache.generateCalendarToISOKey(this.id, calendarDate, overflow);
       cache.set(keyReverse, isoDate);
     };
     Call(ArrayPrototypeForEach, ['constrain', 'reject'], [cacheReverse]);
@@ -818,7 +820,7 @@ const nonIsoHelperBase = {
     date = this.regulateMonthDayNaive(date, overflow, cache);
 
     const { year, month, day } = date;
-    const key = JSONStringify({ func: 'calendarToIsoDate', year, month, day, overflow, id: this.id });
+    const key = OneObjectCache.generateCalendarToISOKey(this.id, date, overflow);
     let cached = cache.get(key);
     if (cached) return cached;
     // If YMD are present in the input but the input has been constrained
@@ -830,14 +832,7 @@ const nonIsoHelperBase = {
       originalDate.day !== undefined &&
       (originalDate.year !== date.year || originalDate.month !== date.month || originalDate.day !== date.day)
     ) {
-      keyOriginal = JSONStringify({
-        func: 'calendarToIsoDate',
-        year: originalDate.year,
-        month: originalDate.month,
-        day: originalDate.day,
-        overflow,
-        id: this.id
-      });
+      keyOriginal = OneObjectCache.generateCalendarToISOKey(this.id, originalDate, overflow);
       cached = cache.get(keyOriginal);
       if (cached) return cached;
     }
@@ -1882,7 +1877,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     if (calendarYear === undefined) {
       throw new TypeErrorCtor('Missing year');
     }
-    const key = JSONStringify({ func: 'getMonthList', calendarYear, id: this.id });
+    const key = OneObjectCache.generateMonthListKey(this.id, calendarYear);
     const cached = cache.get(key);
     if (cached) return cached;
 
