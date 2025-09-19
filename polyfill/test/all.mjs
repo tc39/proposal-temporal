@@ -20,6 +20,8 @@ import './math.mjs';
 // Internal 96-bit integer implementation, not suitable for test262
 import './timeduration.mjs';
 
+import './monthcode.mjs';
+
 Promise.resolve()
   .then(() => {
     return Demitasse.report(Pretty.reporter);
