@@ -984,6 +984,10 @@ const nonIsoHelperBase = {
   },
   addCalendar(calendarDate, { years = 0, months = 0, weeks = 0, days = 0 }, overflow, cache) {
     const { year, day, monthCode } = calendarDate;
+    if (MathAbs(months) > 12 && !monthCodeInfo[this.id]?.additionalMonths) {
+      years += MathTrunc(months / 12);
+      months %= 12;
+    }
     const addedYears = this.adjustCalendarDate({ year: year + years, monthCode, day }, cache);
     const addedMonths = this.addMonthsCalendar(addedYears, months, overflow, cache);
     days += weeks * 7;
