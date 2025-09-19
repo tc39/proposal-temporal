@@ -120,7 +120,10 @@ export class PlainDate {
   withCalendar(calendar) {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
     calendar = ES.ToTemporalCalendarIdentifier(calendar);
-    return ES.CreateTemporalDate(GetSlot(this, ISO_DATE), calendar);
+    // Don't reuse the same ISODate object, as it should start with a fresh
+    // calendar cache
+    const { year, month, day } = GetSlot(this, ISO_DATE);
+    return ES.CreateTemporalDate({ year, month, day }, calendar);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
