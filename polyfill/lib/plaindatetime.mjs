@@ -182,7 +182,13 @@ export class PlainDateTime {
   withCalendar(calendar) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     calendar = ES.ToTemporalCalendarIdentifier(calendar);
-    return ES.CreateTemporalDateTime(GetSlot(this, ISO_DATE_TIME), calendar);
+    // Don't reuse the same ISODate object, as it should start with a fresh
+    // calendar cache
+    const {
+      isoDate: { year, month, day },
+      time
+    } = GetSlot(this, ISO_DATE_TIME);
+    return ES.CreateTemporalDateTime(ES.CombineISODateAndTimeRecord({ year, month, day }, time), calendar);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
