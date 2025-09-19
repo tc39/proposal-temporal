@@ -198,14 +198,14 @@ export class PlainDate {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
     const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE));
-    const isoDate = ES.CalendarYearMonthFromFields(calendar, fields);
+    const isoDate = ES.CalendarYearMonthFromFields(calendar, fields, 'constrain');
     return ES.CreateTemporalYearMonth(isoDate, calendar);
   }
   toPlainMonthDay() {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
     const calendar = GetSlot(this, CALENDAR);
     const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE));
-    const isoDate = ES.CalendarMonthDayFromFields(calendar, fields);
+    const isoDate = ES.CalendarMonthDayFromFields(calendar, fields, 'constrain');
     return ES.CreateTemporalMonthDay(isoDate, calendar);
   }
 
