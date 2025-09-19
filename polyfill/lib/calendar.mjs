@@ -499,14 +499,33 @@ class OneObjectCache {
     Call(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
     this.report();
   }
+  // Cache keys are int32
+  // int32 msb fedcba9876543210fedcba9876543210 lsb
+  //           uyyyyyyyyyyyyyyyyyyyymmmmdddddff
+  // u = unused (1 bit)
+  // y = year + 280804 (20 bits; max is 564387)
+  // m = month (4 bits; max is 13)
+  // d = day (5 bits; max is 31)
+  // f = flags (indicates type of key, and overflow for calendar-to-ISO type)
+  //     00 = Chinese/Dangi month list
+  //     01 = ISO-to-calendar
+  //     10 = calendar-to-ISO, overflow constrain
+  //     11 = calendar-to-ISO, overflow reject
+  static privKey(year, month, day, flags) {
+    // -280804 is the earliest year number in any supported calendar (in this
+    // case, Hijri calendars)
+    const unsignedYear = year + 280804;
+    return (unsignedYear << 11) | (month << 7) | (day << 2) | flags;
+  }
   static generateCalendarToISOKey({ year, month, day }, overflow) {
-    return JSONStringify({ func: 'calendarToIsoDate', year, month, day, overflow });
+    const flags = overflow === 'constrain' ? 0b10 : 0b11;
+    return this.privKey(year, month, day, flags);
   }
   static generateISOToCalendarKey({ year, month, day }) {
-    return JSONStringify({ func: 'isoToCalendarDate', year, month, day });
+    return this.privKey(year, month, day, 1);
   }
   static generateMonthListKey(year) {
-    return JSONStringify({ func: 'getMonthList', year });
+    return this.privKey(year, 0, 0, 0);
   }
 }
 OneObjectCache.objectMap = new WeakMapCtor();
