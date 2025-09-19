@@ -1013,7 +1013,7 @@ const nonIsoHelperBase = {
         }
         const diffYears = calendarTwo.year - calendarOne.year;
         const diffDays = calendarTwo.day - calendarOne.day;
-        if (largestUnit === 'year' && diffYears) {
+        if (diffYears && (largestUnit === 'year' || !monthCodeInfo[this.id]?.additionalMonths)) {
           let diffInYearSign = 0;
           if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
           if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
@@ -1022,6 +1022,10 @@ const nonIsoHelperBase = {
           years = isOneFurtherInYear ? diffYears - sign : diffYears;
         }
         const yearsAdded = years ? this.addCalendar(calendarOne, { years }, 'constrain', cache) : calendarOne;
+        if (years && largestUnit === 'month') {
+          months += years * 12;
+          years = 0;
+        }
         // Now we have less than one year remaining. Add one month at a time
         // until we go over the target, then back up one month and calculate
         // remaining days and weeks.
