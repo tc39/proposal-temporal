@@ -372,43 +372,43 @@ function weekNumber(firstDayOfWeek, minimalDaysInFirstWeek, desiredDay, dayOfWee
 // about non-ISO calendars. However, non-ISO calendar implementation is subject
 // to change because these calendars are implementation-defined.
 
-const eraInfo = {
-  buddhist: {
+const eraInfoEntries = {
+  buddhist: ObjectEntries({
     be: {}
-  },
-  coptic: {
+  }),
+  coptic: ObjectEntries({
     am: {}
-  },
-  ethioaa: {
+  }),
+  ethioaa: ObjectEntries({
     aa: { aliases: ['mundi'] }
-  },
-  ethiopic: {
+  }),
+  ethiopic: ObjectEntries({
     am: { aliases: ['incar'] },
     aa: { aliases: ['mundi'] }
-  },
-  gregory: {
+  }),
+  gregory: ObjectEntries({
     ce: { aliases: ['ad'] },
     bce: { aliases: ['bc'] }
-  },
-  hebrew: {
+  }),
+  hebrew: ObjectEntries({
     am: {}
-  },
-  indian: {
+  }),
+  indian: ObjectEntries({
     shaka: {}
-  },
-  'islamic-civil': {
+  }),
+  'islamic-civil': ObjectEntries({
     ah: {},
     bh: {}
-  },
-  'islamic-tbla': {
+  }),
+  'islamic-tbla': ObjectEntries({
     ah: {},
     bh: {}
-  },
-  'islamic-umalqura': {
+  }),
+  'islamic-umalqura': ObjectEntries({
     ah: {},
     bh: {}
-  },
-  japanese: {
+  }),
+  japanese: ObjectEntries({
     reiwa: {},
     heisei: {},
     showa: {},
@@ -416,27 +416,26 @@ const eraInfo = {
     meiji: {},
     ce: { aliases: ['ad'] },
     bce: { aliases: ['bc'] }
-  },
-  persian: {
+  }),
+  persian: ObjectEntries({
     ap: {}
-  },
-  roc: {
+  }),
+  roc: ObjectEntries({
     roc: { aliases: ['minguo'] },
     broc: { aliases: ['before-roc', 'minguo-qian'] }
-  }
+  })
 };
 
 function CalendarSupportsEra(calendar) {
-  return ObjectHasOwn(eraInfo, calendar);
+  return ObjectHasOwn(eraInfoEntries, calendar);
 }
 
 function CanonicalizeEraInCalendar(calendar, era) {
-  const eras = eraInfo[calendar];
-  const entries = ObjectEntries(eras);
+  const entries = eraInfoEntries[calendar];
   for (let ix = 0; ix < entries.length; ix++) {
     const canonicalName = entries[ix][0];
-    const info = entries[ix][1];
     if (era === canonicalName) return era;
+    const info = entries[ix][1];
     if (info.aliases && Call(ArrayPrototypeIncludes, info.aliases, [era])) return canonicalName;
   }
   return undefined;
