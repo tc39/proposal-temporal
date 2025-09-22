@@ -13400,6 +13400,7 @@
 	    return calendarDate;
 	  },
 	  addCalendar(calendarDate, _ref6, overflow, cache) {
+	    var _monthCodeInfo$this$i;
 	    let {
 	      years = 0,
 	      months = 0,
@@ -13411,6 +13412,10 @@
 	      day,
 	      monthCode
 	    } = calendarDate;
+	    if (MathAbs(months) > 12 && !((_monthCodeInfo$this$i = monthCodeInfo[this.id]) !== null && _monthCodeInfo$this$i !== void 0 && _monthCodeInfo$this$i.additionalMonths)) {
+	      years += MathTrunc(months / 12);
+	      months %= 12;
+	    }
 	    const addedYears = this.adjustCalendarDate({
 	      year: year + years,
 	      monthCode,
@@ -13440,7 +13445,7 @@
 	      case 'month':
 	      case 'year':
 	        {
-	          var _monthCodeInfo$this$i;
+	          var _monthCodeInfo$this$i2;
 	          const sign = this.compareCalendarDates(calendarTwo, calendarOne);
 	          if (!sign) {
 	            return {
@@ -13452,7 +13457,7 @@
 	          }
 	          const diffYears = calendarTwo.year - calendarOne.year;
 	          const diffDays = calendarTwo.day - calendarOne.day;
-	          if (diffYears && (largestUnit === 'year' || !((_monthCodeInfo$this$i = monthCodeInfo[this.id]) !== null && _monthCodeInfo$this$i !== void 0 && _monthCodeInfo$this$i.additionalMonths))) {
+	          if (diffYears && (largestUnit === 'year' || !((_monthCodeInfo$this$i2 = monthCodeInfo[this.id]) !== null && _monthCodeInfo$this$i2 !== void 0 && _monthCodeInfo$this$i2.additionalMonths))) {
 	            let diffInYearSign = 0;
 	            if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
 	            if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
