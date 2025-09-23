@@ -10539,17 +10539,14 @@
 	  let millisecond = epochMilliseconds % 1000;
 	  if (millisecond < 0) millisecond += 1000;
 	  const utc = GetUTCEpochMilliseconds({
-	    isoDate: {
-	      year,
-	      month,
-	      day
-	    },
-	    time: {
-	      hour,
-	      minute,
-	      second,
-	      millisecond
-	    }
+	    year,
+	    month,
+	    day
+	  }, {
+	    hour,
+	    minute,
+	    second,
+	    millisecond
 	  });
 	  return (utc - epochMilliseconds) * 1e6;
 	}
@@ -10571,20 +10568,19 @@
 	  offsetNanoseconds = RoundNumberToIncrement(offsetNanoseconds, 60e9, 'halfExpand');
 	  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
 	}
-	function GetUTCEpochMilliseconds(_ref15) {
-	  let {
-	    isoDate: {
-	      year,
-	      month,
-	      day
-	    },
-	    time: {
-	      hour,
-	      minute,
-	      second,
-	      millisecond /* ignored: microsecond, nanosecond */
-	    }
-	  } = _ref15;
+	function GetUTCEpochMilliseconds(isoDate, time) {
+	  const {
+	    year,
+	    month,
+	    day
+	  } = isoDate;
+	  const {
+	    hour,
+	    minute,
+	    second,
+	    millisecond /* ignored: microsecond, nanosecond */
+	  } = time;
+
 	  // The pattern of leap years in the ISO 8601 calendar repeats every 400
 	  // years. To avoid overflowing at the edges of the range, we reduce the year
 	  // to the remainder after dividing by 400, and then add back all the
@@ -10592,17 +10588,19 @@
 	  const reducedYear = year % 400;
 	  const yearCycles = (year - reducedYear) / 400;
 
-	  // Note: Date.UTC() interprets one and two-digit years as being in the
-	  // 20th century, so don't use it
-	  const legacyDate = new Date$1();
-	  Call$1(DatePrototypeSetUTCHours, legacyDate, [hour, minute, second, millisecond]);
-	  Call$1(DatePrototypeSetUTCFullYear, legacyDate, [reducedYear, month - 1, day]);
-	  const ms = Call$1(DatePrototypeGetTime, legacyDate, []);
-	  return ms + MS_IN_400_YEAR_CYCLE * yearCycles;
+	  // `Date.UTC(year, monthIndex, days)` maps year [0, 99] to [1900, 1999], so
+	  // avoid that range.
+	  const extraCycles = reducedYear >= 0 ? 5 : 0;
+	  const ms = DateUTC(reducedYear + 400 * extraCycles, month - 1, day, hour, minute, second, millisecond);
+	  return ms + MS_IN_400_YEAR_CYCLE * (yearCycles - extraCycles);
 	}
 	function GetUTCEpochNanoseconds(isoDateTime) {
-	  const ms = GetUTCEpochMilliseconds(isoDateTime);
-	  const subMs = isoDateTime.time.microsecond * 1e3 + isoDateTime.time.nanosecond;
+	  const {
+	    isoDate,
+	    time
+	  } = isoDateTime;
+	  const ms = GetUTCEpochMilliseconds(isoDate, time);
+	  const subMs = time.microsecond * 1e3 + time.nanosecond;
 	  return bigInt(ms).multiply(1e6).plus(subMs);
 	}
 	function GetISOPartsFromEpoch(epochNanoseconds) {
@@ -11065,11 +11063,11 @@
 	    throw new RangeError$1('date/time value is outside of supported range');
 	  }
 	}
-	function RejectYearMonthRange(_ref16) {
+	function RejectYearMonthRange(_ref15) {
 	  let {
 	    year,
 	    month
-	  } = _ref16;
+	  } = _ref15;
 	  RejectToRange(year, YEAR_MIN, YEAR_MAX);
 	  if (year === YEAR_MIN) {
 	    RejectToRange(month, 4, 12);
@@ -11227,17 +11225,14 @@
 	// Caution: month is 0-based
 	function ISODateToEpochDays(year, month, day) {
 	  return GetUTCEpochMilliseconds({
-	    isoDate: {
-	      year,
-	      month: month + 1,
-	      day
-	    },
-	    time: {
-	      hour: 0,
-	      minute: 0,
-	      second: 0,
-	      millisecond: 0
-	    }
+	    year,
+	    month: month + 1,
+	    day
+	  }, {
+	    hour: 0,
+	    minute: 0,
+	    second: 0,
+	    millisecond: 0
 	  }) / DAY_MS;
 	}
 
@@ -11245,12 +11240,12 @@
 	// which is ill-defined in how it handles large year numbers. If the issue
 	// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 	// with no observable changes.
-	function CheckISODaysRange(_ref17) {
+	function CheckISODaysRange(_ref16) {
 	  let {
 	    year,
 	    month,
 	    day
-	  } = _ref17;
+	  } = _ref16;
 	  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
 	    throw new RangeError$1('date/time value is outside the supported range');
 	  }
@@ -11929,7 +11924,7 @@
 	  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
 	  return result;
 	}
-	function AddTime(_ref18, timeDuration) {
+	function AddTime(_ref17, timeDuration) {
 	  let {
 	    hour,
 	    minute,
@@ -11937,7 +11932,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref18;
+	  } = _ref17;
 	  second += timeDuration.sec;
 	  nanosecond += timeDuration.subsec;
 	  return BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -12121,7 +12116,7 @@
 	  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
 	  return CombineISODateAndTimeRecord(isoDate, time);
 	}
-	function RoundTime(_ref19, increment, unit, roundingMode) {
+	function RoundTime(_ref18, increment, unit, roundingMode) {
 	  let {
 	    hour,
 	    minute,
@@ -12129,7 +12124,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref19;
+	  } = _ref18;
 	  let quantity;
 	  switch (unit) {
 	    case 'day':
@@ -12364,6 +12359,7 @@
 	  return right;
 	}
 
+	const midnightTimeRecord = MidnightTimeRecord();
 	function arrayFromSet(src) {
 	  const valuesIterator = Call$1(SetPrototypeValues, src, []);
 	  return ArrayFrom({
@@ -12874,12 +12870,7 @@
 	  }
 	  return cache;
 	};
-	function toUtcIsoDateString(_ref4) {
-	  let {
-	    isoYear,
-	    isoMonth,
-	    isoDay
-	  } = _ref4;
+	function toUtcIsoDateString(isoYear, isoMonth, isoDay) {
 	  const yearString = ISOYearString(isoYear);
 	  const monthString = ISODateTimePartString(isoMonth);
 	  const dayString = ISODateTimePartString(isoDay);
@@ -12953,11 +12944,7 @@
 	    });
 	    const cached = cache.get(key);
 	    if (cached) return cached;
-	    const isoString = toUtcIsoDateString({
-	      isoYear,
-	      isoMonth,
-	      isoDay
-	    });
+	    const isoString = toUtcIsoDateString(isoYear, isoMonth, isoDay);
 	    const parts = this.getCalendarParts(isoString);
 	    const hasEra = CalendarSupportsEra(this.id);
 	    const result = {};
@@ -13148,10 +13135,10 @@
 	      }
 	    } else if (eraYear !== undefined) {
 	      const canonicalName = CanonicalizeEraInCalendar(this.id, era);
-	      const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref5 => {
+	      const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref4 => {
 	        let {
 	          code
-	        } = _ref5;
+	        } = _ref4;
 	        return code === canonicalName;
 	      }]);
 	      if (!matchingEra) throw new RangeError$1("Era ".concat(era, " (ISO year ").concat(eraYear, ") was not matched by any era"));
@@ -13419,14 +13406,14 @@
 	    }
 	    return calendarDate;
 	  },
-	  addCalendar(calendarDate, _ref6, overflow, cache) {
+	  addCalendar(calendarDate, _ref5, overflow, cache) {
 	    var _monthCodeInfo$this$i;
 	    let {
 	      years = 0,
 	      months = 0,
 	      weeks = 0,
 	      days = 0
-	    } = _ref6;
+	    } = _ref5;
 	    const {
 	      year,
 	      day,
@@ -14750,87 +14737,83 @@
 	    });
 	    const cached = cache.get(key);
 	    if (cached) return cached;
+
+	    // Reuse the same local object for calendar-specific results, starting with
+	    // a date close to Chinese New Year. Feb 17 will either be in the new year
+	    // or near the end of the previous year's final month.
+	    let daysPastJan31 = 17;
+	    const calendarFields = {
+	      day: undefined,
+	      monthString: undefined,
+	      relatedYear: undefined
+	    };
 	    const dateTimeFormat = this.getFormatter();
-	    const getCalendarDate = (isoYear, daysPastFeb1) => {
-	      const isoStringFeb1 = toUtcIsoDateString({
-	        isoYear,
-	        isoMonth: 2,
-	        isoDay: 1
-	      });
-	      const legacyDate = new Date$1(isoStringFeb1);
-	      // Now add the requested number of days, which may wrap to the next month.
-	      Call$1(DatePrototypeSetUTCDate, legacyDate, [daysPastFeb1 + 1]);
-	      const newYearGuess = Call$1(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [legacyDate]);
-	      const calendarMonthString = Call$1(ArrayPrototypeFind, newYearGuess, [tv => tv.type === 'month']).value;
-	      const calendarDay = +Call$1(ArrayPrototypeFind, newYearGuess, [tv => tv.type === 'day']).value;
-	      let calendarYearToVerify = Call$1(ArrayPrototypeFind, newYearGuess, [tv => tv.type === 'relatedYear']);
-	      if (calendarYearToVerify !== undefined) {
-	        calendarYearToVerify = +calendarYearToVerify.value;
-	      } else {
+	    const updateCalendarFields = () => {
+	      // Abuse GetUTCEpochMilliseconds for automatic rebalancing.
+	      const isoNumbers = {
+	        year: calendarYear,
+	        month: 2,
+	        day: daysPastJan31
+	      };
+	      const ms = GetUTCEpochMilliseconds(isoNumbers, midnightTimeRecord);
+	      const fieldEntries = Call$1(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [ms]);
+	      for (let i = 0; i < fieldEntries.length; i++) {
+	        const {
+	          type,
+	          value
+	        } = fieldEntries[i];
+	        // day and year should be decimal strings, but month values like "5bis" are not number-coercible.
+	        if (type === 'day' || type === 'relatedYear') {
+	          calendarFields[type] = +value;
+	        } else if (type === 'month') {
+	          calendarFields.monthString = value;
+	        }
+	      }
+	      if (calendarFields.relatedYear === undefined) {
 	        // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
 	        // output of Intl.DateTimeFormat.formatToParts.
 	        throw new RangeError$1("Intl.DateTimeFormat.formatToParts lacks relatedYear in ".concat(this.id, " calendar. Try Node 14+ or modern browsers."));
 	      }
-	      return {
-	        calendarMonthString,
-	        calendarDay,
-	        calendarYearToVerify
-	      };
+	      return calendarFields;
 	    };
 
-	    // First, find a date close to Chinese New Year. Feb 17 will either be in
-	    // the first month or near the end of the last month of the previous year.
-	    let isoDaysDelta = 17;
-	    let {
-	      calendarMonthString,
-	      calendarDay,
-	      calendarYearToVerify
-	    } = getCalendarDate(calendarYear, isoDaysDelta);
-
-	    // If we didn't guess the first month correctly, add (almost in some months)
-	    // a lunar month
-	    if (calendarMonthString !== '1') {
-	      isoDaysDelta += 29;
-	      ({
-	        calendarMonthString,
-	        calendarDay
-	      } = getCalendarDate(calendarYear, isoDaysDelta));
+	    // Ensure that we're in the first month.
+	    updateCalendarFields();
+	    if (calendarFields.monthString !== '1') {
+	      daysPastJan31 += 29;
+	      updateCalendarFields();
 	    }
 
-	    // Now back up to near the start of the first month, but not too near that
+	    // Now back up to near the start of the first month, but not so near that
 	    // off-by-one issues matter.
-	    isoDaysDelta -= calendarDay - 5;
-	    const result = {};
+	    daysPastJan31 -= calendarFields.day - 5;
+	    const monthList = {};
 	    let monthIndex = 1;
-	    let oldCalendarDay;
+	    let oldDay;
 	    let oldMonthString;
-	    let done = false;
-	    do {
-	      ({
-	        calendarMonthString,
-	        calendarDay,
-	        calendarYearToVerify
-	      } = getCalendarDate(calendarYear, isoDaysDelta));
-	      if (oldCalendarDay) {
-	        result[oldMonthString].daysInMonth = oldCalendarDay + 30 - calendarDay;
+	    for (;;) {
+	      const {
+	        day,
+	        monthString,
+	        relatedYear
+	      } = updateCalendarFields();
+	      if (oldDay) {
+	        monthList[oldMonthString].daysInMonth = oldDay + 30 - day;
 	      }
-	      if (calendarYearToVerify !== calendarYear) {
-	        done = true;
-	      } else {
-	        result[calendarMonthString] = {
-	          monthIndex: monthIndex++
-	        };
-	        // Move to the next month. Because months are sometimes 29 days, the day of the
-	        // calendar month will move forward slowly but not enough to flip over to a new
-	        // month before the loop ends at 12-13 months.
-	        isoDaysDelta += 30;
-	      }
-	      oldCalendarDay = calendarDay;
-	      oldMonthString = calendarMonthString;
-	    } while (!done);
-	    result[oldMonthString].daysInMonth = oldCalendarDay + 30 - calendarDay;
-	    cache.set(key, result);
-	    return result;
+	      oldDay = day;
+	      oldMonthString = monthString;
+	      if (relatedYear !== calendarYear) break;
+	      monthList[monthString] = {
+	        monthIndex: monthIndex++
+	      };
+	      // Move to the next month. Because months are sometimes 29 days, the day of the
+	      // calendar month will move forward slowly but not enough to flip over to a new
+	      // month before the loop ends at 12-13 months.
+	      daysPastJan31 += 30;
+	    }
+	    monthList[oldMonthString].daysInMonth = oldDay + 30 - calendarFields.day;
+	    cache.set(key, monthList);
+	    return monthList;
 	  },
 	  estimateIsoDate(calendarDate) {
 	    const {
@@ -15015,13 +14998,13 @@
 	    }
 	    return arrayFromSet(result);
 	  },
-	  dateAdd(isoDate, _ref7, overflow) {
+	  dateAdd(isoDate, _ref6, overflow) {
 	    let {
 	      years,
 	      months,
 	      weeks,
 	      days
-	    } = _ref7;
+	    } = _ref6;
 	    const cache = OneObjectCache.getCacheForObject(isoDate);
 	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
 	    const added = this.helper.addCalendar(calendarDate, {
@@ -15089,11 +15072,11 @@
 	}, {
 	  id: 'islamicc',
 	  firstDay: 20
-	}], [_ref8 => {
+	}], [_ref7 => {
 	  let {
 	    id,
 	    firstDay
-	  } = _ref8;
+	  } = _ref7;
 	  const helper = _objectSpread2(_objectSpread2({}, helperIslamic), {}, {
 	    id
 	  });
