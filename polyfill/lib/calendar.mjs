@@ -600,7 +600,8 @@ const nonIsoHelperBase = {
     try {
       return Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [legacyDate]);
     } catch (e) {
-      throw new RangeErrorCtor(`Invalid ISO date: ${isoString}`);
+      if (e instanceof RangeErrorCtor) throw new RangeErrorCtor(`Invalid ISO date: ${isoString}`);
+      throw e;
     }
   },
   isoToCalendarDate(isoDate, cache) {
