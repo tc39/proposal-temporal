@@ -1240,7 +1240,7 @@ const helperHebrew = makeNonISOHelper([{ code: 'am', isoEpoch: { year: -3760, mo
   },
   minMaxMonthLength(calendarDate, minOrMax) {
     const { month, year } = calendarDate;
-    const monthCode = this.getMonthCode(year, month);
+    const monthCode = calendarDate.monthCode ?? this.getMonthCode(year, month);
     const daysInMonth = this.monthLengths[monthCode];
     if (daysInMonth === undefined) throw new RangeErrorCtor(`unmatched Hebrew month: ${month}`);
     return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[minOrMax];
