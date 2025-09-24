@@ -36,9 +36,10 @@ import {
   RegExpPrototypeExec,
   SetPrototypeAdd,
   SetPrototypeValues,
-  StringPrototypeIndexOf,
+  StringPrototypeEndsWith,
   StringPrototypeNormalize,
   StringPrototypeReplace,
+  StringPrototypeSlice,
   StringPrototypeSplit,
   StringPrototypeToLowerCase,
   SymbolIterator,
@@ -1848,20 +1849,18 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   id: 'chinese',
   calendarType: 'lunisolar',
   inLeapYear(calendarDate, cache) {
-    const months = this.getMonthList(calendarDate.year, cache);
-    return ObjectEntries(months).length === 13;
+    return this.getMonthList(calendarDate.year, cache).monthsInYear === 13;
   },
   monthsInYear(calendarDate, cache) {
-    return this.inLeapYear(calendarDate, cache) ? 13 : 12;
+    return this.getMonthList(calendarDate.year, cache).monthsInYear;
   },
   daysInMonth(calendarDate, cache) {
     const { month, year } = calendarDate;
-    const monthEntries = ObjectEntries(this.getMonthList(calendarDate.year, cache));
-    const matchingMonthEntry = Call(ArrayPrototypeFind, monthEntries, [(entry) => entry[1].monthIndex === month]);
+    const matchingMonthEntry = this.getMonthList(year, cache)[month];
     if (matchingMonthEntry === undefined) {
       throw new RangeErrorCtor(`Invalid month ${month} in Chinese year ${year}`);
     }
-    return matchingMonthEntry[1].daysInMonth;
+    return matchingMonthEntry.daysInMonth;
   },
   daysInPreviousMonth(calendarDate, cache) {
     const { month, year } = calendarDate;
@@ -1974,23 +1973,29 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const monthList = {};
     let monthIndex = 1;
     let oldDay;
-    let oldMonthString;
     for (;;) {
       const { day, monthString, relatedYear } = updateCalendarFields();
+      const isLeapMonth = Call(StringPrototypeEndsWith, monthString, ['bis']);
+      const monthCode = CreateMonthCode(
+        isLeapMonth ? Call(StringPrototypeSlice, monthString, [0, -3]) : monthString,
+        isLeapMonth
+      );
       if (oldDay) {
-        monthList[oldMonthString].daysInMonth = oldDay + 30 - day;
+        monthList[monthIndex - 1].daysInMonth = oldDay + 30 - day;
       }
       oldDay = day;
-      oldMonthString = monthString;
 
       if (relatedYear !== calendarYear) break;
 
-      monthList[monthString] = { monthIndex: monthIndex++ };
+      monthList[monthIndex] = { monthCode };
+      monthList[monthCode] = monthIndex++;
+
       // Move to the next month. Because months are sometimes 29 days, the day of the
       // calendar month will move forward slowly but not enough to flip over to a new
       // month before the loop ends at 12-13 months.
       daysPastJan31 += 30;
     }
+    monthList.monthsInYear = monthIndex - 1; // subtract 1, it was incremented after the loop
 
     cache.set(key, monthList);
     return monthList;
@@ -2008,11 +2013,11 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       // month. Below we'll normalize the output.
       if (monthExtra && monthExtra !== 'bis') throw new RangeErrorCtor(`Unexpected leap month suffix: ${monthExtra}`);
       const monthCode = CreateMonthCode(month, monthExtra !== undefined);
-      const monthString = `${month}${monthExtra || ''}`;
       const months = this.getMonthList(year, cache);
-      const monthInfo = months[monthString];
-      if (monthInfo === undefined) throw new RangeErrorCtor(`Unmatched month ${monthString} in Chinese year ${year}`);
-      month = monthInfo.monthIndex;
+      month = months[monthCode];
+      if (month === undefined) {
+        throw new RangeErrorCtor(`Unmatched month ${month}${monthExtra || ''} in Chinese year ${year}`);
+      }
       return { year, month, day, monthCode };
     } else {
       // When called without input coming from legacy Date output,
@@ -2021,25 +2026,20 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       if (month === undefined) {
         const months = this.getMonthList(year, cache);
         const { monthNumber, isLeapMonth } = ParseMonthCode(monthCode);
-        const numberPart = `${monthNumber}${isLeapMonth ? 'bis' : ''}`;
-        let monthInfo = months[numberPart];
-        month = monthInfo && monthInfo.monthIndex;
+        month = months[monthCode];
         // If this leap month isn't present in this year, constrain to the same
         // day of the previous month.
-        if (month === undefined && isLeapMonth && monthNumber !== 13 && overflow === 'constrain') {
-          monthInfo = months[monthNumber];
-          if (monthInfo) {
-            month = monthInfo.monthIndex;
-            monthCode = CreateMonthCode(monthNumber, false);
-          }
+        if (month === undefined && isLeapMonth && overflow === 'constrain') {
+          const adjustedMonthCode = CreateMonthCode(monthNumber, false);
+          month = months[adjustedMonthCode];
+          monthCode = adjustedMonthCode;
         }
         if (month === undefined) {
           throw new RangeErrorCtor(`Unmatched month ${monthCode} in Chinese year ${year}`);
         }
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
-        const monthEntries = ObjectEntries(months);
-        const largestMonth = monthEntries.length;
+        const largestMonth = months.monthsInYear;
         if (overflow === 'reject') {
           ES.RejectToRange(month, 1, largestMonth);
           ES.RejectToRange(day, 1, this.maximumMonthLength());
@@ -2047,22 +2047,16 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           month = ES.ConstrainToRange(month, 1, largestMonth);
           day = ES.ConstrainToRange(day, 1, this.maximumMonthLength());
         }
-        const matchingMonthEntry = Call(ArrayPrototypeFind, monthEntries, [(entry) => entry[1].monthIndex === month]);
-        if (matchingMonthEntry === undefined) {
+        monthCode = months[month].monthCode;
+        if (monthCode === undefined) {
           throw new RangeErrorCtor(`Invalid month ${month} in Chinese year ${year}`);
         }
-        monthCode = CreateMonthCode(
-          Call(StringPrototypeReplace, matchingMonthEntry[0], ['bis', '']),
-          Call(StringPrototypeIndexOf, matchingMonthEntry[0], ['bis']) !== -1
-        );
       } else {
         // Both month and monthCode are present. Make sure they don't conflict.
         const months = this.getMonthList(year, cache);
-        const { monthNumber, isLeapMonth } = ParseMonthCode(monthCode);
-        const numberPart = `${monthNumber}${isLeapMonth ? 'bis' : ''}`;
-        const monthInfo = months[numberPart];
-        if (!monthInfo) throw new RangeErrorCtor(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
-        if (month !== monthInfo.monthIndex) {
+        const monthIndex = months[monthCode];
+        if (!monthIndex) throw new RangeErrorCtor(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
+        if (month !== monthIndex) {
           throw new RangeErrorCtor(
             `monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`
           );
