@@ -1854,6 +1854,24 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   monthsInYear(calendarDate, cache) {
     return this.inLeapYear(calendarDate, cache) ? 13 : 12;
   },
+  daysInMonth(calendarDate, cache) {
+    const { month, year } = calendarDate;
+    const monthEntries = ObjectEntries(this.getMonthList(calendarDate.year, cache));
+    const matchingMonthEntry = Call(ArrayPrototypeFind, monthEntries, [(entry) => entry[1].monthIndex === month]);
+    if (matchingMonthEntry === undefined) {
+      throw new RangeErrorCtor(`Invalid month ${month} in Chinese year ${year}`);
+    }
+    return matchingMonthEntry[1].daysInMonth;
+  },
+  daysInPreviousMonth(calendarDate, cache) {
+    const { month, year } = calendarDate;
+
+    const previousMonthYear = month > 1 ? year : year - 1;
+    let previousMonthDate = { year: previousMonthYear, month, day: 1 };
+    const previousMonth = month > 1 ? month - 1 : this.monthsInYear(previousMonthDate, cache);
+
+    return this.daysInMonth({ year: previousMonthYear, month: previousMonth }, cache);
+  },
   minimumMonthLength: (/* calendarDate */) => 29,
   maximumMonthLength: (/* calendarDate */) => 30,
   maxLengthOfMonthCodeInAnyYear(monthCode) {
@@ -1973,7 +1991,6 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       // month before the loop ends at 12-13 months.
       daysPastJan31 += 30;
     }
-    monthList[oldMonthString].daysInMonth = oldDay + 30 - calendarFields.day;
 
     cache.set(key, monthList);
     return monthList;
