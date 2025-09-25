@@ -1975,6 +1975,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     let oldDay;
     for (;;) {
       const { day, monthString, relatedYear } = updateCalendarFields();
+      if (monthIndex === 1) assert(monthString === '1', `we didn't back up to the beginning of year ${calendarYear}`);
       const isLeapMonth = Call(StringPrototypeEndsWith, monthString, ['bis']);
       const monthCode = CreateMonthCode(
         isLeapMonth ? Call(StringPrototypeSlice, monthString, [0, -3]) : monthString,
