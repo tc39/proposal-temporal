@@ -10278,20 +10278,24 @@
 	  if (timePart) result = "".concat(result, "T").concat(timePart);
 	  return result;
 	}
-	function TemporalDateToString(date) {
-	  let showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
-	  const {
+	function ISODateToString(_ref14) {
+	  let {
 	    year,
 	    month,
 	    day
-	  } = GetSlot(date, ISO_DATE);
+	  } = _ref14;
 	  const yearString = ISOYearString(year);
 	  const monthString = ISODateTimePartString(month);
 	  const dayString = ISODateTimePartString(day);
-	  const calendar = FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
-	  return "".concat(yearString, "-").concat(monthString, "-").concat(dayString).concat(calendar);
+	  return "".concat(yearString, "-").concat(monthString, "-").concat(dayString);
 	}
-	function TimeRecordToString(_ref14, precision) {
+	function TemporalDateToString(date) {
+	  let showCalendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
+	  const dateString = ISODateToString(GetSlot(date, ISO_DATE));
+	  const calendar = FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
+	  return dateString + calendar;
+	}
+	function TimeRecordToString(_ref15, precision) {
 	  let {
 	    hour,
 	    minute,
@@ -10299,7 +10303,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref14;
+	  } = _ref15;
 	  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
 	  return FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
 	}
@@ -10800,10 +10804,14 @@
 	  // Get the offset of one day before and after the requested calendar date and
 	  // clock time, avoiding overflows if near the edge of the Instant range.
 	  let ns = GetUTCEpochNanoseconds(isoDateTime);
+	  // Note, ns may be up to DAY_NANOS outside the NS_MIN...NS_MAX range here,
+	  // even if isoDateTime represents a valid wall time in a non-UTC time zone.
+	  // The TZDB does not describe any transitions that would occur in that extra
+	  // day, so we just clip in order not to throw in GetFormatterParts.
 	  let nsEarlier = ns.minus(DAY_NANOS);
-	  if (nsEarlier.lesser(NS_MIN)) nsEarlier = ns;
+	  if (nsEarlier.lesser(NS_MIN)) nsEarlier = NS_MIN;
 	  let nsLater = ns.plus(DAY_NANOS);
-	  if (nsLater.greater(NS_MAX)) nsLater = ns;
+	  if (nsLater.greater(NS_MAX)) nsLater = NS_MAX;
 	  const earlierOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, nsEarlier);
 	  const laterOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, nsLater);
 
@@ -11025,7 +11033,12 @@
 	}
 	function RejectDateRange(isoDate) {
 	  // Noon avoids trouble at edges of DateTime range (excludes midnight)
-	  RejectDateTimeRange(CombineISODateAndTimeRecord(isoDate, NoonTimeRecord()));
+	  const isoDateTime = CombineISODateAndTimeRecord(isoDate, NoonTimeRecord());
+	  const ns = GetUTCEpochNanoseconds(isoDateTime);
+	  if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
+	    const dateString = ISODateToString(isoDateTime.isoDate);
+	    throw new RangeError$1("".concat(dateString, " is outside of supported range"));
+	  }
 	}
 	function RejectTime(hour, minute, second, millisecond, microsecond, nanosecond) {
 	  RejectToRange(hour, 0, 23);
@@ -11042,17 +11055,15 @@
 	function RejectDateTimeRange(isoDateTime) {
 	  const ns = GetUTCEpochNanoseconds(isoDateTime);
 	  if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
-	    // Because PlainDateTime's range is wider than Instant's range, the line
-	    // below will always throw. Calling `ValidateEpochNanoseconds` avoids
-	    // repeating the same error message twice.
-	    ValidateEpochNanoseconds(ns);
+	    const dateTimeString = ISODateTimeToString(isoDateTime, undefined, undefined, 'never');
+	    throw new RangeError$1("".concat(dateTimeString, " is outside of supported range"));
 	  }
 	}
 
 	// Same as above, but throws a different, non-user-facing error
 	function AssertISODateTimeWithinLimits(isoDateTime) {
 	  const ns = GetUTCEpochNanoseconds(isoDateTime);
-	  assert(ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX), "".concat(ISODateTimeToString(isoDateTime), " is outside the representable range"));
+	  assert(ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX), "".concat(ISODateTimeToString(isoDateTime, undefined, undefined, 'never'), " is outside the representable range"));
 	}
 
 	// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
@@ -11063,11 +11074,11 @@
 	    throw new RangeError$1('date/time value is outside of supported range');
 	  }
 	}
-	function RejectYearMonthRange(_ref15) {
+	function RejectYearMonthRange(_ref16) {
 	  let {
 	    year,
 	    month
-	  } = _ref15;
+	  } = _ref16;
 	  RejectToRange(year, YEAR_MIN, YEAR_MAX);
 	  if (year === YEAR_MIN) {
 	    RejectToRange(month, 4, 12);
@@ -11240,12 +11251,12 @@
 	// which is ill-defined in how it handles large year numbers. If the issue
 	// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 	// with no observable changes.
-	function CheckISODaysRange(_ref16) {
+	function CheckISODaysRange(_ref17) {
 	  let {
 	    year,
 	    month,
 	    day
-	  } = _ref16;
+	  } = _ref17;
 	  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
 	    throw new RangeError$1('date/time value is outside the supported range');
 	  }
@@ -11924,7 +11935,7 @@
 	  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
 	  return result;
 	}
-	function AddTime(_ref17, timeDuration) {
+	function AddTime(_ref18, timeDuration) {
 	  let {
 	    hour,
 	    minute,
@@ -11932,7 +11943,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref17;
+	  } = _ref18;
 	  second += timeDuration.sec;
 	  nanosecond += timeDuration.subsec;
 	  return BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -12116,7 +12127,7 @@
 	  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
 	  return CombineISODateAndTimeRecord(isoDate, time);
 	}
-	function RoundTime(_ref18, increment, unit, roundingMode) {
+	function RoundTime(_ref19, increment, unit, roundingMode) {
 	  let {
 	    hour,
 	    minute,
@@ -12124,7 +12135,7 @@
 	    millisecond,
 	    microsecond,
 	    nanosecond
-	  } = _ref18;
+	  } = _ref19;
 	  let quantity;
 	  switch (unit) {
 	    case 'day':
@@ -13481,7 +13492,7 @@
 	          }
 	          // Now we have less than one year remaining. Add one month at a time
 	          // until we go over the target, then back up one month and calculate
-	          // remaining days and weeks.
+	          // remaining days.
 	          let current;
 	          let next = yearsAdded;
 	          do {
@@ -13489,10 +13500,11 @@
 	            current = next;
 	            next = this.addMonthsCalendar(current, sign, 'constrain', cache);
 	            if (next.day !== calendarOne.day) {
-	              // In case the day was constrained down, try to un-constrain it
-	              next = this.regulateDate(_objectSpread2(_objectSpread2({}, next), {}, {
+	              // In case the day was constrained down, un-constrain it (even if
+	              // that's not a real date)
+	              next = _objectSpread2(_objectSpread2({}, next), {}, {
 	                day: calendarOne.day
-	              }), 'constrain', cache);
+	              });
 	            }
 	          } while (this.compareCalendarDates(calendarTwo, next) * sign >= 0);
 	          months -= sign; // correct for loop above which overshoots by 1
