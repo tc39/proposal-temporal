@@ -1166,6 +1166,14 @@
 
 	var Type$1 = /*@__PURE__*/getDefaultExportFromCjs(Type);
 
+	function assert(condition, message) {
+	  if (!condition) throw new Error$1("assertion failure: ".concat(message));
+	}
+	function assertNotReached(message) {
+	  const reason = message ? " because ".concat(message) : '';
+	  throw new Error$1("assertion failure: code should not be reached".concat(reason));
+	}
+
 	var toString$1 = {}.toString;
 
 	var isarray = Array.isArray || function (arr) {
@@ -6578,14 +6586,6 @@
 
 	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
 
-	function assert(condition, message) {
-	  if (!condition) throw new Error$1("assertion failure: ".concat(message));
-	}
-	function assertNotReached(message) {
-	  const reason = message ? " because ".concat(message) : '';
-	  throw new Error$1("assertion failure: code should not be reached".concat(reason));
-	}
-
 	// Instant
 	const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
 
@@ -6793,49 +6793,21 @@
 	  return evenCardinality ? r1 : r2;
 	}
 
-	const offsetIdentifierNoCapture = /(?:[+-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
-	const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
-	const timeZoneID = new RegExp$1("(?:".concat(offsetIdentifierNoCapture.source, "|(?:").concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*)"));
-	const yearpart = /(?:[+-]\d{6}|\d{4})/;
-	const monthpart = /(?:0[1-9]|1[0-2])/;
-	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
-	const datesplit = new RegExp$1("(".concat(yearpart.source, ")(?:-(").concat(monthpart.source, ")-(").concat(daypart.source, ")|(").concat(monthpart.source, ")(").concat(daypart.source, "))"));
-	const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-	const offsetWithParts = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-	const offset = /((?:[+-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
-	const offsetpart = new RegExp$1("([zZ])|".concat(offset.source, "?"));
-	const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
-	const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
-	const zoneddatetime = new RegExp$1(Call$1(ArrayPrototypeJoin, ["^".concat(datesplit.source), "(?:(?:[tT]|\\s+)".concat(timesplit.source, "(?:").concat(offsetpart.source, ")?)?"), "(?:\\[!?(".concat(timeZoneID.source, ")\\])?"), "((?:".concat(annotation.source, ")*)$")], ['']));
-	const time = new RegExp$1(Call$1(ArrayPrototypeJoin, ["^[tT]?".concat(timesplit.source), "(?:".concat(offsetpart.source, ")?"), "(?:\\[!?".concat(timeZoneID.source, "\\])?"), "((?:".concat(annotation.source, ")*)$")], ['']));
-
-	// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
-	// annotations are still allowed, and will throw if the calendar annotation is
-	// not ISO.
-	// Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
-	// with the reference fields.
-	// YYYYMM forbidden by ISO 8601 because ambiguous with YYMMDD, but allowed by
-	// RFC 3339 and we don't allow 2-digit years, so we allow it.
-	// Not ambiguous with HHMMSS because that requires a 'T' prefix
-	// UTC offsets are not allowed, because they are not allowed with any date-only
-	// format; also, YYYY-MM-UU is ambiguous with YYYY-MM-DD
-	const yearmonth = new RegExp$1("^(".concat(yearpart.source, ")-?(").concat(monthpart.source, ")(?:\\[!?").concat(timeZoneID.source, "\\])?((?:").concat(annotation.source, ")*)$"));
-	const monthday = new RegExp$1("^(?:--)?(".concat(monthpart.source, ")-?(").concat(daypart.source, ")(?:\\[!?").concat(timeZoneID.source, "\\])?((?:").concat(annotation.source, ")*)$"));
-	const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
-	const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
-	const durationTime = new RegExp$1("(?:".concat(fraction.source, "H)?(?:").concat(fraction.source, "M)?(?:").concat(fraction.source, "S)?"));
-	const duration = new RegExp$1("^([+-])?P".concat(durationDate.source, "(?:T(?!$)").concat(durationTime.source, ")?$"), 'i');
-	const monthCode = /^M(?:(00)(L)|(0[1-9])(L)?|([1-9][0-9])(L)?)$/;
-
+	const digitsForMonthNumber = ArrayFrom({
+	  length: 100
+	}, (_, i) => i < 10 ? "0".concat(i) : "".concat(i));
 	function ParseMonthCode(argument) {
-	  var _ref, _match$, _ref2, _match$2;
 	  const value = ToPrimitive$2(argument, String$1);
 	  if (typeof value !== 'string') throw new TypeError$1('month code must be a string');
-	  const match = Call$1(RegExpPrototypeExec, monthCode, [value]);
-	  if (!match) throw new RangeError$1("bad month code ".concat(value, "; must match M01-M99 or M00L-M99L"));
+	  const digits = Call$1(StringPrototypeSlice, value, [1, 3]);
+	  const monthNumber = digits.length === 2 ? +digits | 0 : -1; // -1 ensures failure
+	  const isLeapMonth = value.length === 4;
+	  if (!(monthNumber >= 0) || digits !== digitsForMonthNumber[monthNumber] || value[0] !== 'M' || (isLeapMonth ? value[3] !== 'L' : value.length !== 3 || monthNumber === 0)) {
+	    throw new RangeError$1("bad month code ".concat(value, "; must match M01-M99 or M00L-M99L"));
+	  }
 	  return {
-	    monthNumber: +((_ref = (_match$ = match[1]) !== null && _match$ !== void 0 ? _match$ : match[3]) !== null && _ref !== void 0 ? _ref : match[5]),
-	    isLeapMonth: ((_ref2 = (_match$2 = match[2]) !== null && _match$2 !== void 0 ? _match$2 : match[4]) !== null && _ref2 !== void 0 ? _ref2 : match[6]) === 'L'
+	    monthNumber,
+	    isLeapMonth
 	  };
 	}
 	function CreateMonthCode(monthNumber, isLeapMonth) {
@@ -8407,6 +8379,39 @@
 	}
 	_defineProperty(TimeDuration, "MAX", bigInt('9007199254740991999999999'));
 	_defineProperty(TimeDuration, "ZERO", new _TimeDuration(bigInt.zero));
+
+	const offsetIdentifierNoCapture = /(?:[+-](?:[01][0-9]|2[0-3])(?::?[0-5][0-9])?)/;
+	const tzComponent = /[A-Za-z._][A-Za-z._0-9+-]*/;
+	const timeZoneID = new RegExp$1("(?:".concat(offsetIdentifierNoCapture.source, "|(?:").concat(tzComponent.source, ")(?:\\/(?:").concat(tzComponent.source, "))*)"));
+	const yearpart = /(?:[+-]\d{6}|\d{4})/;
+	const monthpart = /(?:0[1-9]|1[0-2])/;
+	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
+	const datesplit = new RegExp$1("(".concat(yearpart.source, ")(?:-(").concat(monthpart.source, ")-(").concat(daypart.source, ")|(").concat(monthpart.source, ")(").concat(daypart.source, "))"));
+	const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
+	const offsetWithParts = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
+	const offset = /((?:[+-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
+	const offsetpart = new RegExp$1("([zZ])|".concat(offset.source, "?"));
+	const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
+	const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
+	const zoneddatetime = new RegExp$1(Call$1(ArrayPrototypeJoin, ["^".concat(datesplit.source), "(?:(?:[tT]|\\s+)".concat(timesplit.source, "(?:").concat(offsetpart.source, ")?)?"), "(?:\\[!?(".concat(timeZoneID.source, ")\\])?"), "((?:".concat(annotation.source, ")*)$")], ['']));
+	const time = new RegExp$1(Call$1(ArrayPrototypeJoin, ["^[tT]?".concat(timesplit.source), "(?:".concat(offsetpart.source, ")?"), "(?:\\[!?".concat(timeZoneID.source, "\\])?"), "((?:".concat(annotation.source, ")*)$")], ['']));
+
+	// The short forms of YearMonth and MonthDay are only for the ISO calendar, but
+	// annotations are still allowed, and will throw if the calendar annotation is
+	// not ISO.
+	// Non-ISO calendar YearMonth and MonthDay have to parse as a Temporal.PlainDate,
+	// with the reference fields.
+	// YYYYMM forbidden by ISO 8601 because ambiguous with YYMMDD, but allowed by
+	// RFC 3339 and we don't allow 2-digit years, so we allow it.
+	// Not ambiguous with HHMMSS because that requires a 'T' prefix
+	// UTC offsets are not allowed, because they are not allowed with any date-only
+	// format; also, YYYY-MM-UU is ambiguous with YYYY-MM-DD
+	const yearmonth = new RegExp$1("^(".concat(yearpart.source, ")-?(").concat(monthpart.source, ")(?:\\[!?").concat(timeZoneID.source, "\\])?((?:").concat(annotation.source, ")*)$"));
+	const monthday = new RegExp$1("^(?:--)?(".concat(monthpart.source, ")-?(").concat(daypart.source, ")(?:\\[!?").concat(timeZoneID.source, "\\])?((?:").concat(annotation.source, ")*)$"));
+	const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
+	const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
+	const durationTime = new RegExp$1("(?:".concat(fraction.source, "H)?(?:").concat(fraction.source, "M)?(?:").concat(fraction.source, "S)?"));
+	const duration = new RegExp$1("^([+-])?P".concat(durationDate.source, "(?:T(?!$)").concat(durationTime.source, ")?$"), 'i');
 
 	const DAY_MS = 86400000;
 	const DAY_NANOS = DAY_MS * 1e6;
@@ -12740,53 +12745,53 @@
 	// about non-ISO calendars. However, non-ISO calendar implementation is subject
 	// to change because these calendars are implementation-defined.
 
-	const eraInfo = {
-	  buddhist: {
+	const eraInfoEntries = {
+	  buddhist: ObjectEntries({
 	    be: {}
-	  },
-	  coptic: {
+	  }),
+	  coptic: ObjectEntries({
 	    am: {}
-	  },
-	  ethioaa: {
+	  }),
+	  ethioaa: ObjectEntries({
 	    aa: {
 	      aliases: ['mundi']
 	    }
-	  },
-	  ethiopic: {
+	  }),
+	  ethiopic: ObjectEntries({
 	    am: {
 	      aliases: ['incar']
 	    },
 	    aa: {
 	      aliases: ['mundi']
 	    }
-	  },
-	  gregory: {
+	  }),
+	  gregory: ObjectEntries({
 	    ce: {
 	      aliases: ['ad']
 	    },
 	    bce: {
 	      aliases: ['bc']
 	    }
-	  },
-	  hebrew: {
+	  }),
+	  hebrew: ObjectEntries({
 	    am: {}
-	  },
-	  indian: {
+	  }),
+	  indian: ObjectEntries({
 	    shaka: {}
-	  },
-	  'islamic-civil': {
+	  }),
+	  'islamic-civil': ObjectEntries({
 	    ah: {},
 	    bh: {}
-	  },
-	  'islamic-tbla': {
+	  }),
+	  'islamic-tbla': ObjectEntries({
 	    ah: {},
 	    bh: {}
-	  },
-	  'islamic-umalqura': {
+	  }),
+	  'islamic-umalqura': ObjectEntries({
 	    ah: {},
 	    bh: {}
-	  },
-	  japanese: {
+	  }),
+	  japanese: ObjectEntries({
 	    reiwa: {},
 	    heisei: {},
 	    showa: {},
@@ -12798,29 +12803,28 @@
 	    bce: {
 	      aliases: ['bc']
 	    }
-	  },
-	  persian: {
+	  }),
+	  persian: ObjectEntries({
 	    ap: {}
-	  },
-	  roc: {
+	  }),
+	  roc: ObjectEntries({
 	    roc: {
 	      aliases: ['minguo']
 	    },
 	    broc: {
 	      aliases: ['before-roc', 'minguo-qian']
 	    }
-	  }
+	  })
 	};
 	function CalendarSupportsEra(calendar) {
-	  return ObjectHasOwn(eraInfo, calendar);
+	  return ObjectHasOwn(eraInfoEntries, calendar);
 	}
 	function CanonicalizeEraInCalendar(calendar, era) {
-	  const eras = eraInfo[calendar];
-	  const entries = ObjectEntries(eras);
+	  const entries = eraInfoEntries[calendar];
 	  for (let ix = 0; ix < entries.length; ix++) {
 	    const canonicalName = entries[ix][0];
-	    const info = entries[ix][1];
 	    if (era === canonicalName) return era;
+	    const info = entries[ix][1];
 	    if (info.aliases && Call$1(ArrayPrototypeIncludes, info.aliases, [era])) return canonicalName;
 	  }
 	  return undefined;
@@ -12830,19 +12834,22 @@
 	 * This prototype implementation of non-ISO calendars makes many repeated calls
 	 * to Intl APIs which may be slow (e.g. >0.2ms). This trivial cache will speed
 	 * up these repeat accesses. Each cache instance is associated (via a WeakMap)
-	 * to a specific Temporal object, which speeds up multiple calendar calls on the
-	 * same Temporal object instance.  No invalidation or pruning is necessary
-	 * because each object's cache is thrown away when the object is GC-ed.
+	 * to a specific ISO Date Record object, which speeds up multiple calendar calls
+	 * on Temporal objects with the same ISO Date Record instance.  No invalidation
+	 * or pruning is necessary because each object's cache is thrown away when the
+	 * object is GC-ed.
 	 */
 	class OneObjectCache {
-	  constructor() {
-	    let cacheToClone = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+	  constructor(id) {
+	    let cacheToClone = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+	    this.id = id;
 	    this.map = new Map$1();
 	    this.calls = 0;
 	    this.now = now();
 	    this.hits = 0;
 	    this.misses = 0;
 	    if (cacheToClone !== undefined) {
+	      assert(cacheToClone.id === this.id, 'should not clone cache from a different calendar');
 	      let i = 0;
 	      const entriesIterator = Call$1(MapPrototypeEntries, cacheToClone.map, []);
 	      for (;;) {
@@ -12881,19 +12888,57 @@
 	    Call$1(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, this]);
 	    this.report();
 	  }
+	  // Cache keys are int32
+	  // int32 msb fedcba9876543210fedcba9876543210 lsb
+	  //           uyyyyyyyyyyyyyyyyyyyymmmmdddddff
+	  // u = unused (1 bit)
+	  // y = year + 280804 (20 bits; max is 564387)
+	  // m = month (4 bits; max is 13)
+	  // d = day (5 bits; max is 31)
+	  // f = flags (indicates type of key, and overflow for calendar-to-ISO type)
+	  //     00 = Chinese/Dangi month list
+	  //     01 = ISO-to-calendar
+	  //     10 = calendar-to-ISO, overflow constrain
+	  //     11 = calendar-to-ISO, overflow reject
+	  static privKey(year, month, day, flags) {
+	    // -280804 is the earliest year number in any supported calendar (in this
+	    // case, Hijri calendars)
+	    const unsignedYear = year + 280804;
+	    return unsignedYear << 11 | month << 7 | day << 2 | flags;
+	  }
+	  static generateCalendarToISOKey(_ref4, overflow) {
+	    let {
+	      year,
+	      month,
+	      day
+	    } = _ref4;
+	    const flags = overflow === 'constrain' ? 0b10 : 0b11;
+	    return this.privKey(year, month, day, flags);
+	  }
+	  static generateISOToCalendarKey(_ref5) {
+	    let {
+	      year,
+	      month,
+	      day
+	    } = _ref5;
+	    return this.privKey(year, month, day, 1);
+	  }
+	  static generateMonthListKey(year) {
+	    return this.privKey(year, 0, 0, 0);
+	  }
 	}
 	OneObjectCache.objectMap = new WeakMap$1();
 	OneObjectCache.MAX_CACHE_ENTRIES = 1000;
 	/**
 	 * Returns a WeakMap-backed cache that's used to store expensive results
-	 * that are associated with a particular Temporal object instance.
+	 * that are associated with a particular ISO Date Record object instance.
 	 *
 	 * @param obj - object to associate with the cache
 	 */
-	OneObjectCache.getCacheForObject = function (obj) {
+	OneObjectCache.getCacheForObject = function (id, obj) {
 	  let cache = Call$1(WeakMapPrototypeGet, OneObjectCache.objectMap, [obj]);
 	  if (!cache) {
-	    cache = new OneObjectCache();
+	    cache = new OneObjectCache(id);
 	    Call$1(WeakMapPrototypeSet, OneObjectCache.objectMap, [obj, cache]);
 	  }
 	  return cache;
@@ -12954,7 +12999,8 @@
 	    try {
 	      return Call$1(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [legacyDate]);
 	    } catch (e) {
-	      throw new RangeError$1("Invalid ISO date: ".concat(isoString));
+	      if (e instanceof RangeError$1) throw new RangeError$1("Invalid ISO date: ".concat(isoString));
+	      throw e;
 	    }
 	  },
 	  isoToCalendarDate(isoDate, cache) {
@@ -12963,13 +13009,7 @@
 	      month: isoMonth,
 	      day: isoDay
 	    } = isoDate;
-	    const key = JSONStringify({
-	      func: 'isoToCalendarDate',
-	      isoYear,
-	      isoMonth,
-	      isoDay,
-	      id: this.id
-	    });
+	    const key = OneObjectCache.generateISOToCalendarKey(isoDate);
 	    const cached = cache.get(key);
 	    if (cached) return cached;
 	    const isoString = toUtcIsoDateString(isoYear, isoMonth, isoDay);
@@ -13060,14 +13100,7 @@
 	    cache.set(key, calendarDate);
 	    // Also cache the reverse mapping
 	    const cacheReverse = overflow => {
-	      const keyReverse = JSONStringify({
-	        func: 'calendarToIsoDate',
-	        year: calendarDate.year,
-	        month: calendarDate.month,
-	        day: calendarDate.day,
-	        overflow,
-	        id: this.id
-	      });
+	      const keyReverse = OneObjectCache.generateCalendarToISOKey(calendarDate, overflow);
 	      cache.set(keyReverse, isoDate);
 	    };
 	    Call$1(ArrayPrototypeForEach, ['constrain', 'reject'], [cacheReverse]);
@@ -13103,54 +13136,55 @@
 	      }
 	    }
 	  },
+	  /** Private helper function */
+	  eraFromYear(calendarDate) {
+	    const {
+	      year
+	    } = calendarDate;
+	    let eraYear;
+	    const ix = Call$1(ArrayPrototypeFindIndex, this.eras, [(e, i) => {
+	      if (i === this.eras.length - 1) {
+	        if (e.skip) {
+	          // This last era is only present for legacy ICU data. Treat the
+	          // previous era as the last era.
+	          e = this.eras[i - 1];
+	        }
+	        if (e.reverseOf) {
+	          // This is a reverse-sign era (like BCE) which must be the oldest
+	          // era. Count years backwards.
+	          if (year > 0) throw new RangeError$1("Signed year ".concat(year, " is invalid for era ").concat(e.name));
+	          eraYear = e.anchorEpoch.year - year;
+	          return true;
+	        }
+	        // last era always gets all "leftover" (older than epoch) years,
+	        // so no need for a comparison like below.
+	        eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
+	        return true;
+	      }
+	      const comparison = nonIsoHelperBase.compareCalendarDates(calendarDate, e.anchorEpoch);
+	      if (comparison >= 0) {
+	        eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
+	        return true;
+	      }
+	      return false;
+	    }]);
+	    if (ix === -1) throw new RangeError$1("Year ".concat(year, " was not matched by any era"));
+	    let matchingEra = this.eras[ix];
+	    if (matchingEra.skip) matchingEra = this.eras[ix - 1];
+	    return {
+	      eraYear,
+	      era: matchingEra.code
+	    };
+	  },
 	  /** Fill in missing parts of the (year, era, eraYear) tuple */
 	  completeEraYear(calendarDate) {
-	    const eraFromYear = year => {
-	      let eraYear;
-	      const adjustedCalendarDate = _objectSpread2(_objectSpread2({}, calendarDate), {}, {
-	        year
-	      });
-	      const ix = Call$1(ArrayPrototypeFindIndex, this.eras, [(e, i) => {
-	        if (i === this.eras.length - 1) {
-	          if (e.skip) {
-	            // This last era is only present for legacy ICU data. Treat the
-	            // previous era as the last era.
-	            e = this.eras[i - 1];
-	          }
-	          if (e.reverseOf) {
-	            // This is a reverse-sign era (like BCE) which must be the oldest
-	            // era. Count years backwards.
-	            if (year > 0) throw new RangeError$1("Signed year ".concat(year, " is invalid for era ").concat(e.name));
-	            eraYear = e.anchorEpoch.year - year;
-	            return true;
-	          }
-	          // last era always gets all "leftover" (older than epoch) years,
-	          // so no need for a comparison like below.
-	          eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
-	          return true;
-	        }
-	        const comparison = nonIsoHelperBase.compareCalendarDates(adjustedCalendarDate, e.anchorEpoch);
-	        if (comparison >= 0) {
-	          eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
-	          return true;
-	        }
-	        return false;
-	      }]);
-	      if (ix === -1) throw new RangeError$1("Year ".concat(year, " was not matched by any era"));
-	      let matchingEra = this.eras[ix];
-	      if (matchingEra.skip) matchingEra = this.eras[ix - 1];
-	      return {
-	        eraYear,
-	        era: matchingEra.code
-	      };
-	    };
 	    let {
 	      year,
 	      eraYear,
 	      era
 	    } = calendarDate;
 	    if (year !== undefined) {
-	      const matchData = eraFromYear(year);
+	      const matchData = this.eraFromYear(calendarDate);
 	      ({
 	        eraYear,
 	        era
@@ -13163,10 +13197,10 @@
 	      }
 	    } else if (eraYear !== undefined) {
 	      const canonicalName = CanonicalizeEraInCalendar(this.id, era);
-	      const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref4 => {
+	      const matchingEra = Call$1(ArrayPrototypeFind, this.eras, [_ref6 => {
 	        let {
 	          code
-	        } = _ref4;
+	        } = _ref6;
 	        return code === canonicalName;
 	      }]);
 	      if (!matchingEra) throw new RangeError$1("Era ".concat(era, " (ISO year ").concat(eraYear, ") was not matched by any era"));
@@ -13182,10 +13216,15 @@
 	      // the era or after its end as long as it's in the same year. If that
 	      // happens, we'll adjust the era/eraYear pair to be the correct era for
 	      // the `year`.
+	      const adjustedCalendarDate = {
+	        year,
+	        month: calendarDate.month,
+	        day: calendarDate.day
+	      };
 	      ({
 	        eraYear,
 	        era
-	      } = eraFromYear(year));
+	      } = this.eraFromYear(adjustedCalendarDate));
 	    }
 	    // validateCalendarDate already ensured that either year or era+eraYear are
 	    // present
@@ -13260,28 +13299,14 @@
 	      month,
 	      day
 	    } = date;
-	    const key = JSONStringify({
-	      func: 'calendarToIsoDate',
-	      year,
-	      month,
-	      day,
-	      overflow,
-	      id: this.id
-	    });
+	    const key = OneObjectCache.generateCalendarToISOKey(date, overflow);
 	    let cached = cache.get(key);
 	    if (cached) return cached;
 	    // If YMD are present in the input but the input has been constrained
 	    // already, then cache both the original value and the constrained value.
 	    let keyOriginal;
 	    if (originalDate.year !== undefined && originalDate.month !== undefined && originalDate.day !== undefined && (originalDate.year !== date.year || originalDate.month !== date.month || originalDate.day !== date.day)) {
-	      keyOriginal = JSONStringify({
-	        func: 'calendarToIsoDate',
-	        year: originalDate.year,
-	        month: originalDate.month,
-	        day: originalDate.day,
-	        overflow,
-	        id: this.id
-	      });
+	      keyOriginal = OneObjectCache.generateCalendarToISOKey(originalDate, overflow);
 	      cached = cache.get(keyOriginal);
 	      if (cached) return cached;
 	    }
@@ -13434,13 +13459,13 @@
 	    }
 	    return calendarDate;
 	  },
-	  addCalendar(calendarDate, _ref5, overflow, cache) {
+	  addCalendar(calendarDate, _ref7, overflow, cache) {
 	    let {
 	      years = 0,
 	      months = 0,
 	      weeks = 0,
 	      days = 0
-	    } = _ref5;
+	    } = _ref7;
 	    const {
 	      year,
 	      day,
@@ -13734,27 +13759,25 @@
 	    return this.inLeapYear(calendarDate) ? 13 : 12;
 	  },
 	  minimumMonthLength(calendarDate) {
-	    return this.minMaxMonthLength(calendarDate, 'min');
+	    return this.minMaxMonthLength(calendarDate, 0);
 	  },
 	  maximumMonthLength(calendarDate) {
-	    return this.minMaxMonthLength(calendarDate, 'max');
+	    return this.minMaxMonthLength(calendarDate, 1);
 	  },
 	  minMaxMonthLength(calendarDate, minOrMax) {
+	    var _calendarDate$monthCo;
 	    const {
 	      month,
 	      year
 	    } = calendarDate;
-	    const monthCode = this.getMonthCode(year, month);
-	    const monthInfo = Call$1(ArrayPrototypeFind, ObjectEntries(this.months), [m => m[1].monthCode === monthCode]);
-	    if (monthInfo === undefined) throw new RangeError$1("unmatched Hebrew month: ".concat(month));
-	    const daysInMonth = monthInfo[1].days;
+	    const monthCode = (_calendarDate$monthCo = calendarDate.monthCode) !== null && _calendarDate$monthCo !== void 0 ? _calendarDate$monthCo : this.getMonthCode(year, month);
+	    const daysInMonth = this.monthLengths[monthCode];
+	    if (daysInMonth === undefined) throw new RangeError$1("unmatched Hebrew month: ".concat(month));
 	    return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[minOrMax];
 	  },
 	  maxLengthOfMonthCodeInAnyYear(monthCode) {
-	    if (monthCode === 'M04' || monthCode === 'M06' || monthCode === 'M08' || monthCode === 'M10' || monthCode === 'M12') {
-	      return 29;
-	    }
-	    return 30;
+	    const daysInMonth = this.monthLengths[monthCode];
+	    return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[1];
 	  },
 	  /** Take a guess at what ISO date a particular calendar date corresponds to */
 	  estimateIsoDate(calendarDate) {
@@ -13770,94 +13793,76 @@
 	  months: {
 	    Tishri: {
 	      leap: 1,
-	      regular: 1,
-	      monthCode: 'M01',
-	      days: 30
+	      regular: 1
 	    },
 	    Heshvan: {
 	      leap: 2,
-	      regular: 2,
-	      monthCode: 'M02',
-	      days: {
-	        min: 29,
-	        max: 30
-	      }
+	      regular: 2
 	    },
 	    Kislev: {
 	      leap: 3,
-	      regular: 3,
-	      monthCode: 'M03',
-	      days: {
-	        min: 29,
-	        max: 30
-	      }
+	      regular: 3
 	    },
 	    Tevet: {
 	      leap: 4,
-	      regular: 4,
-	      monthCode: 'M04',
-	      days: 29
+	      regular: 4
 	    },
 	    Shevat: {
 	      leap: 5,
-	      regular: 5,
-	      monthCode: 'M05',
-	      days: 30
+	      regular: 5
 	    },
 	    Adar: {
 	      leap: undefined,
-	      regular: 6,
-	      monthCode: 'M06',
-	      days: 29
+	      regular: 6
 	    },
 	    'Adar I': {
 	      leap: 6,
-	      regular: undefined,
-	      monthCode: 'M05L',
-	      days: 30
+	      regular: undefined
 	    },
 	    'Adar II': {
 	      leap: 7,
-	      regular: undefined,
-	      monthCode: 'M06',
-	      days: 29
+	      regular: undefined
 	    },
 	    Nisan: {
 	      leap: 8,
-	      regular: 7,
-	      monthCode: 'M07',
-	      days: 30
+	      regular: 7
 	    },
 	    Iyar: {
 	      leap: 9,
-	      regular: 8,
-	      monthCode: 'M08',
-	      days: 29
+	      regular: 8
 	    },
 	    Sivan: {
 	      leap: 10,
-	      regular: 9,
-	      monthCode: 'M09',
-	      days: 30
+	      regular: 9
 	    },
 	    Tamuz: {
 	      leap: 11,
-	      regular: 10,
-	      monthCode: 'M10',
-	      days: 29
+	      regular: 10
 	    },
 	    Av: {
 	      leap: 12,
-	      regular: 11,
-	      monthCode: 'M11',
-	      days: 30
+	      regular: 11
 	    },
 	    Elul: {
 	      leap: 13,
-	      regular: 12,
-	      monthCode: 'M12',
-	      days: 29
+	      regular: 12
 	    }
+	  },
+	  monthLengths: {
+	    // monthCode: len | [min, max]
+	    M01: 30,
+	    M02: [29, 30],
+	    M03: [29, 30],
+	    M04: 29,
+	    M05: 30,
+	    M05L: 30,
+	    M06: 29,
+	    M07: 30,
+	    M08: 29,
+	    M09: 30,
+	    M10: 29,
+	    M11: 30,
+	    M12: 29
 	  },
 	  getMonthCode(year, month) {
 	    if (this.inLeapYear({
@@ -14715,11 +14720,38 @@
 	  id: 'chinese',
 	  calendarType: 'lunisolar',
 	  inLeapYear(calendarDate, cache) {
-	    const months = this.getMonthList(calendarDate.year, cache);
-	    return ObjectEntries(months).length === 13;
+	    return this.getMonthList(calendarDate.year, cache).monthsInYear === 13;
 	  },
 	  monthsInYear(calendarDate, cache) {
-	    return this.inLeapYear(calendarDate, cache) ? 13 : 12;
+	    return this.getMonthList(calendarDate.year, cache).monthsInYear;
+	  },
+	  daysInMonth(calendarDate, cache) {
+	    const {
+	      month,
+	      year
+	    } = calendarDate;
+	    const matchingMonthEntry = this.getMonthList(year, cache)[month];
+	    if (matchingMonthEntry === undefined) {
+	      throw new RangeError$1("Invalid month ".concat(month, " in Chinese year ").concat(year));
+	    }
+	    return matchingMonthEntry.daysInMonth;
+	  },
+	  daysInPreviousMonth(calendarDate, cache) {
+	    const {
+	      month,
+	      year
+	    } = calendarDate;
+	    const previousMonthYear = month > 1 ? year : year - 1;
+	    let previousMonthDate = {
+	      year: previousMonthYear,
+	      month,
+	      day: 1
+	    };
+	    const previousMonth = month > 1 ? month - 1 : this.monthsInYear(previousMonthDate, cache);
+	    return this.daysInMonth({
+	      year: previousMonthYear,
+	      month: previousMonth
+	    }, cache);
 	  },
 	  minimumMonthLength: (/* calendarDate */) => 29,
 	  maximumMonthLength: (/* calendarDate */) => 30,
@@ -14774,11 +14806,7 @@
 	    if (calendarYear === undefined) {
 	      throw new TypeError$1('Missing year');
 	    }
-	    const key = JSONStringify({
-	      func: 'getMonthList',
-	      calendarYear,
-	      id: this.id
-	    });
+	    const key = OneObjectCache.generateMonthListKey(calendarYear);
 	    const cached = cache.get(key);
 	    if (cached) return cached;
 
@@ -14834,28 +14862,32 @@
 	    const monthList = {};
 	    let monthIndex = 1;
 	    let oldDay;
-	    let oldMonthString;
 	    for (;;) {
 	      const {
 	        day,
 	        monthString,
 	        relatedYear
 	      } = updateCalendarFields();
+	      if (monthIndex === 1) assert(monthString === '1', "we didn't back up to the beginning of year ".concat(calendarYear));
+	      const isLeapMonth = Call$1(StringPrototypeEndsWith, monthString, ['bis']);
+	      const monthCode = CreateMonthCode(isLeapMonth ? Call$1(StringPrototypeSlice, monthString, [0, -3]) : monthString, isLeapMonth);
 	      if (oldDay) {
-	        monthList[oldMonthString].daysInMonth = oldDay + 30 - day;
+	        monthList[monthIndex - 1].daysInMonth = oldDay + 30 - day;
 	      }
 	      oldDay = day;
-	      oldMonthString = monthString;
 	      if (relatedYear !== calendarYear) break;
-	      monthList[monthString] = {
-	        monthIndex: monthIndex++
+	      monthList[monthIndex] = {
+	        monthCode
 	      };
+	      monthList[monthCode] = monthIndex++;
+
 	      // Move to the next month. Because months are sometimes 29 days, the day of the
 	      // calendar month will move forward slowly but not enough to flip over to a new
 	      // month before the loop ends at 12-13 months.
 	      daysPastJan31 += 30;
 	    }
-	    monthList[oldMonthString].daysInMonth = oldDay + 30 - calendarFields.day;
+	    monthList.monthsInYear = monthIndex - 1; // subtract 1, it was incremented after the loop
+
 	    cache.set(key, monthList);
 	    return monthList;
 	  },
@@ -14887,11 +14919,11 @@
 	      // month. Below we'll normalize the output.
 	      if (monthExtra && monthExtra !== 'bis') throw new RangeError$1("Unexpected leap month suffix: ".concat(monthExtra));
 	      const monthCode = CreateMonthCode(month, monthExtra !== undefined);
-	      const monthString = "".concat(month).concat(monthExtra || '');
 	      const months = this.getMonthList(year, cache);
-	      const monthInfo = months[monthString];
-	      if (monthInfo === undefined) throw new RangeError$1("Unmatched month ".concat(monthString, " in Chinese year ").concat(year));
-	      month = monthInfo.monthIndex;
+	      month = months[monthCode];
+	      if (month === undefined) {
+	        throw new RangeError$1("Unmatched month ".concat(month).concat(monthExtra || '', " in Chinese year ").concat(year));
+	      }
 	      return {
 	        year,
 	        month,
@@ -14908,25 +14940,20 @@
 	          monthNumber,
 	          isLeapMonth
 	        } = ParseMonthCode(monthCode);
-	        const numberPart = "".concat(monthNumber).concat(isLeapMonth ? 'bis' : '');
-	        let monthInfo = months[numberPart];
-	        month = monthInfo && monthInfo.monthIndex;
+	        month = months[monthCode];
 	        // If this leap month isn't present in this year, constrain to the same
 	        // day of the previous month.
-	        if (month === undefined && isLeapMonth && monthNumber !== 13 && overflow === 'constrain') {
-	          monthInfo = months[monthNumber];
-	          if (monthInfo) {
-	            month = monthInfo.monthIndex;
-	            monthCode = CreateMonthCode(monthNumber, false);
-	          }
+	        if (month === undefined && isLeapMonth && overflow === 'constrain') {
+	          const adjustedMonthCode = CreateMonthCode(monthNumber, false);
+	          month = months[adjustedMonthCode];
+	          monthCode = adjustedMonthCode;
 	        }
 	        if (month === undefined) {
 	          throw new RangeError$1("Unmatched month ".concat(monthCode, " in Chinese year ").concat(year));
 	        }
 	      } else if (monthCode === undefined) {
 	        const months = this.getMonthList(year, cache);
-	        const monthEntries = ObjectEntries(months);
-	        const largestMonth = monthEntries.length;
+	        const largestMonth = months.monthsInYear;
 	        if (overflow === 'reject') {
 	          RejectToRange(month, 1, largestMonth);
 	          RejectToRange(day, 1, this.maximumMonthLength());
@@ -14934,22 +14961,16 @@
 	          month = ConstrainToRange(month, 1, largestMonth);
 	          day = ConstrainToRange(day, 1, this.maximumMonthLength());
 	        }
-	        const matchingMonthEntry = Call$1(ArrayPrototypeFind, monthEntries, [entry => entry[1].monthIndex === month]);
-	        if (matchingMonthEntry === undefined) {
+	        monthCode = months[month].monthCode;
+	        if (monthCode === undefined) {
 	          throw new RangeError$1("Invalid month ".concat(month, " in Chinese year ").concat(year));
 	        }
-	        monthCode = CreateMonthCode(Call$1(StringPrototypeReplace, matchingMonthEntry[0], ['bis', '']), Call$1(StringPrototypeIndexOf, matchingMonthEntry[0], ['bis']) !== -1);
 	      } else {
 	        // Both month and monthCode are present. Make sure they don't conflict.
 	        const months = this.getMonthList(year, cache);
-	        const {
-	          monthNumber,
-	          isLeapMonth
-	        } = ParseMonthCode(monthCode);
-	        const numberPart = "".concat(monthNumber).concat(isLeapMonth ? 'bis' : '');
-	        const monthInfo = months[numberPart];
-	        if (!monthInfo) throw new RangeError$1("Unmatched monthCode ".concat(monthCode, " in Chinese year ").concat(year));
-	        if (month !== monthInfo.monthIndex) {
+	        const monthIndex = months[monthCode];
+	        if (!monthIndex) throw new RangeError$1("Unmatched monthCode ".concat(monthCode, " in Chinese year ").concat(year));
+	        if (month !== monthIndex) {
 	          throw new RangeError$1("monthCode ".concat(monthCode, " doesn't correspond to month ").concat(month, " in Chinese year ").concat(year));
 	        }
 	      }
@@ -14987,13 +15008,13 @@
 	    }
 	  },
 	  dateToISO(fields, overflow) {
-	    const cache = new OneObjectCache();
+	    const cache = new OneObjectCache(this.id);
 	    const result = this.helper.calendarToIsoDate(fields, overflow, cache);
 	    cache.setObject(result);
 	    return result;
 	  },
 	  monthDayToISOReferenceDate(fields, overflow) {
-	    const cache = new OneObjectCache();
+	    const cache = new OneObjectCache(this.id);
 	    const result = this.helper.monthDayFromFields(fields, overflow, cache);
 	    // result.year is a reference year where this month/day exists in this calendar
 	    cache.setObject(result);
@@ -15042,14 +15063,14 @@
 	    }
 	    return arrayFromSet(result);
 	  },
-	  dateAdd(isoDate, _ref6, overflow) {
+	  dateAdd(isoDate, _ref8, overflow) {
 	    let {
 	      years,
 	      months,
 	      weeks,
 	      days
-	    } = _ref6;
-	    const cache = OneObjectCache.getCacheForObject(isoDate);
+	    } = _ref8;
+	    const cache = OneObjectCache.getCacheForObject(this.id, isoDate);
 	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
 	    const added = this.helper.addCalendar(calendarDate, {
 	      years,
@@ -15059,22 +15080,22 @@
 	    }, overflow, cache);
 	    const isoAdded = this.helper.calendarToIsoDate(added, 'constrain', cache);
 	    // The new object's cache starts with the cache of the old object
-	    if (!OneObjectCache.getCacheForObject(isoAdded)) {
-	      const newCache = new OneObjectCache(cache);
+	    if (!OneObjectCache.getCacheForObject(this.id, isoAdded)) {
+	      const newCache = new OneObjectCache(this.id, cache);
 	      newCache.setObject(isoAdded);
 	    }
 	    return isoAdded;
 	  },
 	  dateUntil(one, two, largestUnit) {
-	    const cacheOne = OneObjectCache.getCacheForObject(one);
-	    const cacheTwo = OneObjectCache.getCacheForObject(two);
+	    const cacheOne = OneObjectCache.getCacheForObject(this.id, one);
+	    const cacheTwo = OneObjectCache.getCacheForObject(this.id, two);
 	    const calendarOne = this.helper.isoToCalendarDate(one, cacheOne);
 	    const calendarTwo = this.helper.isoToCalendarDate(two, cacheTwo);
 	    const result = this.helper.untilCalendar(calendarOne, calendarTwo, largestUnit, cacheOne);
 	    return result;
 	  },
 	  isoToDate(isoDate, requestedFields) {
-	    const cache = OneObjectCache.getCacheForObject(isoDate);
+	    const cache = OneObjectCache.getCacheForObject(this.id, isoDate);
 	    const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
 	    if (requestedFields.dayOfWeek) {
 	      calendarDate.dayOfWeek = impl['iso8601'].isoToDate(isoDate, {
@@ -15116,11 +15137,11 @@
 	}, {
 	  id: 'islamicc',
 	  firstDay: 20
-	}], [_ref7 => {
+	}], [_ref9 => {
 	  let {
 	    id,
 	    firstDay
-	  } = _ref7;
+	  } = _ref9;
 	  const helper = _objectSpread2(_objectSpread2({}, helperIslamic), {}, {
 	    id
 	  });
@@ -16129,7 +16150,18 @@
 	  withCalendar(calendar) {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    calendar = ToTemporalCalendarIdentifier(calendar);
-	    return CreateTemporalDate(GetSlot(this, ISO_DATE), calendar);
+	    // Don't reuse the same ISODate object, as it should start with a fresh
+	    // calendar cache
+	    const {
+	      year,
+	      month,
+	      day
+	    } = GetSlot(this, ISO_DATE);
+	    return CreateTemporalDate({
+	      year,
+	      month,
+	      day
+	    }, calendar);
 	  }
 	  add(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -16213,14 +16245,14 @@
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const calendar = GetSlot(this, CALENDAR);
 	    const fields = ISODateToFields(calendar, GetSlot(this, ISO_DATE));
-	    const isoDate = CalendarYearMonthFromFields(calendar, fields);
+	    const isoDate = CalendarYearMonthFromFields(calendar, fields, 'constrain');
 	    return CreateTemporalYearMonth(isoDate, calendar);
 	  }
 	  toPlainMonthDay() {
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
 	    const calendar = GetSlot(this, CALENDAR);
 	    const fields = ISODateToFields(calendar, GetSlot(this, ISO_DATE));
-	    const isoDate = CalendarMonthDayFromFields(calendar, fields);
+	    const isoDate = CalendarMonthDayFromFields(calendar, fields, 'constrain');
 	    return CreateTemporalMonthDay(isoDate, calendar);
 	  }
 	  static from(item) {
@@ -16432,7 +16464,21 @@
 	  withCalendar(calendar) {
 	    if (!IsTemporalDateTime(this)) throw new TypeError$1('invalid receiver');
 	    calendar = ToTemporalCalendarIdentifier(calendar);
-	    return CreateTemporalDateTime(GetSlot(this, ISO_DATE_TIME), calendar);
+	    // Don't reuse the same ISODate object, as it should start with a fresh
+	    // calendar cache
+	    const {
+	      isoDate: {
+	        year,
+	        month,
+	        day
+	      },
+	      time
+	    } = GetSlot(this, ISO_DATE_TIME);
+	    return CreateTemporalDateTime(CombineISODateAndTimeRecord({
+	      year,
+	      month,
+	      day
+	    }, time), calendar);
 	  }
 	  add(temporalDurationLike) {
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
