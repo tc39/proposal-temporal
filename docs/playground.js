@@ -12645,19 +12645,36 @@
 	    additionalMonths: ['M01L', 'M02L', 'M03L', 'M04L', 'M05L', 'M06L', 'M07L', 'M08L', 'M09L', 'M10L', 'M11L', 'M12L']
 	  },
 	  coptic: {
-	    additionalMonths: ['M13']
+	    additionalMonths: ['M13'],
+	    cycleInfo: {
+	      years: 1,
+	      months: 13
+	    }
 	  },
 	  dangi: {
 	    additionalMonths: ['M01L', 'M02L', 'M03L', 'M04L', 'M05L', 'M06L', 'M07L', 'M08L', 'M09L', 'M10L', 'M11L', 'M12L']
 	  },
 	  ethioaa: {
-	    additionalMonths: ['M13']
+	    additionalMonths: ['M13'],
+	    cycleInfo: {
+	      years: 1,
+	      months: 13
+	    }
 	  },
 	  ethiopic: {
-	    additionalMonths: ['M13']
+	    additionalMonths: ['M13'],
+	    cycleInfo: {
+	      years: 1,
+	      months: 13
+	    }
 	  },
 	  hebrew: {
-	    additionalMonths: ['M05L']
+	    additionalMonths: ['M05L'],
+	    // Metonic cycle: 7 leap years every 19 years
+	    cycleInfo: {
+	      years: 19,
+	      months: 19 * 12 + 7
+	    }
 	  }
 	};
 	function IsValidMonthCodeForCalendar(calendar, monthCode) {
@@ -13418,7 +13435,6 @@
 	    return calendarDate;
 	  },
 	  addCalendar(calendarDate, _ref5, overflow, cache) {
-	    var _monthCodeInfo$this$i;
 	    let {
 	      years = 0,
 	      months = 0,
@@ -13430,9 +13446,15 @@
 	      day,
 	      monthCode
 	    } = calendarDate;
-	    if (MathAbs(months) > 12 && !((_monthCodeInfo$this$i = monthCodeInfo[this.id]) !== null && _monthCodeInfo$this$i !== void 0 && _monthCodeInfo$this$i.additionalMonths)) {
-	      years += MathTrunc(months / 12);
-	      months %= 12;
+	    const monthInfo = monthCodeInfo[this.id];
+	    const cycleInfo = monthInfo ? monthInfo.cycleInfo : {
+	      years: 1,
+	      months: 12
+	    };
+	    if (cycleInfo && MathAbs(months) > cycleInfo.months) {
+	      const cycleCount = MathTrunc(months / cycleInfo.months);
+	      years += cycleCount * cycleInfo.years;
+	      months %= cycleInfo.months;
 	    }
 	    const addedYears = this.adjustCalendarDate({
 	      year: year + years,
@@ -13463,7 +13485,6 @@
 	      case 'month':
 	      case 'year':
 	        {
-	          var _monthCodeInfo$this$i2;
 	          const sign = this.compareCalendarDates(calendarTwo, calendarOne);
 	          if (!sign) {
 	            return {
@@ -13475,7 +13496,12 @@
 	          }
 	          const diffYears = calendarTwo.year - calendarOne.year;
 	          const diffDays = calendarTwo.day - calendarOne.day;
-	          if (diffYears && (largestUnit === 'year' || !((_monthCodeInfo$this$i2 = monthCodeInfo[this.id]) !== null && _monthCodeInfo$this$i2 !== void 0 && _monthCodeInfo$this$i2.additionalMonths))) {
+	          const monthInfo = monthCodeInfo[this.id];
+	          const cycleInfo = monthInfo ? monthInfo.cycleInfo : {
+	            years: 1,
+	            months: 12
+	          };
+	          if (diffYears && (largestUnit === 'year' || cycleInfo)) {
 	            let diffInYearSign = 0;
 	            if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
 	            if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
@@ -13483,18 +13509,24 @@
 	            const isOneFurtherInYear = diffInYearSign * sign < 0;
 	            years = isOneFurtherInYear ? diffYears - sign : diffYears;
 	          }
-	          const yearsAdded = years ? this.addCalendar(calendarOne, {
-	            years
-	          }, 'constrain', cache) : calendarOne;
-	          if (years && largestUnit === 'month') {
-	            months += years * 12;
+	          // Try to skip ahead as many months as possible for this calendar
+	          // without adding month by month in a loop
+	          if (largestUnit === 'month') {
+	            if (cycleInfo && MathAbs(years) >= cycleInfo.years) {
+	              const cycleCount = MathTrunc(years / cycleInfo.years);
+	              months = cycleCount * cycleInfo.months;
+	            }
 	            years = 0;
 	          }
-	          // Now we have less than one year remaining. Add one month at a time
+	          const intermediate = years || months ? this.addCalendar(calendarOne, {
+	            years,
+	            months
+	          }, 'constrain', cache) : calendarOne;
+	          // Now we have less than one cycle remaining. Add one month at a time
 	          // until we go over the target, then back up one month and calculate
 	          // remaining days.
 	          let current;
-	          let next = yearsAdded;
+	          let next = intermediate;
 	          do {
 	            months += sign;
 	            current = next;
