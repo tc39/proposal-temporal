@@ -730,6 +730,7 @@
           1. If _sign_ × (_d1_ - _isoDate2_.[[Day]]) > 0, return *true*.
         1. Return *false*.
       </emu-alg>
+      <emu-note>This operation intentionally uses overflow ~constrain~ when regulating the year-month.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-temporal-regulateisodate" type="abstract operation">
