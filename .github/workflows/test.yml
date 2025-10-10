@@ -44,7 +44,7 @@ jobs:
           node-version: 24.x
       - run: npm ci
       - run: npm run test-cookbook
-  test-validstrings:
+  test-exhaustive:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -57,3 +57,4 @@ jobs:
           cd polyfill
           npm install
           node test/validStrings.mjs
+          npm run test-thorough
