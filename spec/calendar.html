@@ -1202,6 +1202,7 @@
       <p>The operation throws a *TypeError* exception if the non-~unset~ fields of _fields_ are insufficient to identify a unique instance of _type_ in the calendar (e.g., when at least one field in each combination capable of determining some part of its data is ~unset~) or a *RangeError* exception if the fields are sufficient but their values are internally inconsistent within the calendar (e.g., when fields such as [[Month]] and [[MonthCode]] have conflicting non-~unset~ values). For example:</p>
       <ul>
         <li>If _type_ is ~date~ or ~month-day~ and "day" in the calendar has an interpretation similar to ISO 8601 and _fields_.[[Day]] is ~unset~.</li>
+        <li>If "month" in the calendar has an interpretation similar to ISO 8601 and _fields_.[[MonthCode]] identifies a month code that is not valid in any year of the calendar.</li>
         <li>If "month" in the calendar has an interpretation similar to ISO 8601 and either _fields_.[[Month]] and _fields_.[[MonthCode]] are both ~unset~ or neither value is ~unset~ but they do not identify the same month.</li>
         <li>If _type_ is ~month-day~ and _fields_.[[MonthCode]] is ~unset~ and a specific year cannot be determined from _fields_.</li>
         <li>If the calendar supports the usual partitioning of years into eras with their own year counting as represented by "year", "era", and "era year" (as in the Gregorian or traditional Japanese calendars) and any of the following cases apply:
