@@ -828,14 +828,15 @@ export function getProgressBar(start, total) {
       clear: true
     });
   }
+  let printInterval = 10;
+  while (total > 100 * printInterval) printInterval *= 10;
   return new (class FakeProgressBar {
     #done = 0;
 
     tick(delta = 1) {
       this.#done += delta;
-      // Do print _something_ every 1000 tests, so that there is something to
-      // look at while it is in progress.
-      if (delta && this.#done % 1000 === 0) {
+      // Do print _something_ periodically to demonstrate continued progress.
+      if (delta && this.#done % printInterval === 0) {
         const elapsed = Number(nowBigInt() - start) / 1_000_000_000;
         output(`${this.#done} tests completed in ${elapsed.toFixed(1)} seconds.`);
       }
