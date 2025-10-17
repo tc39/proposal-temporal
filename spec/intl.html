@@ -452,7 +452,6 @@
           1. <del>If _parseResult_ contains more than one |MinuteSecond| Parse Node, throw a *RangeError* exception.</del>
           1. Let _offsetNanoseconds_ be <del>ParseTimeZoneOffsetString</del><ins>? ParseDateTimeUTCOffset</ins>(_timeZone_).
           1. Let _offsetMinutes_ be _offsetNanoseconds_ / (6 × 10<sup>10</sup>).
-          1. Assert: _offsetMinutes_ is an integer.
           1. Set _timeZone_ to FormatOffsetTimeZoneIdentifier(_offsetMinutes_).
         1. <del>Else if IsValidTimeZoneName(_timeZone_) is *true*, then</del>
         1. <ins>Else,</ins>

@@ -133,7 +133,7 @@
     <emu-clause id="sec-temporal-formatoffsettimezoneidentifier" type="abstract operation">
       <h1>
         FormatOffsetTimeZoneIdentifier (
-          _offsetMinutes_: an integer,
+          _offsetMinutes_: an integer in the inclusive interval from -1439 to 1439,
           optional _style_: ~separated~ or ~unseparated~,
         ): an offset time zone identifier
       </h1>
@@ -158,7 +158,7 @@
     <emu-clause id="sec-temporal-formatutcoffsetnanoseconds" type="abstract operation">
       <h1>
         FormatUTCOffsetNanoseconds (
-          _offsetNanoseconds_: an integer,
+          _offsetNanoseconds_: an integer in the interval from -86400 × 10<sup>9</sup> (exclusive) to 86400 × 10<sup>9</sup> (exclusive),
         ): a String
       </h1>
       <dl class="header">
@@ -184,7 +184,7 @@
     <emu-clause id="sec-temporal-formatdatetimeutcoffsetrounded" type="abstract operation">
       <h1>
         FormatDateTimeUTCOffsetRounded (
-          _offsetNanoseconds_: an integer,
+          _offsetNanoseconds_: an integer in the interval from -86400 × 10<sup>9</sup> (exclusive) to 86400 × 10<sup>9</sup> (exclusive),
         ): a String
       </h1>
       <dl class="header">
@@ -194,7 +194,6 @@
       <emu-alg>
         1. Set _offsetNanoseconds_ to RoundNumberToIncrement(_offsetNanoseconds_, 60 × 10<sup>9</sup>, ~half-expand~).
         1. Let _offsetMinutes_ be _offsetNanoseconds_ / (60 × 10<sup>9</sup>).
-        1. Assert: _offsetMinutes_ is an integer.
         1. Return FormatOffsetTimeZoneIdentifier(_offsetMinutes_).
       </emu-alg>
     </emu-clause>
