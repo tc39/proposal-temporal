@@ -885,6 +885,7 @@ export async function withSnapshotsFromFile(path, testBody) {
     snapshots = {};
   }
   const newSnapshotEntries = [];
+  const failedSnapshots = [];
 
   function matchSnapshot(actual, key) {
     const expected = snapshots[key];
@@ -901,7 +902,7 @@ export async function withSnapshotsFromFile(path, testBody) {
 
     if (actual !== expected) {
       if (!updateSnapshots) {
-        throw new AssertionError(`Expected snapshot "${key}" to match ${expected}, but got ${actual}`);
+        failedSnapshots.push(new AssertionError(`Expected snapshot "${key}" to match ${expected}, but got ${actual}`));
       }
       updateCount++;
     }
@@ -950,5 +951,8 @@ export async function withSnapshotsFromFile(path, testBody) {
     } else {
       output('No updates necessary');
     }
+  } else if (failedSnapshots.length !== 0) {
+    output(`${failedSnapshots.length} snapshots didn't match:\n  ${failedSnapshots.join('\n  ')}`);
+    throw new AssertionError('snapshot mismatch');
   }
 }
