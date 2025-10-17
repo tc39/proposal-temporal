@@ -1411,6 +1411,36 @@
     </emu-table>
   </emu-clause>
 
+  <emu-clause id="sec-temporal-time-zone-identifier-parse-records">
+    <h1>Time Zone Identifier Parse Records</h1>
+    <p>A <dfn variants="Time Zone Identifier Parse Records">Time Zone Identifier Parse Record</dfn> is a Record value used to represent the result of parsing a time zone identifier either as an offset time zone or named time zone.</p>
+    <p>Time Zone Identifier Parse Records have the fields listed in <emu-xref href="#table-temporal-time-zone-identifier-parse-record-fields"></emu-xref>.</p>
+    <p>The two fields are mutually exclusive. One of them always has the value ~empty~.</p>
+    <emu-table id="table-temporal-time-zone-identifier-parse-record-fields" caption="Time Zone Identifier Parse Record Fields">
+      <table class="real-table">
+        <tr>
+          <th>Field Name</th>
+          <th>Value</th>
+          <th>Meaning</th>
+        </tr>
+        <tr>
+          <td>[[Name]]</td>
+          <td>a String or ~empty~</td>
+          <td>
+            The time zone's name (not necessarily an available named time zone identifier), or ~empty~ if the time zone is an offset time zone.
+          </td>
+        </tr>
+        <tr>
+          <td>[[OffsetMinutes]]</td>
+          <td>an integer in the inclusive interval from -1439 to 1439, or ~empty~</td>
+          <td>
+            The time zone's UTC offset expressed as a number of minutes, or ~empty~ if the time zone is a named time zone.
+          </td>
+        </tr>
+      </table>
+    </emu-table>
+  </emu-clause>
+
   <emu-clause id="sec-temporal-iso-date-time-parse-records">
     <h1>ISO Date-Time Parse Records</h1>
     <p>An <dfn variants="ISO Date-Time Parse Records">ISO Date-Time Parse Record</dfn> is a Record value used to represent the result of parsing an ISO 8601 / RFC 9557 string.</p>
@@ -1706,7 +1736,7 @@
     <h1>
       ParseTemporalTimeZoneString (
         _timeZoneString_: a String,
-      ): either a normal completion containing a Record containing information about the time zone, or a throw completion
+      ): either a normal completion containing a Time Zone Identifier Parse Record, or a throw completion
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -1714,12 +1744,12 @@
         It parses the argument as either a time zone identifier or an ISO 8601 / RFC 9557 string.
         The returned Record's fields are set as follows:
         <ul>
-          <li>If _timeZoneString_ is a named time zone identifier, then [[Name]] is _timeZoneString_ and [[OffsetMinutes]] is ~empty~.</li>
-          <li>Otherwise, if _timeZoneString_ is an offset time zone identifier, then [[OffsetMinutes]] is a signed integer and [[Name]] is ~empty~.</li>
-          <li>Otherwise, if _timeZoneString_ is a string with a time zone annotation containing a named time zone identifier, then [[Name]] is the time zone identifier contained in the annotation and [[OffsetMinutes]] is ~empty~.</li>
-          <li>Otherwise, if _timeZoneString_ is a string with a time zone annotation containing an offset time zone identifier, then [[OffsetMinutes]] is a signed integer and [[Name]] is ~empty~.</li>
-          <li>Otherwise, if _timeZoneString_ is a string using a *Z* offset designator, then [[Name]] is *"UTC"* and [[OffsetMinutes]] is ~empty~.</li>
-          <li>Otherwise, if _timeZoneString_ is a string using a numeric UTC offset, then [[OffsetMinutes]] is a signed integer and [[Name]] is ~empty~.</li>
+          <li>If _timeZoneString_ is a named time zone identifier, then [[Name]] is _timeZoneString_.</li>
+          <li>Otherwise, if _timeZoneString_ is an offset time zone identifier, then [[OffsetMinutes]] is the time zone's UTC offset.</li>
+          <li>Otherwise, if _timeZoneString_ is a string with a time zone annotation containing a named time zone identifier, then [[Name]] is the time zone identifier contained in the annotation.</li>
+          <li>Otherwise, if _timeZoneString_ is a string with a time zone annotation containing an offset time zone identifier, then [[OffsetMinutes]] is the time zone's UTC offset.</li>
+          <li>Otherwise, if _timeZoneString_ is a string using a *Z* offset designator, then [[Name]] is *"UTC"*.</li>
+          <li>Otherwise, if _timeZoneString_ is a string using a numeric UTC offset, then [[OffsetMinutes]] is that numeric UTC offset.</li>
           <li>Otherwise, a *RangeError* is thrown.</li>
         </ul>
       </dd>
