@@ -418,14 +418,12 @@
       <h1>
         ParseTimeZoneIdentifier (
           _identifier_: a String,
-        ): either a normal completion containing a Record with fields [[Name]] (a named time zone identifier or ~empty~) and [[OffsetMinutes]] (an integer or ~empty~), or a throw completion
+        ): either a normal completion containing a Time Zone Identifier Parse Record, or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          If _identifier_ is a named time zone identifier, [[Name]] will be _identifier_ and [[OffsetMinutes]] will be ~empty~.
-          If _identifier_ is an offset time zone identifier, [[Name]] will be ~empty~ and [[OffsetMinutes]] will be a signed integer.
-          Otherwise, a *RangeError* will be thrown.
+          It parses _identifier_ to determine whether it identifies an offset time zone or named time zone. If _identifier_ is syntactically invalid, a *RangeError* will be thrown.
         </dd>
       </dl>
       <emu-alg>
@@ -434,14 +432,13 @@
         1. If _parseResult_ contains a |TimeZoneIANAName| Parse Node, then
           1. Let _name_ be the source text matched by the |TimeZoneIANAName| Parse Node contained within _parseResult_.
           1. NOTE: _name_ is syntactically valid, but does not necessarily conform to <a href="https://data.iana.org/time-zones/theory.html#naming">IANA Time Zone Database naming guidelines</a> or correspond with an available named time zone identifier.
-          1. Return the Record { [[Name]]: CodePointsToString(_name_), [[OffsetMinutes]]: ~empty~ }.
+          1. Return Time Zone Identifier Parse Record { [[Name]]: CodePointsToString(_name_), [[OffsetMinutes]]: ~empty~ }.
         1. Else,
           1. Assert: _parseResult_ contains a |UTCOffset[~SubMinutePrecision]| Parse Node.
           1. Let _offset_ be the source text matched by the |UTCOffset[~SubMinutePrecision]| Parse Node contained within _parseResult_.
           1. Let _offsetNanoseconds_ be ! ParseDateTimeUTCOffset(CodePointsToString(_offset_)).
           1. Let _offsetMinutes_ be _offsetNanoseconds_ / (60 × 10<sup>9</sup>).
-          1. Assert: _offsetMinutes_ is an integer.
-          1. Return the Record { [[Name]]: ~empty~, [[OffsetMinutes]]: _offsetMinutes_ }.
+          1. Return Time Zone Identifier Parse Record { [[Name]]: ~empty~, [[OffsetMinutes]]: _offsetMinutes_ }.
       </emu-alg>
     </emu-clause>
   </emu-clause>
