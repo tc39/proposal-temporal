@@ -15,6 +15,7 @@ cd $(dirname $0)
 interpreter=${1-node}
 there_were_errors=0
 for test in \
+  dateaddition \
   datedifference \
   datetimedifference \
   gregorian \
