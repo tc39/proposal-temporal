@@ -1,10 +1,8 @@
 import {
   assertDurationsEqual,
   assertTemporalEqual,
-  createDateSkippingInvalidCombinations,
   getProgressBar,
-  interestingMonthDays,
-  interestingYears,
+  makeDateCases,
   temporalImpl as T,
   time
 } from './support.mjs';
@@ -16,19 +14,7 @@ const largestUnits = [
   { largestUnit: 'days' }
 ];
 
-const interestingCases = [];
-for (const year of interestingYears) {
-  for (const [month, day] of interestingMonthDays) {
-    const date = createDateSkippingInvalidCombinations(year, month, day);
-    if (!date) continue;
-
-    const dateGregorian = date.withCalendar('gregory');
-
-    // Pre-compute toString so it's not done repeatedly in each test
-    interestingCases.push([date, dateGregorian, date.toString()]);
-  }
-}
-
+const interestingCases = makeDateCases().map(([date, str]) => [date, date.withCalendar('gregory'), str]);
 const total = (interestingCases.length * (interestingCases.length - 1)) / 2;
 
 await time((start) => {
