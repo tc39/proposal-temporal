@@ -19,6 +19,7 @@ for test in \
   datedifference \
   datetimeaddition \
   datetimedifference \
+  durationaddition \
   gregorian \
   instantaddition \
   instantdifference \
