@@ -24,6 +24,7 @@ for test in \
   gregorian \
   instantaddition \
   instantdifference \
+  instantrounding \
   timeaddition \
   timedifference \
   timerounding \
