@@ -33,7 +33,8 @@ for test in \
   yearmonthaddition \
   yearmonthdifference \
   zonedaddition \
-  zoneddifference
+  zoneddifference \
+  zonedrounding
 do
   echo "== Running $test.mjs =="
   $interpreter "$test.mjs" || there_were_errors=1
