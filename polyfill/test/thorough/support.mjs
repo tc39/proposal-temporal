@@ -755,6 +755,43 @@ export function makeYearMonthCases() {
   return interestingYearMonths;
 }
 
+export const interestingNonNamedTimeZones = ['UTC', '+01:23', '-12:34'];
+export const interestingNamedTimeZones = ['America/Vancouver', 'Europe/Amsterdam'];
+
+export function makeZonedCases() {
+  const interestingZonedCases = [];
+
+  for (const epochNs of interestingEpochNs) {
+    for (const timeZone of interestingNonNamedTimeZones.concat(interestingNamedTimeZones)) {
+      const dt = new temporalImpl.ZonedDateTime(epochNs, timeZone);
+      // Pre-compute toString so it's not done repeatedly in each test
+      interestingZonedCases.push([dt, dt.toString()]);
+    }
+  }
+
+  for (const params of interestingZonedDateTimes) {
+    const [timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, hoff, moff = 0] =
+      params;
+    const offset = (hoff < 0 ? '-' : '+') + `${Math.abs(hoff)}`.padStart(2, '0') + ':' + `${moff}`.padStart(2, '0');
+    const dt = temporalImpl.ZonedDateTime.from({
+      timeZone,
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      offset
+    });
+    interestingZonedCases.push([dt, dt.toString()]);
+  }
+
+  return interestingZonedCases;
+}
+
 // If process.hrtime is not available, misuse Temporal.Now
 const nowBigInt = globalThis.process?.hrtime.bigint ?? (() => temporalImpl.Now.instant().epochNanoseconds);
 

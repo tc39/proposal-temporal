@@ -2,8 +2,7 @@ import {
   assertDurationsEqual,
   assertTemporalEqual,
   getProgressBar,
-  interestingEpochNs,
-  interestingZonedDateTimes,
+  makeZonedCases,
   temporalImpl as T,
   time,
   withSnapshotsFromFile
@@ -12,50 +11,21 @@ import {
 const dateLargestUnits = ['years', 'months', 'weeks', 'days'];
 const timeLargestUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
 
-const interestingNonNamedTimeZones = ['UTC', '+01:23', '-12:34'];
-const interestingNamedTimeZones = ['America/Vancouver', 'Europe/Amsterdam'];
-const interestingCases = [];
-
-for (const epochNs of interestingEpochNs) {
-  for (const timeZone of interestingNonNamedTimeZones.concat(interestingNamedTimeZones)) {
-    const dt = new T.ZonedDateTime(epochNs, timeZone);
-    // Pre-compute various info so it's not done repeatedly in each test
-    interestingCases.push([dt, timeZone, dt.toString()]);
-  }
-}
-
-for (const params of interestingZonedDateTimes) {
-  const [timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, hoff, moff = 0] =
-    params;
-  const offset = (hoff < 0 ? '-' : '+') + `${Math.abs(hoff)}`.padStart(2, '0') + ':' + `${moff}`.padStart(2, '0');
-  const dt = T.ZonedDateTime.from({
-    timeZone,
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond,
-    offset
-  });
-  interestingCases.push([dt, timeZone, dt.toString()]);
-}
-
+const interestingCases = makeZonedCases();
 const total = (interestingCases.length * (interestingCases.length - 1)) / 2;
 
 await time(async (start) => {
   const progress = getProgressBar(start, total);
 
   await withSnapshotsFromFile('./zoneddifference.snapshot.json', (matchSnapshot) => {
-    for (const [one, tz1, str1] of interestingCases) {
-      for (const [two, tz2, str2] of interestingCases) {
+    for (const [one, str1] of interestingCases) {
+      const tz1 = one.timeZoneId;
+      for (const [two, str2] of interestingCases) {
         if (T.ZonedDateTime.compare(one, two) === 1) continue;
 
         const testName = `${str1} : ${str2}`;
         progress.tick(1, { test: testName.slice(0, 45) });
+        const tz2 = two.timeZoneId;
 
         // Date arithmetic can only be done between ZDTs with the same time zone
         if (tz1 === tz2) {

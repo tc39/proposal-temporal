@@ -26,6 +26,7 @@ for test in \
   timedifference \
   yearmonthaddition \
   yearmonthdifference \
+  zonedaddition \
   zoneddifference
 do
   echo "== Running $test.mjs =="
