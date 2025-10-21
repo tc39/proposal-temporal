@@ -725,6 +725,14 @@ export function makeDurationCases() {
   });
 }
 
+export function makeInstantCases() {
+  return interestingEpochNs.map((epochNs) => {
+    const instant = new temporalImpl.Instant(epochNs);
+    // Pre-compute toString so it's not done repeatedly in each test
+    return [instant, instant.toString()];
+  });
+}
+
 // If process.hrtime is not available, misuse Temporal.Now
 const nowBigInt = globalThis.process?.hrtime.bigint ?? (() => temporalImpl.Now.instant().epochNanoseconds);
 

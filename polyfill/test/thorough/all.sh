@@ -20,6 +20,7 @@ for test in \
   datetimeaddition \
   datetimedifference \
   gregorian \
+  instantaddition \
   instantdifference \
   timedifference \
   yearmonthdifference \

@@ -2,7 +2,7 @@ import {
   assertDurationsEqual,
   assertTemporalEqual,
   getProgressBar,
-  interestingEpochNs,
+  makeInstantCases,
   temporalImpl as T,
   time,
   withSnapshotsFromFile
@@ -10,13 +10,7 @@ import {
 
 const largestUnits = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
 
-const interestingCases = [];
-for (const epochNs of interestingEpochNs) {
-  const instant = new T.Instant(epochNs);
-  // Pre-compute toString so it's not done repeatedly in each test
-  interestingCases.push([instant, instant.toString()]);
-}
-
+const interestingCases = makeInstantCases();
 const total = (interestingCases.length * (interestingCases.length - 1)) / 2;
 
 await time(async (start) => {
