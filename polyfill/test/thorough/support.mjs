@@ -684,6 +684,34 @@ export function makeDateCases() {
   return interestingDates;
 }
 
+export function makeDateTimeCases() {
+  // Every interesting date with every interesting time would take hours and
+  // hours to run. That would be interesting too, but too long for a CI job. So
+  // we take every interesting date combined with one of the interesting times
+  // and then append the (shorter) list of interesting datetimes.
+  let timeIndex = 0;
+  const interestingDateTimeCases = [];
+  for (const year of interestingYears) {
+    for (const [month, day] of interestingMonthDays) {
+      const date = createDateSkippingInvalidCombinations(year, month, day);
+      if (!date) continue;
+      const args = interestingTimes[timeIndex];
+      timeIndex++;
+      timeIndex %= interestingTimes.length;
+      const time = new temporalImpl.PlainTime(...args);
+      if (date.toString() === '-271821-04-19' && time.toString() === '00:00:00') continue;
+      const datetime = date.toPlainDateTime(time);
+      // Pre-compute toString so it's not done repeatedly in each test
+      interestingDateTimeCases.push([datetime, datetime.toString()]);
+    }
+  }
+  for (const args of interestingDateTimes) {
+    const datetime = new temporalImpl.PlainDateTime(...args);
+    interestingDateTimeCases.push([datetime, datetime.toString()]);
+  }
+  return interestingDateTimeCases;
+}
+
 export function makeDurationCases() {
   return interestingDurations.map((args) => {
     const duration = new temporalImpl.Duration(...args);

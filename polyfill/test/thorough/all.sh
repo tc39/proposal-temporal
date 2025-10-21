@@ -17,6 +17,7 @@ there_were_errors=0
 for test in \
   dateaddition \
   datedifference \
+  datetimeaddition \
   datetimedifference \
   gregorian \
   instantdifference \
