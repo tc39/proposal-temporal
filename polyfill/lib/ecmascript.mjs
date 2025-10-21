@@ -2816,7 +2816,7 @@ export function RejectDateTime(year, month, day, hour, minute, second, milliseco
 export function RejectDateTimeRange(isoDateTime) {
   const ns = GetUTCEpochNanoseconds(isoDateTime);
   if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
-    const dateTimeString = ISODateTimeToString(isoDateTime, undefined, undefined, 'never');
+    const dateTimeString = ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never');
     throw new RangeErrorCtor(`${dateTimeString} is outside of supported range`);
   }
 }
@@ -2826,7 +2826,7 @@ function AssertISODateTimeWithinLimits(isoDateTime) {
   const ns = GetUTCEpochNanoseconds(isoDateTime);
   assert(
     ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX),
-    `${ISODateTimeToString(isoDateTime, undefined, undefined, 'never')} is outside the representable range`
+    `${ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never')} is outside the representable range`
   );
 }
 
