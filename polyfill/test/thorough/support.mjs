@@ -741,6 +741,20 @@ export function makeTimeCases() {
   });
 }
 
+export function makeYearMonthCases() {
+  const interestingYearMonths = [];
+  for (const year of interestingYears) {
+    for (const month of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) {
+      const ym = createYearMonthSkippingInvalidCombinations(year, month);
+      if (!ym) continue;
+
+      // Pre-compute toString so it's not done repeatedly in each test
+      interestingYearMonths.push([ym, ym.toString()]);
+    }
+  }
+  return interestingYearMonths;
+}
+
 // If process.hrtime is not available, misuse Temporal.Now
 const nowBigInt = globalThis.process?.hrtime.bigint ?? (() => temporalImpl.Now.instant().epochNanoseconds);
 

@@ -1,9 +1,8 @@
 import {
   assertDurationsEqual,
   assertTemporalEqual,
-  createYearMonthSkippingInvalidCombinations,
   getProgressBar,
-  interestingYears,
+  makeYearMonthCases,
   temporalImpl as T,
   time,
   withSnapshotsFromFile
@@ -11,17 +10,7 @@ import {
 
 const largestUnits = ['years', 'months'];
 
-const interestingCases = [];
-for (const year of interestingYears) {
-  for (const month of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) {
-    const ym = createYearMonthSkippingInvalidCombinations(year, month);
-    if (!ym) continue;
-
-    // Pre-compute toString so it's not done repeatedly in each test
-    interestingCases.push([ym, ym.toString()]);
-  }
-}
-
+const interestingCases = makeYearMonthCases();
 const total = (interestingCases.length * (interestingCases.length - 1)) / 2;
 
 await time(async (start) => {

@@ -24,6 +24,7 @@ for test in \
   instantdifference \
   timeaddition \
   timedifference \
+  yearmonthaddition \
   yearmonthdifference \
   zoneddifference
 do
