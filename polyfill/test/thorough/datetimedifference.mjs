@@ -1,12 +1,8 @@
 import {
   assertDurationsEqual,
   assertTemporalEqual,
-  createDateSkippingInvalidCombinations,
   getProgressBar,
-  interestingDateTimes,
-  interestingMonthDays,
-  interestingTimes,
-  interestingYears,
+  makeDateTimeCases,
   temporalImpl as T,
   time,
   withSnapshotsFromFile
@@ -29,29 +25,7 @@ const largestUnits = [
   ['nanoseconds', reject]
 ];
 
-// Every interesting date with every interesting time would take hours and hours
-// to run. That would be interesting too, but too long for a CI job.
-let timeIndex = 0;
-const interestingCases = [];
-for (const year of interestingYears) {
-  for (const [month, day] of interestingMonthDays) {
-    const date = createDateSkippingInvalidCombinations(year, month, day);
-    if (!date) continue;
-    const args = interestingTimes[timeIndex];
-    timeIndex++;
-    timeIndex %= interestingTimes.length;
-    const time = new T.PlainTime(...args);
-    if (date.toString() === '-271821-04-19' && time.toString() === '00:00:00') continue;
-    const datetime = date.toPlainDateTime(time);
-    // Pre-compute toString so it's not done repeatedly in each test
-    interestingCases.push([datetime, datetime.toString()]);
-  }
-}
-for (const args of interestingDateTimes) {
-  const datetime = new T.PlainDateTime(...args);
-  interestingCases.push([datetime, datetime.toString()]);
-}
-
+const interestingCases = makeDateTimeCases();
 const total = (interestingCases.length * (interestingCases.length - 1)) / 2;
 
 await time(async (start) => {
