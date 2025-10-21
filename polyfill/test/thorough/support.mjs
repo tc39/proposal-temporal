@@ -611,6 +611,9 @@ export const interestingTimes = [
   [0, 1], // 1 minute after midnight
   [0, 57, 27, 747, 612, 578],
   [1], // 1 hour after midnight
+  [1, 11, 30], // on a half minute
+  [2, 36, 46, 269, 249, 500], // on a half µs
+  [3, 30], // on a half hour
   [5, 38, 49, 848, 112, 687],
   [6, 20, 46, 408, 452, 805],
   [9, 17, 14, 520, 674, 386],
@@ -618,7 +621,9 @@ export const interestingTimes = [
   [12], // noon
   [12, 3, 50, 616, 122, 145],
   [12, 48, 16, 240, 708, 441],
+  [16, 58, 56, 500], // on a half second
   [17, 1, 51, 609, 471, 506],
+  [18, 57, 22, 495, 500], // on a half ms
   [19, 38, 54, 588, 485, 756],
   [21, 7, 53, 438, 330, 45],
   [23], // 1 hour to midnight
@@ -794,6 +799,18 @@ export function makeZonedCases() {
 
 // If process.hrtime is not available, misuse Temporal.Now
 const nowBigInt = globalThis.process?.hrtime.bigint ?? (() => temporalImpl.Now.instant().epochNanoseconds);
+
+export const roundingModes = [
+  'ceil',
+  'floor',
+  'expand',
+  'trunc',
+  'halfCeil',
+  'halfFloor',
+  'halfExpand',
+  'halfTrunc',
+  'halfEven'
+];
 
 export async function time(functionBody) {
   const start = nowBigInt();
