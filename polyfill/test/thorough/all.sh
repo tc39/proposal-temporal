@@ -21,6 +21,8 @@ for test in \
   datetimedifference \
   datetimerounding \
   durationaddition \
+  durationrounding \
+  durationtotal \
   gregorian \
   instantaddition \
   instantdifference \

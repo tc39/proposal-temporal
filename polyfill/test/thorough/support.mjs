@@ -51,6 +51,10 @@ if (typeof process !== 'undefined' && process.argv?.length > 2) {
 
 class AssertionError extends Error {}
 
+export function assertEqual(actual, expected, message) {
+  if (actual !== expected) throw new AssertionError(`${message}: expected ${expected}, got ${actual}`);
+}
+
 export function assertDurationsEqual(actual, expected, message) {
   if (!(actual instanceof temporalImpl.Duration)) throw new AssertionError(`${message}: not a duration`);
   if (
@@ -95,6 +99,24 @@ export function createYearMonthSkippingInvalidCombinations(y, m) {
     if (y === 275760 && m > 9) return null; // too late for supported range
     throw new Error(`${y}-${m} is invalid: ${e}`);
   }
+}
+
+const units = [
+  'years',
+  'months',
+  'weeks',
+  'days',
+  'hours',
+  'minutes',
+  'seconds',
+  'milliseconds',
+  'microseconds',
+  'nanoseconds'
+];
+export function largerOfTwoDurationUnits(one, two) {
+  const oneIndex = units.indexOf(one);
+  const twoIndex = units.indexOf(two);
+  return units[Math.min(oneIndex, twoIndex)];
 }
 
 export const interestingDateTimes = [
@@ -299,8 +321,48 @@ export const interestingDurations = [
   [0, 0, 0, 0, 0, 0, 1, 234, 567, 890],
   [0, 0, 0, 0, 0, 0, 0, 2, 100],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 999],
-  // 100 randomly generated durations, 0-10000 of each subsecond unit and 0-100
-  // of each other unit
+  // span of min instant to max instant, in each largest unit
+  [547581, 4, 0, 24],
+  [0, 6570976, 0, 24],
+  [0, 0, 28571428, 4],
+  [0, 0, 0, 2e8],
+  [0, 0, 0, 0, 48e8],
+  [0, 0, 0, 0, 0, 288e9],
+  [0, 0, 0, 0, 0, 0, 1728e10],
+  [0, 0, 0, 0, 0, 0, 0, 1728e13],
+  [0, 0, 0, 0, 0, 0, 0, 0, 1728e16],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1728e19],
+  // max of each unit
+  [2 ** 32 - 1],
+  [0, 2 ** 32 - 1],
+  [0, 0, 2 ** 32 - 1],
+  [0, 0, 0, 104249991374],
+  [0, 0, 0, 0, 2501999792983],
+  [0, 0, 0, 0, 0, 150119987579016],
+  [0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
+  [0, 0, 0, 0, 0, 0, 0, Number(9_007_199_254_740_991_487n)],
+  [0, 0, 0, 0, 0, 0, 0, 0, Number(9_007_199_254_740_991_475_711n)],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, Number(9_007_199_254_740_991_463_129_087n)],
+  // max calendar unit plus 1 ns
+  [2 ** 32 - 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [0, 2 ** 32 - 1, 0, 0, 0, 0, 0, 0, 0, 1],
+  [0, 0, 2 ** 32 - 1, 0, 0, 0, 0, 0, 0, 1],
+  // max safe number of subsecond units
+  [0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
+  [0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
+  // just below max safe number of subsecond units
+  [0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER - 1],
+  [0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER - 1],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER - 1],
+  // various expressions of max time duration
+  [0, 0, 0, 1, 0, 0, 9007199254654591, 0, 0, 999999999],
+  [0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER, 0, 0, 999999999]
+];
+
+// 100 randomly generated durations, 0-10000 of each subsecond unit and 0-100 of
+// each other unit
+const randomCalendarDurations = [
   [55, 85, 30, 8, 10, 62, 4, 7489, 8207, 1623],
   [81, 94, 38, 52, 4, 59, 17, 488, 7874, 5472],
   [90, 20, 86, 67, 18, 5, 79, 8836, 1262, 8234],
@@ -400,9 +462,12 @@ export const interestingDurations = [
   [47, 43, 75, 93, 18, 51, 2, 4842, 3443, 7108],
   [94, 70, 51, 13, 29, 22, 90, 7593, 4306, 548],
   [46, 63, 4, 89, 20, 95, 62, 3238, 8231, 4219],
-  [1, 31, 64, 96, 27, 43, 85, 4346, 2068, 1402],
-  // 100 randomly generated durations, 0-10000 of each subsecond unit, 0-100 of
-  // of each time unit, and 0 days or calendar units
+  [1, 31, 64, 96, 27, 43, 85, 4346, 2068, 1402]
+];
+
+// 100 randomly generated durations, 0-10000 of each subsecond unit, 0-100 of
+// each time unit, and 0 days or calendar units
+const randomNonCalendarDurations = [
   [0, 0, 0, 0, 10, 34, 20, 3414, 2533, 8950],
   [0, 0, 0, 0, 84, 29, 9, 3546, 4255, 6190],
   [0, 0, 0, 0, 42, 95, 57, 5713, 98, 3874],
@@ -502,44 +567,7 @@ export const interestingDurations = [
   [0, 0, 0, 0, 75, 88, 24, 2403, 6112, 7558],
   [0, 0, 0, 0, 36, 84, 39, 667, 159, 8913],
   [0, 0, 0, 0, 89, 16, 63, 9931, 140, 2138],
-  [0, 0, 0, 0, 49, 95, 14, 4839, 793, 7096],
-  // span of min instant to max instant, in each largest unit
-  [547581, 4, 0, 24],
-  [0, 6570976, 0, 24],
-  [0, 0, 28571428, 4],
-  [0, 0, 0, 2e8],
-  [0, 0, 0, 0, 48e8],
-  [0, 0, 0, 0, 0, 288e9],
-  [0, 0, 0, 0, 0, 0, 1728e10],
-  [0, 0, 0, 0, 0, 0, 0, 1728e13],
-  [0, 0, 0, 0, 0, 0, 0, 0, 1728e16],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1728e19],
-  // max of each unit
-  [2 ** 32 - 1],
-  [0, 2 ** 32 - 1],
-  [0, 0, 2 ** 32 - 1],
-  [0, 0, 0, 104249991374],
-  [0, 0, 0, 0, 2501999792983],
-  [0, 0, 0, 0, 0, 150119987579016],
-  [0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
-  [0, 0, 0, 0, 0, 0, 0, Number(9_007_199_254_740_991_487n)],
-  [0, 0, 0, 0, 0, 0, 0, 0, Number(9_007_199_254_740_991_475_711n)],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, Number(9_007_199_254_740_991_463_129_087n)],
-  // max calendar unit plus 1 ns
-  [2 ** 32 - 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [0, 2 ** 32 - 1, 0, 0, 0, 0, 0, 0, 0, 1],
-  [0, 0, 2 ** 32 - 1, 0, 0, 0, 0, 0, 0, 1],
-  // max safe number of subsecond units
-  [0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
-  [0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER],
-  // just below max safe number of subsecond units
-  [0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER - 1],
-  [0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER - 1],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER - 1],
-  // various expressions of max time duration
-  [0, 0, 0, 1, 0, 0, 9007199254654591, 0, 0, 999999999],
-  [0, 0, 0, 0, 0, 0, Number.MAX_SAFE_INTEGER, 0, 0, 999999999]
+  [0, 0, 0, 0, 49, 95, 14, 4839, 793, 7096]
 ];
 
 export const interestingEpochNs = [
@@ -683,6 +711,10 @@ export const interestingZonedDateTimes = [
   ['America/Toronto', 1919, 3, 31, 12, 0, 0, 0, 0, 0, -4] // day after exceptional midnight-spanning transition
 ];
 
+export function isCalendarUnit(unit) {
+  return unit === 'years' || unit === 'months' || unit === 'weeks';
+}
+
 export function makeDateCases() {
   const interestingDates = [];
   for (const year of interestingYears) {
@@ -725,16 +757,37 @@ export function makeDateTimeCases() {
 }
 
 export function makeDurationCases() {
-  return interestingDurations.map((args) => {
-    const duration = new temporalImpl.Duration(...args);
-    let string = duration.toString();
-    // Disambiguate toString output when milliseconds, microseconds, or
-    // nanoseconds overflow
-    if (duration.milliseconds || duration.microseconds || duration.nanoseconds) {
-      string += `(${BigInt(duration.milliseconds)},${BigInt(duration.microseconds)},${BigInt(duration.nanoseconds)})`;
-    }
-    return [duration, string];
-  });
+  return interestingDurations
+    .concat(randomCalendarDurations)
+    .concat(randomNonCalendarDurations)
+    .map((args) => {
+      const duration = new temporalImpl.Duration(...args);
+      let string = duration.toString();
+      // Disambiguate toString output when milliseconds, microseconds, or
+      // nanoseconds overflow
+      if (duration.milliseconds || duration.microseconds || duration.nanoseconds) {
+        string += `(${BigInt(duration.milliseconds)},${BigInt(duration.microseconds)},${BigInt(duration.nanoseconds)})`;
+      }
+      return [duration, string];
+    });
+}
+
+// Greatly reduce the number of random durations for testing where we vary both
+// largestUnit and smallestUnit, since that is a huge testing space
+export function makeDurationCasesAbbreviated() {
+  return interestingDurations
+    .concat(randomCalendarDurations.slice(0, 5))
+    .concat(randomNonCalendarDurations.slice(0, 5))
+    .map((args) => {
+      const duration = new temporalImpl.Duration(...args);
+      let string = duration.toString();
+      // Disambiguate toString output when milliseconds, microseconds, or
+      // nanoseconds overflow
+      if (duration.milliseconds || duration.microseconds || duration.nanoseconds) {
+        string += `(${BigInt(duration.milliseconds)},${BigInt(duration.microseconds)},${BigInt(duration.nanoseconds)})`;
+      }
+      return [duration, string];
+    });
 }
 
 export function makeInstantCases() {
