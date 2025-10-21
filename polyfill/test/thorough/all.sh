@@ -22,6 +22,7 @@ for test in \
   gregorian \
   instantaddition \
   instantdifference \
+  timeaddition \
   timedifference \
   yearmonthdifference \
   zoneddifference
