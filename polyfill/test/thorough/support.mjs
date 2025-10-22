@@ -666,6 +666,12 @@ export const interestingZonedDateTimes = [
   ['Europe/Amsterdam', 2024, 10, 27, 2, 0, 0, 0, 0, 0, +1], // recent fall-back, positive offset
   ['Europe/Amsterdam', 2024, 10, 27, 2, 0, 0, 0, 0, 1, +1], // 1 ns after
   ['Europe/Amsterdam', 2024, 10, 27, 2, 59, 59, 999, 999, 999, +2], // 1 ns before
+  ['America/Sao_Paulo', 2018, 2, 17, 23, 0, 0, 0, 0, 0, -3], // recent fall-back, around midnight
+  ['America/Sao_Paulo', 2018, 2, 17, 23, 0, 0, 0, 0, 1, -3], // 1 ns after
+  ['America/Sao_Paulo', 2018, 2, 17, 23, 59, 59, 999, 999, 999, -2], // 1 ns before
+  ['America/Sao_Paulo', 2018, 11, 4, 1, 0, 0, 0, 0, 0, -2], // recent spring-forward, around midnight
+  ['America/Sao_Paulo', 2018, 11, 4, 1, 0, 0, 0, 0, 1, -2], // 1 ns after
+  ['America/Sao_Paulo', 2018, 11, 3, 23, 59, 59, 999, 999, 999, -3], // 1 ns before
   ['Pacific/Kiritimati', 2023, 7, 16, 16, 23, 11, 704, 192, 385, +14], // current most positive UTC offset on Earth
   ['Pacific/Niue', 2023, 7, 15, 15, 16, 23, 11, 704, 192, -11], // same instant, current most negative UTC offset
   ['Asia/Kathmandu', 2023, 6, 17, 9, 47, 33, 648, 291, 574, +5, 45], // non-whole-hour UTC offset
@@ -673,7 +679,8 @@ export const interestingZonedDateTimes = [
   ['Antarctica/Troll', 1987, 12, 31, 23, 59, 59, 999, 999, 999, 0], // last instant of year
   ['Antarctica/Casey', 1988, 1, 1, 0, 0, 0, 0, 0, 0, +8], // first instant of year
   ['Pacific/Apia', 2011, 12, 31, 0, 0, 0, 0, 0, 0, +14], // international date line change
-  ['Pacific/Apia', 2011, 12, 29, 23, 59, 59, 999, 999, 999, -10] // 1 ns before
+  ['Pacific/Apia', 2011, 12, 29, 23, 59, 59, 999, 999, 999, -10], // 1 ns before
+  ['America/Toronto', 1919, 3, 31, 12, 0, 0, 0, 0, 0, -4] // day after exceptional midnight-spanning transition
 ];
 
 export function makeDateCases() {
