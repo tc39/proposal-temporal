@@ -25,6 +25,7 @@ for test in \
   instantaddition \
   instantdifference \
   instantrounding \
+  startofday \
   timeaddition \
   timedifference \
   timerounding \
