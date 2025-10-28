@@ -1564,38 +1564,43 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-nudgetocalendarunit" type="abstract operation">
+    <emu-clause id="sec-temporal-computenudgewindow" type="abstract operation">
       <h1>
-        NudgeToCalendarUnit (
+        ComputeNudgeWindow (
           _sign_: -1 or 1,
           _duration_: an Internal Duration Record,
           _originEpochNs_: a BigInt,
-          _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _increment_: a positive integer,
           _unit_: a date unit,
-          _roundingMode_: a rounding mode,
-        ): either a normal completion containing a Record with fields [[NudgeResult]] (a Duration Nudge Result Record) and [[Total]] (a mathematical value), or a throw completion
+          _additionalShift_: a Boolean,
+        ): either a normal completion containing a Record with fields [[R1]] (a mathematical value), [[R2]] (a mathematical value), [[StartEpochNs]] (a BigInt), [[EndEpochNs]] (a BigInt), [[StartDuration]] (an Internal Duration Record), and [[EndDuration]] (an Internal Duration Record), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It implements rounding a duration to an increment of a calendar unit, relative to a starting point, by calculating the upper and lower bounds of the starting point added to the duration in epoch nanoseconds, and rounding according to which one is closer to _destEpochNs_.
+          It implements calculating the upper and lower bounds of the starting point added to the duration in epoch nanoseconds.
         </dd>
       </dl>
       <emu-alg>
         1. If _unit_ is ~year~, then
           1. Let _years_ be RoundNumberToIncrement(_duration_.[[Date]].[[Years]], _increment_, ~trunc~).
-          1. Let _r1_ be _years_.
-          1. Let _r2_ be _years_ + _increment_ × _sign_.
+          1. If _additionalShift_ is *false*, then
+            1. Let _r1_ be _years_.
+          1. Else,
+            1. Let _r1_ be _years_ + _increment_ × _sign_.
+          1. Let _r2_ be _r1_ + _increment_ × _sign_.
           1. Let _startDuration_ be ? CreateDateDurationRecord(_r1_, 0, 0, 0).
           1. Let _endDuration_ be ? CreateDateDurationRecord(_r2_, 0, 0, 0).
         1. Else if _unit_ is ~month~, then
           1. Let _months_ be RoundNumberToIncrement(_duration_.[[Date]].[[Months]], _increment_, ~trunc~).
-          1. Let _r1_ be _months_.
-          1. Let _r2_ be _months_ + _increment_ × _sign_.
+          1. If _additionalShift_ is *false*, then
+            1. Let _r1_ be _months_.
+          1. Else,
+            1. Let _r1_ be _months_ + _increment_ × _sign_.
+          1. Let _r2_ be _r1_ + _increment_ × _sign_.
           1. Let _startDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r1_).
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
         1. Else if _unit_ is ~week~, then
@@ -1632,10 +1637,52 @@
           1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).
         1. Else,
           1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
+        1. Return the Record { [[R1]]: _r1_, [[R2]]: _r2_, [[StartEpochNs]]: _startEpochNs_, [[EndEpochNs]]: _endEpochNs_, [[StartDuration]]: _startDuration_, [[EndDuration]]: _endDuration_ }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-nudgetocalendarunit" type="abstract operation">
+      <h1>
+        NudgeToCalendarUnit (
+          _sign_: -1 or 1,
+          _duration_: an Internal Duration Record,
+          _originEpochNs_: a BigInt,
+          _destEpochNs_: a BigInt,
+          _isoDateTime_: an ISO Date-Time Record,
+          _timeZone_: an available time zone identifier or ~unset~,
+          _calendar_: a calendar type,
+          _increment_: a positive integer,
+          _unit_: a date unit,
+          _roundingMode_: a rounding mode,
+        ): either a normal completion containing a Record with fields [[NudgeResult]] (a Duration Nudge Result Record) and [[Total]] (a mathematical value), or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It implements rounding a duration to an increment of a calendar unit, relative to a starting point, by calculating the upper and lower bounds of the starting point added to the duration in epoch nanoseconds, and rounding according to which one is closer to _destEpochNs_.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Let _didExpandCalendarUnit_ be *false*.
+        1. Let _nudgeWindow_ be ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *false*).
+        1. Let _startEpochNs_ be _nudgeWindow_.[[StartEpochNs]].
+        1. Let _endEpochNs_ be _nudgeWindow_.[[EndEpochNs]].
         1. If _sign_ is 1, then
-          1. Assert: _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_.
+          1. If _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_ is *false*, then
+            1. Set _nudgeWindow_ to ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *true*).
+            1. Assert: _nudgeWindow_.[[StartEpochNs]] ≤ _destEpochNs_ ≤ _nudgeWindow_.[[EndEpochNs]].
+            1. Set _didExpandCalendarUnit_ to *true*.
         1. Else,
-          1. Assert: _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_.
+          1. If _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_ is *false*, then
+            1. Set _nudgeWindow_ to ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *true*).
+            1. Assert: _nudgeWindow_.[[EndEpochNs]] ≤ _destEpochNs_ ≤ _nudgeWindow_.[[StartEpochNs]].
+            1. Set _didExpandCalendarUnit_ to *true*.
+        1. Let _r1_ be _nudgeWindow_.[[R1]].
+        1. Let _r2_ be _nudgeWindow_.[[R2]].
+        1. Set _startEpochNs_ to _nudgeWindow_.[[StartEpochNs]].
+        1. Set _endEpochNs_ to _nudgeWindow_.[[StartEpochNs]].
+        1. Let _startDuration_ be _nudgeWindow_.[[StartDuration]].
+        1. Let _endDuration_ be _nudgeWindow_.[[EndDuration]].
         1. Assert: _startEpochNs_ ≠ _endEpochNs_.
         1. Let _progress_ be (_destEpochNs_ - _startEpochNs_) / (_endEpochNs_ - _startEpochNs_).
         1. Let _total_ be _r1_ + _progress_ × _increment_ × _sign_.
@@ -1649,11 +1696,10 @@
           1. Assert: abs(_r1_) ≤ abs(_total_) &lt; abs(_r2_).
           1. Let _roundedUnit_ be ApplyUnsignedRoundingMode(abs(_total_), abs(_r1_), abs(_r2_), _unsignedRoundingMode_).
         1. If _roundedUnit_ is abs(_r2_), then
-          1. Let _didExpandCalendarUnit_ be *true*.
+          1. Set _didExpandCalendarUnit_ to *true*.
           1. Let _resultDuration_ be _endDuration_.
           1. Let _nudgedEpochNs_ be _endEpochNs_.
         1. Else,
-          1. Let _didExpandCalendarUnit_ be *false*.
           1. Let _resultDuration_ be _startDuration_.
           1. Let _nudgedEpochNs_ be _startEpochNs_.
         1. Set _resultDuration_ to CombineDateAndTimeDuration(_resultDuration_, 0).

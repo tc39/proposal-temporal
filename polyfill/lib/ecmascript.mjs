@@ -3169,40 +3169,34 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   return CombineDateAndTimeDuration(dateDifference, timeDuration);
 }
 
-// Epoch-nanosecond bounding technique where the start/end of the calendar-unit
-// interval are converted to epoch-nanosecond times and destEpochNs is nudged to
-// either one.
-function NudgeToCalendarUnit(
+// Returns: { r1, r2, startEpochNs, endEpochNs, startDuration, endDuration }
+function ComputeNudgeWindow(
   sign,
   duration,
   originEpochNs,
-  destEpochNs,
   isoDateTime,
   timeZone,
   calendar,
   increment,
   unit,
-  roundingMode
+  additionalShift
 ) {
-  // unit must be day, week, month, or year
-  // timeZone may be undefined
-
   // Create a duration with smallestUnit trunc'd towards zero
   // Create a separate duration that incorporates roundingIncrement
   let r1, r2, startDuration, endDuration;
   switch (unit) {
     case 'year': {
       const years = RoundNumberToIncrement(duration.date.years, increment, 'trunc');
-      r1 = years;
-      r2 = years + increment * sign;
+      r1 = !additionalShift ? years : years + increment * sign;
+      r2 = r1 + increment * sign;
       startDuration = { years: r1, months: 0, weeks: 0, days: 0 };
       endDuration = { ...startDuration, years: r2 };
       break;
     }
     case 'month': {
       const months = RoundNumberToIncrement(duration.date.months, increment, 'trunc');
-      r1 = months;
-      r2 = months + increment * sign;
+      r1 = !additionalShift ? months : months + increment * sign;
+      r2 = r1 + increment * sign;
       startDuration = AdjustDateDurationRecord(duration.date, 0, 0, r1);
       endDuration = AdjustDateDurationRecord(duration.date, 0, 0, r2);
       break;
@@ -3240,7 +3234,7 @@ function NudgeToCalendarUnit(
     // If the start of the bound is the same as the "origin" (aka relativeTo),
     // use the origin's epoch-nanoseconds as-is instead of relying on isoDateTime,
     // which then gets zoned and converted back to epoch-nanoseconds,
-    // which looses precision and creates a distorted bounding window.
+    // which loses precision and creates a distorted bounding window.
     startEpochNs = originEpochNs;
   } else {
     const start = CalendarDateAdd(calendar, isoDateTime.isoDate, startDuration, 'constrain');
@@ -3257,9 +3251,85 @@ function NudgeToCalendarUnit(
     ? GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible')
     : GetUTCEpochNanoseconds(endDateTime);
 
+  return { r1, r2, startEpochNs, endEpochNs, startDuration, endDuration };
+}
+
+// Epoch-nanosecond bounding technique where the start/end of the calendar-unit
+// interval are converted to epoch-nanosecond times and destEpochNs is nudged to
+// either one.
+function NudgeToCalendarUnit(
+  sign,
+  duration,
+  originEpochNs,
+  destEpochNs,
+  isoDateTime,
+  timeZone,
+  calendar,
+  increment,
+  unit,
+  roundingMode
+) {
+  // unit must be day, week, month, or year
+  // timeZone may be undefined
+
+  var didExpandCalendarUnit = false;
+  let nudgeWindow = ComputeNudgeWindow(
+    sign,
+    duration,
+    originEpochNs,
+    isoDateTime,
+    timeZone,
+    calendar,
+    increment,
+    unit,
+    false
+  );
+  var { r1, r2, startEpochNs, endEpochNs, startDuration, endDuration } = nudgeWindow;
+
   // Round the smallestUnit within the epoch-nanosecond span
-  if (sign === 1) assert(startEpochNs.leq(destEpochNs) && destEpochNs.leq(endEpochNs), `${unit} was 0 days long`);
-  if (sign === -1) assert(endEpochNs.leq(destEpochNs) && destEpochNs.leq(startEpochNs), `${unit} was 0 days long`);
+  if (sign === 1) {
+    if (!(nudgeWindow.startEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.endEpochNs))) {
+      // Retry nudge window if it's out of bounds
+      nudgeWindow = ComputeNudgeWindow(
+        sign,
+        duration,
+        originEpochNs,
+        isoDateTime,
+        timeZone,
+        calendar,
+        increment,
+        unit,
+        true
+      );
+      assert(
+        nudgeWindow.startEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.endEpochNs),
+        `${unit} was 0 days long`
+      );
+      didExpandCalendarUnit = true;
+    }
+  } else if (sign == -1) {
+    if (!(nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs))) {
+      // Retry nudge window if it's out of bounds
+      nudgeWindow = ComputeNudgeWindow(
+        sign,
+        duration,
+        originEpochNs,
+        isoDateTime,
+        timeZone,
+        calendar,
+        increment,
+        unit,
+        true
+      );
+      assert(
+        nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs),
+        `${unit} was 0 days long`
+      );
+      didExpandCalendarUnit = true;
+    }
+  }
+  ({ r1, r2, startEpochNs, endEpochNs, startDuration, endDuration } = nudgeWindow);
+
   assert(!endEpochNs.equals(startEpochNs), 'startEpochNs must ≠ endEpochNs');
   const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
   const denominator = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
@@ -3278,8 +3348,8 @@ function NudgeToCalendarUnit(
   assert(MathAbs(r1) <= MathAbs(total) && MathAbs(total) <= MathAbs(r2), 'r1 ≤ total ≤ r2');
 
   // Determine whether expanded or contracted
-  const didExpandCalendarUnit = roundedUnit === MathAbs(r2);
-  duration = { date: didExpandCalendarUnit ? endDuration : startDuration, time: TimeDuration.ZERO };
+  didExpandCalendarUnit ||= roundedUnit === MathAbs(r2);
+  duration = { date: roundedUnit == MathAbs(r2) ? endDuration : startDuration, time: TimeDuration.ZERO };
 
   const nudgeResult = {
     duration,
