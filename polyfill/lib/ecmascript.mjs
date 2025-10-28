@@ -3169,6 +3169,34 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   return CombineDateAndTimeDuration(dateDifference, timeDuration);
 }
 
+export function CompareDurations(duration1, duration2, zonedRelativeTo, plainRelativeTo, largestUnit1, largestUnit2) {
+  if (
+    zonedRelativeTo &&
+    (TemporalUnitCategory(largestUnit1) === 'date' || TemporalUnitCategory(largestUnit2) === 'date')
+  ) {
+    const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+    const calendar = GetSlot(zonedRelativeTo, CALENDAR);
+    const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+
+    const after1 = AddZonedDateTime(epochNs, timeZone, calendar, duration1);
+    const after2 = AddZonedDateTime(epochNs, timeZone, calendar, duration2);
+    return ComparisonResult(after1.minus(after2).toJSNumber());
+  }
+
+  let d1 = duration1.date.days;
+  let d2 = duration2.date.days;
+  if (IsCalendarUnit(largestUnit1) || IsCalendarUnit(largestUnit2)) {
+    if (!plainRelativeTo) {
+      throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
+    }
+    d1 = DateDurationDays(duration1.date, plainRelativeTo);
+    d2 = DateDurationDays(duration2.date, plainRelativeTo);
+  }
+  const timeDuration1 = duration1.time.add24HourDays(d1);
+  const timeDuration2 = duration2.time.add24HourDays(d2);
+  return timeDuration1.cmp(timeDuration2);
+}
+
 // Epoch-nanosecond bounding technique where the start/end of the calendar-unit
 // interval are converted to epoch-nanosecond times and destEpochNs is nudged to
 // either one.
@@ -3190,6 +3218,9 @@ function NudgeToCalendarUnit(
   // Create a duration with smallestUnit trunc'd towards zero
   // Create a separate duration that incorporates roundingIncrement
   let r1, r2, startDuration, endDuration;
+  var didExpandCalendarUnit = false;
+  const compare = (d1, d2) => CompareDurations(d1, d2, undefined, ToTemporalDate(isoDateTime.isoDate), unit, unit);
+  var cmpResult = 0;
   switch (unit) {
     case 'year': {
       const years = RoundNumberToIncrement(duration.date.years, increment, 'trunc');
@@ -3197,6 +3228,19 @@ function NudgeToCalendarUnit(
       r2 = years + increment * sign;
       startDuration = { years: r1, months: 0, weeks: 0, days: 0 };
       endDuration = { ...startDuration, years: r2 };
+      cmpResult = compare(CombineDateAndTimeDuration(endDuration, TimeDuration.ZERO), duration);
+      if ((sign > 0 && cmpResult != 1) || (sign < 0 && cmpResult != -1)) {
+        didExpandCalendarUnit = true;
+        r1 = r2;
+        r2 = years + increment * 2 * sign;
+        endDuration = { ...endDuration, years: r2 };
+        cmpResult = compare(CombineDateAndTimeDuration(endDuration, TimeDuration.ZERO), duration);
+        assert(
+          (sign > 0 && cmpResult == 1) || (sign < 0 && cmpResult == -1),
+          "nudgeToCalendarUnit: couldn't find larger duration"
+        );
+        startDuration = { ...startDuration, years: r1 };
+      }
       break;
     }
     case 'month': {
@@ -3205,6 +3249,19 @@ function NudgeToCalendarUnit(
       r2 = months + increment * sign;
       startDuration = AdjustDateDurationRecord(duration.date, 0, 0, r1);
       endDuration = AdjustDateDurationRecord(duration.date, 0, 0, r2);
+      cmpResult = compare(CombineDateAndTimeDuration(endDuration, TimeDuration.ZERO), duration);
+      if ((sign > 0 && cmpResult != 1) || (sign < 0 && cmpResult != -1)) {
+        didExpandCalendarUnit = true;
+        r1 = r2;
+        r2 = months + increment * 2 * sign;
+        endDuration = AdjustDateDurationRecord(duration.date, 0, 0, r2);
+        cmpResult = compare(CombineDateAndTimeDuration(endDuration, TimeDuration.ZERO), duration);
+        assert(
+          (sign > 0 && cmpResult == 1) || (sign < 0 && cmpResult == -1),
+          "nudgeToCalendarUnit: couldn't find larger duration"
+        );
+        startDuration = AdjustDateDurationRecord(duration.date, 0, 0, r1);
+      }
       break;
     }
     case 'week': {
@@ -3240,7 +3297,7 @@ function NudgeToCalendarUnit(
     // If the start of the bound is the same as the "origin" (aka relativeTo),
     // use the origin's epoch-nanoseconds as-is instead of relying on isoDateTime,
     // which then gets zoned and converted back to epoch-nanoseconds,
-    // which looses precision and creates a distorted bounding window.
+    // which loses precision and creates a distorted bounding window.
     startEpochNs = originEpochNs;
   } else {
     const start = CalendarDateAdd(calendar, isoDateTime.isoDate, startDuration, 'constrain');
@@ -3278,8 +3335,8 @@ function NudgeToCalendarUnit(
   assert(MathAbs(r1) <= MathAbs(total) && MathAbs(total) <= MathAbs(r2), 'r1 ≤ total ≤ r2');
 
   // Determine whether expanded or contracted
-  const didExpandCalendarUnit = roundedUnit === MathAbs(r2);
-  duration = { date: didExpandCalendarUnit ? endDuration : startDuration, time: TimeDuration.ZERO };
+  didExpandCalendarUnit |= roundedUnit === MathAbs(r2);
+  duration = { date: roundedUnit == MathAbs(r2) ? endDuration : startDuration, time: TimeDuration.ZERO };
 
   const nudgeResult = {
     duration,
