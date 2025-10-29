@@ -571,6 +571,7 @@
       <p>
         An <dfn variants="ISO Date Records">ISO Date Record</dfn> is a Record value used to represent a valid calendar date in the ISO 8601 calendar, although the year may be outside of the allowed range for Temporal.
         ISO Date Records are produced by the abstract operation CreateISODateRecord.
+        For any ISO Date Record _d_, IsValidISODate(_d_.[[Year]], _d_.[[Month]], _d_.[[Day]]) must return *true*.
       </p>
       <p>ISO Date Records have the fields listed in <emu-xref href="#table-temporal-iso-date-record-fields"></emu-xref>.</p>
       <emu-table id="table-temporal-iso-date-record-fields" caption="ISO Date Record Fields">
