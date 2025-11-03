@@ -11949,9 +11949,12 @@
 	    microsecond,
 	    nanosecond
 	  } = _ref18;
-	  second += timeDuration.sec;
-	  nanosecond += timeDuration.subsec;
-	  return BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+	  // timeDuration.sec is a safe integer, but second+timeDuration.sec may not be.
+	  // minute+trunc(timeDuration.sec/60) is safe. nanosecond+timeDuration.subsec
+	  // is also safe.
+	  const minutes = Math.trunc(timeDuration.sec / 60);
+	  const seconds = timeDuration.sec - minutes * 60;
+	  return BalanceTime(hour, minute + minutes, second + seconds, millisecond, microsecond, nanosecond + timeDuration.subsec);
 	}
 	function AddInstant(epochNanoseconds, timeDuration) {
 	  const result = timeDuration.addToEpochNs(epochNanoseconds);
