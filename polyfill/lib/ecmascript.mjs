@@ -3335,7 +3335,7 @@ function NudgeToCalendarUnit(
   assert(MathAbs(r1) <= MathAbs(total) && MathAbs(total) <= MathAbs(r2), 'r1 ≤ total ≤ r2');
 
   // Determine whether expanded or contracted
-  didExpandCalendarUnit |= roundedUnit === MathAbs(r2);
+  didExpandCalendarUnit ||= roundedUnit === MathAbs(r2);
   duration = { date: roundedUnit == MathAbs(r2) ? endDuration : startDuration, time: TimeDuration.ZERO };
 
   const nudgeResult = {
