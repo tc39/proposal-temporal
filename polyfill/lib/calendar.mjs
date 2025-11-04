@@ -1067,6 +1067,14 @@ const nonIsoHelperBase = {
         }
         const intermediate =
           years || months ? this.addCalendar(calendarOne, { years, months }, 'constrain', cache) : calendarOne;
+        // At this point, intermediate could fail to be in between calendarOne and calendarTwo
+        // if calendarOne is in a leap year and calendarTwo is not. This only happens when
+        // largestUnit is 'year'. In that case, we recurse with 'month' as the largest unit,
+        // since we know the difference is less than a year.
+        if (this.compareCalendarDates(intermediate, calendarTwo) * sign >= 0) {
+          assert(largestUnit == 'year');
+          return this.untilCalendar(calendarOne, calendarTwo, 'month', cache);
+        }
         // Now we have less than one cycle remaining. Add one month at a time
         // until we go over the target, then back up one month and calculate
         // remaining days.
