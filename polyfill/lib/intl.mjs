@@ -539,13 +539,7 @@ function instantAmend(options) {
 }
 
 function hasDateOptions(options) {
-  return (
-    'year' in options ||
-    'month' in options ||
-    'day' in options ||
-    'weekday' in options ||
-    'dateStyle' in options
-  );
+  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options;
 }
 
 function hasTimeOptions(options) {
