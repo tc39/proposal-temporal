@@ -1628,7 +1628,7 @@
           1. Let _startDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r1_).
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
           1. Let _cmpResult_ be ? CompareDurations(_endDuration_, _duration_, *undefined*, _date_, _unit_, _unit_).
-          1. If _sign_ > 0 and _cmpResult_ != 1 or _sign_ < 0 and _cmpResult_ != -1, then
+          1. If _sign_ > 0 and _cmpResult_ ≠ 1, or _sign_ &lt; 0 and _cmpResult_ ≠ -1, then
             1. Set _didExpandCalendarUnit_ to *true*.
             1. Set _r1_ to _r2_.
             1. Set _r2_ to _r1_ + _increment_ × _sign_.
