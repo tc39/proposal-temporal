@@ -1619,7 +1619,7 @@
             1. Set _r2_ to _r1_ + _increment_ × _sign_.
             1. Set _endDuration_ to ? CreateDateDurationRecord(_r2_, 0, 0, 0).
             1. Set _cmpResult_ to ? CompareDurations(_endDuration_, _duration_, *undefined*, _date_, _unit_, _unit_).
-            1. Assert: _sign_ > 0 and _cmpResult_ is 1 or _sign_ < 0 and _cmpResult_ is -1.
+            1. Assert: _sign_ > 0 and _cmpResult_ = 1, or _sign_ &lt; 0 and _cmpResult_ = -1.
             1. Set _startDuration_ to ? CreateDateDurationRecord(_r1_, 0, 0, 0).
         1. Else if _unit_ is ~month~, then
           1. Let _months_ be RoundNumberToIncrement(_duration_.[[Date]].[[Months]], _increment_, ~trunc~).
