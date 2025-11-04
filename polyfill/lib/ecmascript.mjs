@@ -2741,13 +2741,12 @@ export function BalanceTime(hour, minute, second, millisecond, microsecond, nano
   return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
-export function DateDurationDays(dateDuration, plainRelativeTo) {
+export function DateDurationDays(dateDuration, isoDate, calendar) {
   const yearsMonthsWeeksDuration = AdjustDateDurationRecord(dateDuration, 0);
   if (DateDurationSign(yearsMonthsWeeksDuration) === 0) return dateDuration.days;
 
   // balance years, months, and weeks down to days
-  const isoDate = GetSlot(plainRelativeTo, ISO_DATE);
-  const later = CalendarDateAdd(GetSlot(plainRelativeTo, CALENDAR), isoDate, yearsMonthsWeeksDuration, 'constrain');
+  const later = CalendarDateAdd(calendar, isoDate, yearsMonthsWeeksDuration, 'constrain');
   const epochDaysEarlier = ISODateToEpochDays(isoDate.year, isoDate.month - 1, isoDate.day);
   const epochDaysLater = ISODateToEpochDays(later.year, later.month - 1, later.day);
   const yearsMonthsWeeksInDays = epochDaysLater - epochDaysEarlier;
@@ -3169,28 +3168,33 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   return CombineDateAndTimeDuration(dateDifference, timeDuration);
 }
 
-export function CompareDurations(duration1, duration2, zonedRelativeTo, plainRelativeTo, largestUnit1, largestUnit2) {
+export function CompareDurations(
+  duration1,
+  duration2,
+  originEpochNs,
+  timeZone,
+  calendar,
+  isoDate,
+  largestUnit1,
+  largestUnit2
+) {
   if (
-    zonedRelativeTo &&
+    originEpochNs &&
     (TemporalUnitCategory(largestUnit1) === 'date' || TemporalUnitCategory(largestUnit2) === 'date')
   ) {
-    const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
-    const calendar = GetSlot(zonedRelativeTo, CALENDAR);
-    const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-
-    const after1 = AddZonedDateTime(epochNs, timeZone, calendar, duration1);
-    const after2 = AddZonedDateTime(epochNs, timeZone, calendar, duration2);
+    const after1 = AddZonedDateTime(originEpochNs, timeZone, calendar, duration1);
+    const after2 = AddZonedDateTime(originEpochNs, timeZone, calendar, duration2);
     return ComparisonResult(after1.minus(after2).toJSNumber());
   }
 
   let d1 = duration1.date.days;
   let d2 = duration2.date.days;
   if (IsCalendarUnit(largestUnit1) || IsCalendarUnit(largestUnit2)) {
-    if (!plainRelativeTo) {
+    if (!isoDate) {
       throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
     }
-    d1 = DateDurationDays(duration1.date, plainRelativeTo);
-    d2 = DateDurationDays(duration2.date, plainRelativeTo);
+    d1 = DateDurationDays(duration1.date, isoDate, calendar);
+    d2 = DateDurationDays(duration2.date, isoDate, calendar);
   }
   const timeDuration1 = duration1.time.add24HourDays(d1);
   const timeDuration2 = duration2.time.add24HourDays(d2);
@@ -3219,7 +3223,7 @@ function NudgeToCalendarUnit(
   // Create a separate duration that incorporates roundingIncrement
   let r1, r2, startDuration, endDuration;
   var didExpandCalendarUnit = false;
-  const compare = (d1, d2) => CompareDurations(d1, d2, undefined, CreateTemporalDate(isoDateTime.isoDate, calendar), unit, unit);
+  const compare = (d1, d2) => CompareDurations(d1, d2, undefined, undefined, calendar, isoDateTime.isoDate, unit, unit);
   var cmpResult = 0;
   switch (unit) {
     case 'year': {

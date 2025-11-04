@@ -417,11 +417,23 @@ export class Duration {
     const largestUnit1 = ES.DefaultTemporalLargestUnit(one);
     const largestUnit2 = ES.DefaultTemporalLargestUnit(two);
 
+    var originEpochNs, timeZone, calendar, isoDate;
+    if (zonedRelativeTo) {
+      originEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+      timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+      calendar = GetSlot(zonedRelativeTo, CALENDAR);
+    } else if (plainRelativeTo) {
+      calendar = GetSlot(plainRelativeTo, CALENDAR);
+      isoDate = GetSlot(plainRelativeTo, ISO_DATE);
+    }
+
     return ES.CompareDurations(
       ES.ToInternalDurationRecord(one),
       ES.ToInternalDurationRecord(two),
-      zonedRelativeTo,
-      plainRelativeTo,
+      originEpochNs,
+      timeZone,
+      calendar,
+      isoDate,
       largestUnit1,
       largestUnit2
     );
