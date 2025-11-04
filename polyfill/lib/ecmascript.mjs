@@ -3232,7 +3232,7 @@ function NudgeToCalendarUnit(
       if ((sign > 0 && cmpResult != 1) || (sign < 0 && cmpResult != -1)) {
         didExpandCalendarUnit = true;
         r1 = r2;
-        r2 = years + increment * 2 * sign;
+        r2 = r1 + increment * sign;
         endDuration = { ...endDuration, years: r2 };
         cmpResult = compare(CombineDateAndTimeDuration(endDuration, TimeDuration.ZERO), duration);
         assert(
@@ -3253,7 +3253,7 @@ function NudgeToCalendarUnit(
       if ((sign > 0 && cmpResult != 1) || (sign < 0 && cmpResult != -1)) {
         didExpandCalendarUnit = true;
         r1 = r2;
-        r2 = months + increment * 2 * sign;
+        r2 = r1 + increment * sign;
         endDuration = AdjustDateDurationRecord(duration.date, 0, 0, r2);
         cmpResult = compare(CombineDateAndTimeDuration(endDuration, TimeDuration.ZERO), duration);
         assert(

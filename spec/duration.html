@@ -1616,7 +1616,7 @@
           1. If _sign_ > 0 and _cmpResult_ != 1 or _sign_ < 0 and _cmpResult_ != -1, then
             1. Set _didExpandCalendarUnit_ to *true*.
             1. Set _r1_ to _r2_.
-            1. Set _r2_ to _years_ + _increment_ × 2 × _sign_.
+            1. Set _r2_ to _r1_ + _increment_ × _sign_.
             1. Set _endDuration_ to ? CreateDateDurationRecord(_r2_, 0, 0, 0).
             1. Set _cmpResult_ to ? CompareDurations(_endDuration_, _duration_, *undefined*, _date_, _unit_, _unit_).
             1. Assert: _sign_ > 0 and _cmpResult_ is 1 or _sign_ < 0 and _cmpResult_ is -1.
@@ -1631,7 +1631,7 @@
           1. If _sign_ > 0 and _cmpResult_ != 1 or _sign_ < 0 and _cmpResult_ != -1, then
             1. Set _didExpandCalendarUnit_ to *true*.
             1. Set _r1_ to _r2_.
-            1. Set _r2_ to _months_ + _increment_ × 2 × _sign_.
+            1. Set _r2_ to _r1_ + _increment_ × _sign_.
             1. Set _endDuration_ to ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
             1. Set _cmpResult_ to ? CompareDurations(_endDuration_, _duration_, *undefined*, _date_, _unit_, _unit_).
             1. Assert: _sign_ > 0 and _cmpResult_ is 1 or _sign_ < 0 and _cmpResult_ is -1.
