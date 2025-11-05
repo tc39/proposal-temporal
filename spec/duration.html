@@ -1505,8 +1505,7 @@
         <dd>It compares _duration1_ with _duration2_ and returns -1 if _duration1_ represents a shorter time duration than _duration2_; 0 if the two durations are equal; or 1 if _duration1_ represents a longer time duration than _duration2_, relative to _zonedRelativeTo_ or _plainRelativeTo_.</dd>
       </dl>
       <emu-alg>
-        1. If _originEpochNs_ is not *undefined*, and either TemporalUnitCategory(_largestUnit1_) or TemporalUnitCategory(_largestUnit2_) is ~date~, then
-          1. Assert: _timeZone_ is not ~unset~.
+        1. If _timeZone_ is not ~unset~, and either TemporalUnitCategory(_largestUnit1_) or TemporalUnitCategory(_largestUnit2_) is ~date~, then
           1. Assert: _calendar_ is not ~unset~.
           1. Let _after1_ be ? AddZonedDateTime(_originEpochNs_, _timeZone_, _calendar_, _duration1_, ~constrain~).
           1. Let _after2_ be ? AddZonedDateTime(_originEpochNs_, _timeZone_, _calendar_, _duration2_, ~constrain~).
