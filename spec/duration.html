@@ -1502,7 +1502,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd>It compares _duration1_ with _duration2_ and returns -1 if _duration1_ represents a shorter time duration than _duration2_; 0 if the two durations are equal; or 1 if _duration1_ represents a longer time duration than _duration2_, relative to _zonedRelativeTo_ or _plainRelativeTo_.</dd>
+        <dd>It compares _duration1_ with _duration2_ and returns -1 if _duration1_ represents a shorter time duration than _duration2_; 0 if the two durations are equal; or 1 if _duration1_ represents a longer time duration than _duration2_, relative to the starting point given by _originEpochNs_, _isoDate_, _timeZone_, and _calendar_.</dd>
       </dl>
       <emu-alg>
         1. If _timeZone_ is not ~unset~, and either TemporalUnitCategory(_largestUnit1_) or TemporalUnitCategory(_largestUnit2_) is ~date~, then
