@@ -1492,7 +1492,7 @@
         CompareDurations (
           _duration1_: an Internal Duration Record,
           _duration2_: an Internal Duration Record,
-          _originEpochNs_: a BigInt or *undefined*,
+          _originEpochNs_: a BigInt or ~unset~.
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type or ~unset~,
           _isoDate_: an ISO Date record or ~unset~,
@@ -1506,6 +1506,7 @@
       </dl>
       <emu-alg>
         1. If _timeZone_ is not ~unset~, and either TemporalUnitCategory(_largestUnit1_) or TemporalUnitCategory(_largestUnit2_) is ~date~, then
+          1. Assert: _originEpochNs_ is not ~unset~.
           1. Assert: _calendar_ is not ~unset~.
           1. Let _after1_ be ? AddZonedDateTime(_originEpochNs_, _timeZone_, _calendar_, _duration1_, ~constrain~).
           1. Let _after2_ be ? AddZonedDateTime(_originEpochNs_, _timeZone_, _calendar_, _duration2_, ~constrain~).

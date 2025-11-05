@@ -3179,7 +3179,7 @@ export function CompareDurations(
   largestUnit2
 ) {
   if (
-    originEpochNs &&
+    timeZone &&
     (TemporalUnitCategory(largestUnit1) === 'date' || TemporalUnitCategory(largestUnit2) === 'date')
   ) {
     const after1 = AddZonedDateTime(originEpochNs, timeZone, calendar, duration1);
