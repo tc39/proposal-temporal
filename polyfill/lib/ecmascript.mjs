@@ -3220,7 +3220,8 @@ function NudgeToCalendarUnit(
   // Create a separate duration that incorporates roundingIncrement
   let r1, r2, startDuration, endDuration;
   var didExpandCalendarUnit = false;
-  const compare = (d1, d2) => CompareDurations(d1, d2, originEpochNs, timeZone, calendar, isoDateTime.isoDate, unit, unit);
+  const compare = (d1, d2) =>
+    CompareDurations(d1, d2, originEpochNs, timeZone, calendar, isoDateTime.isoDate, unit, unit);
   var cmpResult = 0;
   switch (unit) {
     case 'year': {
