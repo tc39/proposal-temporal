@@ -1630,7 +1630,7 @@
           1. Let _r2_ be _years_ + _increment_ × _sign_.
           1. Let _startDuration_ be ? CreateDateDurationRecord(_r1_, 0, 0, 0).
           1. Let _endDuration_ be ? CreateDateDurationRecord(_r2_, 0, 0, 0).
-          1. Let _cmpResult_ be ? CompareDurations(_endDuration_, _duration_, *undefined*, ~unset~, _calendar_, _isoDateTime_.[[ISODate]], _unit_, _unit_).
+          1. Let _cmpResult_ be ? CompareDurations(_endDuration_, _duration_, _originEpochNs_, _timeZone_, _calendar_, _isoDateTime_.[[ISODate]], _unit_, _unit_).
           1. If _sign_ > 0 and _cmpResult_ ≠ 1, or _sign_ &lt; 0 and _cmpResult_ ≠ -1, then
             1. Set _didExpandCalendarUnit_ to *true*.
             1. Set _r1_ to _r2_.
