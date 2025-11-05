@@ -1072,7 +1072,7 @@ const nonIsoHelperBase = {
         // largestUnit is 'year'. In that case, we recurse with 'month' as the largest unit,
         // since we know the difference is less than a year.
         if (this.compareCalendarDates(intermediate, calendarTwo) * sign >= 0) {
-          assert(largestUnit == 'year');
+          assert(largestUnit === 'year');
           return this.untilCalendar(calendarOne, calendarTwo, 'month', cache);
         }
         // Now we have less than one cycle remaining. Add one month at a time
