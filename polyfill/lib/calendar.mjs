@@ -1739,7 +1739,7 @@ const makeHelperOrthodox = (id, originalEras) => {
 //   two use negative year numbers before epoch)
 // - Coptic has a different epoch date
 // - Ethiopic has an additional second era that starts at the same date as the
-//   zero era of ethioaa.
+//   zero era of ethioaa, which is the anchor era
 const helperEthioaa = ObjectAssign(
   makeHelperOrthodox('ethioaa', [{ code: 'aa', isoEpoch: { year: -5492, month: 7, day: 17 } }])
 );
@@ -1758,11 +1758,9 @@ const helperCoptic = ObjectAssign(
     }
   }
 );
-// Anchor is currently the older era to match ethioaa, but should it be the newer era?
-// See https://github.com/tc39/ecma402/issues/534 for discussion.
 const helperEthiopic = makeHelperOrthodox('ethiopic', [
-  { code: 'aa', isoEpoch: { year: -5492, month: 7, day: 17 } },
-  { code: 'am', isoEpoch: { year: 8, month: 8, day: 27 }, anchorEpoch: { year: 5501 } }
+  { code: 'aa', isoEpoch: { year: -5492, month: 7, day: 17 }, anchorEpoch: { year: -5499 } },
+  { code: 'am', isoEpoch: { year: 8, month: 8, day: 27 } }
 ]);
 
 const helperRoc = makeHelperSameMonthDayAsGregorian('roc', [

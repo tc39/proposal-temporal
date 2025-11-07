@@ -13,9 +13,6 @@ intl402/DateTimeFormat/proto-from-ctor-realm.js
 # https://github.com/tc39/ecma402/issues/402
 intl402/DateTimeFormat/prototype/resolvedOptions/hourCycle-default.js
 
-# https://github.com/tc39/ecma402/issues/534
-staging/Intl402/Temporal/old/non-iso-calendars-ethiopic.js
-
 # Possibly faulty calculations for year 0 in Hebrew calendar in ICU4C
 # https://unicode-org.atlassian.net/browse/ICU-23007
 staging/sm/Temporal/PlainDate/from-constrain-hebrew.js
