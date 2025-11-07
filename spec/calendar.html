@@ -89,7 +89,6 @@
           1. Set _isLeapMonth_ to *true*.
         1. Let _monthCodeDigits_ be the substring of _monthCode_ from 1 to 3.
         1. Let _monthNumber_ be ℝ(StringToNumber(_monthCodeDigits_)).
-        1. If _monthNumber_ is 0 and _isLeapMonth_ is *false*, throw a *RangeError* exception.
         1. Return the Record { [[MonthNumber]]: _monthNumber_, [[IsLeapMonth]]: _isLeapMonth_ }.
       </emu-alg>
       <emu-grammar type="definition">
