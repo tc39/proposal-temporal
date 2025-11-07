@@ -354,6 +354,7 @@ function formatRangeToParts(a, b) {
 function amend(options = {}, amended = {}) {
   options = ObjectAssign({}, options);
   const props = [
+    'era',
     'year',
     'month',
     'day',
@@ -376,6 +377,7 @@ function amend(options = {}, amended = {}) {
 
 function timeAmend(originalOptions) {
   const options = amend(originalOptions, {
+    era: false,
     year: false,
     month: false,
     day: false,
