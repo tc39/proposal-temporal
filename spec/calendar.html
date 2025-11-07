@@ -1250,8 +1250,8 @@
           1. If _monthCode_ is ~unset~, then
             1. If _month_ is ~unset~, throw a *TypeError* exception.
             1. Return ~unused~.
-          1. Assert: _monthCode_ is a String.
-          1. Let _parsedMonthCode_ be ? ParseMonthCode(_monthCode_).
+          1. Assert: _monthCode_ is a month code.
+          1. Let _parsedMonthCode_ be ! ParseMonthCode(_monthCode_).
           1. If _parsedMonthCode_.[[IsLeapMonth]] is *true*, throw a *RangeError* exception.
           1. If _parsedMonthCode_.[[MonthNumber]] > 12, throw a *RangeError* exception.
           1. If _month_ is not ~unset~ and _month_ ≠ _parsedMonthCode_.[[MonthNumber]], throw a *RangeError* exception.
