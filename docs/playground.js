@@ -11060,7 +11060,7 @@
 	function RejectDateTimeRange(isoDateTime) {
 	  const ns = GetUTCEpochNanoseconds(isoDateTime);
 	  if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
-	    const dateTimeString = ISODateTimeToString(isoDateTime, undefined, undefined, 'never');
+	    const dateTimeString = ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never');
 	    throw new RangeError$1("".concat(dateTimeString, " is outside of supported range"));
 	  }
 	}
@@ -11068,7 +11068,7 @@
 	// Same as above, but throws a different, non-user-facing error
 	function AssertISODateTimeWithinLimits(isoDateTime) {
 	  const ns = GetUTCEpochNanoseconds(isoDateTime);
-	  assert(ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX), "".concat(ISODateTimeToString(isoDateTime, undefined, undefined, 'never'), " is outside the representable range"));
+	  assert(ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX), "".concat(ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never'), " is outside the representable range"));
 	}
 
 	// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
@@ -14490,7 +14490,7 @@
 	//   two use negative year numbers before epoch)
 	// - Coptic has a different epoch date
 	// - Ethiopic has an additional second era that starts at the same date as the
-	//   zero era of ethioaa.
+	//   zero era of ethioaa, which is the anchor era
 	const helperEthioaa = ObjectAssign(makeHelperOrthodox('ethioaa', [{
 	  code: 'aa',
 	  isoEpoch: {
@@ -14526,14 +14526,15 @@
 	    };
 	  }
 	});
-	// Anchor is currently the older era to match ethioaa, but should it be the newer era?
-	// See https://github.com/tc39/ecma402/issues/534 for discussion.
 	const helperEthiopic = makeHelperOrthodox('ethiopic', [{
 	  code: 'aa',
 	  isoEpoch: {
 	    year: -5492,
 	    month: 7,
 	    day: 17
+	  },
+	  anchorEpoch: {
+	    year: -5499
 	  }
 	}, {
 	  code: 'am',
@@ -14541,9 +14542,6 @@
 	    year: 8,
 	    month: 8,
 	    day: 27
-	  },
-	  anchorEpoch: {
-	    year: 5501
 	  }
 	}]);
 	const helperRoc = makeHelperSameMonthDayAsGregorian('roc', [{
