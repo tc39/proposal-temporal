@@ -1826,6 +1826,7 @@ export function FormatUTCOffsetNanoseconds(offsetNs) {
 }
 
 export function GetISODateTimeFor(timeZone, epochNs) {
+  assert(IsValidEpochNanoseconds(epochNs));
   const offsetNs = GetOffsetNanosecondsFor(timeZone, epochNs);
   let result = GetISOPartsFromEpoch(epochNs);
   return AddOffsetNanosecondsToISODateTime(result, offsetNs);
@@ -2805,11 +2806,12 @@ function AssertISODateTimeWithinLimits(isoDateTime) {
   );
 }
 
-// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
-// responsible for throwing. In the polyfill, ValidateEpochNanoseconds takes its
-// place so that we can DRY the throwing code.
+export function IsValidEpochNanoseconds(epochNanoseconds) {
+  return !(epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX));
+}
+
 export function ValidateEpochNanoseconds(epochNanoseconds) {
-  if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
+  if (!IsValidEpochNanoseconds(epochNanoseconds)) {
     throw new RangeErrorCtor('date/time value is outside of supported range');
   }
 }
@@ -3064,6 +3066,9 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
 }
 
 export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
+  assert(IsValidEpochNanoseconds(ns1));
+  assert(IsValidEpochNanoseconds(ns2));
+
   const nsDiff = ns2.subtract(ns1);
   if (nsDiff.isZero()) return { date: ZeroDateDuration(), time: TimeDuration.ZERO };
   const sign = nsDiff.lt(0) ? 1 : -1;
@@ -3585,6 +3590,9 @@ export function DifferenceZonedDateTimeWithRounding(
   smallestUnit,
   roundingMode
 ) {
+  assert(IsValidEpochNanoseconds(ns1));
+  assert(IsValidEpochNanoseconds(ns2));
+
   if (TemporalUnitCategory(largestUnit) === 'time') {
     // The user is only asking for a time difference, so return difference of instants.
     return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
@@ -3610,6 +3618,9 @@ export function DifferenceZonedDateTimeWithRounding(
 }
 
 export function DifferenceZonedDateTimeWithTotal(ns1, ns2, timeZone, calendar, unit) {
+  assert(IsValidEpochNanoseconds(ns1));
+  assert(IsValidEpochNanoseconds(ns2));
+
   if (TemporalUnitCategory(unit) === 'time') {
     // The user is only asking for a time difference, so return difference of instants.
     return TotalTimeDuration(TimeDuration.fromEpochNsDiff(ns2, ns1), unit);
@@ -3918,6 +3929,8 @@ export function AddInstant(epochNanoseconds, timeDuration) {
 }
 
 export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow = 'constrain') {
+  assert(IsValidEpochNanoseconds(epochNs));
+
   // If only time is to be added, then use Instant math. It's not OK to fall
   // through to the date/time code below because compatible disambiguation in
   // the PlainDateTime=>Instant conversion will change the offset of any
