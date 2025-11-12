@@ -1277,19 +1277,10 @@ export function ToTemporalInstant(item) {
 
   // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
-  const balanced = BalanceISODateTime(
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond - offsetNanoseconds
-  );
-  CheckISODaysRange(balanced.isoDate);
-  const epochNanoseconds = GetUTCEpochNanoseconds(balanced);
+  const isoDate = { year, month, day };
+  const isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
+  CheckISODaysRange(isoDate);
+  const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
 }
@@ -1417,22 +1408,9 @@ export function InterpretISODateTimeOffset(
   // with the offset winning ('prefer' or 'reject') as long as it's valid
   // for this timezone and date/time.
   if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
-    // Calculate the instant for the input's date/time and offset
-    const balanced = BalanceISODateTime(
-      isoDate.year,
-      isoDate.month,
-      isoDate.day,
-      time.hour,
-      time.minute,
-      time.second,
-      time.millisecond,
-      time.microsecond,
-      time.nanosecond - offsetNs
-    );
-    CheckISODaysRange(balanced.isoDate);
-    const epochNs = GetUTCEpochNanoseconds(balanced);
-    ValidateEpochNanoseconds(epochNs);
-    return epochNs;
+    CheckISODaysRange(isoDate);
+    const epochNanoseconds = GetUTCEpochNanoseconds(dt).subtract(offsetNs);
+    return epochNanoseconds;
   }
 
   CheckISODaysRange(isoDate);
@@ -1925,25 +1903,21 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
   }
 
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
+  let possibleEpochNanoseconds;
   if (offsetMinutes !== undefined) {
-    const balanced = BalanceISODateTime(
-      isoDateTime.isoDate.year,
-      isoDateTime.isoDate.month,
-      isoDateTime.isoDate.day,
-      isoDateTime.time.hour,
-      isoDateTime.time.minute - offsetMinutes,
-      isoDateTime.time.second,
-      isoDateTime.time.millisecond,
-      isoDateTime.time.microsecond,
-      isoDateTime.time.nanosecond
-    );
-    CheckISODaysRange(balanced.isoDate);
-    const epochNs = GetUTCEpochNanoseconds(balanced);
-    ValidateEpochNanoseconds(epochNs);
-    return [epochNs];
+    const offsetNanoseconds = bigInt(offsetMinutes).multiply(6).multiply(10 ** 10);
+    CheckISODaysRange(isoDateTime);
+    const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
+    possibleEpochNanoseconds = [epochNanoseconds];
+  } else {
+    possibleEpochNanoseconds = GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
   }
 
-  return GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
+  for (let epochNanoseconds of possibleEpochNanoseconds) {
+    ValidateEpochNanoseconds(epochNanoseconds);
+  }
+
+  return possibleEpochNanoseconds;
 }
 
 export function GetStartOfDay(timeZone, isoDate) {
