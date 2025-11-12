@@ -1395,7 +1395,9 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
-  CheckISODaysRange(isoDateTime);
+  if (offsetOpt == 'prefer' || offsetOpt == 'reject') {
+    CheckISODaysRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
+  }
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
@@ -1892,7 +1894,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
   // UTC fast path
   if (timeZone === 'UTC') {
-    CheckISODaysRange(isoDateTime);
+    CheckISODaysRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
     return [GetUTCEpochNanoseconds(isoDateTime)];
   }
 
