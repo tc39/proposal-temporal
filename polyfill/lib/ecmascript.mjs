@@ -1889,11 +1889,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
     case 'earlier': {
       const timeDuration = TimeDuration.fromComponents(0, 0, 0, 0, 0, -nanoseconds);
       const earlierTime = AddTime(isoDateTime.time, timeDuration);
-      const earlierDate = BalanceISODate(
-        isoDateTime.isoDate.year,
-        isoDateTime.isoDate.month,
-        isoDateTime.isoDate.day + earlierTime.deltaDays
-      );
+      const earlierDate = AddDaysToISODate(isoDateTime.isoDate, earlierTime.deltaDays);
       const earlier = CombineISODateAndTimeRecord(earlierDate, earlierTime);
       return GetPossibleEpochNanoseconds(timeZone, earlier)[0];
     }
@@ -1902,11 +1898,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
     case 'later': {
       const timeDuration = TimeDuration.fromComponents(0, 0, 0, 0, 0, nanoseconds);
       const laterTime = AddTime(isoDateTime.time, timeDuration);
-      const laterDate = BalanceISODate(
-        isoDateTime.isoDate.year,
-        isoDateTime.isoDate.month,
-        isoDateTime.isoDate.day + laterTime.deltaDays
-      );
+      const laterDate = AddDaysToISODate(isoDateTime.isoDate, laterTime.deltaDays);
       const later = CombineISODateAndTimeRecord(laterDate, laterTime);
       const possible = GetPossibleEpochNanoseconds(timeZone, later);
       return possible[possible.length - 1];
@@ -2386,7 +2378,9 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
     time: { millisecond, microsecond, nanosecond }
   } = GetISOPartsFromEpoch(epochNanoseconds);
   const { year, month, day, hour, minute, second } = GetFormatterParts(id, epochMilliseconds);
-  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedDate = AddDaysToISODate({year, month, day}, 0);
+  return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
 // Most time zones never transition twice within a short span of days. We still
@@ -2638,9 +2632,10 @@ export function BalanceISOYearMonth(year, month) {
   return { year, month };
 }
 
-export function BalanceISODate(year, month, day) {
-  if (!NumberIsFinite(day)) throw new RangeErrorCtor('infinity is out of range');
-  ({ year, month } = BalanceISOYearMonth(year, month));
+export function AddDaysToISODate(isoDate, days) {
+  let day = isoDate.day + days;
+  if (!NumberIsFinite(isoDate.day)) throw new RangeErrorCtor('infinity is out of range');
+  let { year, month } = BalanceISOYearMonth(isoDate.year, isoDate.month);
 
   // The pattern of leap years in the ISO 8601 calendar repeats every 400
   // years. So if we have more than 400 years in days, there's no need to
@@ -2681,7 +2676,7 @@ export function BalanceISODate(year, month, day) {
 
 export function BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
   const time = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
+  const isoDate = AddDaysToISODate({ year, month, day }, time.deltaDays);
   return CombineISODateAndTimeRecord(isoDate, time);
 }
 
@@ -3078,7 +3073,7 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
   // back-off a day from date2 so that the signs of the date and time diff match
   let adjustedDate = isoDateTime2.isoDate;
   if (dateSign === timeSign) {
-    adjustedDate = BalanceISODate(adjustedDate.year, adjustedDate.month, adjustedDate.day + timeSign);
+    adjustedDate = AddDaysToISODate(adjustedDate, timeSign);
     timeDuration = timeDuration.add24HourDays(-timeSign);
   }
 
@@ -3141,11 +3136,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   }
 
   for (; dayCorrection <= maxDayCorrection; dayCorrection++) {
-    const intermediateDate = BalanceISODate(
-      isoDtEnd.isoDate.year,
-      isoDtEnd.isoDate.month,
-      isoDtEnd.isoDate.day - dayCorrection * sign
-    );
+    const intermediateDate = AddDaysToISODate(isoDtEnd.isoDate, dayCorrection * -sign);
 
     // Incorporate time parts from dtStart
     intermediateDateTime = CombineISODateAndTimeRecord(intermediateDate, isoDtStart.time);
@@ -3206,7 +3197,7 @@ function ComputeNudgeWindow(
     case 'week': {
       const yearsMonths = AdjustDateDurationRecord(duration.date, 0, 0);
       const weeksStart = CalendarDateAdd(calendar, isoDateTime.isoDate, yearsMonths, 'constrain');
-      const weeksEnd = BalanceISODate(weeksStart.year, weeksStart.month, weeksStart.day + duration.date.days);
+      const weeksEnd = AddDaysToISODate(weeksStart, duration.date.days);
       const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
       const weeks = RoundNumberToIncrement(duration.date.weeks + untilResult.weeks, increment, 'trunc');
       r1 = weeks;
@@ -3370,7 +3361,7 @@ function NudgeToZonedTime(sign, duration, isoDateTime, timeZone, calendar, incre
   // Apply to origin, output start/end of the day as PlainDateTimes
   const start = CalendarDateAdd(calendar, isoDateTime.isoDate, duration.date, 'constrain');
   const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
-  const endDate = BalanceISODate(start.year, start.month, start.day + sign);
+  const endDate = AddDaysToISODate(start, sign);
   const endDateTime = CombineISODateAndTimeRecord(endDate, isoDateTime.time);
 
   // Compute the epoch-nanosecond start/end of the final whole-day interval
@@ -4139,7 +4130,7 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
   let startDate = CalendarDateFromFields(calendar, fields, 'constrain');
   if (sign < 0) {
     const nextMonth = CalendarDateAdd(calendar, startDate, { months: 1 }, 'constrain');
-    startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
+    startDate = AddDaysToISODate(nextMonth, -1);
   }
   const durationToAdd = ToDateDurationRecordWithoutTime(duration);
   RejectDateRange(startDate);
@@ -4209,9 +4200,8 @@ export function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
 
 export function RoundISODateTime(isoDateTime, increment, unit, roundingMode) {
   AssertISODateTimeWithinLimits(isoDateTime);
-  const { year, month, day } = isoDateTime.isoDate;
   const time = RoundTime(isoDateTime.time, increment, unit, roundingMode);
-  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
+  const isoDate = AddDaysToISODate(isoDateTime.isoDate, time.deltaDays);
   return CombineISODateAndTimeRecord(isoDate, time);
 }
 
