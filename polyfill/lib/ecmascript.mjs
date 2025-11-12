@@ -1820,11 +1820,8 @@ export function FormatUTCOffsetNanoseconds(offsetNs) {
 
 export function GetISODateTimeFor(timeZone, epochNs) {
   const offsetNs = GetOffsetNanosecondsFor(timeZone, epochNs);
-  let {
-    isoDate: { year, month, day },
-    time: { hour, minute, second, millisecond, microsecond, nanosecond }
-  } = GetISOPartsFromEpoch(epochNs);
-  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond + offsetNs);
+  let result = GetISOPartsFromEpoch(epochNs);
+  return AddOffsetNanosecondsToISODateTime(result, offsetNs);
 }
 
 export function GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation) {
@@ -2358,7 +2355,9 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
     time: { millisecond, microsecond, nanosecond }
   } = GetISOPartsFromEpoch(epochNanoseconds);
   const { year, month, day, hour, minute, second } = GetFormatterParts(id, epochMilliseconds);
-  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedDate = BalanceISODate(year, month, day);
+  return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
 // Most time zones never transition twice within a short span of days. We still
@@ -2651,9 +2650,9 @@ export function BalanceISODate(year, month, day) {
   return { year, month, day };
 }
 
-export function BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-  const time = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
+export function AddOffsetNanosecondsToISODateTime(isoDateTime, nanoseconds) {
+  const time = BalanceTime(isoDateTime.time.hour, isoDateTime.time.minute, isoDateTime.time.second, isoDateTime.time.millisecond, isoDateTime.time.microsecond, isoDateTime.time.nanosecond + nanoseconds);
+  const isoDate = BalanceISODate(isoDateTime.isoDate.year, isoDateTime.isoDate.month, isoDateTime.isoDate.day + time.deltaDays);
   return CombineISODateAndTimeRecord(isoDate, time);
 }
 
