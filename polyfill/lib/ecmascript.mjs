@@ -3008,9 +3008,8 @@ export function ISODateToEpochDays(year, month, day) {
 // https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 // with no observable changes.
 function CheckISODaysRange({ year, month, day }) {
-  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
-    throw new RangeErrorCtor('date/time value is outside the supported range');
-  }
+  const dateTime = CombineISODateAndTimeRecord({ year, month, day }, MidnightTimeRecord());
+  RejectDateTimeRange(dateTime);
 }
 
 function DifferenceTime(time1, time2) {
