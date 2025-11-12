@@ -941,7 +941,7 @@ export function GetTemporalRelativeToOption(options) {
 
   let offsetBehaviour = 'option';
   let matchMinutes = false;
-  let isoDate, time, calendar, timeZone, offset;
+  let isoDateTime, calendar, timeZone, offset;
   if (Type(relativeTo) === 'Object') {
     if (IsTemporalZonedDateTime(relativeTo)) {
       return { zonedRelativeTo: relativeTo };
@@ -960,11 +960,11 @@ export function GetTemporalRelativeToOption(options) {
       ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'],
       []
     );
-    ({ isoDate, time } = InterpretTemporalDateTimeFields(calendar, fields, 'constrain'));
+    isoDateTime = InterpretTemporalDateTimeFields(calendar, fields, 'constrain');
     ({ offset, timeZone } = fields);
     if (offset === undefined) offsetBehaviour = 'wall';
   } else {
-    let tzAnnotation, z, year, month, day;
+    let tzAnnotation, z, isoDate, time, year, month, day;
     ({ year, month, day, time, calendar, tzAnnotation, offset, z } = ParseISODateTime(RequireString(relativeTo)));
     if (tzAnnotation) {
       timeZone = ToTemporalTimeZoneIdentifier(tzAnnotation);
@@ -989,14 +989,23 @@ export function GetTemporalRelativeToOption(options) {
     if (!calendar) calendar = 'iso8601';
     calendar = CanonicalizeCalendar(calendar);
     isoDate = { year, month, day };
+    if (time === 'start-of-day') {
+      if (timeZone) {
+        assert(offsetBehaviour === 'wall', "offsetBehavior must be wall when time is start-of-day");
+        const epochNanoseconds = GetStartOfDay(timeZone, isoDate);
+        const zonedRelativeTo = CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+        return { zonedRelativeTo };
+      }
+      time = MidnightTimeRecord();
+    }
+    isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
   }
   if (timeZone === undefined) {
-    return { plainRelativeTo: CreateTemporalDate(isoDate, calendar) };
+    return { plainRelativeTo: CreateTemporalDate(isoDateTime.isoDate, calendar) };
   }
   const offsetNs = offsetBehaviour === 'option' ? ParseDateTimeUTCOffset(offset) : 0;
   const epochNanoseconds = InterpretISODateTimeOffset(
-    isoDate,
-    time,
+    isoDateTime,
     offsetBehaviour,
     offsetNs,
     timeZone,
@@ -1378,8 +1387,7 @@ export function ToTemporalYearMonth(item, options = undefined) {
 }
 
 export function InterpretISODateTimeOffset(
-  isoDate,
-  time,
+  isoDateTime,
   offsetBehaviour,
   offsetNs,
   timeZone,
@@ -1387,37 +1395,26 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
-  CheckISODaysRange(isoDate);
-
-  // start-of-day signifies that we had a string such as YYYY-MM-DD[Zone]. It is
-  // grammatically not possible to specify a UTC offset in that string, so the
-  // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
-  if (time === 'start-of-day') {
-    assert(offsetBehaviour === 'wall', 'offset cannot be provided in YYYY-MM-DD[Zone] string');
-    assert(offsetNs === 0, 'offset cannot be provided in YYYY-MM-DD[Zone] string');
-    return GetStartOfDay(timeZone, isoDate);
-  }
-
-  const dt = CombineISODateAndTimeRecord(isoDate, time);
+  CheckISODaysRange(isoDateTime.isoDate);
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
     // the offset), so just convert DateTime to Instant in the given time zone
-    return GetEpochNanosecondsFor(timeZone, dt, disambiguation);
+    return GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation);
   }
 
   // The caller wants the offset to always win ('use') OR the caller is OK
   // with the offset winning ('prefer' or 'reject') as long as it's valid
   // for this timezone and date/time.
   if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
-    const epochNanoseconds = GetUTCEpochNanoseconds(dt).subtract(offsetNs);
+    const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNs);
     return epochNanoseconds;
   }
 
-  const utcEpochNs = GetUTCEpochNanoseconds(dt);
+  const utcEpochNs = GetUTCEpochNanoseconds(isoDateTime);
 
   // "prefer" or "reject"
-  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
+  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   for (let index = 0; index < possibleEpochNs.length; index++) {
     const candidate = possibleEpochNs[index];
     const candidateOffset = utcEpochNs.subtract(candidate).toJSNumber();
@@ -1431,16 +1428,16 @@ export function InterpretISODateTimeOffset(
   // zone and date/time.
   if (offsetOpt === 'reject') {
     const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
-    const dtStr = ISODateTimeToString(dt, 'iso8601', 'auto');
+    const dtStr = ISODateTimeToString(isoDateTime, 'iso8601', 'auto');
     throw new RangeErrorCtor(`Offset ${offsetStr} is invalid for ${dtStr} in ${timeZone}`);
   }
   // fall through: offsetOpt === 'prefer', but the offset doesn't match
   // so fall back to use the time zone instead.
-  return DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, dt, disambiguation);
+  return DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, isoDateTime, disambiguation);
 }
 
 export function ToTemporalZonedDateTime(item, options = undefined) {
-  let isoDate, time, timeZone, offset, calendar;
+  let isoDateTime, timeZone, offset, calendar;
   let matchMinute = false;
   let hasUTCDesignator = false;
   let disambiguation, offsetOpt;
@@ -1469,9 +1466,9 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
     const overflow = GetTemporalOverflowOption(resolvedOptions);
-    ({ isoDate, time } = InterpretTemporalDateTimeFields(calendar, fields, overflow));
+    isoDateTime = InterpretTemporalDateTimeFields(calendar, fields, overflow);
   } else {
-    let tzAnnotation, z, year, month, day;
+    let tzAnnotation, z, time, year, month, day;
     ({ year, month, day, time, tzAnnotation, offset, z, calendar } = ParseTemporalZonedDateTimeString(
       RequireString(item)
     ));
@@ -1491,7 +1488,16 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
     GetTemporalOverflowOption(resolvedOptions); // validate and ignore
-    isoDate = { year, month, day };
+    const isoDate = { year, month, day };
+    // start-of-day signifies that we had a string such as YYYY-MM-DD[Zone]. It is
+    // grammatically not possible to specify a UTC offset in that string, so the
+    // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
+    if (time === 'start-of-day') {
+      assert(!offset);
+      const epochNanoseconds = GetStartOfDay(timeZone, isoDate);
+      return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+    }
+    isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
   }
   let offsetBehaviour = 'option';
   if (hasUTCDesignator) {
@@ -1502,8 +1508,7 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
   let offsetNs = 0;
   if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
   const epochNanoseconds = InterpretISODateTimeOffset(
-    isoDate,
-    time,
+    isoDateTime,
     offsetBehaviour,
     offsetNs,
     timeZone,
