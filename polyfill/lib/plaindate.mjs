@@ -193,7 +193,7 @@ export class PlainDate {
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
       const isoDateTime = ES.CombineISODateAndTimeRecord(isoDate, GetSlot(temporalTime, TIME));
-      ES.CheckISODaysRange(isoDateTime);
+      ES.RejectDateTimeRange(isoDateTime);
       epochNs = ES.GetEpochNanosecondsFor(timeZone, isoDateTime, 'compatible');
     }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, GetSlot(this, CALENDAR));

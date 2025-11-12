@@ -1288,7 +1288,7 @@ export function ToTemporalInstant(item) {
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
   const isoDate = { year, month, day };
   const isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
-  CheckISODaysRange(isoDateTime);
+  RejectDateTimeRange(isoDateTime);
   const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
@@ -1395,8 +1395,9 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
+
   if (offsetOpt == 'prefer' || offsetOpt == 'reject') {
-    CheckISODaysRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
+    RejectDateTimeRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
   }
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
@@ -1879,7 +1880,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
       const earlierTime = AddTime(isoDateTime.time, timeDuration);
       const earlierDate = AddDaysToISODate(isoDateTime.isoDate, earlierTime.deltaDays);
       const earlier = CombineISODateAndTimeRecord(earlierDate, earlierTime);
-      CheckISODaysRange(earlier);
+      RejectDateTimeRange(earlier);
       return GetPossibleEpochNanoseconds(timeZone, earlier)[0];
     }
     case 'compatible':
@@ -1889,7 +1890,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
       const laterTime = AddTime(isoDateTime.time, timeDuration);
       const laterDate = AddDaysToISODate(isoDateTime.isoDate, laterTime.deltaDays);
       const later = CombineISODateAndTimeRecord(laterDate, laterTime);
-      CheckISODaysRange(later);
+      RejectDateTimeRange(later);
       const possible = GetPossibleEpochNanoseconds(timeZone, later);
       return possible[possible.length - 1];
     }
@@ -1904,7 +1905,7 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
 
   // UTC fast path
   if (timeZone === 'UTC') {
-    CheckISODaysRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
+    RejectDateTimeRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
     return [GetUTCEpochNanoseconds(isoDateTime)];
   }
 
@@ -1928,7 +1929,7 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
 
 export function GetStartOfDay(timeZone, isoDate) {
   const isoDateTime = CombineISODateAndTimeRecord(isoDate, MidnightTimeRecord());
-  CheckISODaysRange(isoDateTime);
+  RejectDateTimeRange(isoDateTime);
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   // If not a DST gap, return the single or earlier epochNs
   if (possibleEpochNs.length) return possibleEpochNs[0];
@@ -3016,14 +3017,6 @@ export function ISODateToEpochDays(year, month, day) {
   );
 }
 
-// This is needed before calling GetUTCEpochNanoseconds, because it uses MakeDay
-// which is ill-defined in how it handles large year numbers. If the issue
-// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
-// with no observable changes.
-export function CheckISODaysRange(dateTime) {
-  RejectDateTimeRange(dateTime);
-}
-
 function DifferenceTime(time1, time2) {
   const hours = time2.hour - time1.hour;
   const minutes = time2.minute - time1.minute;
@@ -3124,7 +3117,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
     // Incorporate time parts from dtStart
     intermediateDateTime = CombineISODateAndTimeRecord(intermediateDate, isoDtStart.time);
 
-    CheckISODaysRange(intermediateDateTime);
+    RejectDateTimeRange(intermediateDateTime);
 
     // Convert intermediate datetime to epoch-nanoseconds (may disambiguate)
     const intermediateNs = GetEpochNanosecondsFor(timeZone, intermediateDateTime, 'compatible');
@@ -3226,7 +3219,7 @@ function NudgeToCalendarUnit(
    if (!timeZone) {
      startEpochNs = GetUTCEpochNanoseconds(startDateTime);
    } else {
-     CheckISODaysRange(startDateTime);
+     RejectDateTimeRange(startDateTime);
      startEpochNs = GetEpochNanosecondsFor(timeZone, startDateTime, 'compatible')
    }
   }
@@ -3234,7 +3227,7 @@ function NudgeToCalendarUnit(
   // Convert to bound-END to epoch-nanoseconds
   const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain');
   const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
-  CheckISODaysRange(endDateTime);
+  RejectDateTimeRange(endDateTime);
   const endEpochNs = timeZone
     ? GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible')
     : GetUTCEpochNanoseconds(endDateTime);
@@ -3280,10 +3273,10 @@ function NudgeToZonedTime(sign, duration, isoDateTime, timeZone, calendar, incre
   // Apply to origin, output start/end of the day as PlainDateTimes
   const start = CalendarDateAdd(calendar, isoDateTime.isoDate, duration.date, 'constrain');
   const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
-  CheckISODaysRange(startDateTime);
+  RejectDateTimeRange(startDateTime);
   const endDate = AddDaysToISODate(start, sign);
   const endDateTime = CombineISODateAndTimeRecord(endDate, isoDateTime.time);
-  CheckISODaysRange(endDateTime);
+  RejectDateTimeRange(endDateTime);
 
   // Compute the epoch-nanosecond start/end of the final whole-day interval
   // If duration has negative sign, startEpochNs will be after endEpochNs
@@ -3418,7 +3411,7 @@ function BubbleRelativeDuration(
     const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
     let endEpochNs;
     if (timeZone) {
-      CheckISODaysRange(endDateTime);
+      RejectDateTimeRange(endDateTime);
       endEpochNs = GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible');
     } else {
       endEpochNs = GetUTCEpochNanoseconds(endDateTime);
@@ -3958,7 +3951,7 @@ export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow
   const addedDate = CalendarDateAdd(calendar, dt.isoDate, duration.date, overflow);
   const dtIntermediate = CombineISODateAndTimeRecord(addedDate, dt.time);
 
-  CheckISODaysRange(dtIntermediate);
+  RejectDateTimeRange(dtIntermediate);
 
   // Note that 'compatible' is used below because this disambiguation behavior
   // is required by RFC 5545.
