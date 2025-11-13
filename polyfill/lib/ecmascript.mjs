@@ -1288,7 +1288,7 @@ export function ToTemporalInstant(item) {
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
   const isoDate = { year, month, day };
   const isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
-  CheckISODaysRange(isoDate);
+  CheckISODaysRange(isoDateTime);
   const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
@@ -1395,7 +1395,7 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
-  CheckISODaysRange(isoDateTime.isoDate);
+  CheckISODaysRange(isoDateTime);
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
@@ -1892,14 +1892,14 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
   // UTC fast path
   if (timeZone === 'UTC') {
-    CheckISODaysRange(isoDateTime.isoDate);
+    CheckISODaysRange(isoDateTime);
     return [GetUTCEpochNanoseconds(isoDateTime)];
   }
 
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
   let possibleEpochNanoseconds;
   if (offsetMinutes !== undefined) {
-    CheckISODaysRange(isoDateTime.isoDate);
+    CheckISODaysRange(isoDateTime);
     const offsetNanoseconds = bigInt(offsetMinutes).multiply(6).multiply(10 ** 10);
     const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
     possibleEpochNanoseconds = [epochNanoseconds];
@@ -3012,8 +3012,7 @@ export function ISODateToEpochDays(year, month, day) {
 // which is ill-defined in how it handles large year numbers. If the issue
 // https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 // with no observable changes.
-function CheckISODaysRange({ year, month, day }) {
-  const dateTime = CombineISODateAndTimeRecord({ year, month, day }, MidnightTimeRecord());
+function CheckISODaysRange(dateTime) {
   RejectDateTimeRange(dateTime);
 }
 
