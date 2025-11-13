@@ -138,11 +138,7 @@ function ISODateSurpasses(sign, baseDate, isoDate2, years, months, weeks, days) 
   let d1 = baseDate.day;
   if (weeks !== 0 || days !== 0) {
     const regulatedDate = ES.RegulateISODate(y1, m1, d1, 'constrain');
-    ({
-      year: y1,
-      month: m1,
-      day: d1
-    } = ES.AddDaysToISODate(regulatedDate, 7 * weeks + days));
+    ({ year: y1, month: m1, day: d1 } = ES.AddDaysToISODate(regulatedDate, 7 * weeks + days));
   }
   if (y1 !== isoDate2.year) {
     if (sign * (y1 - isoDate2.year) > 0) return true;
@@ -152,10 +148,6 @@ function ISODateSurpasses(sign, baseDate, isoDate2, years, months, weeks, days) 
     if (sign * (d1 - isoDate2.day) > 0) return true;
   }
   return false;
-}
-
-function addDaysISO(isoDate, days) {
-  return AddDaysToISODate({year: isoDate.year, month: isoDate.month, day: isoDate.day}, days);
 }
 
 const impl = {};
@@ -1481,7 +1473,7 @@ const helperIndian = makeNonISOHelper([{ code: 'shaka', isoEpoch: { year: 79, mo
     const isoYear = calendarDate.year + 78 + (monthInfo.nextYear ? 1 : 0);
     const isoMonth = monthInfo.month;
     const isoDay = monthInfo.day;
-    const isoDate = ES.AddDaysToISODate({year: isoYear, month: isoMonth, day: isoDay}, calendarDate.day - 1);
+    const isoDate = ES.AddDaysToISODate({ year: isoYear, month: isoMonth, day: isoDay }, calendarDate.day - 1);
     return isoDate;
   },
   // https://bugs.chromium.org/p/v8/issues/detail?id=10529 causes Intl's Indian
