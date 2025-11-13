@@ -3273,26 +3273,62 @@ function NudgeToCalendarUnit(
   // timeZone may be undefined
 
   var didExpandCalendarUnit = false;
-  let nudgeWindow = ComputeNudgeWindow(sign, duration, originEpochNs, isoDateTime, timeZone, calendar, increment, unit, false);
+  let nudgeWindow = ComputeNudgeWindow(
+    sign,
+    duration,
+    originEpochNs,
+    isoDateTime,
+    timeZone,
+    calendar,
+    increment,
+    unit,
+    false
+  );
   var { r1, r2, startEpochNs, endEpochNs, startDuration, endDuration } = nudgeWindow;
 
   // Round the smallestUnit within the epoch-nanosecond span
   if (sign === 1) {
     if (!(nudgeWindow.startEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.endEpochNs))) {
       // Retry nudge window if it's out of bounds
-      nudgeWindow = ComputeNudgeWindow(sign, duration, originEpochNs, isoDateTime, timeZone, calendar, increment, unit, true);
-      assert(nudgeWindow.startEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.endEpochNs), `${unit} was 0 days long`);
+      nudgeWindow = ComputeNudgeWindow(
+        sign,
+        duration,
+        originEpochNs,
+        isoDateTime,
+        timeZone,
+        calendar,
+        increment,
+        unit,
+        true
+      );
+      assert(
+        nudgeWindow.startEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.endEpochNs),
+        `${unit} was 0 days long`
+      );
       didExpandCalendarUnit = true;
     }
   } else if (sign == -1) {
     if (!(nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs))) {
       // Retry nudge window if it's out of bounds
-      nudgeWindow = ComputeNudgeWindow(sign, duration, originEpochNs, isoDateTime, timeZone, calendar, increment, unit, true);
-      assert(nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs), `${unit} was 0 days long`);
+      nudgeWindow = ComputeNudgeWindow(
+        sign,
+        duration,
+        originEpochNs,
+        isoDateTime,
+        timeZone,
+        calendar,
+        increment,
+        unit,
+        true
+      );
+      assert(
+        nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs),
+        `${unit} was 0 days long`
+      );
       didExpandCalendarUnit = true;
     }
   }
-  var { r1, r2, startEpochNs, endEpochNs, startDuration, endDuration } = nudgeWindow;
+  ({ r1, r2, startEpochNs, endEpochNs, startDuration, endDuration } = nudgeWindow);
 
   assert(!endEpochNs.equals(startEpochNs), 'startEpochNs must ≠ endEpochNs');
   const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
