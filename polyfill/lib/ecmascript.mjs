@@ -1885,16 +1885,16 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 }
 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
-  CheckISODaysRange(isoDateTime.isoDate);
-
   // UTC fast path
   if (timeZone === 'UTC') {
+    CheckISODaysRange(isoDateTime.isoDate);
     return [GetUTCEpochNanoseconds(isoDateTime)];
   }
 
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
   let possibleEpochNanoseconds;
   if (offsetMinutes !== undefined) {
+    CheckISODaysRange(isoDateTime.isoDate);
     const offsetNanoseconds = bigInt(offsetMinutes).multiply(6).multiply(10 ** 10);
     const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
     possibleEpochNanoseconds = [epochNanoseconds];
