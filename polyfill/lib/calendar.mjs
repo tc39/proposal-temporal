@@ -41,6 +41,7 @@ import {
   StringPrototypeReplace,
   StringPrototypeSlice,
   StringPrototypeSplit,
+  StringPrototypeStartsWith,
   StringPrototypeToLowerCase,
   SymbolIterator,
   WeakMapPrototypeGet,
@@ -625,7 +626,9 @@ const nonIsoHelperBase = {
         }
       }
       if (type === 'month') {
-        const matches = Call(RegExpPrototypeExec, /^([0-9]*)(.*?)$/, [value]);
+        // Newer ICU data has some formats with "Mo11" / "Mo9bis" for Chinese
+        // and Dangi months
+        const matches = Call(RegExpPrototypeExec, /^(?:Mo)?([0-9]*)(.*?)$/, [value]);
         if (!matches || matches.length != 3 || (!matches[1] && !matches[2])) {
           throw new RangeErrorCtor(`Unexpected month: ${value}`);
         }
@@ -1944,7 +1947,11 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         if (type === 'day' || type === 'relatedYear') {
           calendarFields[type] = +value;
         } else if (type === 'month') {
-          calendarFields.monthString = value;
+          if (Call(StringPrototypeStartsWith, value, ['Mo'])) {
+            calendarFields.monthString = Call(StringPrototypeSlice, value, [2]);
+          } else {
+            calendarFields.monthString = value;
+          }
         }
       }
       if (calendarFields.relatedYear === undefined) {
