@@ -2741,12 +2741,13 @@ export function BalanceTime(hour, minute, second, millisecond, microsecond, nano
   return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
-export function DateDurationDays(dateDuration, isoDate, calendar) {
+export function DateDurationDays(dateDuration, plainRelativeTo) {
   const yearsMonthsWeeksDuration = AdjustDateDurationRecord(dateDuration, 0);
   if (DateDurationSign(yearsMonthsWeeksDuration) === 0) return dateDuration.days;
 
   // balance years, months, and weeks down to days
-  const later = CalendarDateAdd(calendar, isoDate, yearsMonthsWeeksDuration, 'constrain');
+  const isoDate = GetSlot(plainRelativeTo, ISO_DATE);
+  const later = CalendarDateAdd(GetSlot(plainRelativeTo, CALENDAR), isoDate, yearsMonthsWeeksDuration, 'constrain');
   const epochDaysEarlier = ISODateToEpochDays(isoDate.year, isoDate.month - 1, isoDate.day);
   const epochDaysLater = ISODateToEpochDays(later.year, later.month - 1, later.day);
   const yearsMonthsWeeksInDays = epochDaysLater - epochDaysEarlier;
@@ -3166,36 +3167,6 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   const dateLargestUnit = LargerOfTwoTemporalUnits('day', largestUnit);
   const dateDifference = CalendarDateUntil(calendar, isoDtStart.isoDate, intermediateDateTime.isoDate, dateLargestUnit);
   return CombineDateAndTimeDuration(dateDifference, timeDuration);
-}
-
-export function CompareDurations(
-  duration1,
-  duration2,
-  originEpochNs,
-  timeZone,
-  calendar,
-  isoDate,
-  largestUnit1,
-  largestUnit2
-) {
-  if (timeZone && (TemporalUnitCategory(largestUnit1) === 'date' || TemporalUnitCategory(largestUnit2) === 'date')) {
-    const after1 = AddZonedDateTime(originEpochNs, timeZone, calendar, duration1);
-    const after2 = AddZonedDateTime(originEpochNs, timeZone, calendar, duration2);
-    return ComparisonResult(after1.minus(after2).toJSNumber());
-  }
-
-  let d1 = duration1.date.days;
-  let d2 = duration2.date.days;
-  if (IsCalendarUnit(largestUnit1) || IsCalendarUnit(largestUnit2)) {
-    if (!isoDate) {
-      throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
-    }
-    d1 = DateDurationDays(duration1.date, isoDate, calendar);
-    d2 = DateDurationDays(duration2.date, isoDate, calendar);
-  }
-  const timeDuration1 = duration1.time.add24HourDays(d1);
-  const timeDuration2 = duration2.time.add24HourDays(d2);
-  return timeDuration1.cmp(timeDuration2);
 }
 
 // Returns: { r1, r2, startEpochNs, endEpochNs, startDuration, endDuration }

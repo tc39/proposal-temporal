@@ -416,27 +416,34 @@ export class Duration {
 
     const largestUnit1 = ES.DefaultTemporalLargestUnit(one);
     const largestUnit2 = ES.DefaultTemporalLargestUnit(two);
+    const duration1 = ES.ToInternalDurationRecord(one);
+    const duration2 = ES.ToInternalDurationRecord(two);
 
-    var originEpochNs, timeZone, calendar, isoDate;
-    if (zonedRelativeTo) {
-      originEpochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
-      timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
-      calendar = GetSlot(zonedRelativeTo, CALENDAR);
-    } else if (plainRelativeTo) {
-      calendar = GetSlot(plainRelativeTo, CALENDAR);
-      isoDate = GetSlot(plainRelativeTo, ISO_DATE);
+    if (
+      zonedRelativeTo &&
+      (ES.TemporalUnitCategory(largestUnit1) === 'date' || ES.TemporalUnitCategory(largestUnit2) === 'date')
+    ) {
+      const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
+      const calendar = GetSlot(zonedRelativeTo, CALENDAR);
+      const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
+
+      const after1 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration1);
+      const after2 = ES.AddZonedDateTime(epochNs, timeZone, calendar, duration2);
+      return ES.ComparisonResult(after1.minus(after2).toJSNumber());
     }
 
-    return ES.CompareDurations(
-      ES.ToInternalDurationRecord(one),
-      ES.ToInternalDurationRecord(two),
-      originEpochNs,
-      timeZone,
-      calendar,
-      isoDate,
-      largestUnit1,
-      largestUnit2
-    );
+    let d1 = duration1.date.days;
+    let d2 = duration2.date.days;
+    if (ES.IsCalendarUnit(largestUnit1) || ES.IsCalendarUnit(largestUnit2)) {
+      if (!plainRelativeTo) {
+        throw new RangeErrorCtor('A starting point is required for years, months, or weeks comparison');
+      }
+      d1 = ES.DateDurationDays(duration1.date, plainRelativeTo);
+      d2 = ES.DateDurationDays(duration2.date, plainRelativeTo);
+    }
+    const timeDuration1 = duration1.time.add24HourDays(d1);
+    const timeDuration2 = duration2.time.add24HourDays(d2);
+    return timeDuration1.cmp(timeDuration2);
   }
 }
 
