@@ -90,25 +90,28 @@
           1. Return *+0*<sub>𝔽</sub>.
         1. Let _zonedRelativeTo_ be _relativeToRecord_.[[ZonedRelativeTo]].
         1. Let _plainRelativeTo_ be _relativeToRecord_.[[PlainRelativeTo]].
-        1. If _zonedRelativeTo_ is not *undefined*, then
-          1. Let _originEpochNs_ be _zonedRelativeTo_.[[EpochNanoseconds]].
-          1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
-          1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
-          1. Let _isoDate_ be ~unset~.
-        1. Else if _plainRelativeTo_ is not *undefined*, then
-          1. Let _originEpochNs_ be *undefined*.
-          1. Let _timeZone_ be ~unset~.
-          1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
-          1. Let _isoDate_ be _plainRelativeTo_.[[ISODate]].
-        1. Else,
-          1. Let _originEpochNs_ be *undefined*.
-          1. Let _timeZone_ be ~unset~.
-          1. Let _calendar_ be ~unset~.
-          1. Let _isoDate_ be ~unset~.
         1. Let _largestUnit1_ be DefaultTemporalLargestUnit(_one_).
         1. Let _largestUnit2_ be DefaultTemporalLargestUnit(_two_).
-        1. Let _result_ be ? CompareDurations(ToInternalDurationRecord(_one_), ToInternalDurationRecord(_two_), _originEpochNs_, _timeZone_, _calendar_, _isoDate_, _largestUnit1_, _largestUnit2_).
-        1. Return _result_<sub>𝔽</sub>.
+        1. Let _duration1_ be ToInternalDurationRecord(_one_).
+        1. Let _duration2_ be ToInternalDurationRecord(_two_).
+        1. If _zonedRelativeTo_ is not *undefined*, and either TemporalUnitCategory(_largestUnit1_) or TemporalUnitCategory(_largestUnit2_) is ~date~, then
+          1. Let _timeZone_ be _zonedRelativeTo_.[[TimeZone]].
+          1. Let _calendar_ be _zonedRelativeTo_.[[Calendar]].
+          1. Let _after1_ be ? AddZonedDateTime(_zonedRelativeTo_.[[EpochNanoseconds]], _timeZone_, _calendar_, _duration1_, ~constrain~).
+          1. Let _after2_ be ? AddZonedDateTime(_zonedRelativeTo_.[[EpochNanoseconds]], _timeZone_, _calendar_, _duration2_, ~constrain~).
+          1. If _after1_ > _after2_, return *1*<sub>𝔽</sub>.
+          1. If _after1_ &lt; _after2_, return *-1*<sub>𝔽</sub>.
+          1. Return *+0*<sub>𝔽</sub>.
+        1. If IsCalendarUnit(_largestUnit1_) is *true* or IsCalendarUnit(_largestUnit2_) is *true*, then
+          1. If _plainRelativeTo_ is *undefined*, throw a *RangeError* exception.
+          1. Let _days1_ be ? DateDurationDays(_duration1_.[[Date]], _plainRelativeTo_).
+          1. Let _days2_ be ? DateDurationDays(_duration2_.[[Date]], _plainRelativeTo_).
+        1. Else,
+          1. Let _days1_ be _one_.[[Days]].
+          1. Let _days2_ be _two_.[[Days]].
+        1. Let _timeDuration1_ be ? Add24HourDaysToTimeDuration(_duration1_.[[Time]], _days1_).
+        1. Let _timeDuration2_ be ? Add24HourDaysToTimeDuration(_duration2_.[[Time]], _days2_).
+        1. Return 𝔽(CompareTimeDuration(_timeDuration1_, _timeDuration2_)).
       </emu-alg>
     </emu-clause>
   </emu-clause>
@@ -1468,8 +1471,7 @@
       <h1>
         DateDurationDays (
           _dateDuration_: a Date Duration Record,
-          _isoDate_: an ISO Date record,
-          _calendar_: a calendar type,
+          _plainRelativeTo_: a Temporal.PlainDate,
         ): either a normal completion containing an integer or a throw completion
       </h1>
       <dl class="header">
@@ -1479,50 +1481,11 @@
       <emu-alg>
         1. Let _yearsMonthsWeeksDuration_ be ! AdjustDateDurationRecord(_dateDuration_, 0).
         1. If DateDurationSign(_yearsMonthsWeeksDuration_) = 0, return _dateDuration_.[[Days]].
-        1. Let _later_ be ? CalendarDateAdd(_calendar_, _isoDate_, _yearsMonthsWeeksDuration_, ~constrain~).
-        1. Let _epochDays1_ be ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]]).
+        1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _plainRelativeTo_.[[ISODate]], _yearsMonthsWeeksDuration_, ~constrain~).
+        1. Let _epochDays1_ be ISODateToEpochDays(_plainRelativeTo_.[[ISODate]].[[Year]], _plainRelativeTo_.[[ISODate]].[[Month]] - 1, _plainRelativeTo_.[[ISODate]].[[Day]]).
         1. Let _epochDays2_ be ISODateToEpochDays(_later_.[[Year]], _later_.[[Month]] - 1, _later_.[[Day]]).
         1. Let _yearsMonthsWeeksInDays_ be _epochDays2_ - _epochDays1_.
         1. Return _dateDuration_.[[Days]] + _yearsMonthsWeeksInDays_.
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-temporal-comparedurations" type="abstract operation">
-      <h1>
-        CompareDurations (
-          _duration1_: an Internal Duration Record,
-          _duration2_: an Internal Duration Record,
-          _originEpochNs_: a BigInt or ~unset~,
-          _timeZone_: an available time zone identifier or ~unset~,
-          _calendar_: a calendar type or ~unset~,
-          _isoDate_: an ISO Date record or ~unset~,
-          _largestUnit1_: a Temporal unit,
-          _largestUnit2_: a Temporal unit,
-        ): either a normal completion containing either -1, 0, or 1, or a throw completion
-      </h1>
-      <dl class="header">
-        <dt>description</dt>
-        <dd>It compares _duration1_ with _duration2_ and returns -1 if _duration1_ represents a shorter time duration than _duration2_; 0 if the two durations are equal; or 1 if _duration1_ represents a longer time duration than _duration2_, relative to the starting point given by _originEpochNs_, _isoDate_, _timeZone_, and _calendar_.</dd>
-      </dl>
-      <emu-alg>
-        1. If _timeZone_ is not ~unset~, and either TemporalUnitCategory(_largestUnit1_) or TemporalUnitCategory(_largestUnit2_) is ~date~, then
-          1. Assert: _originEpochNs_ is not ~unset~.
-          1. Assert: _calendar_ is not ~unset~.
-          1. Let _after1_ be ? AddZonedDateTime(_originEpochNs_, _timeZone_, _calendar_, _duration1_, ~constrain~).
-          1. Let _after2_ be ? AddZonedDateTime(_originEpochNs_, _timeZone_, _calendar_, _duration2_, ~constrain~).
-          1. If _after1_ > _after2_, return 1.
-          1. If _after1_ &lt; _after2_, return -1.
-          1. Return 0.
-        1. If IsCalendarUnit(_largestUnit1_) is *true* or IsCalendarUnit(_largestUnit2_) is *true*, then
-          1. If _isoDate_ is *undefined*, throw a *RangeError* exception.
-          1. Let _days1_ be ? DateDurationDays(_duration1_.[[Date]], _isoDate_, _calendar_).
-          1. Let _days2_ be ? DateDurationDays(_duration2_.[[Date]], _isoDate_, _calendar_).
-        1. Else,
-          1. Let _days1_ be _duration1_.[[Date]].[[Days]].
-          1. Let _days2_ be _duration2_.[[Date]].[[Days]].
-        1. Let _timeDuration1_ be ? Add24HourDaysToTimeDuration(_duration1_.[[Time]], _days1_).
-        1. Let _timeDuration2_ be ? Add24HourDaysToTimeDuration(_duration2_.[[Time]], _days2_).
-        1. Return CompareTimeDuration(_timeDuration1_, _timeDuration2_).
       </emu-alg>
     </emu-clause>
 
@@ -1601,59 +1564,44 @@
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-temporal-nudgetocalendarunit" type="abstract operation">
+    <emu-clause id="sec-temporal-computenudgewindow" type="abstract operation">
       <h1>
-        NudgeToCalendarUnit (
+        ComputeNudgeWindow (
           _sign_: -1 or 1,
           _duration_: an Internal Duration Record,
           _originEpochNs_: a BigInt,
-          _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _increment_: a positive integer,
           _unit_: a date unit,
-          _roundingMode_: a rounding mode,
-        ): either a normal completion containing a Record with fields [[NudgeResult]] (a Duration Nudge Result Record) and [[Total]] (a mathematical value), or a throw completion
+          _additionalShift_: either *true* or *false*
+        ): either a normal completion containing a Record with fields [[r1]] (a mathematical value), [[r2]] (a mathematical value), [[startEpochNs_ (a BigInt), _endEpochNs_ (a BigInt), _startDuration_ (an Internal Duration Record), and _endDuration_ (an InternalDurationRecord), or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It implements rounding a duration to an increment of a calendar unit, relative to a starting point, by calculating the upper and lower bounds of the starting point added to the duration in epoch nanoseconds, and rounding according to which one is closer to _destEpochNs_.
+          It implements calculating the upper and lower bounds of the starting point added to the duration in epoch nanoseconds.
         </dd>
       </dl>
       <emu-alg>
-        1. Let _didExpandCalendarUnit_ be *false*.
         1. If _unit_ is ~year~, then
           1. Let _years_ be RoundNumberToIncrement(_duration_.[[Date]].[[Years]], _increment_, ~trunc~).
-          1. Let _r1_ be _years_.
-          1. Let _r2_ be _years_ + _increment_ × _sign_.
+          1. If _additionalShift_ is not *true*, then
+            1. Let _r1_ be _years_.
+          1. Else,
+            1. Let _r1_ be _years_ + _increment_ × _sign_.
+          1. Let _r2_ be _r1_ + _increment_ × _sign_.
           1. Let _startDuration_ be ? CreateDateDurationRecord(_r1_, 0, 0, 0).
           1. Let _endDuration_ be ? CreateDateDurationRecord(_r2_, 0, 0, 0).
-          1. Let _cmpResult_ be ? CompareDurations(_endDuration_, _duration_, _originEpochNs_, _timeZone_, _calendar_, _isoDateTime_.[[ISODate]], _unit_, _unit_).
-          1. If _sign_ > 0 and _cmpResult_ ≠ 1, or _sign_ &lt; 0 and _cmpResult_ ≠ -1, then
-            1. Set _didExpandCalendarUnit_ to *true*.
-            1. Set _r1_ to _r2_.
-            1. Set _r2_ to _r1_ + _increment_ × _sign_.
-            1. Set _endDuration_ to ? CreateDateDurationRecord(_r2_, 0, 0, 0).
-            1. Set _cmpResult_ to ? CompareDurations(_endDuration_, _duration_, _originEpochNs_, _timeZone_, _calendar_, _isoDateTime_.[[ISODate]], _unit_, _unit_)..
-            1. Assert: _sign_ > 0 and _cmpResult_ = 1, or _sign_ &lt; 0 and _cmpResult_ = -1.
-            1. Set _startDuration_ to ? CreateDateDurationRecord(_r1_, 0, 0, 0).
         1. Else if _unit_ is ~month~, then
           1. Let _months_ be RoundNumberToIncrement(_duration_.[[Date]].[[Months]], _increment_, ~trunc~).
-          1. Let _r1_ be _months_.
-          1. Let _r2_ be _months_ + _increment_ × _sign_.
+          1. If _additionalShift_ is not *true*, then
+            1. Let _r1_ be _months_.
+          1. Else,
+            1. Let _r1_ be _months_ + _increment_ × _sign_.
           1. Let _startDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r1_).
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
-          1. Let _cmpResult_ be ? CompareDurations(_endDuration_, _duration_, _originEpochNs_, _timeZone_, _calendar_, _isoDateTime_.[[ISODate]], _unit_, _unit_).
-          1. If _sign_ > 0 and _cmpResult_ ≠ 1, or _sign_ &lt; 0 and _cmpResult_ ≠ -1, then
-            1. Set _didExpandCalendarUnit_ to *true*.
-            1. Set _r1_ to _r2_.
-            1. Set _r2_ to _r1_ + _increment_ × _sign_.
-            1. Set _endDuration_ to ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
-            1. Set _cmpResult_ to ? CompareDurations(_endDuration_, _duration_, _originEpochNs_, _timeZone_, _calendar_, _isoDateTime_.[[ISODate]], _unit_, _unit_)..
-            1. Assert: _sign_ > 0 and _cmpResult_ = 1, or _sign_ &lt; 0 and _cmpResult_ = -1.
-            1. Set _startDuration_ to ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r1_).
         1. Else if _unit_ is ~week~, then
           1. Let _yearsMonths_ be ! AdjustDateDurationRecord(_duration_.[[Date]], 0, 0).
           1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _yearsMonths_, ~constrain~).
@@ -1688,10 +1636,52 @@
           1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).
         1. Else,
           1. Let _endEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _endDateTime_, ~compatible~).
+        1. Return the Record { [[r1]]: _r1_, [[r2]]: _r2_, [[startEpochNs]]: _startEpochNs_, [[endEpochNs]]: _endEpochNs_, [[startDuration]]: _startDuration_, [[endDuration]]: _endDuration_ }.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-nudgetocalendarunit" type="abstract operation">
+      <h1>
+        NudgeToCalendarUnit (
+          _sign_: -1 or 1,
+          _duration_: an Internal Duration Record,
+          _originEpochNs_: a BigInt,
+          _destEpochNs_: a BigInt,
+          _isoDateTime_: an ISO Date-Time Record,
+          _timeZone_: an available time zone identifier or ~unset~,
+          _calendar_: a calendar type,
+          _increment_: a positive integer,
+          _unit_: a date unit,
+          _roundingMode_: a rounding mode,
+        ): either a normal completion containing a Record with fields [[NudgeResult]] (a Duration Nudge Result Record) and [[Total]] (a mathematical value), or a throw completion
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It implements rounding a duration to an increment of a calendar unit, relative to a starting point, by calculating the upper and lower bounds of the starting point added to the duration in epoch nanoseconds, and rounding according to which one is closer to _destEpochNs_.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. Let _didExpandCalendarUnit_ be *false*.
+        1. Let _nudgeWindow_ be ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *false*).
+        1. Let _startEpochNs_ be _nudgeWindow_.[[startEpochNs]].
+        1. Let _endEpochNs_ be _nudgeWindow_.[[endEpochNs]].
         1. If _sign_ is 1, then
-          1. Assert: _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_.
+          1. If _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_ is *false*, then
+            1. Set _nudgeWindow_ to ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *true*).
+            1. Assert: _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_.
+            1. Set _didExpandCalendarUnit_ to *true*.
         1. Else,
-          1. Assert: _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_.
+          1. If _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_. is *false*, then
+            1. Set _nudgeWindow_ to ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *true*).
+            1. Assert: _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_.
+            1. Set _didExpandCalendarUnit_ to *true*.
+        1. Let _r1_ be _nudgeWindow_[[r1]].
+        1. Let _r2_ be _nudgeWindow_[[r2]].
+        1. Set _startEpochNs_ to _nudgeWindow_.[[startEpochNs]].
+        1. Set _endEpochNs_ to _nudgeWindow_.[[startEpochNs]].
+        1. Let _startDuration_ be _nudgeWindow_.[[startDuration]].
+        1. Let _endDuration_ be _nudgeWindow_.[[endDuration]].
         1. Assert: _startEpochNs_ ≠ _endEpochNs_.
         1. Let _progress_ be (_destEpochNs_ - _startEpochNs_) / (_endEpochNs_ - _startEpochNs_).
         1. Let _total_ be _r1_ + _progress_ × _increment_ × _sign_.
