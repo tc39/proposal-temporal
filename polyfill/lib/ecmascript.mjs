@@ -1833,6 +1833,7 @@ export function GetISODateTimeFor(timeZone, epochNs) {
 }
 
 export function GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation) {
+  CheckISODaysRange(isoDateTime);
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   return DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, isoDateTime, disambiguation);
 }
@@ -1876,6 +1877,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
       const earlierTime = AddTime(isoDateTime.time, timeDuration);
       const earlierDate = AddDaysToISODate(isoDateTime.isoDate, earlierTime.deltaDays);
       const earlier = CombineISODateAndTimeRecord(earlierDate, earlierTime);
+      CheckISODaysRange(earlier);
       return GetPossibleEpochNanoseconds(timeZone, earlier)[0];
     }
     case 'compatible':
@@ -1885,6 +1887,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
       const laterTime = AddTime(isoDateTime.time, timeDuration);
       const laterDate = AddDaysToISODate(isoDateTime.isoDate, laterTime.deltaDays);
       const later = CombineISODateAndTimeRecord(laterDate, laterTime);
+      CheckISODaysRange(later);
       const possible = GetPossibleEpochNanoseconds(timeZone, later);
       return possible[possible.length - 1];
     }
@@ -1895,6 +1898,8 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 }
 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
+  AssertISODateTimeWithinLimits(isoDateTime);
+
   // UTC fast path
   if (timeZone === 'UTC') {
     CheckISODaysRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
@@ -1921,6 +1926,7 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
 
 export function GetStartOfDay(timeZone, isoDate) {
   const isoDateTime = CombineISODateAndTimeRecord(isoDate, MidnightTimeRecord());
+  CheckISODaysRange(isoDateTime);
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   // If not a DST gap, return the single or earlier epochNs
   if (possibleEpochNs.length) return possibleEpochNs[0];
