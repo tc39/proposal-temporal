@@ -1856,7 +1856,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const { month, year } = calendarDate;
     const matchingMonthEntry = this.getMonthList(year, cache)[month];
     if (matchingMonthEntry === undefined) {
-      throw new RangeErrorCtor(`Invalid month ${month} in Chinese year ${year}`);
+      throw new RangeErrorCtor(`Invalid month ${month} in ${this.id} year ${year}`);
     }
     return matchingMonthEntry.daysInMonth;
   },
@@ -2015,7 +2015,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       const months = this.getMonthList(year, cache);
       month = months[monthCode];
       if (month === undefined) {
-        throw new RangeErrorCtor(`Unmatched month ${month}${monthExtra || ''} in Chinese year ${year}`);
+        throw new RangeErrorCtor(`Unmatched month ${month}${monthExtra || ''} in ${this.id} year ${year}`);
       }
       return { year, month, day, monthCode };
     } else {
@@ -2034,7 +2034,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           monthCode = adjustedMonthCode;
         }
         if (month === undefined) {
-          throw new RangeErrorCtor(`Unmatched month ${monthCode} in Chinese year ${year}`);
+          throw new RangeErrorCtor(`Unmatched month ${monthCode} in ${this.id} year ${year}`);
         }
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
@@ -2048,16 +2048,16 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         }
         monthCode = months[month].monthCode;
         if (monthCode === undefined) {
-          throw new RangeErrorCtor(`Invalid month ${month} in Chinese year ${year}`);
+          throw new RangeErrorCtor(`Invalid month ${month} in ${this.id} year ${year}`);
         }
       } else {
         // Both month and monthCode are present. Make sure they don't conflict.
         const months = this.getMonthList(year, cache);
         const monthIndex = months[monthCode];
-        if (!monthIndex) throw new RangeErrorCtor(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
+        if (!monthIndex) throw new RangeErrorCtor(`Unmatched monthCode ${monthCode} in ${this.id} year ${year}`);
         if (month !== monthIndex) {
           throw new RangeErrorCtor(
-            `monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`
+            `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`
           );
         }
       }
