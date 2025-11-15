@@ -15499,7 +15499,7 @@
 	  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  let amended = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 	  options = ObjectAssign({}, options);
-	  const props = ['year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'dayPeriod', 'timeZoneName', 'dateStyle', 'timeStyle'];
+	  const props = ['era', 'year', 'month', 'day', 'hour', 'minute', 'second', 'weekday', 'dayPeriod', 'timeZoneName', 'dateStyle', 'timeStyle'];
 	  for (let i = 0; i < props.length; i++) {
 	    const opt = props[i];
 	    options[opt] = opt in amended ? amended[opt] : options[opt];
@@ -15509,6 +15509,7 @@
 	}
 	function timeAmend(originalOptions) {
 	  const options = amend(originalOptions, {
+	    era: false,
 	    year: false,
 	    month: false,
 	    day: false,
@@ -15573,7 +15574,7 @@
 	    delete options.dateStyle;
 	    ObjectAssign(options, dateStyleHacks[style]);
 	  }
-	  if (!('year' in options || 'month' in options || 'era' in options)) {
+	  if (!('year' in options || 'month' in options)) {
 	    if (hasAnyDateTimeOptions(originalOptions)) {
 	      throw new TypeError("cannot format PlainYearMonth with options [".concat(ObjectKeys(originalOptions), "]"));
 	    }
@@ -15723,7 +15724,7 @@
 	  return options;
 	}
 	function hasDateOptions(options) {
-	  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options || 'era' in options;
+	  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options;
 	}
 	function hasTimeOptions(options) {
 	  return 'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options || 'dayPeriod' in options || 'fractionalSecondDigits' in options;
