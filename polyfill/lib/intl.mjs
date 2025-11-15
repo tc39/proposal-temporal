@@ -354,6 +354,7 @@ function formatRangeToParts(a, b) {
 function amend(options = {}, amended = {}) {
   options = ObjectAssign({}, options);
   const props = [
+    'era',
     'year',
     'month',
     'day',
@@ -376,6 +377,7 @@ function amend(options = {}, amended = {}) {
 
 function timeAmend(originalOptions) {
   const options = amend(originalOptions, {
+    era: false,
     year: false,
     month: false,
     day: false,
@@ -425,7 +427,7 @@ function yearMonthAmend(originalOptions) {
     delete options.dateStyle;
     ObjectAssign(options, dateStyleHacks[style]);
   }
-  if (!('year' in options || 'month' in options || 'era' in options)) {
+  if (!('year' in options || 'month' in options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
       throw new TypeError(`cannot format PlainYearMonth with options [${ObjectKeys(originalOptions)}]`);
     }
@@ -539,14 +541,7 @@ function instantAmend(options) {
 }
 
 function hasDateOptions(options) {
-  return (
-    'year' in options ||
-    'month' in options ||
-    'day' in options ||
-    'weekday' in options ||
-    'dateStyle' in options ||
-    'era' in options
-  );
+  return 'year' in options || 'month' in options || 'day' in options || 'weekday' in options || 'dateStyle' in options;
 }
 
 function hasTimeOptions(options) {
