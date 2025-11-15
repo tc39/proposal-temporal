@@ -675,6 +675,14 @@ const nonIsoHelperBase = {
         result.era = value;
       }
     }
+    if (hasEra && !result.era) {
+      // ICU bug that neglects to provide an era code for negative eraYear in
+      // the coptic calendar
+      assert(this.id === 'coptic', 'Unable to discern era from Intl.DateTimeFormat.formatToParts in Coptic calendar.');
+      // eraYear is also reversed, but using the legacy era code will set it
+      // right
+      result.era = 'era0';
+    }
     if (hasEra && result.eraYear === undefined) {
       // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
       // output of Intl.DateTimeFormat.formatToParts.
