@@ -41,6 +41,7 @@ import {
   StringPrototypeReplace,
   StringPrototypeSlice,
   StringPrototypeSplit,
+  StringPrototypeStartsWith,
   StringPrototypeToLowerCase,
   SymbolIterator,
   WeakMapPrototypeGet,
@@ -625,7 +626,9 @@ const nonIsoHelperBase = {
         }
       }
       if (type === 'month') {
-        const matches = Call(RegExpPrototypeExec, /^([0-9]*)(.*?)$/, [value]);
+        // Newer ICU data has some formats with "Mo11" / "Mo9bis" for Chinese
+        // and Dangi months
+        const matches = Call(RegExpPrototypeExec, /^(?:Mo)?([0-9]*)(.*?)$/, [value]);
         if (!matches || matches.length != 3 || (!matches[1] && !matches[2])) {
           throw new RangeErrorCtor(`Unexpected month: ${value}`);
         }
@@ -671,6 +674,14 @@ const nonIsoHelperBase = {
         value = Call(StringPrototypeToLowerCase, value, []);
         result.era = value;
       }
+    }
+    if (hasEra && !result.era) {
+      // ICU bug that neglects to provide an era code for negative eraYear in
+      // the coptic calendar
+      assert(this.id === 'coptic', 'Unable to discern era from Intl.DateTimeFormat.formatToParts in Coptic calendar.');
+      // eraYear is also reversed, but using the legacy era code will set it
+      // right
+      result.era = 'era0';
     }
     if (hasEra && result.eraYear === undefined) {
       // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
@@ -1017,7 +1028,7 @@ const nonIsoHelperBase = {
       years += cycleCount * cycleInfo.years;
       months %= cycleInfo.months;
     }
-    const addedYears = this.adjustCalendarDate({ year: year + years, monthCode, day }, cache);
+    const addedYears = this.adjustCalendarDate({ year: year + years, monthCode, day }, cache, overflow);
     const addedMonths = this.addMonthsCalendar(addedYears, months, overflow, cache);
     days += weeks * 7;
     const addedDays = this.addDaysCalendar(addedMonths, days, cache);
@@ -1229,7 +1240,9 @@ const helperHebrew = makeNonISOHelper([{ code: 'am', isoEpoch: { year: -3760, mo
     // Given that these can be calculated by counting the number of days in
     // those months, I assume that these DO NOT need to be exposed as
     // Hebrew-only prototype fields or methods.
-    return (7 * year + 1) % 19 < 7;
+    let cycleYear = (7 * year + 1) % 19;
+    if (cycleYear < 0) cycleYear += 19;
+    return cycleYear < 7;
   },
   monthsInYear(calendarDate) {
     return this.inLeapYear(calendarDate) ? 13 : 12;
@@ -1488,11 +1501,14 @@ const helperIndian = makeNonISOHelper([{ code: 'shaka', isoEpoch: { year: 79, mo
   // calendar output to fail for all dates before 0001-01-01 ISO.  For example,
   // in Node 12 0000-01-01 is calculated as 6146/12/-583 instead of 10/11/-79 as
   // expected.
-  vulnerableToBceBug:
+  vulnerableToBceBug: !Call(
+    StringPrototypeStartsWith,
     Call(DatePrototypeToLocaleDateString, new DateCtor('0000-01-01T00:00Z'), [
       'en-US-u-ca-indian',
       { timeZone: 'UTC' }
-    ]) !== '10/11/-79 Saka',
+    ]),
+    ['10/11/-79']
+  ),
   checkIcuBugs(isoDate) {
     if (this.vulnerableToBceBug && isoDate.year < 1) {
       throw new RangeErrorCtor(
@@ -1856,7 +1872,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const { month, year } = calendarDate;
     const matchingMonthEntry = this.getMonthList(year, cache)[month];
     if (matchingMonthEntry === undefined) {
-      throw new RangeErrorCtor(`Invalid month ${month} in Chinese year ${year}`);
+      throw new RangeErrorCtor(`Invalid month ${month} in ${this.id} year ${year}`);
     }
     return matchingMonthEntry.daysInMonth;
   },
@@ -1944,7 +1960,11 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         if (type === 'day' || type === 'relatedYear') {
           calendarFields[type] = +value;
         } else if (type === 'month') {
-          calendarFields.monthString = value;
+          if (Call(StringPrototypeStartsWith, value, ['Mo'])) {
+            calendarFields.monthString = Call(StringPrototypeSlice, value, [2]);
+          } else {
+            calendarFields.monthString = value;
+          }
         }
       }
       if (calendarFields.relatedYear === undefined) {
@@ -2015,7 +2035,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       const months = this.getMonthList(year, cache);
       month = months[monthCode];
       if (month === undefined) {
-        throw new RangeErrorCtor(`Unmatched month ${month}${monthExtra || ''} in Chinese year ${year}`);
+        throw new RangeErrorCtor(`Unmatched month ${month}${monthExtra || ''} in ${this.id} year ${year}`);
       }
       return { year, month, day, monthCode };
     } else {
@@ -2034,7 +2054,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           monthCode = adjustedMonthCode;
         }
         if (month === undefined) {
-          throw new RangeErrorCtor(`Unmatched month ${monthCode} in Chinese year ${year}`);
+          throw new RangeErrorCtor(`Unmatched month ${monthCode} in ${this.id} year ${year}`);
         }
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
@@ -2048,16 +2068,16 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         }
         monthCode = months[month].monthCode;
         if (monthCode === undefined) {
-          throw new RangeErrorCtor(`Invalid month ${month} in Chinese year ${year}`);
+          throw new RangeErrorCtor(`Invalid month ${month} in ${this.id} year ${year}`);
         }
       } else {
         // Both month and monthCode are present. Make sure they don't conflict.
         const months = this.getMonthList(year, cache);
         const monthIndex = months[monthCode];
-        if (!monthIndex) throw new RangeErrorCtor(`Unmatched monthCode ${monthCode} in Chinese year ${year}`);
+        if (!monthIndex) throw new RangeErrorCtor(`Unmatched monthCode ${monthCode} in ${this.id} year ${year}`);
         if (month !== monthIndex) {
           throw new RangeErrorCtor(
-            `monthCode ${monthCode} doesn't correspond to month ${month} in Chinese year ${year}`
+            `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`
           );
         }
       }
