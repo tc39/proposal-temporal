@@ -1491,11 +1491,14 @@ const helperIndian = makeNonISOHelper([{ code: 'shaka', isoEpoch: { year: 79, mo
   // calendar output to fail for all dates before 0001-01-01 ISO.  For example,
   // in Node 12 0000-01-01 is calculated as 6146/12/-583 instead of 10/11/-79 as
   // expected.
-  vulnerableToBceBug:
+  vulnerableToBceBug: !Call(
+    StringPrototypeStartsWith,
     Call(DatePrototypeToLocaleDateString, new DateCtor('0000-01-01T00:00Z'), [
       'en-US-u-ca-indian',
       { timeZone: 'UTC' }
-    ]) !== '10/11/-79 Saka',
+    ]),
+    ['10/11/-79']
+  ),
   checkIcuBugs(isoDate) {
     if (this.vulnerableToBceBug && isoDate.year < 1) {
       throw new RangeErrorCtor(
