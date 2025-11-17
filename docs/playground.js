@@ -13032,7 +13032,9 @@
 	        }
 	      }
 	      if (type === 'month') {
-	        const matches = Call$1(RegExpPrototypeExec, /^([0-9]*)(.*?)$/, [value]);
+	        // Newer ICU data has some formats with "Mo11" / "Mo9bis" for Chinese
+	        // and Dangi months
+	        const matches = Call$1(RegExpPrototypeExec, /^(?:Mo)?([0-9]*)(.*?)$/, [value]);
 	        if (!matches || matches.length != 3 || !matches[1] && !matches[2]) {
 	          throw new RangeError$1("Unexpected month: ".concat(value));
 	        }
@@ -13072,6 +13074,17 @@
 	        value = Call$1(StringPrototypeToLowerCase, value, []);
 	        result.era = value;
 	      }
+	    }
+	    if (hasEra && !result.era) {
+	      // Work around ICU bug that neglects to provide an era code for negative
+	      // eraYear in the coptic calendar
+	      if (this.id !== 'coptic') {
+	        // If missing from any other calendar, it's an as-yet-unknown bug
+	        throw new RangeError$1("Intl.DateTimeFormat.formatToParts lacks era in ".concat(this.id, " calendar."));
+	      }
+	      // eraYear is also reversed, but using the legacy era code will set it
+	      // right
+	      result.era = 'era0';
 	    }
 	    if (hasEra && result.eraYear === undefined) {
 	      // Node 12 has outdated ICU data that lacks the `relatedYear` field in the
@@ -13488,7 +13501,7 @@
 	      year: year + years,
 	      monthCode,
 	      day
-	    }, cache);
+	    }, cache, overflow);
 	    const addedMonths = this.addMonthsCalendar(addedYears, months, overflow, cache);
 	    days += weeks * 7;
 	    const addedDays = this.addDaysCalendar(addedMonths, days, cache);
@@ -13756,7 +13769,9 @@
 	    // Given that these can be calculated by counting the number of days in
 	    // those months, I assume that these DO NOT need to be exposed as
 	    // Hebrew-only prototype fields or methods.
-	    return (7 * year + 1) % 19 < 7;
+	    let cycleYear = (7 * year + 1) % 19;
+	    if (cycleYear < 0) cycleYear += 19;
+	    return cycleYear < 7;
 	  },
 	  monthsInYear(calendarDate) {
 	    return this.inLeapYear(calendarDate) ? 13 : 12;
@@ -14218,9 +14233,9 @@
 	  // calendar output to fail for all dates before 0001-01-01 ISO.  For example,
 	  // in Node 12 0000-01-01 is calculated as 6146/12/-583 instead of 10/11/-79 as
 	  // expected.
-	  vulnerableToBceBug: Call$1(DatePrototypeToLocaleDateString, new Date$1('0000-01-01T00:00Z'), ['en-US-u-ca-indian', {
+	  vulnerableToBceBug: !Call$1(StringPrototypeStartsWith, Call$1(DatePrototypeToLocaleDateString, new Date$1('0000-01-01T00:00Z'), ['en-US-u-ca-indian', {
 	    timeZone: 'UTC'
-	  }]) !== '10/11/-79 Saka',
+	  }]), ['10/11/-79']),
 	  checkIcuBugs(isoDate) {
 	    if (this.vulnerableToBceBug && isoDate.year < 1) {
 	      throw new RangeError$1("calendar '".concat(this.id, "' is broken for ISO dates before 0001-01-01") + ' (see https://bugs.chromium.org/p/v8/issues/detail?id=10529)');
@@ -14733,7 +14748,7 @@
 	    } = calendarDate;
 	    const matchingMonthEntry = this.getMonthList(year, cache)[month];
 	    if (matchingMonthEntry === undefined) {
-	      throw new RangeError$1("Invalid month ".concat(month, " in Chinese year ").concat(year));
+	      throw new RangeError$1("Invalid month ".concat(month, " in ").concat(this.id, " year ").concat(year));
 	    }
 	    return matchingMonthEntry.daysInMonth;
 	  },
@@ -14839,7 +14854,11 @@
 	        if (type === 'day' || type === 'relatedYear') {
 	          calendarFields[type] = +value;
 	        } else if (type === 'month') {
-	          calendarFields.monthString = value;
+	          if (Call$1(StringPrototypeStartsWith, value, ['Mo'])) {
+	            calendarFields.monthString = Call$1(StringPrototypeSlice, value, [2]);
+	          } else {
+	            calendarFields.monthString = value;
+	          }
 	        }
 	      }
 	      if (calendarFields.relatedYear === undefined) {
@@ -14923,7 +14942,7 @@
 	      const months = this.getMonthList(year, cache);
 	      month = months[monthCode];
 	      if (month === undefined) {
-	        throw new RangeError$1("Unmatched month ".concat(month).concat(monthExtra || '', " in Chinese year ").concat(year));
+	        throw new RangeError$1("Unmatched month ".concat(month).concat(monthExtra || '', " in ").concat(this.id, " year ").concat(year));
 	      }
 	      return {
 	        year,
@@ -14950,7 +14969,7 @@
 	          monthCode = adjustedMonthCode;
 	        }
 	        if (month === undefined) {
-	          throw new RangeError$1("Unmatched month ".concat(monthCode, " in Chinese year ").concat(year));
+	          throw new RangeError$1("Unmatched month ".concat(monthCode, " in ").concat(this.id, " year ").concat(year));
 	        }
 	      } else if (monthCode === undefined) {
 	        const months = this.getMonthList(year, cache);
@@ -14964,15 +14983,15 @@
 	        }
 	        monthCode = months[month].monthCode;
 	        if (monthCode === undefined) {
-	          throw new RangeError$1("Invalid month ".concat(month, " in Chinese year ").concat(year));
+	          throw new RangeError$1("Invalid month ".concat(month, " in ").concat(this.id, " year ").concat(year));
 	        }
 	      } else {
 	        // Both month and monthCode are present. Make sure they don't conflict.
 	        const months = this.getMonthList(year, cache);
 	        const monthIndex = months[monthCode];
-	        if (!monthIndex) throw new RangeError$1("Unmatched monthCode ".concat(monthCode, " in Chinese year ").concat(year));
+	        if (!monthIndex) throw new RangeError$1("Unmatched monthCode ".concat(monthCode, " in ").concat(this.id, " year ").concat(year));
 	        if (month !== monthIndex) {
-	          throw new RangeError$1("monthCode ".concat(monthCode, " doesn't correspond to month ").concat(month, " in Chinese year ").concat(year));
+	          throw new RangeError$1("monthCode ".concat(monthCode, " doesn't correspond to month ").concat(month, " in ").concat(this.id, " year ").concat(year));
 	        }
 	      }
 	      return _objectSpread2(_objectSpread2({}, calendarDate), {}, {
