@@ -2105,7 +2105,17 @@ const nonIsoGeneralImpl = {
     }
     return [];
   },
-  resolveFields(fields /* , type */) {
+  resolveFields(fields, type) {
+    if ((type === 'date' || type === 'year-month') && fields.year === undefined) {
+      if (!CalendarSupportsEra(this.helper.id)) {
+        throw new TypeErrorCtor('year is required');
+      } else if (fields.era === undefined || fields.eraYear === undefined) {
+        throw new TypeErrorCtor('year (or era and eraYear) are required');
+      }
+    }
+    if ((type === 'date' || type === 'month-day') && fields.day === undefined) {
+      throw new TypeErrorCtor('day is required');
+    }
     if (this.helper.calendarType !== 'lunisolar') {
       resolveNonLunisolarMonth(fields, this.helper.id);
     }
