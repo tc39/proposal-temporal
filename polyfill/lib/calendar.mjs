@@ -2123,6 +2123,8 @@ const nonIsoGeneralImpl = {
     if (this.helper.calendarType !== 'lunisolar') {
       resolveNonLunisolarMonth(fields, this.helper.id);
     }
+    // Note: Lunisolar calendars go on to resolve month/monthCode in their
+    // adjustCalendarDate implementations
   },
   dateToISO(fields, overflow) {
     const cache = new OneObjectCache(this.id);
