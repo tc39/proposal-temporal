@@ -13516,7 +13516,7 @@
 	    if (overflow === 'reject' && calendarDate.day !== day) {
 	      throw new RangeError$1("Day ".concat(day, " does not exist in resulting calendar month"));
 	    }
-	    return calendarDate;
+	    return this.regulateDate(calendarDate, overflow, cache);
 	  },
 	  addCalendar(calendarDate, _ref7, overflow, cache) {
 	    let {
@@ -13715,17 +13715,12 @@
 	  monthDaySearchStartYear: (/* monthCode, day */) => 1972,
 	  monthDayFromFields(fields, overflow, cache) {
 	    let {
-	      era,
 	      eraYear,
 	      year,
-	      month,
 	      monthCode,
 	      day
 	    } = fields;
 	    const hasEra = CalendarSupportsEra(this.id);
-	    if (month !== undefined && year === undefined && (!hasEra || era === undefined || eraYear === undefined)) {
-	      throw new TypeError$1('when month is present, year (or era and eraYear) are required');
-	    }
 	    if (monthCode === undefined || year !== undefined || hasEra && eraYear !== undefined) {
 	      // Apply overflow behaviour to year/month/day, to get correct monthCode/day
 	      ({
@@ -15065,10 +15060,29 @@
 	    }
 	    return [];
 	  },
-	  resolveFields(fields /* , type */) {
+	  resolveFields(fields, type) {
+	    if ((type === 'date' || type === 'year-month') && fields.year === undefined) {
+	      if (!CalendarSupportsEra(this.helper.id)) {
+	        throw new TypeError$1('year is required');
+	      } else if (fields.era === undefined || fields.eraYear === undefined) {
+	        throw new TypeError$1('year (or era and eraYear) are required');
+	      }
+	    }
+	    if ((type === 'date' || type === 'month-day') && fields.day === undefined) {
+	      throw new TypeError$1('day is required');
+	    }
+	    if (type === 'month-day' && fields.month !== undefined && fields.year === undefined) {
+	      if (!CalendarSupportsEra(this.helper.id)) {
+	        throw new TypeError$1('when month is present, year is required');
+	      } else if (fields.era === undefined || fields.eraYear === undefined) {
+	        throw new TypeError$1('when month is present, year (or era and eraYear) are required');
+	      }
+	    }
 	    if (this.helper.calendarType !== 'lunisolar') {
 	      resolveNonLunisolarMonth(fields, this.helper.id);
 	    }
+	    // Note: Lunisolar calendars go on to resolve month/monthCode in their
+	    // adjustCalendarDate implementations
 	  },
 	  dateToISO(fields, overflow) {
 	    const cache = new OneObjectCache(this.id);
