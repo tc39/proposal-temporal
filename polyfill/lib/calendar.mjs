@@ -1020,7 +1020,7 @@ const nonIsoHelperBase = {
     if (overflow === 'reject' && calendarDate.day !== day) {
       throw new RangeErrorCtor(`Day ${day} does not exist in resulting calendar month`);
     }
-    return calendarDate;
+    return this.regulateDate(calendarDate, overflow, cache);
   },
   addCalendar(calendarDate, { years = 0, months = 0, weeks = 0, days = 0 }, overflow, cache) {
     const { year, day, monthCode } = calendarDate;
