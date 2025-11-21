@@ -13569,7 +13569,9 @@
 	      case 'month':
 	      case 'year':
 	        {
+	          // Sign is -1 if calendarTwo < calendarOne, 1 if calendarTwo > calendarOne
 	          const sign = this.compareCalendarDates(calendarTwo, calendarOne);
+	          // If dates are equal, return 0 date duration
 	          if (!sign) {
 	            return {
 	              years: 0,
@@ -13578,20 +13580,37 @@
 	              days: 0
 	            };
 	          }
+	          // Take the difference between the years of the two dates
 	          const diffYears = calendarTwo.year - calendarOne.year;
+	          // Take the difference between the days of the two dates
 	          const diffDays = calendarTwo.day - calendarOne.day;
+	          // Get list of additional months, and possibly cycle info
 	          const monthInfo = monthCodeInfo[this.id];
 	          const cycleInfo = monthInfo ? monthInfo.cycleInfo : {
 	            years: 1,
 	            months: 12
 	          };
+	          // Compute years difference if necessary
 	          if (diffYears && (largestUnit === 'year' || cycleInfo)) {
+	            // diffInYearSign is the result of comparing the month-day of calendarOne
+	            // and the month-day of calendarTwo, in the forwards direction
 	            let diffInYearSign = 0;
+	            // If calendarTwo's month is greater than calendarOne's month,
+	            // then the years difference should be positive (or negative if sign < 0).
 	            if (calendarTwo.monthCode > calendarOne.monthCode) diffInYearSign = 1;
+	            // If calendarTwo's month is less than calendarOne's month,
+	            // then the years difference should be negative (or positive if sign < 0).
 	            if (calendarTwo.monthCode < calendarOne.monthCode) diffInYearSign = -1;
+	            // If the two months are equal, the sign of the years difference should be
+	            // the sign of the days difference.
 	            if (!diffInYearSign) diffInYearSign = MathSign(diffDays);
-	            const isOneFurtherInYear = diffInYearSign * sign < 0;
-	            years = isOneFurtherInYear ? diffYears - sign : diffYears;
+	            // isCalendarOneFurtherInYear is true iff the ordering of the years
+	            // doesn't match the ordering of the month/days.
+	            const isCalendarOneFurtherInYear = diffInYearSign * sign < 0;
+	            // Add either 1 or -1 to years if isCalendarOneFurtherInYear is true.
+	            // If monthday-two is later in the year than monthday-one, need
+	            // to correct diffYears because it's gone one too far.
+	            years = isCalendarOneFurtherInYear ? diffYears - sign : diffYears;
 	          }
 	          // Try to skip ahead as many months as possible for this calendar
 	          // without adding month by month in a loop
@@ -13602,15 +13621,31 @@
 	            }
 	            years = 0;
 	          }
+
+	          // intermediate should be a date between calendarOne and calendarTwo,
+	          // that is within a year of calendarTwo.
 	          const intermediate = years || months ? this.addCalendar(calendarOne, {
 	            years,
 	            months
 	          }, 'constrain', cache) : calendarOne;
+
+	          // At this point, intermediate could fail to be in between calendarOne and calendarTwo
+	          // due to leap years.
+	          // In that case, add or subtract an extra year from years,
+	          // so that the months can be totaled up correctly.
+	          if (this.compareCalendarDates(intermediate, calendarTwo) * sign > 0) {
+	            years -= sign;
+	          }
+
 	          // Now we have less than one cycle remaining. Add one month at a time
 	          // until we go over the target, then back up one month and calculate
 	          // remaining days.
 	          let current;
-	          let next = intermediate;
+	          // Need to re-add years and months because years might have changed
+	          let next = years || months ? this.addCalendar(calendarOne, {
+	            years,
+	            months
+	          }, 'constrain', cache) : calendarOne;
 	          do {
 	            months += sign;
 	            current = next;
@@ -13626,6 +13661,10 @@
 	          months -= sign; // correct for loop above which overshoots by 1
 	          const remainingDays = this.calendarDaysUntil(current, calendarTwo, cache);
 	          days = remainingDays;
+
+	          // This may return a duration like <P12M11D> that appears to have unbalanced months.
+	          // But that's fine, because subtracting <P12M11D> from a date may have different
+	          // results than subtracting <P1Y11D> from the same date, in the presence of leap months.
 	          break;
 	        }
 	    }
