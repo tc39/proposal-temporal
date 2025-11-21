@@ -125,7 +125,7 @@ export class ZonedDateTime {
     if (!ES.IsTemporalZonedDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     const timeZone = GetSlot(this, TIME_ZONE);
     const today = dateTime(this).isoDate;
-    const tomorrow = ES.BalanceISODate(today.year, today.month, today.day + 1);
+    const tomorrow = ES.AddDaysToISODate(today, 1);
     const todayNs = ES.GetStartOfDay(timeZone, today);
     const tomorrowNs = ES.GetStartOfDay(timeZone, tomorrow);
     const diff = TimeDuration.fromEpochNsDiff(tomorrowNs, todayNs);
@@ -195,8 +195,7 @@ export class ZonedDateTime {
     const newDateTime = ES.InterpretTemporalDateTimeFields(calendar, fields, overflow);
     const newOffsetNs = ES.ParseDateTimeUTCOffset(fields.offset);
     const epochNanoseconds = ES.InterpretISODateTimeOffset(
-      newDateTime.isoDate,
-      newDateTime.time,
+      newDateTime,
       'option',
       newOffsetNs,
       timeZone,
@@ -220,6 +219,7 @@ export class ZonedDateTime {
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
       const dt = ES.CombineISODateAndTimeRecord(iso, GetSlot(temporalTime, TIME));
+      ES.RejectDateTimeRange(dt);
       epochNs = ES.GetEpochNanosecondsFor(timeZone, dt, 'compatible');
     }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
@@ -295,7 +295,7 @@ export class ZonedDateTime {
       // Compute Instants for start-of-day and end-of-day
       // Determine how far the current instant has progressed through this span.
       const dateStart = iso.isoDate;
-      const dateEnd = ES.BalanceISODate(dateStart.year, dateStart.month, dateStart.day + 1);
+      const dateEnd = ES.AddDaysToISODate(dateStart, 1);
 
       const startNs = ES.GetStartOfDay(timeZone, dateStart);
       assert(thisNs.geq(startNs), 'cannot produce an instant during a day that occurs before start-of-day instant');
@@ -319,8 +319,7 @@ export class ZonedDateTime {
       // disambiguation algorithm will be used.
       const offsetNs = ES.GetOffsetNanosecondsFor(timeZone, thisNs);
       epochNanoseconds = ES.InterpretISODateTimeOffset(
-        roundedDateTime.isoDate,
-        roundedDateTime.time,
+        roundedDateTime,
         'option',
         offsetNs,
         timeZone,
