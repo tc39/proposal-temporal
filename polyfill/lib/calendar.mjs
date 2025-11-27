@@ -1434,7 +1434,11 @@ const helperIslamic = makeNonISOHelper(
     },
     minimumMonthLength: (/* calendarDate */) => 29,
     maximumMonthLength: (/* calendarDate */) => 30,
-    maxLengthOfMonthCodeInAnyYear: (/* monthCode */) => 30,
+    maxLengthOfMonthCodeInAnyYear(monthCode) {
+      if (!this.tabular) return 30; // if observational, any month can have 29 or 30 days
+      const month = ParseMonthCode(monthCode).monthNumber;
+      return [0, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30][month];
+    },
     DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
     DAYS_PER_ISO_YEAR: 365.2425,
     estimateIsoDate(calendarDate) {
@@ -2267,14 +2271,14 @@ impl['hebrew'] = ObjectAssign({}, nonIsoGeneralImpl, { helper: helperHebrew });
 Call(
   ArrayPrototypeForEach,
   [
-    { id: 'islamic-umalqura', firstDay: 20 },
-    { id: 'islamic-tbla', firstDay: 19 },
-    { id: 'islamic-civil', firstDay: 20 },
-    { id: 'islamicc', firstDay: 20 }
+    { id: 'islamic-umalqura', firstDay: 20, tabular: false },
+    { id: 'islamic-tbla', firstDay: 19, tabular: true },
+    { id: 'islamic-civil', firstDay: 20, tabular: true },
+    { id: 'islamicc', firstDay: 20, tabular: true }
   ],
   [
-    ({ id, firstDay }) => {
-      const helper = { ...helperIslamic, id };
+    ({ id, firstDay, tabular }) => {
+      const helper = { ...helperIslamic, id, tabular };
       helper.eras[0].isoEpoch.day = firstDay;
       impl[id] = ObjectAssign({}, nonIsoGeneralImpl, { helper });
     }
