@@ -56,7 +56,7 @@ import {
 import Call from 'es-abstract/2024/Call.js';
 import Type from 'es-abstract/2024/Type.js';
 
-import { assert } from './assert.mjs';
+import { assert, assertNotReached } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
 import { DefineIntrinsic } from './intrinsicclass.mjs';
 import { CreateMonthCode, ParseMonthCode } from './monthcode.mjs';
@@ -1208,8 +1208,18 @@ const nonIsoHelperBase = {
       ({ monthCode, day } = this.isoToCalendarDate(this.calendarToIsoDate(fields, overflow, cache), cache));
     }
 
-    let isoYear, isoMonth, isoDay;
-    let closestCalendar, closestIso;
+    // Shape of property bag is correct, check valid input and apply overflow
+    if (!IsValidMonthCodeForCalendar(this.id, monthCode)) {
+      throw new RangeErrorCtor(`Invalid monthCode: ${monthCode} does not exist in calendar ${this.id}`);
+    }
+    const maxDayForMonthCode = this.maxLengthOfMonthCodeInAnyYear(monthCode);
+    if (day > maxDayForMonthCode) {
+      if (overflow === 'reject') {
+        throw new RangeErrorCtor(`No ${this.id} year with monthCode ${monthCode} and day ${day}`);
+      }
+      day = maxDayForMonthCode;
+    }
+
     // Look backwards starting from one of the calendar years spanning ISO year
     // 1972, up to 20 calendar years prior, to find a year that has this month
     // and day. Normal months and days will match immediately, but for leap days
@@ -1231,34 +1241,11 @@ const nonIsoHelperBase = {
       let testCalendarDate = this.adjustCalendarDate({ day, monthCode, year: calendarYear - i }, cache);
       const isoDate = this.calendarToIsoDate(testCalendarDate, 'constrain', cache);
       const roundTripCalendarDate = this.isoToCalendarDate(isoDate, cache);
-      ({ year: isoYear, month: isoMonth, day: isoDay } = isoDate);
       if (roundTripCalendarDate.monthCode === monthCode && roundTripCalendarDate.day === day) {
-        return { month: isoMonth, day: isoDay, year: isoYear };
-      } else if (overflow === 'constrain') {
-        // If the requested day is never present in any instance of this month
-        // code, and the round trip date is an instance of this month code with
-        // the most possible days, we are as close as we can get.
-        const maxDayForMonthCode = this.maxLengthOfMonthCodeInAnyYear(roundTripCalendarDate.monthCode);
-        if (
-          roundTripCalendarDate.monthCode === monthCode &&
-          roundTripCalendarDate.day === maxDayForMonthCode &&
-          day > maxDayForMonthCode
-        ) {
-          return { month: isoMonth, day: isoDay, year: isoYear };
-        }
-        // non-ISO constrain algorithm tries to find the closest date in a matching month
-        if (
-          closestCalendar === undefined ||
-          (roundTripCalendarDate.monthCode === closestCalendar.monthCode &&
-            roundTripCalendarDate.day > closestCalendar.day)
-        ) {
-          closestCalendar = roundTripCalendarDate;
-          closestIso = isoDate;
-        }
+        return isoDate;
       }
     }
-    if (overflow === 'constrain' && closestIso !== undefined) return closestIso;
-    throw new RangeErrorCtor(`No recent ${this.id} year with monthCode ${monthCode} and day ${day}`);
+    assertNotReached(`no recent ${this.id} year with ${monthCode}-${day}, adjust monthDaySearchStartYear`);
   }
 };
 
