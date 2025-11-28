@@ -766,6 +766,9 @@
         1. Return _result_.
       </emu-alg>
     </emu-clause>
+    <emu-note>
+      The ISODateWithinLimits check is necessary because for some non-ISO calendars, an out-of-range reference year might be returned from NonISOMonthDayToISOReferenceDate. For example, certain month-day combinations in the Chinese lunar calendar might only occur outside of the representable range.
+    </emu-note>
 
     <emu-clause id="sec-temporal-formatcalendarannotation" type="abstract operation">
       <h1>
