@@ -941,7 +941,7 @@ export function GetTemporalRelativeToOption(options) {
 
   let offsetBehaviour = 'option';
   let matchMinutes = false;
-  let isoDate, time, calendar, timeZone, offset;
+  let isoDateTime, calendar, timeZone, offset;
   if (Type(relativeTo) === 'Object') {
     if (IsTemporalZonedDateTime(relativeTo)) {
       return { zonedRelativeTo: relativeTo };
@@ -960,11 +960,11 @@ export function GetTemporalRelativeToOption(options) {
       ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'],
       []
     );
-    ({ isoDate, time } = InterpretTemporalDateTimeFields(calendar, fields, 'constrain'));
+    isoDateTime = InterpretTemporalDateTimeFields(calendar, fields, 'constrain');
     ({ offset, timeZone } = fields);
     if (offset === undefined) offsetBehaviour = 'wall';
   } else {
-    let tzAnnotation, z, year, month, day;
+    let tzAnnotation, z, isoDate, time, year, month, day;
     ({ year, month, day, time, calendar, tzAnnotation, offset, z } = ParseISODateTime(RequireString(relativeTo)));
     if (tzAnnotation) {
       timeZone = ToTemporalTimeZoneIdentifier(tzAnnotation);
@@ -989,14 +989,23 @@ export function GetTemporalRelativeToOption(options) {
     if (!calendar) calendar = 'iso8601';
     calendar = CanonicalizeCalendar(calendar);
     isoDate = { year, month, day };
+    if (time === 'start-of-day') {
+      if (timeZone) {
+        assert(offsetBehaviour === 'wall', 'offsetBehavior must be wall when time is start-of-day');
+        const epochNanoseconds = GetStartOfDay(timeZone, isoDate);
+        const zonedRelativeTo = CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+        return { zonedRelativeTo };
+      }
+      time = MidnightTimeRecord();
+    }
+    isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
   }
   if (timeZone === undefined) {
-    return { plainRelativeTo: CreateTemporalDate(isoDate, calendar) };
+    return { plainRelativeTo: CreateTemporalDate(isoDateTime.isoDate, calendar) };
   }
   const offsetNs = offsetBehaviour === 'option' ? ParseDateTimeUTCOffset(offset) : 0;
   const epochNanoseconds = InterpretISODateTimeOffset(
-    isoDate,
-    time,
+    isoDateTime,
     offsetBehaviour,
     offsetNs,
     timeZone,
@@ -1266,30 +1275,14 @@ export function ToTemporalInstant(item) {
     item = ToPrimitive(item, StringCtor);
   }
   const { year, month, day, time, offset, z } = ParseTemporalInstantString(RequireString(item));
-  const {
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millisecond = 0,
-    microsecond = 0,
-    nanosecond = 0
-  } = time === 'start-of-day' ? {} : time;
+  const timeToUse = time === 'start-of-day' ? MidnightTimeRecord() : time;
 
   // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
-  const balanced = BalanceISODateTime(
-    year,
-    month,
-    day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond - offsetNanoseconds
-  );
-  CheckISODaysRange(balanced.isoDate);
-  const epochNanoseconds = GetUTCEpochNanoseconds(balanced);
+  const isoDate = { year, month, day };
+  const isoDateTime = CombineISODateAndTimeRecord(isoDate, timeToUse);
+  RejectDateTimeRange(isoDateTime);
+  const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
 }
@@ -1387,8 +1380,7 @@ export function ToTemporalYearMonth(item, options = undefined) {
 }
 
 export function InterpretISODateTimeOffset(
-  isoDate,
-  time,
+  isoDateTime,
   offsetBehaviour,
   offsetNs,
   timeZone,
@@ -1396,50 +1388,28 @@ export function InterpretISODateTimeOffset(
   offsetOpt,
   matchMinute
 ) {
-  // start-of-day signifies that we had a string such as YYYY-MM-DD[Zone]. It is
-  // grammatically not possible to specify a UTC offset in that string, so the
-  // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
-  if (time === 'start-of-day') {
-    assert(offsetBehaviour === 'wall', 'offset cannot be provided in YYYY-MM-DD[Zone] string');
-    assert(offsetNs === 0, 'offset cannot be provided in YYYY-MM-DD[Zone] string');
-    return GetStartOfDay(timeZone, isoDate);
+  if (offsetOpt == 'prefer' || offsetOpt == 'reject') {
+    RejectDateTimeRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
   }
-
-  const dt = CombineISODateAndTimeRecord(isoDate, time);
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
     // the offset), so just convert DateTime to Instant in the given time zone
-    return GetEpochNanosecondsFor(timeZone, dt, disambiguation);
+    return GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation);
   }
 
   // The caller wants the offset to always win ('use') OR the caller is OK
   // with the offset winning ('prefer' or 'reject') as long as it's valid
   // for this timezone and date/time.
   if (offsetBehaviour === 'exact' || offsetOpt === 'use') {
-    // Calculate the instant for the input's date/time and offset
-    const balanced = BalanceISODateTime(
-      isoDate.year,
-      isoDate.month,
-      isoDate.day,
-      time.hour,
-      time.minute,
-      time.second,
-      time.millisecond,
-      time.microsecond,
-      time.nanosecond - offsetNs
-    );
-    CheckISODaysRange(balanced.isoDate);
-    const epochNs = GetUTCEpochNanoseconds(balanced);
-    ValidateEpochNanoseconds(epochNs);
-    return epochNs;
+    const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNs);
+    return epochNanoseconds;
   }
 
-  CheckISODaysRange(isoDate);
-  const utcEpochNs = GetUTCEpochNanoseconds(dt);
+  const utcEpochNs = GetUTCEpochNanoseconds(isoDateTime);
 
   // "prefer" or "reject"
-  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, dt);
+  const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   for (let index = 0; index < possibleEpochNs.length; index++) {
     const candidate = possibleEpochNs[index];
     const candidateOffset = utcEpochNs.subtract(candidate).toJSNumber();
@@ -1453,16 +1423,16 @@ export function InterpretISODateTimeOffset(
   // zone and date/time.
   if (offsetOpt === 'reject') {
     const offsetStr = FormatUTCOffsetNanoseconds(offsetNs);
-    const dtStr = ISODateTimeToString(dt, 'iso8601', 'auto');
+    const dtStr = ISODateTimeToString(isoDateTime, 'iso8601', 'auto');
     throw new RangeErrorCtor(`Offset ${offsetStr} is invalid for ${dtStr} in ${timeZone}`);
   }
   // fall through: offsetOpt === 'prefer', but the offset doesn't match
   // so fall back to use the time zone instead.
-  return DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, dt, disambiguation);
+  return DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, isoDateTime, disambiguation);
 }
 
 export function ToTemporalZonedDateTime(item, options = undefined) {
-  let isoDate, time, timeZone, offset, calendar;
+  let isoDateTime, timeZone, offset, calendar;
   let matchMinute = false;
   let hasUTCDesignator = false;
   let disambiguation, offsetOpt;
@@ -1491,9 +1461,9 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
     const overflow = GetTemporalOverflowOption(resolvedOptions);
-    ({ isoDate, time } = InterpretTemporalDateTimeFields(calendar, fields, overflow));
+    isoDateTime = InterpretTemporalDateTimeFields(calendar, fields, overflow);
   } else {
-    let tzAnnotation, z, year, month, day;
+    let tzAnnotation, z, time, year, month, day;
     ({ year, month, day, time, tzAnnotation, offset, z, calendar } = ParseTemporalZonedDateTimeString(
       RequireString(item)
     ));
@@ -1513,7 +1483,16 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
     GetTemporalOverflowOption(resolvedOptions); // validate and ignore
-    isoDate = { year, month, day };
+    const isoDate = { year, month, day };
+    // start-of-day signifies that we had a string such as YYYY-MM-DD[Zone]. It is
+    // grammatically not possible to specify a UTC offset in that string, so the
+    // behaviour collapses into ~WALL~, which is equivalent to offset: "ignore".
+    if (time === 'start-of-day') {
+      assert(!offset);
+      const epochNanoseconds = GetStartOfDay(timeZone, isoDate);
+      return CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar);
+    }
+    isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
   }
   let offsetBehaviour = 'option';
   if (hasUTCDesignator) {
@@ -1524,8 +1503,7 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
   let offsetNs = 0;
   if (offsetBehaviour === 'option') offsetNs = ParseDateTimeUTCOffset(offset);
   const epochNanoseconds = InterpretISODateTimeOffset(
-    isoDate,
-    time,
+    isoDateTime,
     offsetBehaviour,
     offsetNs,
     timeZone,
@@ -1841,21 +1819,31 @@ export function FormatUTCOffsetNanoseconds(offsetNs) {
 }
 
 export function GetISODateTimeFor(timeZone, epochNs) {
+  assert(IsValidEpochNanoseconds(epochNs));
   const offsetNs = GetOffsetNanosecondsFor(timeZone, epochNs);
-  let {
-    isoDate: { year, month, day },
-    time: { hour, minute, second, millisecond, microsecond, nanosecond }
-  } = GetISOPartsFromEpoch(epochNs);
-  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond + offsetNs);
+  let isoDateTime = GetISOPartsFromEpoch(epochNs);
+  const balancedTime = BalanceTime(
+    isoDateTime.time.hour,
+    isoDateTime.time.minute,
+    isoDateTime.time.second,
+    isoDateTime.time.millisecond,
+    isoDateTime.time.microsecond,
+    isoDateTime.time.nanosecond + offsetNs
+  );
+  const balancedDate = AddDaysToISODate(isoDateTime.isoDate, balancedTime.deltaDays);
+  return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
 export function GetEpochNanosecondsFor(timeZone, isoDateTime, disambiguation) {
+  RejectDateTimeRange(isoDateTime);
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   return DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, isoDateTime, disambiguation);
 }
 
 // TODO: See if this logic can be removed in favour of GetNamedTimeZoneEpochNanoseconds
 export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, isoDateTime, disambiguation) {
+  AssertISODateTimeWithinLimits(isoDateTime);
+
   const numInstants = possibleEpochNs.length;
 
   if (numInstants === 1) return possibleEpochNs[0];
@@ -1889,12 +1877,9 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
     case 'earlier': {
       const timeDuration = TimeDuration.fromComponents(0, 0, 0, 0, 0, -nanoseconds);
       const earlierTime = AddTime(isoDateTime.time, timeDuration);
-      const earlierDate = BalanceISODate(
-        isoDateTime.isoDate.year,
-        isoDateTime.isoDate.month,
-        isoDateTime.isoDate.day + earlierTime.deltaDays
-      );
+      const earlierDate = AddDaysToISODate(isoDateTime.isoDate, earlierTime.deltaDays);
       const earlier = CombineISODateAndTimeRecord(earlierDate, earlierTime);
+      RejectDateTimeRange(earlier);
       return GetPossibleEpochNanoseconds(timeZone, earlier)[0];
     }
     case 'compatible':
@@ -1902,12 +1887,9 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
     case 'later': {
       const timeDuration = TimeDuration.fromComponents(0, 0, 0, 0, 0, nanoseconds);
       const laterTime = AddTime(isoDateTime.time, timeDuration);
-      const laterDate = BalanceISODate(
-        isoDateTime.isoDate.year,
-        isoDateTime.isoDate.month,
-        isoDateTime.isoDate.day + laterTime.deltaDays
-      );
+      const laterDate = AddDaysToISODate(isoDateTime.isoDate, laterTime.deltaDays);
       const later = CombineISODateAndTimeRecord(laterDate, laterTime);
+      RejectDateTimeRange(later);
       const possible = GetPossibleEpochNanoseconds(timeZone, later);
       return possible[possible.length - 1];
     }
@@ -1918,36 +1900,36 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 }
 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
+  AssertISODateTimeWithinLimits(isoDateTime);
+
   // UTC fast path
   if (timeZone === 'UTC') {
-    CheckISODaysRange(isoDateTime.isoDate);
+    RejectDateTimeRange(CombineISODateAndTimeRecord(isoDateTime.isoDate, MidnightTimeRecord()));
     return [GetUTCEpochNanoseconds(isoDateTime)];
   }
 
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
+  let possibleEpochNanoseconds;
   if (offsetMinutes !== undefined) {
-    const balanced = BalanceISODateTime(
-      isoDateTime.isoDate.year,
-      isoDateTime.isoDate.month,
-      isoDateTime.isoDate.day,
-      isoDateTime.time.hour,
-      isoDateTime.time.minute - offsetMinutes,
-      isoDateTime.time.second,
-      isoDateTime.time.millisecond,
-      isoDateTime.time.microsecond,
-      isoDateTime.time.nanosecond
-    );
-    CheckISODaysRange(balanced.isoDate);
-    const epochNs = GetUTCEpochNanoseconds(balanced);
-    ValidateEpochNanoseconds(epochNs);
-    return [epochNs];
+    const offsetNanoseconds = bigInt(offsetMinutes)
+      .multiply(6)
+      .multiply(10 ** 10);
+    const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
+    possibleEpochNanoseconds = [epochNanoseconds];
+  } else {
+    possibleEpochNanoseconds = GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
   }
 
-  return GetNamedTimeZoneEpochNanoseconds(timeZone, isoDateTime);
+  for (let epochNanoseconds of possibleEpochNanoseconds) {
+    ValidateEpochNanoseconds(epochNanoseconds);
+  }
+
+  return possibleEpochNanoseconds;
 }
 
 export function GetStartOfDay(timeZone, isoDate) {
   const isoDateTime = CombineISODateAndTimeRecord(isoDate, MidnightTimeRecord());
+  RejectDateTimeRange(isoDateTime);
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   // If not a DST gap, return the single or earlier epochNs
   if (possibleEpochNs.length) return possibleEpochNs[0];
@@ -2384,7 +2366,9 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
     time: { millisecond, microsecond, nanosecond }
   } = GetISOPartsFromEpoch(epochNanoseconds);
   const { year, month, day, hour, minute, second } = GetFormatterParts(id, epochMilliseconds);
-  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedDate = AddDaysToISODate({ year, month, day }, 0);
+  return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
 // Most time zones never transition twice within a short span of days. We still
@@ -2636,9 +2620,10 @@ export function BalanceISOYearMonth(year, month) {
   return { year, month };
 }
 
-export function BalanceISODate(year, month, day) {
-  if (!NumberIsFinite(day)) throw new RangeErrorCtor('infinity is out of range');
-  ({ year, month } = BalanceISOYearMonth(year, month));
+export function AddDaysToISODate(isoDate, days) {
+  let day = isoDate.day + days;
+  if (!NumberIsFinite(isoDate.day)) throw new RangeErrorCtor('infinity is out of range');
+  let { year, month } = BalanceISOYearMonth(isoDate.year, isoDate.month);
 
   // The pattern of leap years in the ISO 8601 calendar repeats every 400
   // years. So if we have more than 400 years in days, there's no need to
@@ -2675,12 +2660,6 @@ export function BalanceISODate(year, month, day) {
   }
 
   return { year, month, day };
-}
-
-export function BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-  const time = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
-  return CombineISODateAndTimeRecord(isoDate, time);
 }
 
 export function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
@@ -2830,11 +2809,12 @@ function AssertISODateTimeWithinLimits(isoDateTime) {
   );
 }
 
-// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
-// responsible for throwing. In the polyfill, ValidateEpochNanoseconds takes its
-// place so that we can DRY the throwing code.
+export function IsValidEpochNanoseconds(epochNanoseconds) {
+  return !(epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX));
+}
+
 export function ValidateEpochNanoseconds(epochNanoseconds) {
-  if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
+  if (!IsValidEpochNanoseconds(epochNanoseconds)) {
     throw new RangeErrorCtor('date/time value is outside of supported range');
   }
 }
@@ -3037,16 +3017,6 @@ export function ISODateToEpochDays(year, month, day) {
   );
 }
 
-// This is needed before calling GetUTCEpochNanoseconds, because it uses MakeDay
-// which is ill-defined in how it handles large year numbers. If the issue
-// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
-// with no observable changes.
-function CheckISODaysRange({ year, month, day }) {
-  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
-    throw new RangeErrorCtor('date/time value is outside the supported range');
-  }
-}
-
 function DifferenceTime(time1, time2) {
   const hours = time2.hour - time1.hour;
   const minutes = time2.minute - time1.minute;
@@ -3076,7 +3046,7 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
   // back-off a day from date2 so that the signs of the date and time diff match
   let adjustedDate = isoDateTime2.isoDate;
   if (dateSign === timeSign) {
-    adjustedDate = BalanceISODate(adjustedDate.year, adjustedDate.month, adjustedDate.day + timeSign);
+    adjustedDate = AddDaysToISODate(adjustedDate, timeSign);
     timeDuration = timeDuration.add24HourDays(-timeSign);
   }
 
@@ -3091,9 +3061,12 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
 }
 
 export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
+  assert(IsValidEpochNanoseconds(ns1));
+  assert(IsValidEpochNanoseconds(ns2));
+
   const nsDiff = ns2.subtract(ns1);
   if (nsDiff.isZero()) return { date: ZeroDateDuration(), time: TimeDuration.ZERO };
-  const sign = nsDiff.lt(0) ? -1 : 1;
+  const sign = nsDiff.lt(0) ? 1 : -1;
 
   // Convert start/end instants to datetimes
   const isoDtStart = GetISODateTimeFor(timeZone, ns1);
@@ -3128,25 +3101,23 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   // Only the forward direction allows for an additional 1 day correction caused by a push-forward
   // 'compatible' DST transition causing the wall-clock to overshoot again.
   // This max value is inclusive.
-  let maxDayCorrection = sign === 1 ? 2 : 1;
+  let maxDayCorrection = sign === -1 ? 2 : 1;
 
   // Detect ISO wall-clock overshoot.
   // If the diff of the ISO wall-clock times is opposite to the overall diff's sign,
   // we are guaranteed to need at least one day correction.
   let timeDuration = DifferenceTime(isoDtStart.time, isoDtEnd.time);
-  if (timeDuration.sign() === -sign) {
+  if (timeDuration.sign() === sign) {
     dayCorrection++;
   }
 
   for (; dayCorrection <= maxDayCorrection; dayCorrection++) {
-    const intermediateDate = BalanceISODate(
-      isoDtEnd.isoDate.year,
-      isoDtEnd.isoDate.month,
-      isoDtEnd.isoDate.day - dayCorrection * sign
-    );
+    const intermediateDate = AddDaysToISODate(isoDtEnd.isoDate, dayCorrection * sign);
 
     // Incorporate time parts from dtStart
     intermediateDateTime = CombineISODateAndTimeRecord(intermediateDate, isoDtStart.time);
+
+    RejectDateTimeRange(intermediateDateTime);
 
     // Convert intermediate datetime to epoch-nanoseconds (may disambiguate)
     const intermediateNs = GetEpochNanosecondsFor(timeZone, intermediateDateTime, 'compatible');
@@ -3156,7 +3127,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
 
     // Did intermediateNs NOT surpass ns2?
     // If so, exit the loop with success (without incrementing dayCorrection past maxDayCorrection)
-    if (timeDuration.sign() !== -sign) {
+    if (timeDuration.sign() !== sign) {
       break;
     }
   }
@@ -3204,7 +3175,7 @@ function ComputeNudgeWindow(
     case 'week': {
       const yearsMonths = AdjustDateDurationRecord(duration.date, 0, 0);
       const weeksStart = CalendarDateAdd(calendar, isoDateTime.isoDate, yearsMonths, 'constrain');
-      const weeksEnd = BalanceISODate(weeksStart.year, weeksStart.month, weeksStart.day + duration.date.days);
+      const weeksEnd = AddDaysToISODate(weeksStart, duration.date.days);
       const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
       const weeks = RoundNumberToIncrement(duration.date.weeks + untilResult.weeks, increment, 'trunc');
       r1 = weeks;
@@ -3239,14 +3210,18 @@ function ComputeNudgeWindow(
   } else {
     const start = CalendarDateAdd(calendar, isoDateTime.isoDate, startDuration, 'constrain');
     const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
-    startEpochNs = timeZone
-      ? GetEpochNanosecondsFor(timeZone, startDateTime, 'compatible')
-      : GetUTCEpochNanoseconds(startDateTime);
+    if (!timeZone) {
+      startEpochNs = GetUTCEpochNanoseconds(startDateTime);
+    } else {
+      RejectDateTimeRange(startDateTime);
+      startEpochNs = GetEpochNanosecondsFor(timeZone, startDateTime, 'compatible');
+    }
   }
 
   // Convert to bound-END to epoch-nanoseconds
   const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain');
   const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
+  RejectDateTimeRange(endDateTime);
   const endEpochNs = timeZone
     ? GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible')
     : GetUTCEpochNanoseconds(endDateTime);
@@ -3368,8 +3343,10 @@ function NudgeToZonedTime(sign, duration, isoDateTime, timeZone, calendar, incre
   // Apply to origin, output start/end of the day as PlainDateTimes
   const start = CalendarDateAdd(calendar, isoDateTime.isoDate, duration.date, 'constrain');
   const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
-  const endDate = BalanceISODate(start.year, start.month, start.day + sign);
+  RejectDateTimeRange(startDateTime);
+  const endDate = AddDaysToISODate(start, sign);
   const endDateTime = CombineISODateAndTimeRecord(endDate, isoDateTime.time);
+  RejectDateTimeRange(endDateTime);
 
   // Compute the epoch-nanosecond start/end of the final whole-day interval
   // If duration has negative sign, startEpochNs will be after endEpochNs
@@ -3504,6 +3481,7 @@ function BubbleRelativeDuration(
     const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
     let endEpochNs;
     if (timeZone) {
+      RejectDateTimeRange(endDateTime);
       endEpochNs = GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible');
     } else {
       endEpochNs = GetUTCEpochNanoseconds(endDateTime);
@@ -3686,6 +3664,9 @@ export function DifferenceZonedDateTimeWithRounding(
   smallestUnit,
   roundingMode
 ) {
+  assert(IsValidEpochNanoseconds(ns1));
+  assert(IsValidEpochNanoseconds(ns2));
+
   if (TemporalUnitCategory(largestUnit) === 'time') {
     // The user is only asking for a time difference, so return difference of instants.
     return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
@@ -3711,6 +3692,9 @@ export function DifferenceZonedDateTimeWithRounding(
 }
 
 export function DifferenceZonedDateTimeWithTotal(ns1, ns2, timeZone, calendar, unit) {
+  assert(IsValidEpochNanoseconds(ns1));
+  assert(IsValidEpochNanoseconds(ns2));
+
   if (TemporalUnitCategory(unit) === 'time') {
     // The user is only asking for a time difference, so return difference of instants.
     return TotalTimeDuration(TimeDuration.fromEpochNsDiff(ns2, ns1), unit);
@@ -4019,6 +4003,8 @@ export function AddInstant(epochNanoseconds, timeDuration) {
 }
 
 export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow = 'constrain') {
+  assert(IsValidEpochNanoseconds(epochNs));
+
   // If only time is to be added, then use Instant math. It's not OK to fall
   // through to the date/time code below because compatible disambiguation in
   // the PlainDateTime=>Instant conversion will change the offset of any
@@ -4034,6 +4020,8 @@ export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow
   const dt = GetISODateTimeFor(timeZone, epochNs);
   const addedDate = CalendarDateAdd(calendar, dt.isoDate, duration.date, overflow);
   const dtIntermediate = CombineISODateAndTimeRecord(addedDate, dt.time);
+
+  RejectDateTimeRange(dtIntermediate);
 
   // Note that 'compatible' is used below because this disambiguation behavior
   // is required by RFC 5545.
@@ -4137,7 +4125,7 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
   let startDate = CalendarDateFromFields(calendar, fields, 'constrain');
   if (sign < 0) {
     const nextMonth = CalendarDateAdd(calendar, startDate, { months: 1 }, 'constrain');
-    startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
+    startDate = AddDaysToISODate(nextMonth, -1);
   }
   const durationToAdd = ToDateDurationRecordWithoutTime(duration);
   RejectDateRange(startDate);
@@ -4207,9 +4195,8 @@ export function RoundTemporalInstant(epochNs, increment, unit, roundingMode) {
 
 export function RoundISODateTime(isoDateTime, increment, unit, roundingMode) {
   AssertISODateTimeWithinLimits(isoDateTime);
-  const { year, month, day } = isoDateTime.isoDate;
   const time = RoundTime(isoDateTime.time, increment, unit, roundingMode);
-  const isoDate = BalanceISODate(year, month, day + time.deltaDays);
+  const isoDate = AddDaysToISODate(isoDateTime.isoDate, time.deltaDays);
   return CombineISODateAndTimeRecord(isoDate, time);
 }
 
