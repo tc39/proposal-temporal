@@ -22,6 +22,11 @@ staging/sm/Temporal/PlainDate/from-constrain-hebrew.js
 staging/sm/Temporal/PlainDate/from-islamic-umalqura.js
 
 # Faulty leap month calculations in Chinese calendar in ICU4C
+intl402/Temporal/PlainDate/prototype/monthCode/chinese-calendar-dates.js
+intl402/Temporal/PlainDateTime/prototype/monthCode/chinese-calendar-dates.js
+intl402/Temporal/PlainMonthDay/prototype/monthCode/chinese-calendar-dates.js
+intl402/Temporal/PlainYearMonth/prototype/monthCode/chinese-calendar-dates.js
+intl402/Temporal/ZonedDateTime/prototype/monthCode/chinese-calendar-dates.js
 # https://unicode-org.atlassian.net/browse/ICU-22230
 staging/sm/Temporal/PlainMonthDay/from-chinese-leap-month-uncommon.js
 
