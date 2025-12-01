@@ -13767,8 +13767,19 @@
 	        day
 	      } = this.isoToCalendarDate(this.calendarToIsoDate(fields, overflow, cache), cache));
 	    }
-	    let isoYear, isoMonth, isoDay;
-	    let closestCalendar, closestIso;
+
+	    // Shape of property bag is correct, check valid input and apply overflow
+	    if (!IsValidMonthCodeForCalendar(this.id, monthCode)) {
+	      throw new RangeError$1("Invalid monthCode: ".concat(monthCode, " does not exist in calendar ").concat(this.id));
+	    }
+	    const maxDayForMonthCode = this.maxLengthOfMonthCodeInAnyYear(monthCode);
+	    if (day > maxDayForMonthCode) {
+	      if (overflow === 'reject') {
+	        throw new RangeError$1("No ".concat(this.id, " year with monthCode ").concat(monthCode, " and day ").concat(day));
+	      }
+	      day = maxDayForMonthCode;
+	    }
+
 	    // Look backwards starting from one of the calendar years spanning ISO year
 	    // 1972, up to 20 calendar years prior, to find a year that has this month
 	    // and day. Normal months and days will match immediately, but for leap days
@@ -13790,38 +13801,11 @@
 	      }, cache);
 	      const isoDate = this.calendarToIsoDate(testCalendarDate, 'constrain', cache);
 	      const roundTripCalendarDate = this.isoToCalendarDate(isoDate, cache);
-	      ({
-	        year: isoYear,
-	        month: isoMonth,
-	        day: isoDay
-	      } = isoDate);
 	      if (roundTripCalendarDate.monthCode === monthCode && roundTripCalendarDate.day === day) {
-	        return {
-	          month: isoMonth,
-	          day: isoDay,
-	          year: isoYear
-	        };
-	      } else if (overflow === 'constrain') {
-	        // If the requested day is never present in any instance of this month
-	        // code, and the round trip date is an instance of this month code with
-	        // the most possible days, we are as close as we can get.
-	        const maxDayForMonthCode = this.maxLengthOfMonthCodeInAnyYear(roundTripCalendarDate.monthCode);
-	        if (roundTripCalendarDate.monthCode === monthCode && roundTripCalendarDate.day === maxDayForMonthCode && day > maxDayForMonthCode) {
-	          return {
-	            month: isoMonth,
-	            day: isoDay,
-	            year: isoYear
-	          };
-	        }
-	        // non-ISO constrain algorithm tries to find the closest date in a matching month
-	        if (closestCalendar === undefined || roundTripCalendarDate.monthCode === closestCalendar.monthCode && roundTripCalendarDate.day > closestCalendar.day) {
-	          closestCalendar = roundTripCalendarDate;
-	          closestIso = isoDate;
-	        }
+	        return isoDate;
 	      }
 	    }
-	    if (overflow === 'constrain' && closestIso !== undefined) return closestIso;
-	    throw new RangeError$1("No recent ".concat(this.id, " year with monthCode ").concat(monthCode, " and day ").concat(day));
+	    assertNotReached("no recent ".concat(this.id, " year with ").concat(monthCode, "-").concat(day, ", adjust monthDaySearchStartYear"));
 	  }
 	};
 	function makeNonISOHelper(eras, helper) {
@@ -14116,7 +14100,11 @@
 	  },
 	  minimumMonthLength: (/* calendarDate */) => 29,
 	  maximumMonthLength: (/* calendarDate */) => 30,
-	  maxLengthOfMonthCodeInAnyYear: (/* monthCode */) => 30,
+	  maxLengthOfMonthCodeInAnyYear(monthCode) {
+	    if (!this.tabular) return 30; // if observational, any month can have 29 or 30 days
+	    const month = ParseMonthCode(monthCode).monthNumber;
+	    return [0, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30][month];
+	  },
 	  DAYS_PER_ISLAMIC_YEAR: 354 + 11 / 30,
 	  DAYS_PER_ISO_YEAR: 365.2425,
 	  estimateIsoDate(calendarDate) {
@@ -15243,23 +15231,29 @@
 	});
 	Call$1(ArrayPrototypeForEach, [{
 	  id: 'islamic-umalqura',
-	  firstDay: 20
+	  firstDay: 20,
+	  tabular: false
 	}, {
 	  id: 'islamic-tbla',
-	  firstDay: 19
+	  firstDay: 19,
+	  tabular: true
 	}, {
 	  id: 'islamic-civil',
-	  firstDay: 20
+	  firstDay: 20,
+	  tabular: true
 	}, {
 	  id: 'islamicc',
-	  firstDay: 20
+	  firstDay: 20,
+	  tabular: true
 	}], [_ref9 => {
 	  let {
 	    id,
-	    firstDay
+	    firstDay,
+	    tabular
 	  } = _ref9;
 	  const helper = _objectSpread2(_objectSpread2({}, helperIslamic), {}, {
-	    id
+	    id,
+	    tabular
 	  });
 	  helper.eras[0].isoEpoch.day = firstDay;
 	  impl[id] = ObjectAssign({}, nonIsoGeneralImpl, {
