@@ -1266,14 +1266,6 @@ export function ToTemporalInstant(item) {
     item = ToPrimitive(item, StringCtor);
   }
   const { year, month, day, time, offset, z } = ParseTemporalInstantString(RequireString(item));
-  const {
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millisecond = 0,
-    microsecond = 0,
-    nanosecond = 0
-  } = time === 'start-of-day' ? {} : time;
 
   // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
@@ -1894,7 +1886,9 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
   let possibleEpochNanoseconds;
   if (offsetMinutes !== undefined) {
-    const offsetNanoseconds = bigInt(offsetMinutes).multiply(6).multiply(10 ** 10);
+    const offsetNanoseconds = bigInt(offsetMinutes)
+      .multiply(6)
+      .multiply(10 ** 10);
     CheckISODaysRange(isoDateTime);
     const epochNanoseconds = GetUTCEpochNanoseconds(isoDateTime).subtract(offsetNanoseconds);
     possibleEpochNanoseconds = [epochNanoseconds];
@@ -2348,7 +2342,7 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
   } = GetISOPartsFromEpoch(epochNanoseconds);
   const { year, month, day, hour, minute, second } = GetFormatterParts(id, epochMilliseconds);
   const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  const balancedDate = AddDaysToISODate({year, month, day}, 0);
+  const balancedDate = AddDaysToISODate({ year, month, day }, 0);
   return CombineISODateAndTimeRecord(balancedDate, balancedTime);
 }
 
@@ -2644,7 +2638,14 @@ export function AddDaysToISODate(isoDate, days) {
 }
 
 export function AddOffsetNanosecondsToISODateTime(isoDateTime, nanoseconds) {
-  const time = BalanceTime(isoDateTime.time.hour, isoDateTime.time.minute, isoDateTime.time.second, isoDateTime.time.millisecond, isoDateTime.time.microsecond, isoDateTime.time.nanosecond + nanoseconds);
+  const time = BalanceTime(
+    isoDateTime.time.hour,
+    isoDateTime.time.minute,
+    isoDateTime.time.second,
+    isoDateTime.time.millisecond,
+    isoDateTime.time.microsecond,
+    isoDateTime.time.nanosecond + nanoseconds
+  );
   const isoDate = AddDaysToISODate(isoDateTime.isoDate, time.deltaDays);
   return CombineISODateAndTimeRecord(isoDate, time);
 }
