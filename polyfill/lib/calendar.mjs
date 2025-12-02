@@ -1881,7 +1881,7 @@ const helperJapanese = ObjectAssign(
     { code: 'heisei', isoEpoch: { year: 1989, month: 1, day: 8 }, anchorEpoch: { year: 1989, month: 1, day: 8 } },
     { code: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
     { code: 'taisho', isoEpoch: { year: 1912, month: 7, day: 30 }, anchorEpoch: { year: 1912, month: 7, day: 30 } },
-    { code: 'meiji', isoEpoch: { year: 1868, month: 9, day: 8 }, anchorEpoch: { year: 1868, month: 9, day: 8 } },
+    { code: 'meiji', isoEpoch: { year: 1868, month: 10, day: 23 }, anchorEpoch: { year: 1868, month: 10, day: 23 } },
     { code: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
     { code: 'bce', reverseOf: 'ce' }
   ]),
