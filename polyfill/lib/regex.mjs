@@ -12,12 +12,50 @@ const yearpart = /(?:[+-]\d{6}|\d{4})/;
 const monthpart = /(?:0[1-9]|1[0-2])/;
 const daypart = /(?:0[1-9]|[12]\d|3[01])/;
 export const datesplit = new RegExpCtor(
-  `(${yearpart.source})(?:-(${monthpart.source})-(${daypart.source})|(${monthpart.source})(${daypart.source}))`
+  Call(ArrayPrototypeJoin,
+    [
+      `(?<yearpart>${yearpart.source})`,
+      `(?:-(?<monthpart>${monthpart.source})-`,
+      `(?<daypart>${daypart.source})|`,
+      `(?<monthpart>${monthpart.source})(?<daypart>${daypart.source}))`
+    ],
+    ['']
+  )
 );
-const timesplit = /(\d{2})(?::(\d{2})(?::(\d{2})(?:[.,](\d{1,9}))?)?|(\d{2})(?:(\d{2})(?:[.,](\d{1,9}))?)?)?/;
-export const offsetWithParts = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\d{1,9}))?)?)?/;
-export const offset = /((?:[+-])(?:[01][0-9]|2[0-3])(?::?(?:[0-5][0-9])(?::?(?:[0-5][0-9])(?:[.,](?:\d{1,9}))?)?)?)/;
-const offsetpart = new RegExpCtor(`([zZ])|${offset.source}?`);
+const sep = /:/;
+const hourminute = new RegExpCtor(`(?<hour>\\d{2})(?:(?:${sep.source})?(?<minute>\\d{2}))?`);
+const second2 = /(?<second>\d{2})/;
+const fraction = /(?:[.,](?<fraction>\d{1,9}))/;
+const secondsfraction = new RegExpCtor(`(?:${sep.source}?${second2.source}${fraction.source}?)`);
+const millismicrosfraction = /(?<millis>\d{2})(?:(?<micros>\d{2}))(?:[.,](?<nanos>\d{1,9}))?/;
+const secondspart = new RegExpCtor(`${secondsfraction.source}|${millismicrosfraction.source}`);
+const timesplit = new RegExpCtor(`(?:${hourminute.source})(?:${secondspart.source})?`);
+const sign = /[+-]/;
+const hour = /[01][0-9]|2[0-3]/;
+const minute = /[0-5][0-9]/;
+const second = minute;
+const subseconds = /(?:[.,](?<subseconds>\d{1,9})?)/;
+const optionalMinSecWithSep = new RegExpCtor(
+  `(?:${sep.source})(?<minute>${minute.source})(?:${sep.source}(?<second>${second.source})${subseconds.source}?)?`
+);
+const optionalMinSecNoSep = new RegExpCtor(
+  `(?<minute>${minute.source})(?<second>${second.source}${subseconds.source}?)?`
+);
+const optionalMinSec = new RegExpCtor(`(?:${optionalMinSecWithSep.source})|(?:${optionalMinSecNoSep.source})`);
+const optionalMinSecWithSepNoCapture = new RegExpCtor(
+  `(?:${sep.source})(?:${minute.source})(?:${sep.source}(?:${second.source}${subseconds.source}?))?`
+);
+const optionalMinSecNoSepNoCapture = new RegExpCtor(`(?:${minute.source})(?:${second.source}${subseconds.source}?)?`);
+const optionalMinSecNoCapture = new RegExpCtor(
+  `${optionalMinSecWithSepNoCapture.source}|${optionalMinSecNoSepNoCapture.source}`
+);
+export const offsetWithParts = new RegExpCtor(
+  `^(?<sign>${sign.source})(?<hour>${hour.source})(?:${optionalMinSec.source})?$`
+);
+export const offset = new RegExpCtor(
+  `(?<offset>(?:${sign.source})(?:${hour.source})(?:${optionalMinSecNoCapture.source})?)`
+);
+const offsetpart = new RegExpCtor(`(?<z>[zZ])|${offset.source}?`);
 export const offsetIdentifier = /([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])?)?/;
 export const annotation = /\[(!)?([a-z_][a-z0-9_-]*)=([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)\]/g;
 
@@ -27,8 +65,8 @@ export const zoneddatetime = new RegExpCtor(
     [
       `^${datesplit.source}`,
       `(?:(?:[tT]|\\s+)${timesplit.source}(?:${offsetpart.source})?)?`,
-      `(?:\\[!?(${timeZoneID.source})\\])?`,
-      `((?:${annotation.source})*)$`
+      `(?:\\[!?(?<timeZoneID>${timeZoneID.source})\\])?`,
+      `(?<annotation>(?:${annotation.source})*)$`
     ],
     ['']
   )
@@ -40,8 +78,8 @@ export const time = new RegExpCtor(
     [
       `^[tT]?${timesplit.source}`,
       `(?:${offsetpart.source})?`,
-      `(?:\\[!?${timeZoneID.source}\\])?`,
-      `((?:${annotation.source})*)$`
+      `(?:\\[!?((?<timeZoneID>${timeZoneID.source}))\\])?`,
+      `(?<annotation>(?:${annotation.source})*)$`
     ],
     ['']
   )
@@ -64,8 +102,8 @@ export const monthday = new RegExpCtor(
   `^(?:--)?(${monthpart.source})-?(${daypart.source})(?:\\[!?${timeZoneID.source}\\])?((?:${annotation.source})*)$`
 );
 
-const fraction = /(\d+)(?:[.,](\d{1,9}))?/;
+const fraction1 = /(\d+)(?:[.,](\d{1,9}))?/;
 
 const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
-const durationTime = new RegExpCtor(`(?:${fraction.source}H)?(?:${fraction.source}M)?(?:${fraction.source}S)?`);
+const durationTime = new RegExpCtor(`(?:${fraction1.source}H)?(?:${fraction1.source}M)?(?:${fraction1.source}S)?`);
 export const duration = new RegExpCtor(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');

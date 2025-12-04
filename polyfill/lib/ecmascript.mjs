@@ -430,30 +430,30 @@ export function ParseISODateTime(isoString) {
   // ZDT is the superset of fields for every other Temporal type
   const match = Call(RegExpPrototypeExec, PARSE.zoneddatetime, [isoString]);
   if (!match) throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}`);
-  const calendar = processAnnotations(match[16]);
-  let yearString = match[1];
+  const calendar = processAnnotations(match.groups.annotation);
+  let yearString = match.groups.yearpart;
   if (yearString === '-000000') throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}`);
   const year = +yearString;
-  const month = +(match[2] ?? match[4] ?? 1);
-  const day = +(match[3] ?? match[5] ?? 1);
-  const hasTime = match[6] !== undefined;
-  const hour = +(match[6] ?? 0);
-  const minute = +(match[7] ?? match[10] ?? 0);
-  let second = +(match[8] ?? match[11] ?? 0);
+  const month = +(match.groups.monthpart ?? 1);
+  const day = +(match.groups.daypart ?? 1);
+  const hasTime = match.groups.hour !== undefined;
+  const hour = +(match.groups.hour ?? 0);
+  const minute = +(match.groups.minute ?? 0);
+  let second = +(match.groups.second ?? 0);
   if (second === 60) second = 59;
-  const fraction = (match[9] ?? match[12] ?? '') + '000000000';
+  const fraction = (match.groups.fraction ?? '') + '000000000';
   const millisecond = +Call(StringPrototypeSlice, fraction, [0, 3]);
   const microsecond = +Call(StringPrototypeSlice, fraction, [3, 6]);
   const nanosecond = +Call(StringPrototypeSlice, fraction, [6, 9]);
   let offset;
   let z = false;
-  if (match[13]) {
+  if (match.groups.z) {
     offset = undefined;
     z = true;
-  } else if (match[14]) {
-    offset = match[14];
+  } else if (match.groups.offset) {
+    offset = match.groups.offset;
   }
-  const tzAnnotation = match[15];
+  const tzAnnotation = match.groups.timeZoneID;
   RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
   return {
     year,
@@ -491,16 +491,16 @@ export function ParseTemporalTimeString(isoString) {
   const match = Call(RegExpPrototypeExec, PARSE.time, [isoString]);
   let hour, minute, second, millisecond, microsecond, nanosecond;
   if (match) {
-    processAnnotations(match[10]); // ignore found calendar
-    hour = +(match[1] ?? 0);
-    minute = +(match[2] ?? match[5] ?? 0);
-    second = +(match[3] ?? match[6] ?? 0);
+    processAnnotations(match.groups.annotation); // ignore found calendar
+    hour = +(match.groups.hour ?? 0);
+    minute = +(match.groups.minute ?? 0);
+    second = +(match.groups.second ?? 0);
     if (second === 60) second = 59;
-    const fraction = (match[4] ?? match[7] ?? '') + '000000000';
+    const fraction = (match.groups.fraction ?? '') + '000000000';
     millisecond = +Call(StringPrototypeSlice, fraction, [0, 3]);
     microsecond = +Call(StringPrototypeSlice, fraction, [3, 6]);
     nanosecond = +Call(StringPrototypeSlice, fraction, [6, 9]);
-    if (match[8]) throw new RangeErrorCtor('Z designator not supported for PlainTime');
+    if (match.groups.z) throw new RangeErrorCtor('Z designator not supported for PlainTime');
   } else {
     const { time, z } = ParseISODateTime(isoString);
     if (time === 'start-of-day') throw new RangeErrorCtor(`time is missing in string: ${isoString}`);
@@ -2175,11 +2175,11 @@ export function ParseDateTimeUTCOffset(string) {
   if (!match) {
     throw new RangeErrorCtor(`invalid time zone offset: ${string}; must match ±HH:MM[:SS.SSSSSSSSS]`);
   }
-  const sign = match[1] === '-' ? -1 : +1;
-  const hours = +match[2];
-  const minutes = +(match[3] || 0);
-  const seconds = +(match[4] || 0);
-  const nanoseconds = +Call(StringPrototypeSlice, (match[5] || 0) + '000000000', [0, 9]);
+  const sign = match.groups.sign === '-' ? -1 : +1;
+  const hours = +match.groups.hour;
+  const minutes = +(match.groups.minute || 0);
+  const seconds = +(match.groups.second || 0);
+  const nanoseconds = +Call(StringPrototypeSlice, (match.groups.subseconds || 0) + '000000000', [0, 9]);
   const offsetNanoseconds = sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
   return offsetNanoseconds;
 }
