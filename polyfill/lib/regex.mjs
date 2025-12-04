@@ -12,7 +12,8 @@ const yearpart = /(?:[+-]\d{6}|\d{4})/;
 const monthpart = /(?:0[1-9]|1[0-2])/;
 const daypart = /(?:0[1-9]|[12]\d|3[01])/;
 export const datesplit = new RegExpCtor(
-  Call(ArrayPrototypeJoin,
+  Call(
+    ArrayPrototypeJoin,
     [
       `(?<yearpart>${yearpart.source})`,
       `(?:-(?<monthpart>${monthpart.source})-`,
