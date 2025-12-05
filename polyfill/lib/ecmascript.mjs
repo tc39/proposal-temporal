@@ -515,7 +515,7 @@ export function ParseTemporalTimeString(isoString) {
   // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
   try {
     const { month, day } = ParseTemporalMonthDayString(isoString);
-    RejectISODate(1972, month, day);
+    RejectISODate(1972, month, day, 'reject', 'reject');
   } catch {
     try {
       const { year, month } = ParseTemporalYearMonthString(isoString);
@@ -691,16 +691,9 @@ function ParseTemporalDurationString(isoString) {
   );
 }
 
-export function RegulateISODate(year, month, day, overflow) {
-  switch (overflow) {
-    case 'reject':
-      RejectISODate(year, month, day);
-      break;
-    case 'constrain':
-      ({ year, month, day } = ConstrainISODate(year, month, day));
-      break;
-  }
-  return { year, month, day };
+export function RegulateISODate(year, month, day, overflowMonths, overflowDays) {
+  RejectISODate(year, month, day, overflowMonths, overflowDays);
+  return ConstrainISODate(year, month, day);
 }
 
 export function RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow) {
@@ -1709,8 +1702,8 @@ export function CalendarMergeFields(calendar, fields, additionalFields) {
   return merged;
 }
 
-export function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
-  const result = calendarImplForID(calendar).dateAdd(isoDate, dateDuration, overflow);
+export function CalendarDateAdd(calendar, isoDate, dateDuration, overflowMonths, overflowDays) {
+  const result = calendarImplForID(calendar).dateAdd(isoDate, dateDuration, overflowMonths, overflowDays);
   RejectDateRange(result);
   return result;
 }
@@ -1762,16 +1755,16 @@ export function CalendarEquals(one, two) {
 export function CalendarDateFromFields(calendar, fields, overflow) {
   const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'date');
-  const result = calendarImpl.dateToISO(fields, overflow);
+  const result = calendarImpl.dateToISO(fields, overflow, overflow);
   RejectDateRange(result);
   return result;
 }
 
-export function CalendarYearMonthFromFields(calendar, fields, overflow) {
+export function CalendarYearMonthFromFields(calendar, fields, overflowMonths) {
   const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'year-month');
   fields.day = 1;
-  const result = calendarImpl.dateToISO(fields, overflow);
+  const result = calendarImpl.dateToISO(fields, overflowMonths, 'constrain');
   RejectYearMonthRange(result);
   return result;
 }
@@ -1779,7 +1772,7 @@ export function CalendarYearMonthFromFields(calendar, fields, overflow) {
 export function CalendarMonthDayFromFields(calendar, fields, overflow) {
   const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'month-day');
-  const result = calendarImpl.monthDayToISOReferenceDate(fields, overflow);
+  const result = calendarImpl.monthDayToISOReferenceDate(fields, overflow, overflow);
   RejectDateRange(result);
   return result;
 }
@@ -2747,7 +2740,13 @@ export function DateDurationDays(dateDuration, plainRelativeTo) {
 
   // balance years, months, and weeks down to days
   const isoDate = GetSlot(plainRelativeTo, ISO_DATE);
-  const later = CalendarDateAdd(GetSlot(plainRelativeTo, CALENDAR), isoDate, yearsMonthsWeeksDuration, 'constrain');
+  const later = CalendarDateAdd(
+    GetSlot(plainRelativeTo, CALENDAR),
+    isoDate,
+    yearsMonthsWeeksDuration,
+    'constrain',
+    'constrain'
+  );
   const epochDaysEarlier = ISODateToEpochDays(isoDate.year, isoDate.month - 1, isoDate.day);
   const epochDaysLater = ISODateToEpochDays(later.year, later.month - 1, later.day);
   const yearsMonthsWeeksInDays = epochDaysLater - epochDaysEarlier;
@@ -2784,9 +2783,13 @@ export function RejectToRange(value, min, max) {
   if (value < min || value > max) throw new RangeErrorCtor(`value out of range: ${min} <= ${value} <= ${max}`);
 }
 
-export function RejectISODate(year, month, day) {
-  RejectToRange(month, 1, 12);
-  RejectToRange(day, 1, ISODaysInMonth(year, month));
+export function RejectISODate(year, month, day, overflowMonths, overflowDays) {
+  if (overflowMonths === 'reject') {
+    RejectToRange(month, 1, 12);
+  }
+  if (overflowDays === 'reject') {
+    RejectToRange(day, 1, ISODaysInMonth(year, month));
+  }
 }
 
 function RejectDateRange(isoDate) {
@@ -2809,7 +2812,7 @@ export function RejectTime(hour, minute, second, millisecond, microsecond, nanos
 }
 
 export function RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-  RejectISODate(year, month, day);
+  RejectISODate(year, month, day, 'reject', 'reject');
   RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
@@ -3203,7 +3206,7 @@ function ComputeNudgeWindow(
     }
     case 'week': {
       const yearsMonths = AdjustDateDurationRecord(duration.date, 0, 0);
-      const weeksStart = CalendarDateAdd(calendar, isoDateTime.isoDate, yearsMonths, 'constrain');
+      const weeksStart = CalendarDateAdd(calendar, isoDateTime.isoDate, yearsMonths, 'constrain', 'constrain');
       const weeksEnd = BalanceISODate(weeksStart.year, weeksStart.month, weeksStart.day + duration.date.days);
       const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
       const weeks = RoundNumberToIncrement(duration.date.weeks + untilResult.weeks, increment, 'trunc');
@@ -3237,7 +3240,7 @@ function ComputeNudgeWindow(
     // which loses precision and creates a distorted bounding window.
     startEpochNs = originEpochNs;
   } else {
-    const start = CalendarDateAdd(calendar, isoDateTime.isoDate, startDuration, 'constrain');
+    const start = CalendarDateAdd(calendar, isoDateTime.isoDate, startDuration, 'constrain', 'constrain');
     const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
     startEpochNs = timeZone
       ? GetEpochNanosecondsFor(timeZone, startDateTime, 'compatible')
@@ -3245,7 +3248,7 @@ function ComputeNudgeWindow(
   }
 
   // Convert to bound-END to epoch-nanoseconds
-  const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain');
+  const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain', 'constrain');
   const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
   const endEpochNs = timeZone
     ? GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible')
@@ -3366,7 +3369,7 @@ function NudgeToZonedTime(sign, duration, isoDateTime, timeZone, calendar, incre
   // unit must be hour or smaller
 
   // Apply to origin, output start/end of the day as PlainDateTimes
-  const start = CalendarDateAdd(calendar, isoDateTime.isoDate, duration.date, 'constrain');
+  const start = CalendarDateAdd(calendar, isoDateTime.isoDate, duration.date, 'constrain', 'constrain');
   const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
   const endDate = BalanceISODate(start.year, start.month, start.day + sign);
   const endDateTime = CombineISODateAndTimeRecord(endDate, isoDateTime.time);
@@ -3500,7 +3503,7 @@ function BubbleRelativeDuration(
     }
 
     // Compute end-of-unit in epoch-nanoseconds
-    const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain');
+    const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain', 'constrain');
     const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
     let endEpochNs;
     if (timeZone) {
@@ -4032,7 +4035,7 @@ export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow
   // RFC 5545 requires the date portion to be added in calendar days and the
   // time portion to be added in exact time.
   const dt = GetISODateTimeFor(timeZone, epochNs);
-  const addedDate = CalendarDateAdd(calendar, dt.isoDate, duration.date, overflow);
+  const addedDate = CalendarDateAdd(calendar, dt.isoDate, duration.date, overflow, overflow);
   const dtIntermediate = CombineISODateAndTimeRecord(addedDate, dt.time);
 
   // Note that 'compatible' is used below because this disambiguation behavior
@@ -4085,7 +4088,7 @@ export function AddDurationToDate(operation, plainDate, durationLike, options) {
   const resolvedOptions = GetOptionsObject(options);
   const overflow = GetTemporalOverflowOption(resolvedOptions);
 
-  const addedDate = CalendarDateAdd(calendar, GetSlot(plainDate, ISO_DATE), dateDuration, overflow);
+  const addedDate = CalendarDateAdd(calendar, GetSlot(plainDate, ISO_DATE), dateDuration, overflow, overflow);
   return CreateTemporalDate(addedDate, calendar);
 }
 
@@ -4106,7 +4109,7 @@ export function AddDurationToDateTime(operation, dateTime, durationLike, options
 
   // Delegate the date part addition to the calendar
   RejectDuration(dateDuration.years, dateDuration.months, dateDuration.weeks, dateDuration.days, 0, 0, 0, 0, 0, 0);
-  const addedDate = CalendarDateAdd(calendar, isoDateTime.isoDate, dateDuration, overflow);
+  const addedDate = CalendarDateAdd(calendar, isoDateTime.isoDate, dateDuration, overflow, overflow);
 
   const result = CombineISODateAndTimeRecord(addedDate, timeResult);
   return CreateTemporalDateTime(result, calendar);
@@ -4128,7 +4131,7 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   const resolvedOptions = GetOptionsObject(options);
-  const overflow = GetTemporalOverflowOption(resolvedOptions);
+  const overflowMonths = GetTemporalOverflowOption(resolvedOptions);
   const sign = DurationSign(duration);
 
   const calendar = GetSlot(yearMonth, CALENDAR);
@@ -4136,15 +4139,15 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
   fields.day = 1;
   let startDate = CalendarDateFromFields(calendar, fields, 'constrain');
   if (sign < 0) {
-    const nextMonth = CalendarDateAdd(calendar, startDate, { months: 1 }, 'constrain');
+    const nextMonth = CalendarDateAdd(calendar, startDate, { months: 1 }, 'constrain', 'constrain');
     startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
   }
   const durationToAdd = ToDateDurationRecordWithoutTime(duration);
   RejectDateRange(startDate);
-  const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, overflow);
+  const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, overflowMonths, 'constrain');
   const addedDateFields = ISODateToFields(calendar, addedDate, 'year-month');
 
-  const isoDate = CalendarYearMonthFromFields(calendar, addedDateFields, overflow);
+  const isoDate = CalendarYearMonthFromFields(calendar, addedDateFields, overflowMonths, 'constrain');
   return CreateTemporalYearMonth(isoDate, calendar);
 }
 

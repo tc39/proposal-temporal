@@ -440,7 +440,7 @@
           1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[Time]]).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_internalDuration_.[[Date]], _targetTime_.[[Days]]).
-          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
+          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~, ~constrain~).
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainRelativeTo_.[[ISODate]], MidnightTimeRecord()).
           1. Let _targetDateTime_ be CombineISODateAndTimeRecord(_targetDate_, _targetTime_).
           1. Set _internalDuration_ to ? DifferencePlainDateTimeWithRounding(_isoDateTime_, _targetDateTime_, _calendar_, _largestUnit_, _roundingIncrement_, _smallestUnit_, _roundingMode_).
@@ -491,7 +491,7 @@
           1. Let _targetTime_ be AddTime(MidnightTimeRecord(), _internalDuration_.[[Time]]).
           1. Let _calendar_ be _plainRelativeTo_.[[Calendar]].
           1. Let _dateDuration_ be ! AdjustDateDurationRecord(_internalDuration_.[[Date]], _targetTime_.[[Days]]).
-          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~).
+          1. Let _targetDate_ be ? CalendarDateAdd(_calendar_, _plainRelativeTo_.[[ISODate]], _dateDuration_, ~constrain~, ~constrain~).
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_plainRelativeTo_.[[ISODate]], MidnightTimeRecord()).
           1. Let _targetDateTime_ be CombineISODateAndTimeRecord(_targetDate_, _targetTime_).
           1. Let _total_ be ? DifferencePlainDateTimeWithTotal(_isoDateTime_, _targetDateTime_, _calendar_, _unit_).
@@ -1481,7 +1481,7 @@
       <emu-alg>
         1. Let _yearsMonthsWeeksDuration_ be ! AdjustDateDurationRecord(_dateDuration_, 0).
         1. If DateDurationSign(_yearsMonthsWeeksDuration_) = 0, return _dateDuration_.[[Days]].
-        1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _plainRelativeTo_.[[ISODate]], _yearsMonthsWeeksDuration_, ~constrain~).
+        1. Let _later_ be ? CalendarDateAdd(_plainRelativeTo_.[[Calendar]], _plainRelativeTo_.[[ISODate]], _yearsMonthsWeeksDuration_, ~constrain~, ~constrain~).
         1. Let _epochDays1_ be ISODateToEpochDays(_plainRelativeTo_.[[ISODate]].[[Year]], _plainRelativeTo_.[[ISODate]].[[Month]] - 1, _plainRelativeTo_.[[ISODate]].[[Day]]).
         1. Let _epochDays2_ be ISODateToEpochDays(_later_.[[Year]], _later_.[[Month]] - 1, _later_.[[Day]]).
         1. Let _yearsMonthsWeeksInDays_ be _epochDays2_ - _epochDays1_.
@@ -1605,7 +1605,7 @@
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, 0, _r2_).
         1. Else if _unit_ is ~week~, then
           1. Let _yearsMonths_ be ! AdjustDateDurationRecord(_duration_.[[Date]], 0, 0).
-          1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _yearsMonths_, ~constrain~).
+          1. Let _weeksStart_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _yearsMonths_, ~constrain~, ~constrain~).
           1. Let _weeksEnd_ be BalanceISODate(_weeksStart_.[[Year]], _weeksStart_.[[Month]], _weeksStart_.[[Day]] + _duration_.[[Date]].[[Days]]).
           1. Let _untilResult_ be CalendarDateUntil(_calendar_, _weeksStart_, _weeksEnd_, ~week~).
           1. Let _weeks_ be RoundNumberToIncrement(_duration_.[[Date]].[[Weeks]] + _untilResult_.[[Weeks]], _increment_, ~trunc~).
@@ -1625,13 +1625,13 @@
         1. If _r1_ = 0, then
           1. Let _startEpochNs_ be _originEpochNs_.
         1. Else,
-          1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _startDuration_, ~constrain~).
+          1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _startDuration_, ~constrain~, ~constrain~).
           1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _isoDateTime_.[[Time]]).
           1. If _timeZone_ is ~unset~, then
             1. Let _startEpochNs_ be GetUTCEpochNanoseconds(_startDateTime_).
           1. Else,
             1. Let _startEpochNs_ be ? GetEpochNanosecondsFor(_timeZone_, _startDateTime_, ~compatible~).
-        1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~).
+        1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~, ~constrain~).
         1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
         1. If _timeZone_ is ~unset~, then
           1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).
@@ -1728,7 +1728,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _duration_.[[Date]], ~constrain~).
+        1. Let _start_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _duration_.[[Date]], ~constrain~, ~constrain~).
         1. Let _startDateTime_ be CombineISODateAndTimeRecord(_start_, _isoDateTime_.[[Time]]).
         1. Let _endDate_ be BalanceISODate(_start_.[[Year]], _start_.[[Month]], _start_.[[Day]] + _sign_).
         1. Let _endDateTime_ be CombineISODateAndTimeRecord(_endDate_, _isoDateTime_.[[Time]]).
@@ -1831,7 +1831,7 @@
               1. Assert: _unit_ is ~week~.
               1. Let _weeks_ be _duration_.[[Date]].[[Weeks]] + _sign_.
               1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], 0, _weeks_).
-            1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~).
+            1. Let _end_ be ? CalendarDateAdd(_calendar_, _isoDateTime_.[[ISODate]], _endDuration_, ~constrain~, ~constrain~).
             1. Let _endDateTime_ be CombineISODateAndTimeRecord(_end_, _isoDateTime_.[[Time]]).
             1. If _timeZone_ is ~unset~, then
               1. Let _endEpochNs_ be GetUTCEpochNanoseconds(_endDateTime_).

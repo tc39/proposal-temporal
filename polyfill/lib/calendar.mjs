@@ -171,12 +171,18 @@ impl['iso8601'] = {
     }
     ObjectAssign(fields, resolveNonLunisolarMonth(fields, 'iso8601'));
   },
-  dateToISO(fields, overflow) {
-    return ES.RegulateISODate(fields.year, fields.month, fields.day, overflow);
+  dateToISO(fields, overflowMonths, overflowDays) {
+    return ES.RegulateISODate(fields.year, fields.month, fields.day, overflowMonths, overflowDays);
   },
-  monthDayToISOReferenceDate(fields, overflow) {
+  monthDayToISOReferenceDate(fields, overflowMonths, overflowDays) {
     const referenceISOYear = 1972;
-    const { month, day } = ES.RegulateISODate(fields.year ?? referenceISOYear, fields.month, fields.day, overflow);
+    const { month, day } = ES.RegulateISODate(
+      fields.year ?? referenceISOYear,
+      fields.month,
+      fields.day,
+      overflowMonths,
+      overflowDays
+    );
     return { month, day, year: referenceISOYear };
   },
   extraFields() {
@@ -195,11 +201,11 @@ impl['iso8601'] = {
     }
     return arrayFromSet(result);
   },
-  dateAdd({ year, month, day }, { years = 0, months = 0, weeks = 0, days = 0 }, overflow) {
+  dateAdd({ year, month, day }, { years = 0, months = 0, weeks = 0, days = 0 }, overflowMonths, overflowDays) {
     year += years;
     month += months;
     ({ year, month } = ES.BalanceISOYearMonth(year, month));
-    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflow));
+    ({ year, month, day } = ES.RegulateISODate(year, month, day, overflowMonths, overflowDays));
     day += days + 7 * weeks;
     return ES.BalanceISODate(year, month, day);
   },
@@ -518,8 +524,15 @@ class OneObjectCache {
     const unsignedYear = year + 280804;
     return (unsignedYear << 11) | (month << 7) | (day << 2) | flags;
   }
-  static generateCalendarToISOKey({ year, month, day }, overflow) {
-    const flags = overflow === 'constrain' ? 0b10 : 0b11;
+  static generateCalendarToISOKey({ year, month, day }, overflowMonths, overflowDays) {
+    var flags = 0b00;
+    if (overflowMonths === 'reject' && overflowDays === 'constrain') {
+      flags = 0b01;
+    } else if (overflowMonths === 'constrain' && overflowDays === 'constrain') {
+      flags = 0b10;
+    } else {
+      flags = 0b11;
+    }
     return this.privKey(year, month, day, flags);
   }
   static generateISOToCalendarKey({ year, month, day }) {
@@ -706,7 +719,7 @@ const nonIsoHelperBase = {
       result.eraYear = eraYear;
     }
     if (this.checkIcuBugs) this.checkIcuBugs(isoDate);
-    const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
+    const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', 'constrain', true);
     if (calendarDate.year === undefined) throw new RangeErrorCtor(`Missing year converting ${JSONStringify(isoDate)}`);
     if (calendarDate.month === undefined) {
       throw new RangeErrorCtor(`Missing month converting ${JSONStringify(isoDate)}`);
@@ -826,40 +839,43 @@ const nonIsoHelperBase = {
    * possible calendar:
    * - non-lunisolar calendar (no leap months)
    * */
-  adjustCalendarDate(calendarDate, cache, overflow /*, fromLegacyDate = false */) {
+  adjustCalendarDate(calendarDate, cache, overflowMonths, overflowDays /*, fromLegacyDate = false */) {
     if (this.calendarType === 'lunisolar') throw new RangeErrorCtor('Override required for lunisolar calendars');
     this.validateCalendarDate(calendarDate);
     let { month, monthCode } = calendarDate;
-    ({ month, monthCode } = resolveNonLunisolarMonth(calendarDate, this.id, overflow));
+    ({ month, monthCode } = resolveNonLunisolarMonth(calendarDate, this.id, overflowMonths, overflowDays));
     calendarDate = { ...calendarDate, month, monthCode };
     if (CalendarSupportsEra(this.id)) calendarDate = this.completeEraYear(calendarDate);
     return calendarDate;
   },
-  regulateMonthDayNaive(calendarDate, overflow, cache) {
+  regulateMonthDayNaive(calendarDate, overflowMonths, overflowDays, cache) {
     const largestMonth = this.monthsInYear(calendarDate, cache);
     let { month, day } = calendarDate;
-    if (overflow === 'reject') {
+    if (overflowMonths === 'reject') {
       ES.RejectToRange(month, 1, largestMonth);
-      ES.RejectToRange(day, 1, this.maximumMonthLength(calendarDate));
     } else {
       month = ES.ConstrainToRange(month, 1, largestMonth);
+    }
+    if (overflowDays === 'reject') {
+      ES.RejectToRange(day, 1, this.maximumMonthLength(calendarDate));
+    } else {
       day = ES.ConstrainToRange(day, 1, this.maximumMonthLength({ ...calendarDate, month }));
     }
     return { ...calendarDate, month, day };
   },
-  calendarToIsoDate(date, overflow = 'constrain', cache) {
+  calendarToIsoDate(date, overflowMonths = 'constrain', overflowDays = 'constrain', cache) {
     const originalDate = date;
     // First, normalize the calendar date to ensure that (year, month, day)
     // are all present, converting monthCode and eraYear if needed.
-    date = this.adjustCalendarDate(date, cache, overflow, false);
+    date = this.adjustCalendarDate(date, cache, overflowMonths, overflowDays, false);
 
     // Fix obviously out-of-bounds values. Values that are valid generally, but
     // not in this particular year, may not be caught here for some calendars.
     // If so, these will be handled lower below.
-    date = this.regulateMonthDayNaive(date, overflow, cache);
+    date = this.regulateMonthDayNaive(date, overflowMonths, overflowDays, cache);
 
     const { year, month, day } = date;
-    const key = OneObjectCache.generateCalendarToISOKey(date, overflow);
+    const key = OneObjectCache.generateCalendarToISOKey(date, overflowMonths, overflowDays);
     let cached = cache.get(key);
     if (cached) return cached;
     // If YMD are present in the input but the input has been constrained
@@ -871,7 +887,7 @@ const nonIsoHelperBase = {
       originalDate.day !== undefined &&
       (originalDate.year !== date.year || originalDate.month !== date.month || originalDate.day !== date.day)
     ) {
-      keyOriginal = OneObjectCache.generateCalendarToISOKey(originalDate, overflow);
+      keyOriginal = OneObjectCache.generateCalendarToISOKey(originalDate, overflowMonths, overflowDays);
       cached = cache.get(keyOriginal);
       if (cached) return cached;
     }
@@ -894,7 +910,7 @@ const nonIsoHelperBase = {
         // constrain if so.
         let testCalendarDate = this.isoToCalendarDate(testIsoEstimate, cache);
         while (testCalendarDate.month !== month || testCalendarDate.year !== year) {
-          if (overflow === 'reject') {
+          if (overflowMonths === 'reject' || overflowDays === 'reject') {
             throw new RangeErrorCtor(`day ${day} does not exist in month ${month} of year ${year}`);
           }
           // Back up a day at a time until we're not hanging over the month end
@@ -943,7 +959,7 @@ const nonIsoHelperBase = {
             // estimate is correct. The only way that can happen is if the
             // original date was an invalid value that will be constrained or
             // rejected here.
-            if (overflow === 'reject') {
+            if (overflowMonths === 'reject' || overflowDays === 'reject') {
               throw new RangeErrorCtor(`Can't find ISO date from calendar date: ${JSONStringify({ ...originalDate })}`);
             } else {
               // To constrain, pick the earliest value
@@ -976,17 +992,17 @@ const nonIsoHelperBase = {
     return 0;
   },
   /** Ensure that a calendar date actually exists. If not, return the closest earlier date. */
-  regulateDate(calendarDate, overflow = 'constrain', cache) {
-    const isoDate = this.calendarToIsoDate(calendarDate, overflow, cache);
+  regulateDate(calendarDate, overflowMonths = 'constrain', overflowDays = 'constrain', cache) {
+    const isoDate = this.calendarToIsoDate(calendarDate, overflowMonths, overflowDays, cache);
     return this.isoToCalendarDate(isoDate, cache);
   },
   addDaysCalendar(calendarDate, days, cache) {
-    const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
+    const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', 'constrain', cache);
     const addedIso = addDaysISO(isoDate, days);
     const addedCalendar = this.isoToCalendarDate(addedIso, cache);
     return addedCalendar;
   },
-  addMonthsCalendar(calendarDate, months, overflow, cache) {
+  addMonthsCalendar(calendarDate, months, overflowMonths, overflowDays, cache) {
     const { day } = calendarDate;
     for (let i = 0, absMonths = MathAbs(months); i < absMonths; i++) {
       const { month } = calendarDate;
@@ -995,7 +1011,7 @@ const nonIsoHelperBase = {
         months < 0
           ? -MathMax(day, this.daysInPreviousMonth(calendarDate, cache))
           : this.daysInMonth(calendarDate, cache);
-      const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
+      const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', 'constrain', cache);
       let addedIso = addDaysISO(isoDate, days);
       calendarDate = this.isoToCalendarDate(addedIso, cache);
 
@@ -1014,15 +1030,15 @@ const nonIsoHelperBase = {
 
       if (calendarDate.day !== day) {
         // try to retain the original day-of-month, if possible
-        calendarDate = this.regulateDate({ ...calendarDate, day }, 'constrain', cache);
+        calendarDate = this.regulateDate({ ...calendarDate, day }, 'constrain', 'constrain', cache);
       }
     }
-    if (overflow === 'reject' && calendarDate.day !== day) {
+    if (overflowDays === 'reject' && calendarDate.day !== day) {
       throw new RangeErrorCtor(`Day ${day} does not exist in resulting calendar month`);
     }
-    return this.regulateDate(calendarDate, overflow, cache);
+    return this.regulateDate(calendarDate, overflowMonths, overflowDays, cache);
   },
-  addCalendar(calendarDate, { years = 0, months = 0, weeks = 0, days = 0 }, overflow, cache) {
+  addCalendar(calendarDate, { years = 0, months = 0, weeks = 0, days = 0 }, overflowMonths, overflowDays, cache) {
     const { year, day, monthCode } = calendarDate;
     const monthInfo = monthCodeInfo[this.id];
     const cycleInfo = monthInfo ? monthInfo.cycleInfo : { years: 1, months: 12 };
@@ -1031,8 +1047,13 @@ const nonIsoHelperBase = {
       years += cycleCount * cycleInfo.years;
       months %= cycleInfo.months;
     }
-    const addedYears = this.adjustCalendarDate({ year: year + years, monthCode, day }, cache, overflow);
-    const addedMonths = this.addMonthsCalendar(addedYears, months, overflow, cache);
+    const addedYears = this.adjustCalendarDate(
+      { year: year + years, monthCode, day },
+      cache,
+      overflowMonths,
+      overflowDays
+    );
+    const addedMonths = this.addMonthsCalendar(addedYears, months, overflowMonths, overflowDays, cache);
     days += weeks * 7;
     const addedDays = this.addDaysCalendar(addedMonths, days, cache);
     return addedDays;
@@ -1102,7 +1123,9 @@ const nonIsoHelperBase = {
         // intermediate should be a date between calendarOne and calendarTwo,
         // that is within a year of calendarTwo.
         const intermediate =
-          years || months ? this.addCalendar(calendarOne, { years, months }, 'constrain', cache) : calendarOne;
+          years || months
+            ? this.addCalendar(calendarOne, { years, months }, 'constrain', 'constrain', cache)
+            : calendarOne;
 
         // At this point, intermediate could fail to be in between calendarOne and calendarTwo
         // due to leap years.
@@ -1117,11 +1140,14 @@ const nonIsoHelperBase = {
         // remaining days.
         let current;
         // Need to re-add years and months because years might have changed
-        let next = years || months ? this.addCalendar(calendarOne, { years, months }, 'constrain', cache) : calendarOne;
+        let next =
+          years || months
+            ? this.addCalendar(calendarOne, { years, months }, 'constrain', 'constrain', cache)
+            : calendarOne;
         do {
           months += sign;
           current = next;
-          next = this.addMonthsCalendar(current, sign, 'constrain', cache);
+          next = this.addMonthsCalendar(current, sign, 'constrain', 'constrain', cache);
           if (next.day !== calendarOne.day) {
             // In case the day was constrained down, un-constrain it (even if
             // that's not a real date)
@@ -1157,7 +1183,7 @@ const nonIsoHelperBase = {
 
     // Add enough days to get into the next month, without skipping it
     const increment = day <= max - min ? max : min;
-    const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
+    const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', 'constrain', cache);
     const addedIsoDate = addDaysISO(isoDate, increment);
     const addedCalendarDate = this.isoToCalendarDate(addedIsoDate, cache);
 
@@ -1178,7 +1204,7 @@ const nonIsoHelperBase = {
     const max = this.maximumMonthLength(previousMonthDate);
     if (min === max) return max;
 
-    const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', cache);
+    const isoDate = this.calendarToIsoDate(calendarDate, 'constrain', 'constrain', cache);
     const lastDayOfPreviousMonthIso = addDaysISO(isoDate, -day);
     const lastDayOfPreviousMonthCalendar = this.isoToCalendarDate(lastDayOfPreviousMonthIso, cache);
     return lastDayOfPreviousMonthCalendar.day;
@@ -1190,8 +1216,8 @@ const nonIsoHelperBase = {
     return { year: calendarDate.year, month: calendarDate.month, day: 1 };
   },
   calendarDaysUntil(calendarOne, calendarTwo, cache) {
-    const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', cache);
-    const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', cache);
+    const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', 'constrain', cache);
+    const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', 'constrain', cache);
     return (
       ES.ISODateToEpochDays(twoIso.year, twoIso.month - 1, twoIso.day) -
       ES.ISODateToEpochDays(oneIso.year, oneIso.month - 1, oneIso.day)
@@ -1200,12 +1226,15 @@ const nonIsoHelperBase = {
   // Override this to shortcut the search space if certain month codes only
   // occur long in the past
   monthDaySearchStartYear: (/* monthCode, day */) => 1972,
-  monthDayFromFields(fields, overflow, cache) {
+  monthDayFromFields(fields, overflowMonths, overflowDays, cache) {
     let { eraYear, year, monthCode, day } = fields;
     const hasEra = CalendarSupportsEra(this.id);
     if (monthCode === undefined || year !== undefined || (hasEra && eraYear !== undefined)) {
       // Apply overflow behaviour to year/month/day, to get correct monthCode/day
-      ({ monthCode, day } = this.isoToCalendarDate(this.calendarToIsoDate(fields, overflow, cache), cache));
+      ({ monthCode, day } = this.isoToCalendarDate(
+        this.calendarToIsoDate(fields, overflowMonths, overflowDays, cache),
+        cache
+      ));
     }
 
     // Shape of property bag is correct, check valid input and apply overflow
@@ -1214,7 +1243,7 @@ const nonIsoHelperBase = {
     }
     const maxDayForMonthCode = this.maxLengthOfMonthCodeInAnyYear(monthCode);
     if (day > maxDayForMonthCode) {
-      if (overflow === 'reject') {
+      if (overflowDays === 'reject') {
         throw new RangeErrorCtor(`No ${this.id} year with monthCode ${monthCode} and day ${day}`);
       }
       day = maxDayForMonthCode;
@@ -1238,8 +1267,13 @@ const nonIsoHelperBase = {
         ? calendarOfStartDateIso.year
         : calendarOfStartDateIso.year - 1;
     for (let i = 0; i < 20; i++) {
-      let testCalendarDate = this.adjustCalendarDate({ day, monthCode, year: calendarYear - i }, cache);
-      const isoDate = this.calendarToIsoDate(testCalendarDate, 'constrain', cache);
+      let testCalendarDate = this.adjustCalendarDate(
+        { day, monthCode, year: calendarYear - i },
+        cache,
+        'constrain',
+        'constrain'
+      );
+      const isoDate = this.calendarToIsoDate(testCalendarDate, 'constrain', 'constrain', cache);
       const roundTripCalendarDate = this.isoToCalendarDate(isoDate, cache);
       if (roundTripCalendarDate.monthCode === monthCode && roundTripCalendarDate.day === day) {
         return isoDate;
@@ -1331,7 +1365,13 @@ const helperHebrew = makeNonISOHelper([{ code: 'am', isoEpoch: { year: -3760, mo
       return CreateMonthCode(month, false);
     }
   },
-  adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
+  adjustCalendarDate(
+    calendarDate,
+    cache,
+    overflowMonths = 'constrain',
+    overflowDays = 'constrain',
+    fromLegacyDate = false
+  ) {
     let { era, eraYear, year, month, monthCode, day, monthExtra } = this.completeEraYear(calendarDate);
     if (fromLegacyDate) {
       // In Pre Node-14 V8, DateTimeFormat.formatToParts `month: 'numeric'`
@@ -1360,7 +1400,7 @@ const helperHebrew = makeNonISOHelper([{ code: 'am', isoEpoch: { year: -3760, mo
           }
           month = 6;
           if (!this.inLeapYear({ year })) {
-            if (overflow === 'reject') {
+            if (overflowMonths === 'reject') {
               throw new RangeErrorCtor(`Hebrew monthCode M05L is invalid in year ${year} which is not a leap year`);
             } else {
               // constrain to same day of next month (Adar)
@@ -1376,11 +1416,14 @@ const helperHebrew = makeNonISOHelper([{ code: 'am', isoEpoch: { year: -3760, mo
           if (month < 1 || month > largestMonth) throw new RangeErrorCtor(`Invalid monthCode: ${monthCode}`);
         }
       } else {
-        if (overflow === 'reject') {
+        if (overflowMonths === 'reject') {
           ES.RejectToRange(month, 1, this.monthsInYear({ year }));
-          ES.RejectToRange(day, 1, this.maximumMonthLength({ year, month }));
         } else {
           month = ES.ConstrainToRange(month, 1, this.monthsInYear({ year }));
+        }
+        if (overflowDays === 'reject') {
+          ES.RejectToRange(day, 1, this.maximumMonthLength({ year, month }));
+        } else {
           day = ES.ConstrainToRange(day, 1, this.maximumMonthLength({ year, month }));
         }
         if (monthCode === undefined) {
@@ -2050,7 +2093,13 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const { year, month } = calendarDate;
     return { year, month: month >= 12 ? 12 : month + 1, day: 1 };
   },
-  adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
+  adjustCalendarDate(
+    calendarDate,
+    cache,
+    overflowMonths = 'constrain',
+    overflowDays = 'constrain',
+    fromLegacyDate = false
+  ) {
     let { year, month, monthExtra, day, monthCode } = calendarDate;
     if (year === undefined) throw new TypeErrorCtor('Missing property: year');
     if (fromLegacyDate) {
@@ -2075,7 +2124,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         month = months[monthCode];
         // If this leap month isn't present in this year, constrain to the same
         // day of the previous month.
-        if (month === undefined && isLeapMonth && overflow === 'constrain') {
+        if (month === undefined && isLeapMonth && overflowMonths === 'constrain') {
           const adjustedMonthCode = CreateMonthCode(monthNumber, false);
           month = months[adjustedMonthCode];
           monthCode = adjustedMonthCode;
@@ -2086,11 +2135,14 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
         const largestMonth = months.monthsInYear;
-        if (overflow === 'reject') {
+        if (overflowMonths === 'reject') {
           ES.RejectToRange(month, 1, largestMonth);
-          ES.RejectToRange(day, 1, this.maximumMonthLength());
         } else {
           month = ES.ConstrainToRange(month, 1, largestMonth);
+        }
+        if (overflowDays === 'reject') {
+          ES.RejectToRange(day, 1, this.maximumMonthLength());
+        } else {
           day = ES.ConstrainToRange(day, 1, this.maximumMonthLength());
         }
         monthCode = months[month].monthCode;
@@ -2153,15 +2205,15 @@ const nonIsoGeneralImpl = {
     // Note: Lunisolar calendars go on to resolve month/monthCode in their
     // adjustCalendarDate implementations
   },
-  dateToISO(fields, overflow) {
+  dateToISO(fields, overflowMonths, overflowDays) {
     const cache = new OneObjectCache(this.id);
-    const result = this.helper.calendarToIsoDate(fields, overflow, cache);
+    const result = this.helper.calendarToIsoDate(fields, overflowMonths, overflowDays, cache);
     cache.setObject(result);
     return result;
   },
-  monthDayToISOReferenceDate(fields, overflow) {
+  monthDayToISOReferenceDate(fields, overflowMonths, overflowDays) {
     const cache = new OneObjectCache(this.id);
-    const result = this.helper.monthDayFromFields(fields, overflow, cache);
+    const result = this.helper.monthDayFromFields(fields, overflowMonths, overflowDays, cache);
     // result.year is a reference year where this month/day exists in this calendar
     cache.setObject(result);
     return result;
@@ -2209,11 +2261,17 @@ const nonIsoGeneralImpl = {
     }
     return arrayFromSet(result);
   },
-  dateAdd(isoDate, { years, months, weeks, days }, overflow) {
+  dateAdd(isoDate, { years, months, weeks, days }, overflowMonths, overflowDays) {
     const cache = OneObjectCache.getCacheForObject(this.id, isoDate);
     const calendarDate = this.helper.isoToCalendarDate(isoDate, cache);
-    const added = this.helper.addCalendar(calendarDate, { years, months, weeks, days }, overflow, cache);
-    const isoAdded = this.helper.calendarToIsoDate(added, 'constrain', cache);
+    const added = this.helper.addCalendar(
+      calendarDate,
+      { years, months, weeks, days },
+      overflowMonths,
+      overflowDays,
+      cache
+    );
+    const isoAdded = this.helper.calendarToIsoDate(added, 'constrain', 'constrain', cache);
     // The new object's cache starts with the cache of the old object
     if (!OneObjectCache.getCacheForObject(this.id, isoAdded)) {
       const newCache = new OneObjectCache(this.id, cache);
@@ -2245,7 +2303,13 @@ const nonIsoGeneralImpl = {
     if (requestedFields.daysInMonth) calendarDate.daysInMonth = this.helper.daysInMonth(calendarDate, cache);
     if (requestedFields.daysInYear) {
       const startOfYearCalendar = this.helper.startOfCalendarYear(calendarDate);
-      const startOfNextYearCalendar = this.helper.addCalendar(startOfYearCalendar, { years: 1 }, 'constrain', cache);
+      const startOfNextYearCalendar = this.helper.addCalendar(
+        startOfYearCalendar,
+        { years: 1 },
+        'constrain',
+        'constrain',
+        cache
+      );
       calendarDate.daysInYear = this.helper.calendarDaysUntil(startOfYearCalendar, startOfNextYearCalendar, cache);
     }
     if (requestedFields.monthsInYear) calendarDate.monthsInYear = this.helper.monthsInYear(calendarDate, cache);

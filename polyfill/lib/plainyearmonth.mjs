@@ -13,7 +13,7 @@ export class PlainYearMonth {
     calendar = ES.CanonicalizeCalendar(calendar);
     const day = ES.ToIntegerWithTruncation(referenceISODay);
 
-    ES.RejectISODate(year, month, day);
+    ES.RejectISODate(year, month, day, 'reject', 'reject');
     ES.CreateTemporalYearMonthSlots(this, { year, month, day }, calendar);
   }
   get year() {
