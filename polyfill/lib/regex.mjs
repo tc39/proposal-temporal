@@ -103,10 +103,14 @@ const numberWithOptionalFraction = /(\d+)(?:[.,](\d{1,9}))?/;
 
 const durationDate = /(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?/;
 const durationTime = new RegExpCtor(
-  Call(ArrayPrototypeJoin, [
-    `(?:${numberWithOptionalFraction.source}H)?`,
-    `(?:${numberWithOptionalFraction.source}M)?`,
-    `(?:${numberWithOptionalFraction.source}S)?`
-  ])
+  Call(
+    ArrayPrototypeJoin,
+    [
+      `(?:${numberWithOptionalFraction.source}H)?`,
+      `(?:${numberWithOptionalFraction.source}M)?`,
+      `(?:${numberWithOptionalFraction.source}S)?`
+    ],
+    ['']
+  )
 );
 export const duration = new RegExpCtor(`^([+-])?P${durationDate.source}(?:T(?!$)${durationTime.source})?$`, 'i');
