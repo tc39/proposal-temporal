@@ -978,7 +978,7 @@ export function GetTemporalRelativeToOption(options) {
       if (offset) {
         const offsetParseResult = Call(RegExpPrototypeExec, OFFSET_WITH_PARTS, [offset]);
         assert(offsetParseResult, 'offset string must re-parse');
-        const offsetSecondsPart = offsetParseResult[4];
+        const offsetSecondsPart = offsetParseResult.groups.offsetSecond;
         if (offsetSecondsPart) matchMinutes = false;
       }
     } else if (z) {
@@ -1506,7 +1506,7 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     if (offset) {
       const offsetParseResult = Call(RegExpPrototypeExec, OFFSET_WITH_PARTS, [offset]);
       assert(offsetParseResult, 'offset string must re-parse');
-      const offsetSecondsPart = offsetParseResult[4];
+      const offsetSecondsPart = offsetParseResult.groups.offsetSecond;
       if (offsetSecondsPart) matchMinute = false;
     }
     const resolvedOptions = GetOptionsObject(options);
@@ -2175,11 +2175,11 @@ export function ParseDateTimeUTCOffset(string) {
   if (!match) {
     throw new RangeErrorCtor(`invalid time zone offset: ${string}; must match ±HH:MM[:SS.SSSSSSSSS]`);
   }
-  const sign = match.groups.sign === '-' ? -1 : +1;
-  const hours = +match.groups.hour;
-  const minutes = +(match.groups.minute || 0);
-  const seconds = +(match.groups.second || 0);
-  const nanoseconds = +Call(StringPrototypeSlice, (match.groups.subseconds || 0) + '000000000', [0, 9]);
+  const sign = match.groups.offsetSign === '-' ? -1 : +1;
+  const hours = +match.groups.offsetHour;
+  const minutes = +(match.groups.offsetMinute || 0);
+  const seconds = +(match.groups.offsetSecond || 0);
+  const nanoseconds = +Call(StringPrototypeSlice, (match.groups.offsetSubseconds || 0) + '000000000', [0, 9]);
   const offsetNanoseconds = sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
   return offsetNanoseconds;
 }
