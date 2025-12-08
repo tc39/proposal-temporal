@@ -51,6 +51,16 @@ if (typeof process !== 'undefined' && process.argv?.length > 2) {
 
 class AssertionError extends Error {}
 
+export function assertEqual(actual, expected, message) {
+  if (actual !== expected) throw new AssertionError(`${message}: expected ${expected}, got ${actual}`);
+}
+
+export function assertOffByLessThanOne(actual, expected, message) {
+  if (Math.abs(actual - expected) >= 1) {
+    throw new AssertionError(`${message}: expected ${expected} and ${actual} to differ by at most 1`);
+  }
+}
+
 export function assertDurationsEqual(actual, expected, message) {
   if (!(actual instanceof temporalImpl.Duration)) throw new AssertionError(`${message}: not a duration`);
   if (
@@ -97,6 +107,18 @@ export function createYearMonthSkippingInvalidCombinations(y, m) {
   }
 }
 
+export const durationUnits = [
+  'years',
+  'months',
+  'weeks',
+  'days',
+  'hours',
+  'minutes',
+  'seconds',
+  'milliseconds',
+  'microseconds',
+  'nanoseconds'
+];
 export const interestingDateTimes = [
   [2025, 9, 9, 13, 40, 18, 199, 6, 994], // a recent datetime
   [2025, 9, 8, 14, 41, 19, 200, 7, 995], // earlier date but later time
@@ -638,6 +660,10 @@ export const interestingZonedDateTimes = [
   ['America/Toronto', 1919, 3, 31, 12, 0, 0, 0, 0, 0, -4] // day after exceptional midnight-spanning transition
 ];
 
+export function isCalendarUnit(unit) {
+  return unit === 'years' || unit === 'months' || unit === 'weeks';
+}
+
 export function makeDateCases() {
   const interestingDates = [];
   for (const year of interestingYears) {
@@ -703,6 +729,55 @@ export function makeInstantCases() {
     // Pre-compute toString so it's not done repeatedly in each test
     return [instant, instant.toString()];
   });
+}
+
+export function makeRelativeToCases() {
+  const abbreviatedInterestingYears = [1969, 1972, -271821, 275760];
+  const abbreviatedInterestingEpochNs = [
+    1n, // just after epoch
+    0n, // epoch
+    -1n, // just before epoch
+    86400n * 100_000_000n * 1_000_000_000n, // last supported epoch ns
+    -(86400n * 100_000_000n * 1_000_000_000n), // earliest supported epoch ns
+    -(86400n * 99_999_999n * 1_000_000_000n) // earliest supported epoch ns + 1 d
+  ];
+  const interestingRelativeTo = [];
+
+  for (const year of abbreviatedInterestingYears) {
+    for (const [month, day] of interestingMonthDays) {
+      const date = createDateSkippingInvalidCombinations(year, month, day);
+      if (!date) continue;
+      // Pre-compute toString so it's not done repeatedly in each test
+      interestingRelativeTo.push([date, date.toString()]);
+    }
+  }
+
+  for (const epochNs of abbreviatedInterestingEpochNs) {
+    const dt = new temporalImpl.ZonedDateTime(epochNs, 'UTC');
+    // Pre-compute toString so it's not done repeatedly in each test
+    interestingRelativeTo.push([dt, dt.toString()]);
+  }
+
+  for (const params of interestingZonedDateTimes) {
+    const [timeZone, year, month, day, hour, minute, second, millisecond, microsecond, nanosecond, hoff, moff = 0] =
+      params;
+    const offset = (hoff < 0 ? '-' : '+') + `${Math.abs(hoff)}`.padStart(2, '0') + ':' + `${moff}`.padStart(2, '0');
+    const dt = temporalImpl.ZonedDateTime.from({
+      timeZone,
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      second,
+      millisecond,
+      microsecond,
+      nanosecond,
+      offset
+    });
+    interestingRelativeTo.push([dt, dt.toString()]);
+  }
+  return interestingRelativeTo;
 }
 
 export function makeTimeCases() {
