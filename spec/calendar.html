@@ -765,7 +765,7 @@
       </dl>
       <emu-alg>
         1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~month-day~).
-        1. Let _result_ be ? CalendarMonthDayToISOReferenceDate(_calendar_, _fields_, _overflow_, _overflow_).
+        1. Let _result_ be ? CalendarMonthDayToISOReferenceDate(_calendar_, _fields_, _overflow_).
         1. If ISODateWithinLimits(_result_) is *false*, throw a *RangeError* exception.
         1. Return _result_.
       </emu-alg>
@@ -962,14 +962,13 @@
         NonISOMonthDayToISOReferenceDate (
           _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
-          _overflowMonths_: ~constrain~ or ~reject~,
-          _overflowDays_: ~constrain~ or ~reject~,
+          _overflow_: ~constrain~ or ~reject~
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to overflow correction specified by _overflowMonths_ and _overflowDays.
+          It performs implementation-defined processing to convert _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to overflow correction specified by _overflow_.
           For ~reject~, values that do not form a valid date cause an exception to be thrown.
           For ~constrain~, values that do not form a valid date are clamped to their respective valid range as in CalendarDateToISO.
         </dd>
@@ -1001,14 +1000,13 @@
         CalendarMonthDayToISOReferenceDate (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflowMonths_: ~constrain~ or ~reject~,
-          _overflowDays_: ~constrain~ or ~reject~,
+          _overflow_: ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It converts _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to overflow correction specified by _overflowMonths_ and _overflowDays_.
+          It converts _fields_, which represents a calendar date without a year (i.e., month code and day pair, or equivalent) in the built-in calendar identified by _calendar_, to a corresponding reference date in the ISO 8601 calendar as described below, subject to overflow correction specified by _overflow_.
           For ~reject~, values that do not form a valid date cause an exception to be thrown.
           For ~constrain~, values that do not form a valid date are clamped to their respective valid range as in CalendarDateToISO.
         </dd>
@@ -1018,9 +1016,9 @@
           1. Assert: _fields_.[[Month]] and _fields_.[[Day]] are not ~unset~.
           1. Let _referenceISOYear_ be 1972 (the first ISO 8601 leap year after the epoch).
           1. If _fields_.[[Year]] is ~unset~, let _year_ be _referenceISOYear_; else let _year_ be _fields_.[[Year]].
-          1. Let _result_ be ? RegulateISODate(_year_, _fields_.[[Month]], _fields_.[[Day]], _overflowMonths_, _overflowDays_).
+          1. Let _result_ be ? RegulateISODate(_year_, _fields_.[[Month]], _fields_.[[Day]], _overflow_, _overflow_).
           1. Return CreateISODateRecord(_referenceISOYear_, _result_.[[Month]], _result_.[[Day]]).
-        1. Return ? NonISOMonthDayToISOReferenceDate(_calendar_, _fields_, _overflowMonths_, _overflowDays_).
+        1. Return ? NonISOMonthDayToISOReferenceDate(_calendar_, _fields_, _overflow_).
       </emu-alg>
       <p>
         The fields of the returned ISO Date Record represent a reference date in the ISO 8601 calendar that, when converted to _calendar_, corresponds to the month code and day of _fields_ in an arbitrary but deterministically chosen reference year.
