@@ -12,7 +12,7 @@ export class PlainDate {
     const day = ES.ToIntegerWithTruncation(isoDay);
     calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
-    ES.RejectISODate(year, month, day);
+    ES.RejectISODate(year, month, day, 'reject', 'reject');
 
     ES.CreateTemporalDateSlots(this, { year, month, day }, calendar);
   }
