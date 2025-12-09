@@ -138,7 +138,7 @@ function ISODateSurpasses(sign, baseDate, isoDate2, years, months, weeks, days) 
   let m1 = yearMonth.month;
   let d1 = baseDate.day;
   if (weeks !== 0 || days !== 0) {
-    const regulatedDate = ES.RegulateISODate(y1, m1, d1, 'constrain');
+    const regulatedDate = ES.RegulateISODate(y1, m1, d1, 'constrain', 'constrain');
     ({
       year: y1,
       month: m1,
@@ -171,17 +171,17 @@ impl['iso8601'] = {
     }
     ObjectAssign(fields, resolveNonLunisolarMonth(fields, 'iso8601'));
   },
-  dateToISO(fields, overflowMonths, overflowDays) {
-    return ES.RegulateISODate(fields.year, fields.month, fields.day, overflowMonths, overflowDays);
+  dateToISO(fields, overflow) {
+    return ES.RegulateISODate(fields.year, fields.month, fields.day, overflow, overflow);
   },
-  monthDayToISOReferenceDate(fields, overflowMonths, overflowDays) {
+  monthDayToISOReferenceDate(fields, overflow) {
     const referenceISOYear = 1972;
     const { month, day } = ES.RegulateISODate(
       fields.year ?? referenceISOYear,
       fields.month,
       fields.day,
-      overflowMonths,
-      overflowDays
+      overflow,
+      overflow
     );
     return { month, day, year: referenceISOYear };
   },
@@ -1760,7 +1760,7 @@ const makeHelperGregorian = (id, originalEras) => {
       const { year, month, day } = calendarDate;
       const { anchorEra } = this;
       const isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
-      return ES.RegulateISODate(isoYearEstimate, month, day, 'constrain');
+      return ES.RegulateISODate(isoYearEstimate, month, day, 'constrain', 'constrain');
     }
   });
 };
@@ -2205,15 +2205,15 @@ const nonIsoGeneralImpl = {
     // Note: Lunisolar calendars go on to resolve month/monthCode in their
     // adjustCalendarDate implementations
   },
-  dateToISO(fields, overflowMonths, overflowDays) {
+  dateToISO(fields, overflow) {
     const cache = new OneObjectCache(this.id);
-    const result = this.helper.calendarToIsoDate(fields, overflowMonths, overflowDays, cache);
+    const result = this.helper.calendarToIsoDate(fields, overflow, overflow, cache);
     cache.setObject(result);
     return result;
   },
-  monthDayToISOReferenceDate(fields, overflowMonths, overflowDays) {
+  monthDayToISOReferenceDate(fields, overflow) {
     const cache = new OneObjectCache(this.id);
-    const result = this.helper.monthDayFromFields(fields, overflowMonths, overflowDays, cache);
+    const result = this.helper.monthDayFromFields(fields, overflow, overflow, cache);
     // result.year is a reference year where this month/day exists in this calendar
     cache.setObject(result);
     return result;

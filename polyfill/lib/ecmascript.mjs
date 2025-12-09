@@ -1755,7 +1755,7 @@ export function CalendarEquals(one, two) {
 export function CalendarDateFromFields(calendar, fields, overflow) {
   const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'date');
-  const result = calendarImpl.dateToISO(fields, overflow, overflow);
+  const result = calendarImpl.dateToISO(fields, overflow);
   RejectDateRange(result);
   return result;
 }
@@ -1764,7 +1764,7 @@ export function CalendarYearMonthFromFields(calendar, fields, overflowMonths) {
   const calendarImpl = calendarImplForID(calendar);
   calendarImpl.resolveFields(fields, 'year-month');
   fields.day = 1;
-  const result = calendarImpl.dateToISO(fields, overflowMonths, 'constrain');
+  const result = calendarImpl.dateToISO(fields, overflowMonths);
   RejectYearMonthRange(result);
   return result;
 }
