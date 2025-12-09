@@ -15,6 +15,8 @@ cd $(dirname $0)
 interpreter=${1-node}
 there_were_errors=0
 for test in \
+  calendardaymath \
+  calendarisolike \
   dateaddition \
   datedifference \
   datetimeaddition \
@@ -22,7 +24,6 @@ for test in \
   datetimerounding \
   durationaddition \
   durationtotal \
-  gregorian \
   instantaddition \
   instantdifference \
   instantrounding \
