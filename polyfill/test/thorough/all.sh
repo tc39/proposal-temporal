@@ -17,26 +17,34 @@ there_were_errors=0
 for test in \
   dateaddition \
   datedifference \
+  dateroundtrip \
   datetimeaddition \
   datetimedifference \
   datetimerounding \
+  datetimeroundtrip \
   durationaddition \
+  durationroundtrip \
   durationtotal \
   gregorian \
   instantaddition \
   instantdifference \
   instantrounding \
+  instantroundtrip \
   monthdayrefyear \
+  monthdayroundtrip \
   startofday \
   timeaddition \
   timedifference \
   timerounding \
+  timeroundtrip \
   yearcycle \
   yearmonthaddition \
   yearmonthdifference \
+  yearmonthroundtrip \
   zonedaddition \
   zoneddifference \
-  zonedrounding
+  zonedrounding \
+  zonedroundtrip
 do
   echo "== Running $test.mjs =="
   $interpreter "$test.mjs" || there_were_errors=1
