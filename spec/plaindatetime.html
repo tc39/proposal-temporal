@@ -857,7 +857,7 @@
       </dl>
       <emu-alg>
         1. Let _balancedTime_ be BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
-        1. Let _balancedDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _balancedTime_.[[Days]]).
+        1. Let _balancedDate_ be AddDaysToISODate({ [[Year]]: _year, [[Month]]: _month_, [[Day]]: _day_}, _balancedTime_.[[Days]]).
         1. Return CombineISODateAndTimeRecord(_balancedDate_, _balancedTime_).
       </emu-alg>
     </emu-clause>
