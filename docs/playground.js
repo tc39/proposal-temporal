@@ -8630,9 +8630,9 @@
 	}
 	function ParseTemporalTimeString(isoString) {
 	  const match = Call$1(RegExpPrototypeExec, time, [isoString]);
-	  let hour, minute, second, millisecond, microsecond, nanosecond;
+	  let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
 	  if (match) {
-	    processAnnotations(match.groups.annotation); // ignore found calendar
+	    calendar = processAnnotations(match.groups.annotation);
 	    hour = +(match.groups.hour ?? 0);
 	    minute = +(match.groups.minute ?? 0);
 	    second = +(match.groups.second ?? 0);
@@ -8667,7 +8667,8 @@
 	      second,
 	      millisecond,
 	      microsecond,
-	      nanosecond
+	      nanosecond,
+	      calendar
 	    };
 	  }
 	  // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
@@ -8691,7 +8692,8 @@
 	        second,
 	        millisecond,
 	        microsecond,
-	        nanosecond
+	        nanosecond,
+	        calendar
 	      };
 	    }
 	  }
