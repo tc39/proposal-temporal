@@ -595,6 +595,49 @@
       </emu-alg>
     </emu-clause>
 
+    <emu-clause id="sec-temporal-nonisodatelastdayofmonth" type="implementation-defined abstract operation">
+      <h1>
+        NonISODateLastDayOfMonth (
+          _calendar_: a calendar type that is not *"iso8601"*,
+          _isoYear_: an integer,
+          _isoMonth_: an integer between 1 and 12 (inclusive),
+        ): an ISO Date Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          The operation performs implementation-defined processing to determine the last day of the month denoted by _isoDate_. It returns an ISO Date Record with the same year and month as _isoYear_ and _isoMonth_, and the day set to the last day of _isoMonth_ in _isoYear_ according to the years, months and weeks reckoning of _calendar_.
+        </dd>
+      </dl>
+    </emu-clause>
+
+    <emu-clause id="sec-temporal-calendardatelastdayofmonth" type="abstract operation">
+      <h1>
+        CalendarDateLastDayOfMonth (
+          _calendar_: a calendar type,
+          _isoDate_: an ISO Date Record
+        ): an ISO Date Record
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>
+          It determines the last day in the month _isoMonth_ of the year _isoYear_ using the years, months
+          and weeks reckoning of _calendar_, and returns an ISO Date Record with the same year and month
+          as _isoDate_, and the day set to the last day in the month.
+        </dd>
+      </dl>
+      <emu-alg>
+        1. If _calendar_ is *"iso8601"*, then
+          1. If _isoDate_.[[Year]] equals 275760 and _isoDate_.[[Month]] equals 9, then
+            1. Let _maxDay_ be 13.
+          1. Else,
+            1. Let _maxDay_ be ISODaysInMonth(_isoDate_.[[Year]], _isoDate_.[[Month]]).
+          1. Return CreateISODateRecord(_isoDate_.[[Year]], _isoDate_.[[Month]], _maxDay_).
+        1. Else,
+          1. Return NonISODateLastDayOfMonth(_calendar_, _isoYear_, _isoMonth_).
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-temporal-nonisodateuntil" type="implementation-defined abstract operation">
       <h1>
         NonISODateUntil (

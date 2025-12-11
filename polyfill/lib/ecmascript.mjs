@@ -1715,6 +1715,27 @@ export function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
   return result;
 }
 
+function CalendarDateLastDayOfMonth(calendar, isoDate) {
+  if (calendar === 'iso8601') {
+    let maxDay = isoDate.year === YEAR_MAX && isoDate.month === 9 ? 13 : ISODaysInMonth(isoDate.year, isoDate.month);
+    return { year: isoDate.year, month: isoDate.month, day: maxDay };
+  }
+  let previousIsoDate = isoDate;
+  let nextIsoDate = isoDate;
+  let calendarDate = calendarImplForID(calendar).isoToDate(nextIsoDate, { daysInMonth: true });
+  while (calendarDate.day !== calendarDate.daysInMonth) {
+    previousIsoDate = nextIsoDate;
+    calendarDate = calendarImplForID(calendar).isoToDate(nextIsoDate, { daysInMonth: true });
+    try {
+      nextIsoDate = CalendarDateAdd(calendar, nextIsoDate, { days: 1 }, 'constrain');
+    } catch (e) {
+      // Date overflowed maximum range => consider this the last day
+      break;
+    }
+  }
+  return previousIsoDate;
+}
+
 export function CalendarDateUntil(calendar, isoDate, isoOtherDate, largestUnit) {
   return calendarImplForID(calendar).dateUntil(isoDate, isoOtherDate, largestUnit);
 }
@@ -4129,23 +4150,33 @@ export function AddDurationToTime(operation, temporalTime, durationLike) {
 export function AddDurationToYearMonth(operation, yearMonth, durationLike, options) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
+  const durationTime = ToInternalDurationRecord(duration).time;
   const resolvedOptions = GetOptionsObject(options);
   const overflow = GetTemporalOverflowOption(resolvedOptions);
   const sign = DurationSign(duration);
-
+  const durationYearsMonthsOnly = AdjustDateDurationRecord(duration, 0, 0);
+  const durationWithoutYearsMonths = ToTemporalPartialDurationRecord({
+    years: 0,
+    months: 0,
+    weeks: duration.weeks,
+    days: duration.days
+  });
+  const dateDurationWithoutYearsMonths = ToDateDurationRecordWithoutTime(
+    TemporalDurationFromInternal(CombineDateAndTimeDuration(durationWithoutYearsMonths, durationTime), 'year')
+  );
   const calendar = GetSlot(yearMonth, CALENDAR);
   const fields = ISODateToFields(calendar, GetSlot(yearMonth, ISO_DATE), 'year-month');
   fields.day = 1;
   let startDate = CalendarDateFromFields(calendar, fields, 'constrain');
-  if (sign < 0) {
-    const nextMonth = CalendarDateAdd(calendar, startDate, { months: 1 }, 'constrain');
-    startDate = BalanceISODate(nextMonth.year, nextMonth.month, nextMonth.day - 1);
-  }
-  const durationToAdd = ToDateDurationRecordWithoutTime(duration);
   RejectDateRange(startDate);
-  const addedDate = CalendarDateAdd(calendar, startDate, durationToAdd, overflow);
+  const dateWithYearMonthAdded = CalendarDateAdd(calendar, startDate, durationYearsMonthsOnly, overflow);
+  if (sign < 0) {
+    startDate = CalendarDateLastDayOfMonth(calendar, dateWithYearMonthAdded);
+  } else {
+    startDate = dateWithYearMonthAdded;
+  }
+  const addedDate = CalendarDateAdd(calendar, startDate, dateDurationWithoutYearsMonths, overflow);
   const addedDateFields = ISODateToFields(calendar, addedDate, 'year-month');
-
   const isoDate = CalendarYearMonthFromFields(calendar, addedDateFields, overflow);
   return CreateTemporalYearMonth(isoDate, calendar);
 }

@@ -641,20 +641,24 @@
         1. If _operation_ is ~subtract~, set _duration_ to CreateNegatedTemporalDuration(_duration_).
         1. Let _resolvedOptions_ be ? GetOptionsObject(_options_).
         1. Let _overflow_ be ? GetTemporalOverflowOption(_resolvedOptions_).
+        1. Let _time_ be ToInternalDurationRecord(_duration_).[[Time]].
+        1. Let _durationYearsMonthsOnly_ be ! AdjustDateDurationRecord(_duration_, 0, 0).
+        1. Let _dateDuration_ be ? CreateDateDurationRecord(0, 0, _duration_.[[Weeks]], _duration_.[[Days]]).
+        1. Let _internalDuration_ be CombineDateAndTimeDuration(_dateDuration_, _time_).
+        1. Let _durationWithoutYearsMonths_ be ? TemporalDurationFromInternal(_internalDuration_, ~year~).
+        1. Let _dateDurationWithoutYearsMonths_ be ToDateDurationRecordWithoutTime(_durationWithoutYearsMonths_).
         1. Let _sign_ be DurationSign(_duration_).
         1. Let _calendar_ be _yearMonth_.[[Calendar]].
         1. Let _fields_ be ISODateToFields(_calendar_, _yearMonth_.[[ISODate]], ~year-month~).
         1. Set _fields_.[[Day]] to 1.
         1. Let _intermediateDate_ be ? CalendarDateFromFields(_calendar_, _fields_, ~constrain~).
+        1. If IsValidISODate(_intermediateDate_.[[Year]], _intermediateDate_.[[Month]], _intermediateDate_.[[Day]]) is *false*, throw a *RangeError* exception.
+        1. Let _dateWithYearMonthAdded_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _durationYearsMonthsOnly_, _overflow_).
         1. If _sign_ &lt; 0, then
-          1. Let _oneMonthDuration_ be ! CreateDateDurationRecord(0, 1, 0, 0).
-          1. Let _nextMonth_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _oneMonthDuration_, ~constrain~).
-          1. Let _date_ be BalanceISODate(_nextMonth_.[[Year]], _nextMonth_.[[Month]], _nextMonth_.[[Day]] - 1).
-          1. Assert: ISODateWithinLimits(_date_) is *true*.
+          1. Set _intermediateDate_ to CalendarDateLastDayOfMonth(_calendar_, _dateWithYearMonthAdded_).
         1. Else,
-          1. Let _date_ be _intermediateDate_.
-        1. Let _durationToAdd_ be ToDateDurationRecordWithoutTime(_duration_).
-        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _date_, _durationToAdd_, _overflow_).
+          1. Set _intermediateDate_ to _dateWithYearMonthAdded_.
+        1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _dateDurationWithoutYearsMonths_, _overflow_).
         1. Let _addedDateFields_ be ISODateToFields(_calendar_, _addedDate_, ~year-month~).
         1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _overflow_).
         1. Return ! CreateTemporalYearMonth(_isoDate_, _calendar_).
