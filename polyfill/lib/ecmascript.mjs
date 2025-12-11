@@ -489,9 +489,9 @@ export function ParseTemporalDateString(isoString) {
 
 export function ParseTemporalTimeString(isoString) {
   const match = Call(RegExpPrototypeExec, PARSE.time, [isoString]);
-  let hour, minute, second, millisecond, microsecond, nanosecond;
+  let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
   if (match) {
-    processAnnotations(match.groups.annotation); // ignore found calendar
+    calendar = processAnnotations(match.groups.annotation);
     hour = +(match.groups.hour ?? 0);
     minute = +(match.groups.minute ?? 0);
     second = +(match.groups.second ?? 0);
@@ -510,7 +510,7 @@ export function ParseTemporalTimeString(isoString) {
   RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
   // if it's a date-time string, OK
   if (Call(RegExpPrototypeTest, /[tT ][0-9][0-9]/, [isoString])) {
-    return { hour, minute, second, millisecond, microsecond, nanosecond };
+    return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
   }
   // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
   try {
@@ -521,7 +521,7 @@ export function ParseTemporalTimeString(isoString) {
       const { year, month } = ParseTemporalYearMonthString(isoString);
       RejectISODate(year, month, 1);
     } catch {
-      return { hour, minute, second, millisecond, microsecond, nanosecond };
+      return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
     }
   }
   throw new RangeErrorCtor(`invalid RFC 9557 time-only string ${isoString}; may need a T prefix`);
