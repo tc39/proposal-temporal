@@ -971,7 +971,7 @@
         1. Let _timeSign_ be TimeDurationSign(_timeDuration_).
         1. Let _dateSign_ be CompareISODate(_isoDateTime1_.[[ISODate]], _isoDateTime2_.[[ISODate]]).
         1. Let _adjustedDate_ be _isoDateTime2_.[[ISODate]].
-        1. If _timeSign_ = -_dateSign_, then
+        1. If _timeSign_ = _dateSign_, then
           1. Set _adjustedDate_ to AddDaysToISODate(_adjustedDate_, _timeSign_).
           1. Set _timeDuration_ to ! Add24HourDaysToTimeDuration(_timeDuration_, -_timeSign_).
         1. Let _dateLargestUnit_ be LargerOfTwoTemporalUnits(~day~, _largestUnit_).
