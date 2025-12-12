@@ -192,7 +192,7 @@ impl['iso8601'] = {
     month += months;
     ({ year, month } = ES.BalanceISOYearMonth(year, month));
     const intermediate = ES.RegulateISODate(year, month, day, overflow);
-    days = days + 7 * weeks;
+    days += 7 * weeks;
     return ES.AddDaysToISODate(intermediate, days);
   },
   dateUntil(one, two, largestUnit) {
