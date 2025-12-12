@@ -8343,11 +8343,12 @@
 	const daypart = /(?:0[1-9]|[12]\d|3[01])/;
 	const datesplit = new RegExp$1(Call$1(ArrayPrototypeJoin, [`(?<yearpart>${yearpart.source})`, `(?:-(?<monthpart>${monthpart.source})-`, `(?<daypart>${daypart.source})|`, `(?<monthpart>${monthpart.source})(?<daypart>${daypart.source}))`], ['']));
 	const sep = /:/;
-	const hourminute = new RegExp$1(`(?<hour>\\d{2})(?:(?:${sep.source})?(?<minute>\\d{2}))?`);
 	const timesecond = new RegExp$1('(?<second>\\d{2})');
 	const fraction = new RegExp$1('(?:[.,](?<fraction>\\d{1,9}))');
-	const secondspart = new RegExp$1(`${sep.source}?(?:${timesecond.source})(?:${fraction.source})?`);
-	const timesplit = new RegExp$1(`(?:${hourminute.source})(?:${secondspart.source})?`);
+	const secondspart = new RegExp$1(`(?:${timesecond.source})(?:${fraction.source})?`);
+	const hourminutesecondNoSep = new RegExp$1(`(?<hour>\\d{2})(?:(?<minute>\\d{2}))?(?:${secondspart.source})?`);
+	const hourminutesecondSep = new RegExp$1(`(?<hour>\\d{2})(?:${sep.source}(?<minute>\\d{2}))?(?:${sep.source}${secondspart.source})?`);
+	const timesplit = new RegExp$1(`(?:(?:${hourminutesecondSep.source})|(?:${hourminutesecondNoSep.source}))`);
 	const sign = /[+-]/;
 	const hour = /[01][0-9]|2[0-3]/;
 	const minute = /[0-5][0-9]/;
