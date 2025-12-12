@@ -24,11 +24,12 @@ export const datesplit = new RegExpCtor(
   )
 );
 const sep = /:/;
-const hourminute = new RegExpCtor(`(?<hour>\\d{2})(?:(?:${sep.source})?(?<minute>\\d{2}))?`);
 const timesecond = new RegExpCtor('(?<second>\\d{2})');
 const fraction = new RegExpCtor('(?:[.,](?<fraction>\\d{1,9}))');
-const secondspart = new RegExpCtor(`${sep.source}?(?:${timesecond.source})(?:${fraction.source})?`);
-const timesplit = new RegExpCtor(`(?:${hourminute.source})(?:${secondspart.source})?`);
+const secondspart = new RegExpCtor(`(?:${timesecond.source})(?:${fraction.source})?`);
+const hourminutesecondNoSep = new RegExpCtor(`(?<hour>\\d{2})(?:(?<minute>\\d{2}))?(?:${secondspart.source})?`);
+const hourminutesecondSep = new RegExpCtor(`(?<hour>\\d{2})(?:${sep.source}(?<minute>\\d{2}))?(?:${sep.source}${secondspart.source})?`);
+const timesplit = new RegExpCtor(`(?:(?:${hourminutesecondSep.source})|(?:${hourminutesecondNoSep.source}))`);
 const sign = /[+-]/;
 const hour = /[01][0-9]|2[0-3]/;
 const minute = /[0-5][0-9]/;
