@@ -3045,7 +3045,7 @@ export function ISODateToEpochDays(year, month, day) {
 // with no observable changes.
 function CheckISODaysRange({ year, month, day }) {
   if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
-    throw new RangeErrorCtor('date/time value is outside the supported range');
+    throw new RangeErrorCtor(`date/time value ${year}-${month}-${day} is outside the supported range`);
   }
 }
 

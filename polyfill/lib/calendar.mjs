@@ -561,6 +561,16 @@ function simpleDateDiff(one, two) {
   };
 }
 
+function clampISODate(iso) {
+  if (iso.year < -271821 || (iso.year === -271821 && (iso.month < 4 || (iso.month === 4 && iso.day < 19)))) {
+    return { year: -271821, month: 4, day: 19 };
+  }
+  if (iso.year > 275760 || (iso.year === 275760 && (iso.month > 9 || (iso.month === 9 && iso.day > 13)))) {
+    return { year: 275760, month: 9, day: 13 };
+  }
+  return iso;
+}
+
 /**
  * Implementation that's common to all non-trivial non-ISO calendars
  */
@@ -877,7 +887,7 @@ const nonIsoHelperBase = {
     }
 
     // First, try to roughly guess the result
-    let isoEstimate = this.estimateIsoDate({ year, month, day });
+    let isoEstimate = clampISODate(this.estimateIsoDate({ year, month, day }));
     const calculateSameMonthResult = (diffDays) => {
       // If the estimate is in the same year & month as the target, then we can
       // calculate the result exactly and short-circuit any additional logic.
@@ -909,7 +919,7 @@ const nonIsoHelperBase = {
     let diff = simpleDateDiff(date, roundtripEstimate);
     if (diff.years !== 0 || diff.months !== 0 || diff.days !== 0) {
       const diffTotalDaysEstimate = diff.years * 365 + diff.months * 30 + diff.days;
-      isoEstimate = addDaysISO(isoEstimate, diffTotalDaysEstimate);
+      isoEstimate = clampISODate(addDaysISO(isoEstimate, diffTotalDaysEstimate));
       roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
       diff = simpleDateDiff(date, roundtripEstimate);
       if (diff.years === 0 && diff.months === 0) {
@@ -1871,7 +1881,7 @@ const helperJapanese = ObjectAssign(
     { code: 'heisei', isoEpoch: { year: 1989, month: 1, day: 8 }, anchorEpoch: { year: 1989, month: 1, day: 8 } },
     { code: 'showa', isoEpoch: { year: 1926, month: 12, day: 25 }, anchorEpoch: { year: 1926, month: 12, day: 25 } },
     { code: 'taisho', isoEpoch: { year: 1912, month: 7, day: 30 }, anchorEpoch: { year: 1912, month: 7, day: 30 } },
-    { code: 'meiji', isoEpoch: { year: 1868, month: 9, day: 8 }, anchorEpoch: { year: 1868, month: 9, day: 8 } },
+    { code: 'meiji', isoEpoch: { year: 1868, month: 10, day: 23 }, anchorEpoch: { year: 1868, month: 10, day: 23 } },
     { code: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
     { code: 'bce', reverseOf: 'ce' }
   ]),

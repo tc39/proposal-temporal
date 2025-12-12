@@ -38,10 +38,10 @@ await time(async (start) => {
   const progress = getProgressBar(start, total);
 
   await withSnapshotsFromFile('./yearcycle.snapshot.json', (matchSnapshot) => {
-    for (let i = 0; i <= 1461; i++) {
+    for (let i = 0; i <= datesInCycle; i++) {
       const d1 = startDate.add({ days: i });
       const str1 = dateToShortString(d1);
-      for (let j = 0; j <= 1461; j++) {
+      for (let j = 0; j <= datesInCycle; j++) {
         const d2 = startDate.add({ days: j });
 
         const snapshotName = `${str1}${dateToShortString(d2)}`;
