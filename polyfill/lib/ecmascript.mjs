@@ -1722,16 +1722,17 @@ function CalendarDateLastDayOfMonth(calendar, isoDate) {
   }
   let previousIsoDate = isoDate;
   let nextIsoDate = isoDate;
-  let calendarDate = calendarImplForID(calendar).isoToDate(nextIsoDate, { daysInMonth: true });
-  while (calendarDate.day !== calendarDate.daysInMonth) {
+  let calendarDate = calendarImplForID(calendar).isoToDate(nextIsoDate, { year: true, month: true, day: true });
+  let initialMonth = calendarDate.month;
+  while (calendarDate.month === initialMonth) {
     previousIsoDate = nextIsoDate;
-    calendarDate = calendarImplForID(calendar).isoToDate(nextIsoDate, { daysInMonth: true });
     try {
       nextIsoDate = CalendarDateAdd(calendar, nextIsoDate, { days: 1 }, 'constrain');
     } catch (e) {
       // Date overflowed maximum range => consider this the last day
       break;
     }
+    calendarDate = calendarImplForID(calendar).isoToDate(nextIsoDate, { year: true, month: true, day: true });
   }
   return previousIsoDate;
 }
