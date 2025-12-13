@@ -4151,32 +4151,33 @@ export function AddDurationToTime(operation, temporalTime, durationLike) {
 export function AddDurationToYearMonth(operation, yearMonth, durationLike, options) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
-  const durationTime = ToInternalDurationRecord(duration).time;
+  const sign = DurationSign(duration);
+  duration = ToDateDurationRecordWithoutTime(duration);
   const resolvedOptions = GetOptionsObject(options);
   const overflow = GetTemporalOverflowOption(resolvedOptions);
-  const sign = DurationSign(duration);
   const durationYearsMonthsOnly = AdjustDateDurationRecord(duration, 0, 0);
-  const durationWithoutYearsMonths = ToTemporalPartialDurationRecord({
+  const durationWithoutYearsMonths = {
     years: 0,
     months: 0,
     weeks: duration.weeks,
     days: duration.days
-  });
-  const dateDurationWithoutYearsMonths = ToDateDurationRecordWithoutTime(
-    TemporalDurationFromInternal(CombineDateAndTimeDuration(durationWithoutYearsMonths, durationTime), 'year')
-  );
+  };
   const calendar = GetSlot(yearMonth, CALENDAR);
   const fields = ISODateToFields(calendar, GetSlot(yearMonth, ISO_DATE), 'year-month');
   fields.day = 1;
   let startDate = CalendarDateFromFields(calendar, fields, 'constrain');
   RejectDateRange(startDate);
   const dateWithYearMonthAdded = CalendarDateAdd(calendar, startDate, durationYearsMonthsOnly, overflow);
-  if (sign < 0) {
-    startDate = CalendarDateLastDayOfMonth(calendar, dateWithYearMonthAdded);
-  } else {
-    startDate = dateWithYearMonthAdded;
-  }
-  const addedDate = CalendarDateAdd(calendar, startDate, dateDurationWithoutYearsMonths, overflow);
+  let addedDate;
+  if (!(durationWithoutYearsMonths.weeks === 0 && durationWithoutYearsMonths.days === 0)) {
+    if (sign < 0) {
+      startDate = CalendarDateLastDayOfMonth(calendar, dateWithYearMonthAdded);
+    } else {
+      startDate = dateWithYearMonthAdded;
+    }
+    addedDate = CalendarDateAdd(calendar, startDate, durationWithoutYearsMonths, overflow);
+  } else
+    addedDate = dateWithYearMonthAdded;
   const addedDateFields = ISODateToFields(calendar, addedDate, 'year-month');
   const isoDate = CalendarYearMonthFromFields(calendar, addedDateFields, overflow);
   return CreateTemporalYearMonth(isoDate, calendar);
