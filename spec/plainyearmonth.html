@@ -652,14 +652,14 @@
         1. If IsValidISODate(_intermediateDate_.[[Year]], _intermediateDate_.[[Month]], _intermediateDate_.[[Day]]) is *false*, throw a *RangeError* exception.
         1. Let _dateWithYearMonthAdded_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _durationYearsMonthsOnly_, _overflow_).
         1. Let _addedDate_ be ~unset~.
-        1. If _durationWithoutYearsMonths_.[[Weeks]] is not equal to 0 or _durationWithoutYearsMonths_.[[Days]] is not equal to 0,
+        1. If _durationWithoutYearsMonths_.[[Weeks]] is not equal to 0 or _durationWithoutYearsMonths_.[[Days]] is not equal to 0, then
           1. If _sign_ &lt; 0, then
             1. Set _intermediateDate_ to CalendarDateLastDayOfMonth(_calendar_, _dateWithYearMonthAdded_).
           1. Else,
             1. Set _intermediateDate_ to _dateWithYearMonthAdded_.
-          1. Let _addedDate_ be ? CalendarDateAdd(_calendar_, _intermediateDate_, _dateDurationWithoutYearsMonths_, _overflow_).
+          1. Set _addedDate_ to ? CalendarDateAdd(_calendar_, _intermediateDate_, _durationWithoutYearsMonths_, _overflow_).
         1. Else,
-          1. Let _addedDate_ be _dateWithYearMonthAdded_.
+          1. Set _addedDate_ to _dateWithYearMonthAdded_.
         1. Let _addedDateFields_ be ISODateToFields(_calendar_, _addedDate_, ~year-month~).
         1. Let _isoDate_ be ? CalendarYearMonthFromFields(_calendar_, _addedDateFields_, _overflow_).
         1. Return ! CreateTemporalYearMonth(_isoDate_, _calendar_).
