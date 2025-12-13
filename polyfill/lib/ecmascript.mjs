@@ -2378,8 +2378,7 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
     time: { millisecond, microsecond, nanosecond }
   } = GetISOPartsFromEpoch(epochNanoseconds);
   const { year, month, day, hour, minute, second } = GetFormatterParts(id, epochMilliseconds);
-  const balancedTime = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  return CombineISODateAndTimeRecord({ year, month, day }, balancedTime);
+  return BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
 // Most time zones never transition twice within a short span of days. We still
