@@ -4176,8 +4176,9 @@ export function AddDurationToYearMonth(operation, yearMonth, durationLike, optio
       startDate = dateWithYearMonthAdded;
     }
     addedDate = CalendarDateAdd(calendar, startDate, durationWithoutYearsMonths, overflow);
-  } else
+  } else {
     addedDate = dateWithYearMonthAdded;
+  }
   const addedDateFields = ISODateToFields(calendar, addedDate, 'year-month');
   const isoDate = CalendarYearMonthFromFields(calendar, addedDateFields, overflow);
   return CreateTemporalYearMonth(isoDate, calendar);
