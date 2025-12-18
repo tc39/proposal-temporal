@@ -759,7 +759,10 @@ const nonIsoHelperBase = {
           if (e.reverseOf) {
             // This is a reverse-sign era (like BCE) which must be the oldest
             // era. Count years backwards.
-            if (year > 0) throw new RangeErrorCtor(`Signed year ${year} is invalid for era ${e.name}`);
+            // The year must be negative, because the reverse-sign era is always last,
+            // and if the year was positive, the (comparison >= 0) would have been true
+            // and this closure would already have returned true
+            assert(year <= 0, "year must not be positive in eraFromYear");
             eraYear = e.anchorEpoch.year - year;
             return true;
           }
@@ -776,7 +779,8 @@ const nonIsoHelperBase = {
         return false;
       }
     ]);
-    if (ix === -1) throw new RangeErrorCtor(`Year ${year} was not matched by any era`);
+    // Last era in the list should always match if no other era does
+    assert(ix >= 0, `Year ${year} was not matched by any era`);
     let matchingEra = this.eras[ix];
     if (matchingEra.skip) matchingEra = this.eras[ix - 1];
     return { eraYear, era: matchingEra.code };
