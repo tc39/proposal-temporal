@@ -132,19 +132,11 @@ function calendarDateWeekOfYear(id, isoDate) {
   return { week: woy, year: yow };
 }
 
-function ISODateSurpasses(sign, baseDate, isoDate2, years, months, weeks, days) {
+function ISODateSurpasses(sign, baseDate, isoDate2, years, months) {
   const yearMonth = ES.BalanceISOYearMonth(baseDate.year + years, baseDate.month + months);
   let y1 = yearMonth.year;
   let m1 = yearMonth.month;
   let d1 = baseDate.day;
-  if (weeks !== 0 || days !== 0) {
-    const regulatedDate = ES.RegulateISODate(y1, m1, d1, 'constrain');
-    ({
-      year: y1,
-      month: m1,
-      day: d1
-    } = ES.BalanceISODate(regulatedDate.year, regulatedDate.month, regulatedDate.day + 7 * weeks + days));
-  }
   if (y1 !== isoDate2.year) {
     if (sign * (y1 - isoDate2.year) > 0) return true;
   } else if (m1 !== isoDate2.month) {
