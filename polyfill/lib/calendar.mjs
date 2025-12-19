@@ -2052,7 +2052,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
     let { year, month, monthExtra, day, monthCode } = calendarDate;
-    assert(year, `adjustCalendarDate called on date ${calendarDate} with undefined year property`);
+    assert(year !== undefined, `adjustCalendarDate called on date ${calendarDate} with undefined year property`);
     if (fromLegacyDate) {
       // Legacy Date output returns a string that's an integer with an optional
       // "bis" suffix used only by the Chinese/Dangi calendar to indicate a leap
