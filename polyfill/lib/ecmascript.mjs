@@ -204,10 +204,7 @@ export function ToIntegerWithTruncation(value) {
 export function ToPositiveIntegerWithTruncation(value, property) {
   const integer = ToIntegerWithTruncation(value);
   if (integer <= 0) {
-    if (property !== undefined) {
       throw new RangeErrorCtor(`property '${property}' cannot be a a number less than one`);
-    }
-    throw new RangeErrorCtor('Cannot convert a number less than one to a positive integer');
   }
   return integer;
 }
@@ -263,9 +260,9 @@ const BUILTIN_CASTS = new MapCtor([
   ['era', ToString],
   ['eraYear', ToIntegerWithTruncation],
   ['year', ToIntegerWithTruncation],
-  ['month', ToPositiveIntegerWithTruncation],
+  ['month', (value) => ToPositiveIntegerWithTruncation(value, 'month')],
   ['monthCode', ToMonthCode],
-  ['day', ToPositiveIntegerWithTruncation],
+  ['day', (value) => ToPositiveIntegerWithTruncation(value, 'day')],
   ['hour', ToIntegerWithTruncation],
   ['minute', ToIntegerWithTruncation],
   ['second', ToIntegerWithTruncation],
