@@ -2052,7 +2052,10 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   },
   adjustCalendarDate(calendarDate, cache, overflow = 'constrain', fromLegacyDate = false) {
     let { year, month, monthExtra, day, monthCode } = calendarDate;
-    assert(year !== undefined, `adjustCalendarDate called on date ${calendarDate} with undefined year property`);
+    assert(
+      year !== undefined,
+      `adjustCalendarDate called on date ${JSONStringify(calendarDate)} with undefined year property`
+    );
     if (fromLegacyDate) {
       // Legacy Date output returns a string that's an integer with an optional
       // "bis" suffix used only by the Chinese/Dangi calendar to indicate a leap
@@ -2096,7 +2099,10 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         const months = this.getMonthList(year, cache);
         const monthIndex = months[monthCode];
         assert(monthIndex, `Unmatched monthCode ${monthCode} in ${this.id} year ${year}`);
-        assert(month === monthIndex, `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`);
+        assert(
+          month === monthIndex,
+          `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`
+        );
       }
       return { ...calendarDate, year, month, monthCode, day };
     }
