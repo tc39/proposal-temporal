@@ -56,9 +56,9 @@ export class Duration {
   ) {
     years = ES.ToIntegerIfIntegral(years);
     months = ES.ToIntegerIfIntegral(months);
-    weeks =  ES.ToIntegerIfIntegral(weeks);
-    days =  ES.ToIntegerIfIntegral(days);
-    hours =  ES.ToIntegerIfIntegral(hours);
+    weeks = ES.ToIntegerIfIntegral(weeks);
+    days = ES.ToIntegerIfIntegral(days);
+    hours = ES.ToIntegerIfIntegral(hours);
     minutes = ES.ToIntegerIfIntegral(minutes);
     seconds = ES.ToIntegerIfIntegral(seconds);
     milliseconds = ES.ToIntegerIfIntegral(milliseconds);
