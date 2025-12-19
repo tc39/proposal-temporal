@@ -1186,9 +1186,6 @@ const nonIsoHelperBase = {
   startOfCalendarYear(calendarDate) {
     return { year: calendarDate.year, month: 1, monthCode: 'M01', day: 1 };
   },
-  startOfCalendarMonth(calendarDate) {
-    return { year: calendarDate.year, month: calendarDate.month, day: 1 };
-  },
   calendarDaysUntil(calendarOne, calendarTwo, cache) {
     const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', cache);
     const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', cache);
