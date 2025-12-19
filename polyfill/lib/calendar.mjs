@@ -1373,7 +1373,8 @@ const helperHebrew = makeNonISOHelper([{ code: 'am', isoEpoch: { year: -3760, mo
           // if leap month is before this one, the month index is one more than the month code
           if (this.inLeapYear({ year }) && month >= 6) month++;
           const largestMonth = this.monthsInYear({ year });
-          if (month < 1 || month > largestMonth) throw new RangeErrorCtor(`Invalid monthCode: ${monthCode}`);
+          // The earlier call to validateCalendarDate guarantees this.
+          assert(month >= 1 && month <= largestMonth, `invalid monthCode: ${monthCode}`);
         }
       } else {
         if (overflow === 'reject') {
