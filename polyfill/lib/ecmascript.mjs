@@ -204,7 +204,7 @@ export function ToIntegerWithTruncation(value) {
 export function ToPositiveIntegerWithTruncation(value, property) {
   const integer = ToIntegerWithTruncation(value);
   if (integer <= 0) {
-      throw new RangeErrorCtor(`property '${property}' cannot be a a number less than one`);
+    throw new RangeErrorCtor(`property '${property}' cannot be a a number less than one`);
   }
   return integer;
 }
