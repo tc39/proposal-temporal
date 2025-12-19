@@ -1951,7 +1951,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     }
   },
   getMonthList(calendarYear, cache) {
-    assert(calendarYear, 'getMonthList called on undefined year');
+    assert(calendarYear !== undefined, 'getMonthList called on undefined year');
     const key = OneObjectCache.generateMonthListKey(calendarYear);
     const cached = cache.get(key);
     if (cached) return cached;
