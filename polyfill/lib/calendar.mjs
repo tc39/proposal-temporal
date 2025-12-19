@@ -762,7 +762,7 @@ const nonIsoHelperBase = {
             // The year must be negative, because the reverse-sign era is always last,
             // and if the year was positive, the (comparison >= 0) would have been true
             // and this closure would already have returned true
-            assert(year <= 0, "year must not be positive in eraFromYear");
+            assert(year <= 0, 'year must not be positive in eraFromYear');
             eraYear = e.anchorEpoch.year - year;
             return true;
           }
