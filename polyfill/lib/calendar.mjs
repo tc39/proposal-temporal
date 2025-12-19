@@ -2061,9 +2061,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       const monthCode = CreateMonthCode(month, monthExtra !== undefined);
       const months = this.getMonthList(year, cache);
       month = months[monthCode];
-      if (month === undefined) {
-        throw new RangeErrorCtor(`Unmatched month ${month}${monthExtra || ''} in ${this.id} year ${year}`);
-      }
+      assert(month !== undefined, `Unmatched month ${month}${monthExtra || ''} in ${this.id} year ${year}`);
       return { year, month, day, monthCode };
     } else {
       // When called without input coming from legacy Date output,
@@ -2080,9 +2078,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           month = months[adjustedMonthCode];
           monthCode = adjustedMonthCode;
         }
-        if (month === undefined) {
-          throw new RangeErrorCtor(`Unmatched month ${monthCode} in ${this.id} year ${year}`);
-        }
+        assert(month !== undefined, `Unmatched month ${monthCode} in ${this.id} year ${year}`);
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
         const largestMonth = months.monthsInYear;
@@ -2094,19 +2090,13 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           day = ES.ConstrainToRange(day, 1, this.maximumMonthLength());
         }
         monthCode = months[month].monthCode;
-        if (monthCode === undefined) {
-          throw new RangeErrorCtor(`Invalid month ${month} in ${this.id} year ${year}`);
-        }
+        assert(monthCode !== undefined, `Invalid month ${month} in ${this.id} year ${year}`);
       } else {
         // Both month and monthCode are present. Make sure they don't conflict.
         const months = this.getMonthList(year, cache);
         const monthIndex = months[monthCode];
-        if (!monthIndex) throw new RangeErrorCtor(`Unmatched monthCode ${monthCode} in ${this.id} year ${year}`);
-        if (month !== monthIndex) {
-          throw new RangeErrorCtor(
-            `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`
-          );
-        }
+        assert(monthIndex, `Unmatched monthCode ${monthCode} in ${this.id} year ${year}`);
+        assert(month === monthIndex, `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`);
       }
       return { ...calendarDate, year, month, monthCode, day };
     }
