@@ -434,8 +434,9 @@ export function ParseISODateTime(isoString) {
   let yearString = match.groups.yearpart;
   if (yearString === '-000000') throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}`);
   const year = +yearString;
-  const month = +(match.groups.monthpart ?? 1);
-  const day = +(match.groups.daypart ?? 1);
+  const month = +match.groups.monthpart;
+  const day = +match.groups.daypart;
+  assert(month !== undefined && day !== undefined, `Month and day must be present if string ${isoString} matched`);
   const hasTime = match.groups.hour !== undefined;
   const hour = +(match.groups.hour ?? 0);
   const minute = +(match.groups.minute ?? 0);
