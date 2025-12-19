@@ -2081,7 +2081,9 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
           month = months[adjustedMonthCode];
           monthCode = adjustedMonthCode;
         }
-        assert(month !== undefined, `Unmatched month ${monthCode} in ${this.id} year ${year}`);
+        if (month === undefined) {
+          throw new RangeErrorCtor(`Unmatched month ${monthCode} in ${this.id} year ${year}`);
+        }
       } else if (monthCode === undefined) {
         const months = this.getMonthList(year, cache);
         const largestMonth = months.monthsInYear;
@@ -2099,10 +2101,11 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
         const months = this.getMonthList(year, cache);
         const monthIndex = months[monthCode];
         assert(monthIndex, `Unmatched monthCode ${monthCode} in ${this.id} year ${year}`);
-        assert(
-          month === monthIndex,
-          `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`
-        );
+        if (month !== monthIndex) {
+          throw new RangeErrorCtor(
+            `monthCode ${monthCode} doesn't correspond to month ${month} in ${this.id} year ${year}`
+          );
+        }
       }
       return { ...calendarDate, year, month, monthCode, day };
     }
