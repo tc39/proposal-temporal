@@ -1509,7 +1509,7 @@ const helperIndian = makeNonISOHelper([{ code: 'shaka', isoEpoch: { year: 79, mo
   getMonthInfo(calendarDate) {
     const { month } = calendarDate;
     let monthInfo = this.months[month];
-    if (monthInfo === undefined) throw new RangeErrorCtor(`Invalid month: ${month}`);
+    assert(monthInfo, `getMonthInfo called on date with invalid month ${month}`);
     if (this.inLeapYear(calendarDate) && monthInfo.leap) monthInfo = monthInfo.leap;
     return monthInfo;
   },
@@ -1888,9 +1888,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   daysInMonth(calendarDate, cache) {
     const { month, year } = calendarDate;
     const matchingMonthEntry = this.getMonthList(year, cache)[month];
-    if (matchingMonthEntry === undefined) {
-      throw new RangeErrorCtor(`Invalid month ${month} in ${this.id} year ${year}`);
-    }
+    assert(matchingMonthEntry, `Invalid month ${month} in ${this.id} year ${year}`);
     return matchingMonthEntry.daysInMonth;
   },
   daysInPreviousMonth(calendarDate, cache) {
