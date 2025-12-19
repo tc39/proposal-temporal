@@ -493,7 +493,8 @@ export function ParseTemporalTimeString(isoString) {
   let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
   if (match) {
     calendar = processAnnotations(match.groups.annotation);
-    hour = +(match.groups.hour ?? 0);
+    hour = +match.groups.hour;
+    assert(hour !== undefined, `Hour must be present if string ${isoString} matched`);
     minute = +(match.groups.minute ?? 0);
     second = +(match.groups.second ?? 0);
     if (second === 60) second = 59;
