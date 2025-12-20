@@ -1267,14 +1267,7 @@ export function ToTemporalInstant(item) {
   }
   const { year, month, day, time, offset, z } = ParseTemporalInstantString(RequireString(item));
   assert(time !== 'start-of-day', 'Instant string must include a time');
-  const {
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millisecond = 0,
-    microsecond = 0,
-    nanosecond = 0
-  } = time;
+  const { hour = 0, minute = 0, second = 0, millisecond = 0, microsecond = 0, nanosecond = 0 } = time;
 
   // ParseTemporalInstantString ensures that either `z` is true or or `offset` is non-undefined
   const offsetNanoseconds = z ? 0 : ParseDateTimeUTCOffset(offset);
