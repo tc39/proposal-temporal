@@ -2861,7 +2861,7 @@ export function RejectDuration(y, mon, w, d, h, min, s, ms, µs, ns) {
   const fields = [y, mon, w, d, h, min, s, ms, µs, ns];
   for (let index = 0; index < fields.length; index++) {
     const prop = fields[index];
-    if (!NumberIsFinite(prop)) throw new RangeErrorCtor('infinite values not allowed as duration fields');
+    assert(NumberIsFinite(prop), 'infinite values not allowed as duration fields');
     const propSign = MathSign(prop);
     if (propSign !== 0) {
       if (sign !== 0 && propSign !== sign) throw new RangeErrorCtor('mixed-sign values not allowed as duration fields');
