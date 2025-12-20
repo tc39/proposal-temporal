@@ -2630,7 +2630,7 @@ function InternalDurationSign(duration) {
 }
 
 export function BalanceISOYearMonth(year, month) {
-  if (!NumberIsFinite(year) || !NumberIsFinite(month)) throw new RangeErrorCtor('infinity is out of range');
+  assert(NumberIsFinite(year) && NumberIsFinite(month), 'BalanceISOYearMonth: infinity is out of range');
   month -= 1;
   year += MathFloor(month / 12);
   month %= 12;
@@ -2640,7 +2640,7 @@ export function BalanceISOYearMonth(year, month) {
 }
 
 export function BalanceISODate(year, month, day) {
-  if (!NumberIsFinite(day)) throw new RangeErrorCtor('infinity is out of range');
+  assert(NumberIsFinite(day), 'BalanceISODate: infinity is out of range');
   ({ year, month } = BalanceISOYearMonth(year, month));
 
   // The pattern of leap years in the ISO 8601 calendar repeats every 400
