@@ -751,7 +751,7 @@ export function ToTemporalPartialDurationRecord(temporalDurationLike) {
   return result;
 }
 
-export function AdjustDateDurationRecord({ years, months, weeks, days }, newDays, newWeeks, newMonths) {
+export function AdjustDateDurationRecord({ years, months, weeks }, newDays, newWeeks, newMonths) {
   assert(newDays !== undefined, 'days must be provided to AdjustDateDurationRecord');
   return {
     years,
