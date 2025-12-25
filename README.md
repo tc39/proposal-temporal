@@ -14,7 +14,7 @@ Additional tests and documentation content are also being added during Stage 3.
 Implementation status:
 
 - [SpiderMonkey/Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1912511): [shipped](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/139#javascript) in Firefox 139 (on 2025-05-27)
-- [V8/Chrome](https://crbug.com/42201538): [planned to ship](https://developer.chrome.com/blog/chrome-144-beta#the_temporal_api) in Chrome 144 (on ⁨2026-01-13⁩)
+- [V8/Chrome](https://crbug.com/42201538): [planned to ship](https://developer.chrome.com/blog/chrome-144-beta#the_temporal_api) in Chrome 144 (on 2026-01-13)
 - [Node.js](https://github.com/nodejs/node/issues/57127)
 - [JavaScriptCore/Safari](https://bugs.webkit.org/show_bug.cgi?id=223166)
 - [Boa](https://github.com/boa-dev/boa/issues/1804)
