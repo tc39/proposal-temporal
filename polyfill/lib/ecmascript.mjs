@@ -436,6 +436,12 @@ export function ParseISODateTime(isoString) {
   const day = +match.groups.daypart;
   assert(month !== undefined && day !== undefined, `Month and day must be present if string ${isoString} matched`);
   const hasTime = match.groups.hour !== undefined;
+  const hasMinute = match.groups.minute !== undefined;
+  const hasSecond = match.groups.second !== undefined;
+  const hasFraction = match.groups.fraction !== undefined;
+  if (hasFraction && (!hasSecond || (!hasMinute && hasTime))) {
+    throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}, only seconds may be fractional`);
+  }
   const hour = +(match.groups.hour ?? 0);
   const minute = +(match.groups.minute ?? 0);
   let second = +(match.groups.second ?? 0);
@@ -491,6 +497,13 @@ export function ParseTemporalTimeString(isoString) {
   let hour, minute, second, millisecond, microsecond, nanosecond, calendar;
   if (match) {
     calendar = processAnnotations(match.groups.annotation);
+    const hasFraction = match.groups.fraction !== undefined;
+    const hasSecond = match.groups.second !== undefined;
+    const hasMinute = match.groups.minute !== undefined;
+    const hasHour = match.groups.hour !== undefined;
+    if (hasFraction && (!hasSecond || (!hasMinute && hasHour))) {
+      throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}, only seconds may be fractional`);
+    }
     hour = +match.groups.hour;
     assert(hour !== undefined, `Hour must be present if string ${isoString} matched`);
     minute = +(match.groups.minute ?? 0);
