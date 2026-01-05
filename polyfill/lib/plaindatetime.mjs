@@ -29,13 +29,13 @@ export class PlainDateTime {
     const year = ES.ToIntegerWithTruncation(isoYear);
     const month = ES.ToIntegerWithTruncation(isoMonth);
     const day = ES.ToIntegerWithTruncation(isoDay);
-    hour = hour === undefined ? 0 : ES.ToIntegerWithTruncation(hour);
-    minute = minute === undefined ? 0 : ES.ToIntegerWithTruncation(minute);
-    second = second === undefined ? 0 : ES.ToIntegerWithTruncation(second);
-    millisecond = millisecond === undefined ? 0 : ES.ToIntegerWithTruncation(millisecond);
-    microsecond = microsecond === undefined ? 0 : ES.ToIntegerWithTruncation(microsecond);
-    nanosecond = nanosecond === undefined ? 0 : ES.ToIntegerWithTruncation(nanosecond);
-    calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
+    hour = ES.ToIntegerWithTruncation(hour);
+    minute = ES.ToIntegerWithTruncation(minute);
+    second = ES.ToIntegerWithTruncation(second);
+    millisecond = ES.ToIntegerWithTruncation(millisecond);
+    microsecond = ES.ToIntegerWithTruncation(microsecond);
+    nanosecond = ES.ToIntegerWithTruncation(nanosecond);
+    calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
 
     ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);

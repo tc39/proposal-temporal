@@ -35,7 +35,7 @@ export class ZonedDateTime {
     } else {
       timeZone = ES.FormatOffsetTimeZoneIdentifier(offsetMinutes);
     }
-    calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
+    calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
 
     ES.CreateTemporalZonedDateTimeSlots(this, epochNanoseconds, timeZone, calendar);
