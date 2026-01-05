@@ -583,7 +583,7 @@ function toDateTimeFormattable(value) {
 }
 
 function sameTemporalType(x, y) {
-  if (!isTemporalObject(x) || !isTemporalObject(y)) return false;
+  assert(isTemporalObject(x) && isTemporalObject(y));
   if (ES.IsTemporalTime(x) && !ES.IsTemporalTime(y)) return false;
   if (ES.IsTemporalDate(x) && !ES.IsTemporalDate(y)) return false;
   if (ES.IsTemporalDateTime(x) && !ES.IsTemporalDateTime(y)) return false;
