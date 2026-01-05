@@ -440,7 +440,7 @@ export class ZonedDateTime {
       directionParam = ES.GetOptionsObject(directionParam);
     }
     const direction = ES.GetDirectionOption(directionParam);
-    if (direction === undefined) throw new TypeErrorCtor('direction option is required');
+    assert(direction !== undefined);
 
     // Offset time zones or UTC have no transitions
     if (ES.IsOffsetTimeZoneIdentifier(timeZone) || timeZone === 'UTC') {
