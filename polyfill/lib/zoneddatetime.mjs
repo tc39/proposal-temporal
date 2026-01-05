@@ -394,10 +394,6 @@ export class ZonedDateTime {
     }
 
     optionsCopy.timeZone = GetSlot(this, TIME_ZONE);
-    if (ES.IsOffsetTimeZoneIdentifier(optionsCopy.timeZone)) {
-      // Note: https://github.com/tc39/ecma402/issues/683 will remove this
-      throw new RangeErrorCtor('toLocaleString does not currently support offset time zones');
-    }
 
     const formatter = new DateTimeFormat(locales, optionsCopy);
 
