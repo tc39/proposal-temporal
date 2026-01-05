@@ -9,7 +9,7 @@ export class PlainMonthDay {
   constructor(isoMonth, isoDay, calendar = 'iso8601', referenceISOYear = 1972) {
     const month = ES.ToIntegerWithTruncation(isoMonth);
     const day = ES.ToIntegerWithTruncation(isoDay);
-    calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
+    calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
     const year = ES.ToIntegerWithTruncation(referenceISOYear);
 
