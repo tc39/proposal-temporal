@@ -42,7 +42,7 @@ export function TruncatingDivModByPowerOf10(x, p) {
 export function FMAPowerOf10(x, p, z) {
   if (x === 0) return z;
 
-  const sign = MathSign(x) || MathSign(z);
+  const sign = MathSign(x);
   x = MathAbs(x);
   z = MathAbs(z);
 
