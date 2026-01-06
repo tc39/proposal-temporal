@@ -16380,13 +16380,13 @@
 	    const year = ToIntegerWithTruncation(isoYear);
 	    const month = ToIntegerWithTruncation(isoMonth);
 	    const day = ToIntegerWithTruncation(isoDay);
-	    hour = hour === undefined ? 0 : ToIntegerWithTruncation(hour);
-	    minute = minute === undefined ? 0 : ToIntegerWithTruncation(minute);
-	    second = second === undefined ? 0 : ToIntegerWithTruncation(second);
-	    millisecond = millisecond === undefined ? 0 : ToIntegerWithTruncation(millisecond);
-	    microsecond = microsecond === undefined ? 0 : ToIntegerWithTruncation(microsecond);
-	    nanosecond = nanosecond === undefined ? 0 : ToIntegerWithTruncation(nanosecond);
-	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
+	    hour = ToIntegerWithTruncation(hour);
+	    minute = ToIntegerWithTruncation(minute);
+	    second = ToIntegerWithTruncation(second);
+	    millisecond = ToIntegerWithTruncation(millisecond);
+	    microsecond = ToIntegerWithTruncation(microsecond);
+	    nanosecond = ToIntegerWithTruncation(nanosecond);
+	    calendar = RequireString(calendar);
 	    calendar = CanonicalizeCalendar(calendar);
 	    RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
 	    CreateTemporalDateTimeSlots(this, {
@@ -17077,7 +17077,7 @@
 	    let referenceISOYear = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1972;
 	    const month = ToIntegerWithTruncation(isoMonth);
 	    const day = ToIntegerWithTruncation(isoDay);
-	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
+	    calendar = RequireString(calendar);
 	    calendar = CanonicalizeCalendar(calendar);
 	    const year = ToIntegerWithTruncation(referenceISOYear);
 	    RejectISODate(year, month, day);
@@ -17219,12 +17219,12 @@
 	    let isoMillisecond = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 	    let isoMicrosecond = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
 	    let isoNanosecond = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
-	    const hour = isoHour === undefined ? 0 : ToIntegerWithTruncation(isoHour);
-	    const minute = isoMinute === undefined ? 0 : ToIntegerWithTruncation(isoMinute);
-	    const second = isoSecond === undefined ? 0 : ToIntegerWithTruncation(isoSecond);
-	    const millisecond = isoMillisecond === undefined ? 0 : ToIntegerWithTruncation(isoMillisecond);
-	    const microsecond = isoMicrosecond === undefined ? 0 : ToIntegerWithTruncation(isoMicrosecond);
-	    const nanosecond = isoNanosecond === undefined ? 0 : ToIntegerWithTruncation(isoNanosecond);
+	    const hour = ToIntegerWithTruncation(isoHour);
+	    const minute = ToIntegerWithTruncation(isoMinute);
+	    const second = ToIntegerWithTruncation(isoSecond);
+	    const millisecond = ToIntegerWithTruncation(isoMillisecond);
+	    const microsecond = ToIntegerWithTruncation(isoMicrosecond);
+	    const nanosecond = ToIntegerWithTruncation(isoNanosecond);
 	    RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 	    const time = {
 	      hour,
@@ -17385,7 +17385,7 @@
 	    let referenceISODay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
 	    const year = ToIntegerWithTruncation(isoYear);
 	    const month = ToIntegerWithTruncation(isoMonth);
-	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
+	    calendar = RequireString(calendar);
 	    calendar = CanonicalizeCalendar(calendar);
 	    const day = ToIntegerWithTruncation(referenceISODay);
 	    RejectISODate(year, month, day);
@@ -17568,7 +17568,7 @@
 	    } else {
 	      timeZone = FormatOffsetTimeZoneIdentifier(offsetMinutes);
 	    }
-	    calendar = calendar === undefined ? 'iso8601' : RequireString(calendar);
+	    calendar = RequireString(calendar);
 	    calendar = CanonicalizeCalendar(calendar);
 	    CreateTemporalZonedDateTimeSlots(this, epochNanoseconds, timeZone, calendar);
 	  }
