@@ -11234,7 +11234,7 @@
 	    day
 	  } = _ref7;
 	  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
-	    throw new RangeError$1('date/time value is outside the supported range');
+	    throw new RangeError$1(`date/time value ${year}-${month}-${day} is outside the supported range`);
 	  }
 	}
 	function DifferenceTime(time1, time2) {
@@ -12974,6 +12974,23 @@
 	    days: one.day - two.day
 	  };
 	}
+	function clampISODate(iso) {
+	  if (iso.year < -271821 || iso.year === -271821 && (iso.month < 4 || iso.month === 4 && iso.day < 19)) {
+	    return {
+	      year: -271821,
+	      month: 4,
+	      day: 19
+	    };
+	  }
+	  if (iso.year > 275760 || iso.year === 275760 && (iso.month > 9 || iso.month === 9 && iso.day > 13)) {
+	    return {
+	      year: 275760,
+	      month: 9,
+	      day: 13
+	    };
+	  }
+	  return iso;
+	}
 
 	/**
 	 * Implementation that's common to all non-trivial non-ISO calendars
@@ -13348,11 +13365,11 @@
 	    }
 
 	    // First, try to roughly guess the result
-	    let isoEstimate = this.estimateIsoDate({
+	    let isoEstimate = clampISODate(this.estimateIsoDate({
 	      year,
 	      month,
 	      day
-	    });
+	    }));
 	    const calculateSameMonthResult = diffDays => {
 	      // If the estimate is in the same year & month as the target, then we can
 	      // calculate the result exactly and short-circuit any additional logic.
@@ -13384,7 +13401,7 @@
 	    let diff = simpleDateDiff(date, roundtripEstimate);
 	    if (diff.years !== 0 || diff.months !== 0 || diff.days !== 0) {
 	      const diffTotalDaysEstimate = diff.years * 365 + diff.months * 30 + diff.days;
-	      isoEstimate = addDaysISO(isoEstimate, diffTotalDaysEstimate);
+	      isoEstimate = clampISODate(addDaysISO(isoEstimate, diffTotalDaysEstimate));
 	      roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
 	      diff = simpleDateDiff(date, roundtripEstimate);
 	      if (diff.years === 0 && diff.months === 0) {
@@ -14737,13 +14754,13 @@
 	  code: 'meiji',
 	  isoEpoch: {
 	    year: 1868,
-	    month: 9,
-	    day: 8
+	    month: 10,
+	    day: 23
 	  },
 	  anchorEpoch: {
 	    year: 1868,
-	    month: 9,
-	    day: 8
+	    month: 10,
+	    day: 23
 	  }
 	}, {
 	  code: 'ce',
@@ -15699,6 +15716,7 @@
 	    }
 	  };
 	  const options = amend(originalOptions, {
+	    era: false,
 	    year: false,
 	    hour: false,
 	    minute: false,
