@@ -24,8 +24,6 @@ intl402/Temporal/PlainDateTime/prototype/monthCode/chinese-calendar-dates.js
 intl402/Temporal/PlainMonthDay/prototype/monthCode/chinese-calendar-dates.js
 intl402/Temporal/PlainYearMonth/prototype/monthCode/chinese-calendar-dates.js
 intl402/Temporal/ZonedDateTime/prototype/monthCode/chinese-calendar-dates.js
-# https://unicode-org.atlassian.net/browse/ICU-22230
-staging/sm/Temporal/PlainMonthDay/from-chinese-leap-month-uncommon.js
 # https://unicode-org.atlassian.net/browse/ICU-23285
 intl402/Temporal/PlainDate/prototype/daysInYear/basic-chinese.js
 intl402/Temporal/PlainDateTime/prototype/daysInYear/basic-chinese.js
