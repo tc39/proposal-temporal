@@ -315,7 +315,18 @@ const dateTime = (z, timeRequired) =>
   );
 const annotatedTime = choice(
   seq(timeDesignator, time, [dateTimeUTCOffset(false)], [timeZoneAnnotation], [annotations]),
-  seq(time, [dateTimeUTCOffset(false)], [timeZoneAnnotation], [annotations])
+  seq(
+    withSyntaxConstraints(seq(time, [dateTimeUTCOffset(false)]), (result) => {
+      if (/^(?:(?!02-?30)(?:0[1-9]|1[012])-?(?:0[1-9]|[12][0-9]|30)|(?:0[13578]|10|12)-?31)$/.test(result)) {
+        throw new SyntaxError('valid PlainMonthDay');
+      }
+      if (/^(?!-000000)(?:[0-9]{4}|[+-][0-9]{6})-?(?:0[1-9]|1[012])$/.test(result)) {
+        throw new SyntaxError('valid PlainYearMonth');
+      }
+    }),
+    [timeZoneAnnotation],
+    [annotations]
+  )
 );
 const annotatedDateTime = (zoned, timeRequired) =>
   seq(dateTime(zoned, timeRequired), zoned ? timeZoneAnnotation : [timeZoneAnnotation], [annotations]);
@@ -451,20 +462,7 @@ const goals = {
   DateTime: annotatedDateTime(false, false),
   Duration: duration,
   MonthDay: choice(annotatedMonthDay, annotatedDateTime(false, false)),
-  Time: withSyntaxConstraints(choice(annotatedTime, annotatedDateTime(false, true)), (result) => {
-    try {
-      ES.ParseTemporalMonthDayString(result);
-      throw new SyntaxError('valid PlainMonthDay');
-    } catch (e) {
-      if (e instanceof SyntaxError) throw e;
-    }
-    try {
-      ES.ParseTemporalYearMonthString(result);
-      throw new SyntaxError('valid PlainYearMonth');
-    } catch (e) {
-      if (e instanceof SyntaxError) throw e;
-    }
-  }),
+  Time: choice(annotatedTime, annotatedDateTime(false, true)),
   TimeZone: choice(timeZoneIdentifier, zonedDateTime, instant),
   YearMonth: choice(annotatedYearMonth, annotatedDateTime(false, false)),
   ZonedDateTime: zonedDateTime
