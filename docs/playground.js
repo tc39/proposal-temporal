@@ -13729,13 +13729,6 @@
 	      day: 1
 	    };
 	  },
-	  startOfCalendarMonth(calendarDate) {
-	    return {
-	      year: calendarDate.year,
-	      month: calendarDate.month,
-	      day: 1
-	    };
-	  },
 	  calendarDaysUntil(calendarOne, calendarTwo, cache) {
 	    const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', cache);
 	    const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', cache);
