@@ -6705,7 +6705,7 @@
 	// x and be less than 10**p.
 	function FMAPowerOf10(x, p, z) {
 	  if (x === 0) return z;
-	  const sign = MathSign(x) || MathSign(z);
+	  const sign = MathSign(x);
 	  x = MathAbs(x);
 	  z = MathAbs(z);
 	  const xStr = Call$1(NumberPrototypeToPrecision, x, [MathTrunc(1 + MathLog10(x))]);
