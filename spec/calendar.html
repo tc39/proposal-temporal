@@ -1197,7 +1197,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It performs implementation-defined processing to validate that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard fields and removing redundant fields (for example, merging [[Month]] and [[MonthCode]] into [[Month]] and merging [[Era]] and [[EraYear]] into [[Year]]).
+          It performs implementation-defined processing to validate that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard fields and removing redundant fields (for example, merging [[Era]] and [[EraYear]] into [[Year]]).
         </dd>
       </dl>
       <p>The operation throws a *TypeError* exception if the non-~unset~ fields of _fields_ are insufficient to identify a unique instance of _type_ in the calendar (e.g., when at least one field in each combination capable of determining some part of its data is ~unset~) or a *RangeError* exception if the fields are sufficient but their values are internally inconsistent within the calendar (e.g., when fields such as [[Month]] and [[MonthCode]] have conflicting non-~unset~ values). For example:</p>
@@ -1241,7 +1241,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It validates that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard fields and removing redundant fields (for example, merging [[Month]] and [[MonthCode]] into [[Month]] and merging [[Era]] and [[EraYear]] into [[Year]]).
+          It validates that _fields_ (which describes a date or partial date in the built-in calendar identified by _calendar_) is sufficiently complete to satisfy _type_ and not internally inconsistent, and mutates _fields_ into acceptable input for <emu-xref href="#sec-temporal-calendardatetoiso" title></emu-xref> or <emu-xref href="#sec-temporal-calendarmonthdaytoisoreferencedate" title></emu-xref> by merging data that can be represented in multiple forms into standard fields and removing redundant fields (for example, merging [[Era]] and [[EraYear]] into [[Year]]).
         </dd>
       </dl>
       <emu-alg>
