@@ -132,19 +132,27 @@ function calendarDateWeekOfYear(id, isoDate) {
   return { week: woy, year: yow };
 }
 
-function ISODateSurpasses(sign, baseDate, isoDate2, years, months) {
-  const yearMonth = ES.BalanceISOYearMonth(baseDate.year + years, baseDate.month + months);
-  let y1 = yearMonth.year;
-  let m1 = yearMonth.month;
-  let d1 = baseDate.day;
-  if (y1 !== isoDate2.year) {
-    if (sign * (y1 - isoDate2.year) > 0) return true;
-  } else if (m1 !== isoDate2.month) {
-    if (sign * (m1 - isoDate2.month) > 0) return true;
-  } else if (d1 !== isoDate2.day) {
-    if (sign * (d1 - isoDate2.day) > 0) return true;
+function CompareSurpasses(sign, year, month, day, target) {
+  if (year !== target.year) {
+    if (sign * (year - target.year) > 0) return true;
+  } else if (month !== target.month) {
+    // Skip the monthCode case that is in the spec, as we are currently not
+    // using this operation in non-iso8601 calculations
+    if (sign * (month - target.month) > 0) return true;
+  } else if (day !== target.day) {
+    if (sign * (day - target.day) > 0) return true;
   }
-  return false;
+}
+
+function ISODateSurpasses(sign, baseDate, isoDate2, years, months) {
+  const y0 = baseDate.year + years;
+  if (CompareSurpasses(sign, y0, baseDate.month, baseDate.day, isoDate2)) return true;
+  if (months === 0) return false;
+  const m0 = baseDate.month + months;
+  const monthsAdded = ES.BalanceISOYearMonth(y0, m0);
+  return CompareSurpasses(sign, monthsAdded.year, monthsAdded.month, baseDate.day, isoDate2);
+  // Skip the weeks and days addition in the spec, as we currently optimize that
+  // out in iso8601 date difference calculation
 }
 
 function addDaysISO(isoDate, days) {
