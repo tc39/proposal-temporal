@@ -132,19 +132,28 @@ function calendarDateWeekOfYear(id, isoDate) {
   return { week: woy, year: yow };
 }
 
-function ISODateSurpasses(sign, baseDate, isoDate2, years, months) {
-  const yearMonth = ES.BalanceISOYearMonth(baseDate.year + years, baseDate.month + months);
-  let y1 = yearMonth.year;
-  let m1 = yearMonth.month;
-  let d1 = baseDate.day;
-  if (y1 !== isoDate2.year) {
-    if (sign * (y1 - isoDate2.year) > 0) return true;
-  } else if (m1 !== isoDate2.month) {
-    if (sign * (m1 - isoDate2.month) > 0) return true;
-  } else if (d1 !== isoDate2.day) {
-    if (sign * (d1 - isoDate2.day) > 0) return true;
+function CompareSurpasses(sign, year, month, day, target) {
+  // Optimization: monthCode is not used, instead month codes are compared
+  // lexicographically in untilCalendar() before this function is called
+  if (year !== target.year) {
+    if (sign * (year - target.year) > 0) return true;
+  } else if (month !== target.month) {
+    if (sign * (month - target.month) > 0) return true;
+  } else if (day !== target.day) {
+    if (sign * (day - target.day) > 0) return true;
   }
   return false;
+}
+
+function ISODateSurpasses(sign, baseDate, isoDate2, years, months) {
+  const y0 = baseDate.year + years;
+  if (CompareSurpasses(sign, y0, baseDate.month, baseDate.day, isoDate2)) return true;
+  if (months === 0) return false;
+  const m0 = baseDate.month + months;
+  const monthsAdded = ES.BalanceISOYearMonth(y0, m0);
+  return CompareSurpasses(sign, monthsAdded.year, monthsAdded.month, baseDate.day, isoDate2);
+  // Skip the weeks and days addition in the spec, as we currently optimize that
+  // out in iso8601 date difference calculation
 }
 
 const impl = {};
@@ -1094,7 +1103,7 @@ const nonIsoHelperBase = {
     // due to leap years.
     // In that case, add or subtract an extra year from years,
     // so that the months can be totaled up correctly.
-    if (this.compareCalendarDates(intermediate, calendarTwo) * sign > 0) {
+    if (CompareSurpasses(sign, intermediate.year, intermediate.month, calendarOne.day, calendarTwo)) {
       years -= sign;
     }
 
@@ -1104,16 +1113,15 @@ const nonIsoHelperBase = {
     let current;
     // Need to re-add years and months because years might have changed
     let next = years || months ? this.addCalendar(calendarOne, { years, months }, 'constrain', cache) : calendarOne;
+    next.day = calendarOne.day;
     do {
       months += sign;
       current = next;
       next = this.addMonthsCalendar(current, sign, 'constrain', cache);
-      if (next.day !== calendarOne.day) {
-        // In case the day was constrained down, un-constrain it (even if
-        // that's not a real date)
-        next = { ...next, day: calendarOne.day };
-      }
-    } while (this.compareCalendarDates(calendarTwo, next) * sign >= 0);
+      // In case the day was constrained down, un-constrain it (even if that's
+      // not a real date)
+      next.day = calendarOne.day;
+    } while (!CompareSurpasses(sign, next.year, next.month, next.day, calendarTwo));
     months -= sign; // correct for loop above which overshoots by 1
     const days = this.calendarDaysUntil(current, calendarTwo, cache);
 
