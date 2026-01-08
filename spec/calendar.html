@@ -1243,19 +1243,20 @@
       </dl>
       <emu-alg>
         1. If _calendar_ is *"iso8601"*, then
-          1. If _type_ is ~date~ or ~year-month~ and _fields_.[[Year]] is ~unset~, throw a *TypeError* exception.
-          1. If _type_ is ~date~ or ~month-day~ and _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
-          1. Let _month_ be _fields_.[[Month]].
-          1. Let _monthCode_ be _fields_.[[MonthCode]].
-          1. If _monthCode_ is ~unset~, then
-            1. If _month_ is ~unset~, throw a *TypeError* exception.
-            1. Return ~unused~.
-          1. Assert: _monthCode_ is a month code.
-          1. Let _parsedMonthCode_ be ! ParseMonthCode(_monthCode_).
-          1. If _parsedMonthCode_.[[IsLeapMonth]] is *true*, throw a *RangeError* exception.
-          1. If _parsedMonthCode_.[[MonthNumber]] > 12, throw a *RangeError* exception.
-          1. If _month_ is not ~unset~ and _month_ ≠ _parsedMonthCode_.[[MonthNumber]], throw a *RangeError* exception.
-          1. Set _fields_.[[Month]] to _parsedMonthCode_.[[MonthNumber]].
+          1. Let _needsYear_ be *false*.
+          1. If _type_ is ~date~ or _type_ is ~year-month~, set _needsYear_ to *true*.
+          1. Let _needsDay_ be *false*.
+          1. If _type_ is ~date~ or _type_ is ~month-day~, set _needsDay_ to *true*.
+          1. If _needsYear_ is *true* and _fields_.[[Year]] is ~unset~, throw a *TypeError* exception.
+          1. If _needsDay_ is *true* and _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
+          1. If _fields_.[[Month]] is ~unset~ and _fields_.[[MonthCode]] is ~unset~, throw a *TypeError* exception.
+          1. If _fields_.[[MonthCode]] is not ~unset~, then
+            1. Let _parsedMonthCode_ be ! ParseMonthCode(_fields_.[[MonthCode]]).
+            1. If _parsedMonthCode_.[[IsLeapMonth]] is *true*, throw a *RangeError* exception.
+            1. Let _month_ be _parsedMonthCode_.[[MonthNumber]].
+            1. If _month_ > 12, throw a *RangeError* exception.
+            1. If _fields_.[[Month]] is not ~unset~ and _fields_.[[Month]] ≠ _month_, throw a *RangeError* exception.
+            1. Set _fields_.[[Month]] to _month_.
         1. Else,
           1. Perform ? NonISOResolveFields(_calendar_, _fields_, _type_).
         1. Return ~unused~.
