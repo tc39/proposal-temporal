@@ -1717,7 +1717,7 @@ export function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
 
 function CalendarDateLastDayOfMonth(calendar, isoDate) {
   if (calendar === 'iso8601') {
-    let maxDay = isoDate.year === YEAR_MAX && isoDate.month === 9 ? 13 : ISODaysInMonth(isoDate.year, isoDate.month);
+    let maxDay = ISODaysInMonth(isoDate.year, isoDate.month);
     return { year: isoDate.year, month: isoDate.month, day: maxDay };
   }
   let previousIsoDate = isoDate;
@@ -1726,12 +1726,9 @@ function CalendarDateLastDayOfMonth(calendar, isoDate) {
   let initialMonth = calendarDate.month;
   while (calendarDate.month === initialMonth) {
     previousIsoDate = nextIsoDate;
-    try {
-      nextIsoDate = CalendarDateAdd(calendar, nextIsoDate, { days: 1 }, 'constrain');
-    } catch (e) {
-      // Date overflowed maximum range => consider this the last day
-      break;
-    }
+    // If the date overflows the maxium range, an exception will be thrown,
+    // which is the desired behavior
+    nextIsoDate = CalendarDateAdd(calendar, nextIsoDate, { days: 1 }, 'constrain');
     calendarDate = calendarImplForID(calendar).isoToDate(nextIsoDate, { year: true, month: true, day: true });
   }
   return previousIsoDate;
