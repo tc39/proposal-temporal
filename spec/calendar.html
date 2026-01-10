@@ -634,7 +634,7 @@
             1. Let _maxDay_ be ISODaysInMonth(_isoDate_.[[Year]], _isoDate_.[[Month]]).
           1. Return CreateISODateRecord(_isoDate_.[[Year]], _isoDate_.[[Month]], _maxDay_).
         1. Else,
-          1. Return NonISODateLastDayOfMonth(_calendar_, _isoYear_, _isoMonth_).
+          1. Return NonISODateLastDayOfMonth(_calendar_, _isoDate_.[[Year]], _isoDate_.[[Month]]).
       </emu-alg>
     </emu-clause>
 
