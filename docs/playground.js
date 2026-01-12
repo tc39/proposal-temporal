@@ -10840,7 +10840,7 @@
 	  return duration.time.sign();
 	}
 	function BalanceISOYearMonth(year, month) {
-	  if (!NumberIsFinite(year) || !NumberIsFinite(month)) throw new RangeError$1('infinity is out of range');
+	  assert(NumberIsFinite(year) && NumberIsFinite(month), 'BalanceISOYearMonth: infinity is out of range');
 	  month -= 1;
 	  year += MathFloor(month / 12);
 	  month %= 12;
@@ -10852,7 +10852,7 @@
 	  };
 	}
 	function BalanceISODate(year, month, day) {
-	  if (!NumberIsFinite(day)) throw new RangeError$1('infinity is out of range');
+	  assert(NumberIsFinite(day), 'BalanceISODate: infinity is out of range');
 	  ({
 	    year,
 	    month
