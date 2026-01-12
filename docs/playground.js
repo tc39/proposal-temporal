@@ -8978,14 +8978,14 @@
 	  let {
 	    years,
 	    months,
-	    weeks,
-	    days
+	    weeks
 	  } = _ref3;
+	  assert(newDays !== undefined, 'days must be provided to AdjustDateDurationRecord');
 	  return {
 	    years,
 	    months: newMonths ?? months,
 	    weeks: newWeeks ?? weeks,
-	    days: newDays ?? days
+	    days: newDays
 	  };
 	}
 	function ZeroDateDuration() {
