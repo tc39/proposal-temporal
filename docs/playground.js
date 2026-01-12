@@ -17947,7 +17947,7 @@
 	      directionParam = GetOptionsObject(directionParam);
 	    }
 	    const direction = GetDirectionOption(directionParam);
-	    if (direction === undefined) throw new TypeError$1('direction option is required');
+	    assert(direction !== undefined);
 
 	    // Offset time zones or UTC have no transitions
 	    if (IsOffsetTimeZoneIdentifier(timeZone) || timeZone === 'UTC') {
