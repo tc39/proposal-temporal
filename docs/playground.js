@@ -10035,9 +10035,9 @@
 	    // can come from the argument of TimeZone.p.equals as opposed to the first
 	    // ID which comes from the receiver.
 	    const idRecord2 = GetAvailableNamedTimeZoneIdentifier(two);
-	    if (!idRecord2) return false;
+	    assert(idRecord2, `${JSONStringify(two)} has an invalid time zone`);
 	    const idRecord1 = GetAvailableNamedTimeZoneIdentifier(one);
-	    if (!idRecord1) return false;
+	    assert(idRecord1, `${JSONStringify(one)} has an invalid time zone`);
 	    return idRecord1.primaryIdentifier === idRecord2.primaryIdentifier;
 	  } else {
 	    return offsetMinutes1 === offsetMinutes2;
