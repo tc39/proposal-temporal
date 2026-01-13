@@ -303,10 +303,7 @@ function formatRange(a, b) {
   b = toDateTimeFormattable(b);
   let formatArgs = [a, b];
   let formatter;
-  if (isTemporalObject(a) !== isTemporalObject(b)) {
-    throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
-  }
-  if (isTemporalObject(a)) {
+  if (isTemporalObject(a) || isTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
@@ -331,10 +328,7 @@ function formatRangeToParts(a, b) {
   b = toDateTimeFormattable(b);
   let formatArgs = [a, b];
   let formatter;
-  if (isTemporalObject(a) !== isTemporalObject(b)) {
-    throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
-  }
-  if (isTemporalObject(a)) {
+  if (isTemporalObject(a) || isTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
@@ -584,7 +578,7 @@ function toDateTimeFormattable(value) {
 }
 
 function sameTemporalType(x, y) {
-  assert(isTemporalObject(x) && isTemporalObject(y));
+  if (!isTemporalObject(x) || !isTemporalObject(y)) return false;
   if (ES.IsTemporalTime(x) && !ES.IsTemporalTime(y)) return false;
   if (ES.IsTemporalDate(x) && !ES.IsTemporalDate(y)) return false;
   if (ES.IsTemporalDateTime(x) && !ES.IsTemporalDateTime(y)) return false;
