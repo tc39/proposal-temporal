@@ -293,7 +293,7 @@ const timeSpec = (extended) =>
 const time = choice(timeSpec(true), timeSpec(false));
 
 function validateDayOfMonth(result, { year, month, day }) {
-  if (year !== undefined && day > ES.ISODaysInMonth(year, month)) throw SyntaxError('retry if bad day of month');
+  if (day > ES.ISODaysInMonth(year ?? 1972, month)) throw SyntaxError('retry if bad day of month');
 }
 const dateSpecMonthDay = withSyntaxConstraints(
   seq(['--'], dateMonth, choice(dateSeparator(true), dateSeparator(false)), dateDay),
