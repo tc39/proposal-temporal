@@ -14262,7 +14262,7 @@
 	      month
 	    } = calendarDate;
 	    let monthInfo = this.months[month];
-	    if (monthInfo === undefined) throw new RangeError$1(`Invalid month: ${month}`);
+	    assert(monthInfo, `getMonthInfo called on date with invalid month ${month}`);
 	    if (this.inLeapYear(calendarDate) && monthInfo.leap) monthInfo = monthInfo.leap;
 	    return monthInfo;
 	  },
@@ -14785,9 +14785,7 @@
 	      year
 	    } = calendarDate;
 	    const matchingMonthEntry = this.getMonthList(year, cache)[month];
-	    if (matchingMonthEntry === undefined) {
-	      throw new RangeError$1(`Invalid month ${month} in ${this.id} year ${year}`);
-	    }
+	    assert(matchingMonthEntry, `Invalid month ${month} in ${this.id} year ${year}`);
 	    return matchingMonthEntry.daysInMonth;
 	  },
 	  daysInPreviousMonth(calendarDate, cache) {
