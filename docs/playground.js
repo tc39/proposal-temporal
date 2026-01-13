@@ -14855,9 +14855,7 @@
 	    }
 	  },
 	  getMonthList(calendarYear, cache) {
-	    if (calendarYear === undefined) {
-	      throw new TypeError$1('Missing year');
-	    }
+	    assert(calendarYear !== undefined, 'getMonthList called on undefined year');
 	    const key = OneObjectCache.generateMonthListKey(calendarYear);
 	    const cached = cache.get(key);
 	    if (cached) return cached;
