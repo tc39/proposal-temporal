@@ -15523,10 +15523,7 @@
 	  b = toDateTimeFormattable(b);
 	  let formatArgs = [a, b];
 	  let formatter;
-	  if (isTemporalObject(a) !== isTemporalObject(b)) {
-	    throw new TypeError$1('Intl.DateTimeFormat.formatRange accepts two values of the same type');
-	  }
-	  if (isTemporalObject(a)) {
+	  if (isTemporalObject(a) || isTemporalObject(b)) {
 	    if (!sameTemporalType(a, b)) {
 	      throw new TypeError$1('Intl.DateTimeFormat.formatRange accepts two values of the same type');
 	    }
@@ -15556,10 +15553,7 @@
 	  b = toDateTimeFormattable(b);
 	  let formatArgs = [a, b];
 	  let formatter;
-	  if (isTemporalObject(a) !== isTemporalObject(b)) {
-	    throw new TypeError$1('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
-	  }
-	  if (isTemporalObject(a)) {
+	  if (isTemporalObject(a) || isTemporalObject(b)) {
 	    if (!sameTemporalType(a, b)) {
 	      throw new TypeError$1('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
 	    }
