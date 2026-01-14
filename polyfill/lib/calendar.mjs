@@ -1058,7 +1058,7 @@ const nonIsoHelperBase = {
         const sign = this.compareCalendarDates(calendarTwo, calendarOne);
         // If dates were equal, this would have been checked in DifferenceTemporalPlainDate /
         // DifferenceTemporalPlainDateTime / DifferenceTemporalYearMonth
-        assert(sign, 'equal dates should ahve been checked earlier');
+        assert(sign, 'equal dates should have been checked earlier');
         // Take the difference between the years of the two dates
         const diffYears = calendarTwo.year - calendarOne.year;
         // Take the difference between the days of the two dates
