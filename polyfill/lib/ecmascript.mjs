@@ -1724,6 +1724,9 @@ export function CalendarDateAdd(calendar, isoDate, dateDuration, overflow) {
 }
 
 export function CalendarDateUntil(calendar, isoDate, isoOtherDate, largestUnit) {
+  if (CompareISODate(isoDate, isoOtherDate) === 0) {
+    return { years: 0, months: 0, weeks: 0, days: 0 };
+  }
   return calendarImplForID(calendar).dateUntil(isoDate, isoOtherDate, largestUnit);
 }
 
