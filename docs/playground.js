@@ -13841,7 +13841,7 @@
 	    } = calendarDate;
 	    const monthCode = calendarDate.monthCode ?? this.getMonthCode(year, month);
 	    const daysInMonth = this.monthLengths[monthCode];
-	    if (daysInMonth === undefined) throw new RangeError$1(`unmatched Hebrew month: ${month}`);
+	    assert(daysInMonth, `missing daysInMonth for Hebrew month ${monthCode}`);
 	    return typeof daysInMonth === 'number' ? daysInMonth : daysInMonth[minOrMax];
 	  },
 	  maxLengthOfMonthCodeInAnyYear(monthCode) {
