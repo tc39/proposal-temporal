@@ -762,12 +762,12 @@
       <emu-alg>
         1. Perform ? CalendarResolveFields(_calendar_, _fields_, ~month-day~).
         1. Let _result_ be ? CalendarMonthDayToISOReferenceDate(_calendar_, _fields_, _overflow_).
-        1. If ISODateWithinLimits(_result_) is *false*, throw a *RangeError* exception.
+        1. Assert: ISODateWithinLimits(_result_).
         1. Return _result_.
       </emu-alg>
     </emu-clause>
     <emu-note>
-      The ISODateWithinLimits check is necessary because for some non-ISO calendars, an out-of-range reference year might be returned from NonISOMonthDayToISOReferenceDate. For example, certain month-day combinations in the Chinese lunar calendar might only occur outside of the representable range.
+      The ISODateWithinLimits assertion holds because the result of CalendarMonthDayToISOReferenceDate should return a reference year that falls within the representable range.
     </emu-note>
 
     <emu-clause id="sec-temporal-formatcalendarannotation" type="abstract operation">
