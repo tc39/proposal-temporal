@@ -336,9 +336,7 @@ This method adds `duration` to `yearMonth`, returning a month that is in the fut
 
 The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a string such as `P5M`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-If `duration` has any units smaller than `months`, they will be treated as if they are being added to the first moment of the month given by `yearMonth`.
-Effectively, this means that adding things like `{ days: 1 }` will be ignored.
+There must not be any units smaller than `months` in `duration`.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
@@ -372,9 +370,7 @@ This method subtracts `duration` from `yearMonth`, returning a month that is in 
 
 The `duration` argument is an object with properties denoting a duration, such as `{ months: 5 }`, or a string such as `P5M`, or a `Temporal.Duration` object.
 If `duration` is not a `Temporal.Duration` object, then it will be converted to one as if it were passed to `Temporal.Duration.from()`.
-
-If `duration` has any units smaller than `months`, they will be treated as if they are being subtracted from the last moment of the month given by `yearMonth`.
-Effectively, this means that subtracting things like `{ days: 1 }` will be ignored.
+There must not be any units smaller than `months` in `duration`.
 
 If the result is earlier or later than the range of dates that `Temporal.PlainYearMonth` can represent (approximately half a million years centered on the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time)), then this method will throw a `RangeError` regardless of `overflow`.
 
