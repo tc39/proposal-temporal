@@ -1230,7 +1230,9 @@
       AnnotatedTime :::
         TimeDesignator Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
         Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
-
+    </emu-grammar>
+    <p>Note the disambiguation between the second alternative without |TimeDesignator|, and |DateSpecMonthDay|/|DateSpecYearMonth| in <emu-xref href="#sec-temporal-iso8601grammar-static-semantics-early-errors"></emu-xref>.</p>
+    <emu-grammar type="definition">
       AnnotatedDateTime[Zoned, TimeRequired] :::
         [~Zoned] DateTime[~Z, ?TimeRequired] TimeZoneAnnotation? Annotations?
         [+Zoned] DateTime[+Z, ?TimeRequired] TimeZoneAnnotation Annotations?
@@ -1300,10 +1302,6 @@
         AnnotatedTime
         AnnotatedDateTime[~Zoned, +TimeRequired]
 
-      AmbiguousTemporalTimeString :::
-        DateSpecMonthDay TimeZoneAnnotation? Annotations?
-        DateSpecYearMonth TimeZoneAnnotation? Annotations?
-
       TemporalYearMonthString :::
         AnnotatedYearMonth
         AnnotatedDateTime[~Zoned, ~TimeRequired]
@@ -1344,6 +1342,18 @@
 
     <emu-clause id="sec-temporal-iso8601grammar-static-semantics-early-errors">
       <h1>Static Semantics: Early Errors</h1>
+      <emu-grammar>
+        AnnotatedTime :::
+          Time DateTimeUTCOffset[~Z]? TimeZoneAnnotation? Annotations?
+      </emu-grammar>
+      <ul>
+        <li>
+          It is a Syntax Error if ParseText(|Time| |DateTimeUTCOffset[~Z]|, |DateSpecMonthDay|) is a Parse Node.
+        </li>
+        <li>
+          It is a Syntax Error if ParseText(|Time| |DateTimeUTCOffset[~Z]|, |DateSpecYearMonth|) is a Parse Node.
+        </li>
+      </ul>
       <emu-grammar>
         DateSpec[Extended] :::
           DateYear DateSeparator[?Extended] DateMonth DateSeparator[?Extended] DateDay
