@@ -551,13 +551,7 @@ function hasTimeOptions(options) {
 }
 
 function hasAnyDateTimeOptions(originalOptions) {
-  return (
-    hasDateOptions(originalOptions) ||
-    hasTimeOptions(originalOptions) ||
-    'dateStyle' in originalOptions ||
-    'timeStyle' in originalOptions ||
-    'timeZoneName' in originalOptions
-  );
+  return hasDateOptions(originalOptions) || hasTimeOptions(originalOptions);
 }
 
 function isTemporalObject(obj) {
