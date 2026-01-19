@@ -12572,12 +12572,8 @@
 	  },
 	  dateUntil(one, two, largestUnit) {
 	    const sign = -CompareISODate(one, two);
-	    if (sign === 0) return {
-	      years: 0,
-	      months: 0,
-	      weeks: 0,
-	      days: 0
-	    };
+	    // This case was checked in CalendarDateUntil
+	    assert(sign !== 0);
 	    let years = 0;
 	    let months = 0;
 	    if (largestUnit === 'year' || largestUnit === 'month') {
