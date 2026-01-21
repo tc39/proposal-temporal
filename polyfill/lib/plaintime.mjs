@@ -9,7 +9,7 @@ import {
 } from './primordials.mjs';
 
 import * as ES from './ecmascript.mjs';
-import { DateTimeFormat } from './intl.mjs';
+import { CreateDateTimeFormat } from './intl.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 
 import { GetSlot, TIME } from './slots.mjs';
@@ -144,7 +144,7 @@ export class PlainTime {
   }
   toLocaleString(locales = undefined, options = undefined) {
     if (!ES.IsTemporalTime(this)) throw new TypeErrorCtor('invalid receiver');
-    return new DateTimeFormat(locales, options).format(this);
+    return CreateDateTimeFormat(locales, options, 'time').format(this);
   }
   valueOf() {
     ES.ValueOfThrows('PlainTime');
