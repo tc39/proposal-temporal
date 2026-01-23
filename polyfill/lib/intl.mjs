@@ -66,10 +66,16 @@ const OPTIONS = SymbolCtor('options');
 // Construction of built-in Intl.DateTimeFormat objects is sloooooow,
 // so we'll only create those instances when we need them.
 // See https://bugs.chromium.org/p/v8/issues/detail?id=6528
-function getSlotLazy(obj, slot) {
+function getSlotLazy(obj, slot, isPlain) {
   let val = GetSlot(obj, slot);
   if (typeof val === 'function') {
-    val = new IntlDateTimeFormat(GetSlot(obj, LOCALE), val(GetSlot(obj, OPTIONS)));
+    const baseOptions = val(GetSlot(obj, OPTIONS));
+    const options = ObjectAssign({}, baseOptions);
+    const amendedOptions = val(options);
+    if (isPlain) {
+      amendedOptions.timeZone = 'UTC';
+    }
+    val = new IntlDateTimeFormat(GetSlot(obj, LOCALE), amendedOptions);
     SetSlot(obj, slot, val);
   }
   return val;
@@ -596,8 +602,8 @@ function extractOverrides(temporalObj, main) {
       time: GetSlot(temporalObj, TIME)
     };
     return {
-      epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-      formatter: getSlotLazy(main, TIME_FMT)
+      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
+      formatter: getSlotLazy(main, TIME_FMT, /* isPlain = */ true)
     };
   }
 
@@ -611,8 +617,8 @@ function extractOverrides(temporalObj, main) {
     }
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
     return {
-      epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-      formatter: getSlotLazy(main, YM)
+      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
+      formatter: getSlotLazy(main, YM, /* isPlain = */ true)
     };
   }
 
@@ -626,8 +632,8 @@ function extractOverrides(temporalObj, main) {
     }
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
     return {
-      epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-      formatter: getSlotLazy(main, MD)
+      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
+      formatter: getSlotLazy(main, MD, /* isPlain = */ true)
     };
   }
 
@@ -641,8 +647,8 @@ function extractOverrides(temporalObj, main) {
     }
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
     return {
-      epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-      formatter: getSlotLazy(main, DATE)
+      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
+      formatter: getSlotLazy(main, DATE, /* isPlain = */ true)
     };
   }
 
@@ -656,8 +662,8 @@ function extractOverrides(temporalObj, main) {
     }
     const isoDateTime = GetSlot(temporalObj, ISO_DATE_TIME);
     return {
-      epochNs: ES.GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-      formatter: getSlotLazy(main, DATETIME)
+      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
+      formatter: getSlotLazy(main, DATETIME, /* isPlain = */ true)
     };
   }
 
@@ -670,7 +676,7 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalInstant(temporalObj)) {
     return {
       epochNs: GetSlot(temporalObj, EPOCHNANOSECONDS),
-      formatter: getSlotLazy(main, INST)
+      formatter: getSlotLazy(main, INST, /* isPlain = */ false)
     };
   }
 
