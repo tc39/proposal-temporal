@@ -134,30 +134,6 @@
       <emu-clause id="sec-operations-for-reading-options">
         <h1>Operations for Reading Options</h1>
 
-        <!-- Copied from ECMA-402 GetOptionsObject -->
-
-        <emu-clause id="sec-getoptionsobject" type="abstract operation">
-          <h1>
-            GetOptionsObject (
-              _options_: an ECMAScript language value,
-            ): either a normal completion containing an Object or a throw completion
-          </h1>
-          <dl class="header">
-            <dt>description</dt>
-            <dd>
-              It returns an Object suitable for use with GetOption, either _options_ itself or a default empty Object.
-              It throws a *TypeError* if _options_ is not *undefined* and not an Object.
-            </dd>
-          </dl>
-          <emu-alg>
-            1. If _options_ is *undefined*, then
-              1. Return OrdinaryObjectCreate(*null*).
-            1. If _options_ is an Object, then
-              1. Return _options_.
-            1. Throw a *TypeError* exception.
-          </emu-alg>
-        </emu-clause>
-
         <!-- Copied from ECMA-402 GetOption -->
 
         <emu-clause id="sec-getoption" type="abstract operation">

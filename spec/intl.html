@@ -57,33 +57,6 @@
       <p>In this section, some abstract operations that manipulate options objects are to be moved from ECMA-402 into ECMA-262.</p>
     </emu-note>
 
-    <del class="block">
-
-      <emu-clause id="sec-getoptionsobject-deleted" type="abstract operation">
-        <h1>
-          GetOptionsObject (
-            _options_: an ECMAScript language value,
-          ): either a normal completion containing an Object or a throw completion
-        </h1>
-        <dl class="header">
-          <dt>description</dt>
-          <dd>
-            It returns an Object suitable for use with GetOption, either _options_ itself or a default empty Object.
-            It throws a *TypeError* if _options_ is not *undefined* and not an Object.
-          </dd>
-          <dt>redefinition</dt>
-          <dd>true</dd>
-        </dl>
-        <emu-alg>
-          1. If _options_ is *undefined*, then
-            1. Return OrdinaryObjectCreate(*null*).
-          1. If Type(_options_) is Object, then
-            1. Return _options_.
-          1. Throw a *TypeError* exception.
-        </emu-alg>
-      </emu-clause>
-    </del>
-
     <p>[...]</p>
 
     <del class="block">
