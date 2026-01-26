@@ -15298,7 +15298,7 @@
 	  }
 	  return val;
 	}
-	function createDateTimeFormat(dtf, locale, options) {
+	function internalCreateDateTimeFormat(dtf, locale, options, required) {
 	  const hasOptions = typeof options !== 'undefined';
 	  if (hasOptions) {
 	    // Read all the options in the expected order and copy them to a
@@ -15366,10 +15366,33 @@
 	  SetSlot(dtf, ORIGINAL, original);
 	  SetSlot(dtf, TZ_CANONICAL, ro.timeZone);
 	  SetSlot(dtf, CAL_ID, ro.calendar);
-	  SetSlot(dtf, DATE, dateAmend);
-	  SetSlot(dtf, YM, yearMonthAmend);
-	  SetSlot(dtf, MD, monthDayAmend);
-	  SetSlot(dtf, TIME_FMT, timeAmend);
+	  if (options.dateStyle !== undefined || options.timeStyle !== undefined) {
+	    if (options.dateStyle !== undefined) {
+	      if (required === 'time') {
+	        throw new TypeError$1('toLocaleString of Temporal.PlainTime does not support dateStyle option');
+	      }
+	      SetSlot(dtf, DATE, dateAmend);
+	      SetSlot(dtf, YM, yearMonthAmend);
+	      SetSlot(dtf, MD, monthDayAmend);
+	    } else {
+	      SetSlot(dtf, DATE, null);
+	      SetSlot(dtf, YM, null);
+	      SetSlot(dtf, MD, null);
+	    }
+	    if (options.timeStyle !== undefined) {
+	      if (required === 'date') {
+	        throw new TypeError$1('toLocaleString of a Temporal date type does not support timeStyle option');
+	      }
+	      SetSlot(dtf, TIME_FMT, timeAmend);
+	    } else {
+	      SetSlot(dtf, TIME_FMT, null);
+	    }
+	  } else {
+	    SetSlot(dtf, DATE, dateAmend);
+	    SetSlot(dtf, YM, yearMonthAmend);
+	    SetSlot(dtf, MD, monthDayAmend);
+	    SetSlot(dtf, TIME_FMT, timeAmend);
+	  }
 	  SetSlot(dtf, DATETIME, datetimeAmend);
 	  SetSlot(dtf, INST, instantAmend);
 
@@ -15396,7 +15419,7 @@
 	  constructor() {
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-	    createDateTimeFormat(this, locales, options);
+	    internalCreateDateTimeFormat(this, locales, options, 'any');
 	  }
 	  get format() {
 	    var _this = this;
@@ -15469,6 +15492,17 @@
 	});
 	DateTimeFormat.supportedLocalesOf = IntlDateTimeFormat.supportedLocalesOf;
 	MakeIntrinsicClass(DateTimeFormat, 'Intl.DateTimeFormat');
+
+	// This corresponds to the spec operation CreateDateTimeFormat in that it
+	// creates a new instance and does all the required initialization on it.
+	// However, most of the spec operation is in internalCreateDateTimeFormat() so
+	// that we can call it in the DateTimeFormat constructor, where we already have
+	// the uninitialized instance.
+	function CreateDateTimeFormat(locales, options, required) {
+	  const instance = Object.create(DateTimeFormat.prototype);
+	  internalCreateDateTimeFormat(instance, locales, options, required);
+	  return instance;
+	}
 	function resolvedOptions() {
 	  const resolved = Call$1(IntlDateTimeFormatPrototypeResolvedOptions, GetSlot(this, ORIGINAL), []);
 	  resolved.timeZone = GetSlot(this, TZ_ORIGINAL);
@@ -15809,7 +15843,7 @@
 	  return 'hour' in options || 'minute' in options || 'second' in options || 'timeStyle' in options || 'dayPeriod' in options || 'fractionalSecondDigits' in options;
 	}
 	function hasAnyDateTimeOptions(originalOptions) {
-	  return hasDateOptions(originalOptions) || hasTimeOptions(originalOptions) || 'dateStyle' in originalOptions || 'timeStyle' in originalOptions || 'timeZoneName' in originalOptions;
+	  return hasDateOptions(originalOptions) || hasTimeOptions(originalOptions);
 	}
 	function isTemporalObject(obj) {
 	  return IsTemporalDate(obj) || IsTemporalTime(obj) || IsTemporalDateTime(obj) || IsTemporalZonedDateTime(obj) || IsTemporalYearMonth(obj) || IsTemporalMonthDay(obj) || IsTemporalInstant(obj);
@@ -15839,9 +15873,11 @@
 	      },
 	      time: GetSlot(temporalObj, TIME)
 	    };
+	    const formatter = getSlotLazy(main, TIME_FMT);
+	    if (!formatter) throw new TypeError$1('cannot format PlainTime with only date options');
 	    return {
 	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-	      formatter: getSlotLazy(main, TIME_FMT)
+	      formatter
 	    };
 	  }
 	  if (IsTemporalYearMonth(temporalObj)) {
@@ -15851,9 +15887,11 @@
 	      throw new RangeError$1(`cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
 	    const isoDateTime = CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), NoonTimeRecord());
+	    const formatter = getSlotLazy(main, YM);
+	    if (!formatter) throw new TypeError$1('cannot format PlainYearMonth with only time options');
 	    return {
 	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-	      formatter: getSlotLazy(main, YM)
+	      formatter
 	    };
 	  }
 	  if (IsTemporalMonthDay(temporalObj)) {
@@ -15863,9 +15901,11 @@
 	      throw new RangeError$1(`cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
 	    const isoDateTime = CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), NoonTimeRecord());
+	    const formatter = getSlotLazy(main, MD);
+	    if (!formatter) throw new TypeError$1('cannot format PlainMonthDay with only time options');
 	    return {
 	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-	      formatter: getSlotLazy(main, MD)
+	      formatter
 	    };
 	  }
 	  if (IsTemporalDate(temporalObj)) {
@@ -15875,9 +15915,11 @@
 	      throw new RangeError$1(`cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`);
 	    }
 	    const isoDateTime = CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), NoonTimeRecord());
+	    const formatter = getSlotLazy(main, DATE);
+	    if (!formatter) throw new TypeError$1('cannot format PlainDate with only time options');
 	    return {
 	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
-	      formatter: getSlotLazy(main, DATE)
+	      formatter
 	    };
 	  }
 	  if (IsTemporalDateTime(temporalObj)) {
@@ -15935,6 +15977,7 @@
 
 	var Intl = /*#__PURE__*/Object.freeze({
 		__proto__: null,
+		CreateDateTimeFormat: CreateDateTimeFormat,
 		DateTimeFormat: DateTimeFormat,
 		ModifiedIntlDurationFormatPrototypeFormat: ModifiedIntlDurationFormatPrototypeFormat
 	});
@@ -16285,7 +16328,7 @@
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalDate(this)) throw new TypeError$1('invalid receiver');
-	    return new DateTimeFormat(locales, options).format(this);
+	    return CreateDateTimeFormat(locales, options, 'date').format(this);
 	  }
 	  valueOf() {
 	    ValueOfThrows('PlainDate');
@@ -17121,7 +17164,7 @@
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalMonthDay(this)) throw new TypeError$1('invalid receiver');
-	    return new DateTimeFormat(locales, options).format(this);
+	    return CreateDateTimeFormat(locales, options, 'date').format(this);
 	  }
 	  valueOf() {
 	    ValueOfThrows('PlainMonthDay');
@@ -17342,7 +17385,7 @@
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalTime(this)) throw new TypeError$1('invalid receiver');
-	    return new DateTimeFormat(locales, options).format(this);
+	    return CreateDateTimeFormat(locales, options, 'time').format(this);
 	  }
 	  valueOf() {
 	    ValueOfThrows('PlainTime');
@@ -17498,7 +17541,7 @@
 	    let locales = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
 	    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 	    if (!IsTemporalYearMonth(this)) throw new TypeError$1('invalid receiver');
-	    return new DateTimeFormat(locales, options).format(this);
+	    return CreateDateTimeFormat(locales, options, 'date').format(this);
 	  }
 	  valueOf() {
 	    ValueOfThrows('PlainYearMonth');
