@@ -13211,12 +13211,12 @@
 	        }
 	        // last era always gets all "leftover" (older than epoch) years,
 	        // so no need for a comparison like below.
-	        eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
+	        eraYear = year - e.anchorEpoch.year + e.startingYear;
 	        return true;
 	      }
 	      const comparison = nonIsoHelperBase.compareCalendarDates(calendarDate, e.anchorEpoch);
 	      if (comparison >= 0) {
-	        eraYear = year - e.anchorEpoch.year + (e.hasYearZero ? 0 : 1);
+	        eraYear = year - e.anchorEpoch.year + e.startingYear;
 	        return true;
 	      }
 	      return false;
@@ -13261,7 +13261,7 @@
 	      if (matchingEra.reverseOf) {
 	        year = matchingEra.anchorEpoch.year - eraYear;
 	      } else {
-	        year = eraYear + matchingEra.anchorEpoch.year - (matchingEra.hasYearZero ? 0 : 1);
+	        year = eraYear + matchingEra.anchorEpoch.year - matchingEra.startingYear;
 	      }
 	      // We'll accept dates where the month/day is earlier than the start of
 	      // the era or after its end as long as it's in the same year. If that
@@ -14337,9 +14337,9 @@
 	 *   // the last (oldest) era in the array.
 	 *   reverseOf?: Era;
 	 *
-	 *   // If true, the era's years are 0-based. If omitted or false,
-	 *   // then the era's years are 1-based.
-	 *   hasYearZero?: boolean;
+	 *   // Number of the era's starting year (for example, 0 if there's a Year 0).
+	 *   // If omitted, the era's years are 1-based.
+	 *   startingYear?: number = 1;
 	 *
 	 *   // Override if this era is the anchor. Not normally used because
 	 *   // anchor eras are inferred.
@@ -14360,11 +14360,12 @@
 	  // anchor.
 	  let anchorEra;
 	  Call$1(ArrayPrototypeForEach, eras, [e => {
+	    e.startingYear ??= 1;
 	    if (e.isAnchor || !e.anchorEpoch && !e.reverseOf) {
 	      assert(!anchorEra, 'Invalid era data: cannot have multiple anchor eras');
 	      anchorEra = e;
 	      e.anchorEpoch = {
-	        year: e.hasYearZero ? 0 : 1
+	        year: e.startingYear
 	      };
 	    } else {
 	      assert(e.code, 'Invalid era data: if era name is blank, it must be the anchor era');
@@ -14471,7 +14472,7 @@
 	      const {
 	        anchorEra
 	      } = this;
-	      const isoYearEstimate = year + anchorEra.isoEpoch.year - (anchorEra.hasYearZero ? 0 : 1);
+	      const isoYearEstimate = year + anchorEra.isoEpoch.year - anchorEra.startingYear;
 	      return RegulateISODate(isoYearEstimate, month, day, 'constrain');
 	    }
 	  });
@@ -14653,7 +14654,7 @@
 	});
 	const helperJapanese = ObjectAssign(
 	// NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
-	// before Meiji 1, the `ce` and `bce` eras are used. Challenges with pre-Meiji
+	// before Meiji 6, the `ce` and `bce` eras are used. Challenges with pre-Meiji
 	// eras include:
 	// - Start/end dates of older eras are not precisely defined, which is
 	//   challenging given Temporal's need for precision
@@ -14661,10 +14662,10 @@
 	// - As historical research proceeds, new eras are discovered and existing era
 	//   dates are modified, leading to considerable churn which is not good for
 	//   Temporal use.
-	//  - The earliest era (in 645 CE) may not end up being the earliest depending
-	//    on future historical scholarship
-	//  - Before Meiji, Japan used a lunar (or lunisolar?) calendar but AFAIK
-	//    that's not reflected in the ICU implementation.
+	// - The earliest era (in 645 CE) may not end up being the earliest depending
+	//   on future historical scholarship
+	// - Before Meiji, Japan used a lunisolar calendar but that's not reflected in
+	//   the ICU implementation.
 	//
 	// For more discussion: https://github.com/tc39/proposal-temporal/issues/526.
 	//
@@ -14674,13 +14675,8 @@
 	//
 	// NOTE: Japan started using the Gregorian calendar in 6 Meiji, replacing a
 	// lunisolar calendar. So the day before January 1 of 6 Meiji (1873) was not
-	// December 31, but December 2, of 5 Meiji (1872). The existing Ecma-402
-	// Japanese calendar doesn't seem to take this into account, so neither do we:
-	// > args = ['en-ca-u-ca-japanese', { era: 'short' }]
-	// > new Date('1873-01-01T12:00').toLocaleString(...args)
-	// '1 1, 6 Meiji, 12:00:00 PM'
-	// > new Date('1872-12-31T12:00').toLocaleString(...args)
-	// '12 31, 5 Meiji, 12:00:00 PM'
+	// December 31, but M12-02, of 5 Meiji (1872). To avoid confusion between
+	// lunisolar and solar dates we count years prior to 1872 as CE.
 	makeHelperSameMonthDayAsGregorian('japanese', [
 	// The Japanese calendar `year` is just the ISO year, because (unlike other
 	// ICU calendars) there's no obvious "default era", we use the ISO year.
@@ -14735,15 +14731,14 @@
 	}, {
 	  code: 'meiji',
 	  isoEpoch: {
-	    year: 1868,
-	    month: 10,
-	    day: 23
+	    year: 1873,
+	    month: 1,
+	    day: 1
 	  },
 	  anchorEpoch: {
-	    year: 1868,
-	    month: 10,
-	    day: 23
-	  }
+	    year: 1873
+	  },
+	  startingYear: 6
 	}, {
 	  code: 'ce',
 	  isoEpoch: {
