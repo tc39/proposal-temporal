@@ -989,7 +989,7 @@
       <p>
         The operation throws a *RangeError* if _fields_.[[Year]] is not ~unset~ and the ISO 8601 year _year_ corresponding to _fields_.[[Year]] would cause ISODateWithinLimits to return *false* (i.e., _year_ is not in the inclusive interval from -271,821 to 275,760.)
         This is so as not to require calculating whether the month and day described in _fields_ exist in years arbitrarily far in the future or past.
-        Note this restriction does not apply when _calendar_ is *"iso8601"*.
+        Note this restriction does not apply to CalendarMonthDayToISOReferenceDate when _calendar_ is *"iso8601"*.
       </p>
     </emu-clause>
 
