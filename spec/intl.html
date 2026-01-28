@@ -690,6 +690,109 @@
       <p>The *"length"* property of a DateTime format function is *1*<sub>𝔽</sub>.</p>
     </emu-clause>
 
+    <emu-clause id="sec-formatdatetimepattern" type="abstract operation">
+      <h1>
+        FormatDateTimePattern (
+          _dateTimeFormat_: an Intl.DateTimeFormat,
+          _format_: a DateTime Format Record or a DateTime Range Pattern Format Record,
+          _pattern_: a Pattern String,
+          _epochNanoseconds_: a BigInt,
+          <ins>_isPlain_: a Boolean,</ins>
+        ): a List of Records with fields [[Type]] (a String) and [[Value]] (a String)
+      </h1>
+      <dl class="header">
+        <dt>description</dt>
+        <dd>It creates the corresponding parts for the epoch time _epochNanoseconds_ according to _pattern_ and to the effective locale and the formatting options of _dateTimeFormat_ and _format_<ins>, with _isPlain_ signifying whether _epochNanoseconds_ is an epoch-time representation of a wall-clock time</ins>.</dd>
+      </dl>
+      <emu-alg>
+        1. Let _locale_ be _dateTimeFormat_.[[Locale]].
+        1. Let _nfOptions_ be OrdinaryObjectCreate(*null*).
+        1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"numberingSystem"*, _dateTimeFormat_.[[NumberingSystem]]).
+        1. Perform ! CreateDataPropertyOrThrow(_nfOptions_, *"useGrouping"*, *false*).
+        1. Let _nf_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nfOptions_ »).
+        1. Let _nf2Options_ be OrdinaryObjectCreate(*null*).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"minimumIntegerDigits"*, *2*<sub>𝔽</sub>).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"numberingSystem"*, _dateTimeFormat_.[[NumberingSystem]]).
+        1. Perform ! CreateDataPropertyOrThrow(_nf2Options_, *"useGrouping"*, *false*).
+        1. Let _nf2_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nf2Options_ »).
+        1. If _format_ has a field [[fractionalSecondDigits]], then
+          1. Let _fractionalSecondDigits_ be _format_.[[fractionalSecondDigits]].
+          1. Let _nf3Options_ be OrdinaryObjectCreate(*null*).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"minimumIntegerDigits"*, 𝔽(_fractionalSecondDigits_)).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"numberingSystem"*, _dateTimeFormat_.[[NumberingSystem]]).
+          1. Perform ! CreateDataPropertyOrThrow(_nf3Options_, *"useGrouping"*, *false*).
+          1. Let _nf3_ be ! Construct(%Intl.NumberFormat%, « _locale_, _nf3Options_ »).
+        1. <ins>If _isPlain_ is *true*, let _timeZone_ be *"+00:00"*; else let _timeZone_ be _dateTimeFormat_.[[TimeZone]].</ins>
+        1. Let _tm_ be ToLocalTime(_epochNanoseconds_, _dateTimeFormat_.[[Calendar]], <del>_dateTimeFormat_.[[TimeZone]]</del><ins>_timeZone_</ins>).
+        1. Let _patternParts_ be PartitionPattern(_pattern_).
+        1. Let _result_ be a new empty List.
+        1. For each Record { [[Type]], [[Value]] } _patternPart_ of _patternParts_, do
+          1. Let _p_ be _patternPart_.[[Type]].
+          1. If _p_ is *"literal"*, then
+            1. Append the Record { [[Type]]: *"literal"*, [[Value]]: _patternPart_.[[Value]] } to _result_.
+          1. Else if _p_ is *"fractionalSecondDigits"*, then
+            1. Assert: _format_ has a field [[fractionalSecondDigits]].
+            1. Let _v_ be _tm_.[[Millisecond]].
+            1. Set _v_ to floor(_v_ × 10<sup>( _fractionalSecondDigits_ - 3 )</sup>).
+            1. Let _fv_ be FormatNumeric(_nf3_, _v_).
+            1. Append the Record { [[Type]]: *"fractionalSecond"*, [[Value]]: _fv_ } to _result_.
+          1. Else if _p_ is *"dayPeriod"*, then
+            1. Assert: _format_ has a field [[dayPeriod]].
+            1. Let _f_ be _format_.[[dayPeriod]].
+            1. Let _fv_ be a String value representing the day period of _tm_ in the form given by _f_; the String value depends upon the implementation and the effective locale of _dateTimeFormat_.
+            1. Append the Record { [[Type]]: _p_, [[Value]]: _fv_ } to _result_.
+          1. Else if _p_ is *"timeZoneName"*, then
+            1. Assert: _format_ has a field [[timeZoneName]].
+            1. Let _f_ be _format_.[[timeZoneName]].
+            1. Let _v_ be _dateTimeFormat_.[[TimeZone]].
+            1. Let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale of _dateTimeFormat_. The String value may also depend on the value of the [[InDST]] field of _tm_ if _f_ is *"short"*, *"long"*, *"shortOffset"*, or *"longOffset"*. If the implementation does not have such a localized representation of _f_, then use the String value of _v_ itself.
+            1. Append the Record { [[Type]]: _p_, [[Value]]: _fv_ } to _result_.
+          1. Else if _p_ matches a Property column of the row in <emu-xref href="#table-datetimeformat-components"></emu-xref>, then
+            1. Assert: _format_ has a field [[&lt;_p_>]].
+            1. Let _f_ be _format_.[[&lt;_p_>]].
+            1. Let _v_ be the value of _tm_'s field whose name is the Internal Slot column of the matching row.
+            1. If _p_ is *"year"* and _v_ ≤ 0, set _v_ to 1 - _v_.
+            1. If _p_ is *"month"*, set _v_ to _v_ + 1.
+            1. If _p_ is *"hour"* and _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
+              1. Set _v_ to _v_ modulo 12.
+              1. If _v_ is 0 and _dateTimeFormat_.[[HourCycle]] is *"h12"*, set _v_ to 12.
+            1. If _p_ is *"hour"* and _dateTimeFormat_.[[HourCycle]] is *"h24"*, then
+              1. If _v_ is 0, set _v_ to 24.
+            1. If _f_ is *"numeric"*, then
+              1. Let _fv_ be FormatNumeric(_nf_, _v_).
+            1. Else if _f_ is *"2-digit"*, then
+              1. Let _fv_ be FormatNumeric(_nf2_, _v_).
+              1. Let _codePoints_ be StringToCodePoints(_fv_).
+              1. Let _count_ be the number of elements in _codePoints_.
+              1. If _count_ > 2, then
+                1. Let _tens_ be _codePoints_[_count_ - 2].
+                1. Let _ones_ be _codePoints_[_count_ - 1].
+                1. Set _fv_ to CodePointsToString(« _tens_, _ones_ »).
+            1. Else if _f_ is *"narrow"*, *"short"*, or *"long"*, then
+              1. Let _fv_ be a String value representing _v_ in the form given by _f_; the String value depends upon the implementation and the effective locale and calendar of _dateTimeFormat_. If _p_ is *"month"*, then the String value may also depend on whether _format_.[[day]] is present. If the implementation does not have a localized representation of _f_, then use the String value of _v_ itself.
+            1. Append the Record { [[Type]]: _p_, [[Value]]: _fv_ } to _result_.
+          1. Else if _p_ is *"ampm"*, then
+            1. Let _v_ be _tm_.[[Hour]].
+            1. If _v_ is greater than 11, then
+              1. Let _fv_ be an ILD String value representing *"post meridiem"*.
+            1. Else,
+              1. Let _fv_ be an ILD String value representing *"ante meridiem"*.
+            1. Append the Record { [[Type]]: *"dayPeriod"*, [[Value]]: _fv_ } to _result_.
+          1. Else if _p_ is *"relatedYear"*, then
+            1. Let _v_ be _tm_.[[RelatedYear]].
+            1. Let _fv_ be FormatNumeric(_nf_, _v_).
+            1. Append the Record { [[Type]]: *"relatedYear"*, [[Value]]: _fv_ } to _result_.
+          1. Else if _p_ is *"yearName"*, then
+            1. Let _v_ be _tm_.[[YearName]].
+            1. Let _fv_ be an ILD String value representing _v_.
+            1. Append the Record { [[Type]]: *"yearName"*, [[Value]]: _fv_ } to _result_.
+          1. Else,
+            1. Let _unknown_ be an implementation-, locale-, and numbering system-dependent String based on _epochNanoseconds_ and _p_.
+            1. Append the Record { [[Type]]: *"unknown"*, [[Value]]: _unknown_ } to _result_.
+        1. Return _result_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-partitiondatetimepattern" type="abstract operation">
       <h1>
         PartitionDateTimePattern (
@@ -713,7 +816,7 @@
           1. Let _pattern_ be _format_.[[pattern12]].
         1. Else,
           1. Let _pattern_ be _format_.[[pattern]].
-        1. Let _result_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _epochNanoseconds_).
+        1. Let _result_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _epochNanoseconds_<ins>, _formatRecord_.[[IsPlain]]</ins>).
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -789,6 +892,7 @@
         1. <del>Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].</del>
         1. <ins>Let _format_ be _xFormatRecord_.[[Format]].</ins>
         1. <ins>Assert: _format_ is equal to _yFormatRecord_.[[Format]].</ins>
+        1. <ins>Assert: _xFormatRecord_.[[IsPlain]] = _yFormatRecord_.[[IsPlain]].</ins>
         1. If <ins>_format_ has a field [[hour]] and</ins> _dateTimeFormat_.[[HourCycle]] is *"h11"* or *"h12"*, then
           1. Let _pattern_ be _format_.[[pattern12]].
           1. Let _rangePatterns_ be _format_.[[rangePatterns12]].
@@ -826,7 +930,7 @@
               1. Set _relevantFieldsEqual_ to *false*.
         1. If _relevantFieldsEqual_ is *true*, then
           1. Let _collapsedResult_ be a new empty List.
-          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _xEpochNanoseconds_).
+          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _format_, _pattern_, _xEpochNanoseconds_<ins>, _xFormatRecord_.[[IsPlain]]</ins>).
           1. For each Record { [[Type]], [[Value]] } _r_ of _resultParts_, do
             1. Append the Record { [[Type]]: _r_.[[Type]], [[Value]]: _r_.[[Value]], [[Source]]: *"shared"* } to _collapsedResult_.
           1. Return _collapsedResult_.
@@ -840,7 +944,7 @@
             1. Let _z_ be _xEpochNanoseconds_.
           1. Else,
             1. Let _z_ be _yEpochNanoseconds_.
-          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _selectedRangePattern_, _pattern_, _z_).
+          1. Let _resultParts_ be FormatDateTimePattern(_dateTimeFormat_, _selectedRangePattern_, _pattern_, _z_<ins>, _xFormatRecord_.[[IsPlain]]</ins>).
           1. For each Record { [[Type]], [[Value]] } _r_ of _resultParts_, do
             1. Append the Record { [[Type]]: _r_.[[Type]], [[Value]]: _r_.[[Value]], [[Source]]: _source_ } to _rangeResult_.
         1. Return _rangeResult_.
@@ -972,6 +1076,10 @@
               <td>[[EpochNanoseconds]]</td>
               <td>a BigInt</td>
             </tr>
+            <tr>
+              <td>[[IsPlain]]</td>
+              <td>a Boolean</td>
+            </tr>
           </table>
         </emu-table>
       </emu-clause>
@@ -988,12 +1096,13 @@
         <emu-alg>
           1. If _temporalDate_.[[Calendar]] is not _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalDate_.[[ISODate]], NoonTimeRecord()).
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
+          1. Let _epochNs_ be GetUTCEpochNanoseconds(_isoDateTime_).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainDateFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _epochNs_
+            [[EpochNanoseconds]]: _epochNs_,
+            [[IsPlain]]: *true*
             }.
         </emu-alg>
       </emu-clause>
@@ -1011,12 +1120,13 @@
           1. If _temporalYearMonth_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalYearMonth_.[[ISODate]], NoonTimeRecord()).
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
+          1. Let _epochNs_ be GetUTCEpochNanoseconds(_isoDateTime_).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainYearMonthFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _epochNs_
+            [[EpochNanoseconds]]: _epochNs_,
+            [[IsPlain]]: *true*
             }.
         </emu-alg>
       </emu-clause>
@@ -1034,12 +1144,13 @@
           1. If _temporalMonthDay_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_temporalMonthDay_.[[ISODate]], NoonTimeRecord()).
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
+          1. Let _epochNs_ be GetUTCEpochNanoseconds(_isoDateTime_).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainMonthDayFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _epochNs_
+            [[EpochNanoseconds]]: _epochNs_,
+            [[IsPlain]]: *true*
             }.
         </emu-alg>
       </emu-clause>
@@ -1056,12 +1167,13 @@
         <emu-alg>
           1. Let _isoDate_ be CreateISODateRecord(1970, 1, 1).
           1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _temporalTime_.[[Time]]).
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _isoDateTime_, ~compatible~).
+          1. Let _epochNs_ be GetUTCEpochNanoseconds(_isoDateTime_).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainTimeFormat]].
           1. If _format_ is *null*, throw a *TypeError* exception.
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _epochNs_
+            [[EpochNanoseconds]]: _epochNs_,
+            [[IsPlain]]: *true*
             }.
         </emu-alg>
       </emu-clause>
@@ -1078,11 +1190,12 @@
         <emu-alg>
           1. If _dateTime_.[[Calendar]] is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], then
             1. Throw a *RangeError* exception.
-          1. Let _epochNs_ be ? GetEpochNanosecondsFor(_dateTimeFormat_.[[TimeZone]], _dateTime_.[[ISODateTime]], ~compatible~).
+          1. Let _epochNs_ be GetUTCEpochNanoseconds(_dateTime_.[[ISODateTime]]).
           1. Let _format_ be _dateTimeFormat_.[[TemporalPlainDateTimeFormat]].
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _epochNs_
+            [[EpochNanoseconds]]: _epochNs_,
+            [[IsPlain]]: *true*
             }.
         </emu-alg>
       </emu-clause>
@@ -1100,7 +1213,8 @@
           1. Let _format_ be _dateTimeFormat_.[[TemporalInstantFormat]].
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _instant_.[[EpochNanoseconds]]
+            [[EpochNanoseconds]]: _instant_.[[EpochNanoseconds]],
+            [[IsPlain]]: *false*
             }.
         </emu-alg>
       </emu-clause>
@@ -1121,7 +1235,8 @@
           1. Let _format_ be _dateTimeFormat_.[[DateTimeFormat]].
           1. Return Value Format Record {
             [[Format]]: _format_,
-            [[EpochNanoseconds]]: _epochNanoseconds_
+            [[EpochNanoseconds]]: _epochNanoseconds_,
+            [[IsPlain]]: *false*
             }.
         </emu-alg>
       </emu-clause>
