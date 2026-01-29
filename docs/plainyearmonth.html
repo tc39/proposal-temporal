@@ -426,9 +426,8 @@ The default is <code>&#39;constrain&#39;</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainYearMonth</code> object which is the month indicated by <code>yearMonth</code> plus <code>duration</code>.</p>
 <p>This method adds <code>duration</code> to <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
-If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
-<p>If <code>duration</code> has any units smaller than <code>months</code>, they will be treated as if they are being added to the first moment of the month given by <code>yearMonth</code>.
-Effectively, this means that adding things like <code>{ days: 1 }</code> will be ignored.</p>
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.
+There must not be any units smaller than <code>months</code> in <code>duration</code>.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainYearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.PlainYearMonth</code> does not distinguish days.
@@ -450,9 +449,8 @@ The default is <code>&#39;constrain&#39;</code>.</li>
 <p><strong>Returns:</strong> a new <code>Temporal.PlainYearMonth</code> object which is the month indicated by <code>yearMonth</code> minus <code>duration</code>.</p>
 <p>This method subtracts <code>duration</code> from <code>yearMonth</code>, returning a month that is in the future relative to <code>yearMonth</code>.</p>
 <p>The <code>duration</code> argument is an object with properties denoting a duration, such as <code>{ months: 5 }</code>, or a string such as <code>P5M</code>, or a <code>Temporal.Duration</code> object.
-If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.</p>
-<p>If <code>duration</code> has any units smaller than <code>months</code>, they will be treated as if they are being subtracted from the last moment of the month given by <code>yearMonth</code>.
-Effectively, this means that subtracting things like <code>{ days: 1 }</code> will be ignored.</p>
+If <code>duration</code> is not a <code>Temporal.Duration</code> object, then it will be converted to one as if it were passed to <code>Temporal.Duration.from()</code>.
+There must not be any units smaller than <code>months</code> in <code>duration</code>.</p>
 <p>If the result is earlier or later than the range of dates that <code>Temporal.PlainYearMonth</code> can represent (approximately half a million years centered on the <a href="https://en.wikipedia.org/wiki/Unix_time">Unix epoch</a>), then this method will throw a <code>RangeError</code> regardless of <code>overflow</code>.</p>
 <p>The <code>overflow</code> option has no effect in the default ISO 8601 calendar, because a year is always 12 months and therefore not ambiguous.
 It doesn&#39;t matter in this case that years and months can be different numbers of days, as the resolution of <code>Temporal.PlainYearMonth</code> does not distinguish days.
