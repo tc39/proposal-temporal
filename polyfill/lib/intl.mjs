@@ -422,7 +422,7 @@ function timeAmend(originalOptions) {
   }
   if (!hasTimeOptions(options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
-      throw new TypeError(`cannot format Temporal.PlainTime with options [${ObjectKeys(originalOptions)}]`);
+      throw new TypeErrorCtor(`cannot format Temporal.PlainTime with options [${ObjectKeys(originalOptions)}]`);
     }
     ObjectAssign(options, {
       hour: 'numeric',
@@ -459,7 +459,7 @@ function yearMonthAmend(originalOptions) {
   }
   if (!('year' in options || 'month' in options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
-      throw new TypeError(`cannot format PlainYearMonth with options [${ObjectKeys(originalOptions)}]`);
+      throw new TypeErrorCtor(`cannot format PlainYearMonth with options [${ObjectKeys(originalOptions)}]`);
     }
     ObjectAssign(options, { year: 'numeric', month: 'numeric' });
   }
@@ -492,7 +492,7 @@ function monthDayAmend(originalOptions) {
   }
   if (!('month' in options || 'day' in options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
-      throw new TypeError(`cannot format PlainMonthDay with options [${ObjectKeys(originalOptions)}]`);
+      throw new TypeErrorCtor(`cannot format PlainMonthDay with options [${ObjectKeys(originalOptions)}]`);
     }
     ObjectAssign(options, { month: 'numeric', day: 'numeric' });
   }
@@ -510,7 +510,7 @@ function dateAmend(originalOptions) {
   });
   if (!hasDateOptions(options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
-      throw new TypeError(`cannot format PlainDate with options [${ObjectKeys(originalOptions)}]`);
+      throw new TypeErrorCtor(`cannot format PlainDate with options [${ObjectKeys(originalOptions)}]`);
     }
     ObjectAssign(options, {
       year: 'numeric',
@@ -543,7 +543,7 @@ function datetimeAmend(originalOptions) {
   }
   if (!hasTimeOptions(options) && !hasDateOptions(options)) {
     if (hasAnyDateTimeOptions(originalOptions)) {
-      throw new TypeError(`cannot format PlainDateTime with options [${ObjectKeys(originalOptions)}]`);
+      throw new TypeErrorCtor(`cannot format PlainDateTime with options [${ObjectKeys(originalOptions)}]`);
     }
     ObjectAssign(options, {
       year: 'numeric',
