@@ -8,7 +8,11 @@ import {
 } from './support.mjs';
 
 const interestingYearMonths = makeYearMonthCases();
-const interestingDurations = makeDurationCases();
+const interestingDurations = makeDurationCases().filter(
+  // We don't need to test over and over that units lower than months are not
+  // allowed, but years/months mixed with lower units are still interesting
+  ([duration]) => duration.blank || duration.years !== 0 || duration.months !== 0
+);
 const total = interestingYearMonths.length * interestingDurations.length;
 
 await time(async (start) => {
