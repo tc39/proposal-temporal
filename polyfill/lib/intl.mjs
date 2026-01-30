@@ -66,16 +66,10 @@ const OPTIONS = SymbolCtor('options');
 // Construction of built-in Intl.DateTimeFormat objects is sloooooow,
 // so we'll only create those instances when we need them.
 // See https://bugs.chromium.org/p/v8/issues/detail?id=6528
-function getSlotLazy(obj, slot, isPlain) {
+function getSlotLazy(obj, slot) {
   let val = GetSlot(obj, slot);
   if (typeof val === 'function') {
-    const baseOptions = val(GetSlot(obj, OPTIONS));
-    const options = ObjectAssign({}, baseOptions);
-    const amendedOptions = val(options);
-    if (isPlain) {
-      amendedOptions.timeZone = 'UTC';
-    }
-    val = new IntlDateTimeFormat(GetSlot(obj, LOCALE), amendedOptions);
+    val = new IntlDateTimeFormat(GetSlot(obj, LOCALE), val(GetSlot(obj, OPTIONS)));
     SetSlot(obj, slot, val);
   }
   return val;
@@ -436,6 +430,7 @@ function timeAmend(originalOptions) {
       second: 'numeric'
     });
   }
+  options.timeZone = 'UTC';
   return options;
 }
 
@@ -469,6 +464,7 @@ function yearMonthAmend(originalOptions) {
     }
     ObjectAssign(options, { year: 'numeric', month: 'numeric' });
   }
+  options.timeZone = 'UTC';
   return options;
 }
 
@@ -502,6 +498,7 @@ function monthDayAmend(originalOptions) {
     }
     ObjectAssign(options, { month: 'numeric', day: 'numeric' });
   }
+  options.timeZone = 'UTC';
   return options;
 }
 
@@ -524,6 +521,7 @@ function dateAmend(originalOptions) {
       day: 'numeric'
     });
   }
+  options.timeZone = 'UTC';
   return options;
 }
 
@@ -560,6 +558,7 @@ function datetimeAmend(originalOptions) {
       second: 'numeric'
     });
   }
+  options.timeZone = 'UTC';
   return options;
 }
 
@@ -631,7 +630,7 @@ function extractOverrides(temporalObj, main) {
       isoDate: { year: 1970, month: 1, day: 1 },
       time: GetSlot(temporalObj, TIME)
     };
-    const formatter = getSlotLazy(main, TIME_FMT, /* isPlain = */ true);
+    const formatter = getSlotLazy(main, TIME_FMT);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainTime with only date options');
     return {
       epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
@@ -648,7 +647,7 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
-    const formatter = getSlotLazy(main, YM, /* isPlain = */ true);
+    const formatter = getSlotLazy(main, YM);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainYearMonth with only time options');
     return {
       epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
@@ -665,7 +664,7 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
-    const formatter = getSlotLazy(main, MD, /* isPlain = */ true);
+    const formatter = getSlotLazy(main, MD);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainMonthDay with only time options');
     return {
       epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
@@ -682,7 +681,7 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
-    const formatter = getSlotLazy(main, DATE, /* isPlain = */ true);
+    const formatter = getSlotLazy(main, DATE);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainDate with only time options');
     return {
       epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
@@ -701,7 +700,7 @@ function extractOverrides(temporalObj, main) {
     const isoDateTime = GetSlot(temporalObj, ISO_DATE_TIME);
     return {
       epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
-      formatter: getSlotLazy(main, DATETIME, /* isPlain = */ true)
+      formatter: getSlotLazy(main, DATETIME)
     };
   }
 
@@ -714,7 +713,7 @@ function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalInstant(temporalObj)) {
     return {
       epochNs: GetSlot(temporalObj, EPOCHNANOSECONDS),
-      formatter: getSlotLazy(main, INST, /* isPlain = */ false)
+      formatter: getSlotLazy(main, INST)
     };
   }
 
