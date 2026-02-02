@@ -15639,6 +15639,7 @@
 	      second: 'numeric'
 	    });
 	  }
+	  options.timeZone = 'UTC';
 	  return options;
 	}
 	function yearMonthAmend(originalOptions) {
@@ -15686,6 +15687,7 @@
 	      month: 'numeric'
 	    });
 	  }
+	  options.timeZone = 'UTC';
 	  return options;
 	}
 	function monthDayAmend(originalOptions) {
@@ -15733,6 +15735,7 @@
 	      day: 'numeric'
 	    });
 	  }
+	  options.timeZone = 'UTC';
 	  return options;
 	}
 	function dateAmend(originalOptions) {
@@ -15754,6 +15757,7 @@
 	      day: 'numeric'
 	    });
 	  }
+	  options.timeZone = 'UTC';
 	  return options;
 	}
 	function datetimeAmend(originalOptions) {
@@ -15812,6 +15816,7 @@
 	      second: 'numeric'
 	    });
 	  }
+	  options.timeZone = 'UTC';
 	  return options;
 	}
 	function instantAmend(options) {
@@ -15867,7 +15872,7 @@
 	    const formatter = getSlotLazy(main, TIME_FMT);
 	    if (!formatter) throw new TypeError$1('cannot format PlainTime with only date options');
 	    return {
-	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
+	      epochNs: GetUTCEpochNanoseconds(isoDateTime),
 	      formatter
 	    };
 	  }
@@ -15881,7 +15886,7 @@
 	    const formatter = getSlotLazy(main, YM);
 	    if (!formatter) throw new TypeError$1('cannot format PlainYearMonth with only time options');
 	    return {
-	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
+	      epochNs: GetUTCEpochNanoseconds(isoDateTime),
 	      formatter
 	    };
 	  }
@@ -15895,7 +15900,7 @@
 	    const formatter = getSlotLazy(main, MD);
 	    if (!formatter) throw new TypeError$1('cannot format PlainMonthDay with only time options');
 	    return {
-	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
+	      epochNs: GetUTCEpochNanoseconds(isoDateTime),
 	      formatter
 	    };
 	  }
@@ -15909,7 +15914,7 @@
 	    const formatter = getSlotLazy(main, DATE);
 	    if (!formatter) throw new TypeError$1('cannot format PlainDate with only time options');
 	    return {
-	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
+	      epochNs: GetUTCEpochNanoseconds(isoDateTime),
 	      formatter
 	    };
 	  }
@@ -15921,7 +15926,7 @@
 	    }
 	    const isoDateTime = GetSlot(temporalObj, ISO_DATE_TIME);
 	    return {
-	      epochNs: GetEpochNanosecondsFor(GetSlot(main, TZ_CANONICAL), isoDateTime, 'compatible'),
+	      epochNs: GetUTCEpochNanoseconds(isoDateTime),
 	      formatter: getSlotLazy(main, DATETIME)
 	    };
 	  }
