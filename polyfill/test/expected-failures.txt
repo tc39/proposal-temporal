@@ -30,8 +30,7 @@ intl402/Temporal/PlainDateTime/prototype/daysInYear/basic-chinese.js
 intl402/Temporal/PlainYearMonth/prototype/daysInYear/basic-chinese.js
 intl402/Temporal/ZonedDateTime/prototype/daysInYear/basic-chinese.js
 
-# https://github.com/tc39/test262/commit/95d90bf9f2f519cad3305e3948cbb1663b0b667a
-# Fails on V8, no upstream bug open yet
+# https://issues.chromium.org/issues/40070535
 intl402/DateTimeFormat/prototype/resolvedOptions/resolved-calendar-unicode-extensions-and-options.js
 intl402/DateTimeFormat/prototype/resolvedOptions/resolved-numbering-system-unicode-extensions-and-options.js
 
@@ -41,3 +40,6 @@ intl402/Temporal/PlainDateTime/from/extreme-dates.js
 # Also fails because of https://github.com/tc39/proposal-temporal/issues/3251
 intl402/Temporal/PlainYearMonth/from/extreme-dates.js
 intl402/Temporal/ZonedDateTime/from/extreme-dates.js
+
+# https://issues.chromium.org/issues/481634945
+intl402/DateTimeFormat/prototype/formatToParts/era.js
