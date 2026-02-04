@@ -26,6 +26,7 @@ for test in \
   instantaddition \
   instantdifference \
   instantrounding \
+  monthdayrefyear \
   startofday \
   timeaddition \
   timedifference \
