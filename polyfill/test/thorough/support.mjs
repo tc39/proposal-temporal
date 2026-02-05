@@ -959,6 +959,80 @@ export function makeZonedCases() {
 // If process.hrtime is not available, misuse Temporal.Now
 const nowBigInt = globalThis.process?.hrtime.bigint ?? (() => temporalImpl.Now.instant().epochNanoseconds);
 
+export const parseableDates = [
+  ['1976-11-18', [1976, 11, 18]],
+  ['19761118', [1976, 11, 18]],
+  ['-009999-11-18', [-9999, 11, 18]],
+  ['-0099991118', [-9999, 11, 18]],
+  ['+191976-11-18', [191976, 11, 18]],
+  ['+1919761118', [191976, 11, 18]]
+];
+
+export const parseableNegativeOffsets = [
+  '-04',
+  '-04:00',
+  '-04:00:00',
+  '-04:00:00.0',
+  '-04:00:00.00',
+  '-04:00:00.000',
+  '-04:00:00.0000',
+  '-04:00:00.00000',
+  '-04:00:00.000000',
+  '-04:00:00.0000000',
+  '-04:00:00.00000000',
+  '-04:00:00.000000000'
+].flatMap((offset) => {
+  const variations = [offset];
+  if (offset.includes(':')) variations.push(offset.replaceAll(':', ''));
+  if (offset.includes('.')) variations.push(offset.replace('.', ','));
+  return variations;
+});
+
+export const parseablePositiveOffsets = parseableNegativeOffsets.map((str) => '+01' + str.slice(3));
+export const parseableZeroOffsets = parseableNegativeOffsets.flatMap((str) => [
+  '+00' + str.slice(3),
+  '-00' + str.slice(3)
+]);
+
+export const parseableTimes = [
+  ['15', [15]],
+  ['15:23', [15, 23]],
+  ['15:23:30', [15, 23, 30]],
+  ['15:23:30.1', [15, 23, 30, 100]],
+  ['15:23:30.12', [15, 23, 30, 120]],
+  ['15:23:30.123', [15, 23, 30, 123]],
+  ['15:23:30.1234', [15, 23, 30, 123, 400]],
+  ['15:23:30.12345', [15, 23, 30, 123, 450]],
+  ['15:23:30.123456', [15, 23, 30, 123, 456]],
+  ['15:23:30.1234567', [15, 23, 30, 123, 456, 700]],
+  ['15:23:30.12345678', [15, 23, 30, 123, 456, 780]]
+].flatMap(([isoString, expectation]) => {
+  const variants = [[isoString, expectation]];
+  if (isoString.includes(':')) variants.push([isoString.replaceAll(':', ''), expectation]);
+  if (isoString.includes('.')) variants.push([isoString.replace('.', ','), expectation]);
+  return variants;
+});
+
+export const parseablePlus1Zones = [
+  '+01:00',
+  '+01',
+  '+0100',
+  'Africa/Lagos',
+  '!Africa/Lagos',
+  'africa/lagos',
+  'AFRICA/LAGOS',
+  'aFrIcA/lAgOs'
+];
+
+export const parseableAnnotations = [
+  '',
+  '[foo=bar]',
+  '[u-ca=iso8601]',
+  '[!u-ca=iso8601]',
+  '[u-ca=ISO8601]',
+  '[u-ca=iSo8601]'
+];
+
 export const roundingModes = [
   'ceil',
   'floor',

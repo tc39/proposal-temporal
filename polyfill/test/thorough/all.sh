@@ -20,20 +20,25 @@ for test in \
   dateaddition \
   datedifference \
   datemodify \
+  dateparsing \
   dateroundtrip \
   datetimeaddition \
   datetimedifference \
   datetimemodify \
+  datetimeparsing \
   datetimerounding \
   datetimeroundtrip \
   durationaddition \
   durationmodify \
+  durationparsing \
   durationroundtrip \
   durationtotal \
   instantaddition \
   instantdifference \
+  instantparsing \
   instantrounding \
   instantroundtrip \
+  monthdayparsing \
   monthdayrefyear \
   monthdaymodify \
   monthdayroundtrip \
@@ -41,16 +46,19 @@ for test in \
   timeaddition \
   timedifference \
   timemodify \
+  timeparsing \
   timerounding \
   timeroundtrip \
   yearcycle \
   yearmonthaddition \
   yearmonthdifference \
   yearmonthmodify \
+  yearmonthparsing \
   yearmonthroundtrip \
   zonedaddition \
   zoneddifference \
   zonedmodify \
+  zonedparsing \
   zonedrounding \
   zonedroundtrip
 do
