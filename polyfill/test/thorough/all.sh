@@ -19,12 +19,15 @@ for test in \
   calendarisolike \
   dateaddition \
   datedifference \
+  datemodify \
   dateroundtrip \
   datetimeaddition \
   datetimedifference \
+  datetimemodify \
   datetimerounding \
   datetimeroundtrip \
   durationaddition \
+  durationmodify \
   durationroundtrip \
   durationtotal \
   instantaddition \
@@ -32,18 +35,22 @@ for test in \
   instantrounding \
   instantroundtrip \
   monthdayrefyear \
+  monthdaymodify \
   monthdayroundtrip \
   startofday \
   timeaddition \
   timedifference \
+  timemodify \
   timerounding \
   timeroundtrip \
   yearcycle \
   yearmonthaddition \
   yearmonthdifference \
+  yearmonthmodify \
   yearmonthroundtrip \
   zonedaddition \
   zoneddifference \
+  zonedmodify \
   zonedrounding \
   zonedroundtrip
 do
