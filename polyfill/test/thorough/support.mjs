@@ -677,6 +677,24 @@ export function makeDateCases() {
   return interestingDates;
 }
 
+export function makeDatePropertyBags() {
+  const interestingDays = [undefined, 1, 15, 27, 28, 29, 30, 31];
+  const interestingPropertyBags = [];
+  for (const [ymBag, str] of [[{}, '']].concat(makeYearMonthPropertyBags())) {
+    for (const day of interestingDays) {
+      const bag = { ...ymBag };
+      let desc = '' + str;
+      if (day !== undefined) {
+        bag.day = day;
+        desc += `${day}d`;
+      }
+      interestingPropertyBags.push([bag, desc]);
+    }
+  }
+  interestingPropertyBags.splice(0, 1); // remove the empty bag
+  return interestingPropertyBags;
+}
+
 export function makeDateTimeCases() {
   // Every interesting date with every interesting time would take hours and
   // hours to run. That would be interesting too, but too long for a CI job. So
@@ -703,6 +721,22 @@ export function makeDateTimeCases() {
     interestingDateTimeCases.push([datetime, datetime.toString()]);
   }
   return interestingDateTimeCases;
+}
+
+export function makeDateTimePropertyBags() {
+  // Likewise, every interesting date property bag with every interesting time
+  // property bag is too much.
+  let timeIndex = 0;
+  const timeBags = [[{}, '']].concat(makeTimePropertyBags());
+  const interestingPropertyBags = [];
+  for (const [dateBag, dateStr] of [[{}, '']].concat(makeDatePropertyBags())) {
+    const [timeBag, timeStr] = timeBags[timeIndex];
+    timeIndex++;
+    timeIndex %= interestingTimes.length;
+    interestingPropertyBags.push([{ ...dateBag, ...timeBag }, dateStr + timeStr]);
+  }
+  interestingPropertyBags.splice(0, 1); // remove the empty bag
+  return interestingPropertyBags;
 }
 
 export function makeDurationCases() {
@@ -788,6 +822,57 @@ export function makeTimeCases() {
   });
 }
 
+export function makeTimePropertyBags() {
+  const interestingHours = [undefined, 0, 1, 12, 23];
+  const interestingMinutes = [undefined, 0, 1, 37, 59];
+  const interestingSeconds = [undefined, 0, 1, 29, 59];
+  const interestingMilli = [undefined, 0, 1, 347, 999];
+  const interestingMicro = [undefined, 0, 1, 561, 999];
+  const interestingNano = [undefined, 0, 1, 722, 999];
+  const interestingPropertyBags = [];
+  for (const h of interestingHours) {
+    for (const min of interestingMinutes) {
+      for (const s of interestingSeconds) {
+        for (const ms of interestingMilli) {
+          for (const µs of interestingMicro) {
+            for (const ns of interestingNano) {
+              const bag = {};
+              let desc = '';
+              if (h !== undefined) {
+                bag.hour = h;
+                desc += `${h}h`;
+              }
+              if (min !== undefined) {
+                bag.minute = min;
+                desc += `${min}mn`;
+              }
+              if (s !== undefined) {
+                bag.second = s;
+                desc += `${s}s`;
+              }
+              if (ms !== undefined) {
+                bag.millisecond = ms;
+                desc += `${ms}ms`;
+              }
+              if (µs !== undefined) {
+                bag.microsecond = µs;
+                desc += `${µs}u`;
+              }
+              if (ns !== undefined) {
+                bag.nanosecond = ns;
+                desc += `${ns}n`;
+              }
+              interestingPropertyBags.push([bag, desc]);
+            }
+          }
+        }
+      }
+    }
+  }
+  interestingPropertyBags.splice(0, 1); // remove the empty bag
+  return interestingPropertyBags;
+}
+
 export function makeYearMonthCases() {
   const interestingYearMonths = [];
   for (const year of interestingYears) {
@@ -800,6 +885,38 @@ export function makeYearMonthCases() {
     }
   }
   return interestingYearMonths;
+}
+
+export function makeYearMonthPropertyBags() {
+  const interestingMonths = [undefined, 2, 6, 10];
+  const interestingPropertyBags = [];
+  for (const year of [undefined].concat(interestingYears)) {
+    for (const month of interestingMonths) {
+      let monthVariations = [[{}, '']];
+      if (month !== undefined) {
+        // Also test monthCode, and both month and monthCode
+        const monthCode = 'M' + String(month).padStart(2, '0');
+        monthVariations = [
+          [{ month }, `${month}m`],
+          [{ monthCode }, `${monthCode}c`],
+          [{ month, monthCode }, `${month}m${monthCode}c`]
+        ];
+      }
+      for (const [monthProps, monthDesc] of monthVariations) {
+        const bag = {};
+        let desc = '';
+        if (year !== undefined) {
+          bag.year = year;
+          desc += `${year}y`;
+        }
+        Object.assign(bag, monthProps);
+        desc += monthDesc;
+        interestingPropertyBags.push([bag, desc]);
+      }
+    }
+  }
+  interestingPropertyBags.splice(0, 1); // remove the empty bag
+  return interestingPropertyBags;
 }
 
 export const interestingNonNamedTimeZones = ['UTC', '+01:23', '-12:34'];
