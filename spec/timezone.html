@@ -401,14 +401,13 @@
       </dl>
       <emu-alg>
         1. If _one_ is _two_, return *true*.
-        1. Let _offsetMinutesOne_ be ! ParseTimeZoneIdentifier(_one_).[[OffsetMinutes]].
-        1. Let _offsetMinutesTwo_ be ! ParseTimeZoneIdentifier(_two_).[[OffsetMinutes]].
-        1. If _offsetMinutesOne_ is ~empty~ and _offsetMinutesTwo_ is ~empty~, then
+        1. If IsOffsetTimeZoneIdentifier(_one_) is *false* and IsOffsetTimeZoneIdentifier(_two_) is *false*, then
           1. Let _recordOne_ be GetAvailableNamedTimeZoneIdentifier(_one_).
           1. Let _recordTwo_ be GetAvailableNamedTimeZoneIdentifier(_two_).
-          1. If _recordOne_ is not ~empty~ and _recordTwo_ is not ~empty~ and _recordOne_.[[PrimaryIdentifier]] is _recordTwo_.[[PrimaryIdentifier]], return *true*.
-        1. Else,
-          1. If _offsetMinutesOne_ is not ~empty~ and _offsetMinutesTwo_ is not ~empty~ and _offsetMinutesOne_ = _offsetMinutesTwo_, return *true*.
+          1. Assert: _recordOne_ is not ~empty~.
+          1. Assert: _recordTwo_ is not ~empty~.
+          1. If _recordOne_.[[PrimaryIdentifier]] is _recordTwo_.[[PrimaryIdentifier]], return *true*.
+        1. Assert: If _one_ and _two_ are both offset time zone identifiers, they do not represent the same number of offset minutes.
         1. Return *false*.
       </emu-alg>
     </emu-clause>
