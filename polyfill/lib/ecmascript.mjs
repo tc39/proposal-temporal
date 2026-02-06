@@ -1814,22 +1814,15 @@ export function ToTemporalTimeZoneIdentifier(temporalTimeZoneLike) {
 
 export function TimeZoneEquals(one, two) {
   if (one === two) return true;
-  const offsetMinutes1 = ParseTimeZoneIdentifier(one).offsetMinutes;
-  const offsetMinutes2 = ParseTimeZoneIdentifier(two).offsetMinutes;
-  if (offsetMinutes1 === undefined && offsetMinutes2 === undefined) {
-    // Calling GetAvailableNamedTimeZoneIdentifier is costly, so (unlike the
-    // spec) the polyfill will early-return if one of them isn't recognized. Try
-    // the second ID first because it's more likely to be unknown, because it
-    // can come from the argument of TimeZone.p.equals as opposed to the first
-    // ID which comes from the receiver.
-    const idRecord2 = GetAvailableNamedTimeZoneIdentifier(two);
-    assert(idRecord2, `${JSONStringify(two)} has an invalid time zone`);
+  if (!IsOffsetTimeZoneIdentifier(one) && !IsOffsetTimeZoneIdentifier(two)) {
     const idRecord1 = GetAvailableNamedTimeZoneIdentifier(one);
+    const idRecord2 = GetAvailableNamedTimeZoneIdentifier(two);
     assert(idRecord1, `${JSONStringify(one)} has an invalid time zone`);
+    assert(idRecord2, `${JSONStringify(two)} has an invalid time zone`);
     return idRecord1.primaryIdentifier === idRecord2.primaryIdentifier;
-  } else {
-    return offsetMinutes1 === offsetMinutes2;
   }
+  assert(ParseTimeZoneIdentifier(one).offsetMinutes !== ParseTimeZoneIdentifier(two).offsetMinutes);
+  return false;
 }
 
 export function GetOffsetNanosecondsFor(timeZone, epochNs) {
