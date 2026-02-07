@@ -1686,7 +1686,7 @@
         1. Assert: _startEpochNs_ ≠ _endEpochNs_.
         1. Let _progress_ be (_destEpochNs_ - _startEpochNs_) / (_endEpochNs_ - _startEpochNs_).
         1. Let _total_ be _r1_ + _progress_ × _increment_ × _sign_.
-        1. NOTE: The above two steps cannot be implemented directly using floating-point arithmetic. This division can be implemented as if expressing the denominator and numerator of _total_ as two time durations, and performing one division operation with a floating-point result.
+        1. NOTE: The above two steps cannot be implemented directly using floating-point arithmetic. This division can be implemented as if expressing _total_ as the quotient of two time durations (which may not be safe integers), performing all other calculations before the division, and finally performing one division operation with a floating-point result for _total_. The division can be implemented in C++ with the `__float128` type if the compiler supports it, or with software emulation such as in the <a href="https://bellard.org/softfp/">SoftFP</a> library.
         1. Assert: 0 ≤ _progress_ ≤ 1.
         1. If _sign_ &lt; 0, let _isNegative_ be ~negative~; else let _isNegative_ be ~positive~.
         1. Let _unsignedRoundingMode_ be GetUnsignedRoundingMode(_roundingMode_, _isNegative_).
