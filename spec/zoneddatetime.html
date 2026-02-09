@@ -97,7 +97,7 @@
 
     <emu-clause id="sec-temporal.zoneddatetime.prototype-%symbol.tostringtag%">
       <h1>Temporal.ZonedDateTime.prototype[ %Symbol.toStringTag% ]</h1>
-      <p>The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.ZonedDateTime"*.</p>
+      <p>The initial value of the %Symbol.toStringTag% property is the String *"Temporal.ZonedDateTime"*.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
     </emu-clause>
 
@@ -855,7 +855,7 @@
             [[EpochNanoseconds]]
           </td>
           <td>
-            A BigInt value representing the number of nanoseconds since the epoch.
+            A BigInt representing the number of nanoseconds since the epoch.
           </td>
         </tr>
         <tr>
@@ -1092,7 +1092,7 @@
       <dl class="header">
         <dt>description</dt>
         <dd>
-          It adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the epoch, subject to the rules of the time zone and calendar, and returns the result as a BigInt value.
+          It adds a duration in various units to a number of nanoseconds _epochNanoseconds_ since the epoch, subject to the rules of the time zone and calendar, and returns the result as a BigInt.
           As specified in <a href="https://tools.ietf.org/html/rfc5545">RFC 5545</a>, the date portion of the duration is added in calendar days, and the time portion is added in exact time.
         </dd>
       </dl>
