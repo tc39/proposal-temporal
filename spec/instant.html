@@ -104,7 +104,7 @@
 
     <emu-clause id="sec-temporal.instant.prototype-%symbol.tostringtag%">
       <h1>Temporal.Instant.prototype[ %Symbol.toStringTag% ]</h1>
-      <p>The initial value of the %Symbol.toStringTag% property is the String value *"Temporal.Instant"*.</p>
+      <p>The initial value of the %Symbol.toStringTag% property is the String *"Temporal.Instant"*.</p>
       <p>This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.</p>
     </emu-clause>
 
@@ -331,7 +331,7 @@
             [[EpochNanoseconds]]
           </td>
           <td>
-            A BigInt value representing the number of nanoseconds since the epoch.
+            A BigInt representing the number of nanoseconds since the epoch.
           </td>
         </tr>
       </table>
@@ -444,7 +444,7 @@
     <emu-clause id="sec-temporal-addinstant" type="abstract operation">
       <h1>
         AddInstant (
-          _epochNanoseconds_: a BigInt value,
+          _epochNanoseconds_: a BigInt,
           _timeDuration_: a time duration,
         ): either a normal completion containing a BigInt or a throw completion
       </h1>
