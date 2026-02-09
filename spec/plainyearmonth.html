@@ -481,7 +481,7 @@
         1. Let _isoDate_ be CreateISODateRecord(_result_.[[Year]], _result_.[[Month]], _result_.[[Day]]).
         1. If ISOYearMonthWithinLimits(_isoDate_) is *false*, throw a *RangeError* exception.
         1. Set _result_ to ISODateToFields(_calendar_, _isoDate_, ~year-month~).
-        1. NOTE: The following operation is called with ~constrain~ regardless of the value of _overflow_, in order for the calendar to store a canonical value in the [[Day]] field of the [[ISODate]] internal slot of the result.
+        1. NOTE: The following operation is called with ~constrain~ regardless of _overflow_, in order for the calendar to store a canonical value in the [[Day]] field of the [[ISODate]] internal slot of the result.
         1. Set _isoDate_ to ? CalendarYearMonthFromFields(_calendar_, _result_, ~constrain~).
         1. Return ! CreateTemporalYearMonth(_isoDate_, _calendar_).
       </emu-alg>
