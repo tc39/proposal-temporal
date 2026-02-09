@@ -659,6 +659,11 @@
           </dd>
         </dl>
         <emu-alg>
+          1. Let _anyConflictingFields_ be *false*.
+          1. For each name _name_ of fields present in _baseFormat_, do
+            1. If _allowedOptions_ does not contain _name_, set _anyConflictingFields_ to *true*.
+          1. If _anyConflictingFields_ is *false*, return _baseFormat_.
+          1. NOTE: The above steps prevent the operation from returning an altered format when _baseFormat_ would be sufficient. This should be unnecessary, but exists because the ECMA-402 specification does not guarantee that a format returned from DateTimeStyleFormat can also be returned from BasicFormatMatcher or BestFitFormatMatcher.
           1. Let _formatOptions_ be a new Record.
           1. For each field name _fieldName_ of _allowedOptions_, do
             1. Set the field of _formatOptions_ whose name is _fieldName_ to the value of the field of _baseFormat_ whose name is _fieldName_.
