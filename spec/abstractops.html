@@ -119,8 +119,7 @@
       <dd>It checks that the given date is within the range of 10<sup>8</sup> days from the epoch.</dd>
     </dl>
     <emu-alg>
-      1. If abs(ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]])) > 10<sup>8</sup>, then
-        1. Throw a *RangeError* exception.
+      1. If abs(ISODateToEpochDays(_isoDate_.[[Year]], _isoDate_.[[Month]] - 1, _isoDate_.[[Day]])) > 10<sup>8</sup>, throw a *RangeError* exception.
       1. Return ~unused~.
     </emu-alg>
     <emu-note type="editor">
@@ -434,8 +433,7 @@
         1. Assert: _dividend_ > 1.
         1. Let _maximum_ be _dividend_ - 1.
       1. If _increment_ > _maximum_, throw a *RangeError* exception.
-      1. If _dividend_ modulo _increment_ ≠ 0, then
-        1. Throw a *RangeError* exception.
+      1. If _dividend_ modulo _increment_ ≠ 0, throw a *RangeError* exception.
       1. Return ~unused~.
     </emu-alg>
   </emu-clause>
@@ -479,61 +477,52 @@
       </dd>
     </dl>
     <emu-alg>
-      1. If _smallestUnit_ is ~minute~, then
-        1. Return the Record {
+      1. If _smallestUnit_ is ~minute~, return the Record {
           [[Precision]]: ~minute~,
           [[Unit]]: ~minute~,
           [[Increment]]: 1
-          }.
-      1. If _smallestUnit_ is ~second~, then
-        1. Return the Record {
+        }.
+      1. If _smallestUnit_ is ~second~, return the Record {
           [[Precision]]: 0,
           [[Unit]]: ~second~,
           [[Increment]]: 1
-          }.
-      1. If _smallestUnit_ is ~millisecond~, then
-        1. Return the Record {
+        }.
+      1. If _smallestUnit_ is ~millisecond~, return the Record {
           [[Precision]]: 3,
           [[Unit]]: ~millisecond~,
           [[Increment]]: 1
-          }.
-      1. If _smallestUnit_ is ~microsecond~, then
-        1. Return the Record {
+        }.
+      1. If _smallestUnit_ is ~microsecond~, return the Record {
           [[Precision]]: 6,
           [[Unit]]: ~microsecond~,
           [[Increment]]: 1
-          }.
-      1. If _smallestUnit_ is ~nanosecond~, then
-        1. Return the Record {
+        }.
+      1. If _smallestUnit_ is ~nanosecond~, return the Record {
           [[Precision]]: 9,
           [[Unit]]: ~nanosecond~,
           [[Increment]]: 1
-          }.
+        }.
       1. Assert: _smallestUnit_ is ~unset~.
-      1. If _fractionalDigitCount_ is ~auto~, then
-        1. Return the Record {
+      1. If _fractionalDigitCount_ is ~auto~, return the Record {
           [[Precision]]: ~auto~,
           [[Unit]]: ~nanosecond~,
           [[Increment]]: 1
-          }.
-      1. If _fractionalDigitCount_ = 0, then
-        1. Return the Record {
+        }.
+      1. If _fractionalDigitCount_ = 0, return the Record {
           [[Precision]]: 0,
           [[Unit]]: ~second~,
           [[Increment]]: 1
-          }.
-      1. If _fractionalDigitCount_ is in the inclusive interval from 1 to 3, then
-        1. Return the Record {
+        }.
+      1. If _fractionalDigitCount_ is in the inclusive interval from 1 to 3, return the Record {
           [[Precision]]: _fractionalDigitCount_,
           [[Unit]]: ~millisecond~,
           [[Increment]]: 10<sup>3 - _fractionalDigitCount_</sup>
-          }.
-      1. If _fractionalDigitCount_ is in the inclusive interval from 4 to 6, then
-        1. Return the Record {
+        }.
+      1. If _fractionalDigitCount_ is in the inclusive interval from 4 to 6, return the Record {
           [[Precision]]: _fractionalDigitCount_,
           [[Unit]]: ~microsecond~,
           [[Increment]]: 10<sup>6 - _fractionalDigitCount_</sup>
-          }.
+        }.
       1. Assert: _fractionalDigitCount_ is in the inclusive interval from 7 to 9.
       1. Return the Record {
         [[Precision]]: _fractionalDigitCount_,
@@ -1766,16 +1755,12 @@
     </dl>
     <emu-alg>
       1. Let _parseResult_ be ParseText(StringToCodePoints(_timeZoneString_), |TimeZoneIdentifier|).
-      1. If _parseResult_ is a Parse Node, then
-        1. Return ! ParseTimeZoneIdentifier(_timeZoneString_).
+      1. If _parseResult_ is a Parse Node, return ! ParseTimeZoneIdentifier(_timeZoneString_).
       1. Let _result_ be ? ParseISODateTime(_timeZoneString_, « |TemporalDateTimeString[+Zoned]|, |TemporalDateTimeString[~Zoned]|, |TemporalInstantString|, |TemporalTimeString|, |TemporalMonthDayString|, |TemporalYearMonthString| »).
       1. Let _timeZoneResult_ be _result_.[[TimeZone]].
-      1. If _timeZoneResult_.[[TimeZoneAnnotation]] is not ~empty~, then
-        1. Return ! ParseTimeZoneIdentifier(_timeZoneResult_.[[TimeZoneAnnotation]]).
-      1. If _timeZoneResult_.[[Z]] is *true*, then
-        1. Return ! ParseTimeZoneIdentifier(*"UTC"*).
-      1. If _timeZoneResult_.[[OffsetString]] is not ~empty~, then
-        1. Return ? ParseTimeZoneIdentifier(_timeZoneResult_.[[OffsetString]]).
+      1. If _timeZoneResult_.[[TimeZoneAnnotation]] is not ~empty~, return ! ParseTimeZoneIdentifier(_timeZoneResult_.[[TimeZoneAnnotation]]).
+      1. If _timeZoneResult_.[[Z]] is *true*, return ! ParseTimeZoneIdentifier(*"UTC"*).
+      1. If _timeZoneResult_.[[OffsetString]] is not ~empty~, return ? ParseTimeZoneIdentifier(_timeZoneResult_.[[OffsetString]]).
       1. Throw a *RangeError* exception.
     </emu-alg>
   </emu-clause>

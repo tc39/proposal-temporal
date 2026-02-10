@@ -215,8 +215,7 @@
       <emu-alg>
         1. Let _plainMonthDay_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainMonthDay_, [[InitializedTemporalMonthDay]]).
-        1. If _item_ is not an Object, then
-          1. Throw a *TypeError* exception.
+        1. If _item_ is not an Object, throw a *TypeError* exception.
         1. Let _calendar_ be _plainMonthDay_.[[Calendar]].
         1. Let _fields_ be ISODateToFields(_calendar_, _plainMonthDay_.[[ISODate]], ~month-day~).
         1. Let _inputFields_ be ? PrepareCalendarFields(_calendar_, _item_, « ~year~ », « », « »).
