@@ -261,8 +261,7 @@
       <emu-alg>
         1. Let _plainTime_ be the *this* value.
         1. Perform ? RequireInternalSlot(_plainTime_, [[InitializedTemporalTime]]).
-        1. If _roundTo_ is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If _roundTo_ is *undefined*, throw a *TypeError* exception.
         1. If _roundTo_ is a String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
@@ -653,18 +652,12 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _hour_ &lt; 0 or _hour_ > 23, then
-          1. Return *false*.
-        1. If _minute_ &lt; 0 or _minute_ > 59, then
-          1. Return *false*.
-        1. If _second_ &lt; 0 or _second_ > 59, then
-          1. Return *false*.
-        1. If _millisecond_ &lt; 0 or _millisecond_ > 999, then
-          1. Return *false*.
-        1. If _microsecond_ &lt; 0 or _microsecond_ > 999, then
-          1. Return *false*.
-        1. If _nanosecond_ &lt; 0 or _nanosecond_ > 999, then
-          1. Return *false*.
+        1. If _hour_ &lt; 0 or _hour_ > 23, return *false*.
+        1. If _minute_ &lt; 0 or _minute_ > 59, return *false*.
+        1. If _second_ &lt; 0 or _second_ > 59, return *false*.
+        1. If _millisecond_ &lt; 0 or _millisecond_ > 999, return *false*.
+        1. If _microsecond_ &lt; 0 or _microsecond_ > 999, return *false*.
+        1. If _nanosecond_ &lt; 0 or _nanosecond_ > 999, return *false*.
         1. Return *true*.
       </emu-alg>
     </emu-clause>
@@ -897,18 +890,12 @@
           1. Let _quantity_ be _time_.[[Nanosecond]].
         1. Let _unitLength_ be the value in the "Length in Nanoseconds" column of the row of <emu-xref href="#table-temporal-units"></emu-xref> whose "Value" column contains _unit_.
         1. Let _result_ be RoundNumberToIncrement(_quantity_, _increment_ × _unitLength_, _roundingMode_) / _unitLength_.
-        1. If _unit_ is ~day~, then
-          1. Return CreateTimeRecord(0, 0, 0, 0, 0, 0, _result_).
-        1. If _unit_ is ~hour~, then
-          1. Return BalanceTime(_result_, 0, 0, 0, 0, 0).
-        1. If _unit_ is ~minute~, then
-          1. Return BalanceTime(_time_.[[Hour]], _result_, 0, 0, 0, 0).
-        1. If _unit_ is ~second~, then
-          1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _result_, 0, 0, 0).
-        1. If _unit_ is ~millisecond~, then
-          1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _result_, 0, 0).
-        1. If _unit_ is ~microsecond~, then
-          1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _result_, 0).
+        1. If _unit_ is ~day~, return CreateTimeRecord(0, 0, 0, 0, 0, 0, _result_).
+        1. If _unit_ is ~hour~, return BalanceTime(_result_, 0, 0, 0, 0, 0).
+        1. If _unit_ is ~minute~, return BalanceTime(_time_.[[Hour]], _result_, 0, 0, 0, 0).
+        1. If _unit_ is ~second~, return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _result_, 0, 0, 0).
+        1. If _unit_ is ~millisecond~, return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _result_, 0, 0).
+        1. If _unit_ is ~microsecond~, return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _result_, 0).
         1. Assert: _unit_ is ~nanosecond~.
         1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _result_).
       </emu-alg>

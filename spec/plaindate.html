@@ -808,12 +808,9 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _month_ &lt; 1 or _month_ > 12, then
-          1. Return *false*.
+        1. If _month_ &lt; 1 or _month_ > 12, return *false*.
         1. Let _daysInMonth_ be ISODaysInMonth(_year_, _month_).
-        1. If _day_ &lt; 1 or _day_ > _daysInMonth_, then
-          1. Return *false*.
-        1. Return *true*.
+        1. If _day_ &lt; 1 or _day_ > _daysInMonth_, return *false*; else return *true*.
       </emu-alg>
     </emu-clause>
 
@@ -849,8 +846,7 @@
         <dd>It returns a String representation of _y_ suitable for inclusion in an ISO 8601 string, either in 4-digit format or 6-digit format with sign.</dd>
       </dl>
       <emu-alg>
-        1. If _y_ ≥ 0 and _y_ ≤ 9999, then
-          1. Return ToZeroPaddedDecimalString(_y_, 4).
+        1. If _y_ ≥ 0 and _y_ ≤ 9999, return ToZeroPaddedDecimalString(_y_, 4).
         1. If _y_ > 0, let _yearSign_ be *"+"*; else let _yearSign_ be *"-"*.
         1. Let _year_ be ToZeroPaddedDecimalString(abs(_y_), 6).
         1. Return the string-concatenation of _yearSign_ and _year_.

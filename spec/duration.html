@@ -391,8 +391,7 @@
       <emu-alg>
         1. Let _duration_ be the *this* value.
         1. Perform ? RequireInternalSlot(_duration_, [[InitializedTemporalDuration]]).
-        1. If _roundTo_ is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If _roundTo_ is *undefined*, throw a *TypeError* exception.
         1. If _roundTo_ is a String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
@@ -420,8 +419,7 @@
           1. Set _largestUnit_ to _defaultLargestUnit_.
         1. Else if _largestUnit_ is ~auto~, then
           1. Set _largestUnit_ to _defaultLargestUnit_.
-        1. If _smallestUnitPresent_ is *false* and _largestUnitPresent_ is *false*, then
-          1. Throw a *RangeError* exception.
+        1. If _smallestUnitPresent_ is *false* and _largestUnitPresent_ is *false*, throw a *RangeError* exception.
         1. If LargerOfTwoTemporalUnits(_largestUnit_, _smallestUnit_) is not _largestUnit_, throw a *RangeError* exception.
         1. Let _maximum_ be MaximumTemporalDurationRoundingIncrement(_smallestUnit_).
         1. If _maximum_ is not ~unset~, perform ? ValidateTemporalRoundingIncrement(_roundingIncrement_, _maximum_, *false*).
@@ -1225,8 +1223,7 @@
         <dd>The returned Record has its fields set according to the properties of _temporalDurationLike_.</dd>
       </dl>
       <emu-alg>
-        1. If _temporalDurationLike_ is not an Object, then
-          1. Throw a *TypeError* exception.
+        1. If _temporalDurationLike_ is not an Object, throw a *TypeError* exception.
         1. Let _result_ be a new partial Duration Record with each field set to *undefined*.
         1. NOTE: The following steps read properties and perform independent validation in alphabetical order.
         1. Let _days_ be ? Get(_temporalDurationLike_, *"days"*).

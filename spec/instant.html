@@ -182,8 +182,7 @@
       <emu-alg>
         1. Let _instant_ be the *this* value.
         1. Perform ? RequireInternalSlot(_instant_, [[InitializedTemporalInstant]]).
-        1. If _roundTo_ is *undefined*, then
-          1. Throw a *TypeError* exception.
+        1. If _roundTo_ is *undefined*, throw a *TypeError* exception.
         1. If _roundTo_ is a String, then
           1. Let _paramString_ be _roundTo_.
           1. Set _roundTo_ to OrdinaryObjectCreate(*null*).
@@ -367,9 +366,7 @@
         <dd>It returns *true* if its argument is within the allowed range of nanoseconds since the epoch for a Temporal.Instant and Temporal.ZonedDateTime, and *false* otherwise.</dd>
       </dl>
       <emu-alg>
-        1. If ℝ(_epochNanoseconds_) &lt; nsMinInstant or ℝ(_epochNanoseconds_) > nsMaxInstant, then
-          1. Return *false*.
-        1. Return *true*.
+        1. If ℝ(_epochNanoseconds_) &lt; nsMinInstant or ℝ(_epochNanoseconds_) > nsMaxInstant, return *false*; else return *true*.
       </emu-alg>
     </emu-clause>
 

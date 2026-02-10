@@ -489,11 +489,9 @@
               1. Set _value_ to ? ToOffsetString(_value_).
             1. Set _result_'s field whose name is given in the Field Name column of the same row to _value_.
           1. Else if _requiredFieldNames_ is a List, then
-            1. If _requiredFieldNames_ contains _key_, then
-              1. Throw a *TypeError* exception.
+            1. If _requiredFieldNames_ contains _key_, throw a *TypeError* exception.
             1. Set _result_'s field whose name is given in the Field Name column of the same row to the corresponding Default value of the same row.
-        1. If _requiredFieldNames_ is ~partial~ and _any_ is *false*, then
-          1. Throw a *TypeError* exception.
+        1. If _requiredFieldNames_ is ~partial~ and _any_ is *false*, throw a *TypeError* exception.
         1. Return _result_.
       </emu-alg>
     </emu-clause>
@@ -630,8 +628,7 @@
       </dl>
       <emu-alg>
         1. Let _sign_ be CompareISODate(_one_, _two_).
-        1. If _sign_ = 0, then
-          1. Return ZeroDateDuration().
+        1. If _sign_ = 0, return ZeroDateDuration().
         1. If _calendar_ is *"iso8601"*, then
           1. Set _sign_ to -sign.
           1. Let _years_ be 0.
@@ -675,9 +672,7 @@
         </dd>
       </dl>
       <emu-alg>
-        1. If _temporalCalendarLike_ is an Object, then
-          1. If _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
-            1. Return _temporalCalendarLike_.[[Calendar]].
+        1. If _temporalCalendarLike_ is an Object and _temporalCalendarLike_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, return _temporalCalendarLike_.[[Calendar]].
         1. If _temporalCalendarLike_ is not a String, throw a *TypeError* exception.
         1. Let _identifier_ be ? ParseTemporalCalendarString(_temporalCalendarLike_).
         1. Return ? CanonicalizeCalendar(_identifier_).
@@ -701,8 +696,7 @@
         1. If _item_ has an [[InitializedTemporalDate]], [[InitializedTemporalDateTime]], [[InitializedTemporalMonthDay]], [[InitializedTemporalYearMonth]], or [[InitializedTemporalZonedDateTime]] internal slot, then
           1. Return _item_.[[Calendar]].
         1. Let _calendarLike_ be ? Get(_item_, *"calendar"*).
-        1. If _calendarLike_ is *undefined*, then
-          1. Return *"iso8601"*.
+        1. If _calendarLike_ is *undefined*, return *"iso8601"*.
         1. Return ? ToTemporalCalendarIdentifier(_calendarLike_).
       </emu-alg>
     </emu-clause>
