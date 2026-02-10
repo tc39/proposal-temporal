@@ -295,9 +295,9 @@
         <dd>It chooses from a List of possible exact times the one indicated by the _disambiguation_ parameter.</dd>
       </dl>
       <emu-alg>
-        1. Let _n_ be _possibleEpochNs_'s length.
+        1. Let _n_ be the number of elements in _possibleEpochNs_.
         1. If _n_ = 1, then
-          1. Return _possibleEpochNs_[0].
+          1. Return the sole element of _possibleEpochNs_.
         1. If _n_ ≠ 0, then
           1. If _disambiguation_ is ~earlier~ or ~compatible~, then
             1. Return _possibleEpochNs_[0].
@@ -311,11 +311,11 @@
         1. Let _before_ be the latest possible ISO Date-Time Record for which CompareISODateTime(_before_, _isoDateTime_) = -1 and ! GetPossibleEpochNanoseconds(_timeZone_, _before_) is not empty.
         1. Let _after_ be the earliest possible ISO Date-Time Record for which CompareISODateTime(_after_, _isoDateTime_) = 1 and ! GetPossibleEpochNanoseconds(_timeZone_, _after_) is not empty.
         1. Let _beforePossible_ be ! GetPossibleEpochNanoseconds(_timeZone_, _before_).
-        1. Assert: _beforePossible_'s length is 1.
+        1. Assert: The number of elements in _beforePossible_ = 1.
         1. Let _afterPossible_ be ! GetPossibleEpochNanoseconds(_timeZone_, _after_).
-        1. Assert: _afterPossible_'s length is 1.
-        1. Let _offsetBefore_ be GetOffsetNanosecondsFor(_timeZone_, _beforePossible_[0]).
-        1. Let _offsetAfter_ be GetOffsetNanosecondsFor(_timeZone_, _afterPossible_[0]).
+        1. Assert: The number of elements in _afterPossible_ = 1.
+        1. Let _offsetBefore_ be GetOffsetNanosecondsFor(_timeZone_, the sole element of _beforePossible_).
+        1. Let _offsetAfter_ be GetOffsetNanosecondsFor(_timeZone_, the sole element of _afterPossible_).
         1. Let _nanoseconds_ be _offsetAfter_ - _offsetBefore_.
         1. Assert: abs(_nanoseconds_) ≤ nsPerDay.
         1. If _disambiguation_ is ~earlier~, then
@@ -332,7 +332,7 @@
         1. Let _laterDate_ be AddDaysToISODate(_isoDateTime_.[[ISODate]], _laterTime_.[[Days]]).
         1. Let _laterDateTime_ be CombineISODateAndTimeRecord(_laterDate_, _laterTime_).
         1. Set _possibleEpochNs_ to ? GetPossibleEpochNanoseconds(_timeZone_, _laterDateTime_).
-        1. Set _n_ to _possibleEpochNs_'s length.
+        1. Set _n_ to the number of elements in _possibleEpochNs_.
         1. Assert: _n_ ≠ 0.
         1. Return _possibleEpochNs_[_n_ - 1].
       </emu-alg>
@@ -383,8 +383,8 @@
         1. If _possibleEpochNs_ is not empty, return _possibleEpochNs_[0].
         1. Assert: IsOffsetTimeZoneIdentifier(_timeZone_) is *false*.
         1. [declared="isoDateTimeAfter"] Let _possibleEpochNsAfter_ be GetNamedTimeZoneEpochNanoseconds(_timeZone_, _isoDateTimeAfter_), where _isoDateTimeAfter_ is the ISO Date-Time Record for which DifferenceISODateTime(_isoDateTime_, _isoDateTimeAfter_, *"iso8601"*, ~hour~).[[Time]] is the smallest possible value > 0 for which _possibleEpochNsAfter_ is not empty (i.e., _isoDateTimeAfter_ represents the first local time after the transition).
-        1. Assert: _possibleEpochNsAfter_'s length = 1.
-        1. Return _possibleEpochNsAfter_[0].
+        1. Assert: The number of elements in _possibleEpochNsAfter_ = 1.
+        1. Return the sole element of _possibleEpochNsAfter_.
       </emu-alg>
     </emu-clause>
 
