@@ -464,18 +464,18 @@
           1. Let _styles_ be _resolvedLocaleData_.[[styles]].[[&lt;_resolvedCalendar_>]].
           1. Let _bestFormat_ be DateTimeStyleFormat(_dateStyle_, _timeStyle_, _styles_).
           1. <ins>If _dateStyle_ is not *undefined*, then</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]] »).</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[era]], [[year]], [[month]] »).</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[month]], [[day]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « *"weekday"*, *"era"*, *"year"*, *"month"*, *"day"* »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « *"era"*, *"year"*, *"month"* »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « *"month"*, *"day"* »).</ins>
           1. <ins>Else,</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateFormat]] to *null*.</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainYearMonthFormat]] to *null*.</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainMonthDayFormat]] to *null*.</ins>
           1. <ins>If _timeStyle_ is not *undefined*, then</ins>
-            1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
+            1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* »).</ins>
           1. <ins>Else,</ins>
             1. <ins>Set _dateTimeFormat_.[[TemporalPlainTimeFormat]] to *null*.</ins>
-          1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « [[weekday]], [[era]], [[year]], [[month]], [[day]], [[dayPeriod]], [[hour]], [[minute]], [[second]], [[fractionalSecondDigits]] »).</ins>
+          1. <ins>Set _dateTimeFormat_.[[TemporalPlainDateTimeFormat]] to AdjustDateTimeStyleFormat(_formats_, _bestFormat_, _formatMatcher_, « *"weekday"*, *"era"*, *"year"*, *"month"*, *"day"*, *"dayPeriod"*, *"hour"*, *"minute"*, *"second"*, *"fractionalSecondDigits"* »).</ins>
           1. <ins>Set _dateTimeFormat_.[[TemporalInstantFormat]] to _bestFormat_.</ins>
         1. Else,
           1. <del>Let _needDefaults_ be *true*.</del>
@@ -647,7 +647,7 @@
             _formats_: a List of DateTime Format Records,
             _baseFormat_: a DateTime Format Record,
             _matcher_: either *"basic"* or *"best fit"*,
-            _allowedOptions_: a List of field names,
+            _allowedOptions_: a List of property names from the "Property" column of <emu-xref href="#table-datetimeformat-components"></emu-xref>,
           ): a DateTime Format Record
         </h1>
         <dl class="header">
@@ -660,13 +660,14 @@
         </dl>
         <emu-alg>
           1. Let _anyConflictingFields_ be *false*.
-          1. For each name _name_ of fields present in _baseFormat_, do
-            1. If _allowedOptions_ does not contain _name_, set _anyConflictingFields_ to *true*.
+          1. For each row of <emu-xref href="#table-datetimeformat-components"></emu-xref>, except the header row, in table order, do
+            1. Let _prop_ be the name given in the "Property" column of the current row.
+            1. If _baseFormat_ has a [[&lt;_prop_>]] field and _allowedOptions_ does not contain _prop_, set _anyConflictingFields_ to true.
           1. If _anyConflictingFields_ is *false*, return _baseFormat_.
           1. NOTE: The above steps prevent the operation from returning an altered format when _baseFormat_ would be sufficient. This should be unnecessary, but exists because the ECMA-402 specification does not guarantee that a format returned from DateTimeStyleFormat can also be returned from BasicFormatMatcher or BestFitFormatMatcher.
           1. Let _formatOptions_ be a new Record.
-          1. For each field name _fieldName_ of _allowedOptions_, do
-            1. Set the field of _formatOptions_ whose name is _fieldName_ to the value of the field of _baseFormat_ whose name is _fieldName_.
+          1. For each property name _prop_ of _allowedOptions_, do
+            1. If _baseFormat_ has a [[&lt;_prop_>]] field, set _formatOptions_.[[&lt;_prop_>]] to _baseFormat_.[[&lt;_prop_>]].
           1. If _matcher_ is *"basic"*, then
             1. Let _bestFormat_ be BasicFormatMatcher(_formatOptions_, _formats_).
           1. Else,
