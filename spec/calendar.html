@@ -444,7 +444,7 @@
           _fields_: an Object,
           _calendarFieldNames_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
           _nonCalendarFieldNames_: a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
-          _requiredFieldNames_: ~partial~ or a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref>,
+          _requiredFieldNames_: either a List of values from the Enumeration Key column of <emu-xref href="#table-temporal-calendar-fields-record-fields"></emu-xref> or ~partial~,
         ): either a normal completion containing a Calendar Fields Record, or a throw completion
       </h1>
       <dl class="header">
@@ -553,7 +553,7 @@
           _calendar_: a calendar type that is not *"iso8601"*,
           _isoDate_: an ISO Date Record,
           _duration_: a Date Duration Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -571,7 +571,7 @@
           _calendar_: a calendar type,
           _isoDate_: an ISO Date Record,
           _duration_: a Date Duration Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -712,7 +712,7 @@
         CalendarDateFromFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -732,7 +732,7 @@
         CalendarYearMonthFromFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -753,7 +753,7 @@
         CalendarMonthDayFromFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -775,7 +775,7 @@
       <h1>
         FormatCalendarAnnotation (
           _id_: a calendar type,
-          _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
+          _showCalendar_: one of ~auto~, ~always~, ~never~, or ~critical~,
         ): a String
       </h1>
       <dl class="header">
@@ -910,7 +910,7 @@
         NonISOCalendarDateToISO (
           _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -936,7 +936,7 @@
         CalendarDateToISO (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -960,7 +960,7 @@
         NonISOMonthDayToISOReferenceDate (
           _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -997,7 +997,7 @@
         CalendarMonthDayToISOReferenceDate (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -1191,7 +1191,7 @@
         NonISOResolveFields (
           _calendar_: a calendar type that is not *"iso8601"*,
           _fields_: a Calendar Fields Record,
-          _type_: ~date~, ~year-month~, or ~month-day~,
+          _type_: one of ~date~, ~year-month~, or ~month-day~,
         ): either a normal completion containing ~unused~ or a throw completion
       </h1>
       <dl class="header">
@@ -1235,7 +1235,7 @@
         CalendarResolveFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _type_: ~date~, ~year-month~, or ~month-day~,
+          _type_: one of ~date~, ~year-month~, or ~month-day~,
         ): either a normal completion containing ~unused~ or a throw completion
       </h1>
       <dl class="header">

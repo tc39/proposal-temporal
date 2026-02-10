@@ -310,7 +310,7 @@
     <h1>
       GetTemporalOffsetOption (
         _options_: an Object,
-        _fallback_: ~prefer~, ~use~, ~ignore~, or ~reject~,
+        _fallback_: one of ~prefer~, ~use~, ~ignore~, or ~reject~,
       ): either a normal completion containing either ~prefer~, ~use~, ~ignore~, or ~reject~, or a throw completion
     </h1>
     <dl class="header">
@@ -466,9 +466,9 @@
   <emu-clause id="sec-temporal-tosecondsstringprecisionrecord" type="abstract operation">
     <h1>
       ToSecondsStringPrecisionRecord (
-        _smallestUnit_: ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~, or ~unset~,
-        _fractionalDigitCount_: ~auto~ or an integer in the inclusive interval from 0 to 9,
-      ): a Record with fields [[Precision]] (~minute~, ~auto~, or an integer in the inclusive interval from 0 to 9), [[Unit]] (~minute~, ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~), and [[Increment]] (1, 10, or 100)
+        _smallestUnit_: one of ~minute~, ~second~, ~millisecond~, ~microsecond~, ~nanosecond~, or ~unset~,
+        _fractionalDigitCount_: either an integer in the inclusive interval from 0 to 9 or ~auto~,
+      ): a Record with fields [[Precision]] (either an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~), [[Unit]] (one of ~minute~, ~second~, ~millisecond~, ~microsecond~, or ~nanosecond~), and [[Increment]] (one of 1, 10, or 100)
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -548,7 +548,7 @@
       GetTemporalUnitValuedOption (
         _options_: an Object,
         _key_: a property key,
-        _default_: ~required~ or ~unset~,
+        _default_: either ~required~ or ~unset~,
       ): either a normal completion containing either a Temporal unit, ~unset~, or ~auto~, or a throw completion
     </h1>
     <dl class="header">
@@ -574,8 +574,8 @@
   <emu-clause id="sec-temporal-validatetemporalunitvaluedoption" type="abstract operation">
     <h1>
       ValidateTemporalUnitValue (
-        _value_: a Temporal unit, ~unset~, or ~auto~,
-        _unitGroup_: ~date~, ~time~, or ~datetime~,
+        _value_: either a Temporal unit, ~unset~, or ~auto~,
+        _unitGroup_: one of ~date~, ~time~, or ~datetime~,
         optional _extraValues_: a List of either Temporal units or ~auto~,
       ): either a normal completion containing ~unused~ or a throw completion
     </h1>
@@ -708,7 +708,7 @@
     <h1>
       TemporalUnitCategory (
         _unit_: a Temporal unit,
-      ): ~date~ or ~time~
+      ): either ~date~ or ~time~
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -723,7 +723,7 @@
     <h1>
       MaximumTemporalDurationRoundingIncrement (
         _unit_: a Temporal unit,
-      ): 24, 60, 1000, or ~unset~
+      ): one of 24, 60, 1000, or ~unset~
     </h1>
     <dl class="header">
       <dt>description</dt>
@@ -789,8 +789,8 @@
         _minute_: an integer in the inclusive interval from 0 to 59,
         _second_: an integer in the inclusive interval from 0 to 59,
         _subSecondNanoseconds_: an integer in the inclusive interval from 0 to 999999999,
-        _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
-        optional _style_: ~separated~ or ~unseparated~,
+        _precision_: either an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
+        optional _style_: either ~separated~ or ~unseparated~,
       ): a String
     </h1>
     <dl class="header">
@@ -819,7 +819,7 @@
     <h1>
       GetUnsignedRoundingMode (
         _roundingMode_: a rounding mode,
-        _sign_: ~negative~ or ~positive~,
+        _sign_: either ~negative~ or ~positive~,
       ): an unsigned rounding mode
     </h1>
     <dl class="header">
@@ -932,7 +932,7 @@
         _x_: a mathematical value,
         _r1_: a mathematical value,
         _r2_: a mathematical value,
-        _unsignedRoundingMode_: a specification type from the "Unsigned Rounding Mode" column of <emu-xref href="#table-unsigned-rounding-modes"></emu-xref>, or *undefined*,
+        _unsignedRoundingMode_: either a specification type from the "Unsigned Rounding Mode" column of <emu-xref href="#table-unsigned-rounding-modes"></emu-xref> or *undefined*,
       ): a mathematical value
     </h1>
     <dl class="header">
@@ -1840,7 +1840,7 @@
       ISODateToFields (
         _calendar_: a calendar type,
         _isoDate_: an ISO Date Record,
-        _type_: ~date~, ~year-month~, or ~month-day~,
+        _type_: one of ~date~, ~year-month~, or ~month-day~,
       ): a Calendar Fields Record
     </h1>
     <dl class="header">
@@ -1862,9 +1862,9 @@
   <emu-clause id="sec-temporal-getdifferencesettings" type="abstract operation">
     <h1>
       GetDifferenceSettings (
-        _operation_: ~since~ or ~until~,
+        _operation_: either ~since~ or ~until~,
         _options_: an Object,
-        _unitGroup_: ~date~, ~time~, or ~datetime~,
+        _unitGroup_: one of ~date~, ~time~, or ~datetime~,
         _disallowedUnits_: a List of Temporal units,
         _fallbackSmallestUnit_: a Temporal unit,
         _smallestLargestDefaultUnit_: a Temporal unit,

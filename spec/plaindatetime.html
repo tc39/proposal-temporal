@@ -775,7 +775,7 @@
         InterpretTemporalDateTimeFields (
           _calendar_: a calendar type,
           _fields_: a Calendar Fields Record,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date-Time Record, or a throw completion
       </h1>
       <dl class="header">
@@ -890,8 +890,8 @@
         ISODateTimeToString (
           _isoDateTime_: an ISO Date-Time Record,
           _calendar_: a calendar type,
-          _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
-          _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
+          _precision_: either an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
+          _showCalendar_: one of ~auto~, ~always~, ~never~, or ~critical~,
         ): a String
       </h1>
       <dl class="header">
@@ -914,7 +914,7 @@
         CompareISODateTime (
           _isoDateTime1_: an ISO Date-Time Record,
           _isoDateTime2_: an ISO Date-Time Record,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -932,7 +932,7 @@
         RoundISODateTime (
           _isoDateTime_: an ISO Date-Time Record,
           _increment_: a positive integer,
-          _unit_: a time unit or ~day~,
+          _unit_: either a time unit or ~day~,
           _roundingMode_: a rounding mode,
         ): an ISO Date-Time Record
       </h1>
@@ -1039,7 +1039,7 @@
     <emu-clause id="sec-temporal-differencetemporalplaindatetime" type="abstract operation">
       <h1>
         DifferenceTemporalPlainDateTime (
-          _operation_: ~since~ or ~until~,
+          _operation_: either ~since~ or ~until~,
           _dateTime_: a Temporal.PlainDateTime,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -1066,7 +1066,7 @@
     <emu-clause id="sec-temporal-adddurationtodatetime" type="abstract operation">
       <h1>
         AddDurationToDateTime (
-          _operation_: ~add~ or ~subtract~,
+          _operation_: either ~add~ or ~subtract~,
           _dateTime_: a Temporal.PlainDateTime,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an ECMAScript language value,

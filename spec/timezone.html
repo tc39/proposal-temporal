@@ -83,7 +83,7 @@
         GetNamedTimeZoneNextTransition (
           _timeZoneIdentifier_: an available named time zone identifier,
           _epochNanoseconds_: a BigInt,
-        ): a BigInt or *null*
+        ): either a BigInt or *null*
       </h1>
       <dl class="header">
       </dl>
@@ -109,7 +109,7 @@
         GetNamedTimeZonePreviousTransition (
           _timeZoneIdentifier_: an available named time zone identifier,
           _epochNanoseconds_: a BigInt,
-        ): a BigInt or *null*
+        ): either a BigInt or *null*
       </h1>
       <dl class="header">
       </dl>
@@ -134,7 +134,7 @@
       <h1>
         FormatOffsetTimeZoneIdentifier (
           _offsetMinutes_: an integer in the inclusive interval from -1439 to 1439,
-          optional _style_: ~separated~ or ~unseparated~,
+          optional _style_: either ~separated~ or ~unseparated~,
         ): an offset time zone identifier
       </h1>
       <dl class="header">
@@ -267,7 +267,7 @@
         GetEpochNanosecondsFor (
           _timeZone_: an available time zone identifier,
           _isoDateTime_: an ISO Date-Time Record,
-          _disambiguation_: ~compatible~, ~earlier~, ~later~, or ~reject~,
+          _disambiguation_: one of ~compatible~, ~earlier~, ~later~, or ~reject~,
         ): either a normal completion containing a BigInt or a throw completion
       </h1>
       <dl class="header">
@@ -287,7 +287,7 @@
           _possibleEpochNs_: a List of BigInts,
           _timeZone_: an available time zone identifier,
           _isoDateTime_: an ISO Date-Time Record,
-          _disambiguation_: ~compatible~, ~earlier~, ~later~, or ~reject~,
+          _disambiguation_: one of ~compatible~, ~earlier~, ~later~, or ~reject~,
         ): either a normal completion containing a BigInt or a throw completion
       </h1>
       <dl class="header">

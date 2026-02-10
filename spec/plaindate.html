@@ -694,9 +694,9 @@
     <emu-clause id="sec-temporal-comparesurpasses" type="abstract operation">
       <h1>
         CompareSurpasses (
-          _sign_: -1 or 1,
+          _sign_: either -1 or 1,
           _year_: an integer,
-          _monthOrCode_: an integer or a month code,
+          _monthOrCode_: either an integer or a month code,
           _day_: an integer,
           _target_: a Calendar Date Record,
         ): a Boolean
@@ -726,7 +726,7 @@
     <emu-clause id="sec-temporal-isodatesurpasses" type="abstract operation">
       <h1>
         ISODateSurpasses (
-          _sign_: -1 or 1,
+          _sign_: either -1 or 1,
           _baseDate_: an ISO Date Record,
           _isoDate2_: an ISO Date Record,
           _years_: an integer,
@@ -769,7 +769,7 @@
           _year_: an integer,
           _month_: an integer,
           _day_: an integer,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing an ISO Date Record or a throw completion
       </h1>
       <dl class="header">
@@ -861,7 +861,7 @@
       <h1>
         TemporalDateToString (
           _temporalDate_: a Temporal.PlainDate,
-          _showCalendar_: ~auto~, ~always~, ~never~, or ~critical~,
+          _showCalendar_: one of ~auto~, ~always~, ~never~, or ~critical~,
         ): a String
       </h1>
       <dl class="header">
@@ -901,7 +901,7 @@
         CompareISODate (
           _isoDate1_: an ISO Date Record,
           _isoDate2_: an ISO Date Record,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -923,7 +923,7 @@
     <emu-clause id="sec-temporal-differencetemporalplaindate" type="abstract operation">
       <h1>
         DifferenceTemporalPlainDate (
-          _operation_: ~since~ or ~until~,
+          _operation_: either ~since~ or ~until~,
           _temporalDate_: a Temporal.PlainDate,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -957,7 +957,7 @@
     <emu-clause id="sec-temporal-adddurationtodate" type="abstract operation">
       <h1>
         AddDurationToDate (
-          _operation_: ~add~ or ~subtract~,
+          _operation_: either ~add~ or ~subtract~,
           _temporalDate_: a Temporal.PlainDate,
           _temporalDurationLike_: an ECMAScript language value,
           _options_: an ECMAScript language value,

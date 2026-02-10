@@ -608,7 +608,7 @@
           _millisecond_: an integer,
           _microsecond_: an integer,
           _nanosecond_: an integer,
-          _overflow_: ~constrain~ or ~reject~,
+          _overflow_: either ~constrain~ or ~reject~,
         ): either a normal completion containing a Time Record or a throw completion
       </h1>
       <dl class="header">
@@ -724,7 +724,7 @@
       <h1>
         ToTemporalTimeRecord (
           _temporalTimeLike_: an Object,
-          optional _completeness_: ~partial~ or ~complete~,
+          optional _completeness_: either ~partial~ or ~complete~,
         ): either a normal completion containing a TemporalTimeLike Record or a throw completion
       </h1>
       <dl class="header">
@@ -810,7 +810,7 @@
       <h1>
         TimeRecordToString (
           _time_: a Time Record,
-          _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
+          _precision_: either an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
         ): a String
       </h1>
       <dl class="header">
@@ -828,7 +828,7 @@
         CompareTimeRecord (
           _time1_: a Time Record,
           _time2_: a Time Record,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -873,7 +873,7 @@
         RoundTime (
           _time_: a Time Record,
           _increment_: a positive integer,
-          _unit_: a time unit or ~day~,
+          _unit_: either a time unit or ~day~,
           _roundingMode_: a rounding mode,
         ): a Time Record
       </h1>
@@ -917,7 +917,7 @@
     <emu-clause id="sec-temporal-differencetemporalplaintime" type="abstract operation">
       <h1>
         DifferenceTemporalPlainTime (
-          _operation_: ~since~ or ~until~,
+          _operation_: either ~since~ or ~until~,
           _temporalTime_: a Temporal.PlainTime,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -943,7 +943,7 @@
     <emu-clause id="sec-temporal-adddurationtotime" type="abstract operation">
       <h1>
         AddDurationToTime (
-          _operation_: ~add~ or ~subtract~,
+          _operation_: either ~add~ or ~subtract~,
           _temporalTime_: a Temporal.PlainTime,
           _temporalDurationLike_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.PlainTime or a throw completion

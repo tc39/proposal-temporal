@@ -504,8 +504,8 @@
       <h1>
         TemporalInstantToString (
           _instant_: a Temporal.Instant,
-          _timeZone_: an available time zone identifier or *undefined*,
-          _precision_: an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
+          _timeZone_: either an available time zone identifier or *undefined*,
+          _precision_: either an integer in the inclusive interval from 0 to 9, ~minute~, or ~auto~,
         ): a String
       </h1>
       <dl class="header">
@@ -530,7 +530,7 @@
     <emu-clause id="sec-temporal-differencetemporalinstant" type="abstract operation">
       <h1>
         DifferenceTemporalInstant (
-          _operation_: ~since~ or ~until~,
+          _operation_: either ~since~ or ~until~,
           _instant_: a Temporal.Instant,
           _other_: an ECMAScript language value,
           _options_: an ECMAScript language value,
@@ -554,7 +554,7 @@
     <emu-clause id="sec-temporal-adddurationtoinstant" type="abstract operation">
       <h1>
         AddDurationToInstant (
-          _operation_: ~add~ or ~subtract~,
+          _operation_: either ~add~ or ~subtract~,
           _instant_: a Temporal.Instant,
           _temporalDurationLike_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.Instant or a throw completion
