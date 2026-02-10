@@ -1102,7 +1102,7 @@
       <h1>
         DurationSign (
           _duration_: a <del>Duration Record</del><ins>Temporal.Duration</ins>,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1120,7 +1120,7 @@
       <h1>
         DateDurationSign (
           _dateDuration_: a Date Duration Record,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1138,7 +1138,7 @@
       <h1>
         InternalDurationSign (
           _internalDuration_: an Internal Duration Record,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1400,7 +1400,7 @@
         CompareTimeDuration (
           _one_: a time duration,
           _two_: a time duration,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1454,7 +1454,7 @@
       <h1>
         TimeDurationSign (
           _d_: a time duration,
-        ): -1, 0, or 1
+        ): one of -1, 0, or 1
       </h1>
       <dl class="header">
         <dt>description</dt>
@@ -1514,7 +1514,7 @@
       <h1>
         TotalTimeDuration (
           _timeDuration_: a time duration,
-          _unit_: a time unit or ~day~,
+          _unit_: either a time unit or ~day~,
         ): a mathematical value
       </h1>
       <dl class="header">
@@ -1567,11 +1567,11 @@
     <emu-clause id="sec-temporal-computenudgewindow" type="abstract operation">
       <h1>
         ComputeNudgeWindow (
-          _sign_: -1 or 1,
+          _sign_: either -1 or 1,
           _duration_: an Internal Duration Record,
           _originEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
-          _timeZone_: an available time zone identifier or ~unset~,
+          _timeZone_: either an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _increment_: a positive integer,
           _unit_: a date unit,
@@ -1644,12 +1644,12 @@
     <emu-clause id="sec-temporal-nudgetocalendarunit" type="abstract operation">
       <h1>
         NudgeToCalendarUnit (
-          _sign_: -1 or 1,
+          _sign_: either -1 or 1,
           _duration_: an Internal Duration Record,
           _originEpochNs_: a BigInt,
           _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
-          _timeZone_: an available time zone identifier or ~unset~,
+          _timeZone_: either an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _increment_: a positive integer,
           _unit_: a date unit,
@@ -1711,7 +1711,7 @@
     <emu-clause id="sec-temporal-nudgetozonedtime" type="abstract operation">
       <h1>
         NudgeToZonedTime (
-          _sign_: -1 or 1,
+          _sign_: either -1 or 1,
           _duration_: an Internal Duration Record,
           _isoDateTime_: an ISO Date-Time Record,
           _timeZone_: an available time zone identifier,
@@ -1761,7 +1761,7 @@
           _destEpochNs_: a BigInt,
           _largestUnit_: a Temporal unit,
           _increment_: a positive integer,
-          _smallestUnit_: a time unit or ~day~,
+          _smallestUnit_: either a time unit or ~day~,
           _roundingMode_: a rounding mode,
         ): either a normal completion containing a Duration Nudge Result Record or a throw completion
       </h1>
@@ -1796,11 +1796,11 @@
     <emu-clause id="sec-temporal-bubblerelativeduration" type="abstract operation">
       <h1>
         BubbleRelativeDuration (
-          _sign_: -1 or 1,
+          _sign_: either -1 or 1,
           _duration_: an Internal Duration Record,
           _nudgedEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
-          _timeZone_: an available time zone identifier or ~unset~,
+          _timeZone_: either an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
           _smallestUnit_: a date unit,
@@ -1855,7 +1855,7 @@
           _originEpochNs_: a BigInt,
           _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
-          _timeZone_: an available time zone identifier or ~unset~,
+          _timeZone_: either an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _largestUnit_: a Temporal unit,
           _increment_: a positive integer,
@@ -1896,7 +1896,7 @@
           _originEpochNs_: a BigInt,
           _destEpochNs_: a BigInt,
           _isoDateTime_: an ISO Date-Time Record,
-          _timeZone_: an available time zone identifier or ~unset~,
+          _timeZone_: either an available time zone identifier or ~unset~,
           _calendar_: a calendar type,
           _unit_: a Temporal unit,
         ): either a normal completion containing a mathematical value, or a throw completion
@@ -1919,7 +1919,7 @@
       <h1>
         TemporalDurationToString (
           _duration_: a Temporal.Duration,
-          _precision_: an integer between 0 and 9 inclusive, or ~auto~,
+          _precision_: either an integer between 0 and 9 inclusive or ~auto~,
         ): a String
       </h1>
       <dl class="header">
@@ -1960,7 +1960,7 @@
     <emu-clause id="sec-temporal-adddurations" type="abstract operation">
       <h1>
         AddDurations (
-          _operation_: ~add~ or ~subtract~,
+          _operation_: either ~add~ or ~subtract~,
           _duration_: a Temporal.Duration,
           _other_: an ECMAScript language value,
         ): either a normal completion containing a Temporal.Duration or a throw completion

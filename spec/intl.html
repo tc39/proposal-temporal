@@ -578,12 +578,12 @@
         <h1>
           GetDateTimeFormat (
             _formats_: a List of DateTime Format Records,
-            _matcher_: *"basic"* or *"best fit"*,
+            _matcher_: either *"basic"* or *"best fit"*,
             _options_: a Record,
-            _required_: ~date~, ~time~, ~year-month~, ~month-day~, or ~any~,
-            _defaults_: ~date~, ~time~, ~year-month~, ~month-day~, ~zoned-date-time~, or ~all~,
-            _inherit_: ~all~ or ~relevant~,
-          ): a DateTime Format Record or *null*
+            _required_: one of ~date~, ~time~, ~year-month~, ~month-day~, or ~any~,
+            _defaults_: one of ~date~, ~time~, ~year-month~, ~month-day~, ~zoned-date-time~, or ~all~,
+            _inherit_: either ~all~ or ~relevant~,
+          ): either a DateTime Format Record or *null*
         </h1>
         <dl class="header">
         </dl>
@@ -646,7 +646,7 @@
           AdjustDateTimeStyleFormat (
             _formats_: a List of DateTime Format Records,
             _baseFormat_: a DateTime Format Record,
-            _matcher_: *"basic"* or *"best fit"*,
+            _matcher_: either *"basic"* or *"best fit"*,
             _allowedOptions_: a List of field names,
           ): a DateTime Format Record
         </h1>
@@ -1250,7 +1250,7 @@
         <h1>
           HandleDateTimeValue (
             _dateTimeFormat_: an Intl.DateTimeFormat,
-            _x_: a Number, or an Object for which IsTemporalObject returns *true*,
+            _x_: either a Number, or an Object for which IsTemporalObject returns *true*,
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
