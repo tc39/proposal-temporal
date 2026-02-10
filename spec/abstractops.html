@@ -765,7 +765,7 @@
     <dl class="header">
       <dt>description</dt>
       <dd>
-        If _precision_ = 0, or if _precision_ is ~auto~ and _subSecondNanoseconds_ = 0, then an empty String will be returned.
+        If _precision_ = 0, or _precision_ is ~auto~ and _subSecondNanoseconds_ = 0, then an empty String will be returned.
         Otherwise, the output will be a decimal point followed by a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is ~auto~) to the last non-zero digit.
       </dd>
     </dl>
@@ -798,7 +798,7 @@
       <dd>
         It formats a collection of unsigned time components into a string, truncating units as necessary, and separating hours, minutes, and seconds with colons unless _style_ is ~unseparated~.
         The output will be formatted like HH:MM or HHMM if _precision_ is ~minute~.
-        Otherwise, the output will be formatted like HH:MM:SS or HHMMSS if _precision_ = 0, or if _subSecondNanoseconds_ = 0 and _precision_ is ~auto~.
+        Otherwise, the output will be formatted like HH:MM:SS or HHMMSS if _precision_ = 0, or _subSecondNanoseconds_ = 0 and _precision_ is ~auto~.
         Otherwise, the output will be formatted like HH:MM:SS.fff or HHMMSS.fff where "fff" is a sequence of fractional seconds digits, truncated to _precision_ digits or (if _precision_ is ~auto~) to the last non-zero digit.
       </dd>
     </dl>
