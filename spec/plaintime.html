@@ -882,7 +882,7 @@
         <dd>It rounds a time to the given increment.</dd>
       </dl>
       <emu-alg>
-        1. If _unit_ is ~day~ or ~hour~, then
+        1. If _unit_ is either ~day~ or ~hour~, then
           1. Let _quantity_ be ((((_time_.[[Hour]] × 60 + _time_.[[Minute]]) × 60 + _time_.[[Second]]) × 1000 + _time_.[[Millisecond]]) × 1000 + _time_.[[Microsecond]]) × 1000 + _time_.[[Nanosecond]].
         1. Else if _unit_ is ~minute~, then
           1. Let _quantity_ be (((_time_.[[Minute]] × 60 + _time_.[[Second]]) × 1000 + _time_.[[Millisecond]]) × 1000 + _time_.[[Microsecond]]) × 1000 + _time_.[[Nanosecond]].

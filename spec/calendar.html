@@ -641,7 +641,7 @@
               1. Set _years_ to _candidateYears_.
               1. Set _candidateYears_ to _candidateYears_ + _sign_.
           1. Let _months_ be 0.
-          1. If _largestUnit_ is ~year~ or _largestUnit_ is ~month~, then
+          1. If _largestUnit_ is either ~year~ or ~month~, then
             1. Let _candidateMonths_ be _sign_.
             1. Repeat, while ISODateSurpasses(_sign_, _one_, _two_, _years_, _candidateMonths_, 0, 0) is *false*,
               1. Set _months_ to _candidateMonths_.
@@ -822,8 +822,8 @@
         <dd>It returns the number of days in the given year and month in the ISO 8601 calendar.</dd>
       </dl>
       <emu-alg>
-        1. If _month_ is 1, 3, 5, 7, 8, 10, or 12, return 31.
-        1. If _month_ is 4, 6, 9, or 11, return 30.
+        1. If _month_ is one of 1, 3, 5, 7, 8, 10, or 12, return 31.
+        1. If _month_ is one of 4, 6, 9, or 11, return 30.
         1. Assert: _month_ = 2.
         1. Return 28 + MathematicalInLeapYear(EpochTimeForYear(_year_)).
       </emu-alg>
@@ -1202,7 +1202,7 @@
       </dl>
       <p>The operation throws a *TypeError* exception if the non-~unset~ fields of _fields_ are insufficient to identify a unique instance of _type_ in the calendar (e.g., when at least one field in each combination capable of determining some part of its data is ~unset~) or a *RangeError* exception if the fields are sufficient but their values are internally inconsistent within the calendar (e.g., when fields such as [[Month]] and [[MonthCode]] have conflicting non-~unset~ values). For example:</p>
       <ul>
-        <li>If _type_ is ~date~ or ~month-day~ and "day" in the calendar has an interpretation similar to ISO 8601 and _fields_.[[Day]] is ~unset~.</li>
+        <li>If _type_ is either ~date~ or ~month-day~, and "day" in the calendar has an interpretation similar to ISO 8601 and _fields_.[[Day]] is ~unset~.</li>
         <li>If _fields_.[[MonthCode]] identifies a month code that is not valid in any year of the calendar.</li>
         <li>If _fields_.[[Month]] and _fields_.[[MonthCode]] are both ~unset~ or neither value is ~unset~ but they do not identify the same month.</li>
         <li>If _type_ is ~month-day~ and _fields_.[[MonthCode]] is ~unset~ and a specific year cannot be determined from _fields_.</li>
@@ -1247,9 +1247,9 @@
       <emu-alg>
         1. If _calendar_ is *"iso8601"*, then
           1. Let _needsYear_ be *false*.
-          1. If _type_ is ~date~ or _type_ is ~year-month~, set _needsYear_ to *true*.
+          1. If _type_ is either ~date~ or ~year-month~, set _needsYear_ to *true*.
           1. Let _needsDay_ be *false*.
-          1. If _type_ is ~date~ or _type_ is ~month-day~, set _needsDay_ to *true*.
+          1. If _type_ is either ~date~ or ~month-day~, set _needsDay_ to *true*.
           1. If _needsYear_ is *true* and _fields_.[[Year]] is ~unset~, throw a *TypeError* exception.
           1. If _needsDay_ is *true* and _fields_.[[Day]] is ~unset~, throw a *TypeError* exception.
           1. If _fields_.[[Month]] is ~unset~ and _fields_.[[MonthCode]] is ~unset~, throw a *TypeError* exception.
