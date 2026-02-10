@@ -1620,8 +1620,8 @@
           1. Let _r2_ be _days_ + _increment_ × _sign_.
           1. Let _startDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _r1_).
           1. Let _endDuration_ be ? AdjustDateDurationRecord(_duration_.[[Date]], _r2_).
-        1. Assert: If _sign_ is 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
-        1. Assert: If _sign_ is -1, _r1_ ≤ 0 and _r1_ > _r2_.
+        1. Assert: If _sign_ = 1, _r1_ ≥ 0 and _r1_ &lt; _r2_.
+        1. Assert: If _sign_ = -1, _r1_ ≤ 0 and _r1_ > _r2_.
         1. If _r1_ = 0, then
           1. Let _startEpochNs_ be _originEpochNs_.
         1. Else,
@@ -1667,7 +1667,7 @@
         1. Let _nudgeWindow_ be ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *false*).
         1. Let _startEpochNs_ be _nudgeWindow_.[[StartEpochNs]].
         1. Let _endEpochNs_ be _nudgeWindow_.[[EndEpochNs]].
-        1. If _sign_ is 1, then
+        1. If _sign_ = 1, then
           1. If _startEpochNs_ ≤ _destEpochNs_ ≤ _endEpochNs_ is *false*, then
             1. Set _nudgeWindow_ to ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *true*).
             1. Assert: _nudgeWindow_.[[StartEpochNs]] ≤ _destEpochNs_ ≤ _nudgeWindow_.[[EndEpochNs]].

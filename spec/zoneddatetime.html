@@ -910,7 +910,7 @@
       <emu-alg>
         1. If _time_ is ~start-of-day~, then
           1. Assert: _offsetBehaviour_ is ~wall~.
-          1. Assert: _offsetNanoseconds_ is 0.
+          1. Assert: _offsetNanoseconds_ = 0.
           1. Return ? GetStartOfDay(_timeZone_, _isoDate_).
         1. Let _isoDateTime_ be CombineISODateAndTimeRecord(_isoDate_, _time_).
         1. If _offsetBehaviour_ is ~wall~, or _offsetBehaviour_ is ~option~ and _offsetOption_ is ~ignore~, then
