@@ -1090,7 +1090,7 @@
         <dd>It characterizes calendar-specific fields that are relevant for the provided _fields_ in the built-in calendar identified by _calendar_. For example, « ~era~, ~era-year~ » is returned when _calendar_ is *"gregory"* or *"japanese"* and _fields_ is a List containing ~year~.</dd>
       </dl>
       <emu-alg>
-        1. If _calendar_ is *"iso8601"*, return an empty List.
+        1. If _calendar_ is *"iso8601"*, return a new empty List.
         1. Return an implementation-defined List as described above.
       </emu-alg>
     </emu-clause>
@@ -1175,7 +1175,7 @@
       </dl>
       <emu-alg>
         1. If _calendar_ is *"iso8601"*, then
-          1. Let _ignoredKeys_ be an empty List.
+          1. Let _ignoredKeys_ be a new empty List.
           1. For each element _key_ of _keys_, do
             1. Append _key_ to _ignoredKeys_.
             1. If _key_ is ~month~, append ~month-code~ to _ignoredKeys_.
