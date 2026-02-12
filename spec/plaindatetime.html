@@ -850,7 +850,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd></dd>
+        <dd>It balances the given date and time components so that each falls within its conventional range, carrying over excess into the next larger unit, and returns the result as an ISO Date-Time Record.</dd>
       </dl>
       <emu-alg>
         1. Let _balancedTime_ be BalanceTime(_hour_, _minute_, _second_, _millisecond_, _microsecond_, _nanosecond_).
@@ -993,7 +993,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd></dd>
+        <dd>It computes the difference between _isoDateTime1_ and _isoDateTime2_, rounding the result according to _roundingIncrement_, _smallestUnit_, and _roundingMode_. It throws a *RangeError* if either datetime is outside the representable limits.</dd>
       </dl>
       <emu-alg>
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, return CombineDateAndTimeDuration(ZeroDateDuration(), 0).
@@ -1017,7 +1017,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd></dd>
+        <dd>It computes the total difference between _isoDateTime1_ and _isoDateTime2_ as a mathematical value in units of _unit_. It throws a *RangeError* if either datetime is outside the representable limits.</dd>
       </dl>
       <emu-alg>
         1. If CompareISODateTime(_isoDateTime1_, _isoDateTime2_) = 0, return 0.
