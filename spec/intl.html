@@ -586,6 +586,8 @@
           ): either a DateTime Format Record or *null*
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It selects the best matching DateTime Format Record from _formats_ based on _matcher_, _options_, _required_, _defaults_, and _inherit_.</dd>
         </dl>
         <emu-alg>
           1. If _required_ is ~date~, then
@@ -1026,6 +1028,8 @@
           ): a Boolean
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It returns *true* if _value_ is an instance of a Temporal type that can be formatted.</dd>
         </dl>
         <emu-alg>
           1. If _value_ is not an Object, return *false*.
@@ -1096,6 +1100,8 @@
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It prepares _temporalDate_ for formatting by _dateTimeFormat_, returning a Value Format Record, or throws if the calendars are incompatible or _dateTimeFormat_ has no suitable format.</dd>
         </dl>
         <emu-alg>
           1. If _temporalDate_.[[Calendar]] is not either _dateTimeFormat_.[[Calendar]] or *"iso8601"*, throw a *RangeError* exception.
@@ -1119,6 +1125,8 @@
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It prepares _temporalYearMonth_ for formatting by _dateTimeFormat_, returning a Value Format Record, or throws if the calendars are incompatible or _dateTimeFormat_ has no suitable format.</dd>
         </dl>
         <emu-alg>
           1. If _temporalYearMonth_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.
@@ -1142,6 +1150,8 @@
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It prepares _temporalMonthDay_ for formatting by _dateTimeFormat_, returning a Value Format Record, or throws if the calendars are incompatible or _dateTimeFormat_ has no suitable format.</dd>
         </dl>
         <emu-alg>
           1. If _temporalMonthDay_.[[Calendar]] is not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.
@@ -1165,6 +1175,8 @@
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It prepares _temporalTime_ for formatting by _dateTimeFormat_, returning a Value Format Record, or throws if _dateTimeFormat_ has no suitable format.</dd>
         </dl>
         <emu-alg>
           1. Let _isoDate_ be CreateISODateRecord(1970, 1, 1).
@@ -1188,6 +1200,8 @@
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It prepares _dateTime_ for formatting by _dateTimeFormat_, returning a Value Format Record, or throws if the calendars are incompatible.</dd>
         </dl>
         <emu-alg>
           1. If _dateTime_.[[Calendar]] is not *"iso8601"* and not equal to _dateTimeFormat_.[[Calendar]], throw a *RangeError* exception.
@@ -1209,6 +1223,8 @@
           ): a Value Format Record
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It prepares _instant_ for formatting by _dateTimeFormat_, returning a Value Format Record.</dd>
         </dl>
         <emu-alg>
           1. Let _format_ be _dateTimeFormat_.[[TemporalInstantFormat]].
@@ -1228,6 +1244,8 @@
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It prepares the Number value _x_ for formatting by _dateTimeFormat_, returning a Value Format Record, or throws if _x_ is not a finite time value.</dd>
         </dl>
         <emu-alg>
           1. Set _x_ to TimeClip(_x_).
@@ -1250,6 +1268,8 @@
           ): either a normal completion containing a Value Format Record or a throw completion
         </h1>
         <dl class="header">
+          <dt>description</dt>
+          <dd>It dispatches _x_ to the appropriate handler based on its type for formatting by _dateTimeFormat_.</dd>
         </dl>
         <emu-alg>
           1. If _x_ is a Number, return ? HandleDateTimeOthers(_dateTimeFormat_, _x_).

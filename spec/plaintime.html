@@ -675,7 +675,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd></dd>
+        <dd>It balances the given time components so that each falls within its conventional range, carrying over excess into the next larger unit, and returns the result as a Time Record.</dd>
       </dl>
       <emu-alg>
         1. Set _microsecond_ to _microsecond_ + floor(_nanosecond_ / 1000).
@@ -721,6 +721,8 @@
         ): either a normal completion containing a TemporalTimeLike Record or a throw completion
       </h1>
       <dl class="header">
+        <dt>description</dt>
+        <dd>It converts _temporalTimeLike_ to a TemporalTimeLike Record by reading time component properties, with missing components set to 0 if _completeness_ is ~complete~ or to ~unset~ if ~partial~. It throws a *TypeError* if _temporalTimeLike_ has no recognized time component properties.</dd>
       </dl>
       <emu-alg>
         1. If _completeness_ is not present, set _completeness_ to ~complete~.
@@ -853,7 +855,7 @@
       </h1>
       <dl class="header">
         <dt>description</dt>
-        <dd></dd>
+        <dd>It adds _timeDuration_ to _time_ and returns the balanced result.</dd>
       </dl>
       <emu-alg>
         1. Return BalanceTime(_time_.[[Hour]], _time_.[[Minute]], _time_.[[Second]], _time_.[[Millisecond]], _time_.[[Microsecond]], _time_.[[Nanosecond]] + _timeDuration_).
