@@ -27,6 +27,7 @@ import {
   MapPrototypeSet,
   MathAbs,
   MathFloor,
+  MathRound,
   MathTrunc,
   MathMax,
   MathSign,
@@ -1913,9 +1914,38 @@ const helperJapanese = ObjectAssign(
   }
 );
 
+// ICU4C's Chinese/Dangi calendar fails for ISO years outside ~-29688 to +70368.
+// Work around this using the Metonic cycle (see also Hebrew cycleInfo above):
+// shift by a multiple of 19 years into the safe range, then adjust back.
+const CHINESE_ICU_SAFE_LOW = -29000;
+const CHINESE_ICU_SAFE_HIGH = 70000;
+
+function chineseMetonicOffset(year) {
+  if (year >= CHINESE_ICU_SAFE_LOW && year <= CHINESE_ICU_SAFE_HIGH) return 0;
+  return MathRound((year - 2000) / 19) * 19;
+}
+
 const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   id: 'chinese',
   calendarType: 'lunisolar',
+  isoToCalendarDate(isoDate, cache) {
+    const offset = chineseMetonicOffset(isoDate.year);
+    if (offset === 0) {
+      return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
+    }
+    const safeIsoDate = { ...isoDate, year: isoDate.year - offset };
+    const result = nonIsoHelperBase.isoToCalendarDate.call(this, safeIsoDate, cache);
+    const adjusted = { ...result, year: result.year + offset };
+    // Cache both directions with the original (not shifted) date keys
+    const key = OneObjectCache.generateISOToCalendarKey(isoDate);
+    cache.set(key, adjusted);
+    const cacheReverse = (overflow) => {
+      const keyReverse = OneObjectCache.generateCalendarToISOKey(adjusted, overflow);
+      cache.set(keyReverse, isoDate);
+    };
+    Call(ArrayPrototypeForEach, ['constrain', 'reject'], [cacheReverse]);
+    return adjusted;
+  },
   inLeapYear(calendarDate, cache) {
     return this.getMonthList(calendarDate.year, cache).monthsInYear === 13;
   },
@@ -1986,6 +2016,9 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const cached = cache.get(key);
     if (cached) return cached;
 
+    const offset = chineseMetonicOffset(calendarYear);
+    const effectiveYear = calendarYear - offset;
+
     // Reuse the same local object for calendar-specific results, starting with
     // a date close to Chinese New Year. Feb 17 will either be in the new year
     // or near the end of the previous year's final month.
@@ -1994,7 +2027,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const dateTimeFormat = this.getFormatter();
     const updateCalendarFields = () => {
       // Abuse GetUTCEpochMilliseconds for automatic rebalancing.
-      const isoNumbers = { year: calendarYear, month: 2, day: daysPastJan31 };
+      const isoNumbers = { year: effectiveYear, month: 2, day: daysPastJan31 };
       const ms = ES.GetUTCEpochMilliseconds(isoNumbers, midnightTimeRecord);
       const fieldEntries = Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [ms]);
       for (let i = 0; i < fieldEntries.length; i++) {
@@ -2047,7 +2080,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
       }
       oldDay = day;
 
-      if (relatedYear !== calendarYear) break;
+      if (relatedYear !== effectiveYear) break;
 
       monthList[monthIndex] = { monthCode };
       monthList[monthCode] = monthIndex++;
