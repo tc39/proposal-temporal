@@ -1988,7 +1988,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
 
     // Reuse the same local object for calendar-specific results, starting with
     // a date close to Chinese New Year. Feb 17 will either be in month 1 of the
-    // new year, in a leap month immediately after month 1 (rare), or near the
+    // new year, in month 2 or a leap month after month 1 (rare), or near the
     // end of the previous year's final month.
     let daysPastJan31 = 17;
     const calendarFields = { day: undefined, monthString: undefined, relatedYear: undefined };
@@ -2023,10 +2023,17 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
 
     // Ensure that we're in the first month.
     updateCalendarFields();
+    if (calendarFields.monthString === '2') {
+      // Rare case: Feb 17 is already in month 2 (e.g. ISO year 7625).
+      // Back up into month 1 (or, theoretically, 1bis).
+      daysPastJan31 -= 30;
+      updateCalendarFields();
+    }
     if (calendarFields.monthString === '1bis') {
-      // Rare case: there's a leap month after month 1, and Feb 17 landed in it.
-      // Back up to the previous year's last month, then the check below will
-      // advance forward into month 1.
+      // Rare case: there's a leap month after month 1, and Feb 17 landed in it
+      // (e.g. ISO year 7253). Also handles the theoretical case of backing up
+      // from month 2 into 1bis. Back up to the previous year's last month,
+      // then the check below will advance forward into month 1.
       daysPastJan31 -= 30;
       updateCalendarFields();
     }
