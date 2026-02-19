@@ -287,11 +287,12 @@ export class Duration {
     assert(!ES.IsCalendarUnit(smallestUnit), 'smallestUnit was larger than largestUnit');
     let internalDuration = ES.ToInternalDurationRecordWith24HourDays(this);
     if (smallestUnit === 'day') {
-      // First convert time units up to days
+      // Round in nanosecond (bigInt) space to avoid floating-point
+      // precision loss when the sub-day remainder is tiny relative to
+      // the number of days.
       const DAY_NANOS = 86400 * 1e9;
-      const { quotient, remainder } = internalDuration.time.divmod(DAY_NANOS);
-      let days = internalDuration.date.days + quotient + ES.TotalTimeDuration(remainder, 'day');
-      days = ES.RoundNumberToIncrement(days, roundingIncrement, roundingMode);
+      const rounded = ES.RoundTimeDuration(internalDuration.time, roundingIncrement, 'day', roundingMode);
+      const { quotient: days } = rounded.divmod(DAY_NANOS);
       const dateDuration = { years: 0, months: 0, weeks: 0, days };
       internalDuration = ES.CombineDateAndTimeDuration(dateDuration, TimeDuration.ZERO);
     } else {
