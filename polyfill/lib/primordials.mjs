@@ -111,6 +111,7 @@ export const {
   log10: MathLog10,
   max: MathMax,
   min: MathMin,
+  round: MathRound,
   sign: MathSign,
   trunc: MathTrunc
 } = Math;
