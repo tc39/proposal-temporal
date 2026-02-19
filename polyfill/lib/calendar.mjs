@@ -1987,8 +1987,9 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     if (cached) return cached;
 
     // Reuse the same local object for calendar-specific results, starting with
-    // a date close to Chinese New Year. Feb 17 will either be in the new year
-    // or near the end of the previous year's final month.
+    // a date close to Chinese New Year. Feb 17 will either be in month 1 of the
+    // new year, in a leap month immediately after month 1 (rare), or near the
+    // end of the previous year's final month.
     let daysPastJan31 = 17;
     const calendarFields = { day: undefined, monthString: undefined, relatedYear: undefined };
     const dateTimeFormat = this.getFormatter();
@@ -2022,6 +2023,13 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
 
     // Ensure that we're in the first month.
     updateCalendarFields();
+    if (calendarFields.monthString === '1bis') {
+      // Rare case: there's a leap month after month 1, and Feb 17 landed in it.
+      // Back up to the previous year's last month, then the check below will
+      // advance forward into month 1.
+      daysPastJan31 -= 30;
+      updateCalendarFields();
+    }
     if (calendarFields.monthString !== '1') {
       daysPastJan31 += 29;
       updateCalendarFields();
