@@ -570,6 +570,74 @@ function clampISODate(iso) {
   return iso;
 }
 
+function isOutOfLegacyDateRange(isoDate) {
+  const { year, month, day } = isoDate;
+  if (year < -271821 || year > 275760) return true;
+  if (year === -271821) return month < 4 || (month === 4 && day < 19);
+  if (year === 275760) return month > 9 || (month === 9 && day > 13);
+  return false;
+}
+
+function makeShiftedIsoToCalendarDate(cycleYears) {
+  return function isoToCalendarDate(isoDate, cache) {
+    if (!isOutOfLegacyDateRange(isoDate)) {
+      return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
+    }
+    const offset = MathRound((isoDate.year - 2000) / cycleYears) * cycleYears;
+    const safeIsoDate = { ...isoDate, year: isoDate.year - offset };
+    const result = nonIsoHelperBase.isoToCalendarDate.call(this, safeIsoDate, cache);
+    const adjusted = { ...result, year: result.year + offset };
+    if (adjusted.eraYear !== undefined) adjusted.eraYear += offset;
+    const key = OneObjectCache.generateISOToCalendarKey(isoDate);
+    cache.set(key, adjusted);
+    Call(
+      ArrayPrototypeForEach,
+      ['constrain', 'reject'],
+      [
+        (overflow) => {
+          cache.set(OneObjectCache.generateCalendarToISOKey(adjusted, overflow), isoDate);
+        }
+      ]
+    );
+    return adjusted;
+  };
+}
+
+function makeDayShiftedIsoToCalendarDate(cycleDays, cycleYears) {
+  return function isoToCalendarDate(isoDate, cache) {
+    if (!isOutOfLegacyDateRange(isoDate)) {
+      return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
+    }
+    // Shift by the minimum number of cycles to bring the date within the
+    // legacy Date range. Using a minimal shift avoids accumulated errors for
+    // calendars where the cycle length is approximate (e.g., islamic-umalqura).
+    const direction = isoDate.year > 0 ? 1 : -1;
+    const approxDaysBeyond = MathAbs(isoDate.year - direction * 2000) * 365;
+    let numCycles = MathMax(1, MathFloor(approxDaysBeyond / cycleDays));
+    let safeIsoDate = ES.AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
+    while (isOutOfLegacyDateRange(safeIsoDate)) {
+      numCycles++;
+      safeIsoDate = ES.AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
+    }
+    const yearShift = numCycles * cycleYears * direction;
+    const result = nonIsoHelperBase.isoToCalendarDate.call(this, safeIsoDate, cache);
+    const adjusted = { ...result, year: result.year + yearShift };
+    if (adjusted.eraYear !== undefined) adjusted.eraYear += yearShift;
+    const key = OneObjectCache.generateISOToCalendarKey(isoDate);
+    cache.set(key, adjusted);
+    Call(
+      ArrayPrototypeForEach,
+      ['constrain', 'reject'],
+      [
+        (overflow) => {
+          cache.set(OneObjectCache.generateCalendarToISOKey(adjusted, overflow), isoDate);
+        }
+      ]
+    );
+    return adjusted;
+  };
+}
+
 /**
  * Implementation that's common to all non-trivial non-ISO calendars
  */
@@ -1458,7 +1526,8 @@ const helperIslamic = makeNonISOHelper(
     estimateIsoDate(calendarDate) {
       const { year } = this.adjustCalendarDate(calendarDate);
       return { year: MathFloor((year * this.DAYS_PER_ISLAMIC_YEAR) / this.DAYS_PER_ISO_YEAR) + 622, month: 1, day: 1 };
-    }
+    },
+    isoToCalendarDate: makeDayShiftedIsoToCalendarDate(10631, 30)
   }
 );
 
@@ -1582,7 +1651,8 @@ const helperIndian = makeNonISOHelper([{ code: 'shaka', isoEpoch: { year: 79, mo
     // Some ICU versions have the legacy era code 'saka', the correct one is
     // 'shaka'; return it unconditionally as there is only one era
     return { era: 'shaka', eraYear: calendarDate.eraYear };
-  }
+  },
+  isoToCalendarDate: makeShiftedIsoToCalendarDate(4)
 });
 
 /**
@@ -1805,7 +1875,8 @@ const makeHelperOrthodox = (id, originalEras) => {
     },
     maxLengthOfAdjustedMonthCodeInAnyYear(monthCode /*, day, overflow */) {
       return [monthCode, monthCode === 'M13' ? 6 : 30];
-    }
+    },
+    isoToCalendarDate: makeDayShiftedIsoToCalendarDate(1461, 4)
   });
 };
 
