@@ -1920,7 +1920,8 @@ const helperJapanese = ObjectAssign(
 const CHINESE_ICU_SAFE_LOW = -29000;
 const CHINESE_ICU_SAFE_HIGH = 70000;
 
-function chineseMetonicOffset(year) {
+function chineseMetonicOffset(helper, year) {
+  if (!helper.isVulnerableTo70000Bug()) return 0;
   if (year >= CHINESE_ICU_SAFE_LOW && year <= CHINESE_ICU_SAFE_HIGH) return 0;
   return MathRound((year - 2000) / 19) * 19;
 }
@@ -1928,8 +1929,21 @@ function chineseMetonicOffset(year) {
 const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
   id: 'chinese',
   calendarType: 'lunisolar',
+  isVulnerableTo70000Bug() {
+    // https://unicode-org.atlassian.net/browse/ICU-23286
+    if (this.vulnerableTo70000Bug === undefined) {
+      const formatter = this.getFormatter();
+      try {
+        Call(IntlDateTimeFormatPrototypeFormatToParts, formatter, [2146851043199999 + 1]);
+        this.vulnerableTo70000Bug = false;
+      } catch {
+        this.vulnerableTo70000Bug = true;
+      }
+    }
+    return this.vulnerableTo70000Bug;
+  },
   isoToCalendarDate(isoDate, cache) {
-    const offset = chineseMetonicOffset(isoDate.year);
+    const offset = chineseMetonicOffset(this, isoDate.year);
     if (offset === 0) {
       return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
     }
@@ -2016,7 +2030,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const cached = cache.get(key);
     if (cached) return cached;
 
-    const offset = chineseMetonicOffset(calendarYear);
+    const offset = chineseMetonicOffset(this, calendarYear);
     const effectiveYear = calendarYear - offset;
 
     // Reuse the same local object for calendar-specific results, starting with
