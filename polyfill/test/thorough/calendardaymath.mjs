@@ -8,12 +8,11 @@ import {
 } from './support.mjs';
 
 const largestUnits = [{ largestUnit: 'weeks' }, { largestUnit: 'days' }];
-// 'chinese' and 'dangi' are temporarily omitted because there are some dates
-// that the current version of ICU4C can't handle well enough to calculate the
-// snapshots
 const calendars = [
   'buddhist',
+  'chinese',
   'coptic',
+  'dangi',
   'ethioaa',
   'ethiopic',
   'gregory',
