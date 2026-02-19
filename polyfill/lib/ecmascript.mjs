@@ -4254,9 +4254,9 @@ export function RoundTime(
 }
 
 export function RoundTimeDuration(timeDuration, increment, unit, roundingMode) {
-  // unit must be a time unit
   const divisor = Call(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]);
-  return timeDuration.round(divisor * increment, roundingMode);
+  // Use bigInt multiplication to avoid exceeding MAX_SAFE_INTEGER
+  return timeDuration.round(bigInt(divisor).multiply(increment), roundingMode);
 }
 
 export function TotalTimeDuration(timeDuration, unit) {
