@@ -561,26 +561,22 @@ function simpleDateDiff(one, two) {
 }
 
 function clampISODate(iso) {
-  if (iso.year < -271821 || (iso.year === -271821 && (iso.month < 4 || (iso.month === 4 && iso.day < 19)))) {
-    return { year: -271821, month: 4, day: 19 };
-  }
-  if (iso.year > 275760 || (iso.year === 275760 && (iso.month > 9 || (iso.month === 9 && iso.day > 13)))) {
-    return { year: 275760, month: 9, day: 13 };
-  }
+  const cmp = compareISODateToLegacyDateRange(iso);
+  if (cmp < 0) return { year: -271821, month: 4, day: 19 };
+  if (cmp > 0) return { year: 275760, month: 9, day: 13 };
   return iso;
 }
 
-function isOutOfLegacyDateRange(isoDate) {
+function compareISODateToLegacyDateRange(isoDate) {
   const { year, month, day } = isoDate;
-  if (year < -271821 || year > 275760) return true;
-  if (year === -271821) return month < 4 || (month === 4 && day < 19);
-  if (year === 275760) return month > 9 || (month === 9 && day > 13);
-  return false;
+  if (year < -271821 || (year === -271821 && (month < 4 || (month === 4 && day < 19)))) return -1;
+  if (year > 275760 || (year === 275760 && (month > 9 || (month === 9 && day > 13)))) return 1;
+  return 0;
 }
 
 function makeShiftedIsoToCalendarDate(cycleYears) {
   return function isoToCalendarDate(isoDate, cache) {
-    if (!isOutOfLegacyDateRange(isoDate)) {
+    if (compareISODateToLegacyDateRange(isoDate) === 0) {
       return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
     }
     const offset = MathRound((isoDate.year - 2000) / cycleYears) * cycleYears;
@@ -605,7 +601,7 @@ function makeShiftedIsoToCalendarDate(cycleYears) {
 
 function makeDayShiftedIsoToCalendarDate(cycleDays, cycleYears) {
   return function isoToCalendarDate(isoDate, cache) {
-    if (!isOutOfLegacyDateRange(isoDate)) {
+    if (compareISODateToLegacyDateRange(isoDate) === 0) {
       return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
     }
     // Shift by the minimum number of cycles to bring the date within the
@@ -615,7 +611,7 @@ function makeDayShiftedIsoToCalendarDate(cycleDays, cycleYears) {
     const approxDaysBeyond = MathAbs(isoDate.year - direction * 2000) * 365;
     let numCycles = MathMax(1, MathFloor(approxDaysBeyond / cycleDays));
     let safeIsoDate = ES.AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
-    while (isOutOfLegacyDateRange(safeIsoDate)) {
+    while (compareISODateToLegacyDateRange(safeIsoDate) !== 0) {
       numCycles++;
       safeIsoDate = ES.AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
     }
