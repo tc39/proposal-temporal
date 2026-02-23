@@ -13087,21 +13087,80 @@
 	  };
 	}
 	function clampISODate(iso) {
-	  if (iso.year < -271821 || iso.year === -271821 && (iso.month < 4 || iso.month === 4 && iso.day < 19)) {
-	    return {
-	      year: -271821,
-	      month: 4,
-	      day: 19
-	    };
-	  }
-	  if (iso.year > 275760 || iso.year === 275760 && (iso.month > 9 || iso.month === 9 && iso.day > 13)) {
-	    return {
-	      year: 275760,
-	      month: 9,
-	      day: 13
-	    };
-	  }
+	  const cmp = compareISODateToLegacyDateRange(iso);
+	  if (cmp < 0) return {
+	    year: -271821,
+	    month: 4,
+	    day: 19
+	  };
+	  if (cmp > 0) return {
+	    year: 275760,
+	    month: 9,
+	    day: 13
+	  };
 	  return iso;
+	}
+	function compareISODateToLegacyDateRange(isoDate) {
+	  const {
+	    year,
+	    month,
+	    day
+	  } = isoDate;
+	  if (year < -271821 || year === -271821 && (month < 4 || month === 4 && day < 19)) return -1;
+	  if (year > 275760 || year === 275760 && (month > 9 || month === 9 && day > 13)) return 1;
+	  return 0;
+	}
+	function makeShiftedIsoToCalendarDate(cycleYears) {
+	  return function isoToCalendarDate(isoDate, cache) {
+	    if (compareISODateToLegacyDateRange(isoDate) === 0) {
+	      return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
+	    }
+	    const offset = MathRound((isoDate.year - 2000) / cycleYears) * cycleYears;
+	    const safeIsoDate = _objectSpread2(_objectSpread2({}, isoDate), {}, {
+	      year: isoDate.year - offset
+	    });
+	    const result = nonIsoHelperBase.isoToCalendarDate.call(this, safeIsoDate, cache);
+	    const adjusted = _objectSpread2(_objectSpread2({}, result), {}, {
+	      year: result.year + offset
+	    });
+	    if (adjusted.eraYear !== undefined) adjusted.eraYear += offset;
+	    const key = OneObjectCache.generateISOToCalendarKey(isoDate);
+	    cache.set(key, adjusted);
+	    Call$1(ArrayPrototypeForEach, ['constrain', 'reject'], [overflow => {
+	      cache.set(OneObjectCache.generateCalendarToISOKey(adjusted, overflow), isoDate);
+	    }]);
+	    return adjusted;
+	  };
+	}
+	function makeDayShiftedIsoToCalendarDate(cycleDays, cycleYears) {
+	  return function isoToCalendarDate(isoDate, cache) {
+	    if (compareISODateToLegacyDateRange(isoDate) === 0) {
+	      return nonIsoHelperBase.isoToCalendarDate.call(this, isoDate, cache);
+	    }
+	    // Shift by the minimum number of cycles to bring the date within the
+	    // legacy Date range. Using a minimal shift avoids accumulated errors for
+	    // calendars where the cycle length is approximate (e.g., islamic-umalqura).
+	    const direction = isoDate.year > 0 ? 1 : -1;
+	    const approxDaysBeyond = MathAbs(isoDate.year - direction * 2000) * 365;
+	    let numCycles = MathMax(1, MathFloor(approxDaysBeyond / cycleDays));
+	    let safeIsoDate = AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
+	    while (compareISODateToLegacyDateRange(safeIsoDate) !== 0) {
+	      numCycles++;
+	      safeIsoDate = AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
+	    }
+	    const yearShift = numCycles * cycleYears * direction;
+	    const result = nonIsoHelperBase.isoToCalendarDate.call(this, safeIsoDate, cache);
+	    const adjusted = _objectSpread2(_objectSpread2({}, result), {}, {
+	      year: result.year + yearShift
+	    });
+	    if (adjusted.eraYear !== undefined) adjusted.eraYear += yearShift;
+	    const key = OneObjectCache.generateISOToCalendarKey(isoDate);
+	    cache.set(key, adjusted);
+	    Call$1(ArrayPrototypeForEach, ['constrain', 'reject'], [overflow => {
+	      cache.set(OneObjectCache.generateCalendarToISOKey(adjusted, overflow), isoDate);
+	    }]);
+	    return adjusted;
+	  };
 	}
 
 	/**
@@ -14220,7 +14279,8 @@
 	      month: 1,
 	      day: 1
 	    };
-	  }
+	  },
+	  isoToCalendarDate: makeDayShiftedIsoToCalendarDate(10631, 30)
 	});
 	const helperPersian = makeNonISOHelper([{
 	  code: 'ap',
@@ -14430,7 +14490,8 @@
 	      era: 'shaka',
 	      eraYear: calendarDate.eraYear
 	    };
-	  }
+	  },
+	  isoToCalendarDate: makeShiftedIsoToCalendarDate(4)
 	});
 
 	/**
@@ -14678,7 +14739,8 @@
 	    },
 	    maxLengthOfAdjustedMonthCodeInAnyYear(monthCode /*, day, overflow */) {
 	      return [monthCode, monthCode === 'M13' ? 6 : 30];
-	    }
+	    },
+	    isoToCalendarDate: makeDayShiftedIsoToCalendarDate(1461, 4)
 	  });
 	};
 
