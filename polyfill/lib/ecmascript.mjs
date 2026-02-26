@@ -550,8 +550,11 @@ export function ParseTemporalYearMonthString(isoString) {
     year = +yearString;
     month = +match[2];
     referenceISODay = 1;
-    if (calendar !== undefined && calendar !== 'iso8601') {
-      throw new RangeErrorCtor('YYYY-MM format is only valid with iso8601 calendar');
+    if (calendar !== undefined) {
+      calendar = ASCIILowercase(calendar);
+      if (calendar !== 'iso8601') {
+        throw new RangeErrorCtor('YYYY-MM format is only valid with iso8601 calendar');
+      }
     }
   } else {
     let z;
@@ -568,8 +571,11 @@ export function ParseTemporalMonthDayString(isoString) {
     calendar = processAnnotations(match[3]);
     month = +match[1];
     day = +match[2];
-    if (calendar !== undefined && calendar !== 'iso8601') {
-      throw new RangeErrorCtor('MM-DD format is only valid with iso8601 calendar');
+    if (calendar !== undefined) {
+      calendar = ASCIILowercase(calendar);
+      if (calendar !== 'iso8601') {
+        throw new RangeErrorCtor('MM-DD format is only valid with iso8601 calendar');
+      }
     }
   } else {
     let z;
