@@ -123,12 +123,12 @@ import {
 
 import bigInt from 'big-integer';
 
-const DAY_MS = 86400_000;
-const DAY_NANOS = DAY_MS * 1e6;
+export const DAY_MS = 86400_000;
+export const DAY_NANOS = DAY_MS * 1e6;
 // Instant range is 100 million days (inclusive) before or after epoch.
 const MS_MAX = DAY_MS * 1e8;
 const NS_MIN = bigInt(DAY_NANOS).multiply(-1e8);
-const NS_MAX = bigInt(DAY_NANOS).multiply(1e8);
+export const NS_MAX = bigInt(DAY_NANOS).multiply(1e8);
 // PlainDateTime range is 24 hours wider (exclusive) than the Instant range on
 // both ends, to allow for valid Instant=>PlainDateTime conversion for all
 // built-in time zones (whose offsets must have a magnitude less than 24 hours).
