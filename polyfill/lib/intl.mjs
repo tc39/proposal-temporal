@@ -1,5 +1,6 @@
 import {
   // constructors and similar
+  String as StringCtor,
   Symbol as SymbolCtor,
 
   // error constructors
@@ -18,6 +19,10 @@ import {
   IntlDurationFormatPrototypeFormat,
   IntlDurationFormatPrototypeFormatToParts,
   IntlDurationFormatPrototypeResolvedOptions,
+  IntlNumberFormat,
+  IntlNumberFormatPrototypeGetFormat,
+  MathCeil,
+  NumberIsNaN,
   ObjectAssign,
   ObjectCreate,
   ObjectDefineProperties,
@@ -25,7 +30,7 @@ import {
   ObjectKeys,
   warn
 } from './primordials.mjs';
-import { assert } from './assert.mjs';
+import { assert, assertNotReached } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
 import { MakeIntrinsicClass } from './intrinsicclass.mjs';
 import {
@@ -51,6 +56,8 @@ import {
   CALENDAR
 } from './slots.mjs';
 
+import bigInt from 'big-integer';
+
 const DATE = SymbolCtor('date');
 const YM = SymbolCtor('ym');
 const MD = SymbolCtor('md');
@@ -73,6 +80,52 @@ function getSlotLazy(obj, slot) {
     SetSlot(obj, slot, val);
   }
   return val;
+}
+
+// Return the value of the corresponding part from formatToParts() output
+function findPart(parts, expectedType) {
+  for (let ix = 0; ix < parts.length; ix++) {
+    if (parts[ix].type === expectedType) return parts[ix].value;
+  }
+  /* c8 ignore next */ assertNotReached('findPart() should only be used when the part is expected');
+}
+
+function adjustRenderedDay(polyfilledFormatter, realFormatter, originalEpochMs, renderedValue, dayAdjust) {
+  if (dayAdjust === 0) return renderedValue;
+  let day = +renderedValue;
+  if (!NumberIsNaN(day)) return StringCtor(day - dayAdjust);
+
+  // If the day isn't given in Arabic numerals, re-do the format in a
+  // way that's parseable by StringToNumber
+  const options = ES.Call(IntlDateTimeFormatPrototypeResolvedOptions, realFormatter, []);
+  const originalNumberingSystem = options.numberingSystem;
+  options.numberingSystem = 'latn';
+  const parseableFormatter = new IntlDateTimeFormat('en', options);
+  const parseableParts = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, parseableFormatter, [originalEpochMs]);
+  const parseableDay = findPart(parseableParts, 'day');
+  day = +parseableDay;
+
+  // Reformat the day in the target format's numeral system
+  const numberFormatter = new IntlNumberFormat(GetSlot(polyfilledFormatter, LOCALE), {
+    numberingSystem: originalNumberingSystem
+  });
+  const boundFormat = ES.Call(IntlNumberFormatPrototypeGetFormat, numberFormatter, []);
+  return ES.Call(boundFormat, numberFormatter, [day - dayAdjust]);
+}
+
+function adjustRenderedWeekday(polyfilledFormatter, realFormatter, originalEpochMs, renderedValue, dayAdjust) {
+  if (dayAdjust === 0) return renderedValue;
+  // The weekday, if present, needs to be adjusted as well. Use ZonedDateTime as
+  // a convenient way to get the ordinal weekday.
+  const options = ES.Call(IntlDateTimeFormatPrototypeResolvedOptions, realFormatter, []);
+  const zdt = ES.CreateTemporalZonedDateTime(bigInt(originalEpochMs).multiply(1e6), options.timeZone);
+  options.timeZone = 'UTC';
+  const weekdayFormatter = new IntlDateTimeFormat(GetSlot(polyfilledFormatter, LOCALE), options);
+  // Weekday of 1970-01-01 is 4 (Thursday)
+  const weekdayParts = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, weekdayFormatter, [
+    (zdt.dayOfWeek - dayAdjust - 4) * ES.DAY_MS
+  ]);
+  return findPart(weekdayParts, 'weekday');
 }
 
 function internalCreateDateTimeFormat(dtf, locale, options, required) {
@@ -306,7 +359,7 @@ function resolvedOptions() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function format(datetime, ...rest) {
-  let { epochNs, formatter } = extractOverrides(datetime, this);
+  let { epochNs, formatter, dayAdjust = 0 } = extractOverrides(datetime, this);
   let formatArgs;
   if (formatter) {
     formatArgs = [ES.epochNsToMs(epochNs, 'floor')];
@@ -314,13 +367,31 @@ function format(datetime, ...rest) {
     formatter = GetSlot(this, ORIGINAL);
     formatArgs = ES.Call(ArrayPrototypeSlice, arguments, []);
   }
-  const boundFormat = ES.Call(IntlDateTimeFormatPrototypeGetFormat, formatter, []);
-  return ES.Call(boundFormat, formatter, formatArgs);
+  if (dayAdjust === 0) {
+    // Happy path
+    const boundFormat = ES.Call(IntlDateTimeFormatPrototypeGetFormat, formatter, []);
+    return ES.Call(boundFormat, formatter, formatArgs);
+  }
+
+  // Special case for extreme dates, to avoid TimeClip restriction
+  const parts = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, formatter, formatArgs);
+  let result = '';
+  for (let ix = 0; ix < parts.length; ix++) {
+    const { type, value } = parts[ix];
+    if (type === 'day') {
+      result += adjustRenderedDay(this, formatter, formatArgs[0], value, dayAdjust);
+    } else if (type === 'weekday') {
+      result += adjustRenderedWeekday(this, formatter, formatArgs[0], value, dayAdjust);
+    } else {
+      result += value;
+    }
+  }
+  return result;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function formatToParts(datetime, ...rest) {
-  let { epochNs, formatter } = extractOverrides(datetime, this);
+  let { epochNs, formatter, dayAdjust = 0 } = extractOverrides(datetime, this);
   let formatArgs;
   if (formatter) {
     formatArgs = [ES.epochNsToMs(epochNs, 'floor')];
@@ -328,7 +399,19 @@ function formatToParts(datetime, ...rest) {
     formatter = GetSlot(this, ORIGINAL);
     formatArgs = ES.Call(ArrayPrototypeSlice, arguments, []);
   }
-  return ES.Call(IntlDateTimeFormatPrototypeFormatToParts, formatter, formatArgs);
+  const parts = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, formatter, formatArgs);
+  if (dayAdjust !== 0) {
+    // Special case for extreme dates, to avoid TimeClip restriction
+    for (let ix = 0; ix < parts.length; ix++) {
+      const { type, value } = parts[ix];
+      if (type === 'day') {
+        parts[ix].value = adjustRenderedDay(this, formatter, formatArgs[0], value, dayAdjust);
+      } else if (type === 'weekday') {
+        parts[ix].value = adjustRenderedWeekday(this, formatter, formatArgs[0], value, dayAdjust);
+      }
+    }
+  }
+  return parts;
 }
 
 function formatRange(a, b) {
@@ -339,19 +422,52 @@ function formatRange(a, b) {
   b = toDateTimeFormattable(b);
   let formatArgs = [a, b];
   let formatter;
+  let aDayAdjust = 0;
+  let bDayAdjust = 0;
   if (isTemporalObject(a) || isTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
-    const { epochNs: aa, formatter: aformatter } = extractOverrides(a, this);
-    const { epochNs: bb, formatter: bformatter } = extractOverrides(b, this);
-    if (aformatter) {
-      assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
-      formatter = aformatter;
-      formatArgs = [ES.epochNsToMs(aa, 'floor'), ES.epochNsToMs(bb, 'floor')];
+    const aRecord = extractOverrides(a, this);
+    const bRecord = extractOverrides(b, this);
+    if (aRecord.formatter) {
+      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+      formatter = aRecord.formatter;
+      formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
     }
+    aDayAdjust = aRecord.dayAdjust ?? 0;
+    bDayAdjust = bRecord.dayAdjust ?? 0;
   } else {
     formatter = GetSlot(this, ORIGINAL);
+  }
+  if (aDayAdjust !== 0 || bDayAdjust !== 0) {
+    // Special case for extreme dates, to avoid TimeClip restriction
+    const parts = ES.Call(IntlDateTimeFormatPrototypeFormatRangeToParts, formatter, formatArgs);
+    let result = '';
+    for (let ix = 0; ix < parts.length; ix++) {
+      const { type, value, source } = parts[ix];
+      const isStart = source === 'startRange';
+      if (type === 'day') {
+        result += adjustRenderedDay(
+          this,
+          formatter,
+          formatArgs[isStart ? 0 : 1],
+          value,
+          isStart ? aDayAdjust : bDayAdjust
+        );
+      } else if (type === 'weekday') {
+        result += adjustRenderedWeekday(
+          this,
+          formatter,
+          formatArgs[isStart ? 0 : 1],
+          value,
+          isStart ? aDayAdjust : bDayAdjust
+        );
+      } else {
+        result += value;
+      }
+    }
+    return result;
   }
   return ES.Call(IntlDateTimeFormatPrototypeFormatRange, formatter, formatArgs);
 }
@@ -364,21 +480,50 @@ function formatRangeToParts(a, b) {
   b = toDateTimeFormattable(b);
   let formatArgs = [a, b];
   let formatter;
+  let aDayAdjust = 0;
+  let bDayAdjust = 0;
   if (isTemporalObject(a) || isTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
-    const { epochNs: aa, formatter: aformatter } = extractOverrides(a, this);
-    const { epochNs: bb, formatter: bformatter } = extractOverrides(b, this);
-    if (aformatter) {
-      assert(bformatter == aformatter, 'formatters for same Temporal type should be identical');
-      formatter = aformatter;
-      formatArgs = [ES.epochNsToMs(aa, 'floor'), ES.epochNsToMs(bb, 'floor')];
+    const aRecord = extractOverrides(a, this);
+    const bRecord = extractOverrides(b, this);
+    if (aRecord.formatter) {
+      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+      formatter = aRecord.formatter;
+      formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
     }
+    aDayAdjust = aRecord.dayAdjust ?? 0;
+    bDayAdjust = bRecord.dayAdjust ?? 0;
   } else {
     formatter = GetSlot(this, ORIGINAL);
   }
-  return ES.Call(IntlDateTimeFormatPrototypeFormatRangeToParts, formatter, formatArgs);
+  const parts = ES.Call(IntlDateTimeFormatPrototypeFormatRangeToParts, formatter, formatArgs);
+  if (aDayAdjust !== 0 || bDayAdjust !== 0) {
+    // Special case for extreme dates, to avoid TimeClip restriction
+    for (let ix = 0; ix < parts.length; ix++) {
+      const { type, value, source } = parts[ix];
+      const isStart = source === 'startRange';
+      if (type === 'day') {
+        parts[ix].value = adjustRenderedDay(
+          this,
+          formatter,
+          formatArgs[isStart ? 0 : 1],
+          value,
+          isStart ? aDayAdjust : bDayAdjust
+        );
+      } else if (type === 'weekday') {
+        parts[ix].value = adjustRenderedWeekday(
+          this,
+          formatter,
+          formatArgs[isStart ? 0 : 1],
+          value,
+          isStart ? aDayAdjust : bDayAdjust
+        );
+      }
+    }
+  }
+  return parts;
 }
 
 function amend(options = {}, amended = {}) {
@@ -624,6 +769,24 @@ function sameTemporalType(x, y) {
   return true;
 }
 
+// Allows formatting an epochMs value that will pass TimeClip in the original
+// DateTimeFormat code, and then adjusting it afterwards
+function getAdjustedEpochNanoseconds(isoDateTime) {
+  const epochNs = ES.GetUTCEpochNanoseconds(isoDateTime);
+  try {
+    ES.ValidateEpochNanoseconds(epochNs);
+  } catch (e) {
+    if (!(e instanceof RangeErrorCtor)) throw e;
+    const minAdjust = MathCeil(epochNs.abs().subtract(ES.NS_MAX).toJSNumber() / ES.DAY_NANOS);
+    const dayAdjust = minAdjust * (epochNs.geq(0) ? -1 : 1);
+    return {
+      dayAdjust,
+      epochNs: epochNs.add(dayAdjust * ES.DAY_NANOS)
+    };
+  }
+  return { dayAdjust: 0, epochNs };
+}
+
 function extractOverrides(temporalObj, main) {
   if (ES.IsTemporalTime(temporalObj)) {
     const isoDateTime = {
@@ -649,9 +812,11 @@ function extractOverrides(temporalObj, main) {
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
     const formatter = getSlotLazy(main, YM);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainYearMonth with only time options');
+    const { epochNs, dayAdjust } = getAdjustedEpochNanoseconds(isoDateTime);
     return {
-      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
-      formatter
+      epochNs,
+      formatter,
+      dayAdjust
     };
   }
 
@@ -683,9 +848,11 @@ function extractOverrides(temporalObj, main) {
     const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
     const formatter = getSlotLazy(main, DATE);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainDate with only time options');
+    const { epochNs, dayAdjust } = getAdjustedEpochNanoseconds(isoDateTime);
     return {
-      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
-      formatter
+      epochNs,
+      formatter,
+      dayAdjust
     };
   }
 
@@ -698,9 +865,11 @@ function extractOverrides(temporalObj, main) {
       );
     }
     const isoDateTime = GetSlot(temporalObj, ISO_DATE_TIME);
+    const { epochNs, dayAdjust } = getAdjustedEpochNanoseconds(isoDateTime);
     return {
-      epochNs: ES.GetUTCEpochNanoseconds(isoDateTime),
-      formatter: getSlotLazy(main, DATETIME)
+      epochNs,
+      formatter: getSlotLazy(main, DATETIME),
+      dayAdjust
     };
   }
 

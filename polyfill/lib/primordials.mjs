@@ -85,7 +85,8 @@ export const {
 export const {
   supportedValuesOf: IntlSupportedValuesOf,
   DateTimeFormat: IntlDateTimeFormat,
-  DurationFormat: IntlDurationFormat
+  DurationFormat: IntlDurationFormat,
+  NumberFormat: IntlNumberFormat
 } = Intl;
 export const { get: IntlDateTimeFormatPrototypeGetFormat } =
   ObjectGetOwnPropertyDescriptor(IntlDateTimeFormat?.prototype || ObjectCreate(null), 'format') || ObjectCreate(null);
@@ -101,12 +102,15 @@ export const {
   formatToParts: IntlDurationFormatPrototypeFormatToParts,
   resolvedOptions: IntlDurationFormatPrototypeResolvedOptions
 } = IntlDurationFormatPrototype;
+export const { get: IntlNumberFormatPrototypeGetFormat } =
+  ObjectGetOwnPropertyDescriptor(IntlNumberFormat?.prototype || ObjectCreate(null), 'format') || ObjectCreate(null);
 export const { stringify: JSONStringify } = JSON;
 export const {
   prototype: { entries: MapPrototypeEntries, get: MapPrototypeGet, has: MapPrototypeHas, set: MapPrototypeSet }
 } = Map;
 export const {
   abs: MathAbs,
+  ceil: MathCeil,
   floor: MathFloor,
   log10: MathLog10,
   max: MathMax,
