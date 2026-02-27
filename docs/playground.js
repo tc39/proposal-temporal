@@ -8468,7 +8468,7 @@
 	  offsetSubseconds: 1
 	});
 	const optionalMinSecWithSep = new RegExp$1(Call$1(ArrayPrototypeJoin, ["(?:".concat(sep.source, ")(?<offsetMinute>").concat(minute.source, ")"), "(?:".concat(sep.source, "(?<offsetSecond>").concat(second.source, ")").concat(subseconds.source, "?)?")], ['']));
-	const optionalMinSecNoSep = new RegExp$1("(?<offsetMinute>".concat(minute.source, ")(?<offsetSecond>").concat(second.source).concat(subseconds.source, "?)?"));
+	const optionalMinSecNoSep = new RegExp$1("(?<offsetMinute>".concat(minute.source, ")(?:(?<offsetSecond>").concat(second.source, ")").concat(subseconds.source, "?)?"));
 	const optionalMinSec = new RegExp$1("(?:".concat(optionalMinSecWithSep.source, ")|(?:").concat(optionalMinSecNoSep.source, ")"));
 	const offsetWithParts = new RegExp$1("^(?<offsetSign>".concat(sign.source, ")(?<offsetHour>").concat(hour.source, ")(?:").concat(optionalMinSec.source, ")?$"));
 	const offset = new RegExp$1("(?<offset>(?:".concat(sign.source, ")(?:").concat(hour.source, ")(?:").concat(optionalMinSec.source, ")?)"));
@@ -9636,7 +9636,7 @@
 	}
 	function ToTemporalInstant(item) {
 	  const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-	  if (Type$1(item === 'Object')) {
+	  if (Type$1(item) === 'Object') {
 	    if (IsTemporalInstant(item) || IsTemporalZonedDateTime(item)) {
 	      return new TemporalInstant(GetSlot(item, EPOCHNANOSECONDS));
 	    }
