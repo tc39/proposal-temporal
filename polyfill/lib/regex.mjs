@@ -48,7 +48,7 @@ const optionalMinSecWithSep = new RegExpCtor(
   )
 );
 const optionalMinSecNoSep = new RegExpCtor(
-  `(?<offsetMinute>${minute.source})(?<offsetSecond>${second.source}${subseconds.source}?)?`
+  `(?<offsetMinute>${minute.source})(?:(?<offsetSecond>${second.source})${subseconds.source}?)?`
 );
 const optionalMinSec = new RegExpCtor(`(?:${optionalMinSecWithSep.source})|(?:${optionalMinSecNoSep.source})`);
 export const offsetWithParts = new RegExpCtor(
