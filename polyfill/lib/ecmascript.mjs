@@ -1279,7 +1279,7 @@ export function ToTemporalDuration(item) {
 
 export function ToTemporalInstant(item) {
   const TemporalInstant = GetIntrinsic('%Temporal.Instant%');
-  if (Type(item === 'Object')) {
+  if (Type(item) === 'Object') {
     if (IsTemporalInstant(item) || IsTemporalZonedDateTime(item)) {
       return new TemporalInstant(GetSlot(item, EPOCHNANOSECONDS));
     }
