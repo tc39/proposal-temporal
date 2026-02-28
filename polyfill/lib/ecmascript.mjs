@@ -3424,7 +3424,7 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
   const timeDuration = duration.time.add24HourDays(duration.date.days);
   // Convert to nanoseconds and round
   const unitLength = Call(MapPrototypeGet, NS_PER_TIME_UNIT, [smallestUnit]);
-  const roundedTime = timeDuration.round(increment * unitLength, roundingMode);
+  const roundedTime = timeDuration.round(bigInt(increment).multiply(unitLength), roundingMode);
   const diffTime = roundedTime.subtract(timeDuration);
 
   // Determine if whole days expanded
