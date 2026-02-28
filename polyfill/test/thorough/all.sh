@@ -31,6 +31,7 @@ for test in \
   durationaddition \
   durationmodify \
   durationparsing \
+  durationrounding \
   durationroundtrip \
   durationtotal \
   instantaddition \
