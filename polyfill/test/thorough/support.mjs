@@ -119,6 +119,19 @@ export const durationUnits = [
   'microseconds',
   'nanoseconds'
 ];
+export function largerOfTwoDurationUnits(one, two) {
+  const oneIndex = durationUnits.indexOf(one);
+  const twoIndex = durationUnits.indexOf(two);
+  return durationUnits[Math.min(oneIndex, twoIndex)];
+}
+
+export function largestUnitPresent(duration) {
+  for (const unit of durationUnits) {
+    if (duration[unit] !== 0) return unit;
+  }
+  return 'none';
+}
+
 export const interestingDateTimes = [
   [2025, 9, 9, 13, 40, 18, 199, 6, 994], // a recent datetime
   [2025, 9, 8, 14, 41, 19, 200, 7, 995], // earlier date but later time
@@ -1044,6 +1057,31 @@ export const roundingModes = [
   'halfTrunc',
   'halfEven'
 ];
+
+// Figure out what rounding modes make sense to test for the given combination
+// of duration rounding parameters
+export function sensibleRoundingModes(duration, str, smallestUnit, roundingIncrement, relativeTo = undefined) {
+  let halfExpandStr, halfTruncStr;
+  try {
+    halfExpandStr = duration
+      .round({ smallestUnit, roundingIncrement, relativeTo, roundingMode: 'halfExpand' })
+      .toString();
+    halfTruncStr = duration
+      .round({ smallestUnit, roundingIncrement, relativeTo, roundingMode: 'halfTrunc' })
+      .toString();
+  } catch (e) {
+    // at the extremum of the representable range? just do one rounding mode
+    if (e instanceof RangeError) return ['trunc'];
+    throw e;
+  }
+  const isAlreadyRounded = halfExpandStr === halfTruncStr && halfExpandStr === str;
+  const isHalfway = halfExpandStr !== halfTruncStr;
+  const roundingModes = [];
+  if (!isAlreadyRounded) roundingModes.push('floor', 'ceil');
+  if (isHalfway) roundingModes.push('halfFloor', 'halfCeil', 'halfEven');
+  if (roundingModes.length === 0) roundingModes.push('trunc');
+  return roundingModes;
+}
 
 export async function time(functionBody) {
   const start = nowBigInt();
