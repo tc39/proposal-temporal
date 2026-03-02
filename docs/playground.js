@@ -11631,11 +11631,15 @@
 	  const even = MathAbs(r1) / increment % 2 === 0;
 	  const roundedUnit = numerator.isZero() ? MathAbs(r1) : !numerator.cmp(denominator) // equal?
 	  ? MathAbs(r2) : ApplyUnsignedRoundingMode(MathAbs(r1), MathAbs(r2), cmp, even, unsignedRoundingMode);
-
-	  // Trick to minimize rounding error, due to the lack of fma() in JS
-	  const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(increment * sign)));
-	  const total = fakeNumerator.fdiv(denominator.totalNs);
-	  assert(MathAbs(r1) <= MathAbs(total) && MathAbs(total) <= MathAbs(r2), 'r1 ≤ total ≤ r2');
+	  let total = null;
+	  if (increment === 1) {
+	    // Calculate total with a trick to minimize rounding error, due to the lack
+	    // of fma() in JS. total is only used when calling from total(), which is
+	    // definitely not the case when increment ≠ 1
+	    const fakeNumerator = new TimeDuration(denominator.totalNs.times(r1).add(numerator.totalNs.times(sign)));
+	    total = fakeNumerator.fdiv(denominator.totalNs);
+	    assert(MathAbs(r1) <= MathAbs(total) && MathAbs(total) <= MathAbs(r2), 'r1 ≤ total ≤ r2');
+	  }
 
 	  // Determine whether expanded or contracted
 	  didExpandCalendarUnit || (didExpandCalendarUnit = roundedUnit === MathAbs(r2));
@@ -11712,7 +11716,7 @@
 	  const timeDuration = duration.time.add24HourDays(duration.date.days);
 	  // Convert to nanoseconds and round
 	  const unitLength = Call$1(MapPrototypeGet, NS_PER_TIME_UNIT, [smallestUnit]);
-	  const roundedTime = timeDuration.round(increment * unitLength, roundingMode);
+	  const roundedTime = timeDuration.round(bigInt(increment).multiply(unitLength), roundingMode);
 	  const diffTime = roundedTime.subtract(timeDuration);
 
 	  // Determine if whole days expanded
