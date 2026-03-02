@@ -763,7 +763,7 @@ export function makeDurationCases() {
       let string = duration.toString();
       // Disambiguate toString output when milliseconds, microseconds, or
       // nanoseconds overflow
-      if (duration.milliseconds || duration.microseconds || duration.nanoseconds) {
+      if (duration.milliseconds > 999 || duration.microseconds > 999 || duration.nanoseconds > 999) {
         string += `(${BigInt(duration.milliseconds)},${BigInt(duration.microseconds)},${BigInt(duration.nanoseconds)})`;
       }
       return [duration, string];
