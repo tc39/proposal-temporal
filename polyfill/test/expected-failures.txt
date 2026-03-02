@@ -1,6 +1,5 @@
 # Caused by https://issues.chromium.org/issues/40893567
 # Remove these lines after that bug is fixed.
-staging/Intl402/Temporal/old/date-time-format.js
 intl402/DateTimeFormat/prototype/format/temporal-objects-resolved-time-zone.js
 intl402/DateTimeFormat/prototype/format/timedatestyle-en.js
 
