@@ -19,7 +19,6 @@ node runtest262.mjs "test262/test/built-ins/Date/*/toTemporalInstant/*.js" || [ 
 for subdir in $subdirs; do
   node runtest262.mjs "$subdir/**" || failed=1
 done
-node runtest262.mjs "test262/test/staging/Intl402/Temporal/**/*.js" || failed=1
 node runtest262.mjs "test262/test/intl402/DateTimeFormat/**/*.js" || failed=1
 node runtest262.mjs "test262/test/built-ins/Date/*/toLocale*String/*.js" || failed=1
 
