@@ -9,7 +9,7 @@
 # Kiesel:         ./all.sh "$HOME/.esvu/bin/kiesel -m"
 # LadybirdJS:     ./all.sh "$HOME/.esvu/bin/ladybird-js -m"
 # SpiderMonkey:   ./all.sh "$HOME/.esvu/bin/sm -m"
-# V8:             ./all.sh "$HOME/.esvu/bin/v8 --harmony-temporal"
+# V8:             ./all.sh "$HOME/.esvu/bin/v8"
 
 cd $(dirname $0)
 interpreter=${1-node}
