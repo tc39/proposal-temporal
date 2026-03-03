@@ -23,7 +23,7 @@ for (let mask = 1; mask < 2 ** 10; mask++) {
   // otherwise the test is pretty short
   for (const sign of [1, -1]) {
     const bag = {};
-    let desc = sign === -1 ? '\\' : '/';
+    let desc = sign === -1 ? '|' : '/';
     if (mask & 0x001) {
       const value = rotate(interestingYears);
       bag.years = value * sign;
