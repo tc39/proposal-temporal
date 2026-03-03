@@ -8,6 +8,7 @@ import {
 } from './support.mjs';
 
 const largestUnits = [{ largestUnit: 'weeks' }, { largestUnit: 'days' }];
+const reject = { overflow: 'reject' };
 const calendars = [
   'buddhist',
   'chinese',
@@ -46,10 +47,10 @@ await time((start) => {
           assertDurationsEqual(one.since(two, opts), dif.negated(), `${str1} since ${str2} ${opts.largestUnit}`);
           assertDurationsEqual(two.until(one, opts), dif.negated(), `${str2} until ${str1} ${opts.largestUnit}`);
           assertDurationsEqual(two.since(one, opts), dif, `${str2} since ${str1} ${opts.largestUnit}`);
-          assertTemporalEqual(one.add(dif), two, `${str1} + ${dif} = ${str2}`);
-          assertTemporalEqual(one.subtract(dif.negated()), two, `${str1} - -${dif} = ${str2}`);
-          assertTemporalEqual(two.add(dif.negated()), one, `${str2} + -${dif} = ${str1}`);
-          assertTemporalEqual(two.subtract(dif), one, `${str2} - ${dif} = ${str1}`);
+          assertTemporalEqual(one.add(dif, reject), two, `${str1} + ${dif} = ${str2}`);
+          assertTemporalEqual(one.subtract(dif.negated(), reject), two, `${str1} - -${dif} = ${str2}`);
+          assertTemporalEqual(two.add(dif.negated(), reject), one, `${str2} + -${dif} = ${str1}`);
+          assertTemporalEqual(two.subtract(dif, reject), one, `${str2} - ${dif} = ${str1}`);
         }
       }
     }
