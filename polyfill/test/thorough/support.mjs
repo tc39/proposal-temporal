@@ -770,6 +770,24 @@ export function makeDurationCases() {
     });
 }
 
+// Greatly reduce the number of random durations for testing where we vary both
+// largestUnit and smallestUnit, since that is a huge testing space
+export function makeDurationCasesAbbreviated() {
+  return interestingDurations
+    .concat(randomCalendarDurations.slice(0, 5))
+    .concat(randomNonCalendarDurations.slice(0, 5))
+    .map((args) => {
+      const duration = new temporalImpl.Duration(...args);
+      let string = duration.toString();
+      // Disambiguate toString output when milliseconds, microseconds, or
+      // nanoseconds overflow
+      if (duration.milliseconds > 999 || duration.microseconds > 999 || duration.nanoseconds > 999) {
+        string += `(${BigInt(duration.milliseconds)},${BigInt(duration.microseconds)},${BigInt(duration.nanoseconds)})`;
+      }
+      return [duration, string];
+    });
+}
+
 export function makeInstantCases() {
   return interestingEpochNs.map((epochNs) => {
     const instant = new temporalImpl.Instant(epochNs);
