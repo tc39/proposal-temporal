@@ -44,17 +44,3 @@ jobs:
           node-version: 25.6.1
       - run: npm ci
       - run: npm run test-cookbook
-  test-exhaustive:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: use node.js v25.6.1
-        uses: actions/setup-node@v3
-        with:
-          node-version: 25.6.1
-      - run: npm ci
-      - run: |
-          cd polyfill
-          npm install
-          node test/validStrings.mjs
-          npm run test-thorough

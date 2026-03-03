@@ -1,0 +1,21 @@
+name: Run snapshot tests
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled]
+
+jobs:
+  test:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'run snapshot tests') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: use node.js v25.6.1
+        uses: actions/setup-node@v3
+        with:
+          node-version: 25.6.1
+      - run: npm ci
+      - run: |
+          cd polyfill
+          npm install
+          node test/validStrings.mjs
+          npm run test-thorough
