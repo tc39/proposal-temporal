@@ -55,7 +55,6 @@ import {
 } from './primordials.mjs';
 
 import Call from 'es-abstract/2024/Call.js';
-import Type from 'es-abstract/2024/Type.js';
 
 import { assert, assertNotReached } from './assert.mjs';
 import * as ES from './ecmascript.mjs';
@@ -611,10 +610,7 @@ function makeDayShiftedIsoToCalendarDate(cycleDays, cycleYears) {
     const approxDaysBeyond = MathAbs(isoDate.year - direction * 2000) * 365;
     let numCycles = MathMax(1, MathFloor(approxDaysBeyond / cycleDays));
     let safeIsoDate = ES.AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
-    while (compareISODateToLegacyDateRange(safeIsoDate) !== 0) {
-      numCycles++;
-      safeIsoDate = ES.AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
-    }
+    assert(compareISODateToLegacyDateRange(safeIsoDate) === 0, 'numCycles calculation should be correct');
     const yearShift = numCycles * cycleYears * direction;
     const result = nonIsoHelperBase.isoToCalendarDate.call(this, safeIsoDate, cache);
     const adjusted = { ...result, year: result.year + yearShift };
@@ -780,11 +776,9 @@ const nonIsoHelperBase = {
     }
     if (this.checkIcuBugs) this.checkIcuBugs(isoDate);
     const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
-    if (calendarDate.year === undefined) throw new RangeErrorCtor(`Missing year converting ${JSONStringify(isoDate)}`);
-    if (calendarDate.month === undefined) {
-      throw new RangeErrorCtor(`Missing month converting ${JSONStringify(isoDate)}`);
-    }
-    if (calendarDate.day === undefined) throw new RangeErrorCtor(`Missing day converting ${JSONStringify(isoDate)}`);
+    assert(calendarDate.year !== undefined, `Missing year converting ${JSONStringify(isoDate)}`);
+    assert(calendarDate.month !== undefined, `Missing month converting ${JSONStringify(isoDate)}`);
+    assert(calendarDate.day !== undefined, `Missing day converting ${JSONStringify(isoDate)}`);
     cache.set(key, calendarDate);
     // Also cache the reverse mapping
     const cacheReverse = (overflow) => {
@@ -803,11 +797,7 @@ const nonIsoHelperBase = {
     if (month === undefined && monthCode === undefined) throw new TypeErrorCtor('month or monthCode is required');
     if (day === undefined) throw new RangeErrorCtor('Missing day');
     if (monthCode !== undefined) {
-      if (typeof monthCode !== 'string') {
-        throw new RangeErrorCtor(
-          `monthCode must be a string, not ${Call(StringPrototypeToLowerCase, Type(monthCode), [])}`
-        );
-      }
+      assert(typeof monthCode === 'string', `monthCode must be a string, not ${typeof monthCode}`);
       const { monthNumber } = ParseMonthCode(monthCode);
       if (monthNumber < 1 || monthNumber > 13) throw new RangeErrorCtor(`Invalid monthCode: ${monthCode}`);
     }
@@ -1032,15 +1022,14 @@ const nonIsoHelperBase = {
     }
     cache.set(key, isoEstimate);
     if (keyOriginal) cache.set(keyOriginal, isoEstimate);
-    if (
-      date.year === undefined ||
-      date.month === undefined ||
-      date.day === undefined ||
-      date.monthCode === undefined ||
-      (CalendarSupportsEra(this.id) && (date.era === undefined || date.eraYear === undefined))
-    ) {
-      throw new RangeErrorCtor('Unexpected missing property');
-    }
+    assert(date.year !== undefined, 'Missing year');
+    assert(date.month !== undefined, 'Missing month');
+    assert(date.day !== undefined, 'Missing day');
+    assert(date.monthCode !== undefined, 'Missing monthCode');
+    assert(
+      !CalendarSupportsEra(this.id) || (date.era !== undefined && date.eraYear !== undefined),
+      'Unexpected missing property'
+    );
     return isoEstimate;
   },
   compareCalendarDates(date1, date2) {
@@ -1915,24 +1904,10 @@ const helperBuddhist = ObjectAssign(
   makeHelperSameMonthDayAsGregorian('buddhist', [{ code: 'be', isoEpoch: { year: -542, month: 1, day: 1 } }])
 );
 
-const helperGregory = ObjectAssign(
-  makeHelperSameMonthDayAsGregorian('gregory', [
-    { code: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
-    { code: 'bce', reverseOf: 'ce' }
-  ]),
-  {
-    reviseIntlEra(calendarDate /*, isoDate*/) {
-      let { era, eraYear } = calendarDate;
-      // Firefox 96 introduced a bug where the `'short'` format of the era
-      // option mistakenly returns the one-letter (narrow) format instead. The
-      // code below handles either the correct or Firefox-buggy format. See
-      // https://bugzilla.mozilla.org/show_bug.cgi?id=1752253
-      if (era === 'b') era = 'bce';
-      if (era === 'a') era = 'ce';
-      return { era, eraYear };
-    }
-  }
-);
+const helperGregory = makeHelperSameMonthDayAsGregorian('gregory', [
+  { code: 'ce', isoEpoch: { year: 1, month: 1, day: 1 } },
+  { code: 'bce', reverseOf: 'ce' }
+]);
 
 const helperJapanese = ObjectAssign(
   // NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
