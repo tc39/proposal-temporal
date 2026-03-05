@@ -987,7 +987,6 @@ const nonIsoHelperBase = {
     let increment = 8;
     while (sign) {
       isoEstimate = ES.AddDaysToISODate(isoEstimate, sign * increment);
-      const oldRoundtripEstimate = roundtripEstimate;
       roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
       const oldSign = sign;
       sign = this.compareCalendarDates(date, roundtripEstimate);
@@ -998,25 +997,10 @@ const nonIsoHelperBase = {
           // Signal the loop condition that there's a match.
           sign = 0;
         } else if (oldSign && sign !== oldSign) {
-          if (increment > 1) {
-            // If the estimate overshot the target, try again with a smaller increment
-            // in the reverse direction.
-            increment /= 2;
-          } else {
-            // Increment is 1, and neither the previous estimate nor the new
-            // estimate is correct. The only way that can happen is if the
-            // original date was an invalid value that will be constrained or
-            // rejected here.
-            if (overflow === 'reject') {
-              throw new RangeErrorCtor(`Can't find ISO date from calendar date: ${JSONStringify({ ...originalDate })}`);
-            } else {
-              // To constrain, pick the earliest value
-              const order = this.compareCalendarDates(roundtripEstimate, oldRoundtripEstimate);
-              // If current value is larger, then back up to the previous value.
-              if (order > 0) isoEstimate = ES.AddDaysToISODate(isoEstimate, -1);
-              sign = 0;
-            }
-          }
+          /* c8 ignore next */
+          assertNotReached(
+            `calendarToIsoDate binary search should not overshoot (increment ${increment} cannot skip a month)`
+          );
         }
       }
     }
