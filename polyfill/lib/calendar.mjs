@@ -982,27 +982,22 @@ const nonIsoHelperBase = {
         sign = this.compareCalendarDates(date, roundtripEstimate);
       }
     }
-    // If the initial guess is not in the same month, then bisect the
-    // distance to the target, starting with 8 days per step.
-    let increment = 8;
+    // If the initial guess is not in the same month, search in 8-day increments
+    // towards the target, until we get into the same month. From there we can
+    // calculate the number of days directly.
+    const increment = 8;
+    const oldSign = sign;
     while (sign) {
       isoEstimate = ES.AddDaysToISODate(isoEstimate, sign * increment);
       roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
-      const oldSign = sign;
       sign = this.compareCalendarDates(date, roundtripEstimate);
-      if (sign) {
-        diff = simpleDateDiff(date, roundtripEstimate);
-        if (diff.years === 0 && diff.months === 0) {
-          isoEstimate = calculateSameMonthResult(diff.days);
-          // Signal the loop condition that there's a match.
-          sign = 0;
-        } else {
-          assert(
-            !oldSign || sign === oldSign,
-            `calendarToIsoDate binary search should not overshoot (increment ${increment} cannot skip a month)`
-          );
-        }
+      if (sign === 0) break;
+      diff = simpleDateDiff(date, roundtripEstimate);
+      if (diff.years === 0 && diff.months === 0) {
+        isoEstimate = calculateSameMonthResult(diff.days);
+        break;
       }
+      assert(sign === oldSign, 'calendarToIsoDate search should not overshoot a month entirely');
     }
     cache.set(key, isoEstimate);
     if (keyOriginal) cache.set(keyOriginal, isoEstimate);
