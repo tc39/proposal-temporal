@@ -982,43 +982,22 @@ const nonIsoHelperBase = {
         sign = this.compareCalendarDates(date, roundtripEstimate);
       }
     }
-    // If the initial guess is not in the same month, then bisect the
-    // distance to the target, starting with 8 days per step.
-    let increment = 8;
+    // If the initial guess is not in the same month, search in 8-day increments
+    // towards the target, until we get into the same month. From there we can
+    // calculate the number of days directly.
+    const increment = 8;
+    const oldSign = sign;
     while (sign) {
       isoEstimate = ES.AddDaysToISODate(isoEstimate, sign * increment);
-      const oldRoundtripEstimate = roundtripEstimate;
       roundtripEstimate = this.isoToCalendarDate(isoEstimate, cache);
-      const oldSign = sign;
       sign = this.compareCalendarDates(date, roundtripEstimate);
-      if (sign) {
-        diff = simpleDateDiff(date, roundtripEstimate);
-        if (diff.years === 0 && diff.months === 0) {
-          isoEstimate = calculateSameMonthResult(diff.days);
-          // Signal the loop condition that there's a match.
-          sign = 0;
-        } else if (oldSign && sign !== oldSign) {
-          if (increment > 1) {
-            // If the estimate overshot the target, try again with a smaller increment
-            // in the reverse direction.
-            increment /= 2;
-          } else {
-            // Increment is 1, and neither the previous estimate nor the new
-            // estimate is correct. The only way that can happen is if the
-            // original date was an invalid value that will be constrained or
-            // rejected here.
-            if (overflow === 'reject') {
-              throw new RangeErrorCtor(`Can't find ISO date from calendar date: ${JSONStringify({ ...originalDate })}`);
-            } else {
-              // To constrain, pick the earliest value
-              const order = this.compareCalendarDates(roundtripEstimate, oldRoundtripEstimate);
-              // If current value is larger, then back up to the previous value.
-              if (order > 0) isoEstimate = ES.AddDaysToISODate(isoEstimate, -1);
-              sign = 0;
-            }
-          }
-        }
+      if (sign === 0) break;
+      diff = simpleDateDiff(date, roundtripEstimate);
+      if (diff.years === 0 && diff.months === 0) {
+        isoEstimate = calculateSameMonthResult(diff.days);
+        break;
       }
+      assert(sign === oldSign, 'calendarToIsoDate search should not overshoot a month entirely');
     }
     cache.set(key, isoEstimate);
     if (keyOriginal) cache.set(keyOriginal, isoEstimate);
