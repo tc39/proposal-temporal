@@ -996,9 +996,9 @@ const nonIsoHelperBase = {
           isoEstimate = calculateSameMonthResult(diff.days);
           // Signal the loop condition that there's a match.
           sign = 0;
-        } else if (oldSign && sign !== oldSign) {
-          /* c8 ignore next */
-          assertNotReached(
+        } else {
+          assert(
+            !oldSign || sign === oldSign,
             `calendarToIsoDate binary search should not overshoot (increment ${increment} cannot skip a month)`
           );
         }
