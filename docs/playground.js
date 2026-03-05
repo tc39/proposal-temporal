@@ -1191,52 +1191,6 @@
 	  }, _wrapRegExp.apply(this, arguments);
 	}
 
-	/** @type {import('./isObject')} */
-	var isObject$4 = function isObject(x) {
-		return !!x && (typeof x === 'function' || typeof x === 'object');
-	};
-
-	var isObject$3 = isObject$4;
-
-	// https://262.ecma-international.org/5.1/#sec-8
-
-	var Type$2 = function Type(x) {
-		if (x === null) {
-			return 'Null';
-		}
-		if (typeof x === 'undefined') {
-			return 'Undefined';
-		}
-		if (isObject$3(x)) {
-			return 'Object';
-		}
-		if (typeof x === 'number') {
-			return 'Number';
-		}
-		if (typeof x === 'boolean') {
-			return 'Boolean';
-		}
-		if (typeof x === 'string') {
-			return 'String';
-		}
-	};
-
-	var ES5Type = Type$2;
-
-	// https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
-
-	var Type = function Type(x) {
-		if (typeof x === 'symbol') {
-			return 'Symbol';
-		}
-		if (typeof x === 'bigint') {
-			return 'BigInt';
-		}
-		return ES5Type(x);
-	};
-
-	var Type$1 = /*@__PURE__*/getDefaultExportFromCjs(Type);
-
 	function assert(condition, message) {
 	  if (!condition) throw new Error$1("assertion failure: ".concat(message));
 	}
@@ -1244,6 +1198,11 @@
 	  const reason = message ? " because ".concat(message) : '';
 	  throw new Error$1("assertion failure: code should not be reached".concat(reason));
 	}
+
+	/** @type {import('./isObject')} */
+	var isObject$4 = function isObject(x) {
+		return !!x && (typeof x === 'function' || typeof x === 'object');
+	};
 
 	var toString$1 = {}.toString;
 
@@ -4616,7 +4575,7 @@
 	    }
 	  });
 	  for (var x = args[i]; i < len; x = args[++i]) {
-	    if (isNull(x) || !isObject$2(x)) {
+	    if (isNull(x) || !isObject$3(x)) {
 	      str += ' ' + x;
 	    } else {
 	      str += ' ' + inspect(x);
@@ -5040,19 +4999,19 @@
 	}
 
 	function isRegExp$1(re) {
-	  return isObject$2(re) && objectToString$1(re) === '[object RegExp]';
+	  return isObject$3(re) && objectToString$1(re) === '[object RegExp]';
 	}
 
-	function isObject$2(arg) {
+	function isObject$3(arg) {
 	  return typeof arg === 'object' && arg !== null;
 	}
 
 	function isDate$2(d) {
-	  return isObject$2(d) && objectToString$1(d) === '[object Date]';
+	  return isObject$3(d) && objectToString$1(d) === '[object Date]';
 	}
 
 	function isError$1(e) {
-	  return isObject$2(e) &&
+	  return isObject$3(e) &&
 	      (objectToString$1(e) === '[object Error]' || e instanceof Error);
 	}
 
@@ -5103,7 +5062,7 @@
 
 	function _extend(origin, add) {
 	  // Don't do anything if add isn't an object
-	  if (!add || !isObject$2(add)) return origin;
+	  if (!add || !isObject$3(add)) return origin;
 
 	  var keys = Object.keys(add);
 	  var i = keys.length;
@@ -5125,7 +5084,7 @@
 	  isFunction: isFunction,
 	  isError: isError$1,
 	  isDate: isDate$2,
-	  isObject: isObject$2,
+	  isObject: isObject$3,
 	  isRegExp: isRegExp$1,
 	  isUndefined: isUndefined,
 	  isSymbol: isSymbol$3,
@@ -5159,7 +5118,7 @@
 		isNull: isNull,
 		isNullOrUndefined: isNullOrUndefined,
 		isNumber: isNumber$1,
-		isObject: isObject$2,
+		isObject: isObject$3,
 		isPrimitive: isPrimitive$3,
 		isRegExp: isRegExp$1,
 		isString: isString$1,
@@ -6525,7 +6484,7 @@
 	}
 
 	var $TypeError$2 = type;
-	var isObject$1 = isObject$4;
+	var isObject$2 = isObject$4;
 	var callBound = callBound$4;
 	var OwnPropertyKeys = ownKeys;
 
@@ -6548,7 +6507,7 @@
 	// https://262.ecma-international.org/12.0/#sec-copydataproperties
 
 	var CopyDataProperties = function CopyDataProperties(target, source, excludedItems) {
-		if (!isObject$1(target)) {
+		if (!isObject$2(target)) {
 			throw new $TypeError$2('Assertion failed: "target" must be an Object');
 		}
 
@@ -6597,14 +6556,14 @@
 	var $TypeError$1 = type;
 
 	var hasOwn = hasown;
-	var isObject = isObject$4;
+	var isObject$1 = isObject$4;
 
 	var isPropertyKey = isPropertyKey$2;
 
 	// https://262.ecma-international.org/6.0/#sec-hasownproperty
 
 	var HasOwnProperty = function HasOwnProperty(O, P) {
-		if (!isObject(O)) {
+		if (!isObject$1(O)) {
 			throw new $TypeError$1('Assertion failed: `O` must be an Object');
 		}
 		if (!isPropertyKey(P)) {
@@ -6656,6 +6615,47 @@
 	};
 
 	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
+
+	var isObject = isObject$4;
+
+	// https://262.ecma-international.org/5.1/#sec-8
+
+	var Type$2 = function Type(x) {
+		if (x === null) {
+			return 'Null';
+		}
+		if (typeof x === 'undefined') {
+			return 'Undefined';
+		}
+		if (isObject(x)) {
+			return 'Object';
+		}
+		if (typeof x === 'number') {
+			return 'Number';
+		}
+		if (typeof x === 'boolean') {
+			return 'Boolean';
+		}
+		if (typeof x === 'string') {
+			return 'String';
+		}
+	};
+
+	var ES5Type = Type$2;
+
+	// https://262.ecma-international.org/11.0/#sec-ecmascript-data-types-and-values
+
+	var Type = function Type(x) {
+		if (typeof x === 'symbol') {
+			return 'Symbol';
+		}
+		if (typeof x === 'bigint') {
+			return 'BigInt';
+		}
+		return ES5Type(x);
+	};
+
+	var Type$1 = /*@__PURE__*/getDefaultExportFromCjs(Type);
 
 	// Instant
 	const EPOCHNANOSECONDS = 'slot-epochNanoSeconds';
@@ -13159,10 +13159,7 @@
 	    const approxDaysBeyond = MathAbs(isoDate.year - direction * 2000) * 365;
 	    let numCycles = MathMax(1, MathFloor(approxDaysBeyond / cycleDays));
 	    let safeIsoDate = AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
-	    while (compareISODateToLegacyDateRange(safeIsoDate) !== 0) {
-	      numCycles++;
-	      safeIsoDate = AddDaysToISODate(isoDate, -numCycles * cycleDays * direction);
-	    }
+	    assert(compareISODateToLegacyDateRange(safeIsoDate) === 0, 'numCycles calculation should be correct');
 	    const yearShift = numCycles * cycleYears * direction;
 	    const result = nonIsoHelperBase.isoToCalendarDate.call(this, safeIsoDate, cache);
 	    const adjusted = _objectSpread2(_objectSpread2({}, result), {}, {
@@ -13326,11 +13323,9 @@
 	    }
 	    if (this.checkIcuBugs) this.checkIcuBugs(isoDate);
 	    const calendarDate = this.adjustCalendarDate(result, cache, 'constrain', true);
-	    if (calendarDate.year === undefined) throw new RangeError$1("Missing year converting ".concat(JSONStringify(isoDate)));
-	    if (calendarDate.month === undefined) {
-	      throw new RangeError$1("Missing month converting ".concat(JSONStringify(isoDate)));
-	    }
-	    if (calendarDate.day === undefined) throw new RangeError$1("Missing day converting ".concat(JSONStringify(isoDate)));
+	    assert(calendarDate.year !== undefined, "Missing year converting ".concat(JSONStringify(isoDate)));
+	    assert(calendarDate.month !== undefined, "Missing month converting ".concat(JSONStringify(isoDate)));
+	    assert(calendarDate.day !== undefined, "Missing day converting ".concat(JSONStringify(isoDate)));
 	    cache.set(key, calendarDate);
 	    // Also cache the reverse mapping
 	    const cacheReverse = overflow => {
@@ -13356,9 +13351,7 @@
 	    if (month === undefined && monthCode === undefined) throw new TypeError$1('month or monthCode is required');
 	    if (day === undefined) throw new RangeError$1('Missing day');
 	    if (monthCode !== undefined) {
-	      if (typeof monthCode !== 'string') {
-	        throw new RangeError$1("monthCode must be a string, not ".concat(Call$1(StringPrototypeToLowerCase, Type$1(monthCode), [])));
-	      }
+	      assert(typeof monthCode === 'string', "monthCode must be a string, not ".concat(typeof monthCode));
 	      const {
 	        monthNumber
 	      } = ParseMonthCode(monthCode);
@@ -13632,9 +13625,11 @@
 	    }
 	    cache.set(key, isoEstimate);
 	    if (keyOriginal) cache.set(keyOriginal, isoEstimate);
-	    if (date.year === undefined || date.month === undefined || date.day === undefined || date.monthCode === undefined || CalendarSupportsEra(this.id) && (date.era === undefined || date.eraYear === undefined)) {
-	      throw new RangeError$1('Unexpected missing property');
-	    }
+	    assert(date.year !== undefined, 'Missing year');
+	    assert(date.month !== undefined, 'Missing month');
+	    assert(date.day !== undefined, 'Missing day');
+	    assert(date.monthCode !== undefined, 'Missing monthCode');
+	    assert(!CalendarSupportsEra(this.id) || date.era !== undefined && date.eraYear !== undefined, 'Unexpected missing property');
 	    return isoEstimate;
 	  },
 	  compareCalendarDates(date1, date2) {
@@ -14838,7 +14833,7 @@
 	    day: 1
 	  }
 	}]));
-	const helperGregory = ObjectAssign(makeHelperSameMonthDayAsGregorian('gregory', [{
+	const helperGregory = makeHelperSameMonthDayAsGregorian('gregory', [{
 	  code: 'ce',
 	  isoEpoch: {
 	    year: 1,
@@ -14848,24 +14843,7 @@
 	}, {
 	  code: 'bce',
 	  reverseOf: 'ce'
-	}]), {
-	  reviseIntlEra(calendarDate /*, isoDate*/) {
-	    let {
-	      era,
-	      eraYear
-	    } = calendarDate;
-	    // Firefox 96 introduced a bug where the `'short'` format of the era
-	    // option mistakenly returns the one-letter (narrow) format instead. The
-	    // code below handles either the correct or Firefox-buggy format. See
-	    // https://bugzilla.mozilla.org/show_bug.cgi?id=1752253
-	    if (era === 'b') era = 'bce';
-	    if (era === 'a') era = 'ce';
-	    return {
-	      era,
-	      eraYear
-	    };
-	  }
-	});
+	}]);
 	const helperJapanese = ObjectAssign(
 	// NOTE: Only the 5 modern eras (Meiji and later) are included. For dates
 	// before Meiji 6, the `ce` and `bce` eras are used. Challenges with pre-Meiji
