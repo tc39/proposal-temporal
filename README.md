@@ -4,12 +4,9 @@ Provides standard objects and functions for working with dates and times.
 
 ## Status
 
-This proposal is currently [Stage 3](https://github.com/tc39/proposals#stage-3) and was reviewed for Stage 3 by Richard Gibson, Bradley Farias, and Daniel Ehrenberg.
+This proposal is currently [Stage 4](https://github.com/tc39/proposals/blob/main/finished-proposals.md).
 
-This proposal is now in the hands of ECMAScript engine implementers, so the bar for making API changes is extremely high.
-Nonetheless, changes may occur as the result of feedback from implementation in JS engines.
-Editorial changes to the spec and bug fixes to the spec, tests, and docs are also ongoing, as is customary for Stage 3 proposals.
-Additional tests and documentation content are also being added during Stage 3.
+It will be merged into the [ECMA-262](github.com/tc39/ecma262/pull/3759) and [ECMA-402](https://github.com/tc39/ecma402/pull/1044) standards and this repository will be archived.
 
 Implementation status:
 
