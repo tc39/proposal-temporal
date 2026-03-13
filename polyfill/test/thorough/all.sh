@@ -51,6 +51,7 @@ for test in \
   timeparsing \
   timerounding \
   timeroundtrip \
+  timezones \
   yearcycle \
   yearmonthaddition \
   yearmonthdifference \
