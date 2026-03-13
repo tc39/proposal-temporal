@@ -6,7 +6,7 @@ Provides standard objects and functions for working with dates and times.
 
 This proposal is currently [Stage 4](https://github.com/tc39/proposals/blob/main/finished-proposals.md).
 
-It will be merged into the [ECMA-262](github.com/tc39/ecma262/pull/3759) and [ECMA-402](https://github.com/tc39/ecma402/pull/1044) standards and this repository will be archived.
+It will be merged into the [ECMA-262](https://github.com/tc39/ecma262/pull/3759) and [ECMA-402](https://github.com/tc39/ecma402/pull/1044) standards and this repository will be archived.
 
 Implementation status:
 
