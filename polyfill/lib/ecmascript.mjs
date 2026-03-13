@@ -3308,25 +3308,11 @@ function NudgeToCalendarUnit(
       didExpandCalendarUnit = true;
     }
   } else if (sign == -1) {
-    if (!(nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs))) {
-      // Retry nudge window if it's out of bounds
-      nudgeWindow = ComputeNudgeWindow(
-        sign,
-        duration,
-        originEpochNs,
-        isoDateTime,
-        timeZone,
-        calendar,
-        increment,
-        unit,
-        true
-      );
-      assert(
-        nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs),
-        `${unit} was 0 days long`
-      );
-      didExpandCalendarUnit = true;
-    }
+    /* c8 ignore next */
+    assert(
+      nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs),
+      `sign===-1 nudge window should always contain destEpochNs for ${unit}`
+    );
   }
   ({ r1, r2, startEpochNs, endEpochNs, startDuration, endDuration } = nudgeWindow);
 
