@@ -1672,10 +1672,8 @@
             1. Assert: _nudgeWindow_.[[StartEpochNs]] ≤ _destEpochNs_ ≤ _nudgeWindow_.[[EndEpochNs]].
             1. Set _didExpandCalendarUnit_ to *true*.
         1. Else,
-          1. If _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_ is *false*, then
-            1. Set _nudgeWindow_ to ? ComputeNudgeWindow(_sign_, _duration_, _originEpochNs_, _isoDateTime_, _timeZone_, _calendar_, _increment_, _unit_, *true*).
-            1. Assert: _nudgeWindow_.[[EndEpochNs]] ≤ _destEpochNs_ ≤ _nudgeWindow_.[[StartEpochNs]].
-            1. Set _didExpandCalendarUnit_ to *true*.
+          1. Assert: _endEpochNs_ ≤ _destEpochNs_ ≤ _startEpochNs_.
+          1. NOTE: For negative durations, end-of-month constraining can only reduce the day number, which moves the endpoint further from the origin, so the nudge window always contains _destEpochNs_ without an additional shift.
         1. Let _r1_ be _nudgeWindow_.[[R1]].
         1. Let _r2_ be _nudgeWindow_.[[R2]].
         1. Set _startEpochNs_ to _nudgeWindow_.[[StartEpochNs]].
