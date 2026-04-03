@@ -247,7 +247,7 @@ hebrewNewYearsEve <span class="token operator">=</span> Temporal<span class="tok
 <span class="token comment">// (desired: true)</span></code></pre><h3 id="mitigating-the-unexpected-calendar-problem"><a class="heading-link" href="#mitigating-the-unexpected-calendar-problem"></a>Mitigating the Unexpected Calendar Problem</h3><p>There are two ways to avoid the Unexpected Calendar Problem: the preferred solution of writing calendar-safe code, or a fallback option to validate or coerce inputs to a known calendar.</p>
 <h4 id="writing-calendar-safe-code"><a class="heading-link" href="#writing-calendar-safe-code"></a>Writing Calendar-Safe Code</h3><p>The best way to mitigate the Unexpected Calendar Problem is to write &quot;calendar-safe&quot; code that works for all built-in calendars.
 For example, the function above can easily be written to be calendar-safe by using the <code>monthsInYear</code> and <code>daysInMonth</code> properties instead of hard-coding ISO constants.
-Developers who follow documented <a href="https://tc39.es/proposal-temporal/docs/calendar.html#writing-cross-calendar-code">best practices for writing calendar-safe Temporal code</a> will be able to use the same code for all built-in calendars.</p>
+Developers who follow documented <a href="https://tc39.es/proposal-temporal/docs/calendars.html#writing-cross-calendar-code">best practices for writing calendar-safe Temporal code</a> will be able to use the same code for all built-in calendars.</p>
 <p>Beyond documentation, the Temporal API itself has been designed to make it easier to write calendar-safe code.
 For example:</p>
 <ul>
