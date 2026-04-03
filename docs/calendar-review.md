@@ -175,7 +175,7 @@ There are two ways to avoid the Unexpected Calendar Problem: the preferred solut
 
 The best way to mitigate the Unexpected Calendar Problem is to write "calendar-safe" code that works for all built-in calendars.
 For example, the function above can easily be written to be calendar-safe by using the `monthsInYear` and `daysInMonth` properties instead of hard-coding ISO constants.
-Developers who follow documented [best practices for writing calendar-safe Temporal code](https://tc39.es/proposal-temporal/docs/calendar.html#writing-cross-calendar-code) will be able to use the same code for all built-in calendars.
+Developers who follow documented [best practices for writing calendar-safe Temporal code](https://tc39.es/proposal-temporal/docs/calendars.html#writing-cross-calendar-code) will be able to use the same code for all built-in calendars.
 
 Beyond documentation, the Temporal API itself has been designed to make it easier to write calendar-safe code.
 For example:
