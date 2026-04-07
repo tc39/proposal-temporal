@@ -430,11 +430,9 @@ function formatRange(a, b) {
     }
     const aRecord = extractOverrides(a, this);
     const bRecord = extractOverrides(b, this);
-    if (aRecord.formatter) {
-      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
-      formatter = aRecord.formatter;
-      formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
-    }
+    assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+    formatter = aRecord.formatter;
+    formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
     aDayAdjust = aRecord.dayAdjust ?? 0;
     bDayAdjust = bRecord.dayAdjust ?? 0;
   } else {
@@ -488,11 +486,9 @@ function formatRangeToParts(a, b) {
     }
     const aRecord = extractOverrides(a, this);
     const bRecord = extractOverrides(b, this);
-    if (aRecord.formatter) {
-      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
-      formatter = aRecord.formatter;
-      formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
-    }
+    assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+    formatter = aRecord.formatter;
+    formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
     aDayAdjust = aRecord.dayAdjust ?? 0;
     bDayAdjust = bRecord.dayAdjust ?? 0;
   } else {

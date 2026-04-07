@@ -941,10 +941,9 @@ export function ValidateTemporalUnitValue(value, unitGroup, extraValues = []) {
   if (Call(ArrayPrototypeIncludes, extraValues, [value])) return;
   for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
     const unitInfo = TEMPORAL_UNITS[index];
-    const singular = unitInfo[0];
     const plural = unitInfo[1];
     const category = unitInfo[2];
-    if (value !== singular && value !== plural) continue;
+    if (value !== plural) continue;
     if (unitGroup === 'datetime' || unitGroup === category) return;
   }
   throw new RangeErrorCtor(`${value} not allowed as a ${unitGroup} unit`);
@@ -2820,7 +2819,7 @@ export function RejectDateTime(year, month, day, hour, minute, second, milliseco
 export function RejectDateTimeRange(isoDateTime) {
   const ns = GetUTCEpochNanoseconds(isoDateTime);
   if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
-    const dateTimeString = ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never');
+    const dateTimeString = ISODateTimeToString(isoDateTime, 'iso8601', 'auto', 'never');
     throw new RangeErrorCtor(`${dateTimeString} is outside of supported range`);
   }
 }
@@ -2830,7 +2829,7 @@ function AssertISODateTimeWithinLimits(isoDateTime) {
   const ns = GetUTCEpochNanoseconds(isoDateTime);
   assert(
     ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX),
-    `${ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never')} is outside the representable range`
+    `${ISODateTimeToString(isoDateTime, 'iso8601', 'auto', 'never')} is outside the representable range`
   );
 }
 
