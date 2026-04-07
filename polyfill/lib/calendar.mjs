@@ -568,6 +568,7 @@ OneObjectCache.MAX_CACHE_ENTRIES = 1000;
  * Returns a WeakMap-backed cache that's used to store expensive results
  * that are associated with a particular ISO Date Record object instance.
  *
+ * @param id - calendar ID for the cache
  * @param obj - object to associate with the cache
  */
 OneObjectCache.getCacheForObject = function (id, obj) {
@@ -2035,7 +2036,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const { month, year } = calendarDate;
 
     const previousMonthYear = month > 1 ? year : year - 1;
-    let previousMonthDate = { year: previousMonthYear, month, day: 1 };
+    const previousMonthDate = { year: previousMonthYear, month, day: 1 };
     const previousMonth = month > 1 ? month - 1 : this.monthsInYear(previousMonthDate, cache);
 
     return this.daysInMonth({ year: previousMonthYear, month: previousMonth }, cache);
