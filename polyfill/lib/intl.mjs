@@ -424,7 +424,7 @@ function formatRange(a, b) {
   let formatter;
   let aDayAdjust = 0;
   let bDayAdjust = 0;
-  if (isTemporalObject(a) || isTemporalObject(b)) {
+  if (isFormattableTemporalObject(a) || isFormattableTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
@@ -482,7 +482,7 @@ function formatRangeToParts(a, b) {
   let formatter;
   let aDayAdjust = 0;
   let bDayAdjust = 0;
-  if (isTemporalObject(a) || isTemporalObject(b)) {
+  if (isFormattableTemporalObject(a) || isFormattableTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
@@ -740,7 +740,7 @@ function hasAnyDateTimeOptions(originalOptions) {
   return hasDateOptions(originalOptions) || hasTimeOptions(originalOptions);
 }
 
-function isTemporalObject(obj) {
+function isFormattableTemporalObject(obj) {
   return (
     ES.IsTemporalDate(obj) ||
     ES.IsTemporalTime(obj) ||
@@ -753,12 +753,12 @@ function isTemporalObject(obj) {
 }
 
 function toDateTimeFormattable(value) {
-  if (isTemporalObject(value)) return value;
+  if (isFormattableTemporalObject(value)) return value;
   return ES.ToNumber(value);
 }
 
 function sameTemporalType(x, y) {
-  if (!isTemporalObject(x) || !isTemporalObject(y)) return false;
+  if (!isFormattableTemporalObject(x) || !isFormattableTemporalObject(y)) return false;
   if (ES.IsTemporalTime(x) && !ES.IsTemporalTime(y)) return false;
   if (ES.IsTemporalDate(x) && !ES.IsTemporalDate(y)) return false;
   if (ES.IsTemporalDateTime(x) && !ES.IsTemporalDateTime(y)) return false;
