@@ -770,12 +770,15 @@ export function ToTemporalPartialDurationRecord(temporalDurationLike) {
   return result;
 }
 
-export function AdjustDateDurationRecord({ years, months, weeks }, newDays, newWeeks, newMonths) {
+export function AdjustDateDurationRecord(dateDuration, newDays, newWeeks, newMonths) {
   assert(newDays !== undefined, 'days must be provided to AdjustDateDurationRecord');
+  const months = newMonths ?? dateDuration.months;
+  const weeks = newWeeks ?? dateDuration.weeks;
+  RejectDuration(dateDuration.years, months, weeks, newDays, 0, 0, 0, 0, 0, 0);
   return {
-    years,
-    months: newMonths ?? months,
-    weeks: newWeeks ?? weeks,
+    years: dateDuration.years,
+    months,
+    weeks,
     days: newDays
   };
 }
