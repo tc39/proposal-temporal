@@ -319,6 +319,41 @@ const monthCodeInfo = {
   }
 };
 
+const calendarMinYear = {
+  buddhist: -271278,
+  chinese: -271821,
+  coptic: -272099,
+  dangi: -271821,
+  ethioaa: -266323,
+  ethiopic: -271823,
+  gregory: -271821,
+  hebrew: -268058,
+  indian: -271899,
+  'islamic-civil': -280804,
+  'islamic-tbla': -280804,
+  'islamic-umalqura': -280804,
+  japanese: -271821,
+  persian: -272442,
+  roc: -273732
+};
+const calendarMaxYear = {
+  buddhist: 276303,
+  chinese: 275760,
+  coptic: 275471,
+  dangi: 275760,
+  ethioaa: 281247,
+  ethiopic: 275747,
+  gregory: 275760,
+  hebrew: 279517,
+  indian: 275682,
+  'islamic-civil': 283583,
+  'islamic-tbla': 283583,
+  'islamic-umalqura': 283583,
+  japanese: 275760,
+  persian: 275139,
+  roc: 273849
+};
+
 function IsValidMonthCodeForCalendar(calendar, monthCode) {
   const { monthNumber, isLeapMonth } = ParseMonthCode(monthCode);
   if (!isLeapMonth && monthNumber >= 1 && monthNumber <= 12) return true;
@@ -533,6 +568,7 @@ OneObjectCache.MAX_CACHE_ENTRIES = 1000;
  * Returns a WeakMap-backed cache that's used to store expensive results
  * that are associated with a particular ISO Date Record object instance.
  *
+ * @param id - calendar ID for the cache
  * @param obj - object to associate with the cache
  */
 OneObjectCache.getCacheForObject = function (id, obj) {
@@ -916,6 +952,10 @@ const nonIsoHelperBase = {
     // First, normalize the calendar date to ensure that (year, month, day)
     // are all present, converting monthCode and eraYear if needed.
     date = this.adjustCalendarDate(date, cache, overflow, false);
+
+    if (date.year > calendarMaxYear[this.id] || date.year < calendarMinYear[this.id]) {
+      throw new RangeError(`Year ${date.year} out of range for calendar ${this.id}`);
+    }
 
     // Fix obviously out-of-bounds values. Values that are valid generally, but
     // not in this particular year, may not be caught here for some calendars.
@@ -1996,7 +2036,7 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const { month, year } = calendarDate;
 
     const previousMonthYear = month > 1 ? year : year - 1;
-    let previousMonthDate = { year: previousMonthYear, month, day: 1 };
+    const previousMonthDate = { year: previousMonthYear, month, day: 1 };
     const previousMonth = month > 1 ? month - 1 : this.monthsInYear(previousMonthDate, cache);
 
     return this.daysInMonth({ year: previousMonthYear, month: previousMonth }, cache);

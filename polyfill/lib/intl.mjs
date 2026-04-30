@@ -424,17 +424,15 @@ function formatRange(a, b) {
   let formatter;
   let aDayAdjust = 0;
   let bDayAdjust = 0;
-  if (isTemporalObject(a) || isTemporalObject(b)) {
+  if (isFormattableTemporalObject(a) || isFormattableTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRange accepts two values of the same type');
     }
     const aRecord = extractOverrides(a, this);
     const bRecord = extractOverrides(b, this);
-    if (aRecord.formatter) {
-      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
-      formatter = aRecord.formatter;
-      formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
-    }
+    assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+    formatter = aRecord.formatter;
+    formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
     aDayAdjust = aRecord.dayAdjust ?? 0;
     bDayAdjust = bRecord.dayAdjust ?? 0;
   } else {
@@ -482,17 +480,15 @@ function formatRangeToParts(a, b) {
   let formatter;
   let aDayAdjust = 0;
   let bDayAdjust = 0;
-  if (isTemporalObject(a) || isTemporalObject(b)) {
+  if (isFormattableTemporalObject(a) || isFormattableTemporalObject(b)) {
     if (!sameTemporalType(a, b)) {
       throw new TypeErrorCtor('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
     }
     const aRecord = extractOverrides(a, this);
     const bRecord = extractOverrides(b, this);
-    if (aRecord.formatter) {
-      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
-      formatter = aRecord.formatter;
-      formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
-    }
+    assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+    formatter = aRecord.formatter;
+    formatArgs = [ES.epochNsToMs(aRecord.epochNs, 'floor'), ES.epochNsToMs(bRecord.epochNs, 'floor')];
     aDayAdjust = aRecord.dayAdjust ?? 0;
     bDayAdjust = bRecord.dayAdjust ?? 0;
   } else {
@@ -740,7 +736,7 @@ function hasAnyDateTimeOptions(originalOptions) {
   return hasDateOptions(originalOptions) || hasTimeOptions(originalOptions);
 }
 
-function isTemporalObject(obj) {
+function isFormattableTemporalObject(obj) {
   return (
     ES.IsTemporalDate(obj) ||
     ES.IsTemporalTime(obj) ||
@@ -753,12 +749,12 @@ function isTemporalObject(obj) {
 }
 
 function toDateTimeFormattable(value) {
-  if (isTemporalObject(value)) return value;
+  if (isFormattableTemporalObject(value)) return value;
   return ES.ToNumber(value);
 }
 
 function sameTemporalType(x, y) {
-  if (!isTemporalObject(x) || !isTemporalObject(y)) return false;
+  if (!isFormattableTemporalObject(x) || !isFormattableTemporalObject(y)) return false;
   if (ES.IsTemporalTime(x) && !ES.IsTemporalTime(y)) return false;
   if (ES.IsTemporalDate(x) && !ES.IsTemporalDate(y)) return false;
   if (ES.IsTemporalDateTime(x) && !ES.IsTemporalDateTime(y)) return false;
