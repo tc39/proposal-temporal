@@ -12,7 +12,7 @@ Implementation status:
 
 - [SpiderMonkey/Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1912511): [shipped](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/139#javascript) in Firefox 139 (on 2025-05-27)
 - [V8/Chrome](https://crbug.com/42201538): [shipped](https://developer.chrome.com/release-notes/144#temporal_in_ecma262) in Chrome 144 (on 2026-01-13)
-- [Node.js](https://github.com/nodejs/node/issues/57127)
+- [Node.js](https://github.com/nodejs/node/issues/57127): [shipped](https://nodejs.org/en/blog/release/v26.0.0#temporal-api) in Node 26 (on 2026-05-05)
 - [JavaScriptCore/Safari](https://bugs.webkit.org/show_bug.cgi?id=223166)
 - [Boa](https://github.com/boa-dev/boa/issues/1804)
 - [GraalJS](https://github.com/oracle/graaljs/issues/851): [planned to ship](https://github.com/oracle/graaljs/milestone/5?closed=1) in GraalVM 25.1.0
