@@ -287,7 +287,7 @@ export class ZonedDateTime {
 
     // first, round the underlying DateTime fields
     const timeZone = GetSlot(this, TIME_ZONE);
-    const thisNs = GetSlot(this, EPOCHNANOSECONDS);
+    let thisNs = GetSlot(this, EPOCHNANOSECONDS);
     const iso = dateTime(this);
     let epochNanoseconds;
 
@@ -301,7 +301,13 @@ export class ZonedDateTime {
       assert(thisNs.geq(startNs), 'cannot produce an instant during a day that occurs before start-of-day instant');
 
       const endNs = ES.GetStartOfDay(timeZone, dateEnd);
-      assert(thisNs.lt(endNs), 'cannot produce an instant during a day that occurs on or after end-of-day instant');
+      // Handle the case where a transition starts after midnight and falls back
+      // to before midnight, and pieces of two calendar days are interleaved.
+      // endNs is the start of the first piece of the second calendar day, so if
+      // thisNs is inside the second piece of the first calendar day, it can be
+      // outside of the box defined by start-of-day and end-of-day.
+      // https://github.com/tc39/proposal-temporal/issues/3312
+      if (thisNs.geq(endNs)) thisNs = endNs.minus(bigInt.one);
 
       const dayLengthNs = endNs.subtract(startNs);
       const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
