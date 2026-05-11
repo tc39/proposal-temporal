@@ -9077,15 +9077,15 @@
 	  }
 	  return result;
 	}
-	function AdjustDateDurationRecord(_ref9, newDays, newWeeks, newMonths) {
-	  let years = _ref9.years,
-	    months = _ref9.months,
-	    weeks = _ref9.weeks;
+	function AdjustDateDurationRecord(dateDuration, newDays, newWeeks, newMonths) {
 	  assert(newDays !== undefined, 'days must be provided to AdjustDateDurationRecord');
+	  const months = newMonths !== null && newMonths !== void 0 ? newMonths : dateDuration.months;
+	  const weeks = newWeeks !== null && newWeeks !== void 0 ? newWeeks : dateDuration.weeks;
+	  RejectDuration(dateDuration.years, months, weeks, newDays, 0, 0, 0, 0, 0, 0);
 	  return {
-	    years,
-	    months: newMonths !== null && newMonths !== void 0 ? newMonths : months,
-	    weeks: newWeeks !== null && newWeeks !== void 0 ? newWeeks : weeks,
+	    years: dateDuration.years,
+	    months,
+	    weeks,
 	    days: newDays
 	  };
 	}
@@ -9291,10 +9291,9 @@
 	  if (Call$1(ArrayPrototypeIncludes, extraValues, [value])) return;
 	  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
 	    const unitInfo = TEMPORAL_UNITS[index];
-	    const singular = unitInfo[0];
 	    const plural = unitInfo[1];
 	    const category = unitInfo[2];
-	    if (value !== singular && value !== plural) continue;
+	    if (value !== plural) continue;
 	    if (unitGroup === 'datetime' || unitGroup === category) return;
 	  }
 	  throw new RangeError$1("".concat(value, " not allowed as a ").concat(unitGroup, " unit"));
@@ -10329,10 +10328,10 @@
 	  if (timePart) result = "".concat(result, "T").concat(timePart);
 	  return result;
 	}
-	function ISODateToString(_ref0) {
-	  let year = _ref0.year,
-	    month = _ref0.month,
-	    day = _ref0.day;
+	function ISODateToString(_ref9) {
+	  let year = _ref9.year,
+	    month = _ref9.month,
+	    day = _ref9.day;
 	  const yearString = ISOYearString(year);
 	  const monthString = ISODateTimePartString(month);
 	  const dayString = ISODateTimePartString(day);
@@ -10344,13 +10343,13 @@
 	  const calendar = FormatCalendarAnnotation(GetSlot(date, CALENDAR), showCalendar);
 	  return dateString + calendar;
 	}
-	function TimeRecordToString(_ref1, precision) {
-	  let hour = _ref1.hour,
-	    minute = _ref1.minute,
-	    second = _ref1.second,
-	    millisecond = _ref1.millisecond,
-	    microsecond = _ref1.microsecond,
-	    nanosecond = _ref1.nanosecond;
+	function TimeRecordToString(_ref0, precision) {
+	  let hour = _ref0.hour,
+	    minute = _ref0.minute,
+	    second = _ref0.second,
+	    millisecond = _ref0.millisecond,
+	    microsecond = _ref0.microsecond,
+	    nanosecond = _ref0.nanosecond;
 	  const subSecondNanoseconds = millisecond * 1e6 + microsecond * 1e3 + nanosecond;
 	  return FormatTimeString(hour, minute, second, subSecondNanoseconds, precision);
 	}
@@ -11082,7 +11081,7 @@
 	function RejectDateTimeRange(isoDateTime) {
 	  const ns = GetUTCEpochNanoseconds(isoDateTime);
 	  if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
-	    const dateTimeString = ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never');
+	    const dateTimeString = ISODateTimeToString(isoDateTime, 'iso8601', 'auto', 'never');
 	    throw new RangeError$1("".concat(dateTimeString, " is outside of supported range"));
 	  }
 	}
@@ -11090,7 +11089,7 @@
 	// Same as above, but throws a different, non-user-facing error
 	function AssertISODateTimeWithinLimits(isoDateTime) {
 	  const ns = GetUTCEpochNanoseconds(isoDateTime);
-	  assert(ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX), "".concat(ISODateTimeToString(isoDateTime, 'auto', 'auto', 'never'), " is outside the representable range"));
+	  assert(ns.geq(DATETIME_NS_MIN) && ns.leq(DATETIME_NS_MAX), "".concat(ISODateTimeToString(isoDateTime, 'iso8601', 'auto', 'never'), " is outside the representable range"));
 	}
 
 	// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
@@ -11101,9 +11100,9 @@
 	    throw new RangeError$1('date/time value is outside of supported range');
 	  }
 	}
-	function RejectYearMonthRange(_ref10) {
-	  let year = _ref10.year,
-	    month = _ref10.month;
+	function RejectYearMonthRange(_ref1) {
+	  let year = _ref1.year,
+	    month = _ref1.month;
 	  RejectToRange(year, YEAR_MIN, YEAR_MAX);
 	  if (year === YEAR_MIN) {
 	    RejectToRange(month, 4, 12);
@@ -11276,10 +11275,10 @@
 	// which is ill-defined in how it handles large year numbers. If the issue
 	// https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 	// with no observable changes.
-	function CheckISODaysRange(_ref11) {
-	  let year = _ref11.year,
-	    month = _ref11.month,
-	    day = _ref11.day;
+	function CheckISODaysRange(_ref10) {
+	  let year = _ref10.year,
+	    month = _ref10.month,
+	    day = _ref10.day;
 	  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
 	    throw new RangeError$1("date/time value ".concat(year, "-").concat(month, "-").concat(day, " is outside the supported range"));
 	  }
@@ -12000,13 +11999,13 @@
 	  if (operation === 'since') result = CreateNegatedTemporalDuration(result);
 	  return result;
 	}
-	function AddTime(_ref12, timeDuration) {
-	  let hour = _ref12.hour,
-	    minute = _ref12.minute,
-	    second = _ref12.second,
-	    millisecond = _ref12.millisecond,
-	    microsecond = _ref12.microsecond,
-	    nanosecond = _ref12.nanosecond;
+	function AddTime(_ref11, timeDuration) {
+	  let hour = _ref11.hour,
+	    minute = _ref11.minute,
+	    second = _ref11.second,
+	    millisecond = _ref11.millisecond,
+	    microsecond = _ref11.microsecond,
+	    nanosecond = _ref11.nanosecond;
 	  // timeDuration.sec is a safe integer, but second+timeDuration.sec may not be.
 	  // minute+trunc(timeDuration.sec/60) is safe. nanosecond+timeDuration.subsec
 	  // is also safe.
@@ -12182,13 +12181,13 @@
 	  const isoDate = AddDaysToISODate(isoDateTime.isoDate, time.deltaDays);
 	  return CombineISODateAndTimeRecord(isoDate, time);
 	}
-	function RoundTime(_ref13, increment, unit, roundingMode) {
-	  let hour = _ref13.hour,
-	    minute = _ref13.minute,
-	    second = _ref13.second,
-	    millisecond = _ref13.millisecond,
-	    microsecond = _ref13.microsecond,
-	    nanosecond = _ref13.nanosecond;
+	function RoundTime(_ref12, increment, unit, roundingMode) {
+	  let hour = _ref12.hour,
+	    minute = _ref12.minute,
+	    second = _ref12.second,
+	    millisecond = _ref12.millisecond,
+	    microsecond = _ref12.microsecond,
+	    nanosecond = _ref12.nanosecond;
 	  let quantity;
 	  switch (unit) {
 	    case 'day':
@@ -12713,6 +12712,40 @@
 	    }
 	  }
 	};
+	const calendarMinYear = {
+	  buddhist: -271278,
+	  chinese: -271821,
+	  coptic: -272099,
+	  dangi: -271821,
+	  ethioaa: -266323,
+	  ethiopic: -271823,
+	  gregory: -271821,
+	  hebrew: -268058,
+	  indian: -271899,
+	  'islamic-civil': -280804,
+	  'islamic-tbla': -280804,
+	  'islamic-umalqura': -280804,
+	  japanese: -271821,
+	  persian: -272442,
+	  roc: -273732
+	};
+	const calendarMaxYear = {
+	  buddhist: 276303,
+	  chinese: 275760,
+	  coptic: 275471,
+	  dangi: 275760,
+	  ethioaa: 281247,
+	  ethiopic: 275747,
+	  gregory: 275760,
+	  hebrew: 279517,
+	  indian: 275682,
+	  'islamic-civil': 283583,
+	  'islamic-tbla': 283583,
+	  'islamic-umalqura': 283583,
+	  japanese: 275760,
+	  persian: 275139,
+	  roc: 273849
+	};
 	function IsValidMonthCodeForCalendar(calendar, monthCode) {
 	  const _ParseMonthCode = ParseMonthCode(monthCode),
 	    monthNumber = _ParseMonthCode.monthNumber,
@@ -12956,6 +12989,7 @@
 	 * Returns a WeakMap-backed cache that's used to store expensive results
 	 * that are associated with a particular ISO Date Record object instance.
 	 *
+	 * @param id - calendar ID for the cache
 	 * @param obj - object to associate with the cache
 	 */
 	OneObjectCache.getCacheForObject = function (id, obj) {
@@ -13373,6 +13407,9 @@
 	    // First, normalize the calendar date to ensure that (year, month, day)
 	    // are all present, converting monthCode and eraYear if needed.
 	    date = this.adjustCalendarDate(date, cache, overflow, false);
+	    if (date.year > calendarMaxYear[this.id] || date.year < calendarMinYear[this.id]) {
+	      throw new RangeError("Year ".concat(date.year, " out of range for calendar ").concat(this.id));
+	    }
 
 	    // Fix obviously out-of-bounds values. Values that are valid generally, but
 	    // not in this particular year, may not be caught here for some calendars.
@@ -14821,7 +14858,7 @@
 	    const month = calendarDate.month,
 	      year = calendarDate.year;
 	    const previousMonthYear = month > 1 ? year : year - 1;
-	    let previousMonthDate = {
+	    const previousMonthDate = {
 	      year: previousMonthYear,
 	      month,
 	      day: 1
@@ -15670,18 +15707,16 @@
 	  let formatter;
 	  let aDayAdjust = 0;
 	  let bDayAdjust = 0;
-	  if (isTemporalObject(a) || isTemporalObject(b)) {
+	  if (isFormattableTemporalObject(a) || isFormattableTemporalObject(b)) {
 	    var _aRecord$dayAdjust, _bRecord$dayAdjust;
 	    if (!sameTemporalType(a, b)) {
 	      throw new TypeError$1('Intl.DateTimeFormat.formatRange accepts two values of the same type');
 	    }
 	    const aRecord = extractOverrides(a, this);
 	    const bRecord = extractOverrides(b, this);
-	    if (aRecord.formatter) {
-	      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
-	      formatter = aRecord.formatter;
-	      formatArgs = [epochNsToMs(aRecord.epochNs, 'floor'), epochNsToMs(bRecord.epochNs, 'floor')];
-	    }
+	    assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+	    formatter = aRecord.formatter;
+	    formatArgs = [epochNsToMs(aRecord.epochNs, 'floor'), epochNsToMs(bRecord.epochNs, 'floor')];
 	    aDayAdjust = (_aRecord$dayAdjust = aRecord.dayAdjust) !== null && _aRecord$dayAdjust !== void 0 ? _aRecord$dayAdjust : 0;
 	    bDayAdjust = (_bRecord$dayAdjust = bRecord.dayAdjust) !== null && _bRecord$dayAdjust !== void 0 ? _bRecord$dayAdjust : 0;
 	  } else {
@@ -15719,18 +15754,16 @@
 	  let formatter;
 	  let aDayAdjust = 0;
 	  let bDayAdjust = 0;
-	  if (isTemporalObject(a) || isTemporalObject(b)) {
+	  if (isFormattableTemporalObject(a) || isFormattableTemporalObject(b)) {
 	    var _aRecord$dayAdjust2, _bRecord$dayAdjust2;
 	    if (!sameTemporalType(a, b)) {
 	      throw new TypeError$1('Intl.DateTimeFormat.formatRangeToParts accepts two values of the same type');
 	    }
 	    const aRecord = extractOverrides(a, this);
 	    const bRecord = extractOverrides(b, this);
-	    if (aRecord.formatter) {
-	      assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
-	      formatter = aRecord.formatter;
-	      formatArgs = [epochNsToMs(aRecord.epochNs, 'floor'), epochNsToMs(bRecord.epochNs, 'floor')];
-	    }
+	    assert(bRecord.formatter == aRecord.formatter, 'formatters for same Temporal type should be identical');
+	    formatter = aRecord.formatter;
+	    formatArgs = [epochNsToMs(aRecord.epochNs, 'floor'), epochNsToMs(bRecord.epochNs, 'floor')];
 	    aDayAdjust = (_aRecord$dayAdjust2 = aRecord.dayAdjust) !== null && _aRecord$dayAdjust2 !== void 0 ? _aRecord$dayAdjust2 : 0;
 	    bDayAdjust = (_bRecord$dayAdjust2 = bRecord.dayAdjust) !== null && _bRecord$dayAdjust2 !== void 0 ? _bRecord$dayAdjust2 : 0;
 	  } else {
@@ -15997,15 +16030,15 @@
 	function hasAnyDateTimeOptions(originalOptions) {
 	  return hasDateOptions(originalOptions) || hasTimeOptions(originalOptions);
 	}
-	function isTemporalObject(obj) {
+	function isFormattableTemporalObject(obj) {
 	  return IsTemporalDate(obj) || IsTemporalTime(obj) || IsTemporalDateTime(obj) || IsTemporalZonedDateTime(obj) || IsTemporalYearMonth(obj) || IsTemporalMonthDay(obj) || IsTemporalInstant(obj);
 	}
 	function toDateTimeFormattable(value) {
-	  if (isTemporalObject(value)) return value;
+	  if (isFormattableTemporalObject(value)) return value;
 	  return ToNumber$2(value);
 	}
 	function sameTemporalType(x, y) {
-	  if (!isTemporalObject(x) || !isTemporalObject(y)) return false;
+	  if (!isFormattableTemporalObject(x) || !isFormattableTemporalObject(y)) return false;
 	  if (IsTemporalTime(x) && !IsTemporalTime(y)) return false;
 	  if (IsTemporalDate(x) && !IsTemporalDate(y)) return false;
 	  if (IsTemporalDateTime(x) && !IsTemporalDateTime(y)) return false;
