@@ -3232,7 +3232,7 @@ function ComputeNudgeWindow(
 
   // Convert to bound-START to epoch-nanoseconds
   let startEpochNs;
-  if (!r1) {
+  if (DateDurationSign(startDuration) === 0) {
     // If the start of the bound is the same as the "origin" (aka relativeTo),
     // use the origin's epoch-nanoseconds as-is instead of relying on isoDateTime,
     // which then gets zoned and converted back to epoch-nanoseconds,
