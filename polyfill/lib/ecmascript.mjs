@@ -3104,16 +3104,19 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
   // Convert start/end instants to datetimes
   const isoDtStart = GetISODateTimeFor(timeZone, ns1);
   const isoDtEnd = GetISODateTimeFor(timeZone, ns2);
+  const isoDtLexSign = CompareISODate(isoDtStart.isoDate, isoDtEnd.isoDate);
 
-  // If year-month-day values are same-day,
-  // there's no point involving the calendar/timezone for zdt->pdt conversions.
-  // It also avoids a situation where dayCorrection backs up too far on same-day diffs
-  // with reverse-direction wallclock delta due to DST:
-  // https://github.com/tc39/proposal-temporal/issues/3141
   if (
-    isoDtStart.isoDate.year === isoDtEnd.isoDate.year &&
-    isoDtStart.isoDate.month === isoDtEnd.isoDate.month &&
-    isoDtStart.isoDate.day === isoDtEnd.isoDate.day
+    // If year-month-day values are same-day,
+    // there's no point involving the calendar/timezone for zdt->pdt conversions.
+    // It also avoids a situation where dayCorrection backs up too far on same-day diffs
+    // with reverse-direction wallclock delta due to DST:
+    // https://github.com/tc39/proposal-temporal/issues/3141
+    isoDtLexSign === 0 ||
+    // If year-month-day diff is opposite sign from overall nanosecond diff, then the time zone
+    // likely repeated a whole day (ex: America/Adak). In this case, do all math in time realm.
+    // https://github.com/tc39/proposal-temporal/issues/3311
+    isoDtLexSign !== sign
   ) {
     const timeDuration = new TimeDuration(nsDiff);
     return { date: ZeroDateDuration(), time: timeDuration };
@@ -3152,6 +3155,15 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
 
     // Convert intermediate datetime to epoch-nanoseconds (may disambiguate)
     const intermediateNs = GetEpochNanosecondsFor(timeZone, intermediateDateTime, 'compatible');
+
+    // For when intermediate datetime backs up too far beyond the starting point, likely due to a
+    // time zone's repeated day (ex: America/Adak). In this case, do all math in time realm.
+    const intermediateNsDiff = intermediateNs.subtract(ns1);
+    const intermediateSign = intermediateNsDiff.lt(0) ? 1 : -1;
+    if (intermediateSign !== sign) {
+      const timeDuration = new TimeDuration(nsDiff);
+      return { date: ZeroDateDuration(), time: timeDuration };
+    }
 
     // Compute the nanosecond diff between the intermediate instant and the final destination
     timeDuration = TimeDuration.fromEpochNsDiff(ns2, intermediateNs);
