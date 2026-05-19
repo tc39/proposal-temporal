@@ -34,6 +34,7 @@ for test in \
   durationparsing \
   durationrounding \
   durationroundinginvariant \
+  durationroundingrelativesimple \
   durationroundtrip \
   durationtotal \
   instantaddition \

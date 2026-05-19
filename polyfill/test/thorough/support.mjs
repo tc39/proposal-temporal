@@ -1087,6 +1087,19 @@ export const parseableAnnotations = [
   '[u-ca=iSo8601]'
 ];
 
+export const roundingGranularities = {
+  years: [1, 2, 10, 1e5, 547581],
+  months: [1, 2, 10, 1e6, 6570976],
+  weeks: [1, 2, 10, 1e7, 28571428],
+  days: [1, 2, 10, 1e7, 1e8 - 1, 1e9],
+  hours: [1, 2, 3, 4, 6, 8, 12],
+  minutes: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30],
+  seconds: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30],
+  milliseconds: [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500],
+  microseconds: [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500],
+  nanoseconds: [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500]
+};
+
 export const roundingModes = [
   'ceil',
   'floor',
