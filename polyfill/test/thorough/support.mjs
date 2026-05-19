@@ -49,6 +49,29 @@ if (typeof process !== 'undefined' && process.argv?.length > 2) {
   updateSnapshots = true;
 }
 
+// Snapshot files can be very large. Use these to try to minimize repeated text
+export const abbrevs = {
+  ceil: 'c',
+  days: 'd',
+  expand: 'x',
+  floor: 'f',
+  halfCeil: 'hc',
+  halfExpand: 'hx',
+  halfEven: 'he',
+  halfFloor: 'hf',
+  halfTrunc: 'ht',
+  hours: 'h',
+  months: 'mo',
+  microseconds: 'us',
+  milliseconds: 'ms',
+  minutes: 'mn',
+  nanoseconds: 'n',
+  seconds: 's',
+  trunc: 't',
+  weeks: 'w',
+  years: 'y'
+};
+
 class AssertionError extends Error {}
 
 export function assertEqual(actual, expected, message) {
