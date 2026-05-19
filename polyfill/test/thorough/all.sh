@@ -19,6 +19,7 @@ for test in \
   calendarisolike \
   dateaddition \
   datedifference \
+  datedifferencerounding \
   datemodify \
   dateparsing \
   dateroundtrip \
@@ -37,6 +38,7 @@ for test in \
   durationtotal \
   instantaddition \
   instantdifference \
+  instantdifferencerounding \
   instantparsing \
   instantrounding \
   instantroundtrip \
@@ -47,6 +49,7 @@ for test in \
   startofday \
   timeaddition \
   timedifference \
+  timedifferencerounding \
   timemodify \
   timeparsing \
   timerounding \
@@ -55,11 +58,13 @@ for test in \
   yearcycle \
   yearmonthaddition \
   yearmonthdifference \
+  yearmonthdifferencerounding \
   yearmonthmodify \
   yearmonthparsing \
   yearmonthroundtrip \
   zonedaddition \
   zoneddifference \
+  zoneddifferencerounding \
   zonedmodify \
   zonedparsing \
   zonedrounding \
