@@ -8,6 +8,7 @@ import {
   TypeError as TypeErrorCtor,
 
   // class static functions and methods
+  ArrayPrototypeIncludes,
   ArrayPrototypeSlice,
   IntlDateTimeFormat,
   IntlDateTimeFormatPrototypeGetFormat,
@@ -22,6 +23,7 @@ import {
   IntlNumberFormat,
   IntlNumberFormatPrototypeGetFormat,
   MathCeil,
+  NumberIsFinite,
   NumberIsNaN,
   ObjectAssign,
   ObjectCreate,
@@ -131,37 +133,62 @@ function adjustRenderedWeekday(polyfilledFormatter, realFormatter, originalEpoch
 function internalCreateDateTimeFormat(dtf, locale, options, required) {
   const hasOptions = typeof options !== 'undefined';
   if (hasOptions) {
-    // Read all the options in the expected order and copy them to a
-    // null-prototype object with which we can do further operations
-    // unobservably
+    // Read all the options in the expected order, perform expected conversions
+    // and validations, and copy them to a null-prototype object with which we
+    // can do further operations unobservably
     const props = [
-      'localeMatcher',
-      'calendar',
-      'numberingSystem',
-      'hour12',
-      'hourCycle',
-      'timeZone',
-      'weekday',
-      'era',
-      'year',
-      'month',
-      'day',
-      'dayPeriod',
-      'hour',
-      'minute',
-      'second',
-      'fractionalSecondDigits',
-      'timeZoneName',
-      'formatMatcher',
-      'dateStyle',
-      'timeStyle'
+      ['localeMatcher', 'string', ['lookup', 'best fit']],
+      ['calendar', 'string', null],
+      ['numberingSystem', 'string', null],
+      ['hour12', 'boolean'],
+      ['hourCycle', 'string', ['h11', 'h12', 'h23', 'h24']],
+      ['timeZone', 'string', null],
+      ['weekday', 'string', ['narrow', 'short', 'long']],
+      ['era', 'string', ['narrow', 'short', 'long']],
+      ['year', 'string', ['2-digit', 'numeric']],
+      ['month', 'string', ['2-digit', 'numeric', 'narrow', 'short', 'long']],
+      ['day', 'string', ['2-digit', 'numeric']],
+      ['dayPeriod', 'string', ['narrow', 'short', 'long']],
+      ['hour', 'string', ['2-digit', 'numeric']],
+      ['minute', 'string', ['2-digit', 'numeric']],
+      ['second', 'string', ['2-digit', 'numeric']],
+      ['fractionalSecondDigits', 'number', 1, 3],
+      ['timeZoneName', 'string', ['short', 'long', 'shortOffset', 'longOffset', 'shortGeneric', 'longGeneric']],
+      ['formatMatcher', 'string', ['basic', 'best fit']],
+      ['dateStyle', 'string', ['full', 'long', 'medium', 'short']],
+      ['timeStyle', 'string', ['full', 'long', 'medium', 'short']]
     ];
     options = ES.ToObject(options);
     const newOptions = ObjectCreate(null);
     for (let i = 0; i < props.length; i++) {
-      const prop = props[i];
-      if (ES.HasOwnProperty(options, prop)) {
-        newOptions[prop] = options[prop];
+      const entry = props[i];
+      const prop = entry[0];
+      let value = options[prop];
+      if (value !== undefined) {
+        const conversionHint = entry[1];
+        switch (conversionHint) {
+          case 'string':
+            {
+              value = ES.ToString(value);
+              const allowed = entry[2];
+              if (allowed !== null && !ES.Call(ArrayPrototypeIncludes, allowed, [value])) {
+                throw new RangeError(`Value ${value} out of range for Intl.DateTimeFormat options property ${prop}`);
+              }
+            }
+            break;
+          case 'number':
+            {
+              value = ES.ToNumber(value);
+              const minimum = entry[2];
+              const maximum = entry[3];
+              if (!NumberIsFinite(value) || value < minimum || value > maximum) {
+                throw new RangeError(`${prop} value is out of range`);
+              }
+            }
+            break;
+          case 'boolean': // nothing observable, handle in real DTF constructor
+        }
+        newOptions[prop] = value;
       }
     }
     options = newOptions;
