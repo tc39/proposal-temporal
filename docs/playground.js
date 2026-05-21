@@ -15415,16 +15415,40 @@
 	function internalCreateDateTimeFormat(dtf, locale, options, required) {
 	  const hasOptions = typeof options !== 'undefined';
 	  if (hasOptions) {
-	    // Read all the options in the expected order and copy them to a
-	    // null-prototype object with which we can do further operations
-	    // unobservably
-	    const props = ['localeMatcher', 'calendar', 'numberingSystem', 'hour12', 'hourCycle', 'timeZone', 'weekday', 'era', 'year', 'month', 'day', 'dayPeriod', 'hour', 'minute', 'second', 'fractionalSecondDigits', 'timeZoneName', 'formatMatcher', 'dateStyle', 'timeStyle'];
+	    // Read all the options in the expected order, perform expected conversions
+	    // and validations, and copy them to a null-prototype object with which we
+	    // can do further operations unobservably
+	    const props = [['localeMatcher', 'string', ['lookup', 'best fit']], ['calendar', 'string', null], ['numberingSystem', 'string', null], ['hour12', 'boolean'], ['hourCycle', 'string', ['h11', 'h12', 'h23', 'h24']], ['timeZone', 'string', null], ['weekday', 'string', ['narrow', 'short', 'long']], ['era', 'string', ['narrow', 'short', 'long']], ['year', 'string', ['2-digit', 'numeric']], ['month', 'string', ['2-digit', 'numeric', 'narrow', 'short', 'long']], ['day', 'string', ['2-digit', 'numeric']], ['dayPeriod', 'string', ['narrow', 'short', 'long']], ['hour', 'string', ['2-digit', 'numeric']], ['minute', 'string', ['2-digit', 'numeric']], ['second', 'string', ['2-digit', 'numeric']], ['fractionalSecondDigits', 'number', 1, 3], ['timeZoneName', 'string', ['short', 'long', 'shortOffset', 'longOffset', 'shortGeneric', 'longGeneric']], ['formatMatcher', 'string', ['basic', 'best fit']], ['dateStyle', 'string', ['full', 'long', 'medium', 'short']], ['timeStyle', 'string', ['full', 'long', 'medium', 'short']]];
 	    options = ToObject$2(options);
 	    const newOptions = ObjectCreate(null);
 	    for (let i = 0; i < props.length; i++) {
-	      const prop = props[i];
-	      if (HasOwnProperty$1(options, prop)) {
-	        newOptions[prop] = options[prop];
+	      const entry = props[i];
+	      const prop = entry[0];
+	      let value = options[prop];
+	      if (value !== undefined) {
+	        const conversionHint = entry[1];
+	        switch (conversionHint) {
+	          case 'string':
+	            {
+	              value = ToString$1(value);
+	              const allowed = entry[2];
+	              if (allowed !== null && !Call$1(ArrayPrototypeIncludes, allowed, [value])) {
+	                throw new RangeError("Value ".concat(value, " out of range for Intl.DateTimeFormat options property ").concat(prop));
+	              }
+	            }
+	            break;
+	          case 'number':
+	            {
+	              value = ToNumber$2(value);
+	              const minimum = entry[2];
+	              const maximum = entry[3];
+	              if (!NumberIsFinite(value) || value < minimum || value > maximum) {
+	                throw new RangeError("".concat(prop, " value is out of range"));
+	              }
+	            }
+	            break;
+	        }
+	        newOptions[prop] = value;
 	      }
 	    }
 	    options = newOptions;
@@ -18059,7 +18083,7 @@
 
 	    // first, round the underlying DateTime fields
 	    const timeZone = GetSlot(this, TIME_ZONE);
-	    const thisNs = GetSlot(this, EPOCHNANOSECONDS);
+	    let thisNs = GetSlot(this, EPOCHNANOSECONDS);
 	    const iso = dateTime(this);
 	    let epochNanoseconds;
 	    if (smallestUnit === 'day') {
@@ -18070,7 +18094,13 @@
 	      const startNs = GetStartOfDay(timeZone, dateStart);
 	      assert(thisNs.geq(startNs), 'cannot produce an instant during a day that occurs before start-of-day instant');
 	      const endNs = GetStartOfDay(timeZone, dateEnd);
-	      assert(thisNs.lt(endNs), 'cannot produce an instant during a day that occurs on or after end-of-day instant');
+	      // Handle the case where a transition starts after midnight and falls back
+	      // to before midnight, and pieces of two calendar days are interleaved.
+	      // endNs is the start of the first piece of the second calendar day, so if
+	      // thisNs is inside the second piece of the first calendar day, it can be
+	      // outside of the box defined by start-of-day and end-of-day.
+	      // https://github.com/tc39/proposal-temporal/issues/3312
+	      if (thisNs.geq(endNs)) thisNs = endNs.minus(bigInt.one);
 	      const dayLengthNs = endNs.subtract(startNs);
 	      const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
 	      const roundedDayNs = dayProgressNs.round(dayLengthNs, roundingMode);
