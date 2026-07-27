@@ -3209,16 +3209,16 @@ function ComputeNudgeWindow(
       const weeksEnd = AddDaysToISODate(weeksStart, duration.date.days);
       const untilResult = CalendarDateUntil(calendar, weeksStart, weeksEnd, 'week');
       const weeks = RoundNumberToIncrement(duration.date.weeks + untilResult.weeks, increment, 'trunc');
-      r1 = weeks;
-      r2 = weeks + increment * sign;
+      r1 = !additionalShift ? weeks : weeks + increment * sign;
+      r2 = r1 + increment * sign;
       startDuration = AdjustDateDurationRecord(duration.date, 0, r1);
       endDuration = AdjustDateDurationRecord(duration.date, 0, r2);
       break;
     }
     case 'day': {
       const days = RoundNumberToIncrement(duration.date.days, increment, 'trunc');
-      r1 = days;
-      r2 = days + increment * sign;
+      r1 = !additionalShift ? days : days + increment * sign;
+      r2 = r1 + increment * sign;
       startDuration = AdjustDateDurationRecord(duration.date, r1);
       endDuration = AdjustDateDurationRecord(duration.date, r2);
       break;
@@ -3290,7 +3290,13 @@ function NudgeToCalendarUnit(
 
   // Round the smallestUnit within the epoch-nanosecond span
   if (sign === 1) {
-    if (!(nudgeWindow.startEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.endEpochNs))) {
+    if (
+      !(nudgeWindow.startEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.endEpochNs)) ||
+      // If zero-size nudge window, try again
+      // TODO: maybe converge with condition above?
+      // TODO: might not need this when sign === 1
+      endEpochNs.equals(startEpochNs)
+    ) {
       // Retry nudge window if it's out of bounds
       nudgeWindow = ComputeNudgeWindow(
         sign,
@@ -3310,7 +3316,12 @@ function NudgeToCalendarUnit(
       didExpandCalendarUnit = true;
     }
   } else if (sign == -1) {
-    if (!(nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs))) {
+    if (
+      !(nudgeWindow.endEpochNs.leq(destEpochNs) && destEpochNs.leq(nudgeWindow.startEpochNs)) ||
+      // If zero-size nudge window, try again
+      // TODO: maybe converge with condition above?
+      endEpochNs.equals(startEpochNs)
+    ) {
       // Retry nudge window if it's out of bounds
       nudgeWindow = ComputeNudgeWindow(
         sign,
