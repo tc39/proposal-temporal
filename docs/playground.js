@@ -356,7 +356,7 @@
 	var actualApply = $reflectApply || bind$3.call($call$2, $apply$2);
 
 	var bind$2 = functionBind;
-	var $TypeError$9 = type;
+	var $TypeError$a = type;
 
 	var $call$1 = requireFunctionCall();
 	var $actualApply = actualApply;
@@ -364,7 +364,7 @@
 	/** @type {(args: [Function, thisArg?: unknown, ...args: unknown[]]) => Function} TODO FIXME, find a way to use import('.') */
 	var callBindApplyHelpers = function callBindBasic(args) {
 		if (args.length < 1 || typeof args[0] !== 'function') {
-			throw new $TypeError$9('a function is required');
+			throw new $TypeError$a('a function is required');
 		}
 		return $actualApply(bind$2, $call$1, args);
 	};
@@ -458,7 +458,7 @@
 	var $RangeError = range;
 	var $ReferenceError = ref;
 	var $SyntaxError = syntax;
-	var $TypeError$8 = type;
+	var $TypeError$9 = type;
 	var $URIError = uri;
 
 	var abs = abs$1;
@@ -482,7 +482,7 @@
 	var $defineProperty = esDefineProperty;
 
 	var throwTypeError = function () {
-		throw new $TypeError$8();
+		throw new $TypeError$9();
 	};
 	var ThrowTypeError = $gOPD
 		? (function () {
@@ -575,7 +575,7 @@
 		'%SyntaxError%': $SyntaxError,
 		'%ThrowTypeError%': ThrowTypeError,
 		'%TypedArray%': TypedArray,
-		'%TypeError%': $TypeError$8,
+		'%TypeError%': $TypeError$9,
 		'%Uint8Array%': typeof Uint8Array === 'undefined' ? undefined$1 : Uint8Array,
 		'%Uint8ClampedArray%': typeof Uint8ClampedArray === 'undefined' ? undefined$1 : Uint8ClampedArray,
 		'%Uint16Array%': typeof Uint16Array === 'undefined' ? undefined$1 : Uint16Array,
@@ -730,7 +730,7 @@
 				value = doEval(intrinsicName);
 			}
 			if (typeof value === 'undefined' && !allowMissing) {
-				throw new $TypeError$8('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
+				throw new $TypeError$9('intrinsic ' + name + ' exists, but is not available. Please file an issue!');
 			}
 
 			return {
@@ -745,10 +745,10 @@
 
 	var getIntrinsic = function GetIntrinsic(name, allowMissing) {
 		if (typeof name !== 'string' || name.length === 0) {
-			throw new $TypeError$8('intrinsic name must be a non-empty string');
+			throw new $TypeError$9('intrinsic name must be a non-empty string');
 		}
 		if (arguments.length > 1 && typeof allowMissing !== 'boolean') {
-			throw new $TypeError$8('"allowMissing" argument must be a boolean');
+			throw new $TypeError$9('"allowMissing" argument must be a boolean');
 		}
 
 		if ($exec(/^%?[^%]*%?$/, name) === null) {
@@ -793,7 +793,7 @@
 			} else if (value != null) {
 				if (!(part in value)) {
 					if (!allowMissing) {
-						throw new $TypeError$8('base intrinsic for ' + name + ' exists, but the property is not available.');
+						throw new $TypeError$9('base intrinsic for ' + name + ' exists, but the property is not available.');
 					}
 					return void undefined$1;
 				}
@@ -834,7 +834,7 @@
 	var $indexOf = callBindBasic([GetIntrinsic$7('%String.prototype.indexOf%')]);
 
 	/** @type {import('.')} */
-	var callBound$4 = function callBoundIntrinsic(name, allowMissing) {
+	var callBound$5 = function callBoundIntrinsic(name, allowMissing) {
 		/* eslint no-extra-parens: 0 */
 
 		var intrinsic = /** @type {(this: unknown, ...args: unknown[]) => unknown} */ (GetIntrinsic$7(name, !!allowMissing));
@@ -849,7 +849,7 @@
 	var $Array = GetIntrinsic$6('%Array%');
 
 	// eslint-disable-next-line global-require
-	var toStr$3 = !$Array.isArray && callBound$4('Object.prototype.toString');
+	var toStr$3 = !$Array.isArray && callBound$5('Object.prototype.toString');
 
 	var IsArray$3 = $Array.isArray || function IsArray(argument) {
 		return toStr$3(argument) === '[object Array]';
@@ -859,20 +859,20 @@
 	var IsArray$2 = IsArray$3;
 
 	var GetIntrinsic$5 = getIntrinsic;
-	var callBound$3 = callBound$4;
+	var callBound$4 = callBound$5;
 
-	var $TypeError$7 = type;
+	var $TypeError$8 = type;
 
 	var IsArray$1 = IsArray$2;
 
-	var $apply = GetIntrinsic$5('%Reflect.apply%', true) || callBound$3('Function.prototype.apply');
+	var $apply = GetIntrinsic$5('%Reflect.apply%', true) || callBound$4('Function.prototype.apply');
 
 	// https://262.ecma-international.org/6.0/#sec-call
 
 	var Call = function Call(F, V) {
 		var argumentsList = arguments.length > 2 ? arguments[2] : [];
 		if (!IsArray$1(argumentsList)) {
-			throw new $TypeError$7('Assertion failed: optional `argumentsList`, if provided, must be a List');
+			throw new $TypeError$8('Assertion failed: optional `argumentsList`, if provided, must be a List');
 		}
 		return $apply(F, V, argumentsList);
 	};
@@ -1189,14 +1189,14 @@
 	  return toString$1.call(arr) == '[object Array]';
 	};
 
-	var $TypeError$6 = type;
+	var $TypeError$7 = type;
 
 	var isArray$3 = isarray;
 
 	/** @type {import('.')} */
 	var safePushApply$1 = function safePushApply(target, source) {
 		if (!isArray$3(target)) {
-			throw new $TypeError$6('target must be an array');
+			throw new $TypeError$7('target must be an array');
 		}
 		for (var i = 0; i < source.length; i++) {
 			target[target.length] = source[i]; // eslint-disable-line no-param-reassign
@@ -1400,18 +1400,79 @@
 
 	var GetIntrinsic$4 = getIntrinsic;
 
+	var callBound$3 = callBound$5;
 	var safePushApply = safePushApply$1;
 
 	var $ownKeys = GetIntrinsic$4('%Reflect.ownKeys%', true);
 	var $gOPN = GetIntrinsic$4('%Object.getOwnPropertyNames%', true);
 	var $gOPS = GetIntrinsic$4('%Object.getOwnPropertySymbols%', true);
 
+	var $isEnumerable$1 = callBound$3('Object.prototype.propertyIsEnumerable');
+
 	var keys = requireObjectKeys();
 
-	/** @type {import('.')} */
-	var ownKeys = $ownKeys || function ownKeys(source) {
+	// eslint-disable-next-line array-bracket-newline
+	var order = ['b', 'd', 'a', 'c', 'g', 'e', 'h', 'f', 'j', 'i', 'l', 'k'];
+	/*
+	 * Some pre-ES2015 engines (notably V8 in node 0.8) enumerate own property names
+	 * in a per-realm randomized order rather than property-creation order, and a
+	 * `Reflect.ownKeys`/`getOwnPropertyNames` shim layered on top (e.g. es6-shim)
+	 * inherits that. `Object.keys` is ordered even there, so probe whichever key
+	 * source we're about to use and reconstruct from `object-keys` when it can't be
+	 * trusted to preserve insertion order.
+	 */
+	/** @param {(o: object) => (string | symbol)[]} getNames */
+	function preservesInsertionOrder(getNames) {
+		/** @type {Record<string, boolean>} */
+		var probe = {};
+		var got;
+		var i;
+		for (i = 0; i < order.length; i += 1) {
+			probe[order[i]] = true;
+		}
+		got = getNames(probe);
+		if (got.length !== order.length) {
+			return false;
+		}
+		for (i = 0; i < order.length; i += 1) {
+			if (got[i] !== order[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	var nativeOwnKeys = $ownKeys && preservesInsertionOrder($ownKeys) ? $ownKeys : null;
+	var trustGOPNOrder = !nativeOwnKeys && $gOPN && preservesInsertionOrder($gOPN);
+
+	/** @type {typeof import('.')} */
+	var ownKeys = nativeOwnKeys || function ownKeys(source) {
 		/** @type {(keyof typeof source)[]} */
-		var sourceKeys = ($gOPN || keys)(source);
+		var sourceKeys;
+		var allNames;
+		var name;
+		var i;
+
+		if ($gOPN && trustGOPNOrder) {
+			sourceKeys = $gOPN(source);
+		} else {
+			/*
+			 * The available key source can't be trusted to preserve order, so take the
+			 * enumerable keys from `object-keys` (ordered) and borrow only the
+			 * non-enumerable names from `getOwnPropertyNames` (their relative order is
+			 * unrecoverable on such engines).
+			 */
+			sourceKeys = keys(source);
+			if ($gOPN) {
+				allNames = $gOPN(source);
+				for (i = 0; i < allNames.length; i += 1) {
+					name = allNames[i];
+					if (!$isEnumerable$1(source, name)) {
+						sourceKeys[sourceKeys.length] = name;
+					}
+				}
+			}
+		}
 		if ($gOPS) {
 			safePushApply(sourceKeys, $gOPS(source));
 		}
@@ -1442,7 +1503,7 @@
 		return false;
 	};
 
-	var isPropertyKey$2 = function isPropertyKey(argument) {
+	var isPropertyKey$3 = function isPropertyKey(argument) {
 		return typeof argument === 'string' || typeof argument === 'symbol';
 	};
 
@@ -1804,7 +1865,7 @@
 		// eslint-disable-next-line global-require
 		var isArray = hasArrayLengthDefineBug && IsArray$3;
 
-		var callBound = callBound$4;
+		var callBound = callBound$5;
 
 		var $isEnumerable = callBound('Object.prototype.propertyIsEnumerable');
 
@@ -2011,7 +2072,7 @@
 		var IsAccessorDescriptor = requireIsAccessorDescriptor();
 		var IsDataDescriptor = requireIsDataDescriptor();
 		var IsGenericDescriptor = requireIsGenericDescriptor();
-		var isPropertyKey = isPropertyKey$2;
+		var isPropertyKey = isPropertyKey$3;
 		var SameValue = requireSameValue();
 
 		// https://262.ecma-international.org/13.0/#sec-validateandapplypropertydescriptor
@@ -2188,7 +2249,7 @@
 
 		var IsAccessorDescriptor = requireIsAccessorDescriptor();
 		var IsExtensible = requireIsExtensible();
-		var isPropertyKey = isPropertyKey$2;
+		var isPropertyKey = isPropertyKey$3;
 		var ToPropertyDescriptor = requireToPropertyDescriptor();
 		var SameValue = requireSameValue();
 		var ValidateAndApplyPropertyDescriptor = requireValidateAndApplyPropertyDescriptor();
@@ -2244,7 +2305,7 @@
 		var $TypeError = type;
 		var isObject = isObject$4;
 
-		var isPropertyKey = isPropertyKey$2;
+		var isPropertyKey = isPropertyKey$3;
 		var OrdinaryDefineOwnProperty = requireOrdinaryDefineOwnProperty();
 
 		// https://262.ecma-international.org/6.0/#sec-createdataproperty
@@ -2279,7 +2340,7 @@
 
 		var CreateDataProperty = requireCreateDataProperty();
 
-		var isPropertyKey = isPropertyKey$2;
+		var isPropertyKey = isPropertyKey$3;
 
 		// // https://262.ecma-international.org/14.0/#sec-createdatapropertyorthrow
 
@@ -5666,7 +5727,7 @@
 
 		var inspect = objectInspect;
 
-		var isPropertyKey = isPropertyKey$2;
+		var isPropertyKey = isPropertyKey$3;
 
 		var isObject = isObject$4;
 
@@ -5687,11 +5748,6 @@
 		return Get$1;
 	}
 
-	/** @type {(value: unknown) => value is null | undefined | string | symbol | number | boolean | bigint} */
-	var isPrimitive$2 = function isPrimitive(value) {
-		return value === null || (typeof value !== 'function' && typeof value !== 'object');
-	};
-
 	var shams;
 	var hasRequiredShams;
 
@@ -5708,7 +5764,7 @@
 		return shams;
 	}
 
-	var callBound$2 = callBound$4;
+	var callBound$2 = callBound$5;
 
 	var getDay = callBound$2('Date.prototype.getDay');
 	/** @type {import('.')} */
@@ -5743,7 +5799,7 @@
 		if (hasRequiredIsRegex) return isRegex;
 		hasRequiredIsRegex = 1;
 
-		var callBound = callBound$4;
+		var callBound = callBound$5;
 		var hasToStringTag = requireShams()();
 		var hasOwn = hasown;
 		var gOPD = gopd;
@@ -5820,7 +5876,7 @@
 		if (hasRequiredSafeRegexTest) return safeRegexTest$1;
 		hasRequiredSafeRegexTest = 1;
 
-		var callBound = callBound$4;
+		var callBound = callBound$5;
 		var isRegex = requireIsRegex();
 
 		var $exec = callBound('RegExp.prototype.exec');
@@ -5838,7 +5894,7 @@
 		return safeRegexTest$1;
 	}
 
-	var callBound$1 = callBound$4;
+	var callBound$1 = callBound$5;
 	var $toString = callBound$1('Object.prototype.toString');
 	var hasSymbols$1 = requireHasSymbols()();
 	var safeRegexTest = requireSafeRegexTest();
@@ -5879,20 +5935,121 @@
 
 	var isSymbolExports = isSymbol$1.exports;
 
+	/** @import { primitive } from '../' */
+	/** @import { primitiveES5 } from '../es5' */
+
+	/** @type {<T extends primitive | primitiveES5>(value: unknown) => value is T} */
+	var isPrimitive$2 = function isPrimitive(value) {
+		return value === null || (typeof value !== 'function' && typeof value !== 'object');
+	};
+
+	var isPropertyKey$2;
+	var hasRequiredIsPropertyKey;
+
+	function requireIsPropertyKey () {
+		if (hasRequiredIsPropertyKey) return isPropertyKey$2;
+		hasRequiredIsPropertyKey = 1;
+
+		/** @type {import('./isPropertyKey')} */
+		isPropertyKey$2 = function isPropertyKey(argument) {
+			return typeof argument === 'string' || typeof argument === 'symbol';
+		};
+		return isPropertyKey$2;
+	}
+
+	var GetV;
+	var hasRequiredGetV;
+
+	function requireGetV () {
+		if (hasRequiredGetV) return GetV;
+		hasRequiredGetV = 1;
+
+		var $TypeError = type;
+
+		var inspect = objectInspect;
+
+		var isPropertyKey = requireIsPropertyKey();
+
+		// https://262.ecma-international.org/6.0/#sec-getv
+
+		/** @type {import('./GetV')} */
+		GetV = function GetV(V, P) {
+			// 7.3.2.1
+			if (!isPropertyKey(P)) {
+				throw new $TypeError('Assertion failed: P is not a Property Key, got ' + inspect(P));
+			}
+
+			// 7.3.2.2-3
+			// var O = ToObject(V);
+
+			// 7.3.2.4
+			return /** @type {Record<typeof P, unknown>} */ (V)[P]; // O.[[Get]](P, V)
+		};
+		return GetV;
+	}
+
+	var GetMethod$1;
+	var hasRequiredGetMethod;
+
+	function requireGetMethod () {
+		if (hasRequiredGetMethod) return GetMethod$1;
+		hasRequiredGetMethod = 1;
+
+		var $TypeError = type;
+
+		var isCallable = isCallable$1;
+
+		var inspect = objectInspect;
+
+		var GetV = requireGetV();
+		var isPropertyKey = requireIsPropertyKey();
+
+		// https://262.ecma-international.org/6.0/#sec-getmethod
+
+		/** @type {import('./GetMethod')} */
+		GetMethod$1 = function GetMethod(O, P) {
+			// 7.3.9.1
+			if (!isPropertyKey(P)) {
+				throw new $TypeError('Assertion failed: P is not a Property Key');
+			}
+
+			// 7.3.9.2
+			var func = GetV(O, P);
+
+			// 7.3.9.4
+			if (func == null) {
+				return void 0;
+			}
+
+			// 7.3.9.5
+			if (!isCallable(func)) {
+				throw new $TypeError(inspect(P) + ' is not a function: ' + inspect(func));
+			}
+
+			// 7.3.9.6
+			return func;
+		};
+		return GetMethod$1;
+	}
+
 	var hasSymbols = typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol';
 
-	var isPrimitive$1 = isPrimitive$2;
 	var isCallable = isCallable$1;
 	var isDate = isDateObject;
 	var isSymbol = isSymbolExports;
+	var $TypeError$6 = type;
 
-	/** @type {(O: { valueOf?: () => unknown, toString?: () => unknown }, hint: 'number' | 'string' | 'default') => null | undefined | string | symbol | number | boolean | bigint} */
-	var ordinaryToPrimitive = function OrdinaryToPrimitive(O, hint) {
+	var isPrimitive$1 = isPrimitive$2;
+
+	/** @import { primitiveES6 } from './es2015' */
+
+	/** @type {(O: { valueOf?: () => unknown, toString?: () => unknown }, hint: 'number' | 'string') => primitiveES6} */
+	function OrdinaryToPrimitive(O, hint) {
 		if (typeof O === 'undefined' || O === null) {
-			throw new TypeError('Cannot call method on ' + O);
+			throw new $TypeError$6('Cannot call method on ' + O);
 		}
 		if (typeof hint !== 'string' || (hint !== 'number' && hint !== 'string')) {
-			throw new TypeError('hint must be "string" or "number"');
+			throw new $TypeError$6('hint must be "string" or "number"');
 		}
 		/** @type {('toString' | 'valueOf')[]} */
 		var methodNames = hint === 'string' ? ['toString', 'valueOf'] : ['valueOf', 'toString'];
@@ -5902,30 +6059,20 @@
 			if (isCallable(method)) {
 				result = method.call(O);
 				if (isPrimitive$1(result)) {
-					return result;
+					return /** @type {primitiveES6} */ (result);
 				}
 			}
 		}
-		throw new TypeError('No default value');
-	};
+		throw new $TypeError$6('No default value');
+	}
 
-	/** @type {<K extends PropertyKey>(O: Record<K, unknown>, P: K) => Function | undefined} */
-	var GetMethod = function GetMethod(O, P) {
-		var func = O[P];
-		if (func !== null && typeof func !== 'undefined') {
-			if (!isCallable(func)) {
-				throw new TypeError(func + ' returned for property ' + String(P) + ' of object ' + O + ' is not a function');
-			}
-			return func;
-		}
-		return void 0;
-	};
+	var GetMethod = requireGetMethod();
 
 	/** @type {import('./es2015')} */
 	// http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
 	var es2015 = function ToPrimitive(input) {
 		if (isPrimitive$1(input)) {
-			return input;
+			return /** @type {primitiveES6} */ (input);
 		}
 		/** @type {'default' | 'string' | 'number'} */
 		var hint = 'default';
@@ -5940,8 +6087,12 @@
 		var exoticToPrim;
 		if (hasSymbols) {
 			if (Symbol.toPrimitive) {
-				// eslint-disable-next-line no-extra-parens
-				exoticToPrim = GetMethod(/** @type {Record<PropertyKey, unknown>} */ (input), Symbol.toPrimitive);
+
+				exoticToPrim = GetMethod(
+					/** @type {{ [k in SymbolConstructor['toPrimitive']]?: Function }} */
+					(input),
+					Symbol.toPrimitive
+				);
 			} else if (isSymbol(input)) {
 				exoticToPrim = Symbol.prototype.valueOf;
 			}
@@ -5949,15 +6100,15 @@
 		if (typeof exoticToPrim !== 'undefined') {
 			var result = exoticToPrim.call(input, hint);
 			if (isPrimitive$1(result)) {
-				return result;
+				return /** @type {primitiveES6} */ (result);
 			}
-			throw new TypeError('unable to convert exotic object to primitive');
+			throw new $TypeError$6('unable to convert exotic object to primitive');
 		}
 		if (hint === 'default' && (isDate(input) || isSymbol(input))) {
-			hint = 'string';
+			hint = /** @type {const} */ ('string');
 		}
-		// eslint-disable-next-line no-extra-parens
-		return ordinaryToPrimitive(/** @type {object} */ (input), hint === 'default' ? 'number' : hint);
+
+		return OrdinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
 	};
 
 	var toPrimitive = es2015;
@@ -6205,21 +6356,28 @@
 		return value;
 	};
 
-	var GetIntrinsic$3 = getIntrinsic;
+	var ToString$2;
+	var hasRequiredToString;
 
-	var $String = GetIntrinsic$3('%String%');
-	var $TypeError$4 = type;
+	function requireToString () {
+		if (hasRequiredToString) return ToString$2;
+		hasRequiredToString = 1;
 
-	// https://262.ecma-international.org/6.0/#sec-tostring
+		var GetIntrinsic = getIntrinsic;
 
-	var ToString = function ToString(argument) {
-		if (typeof argument === 'symbol') {
-			throw new $TypeError$4('Cannot convert a Symbol value to a string');
-		}
-		return $String(argument);
-	};
+		var $String = GetIntrinsic('%String%');
+		var $TypeError = type;
 
-	var ToString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToString);
+		// https://262.ecma-international.org/6.0/#sec-tostring
+
+		ToString$2 = function ToString(argument) {
+			if (typeof argument === 'symbol') {
+				throw new $TypeError('Cannot convert a Symbol value to a string');
+			}
+			return $String(argument);
+		};
+		return ToString$2;
+	}
 
 	var implementation;
 	var hasRequiredImplementation;
@@ -6229,23 +6387,32 @@
 		hasRequiredImplementation = 1;
 
 		var RequireObjectCoercible = RequireObjectCoercible$1;
-		var ToString$1 = ToString;
-		var callBound = callBound$4;
+		var ToString = requireToString();
+		var callBound = callBound$5;
+		var safeRegexTester = requireSafeRegexTest();
+
 		var $replace = callBound('String.prototype.replace');
+		var $charAt = callBound('String.prototype.charAt');
+		var $slice = callBound('String.prototype.slice');
 
 		var mvsIsWS = (/^\s$/).test('\u180E');
 		/* eslint-disable no-control-regex */
 		var leftWhitespace = mvsIsWS
 			? /^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+/
 			: /^[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+/;
-		var rightWhitespace = mvsIsWS
-			? /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+$/
-			: /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]+$/;
+		var isWhitespace = safeRegexTester(mvsIsWS
+			? /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]$/
+			: /[\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF]$/);
 		/* eslint-enable no-control-regex */
 
 		implementation = function trim() {
-			var S = ToString$1(RequireObjectCoercible(this));
-			return $replace($replace(S, leftWhitespace, ''), rightWhitespace, '');
+			var S = $replace(ToString(RequireObjectCoercible(this)), leftWhitespace, '');
+			// scan back for the trailing whitespace boundary; a `$`-anchored regexp is quadratic on large internal whitespace runs
+			var end = S.length;
+			while (end > 0 && isWhitespace($charAt(S, end - 1))) {
+				end -= 1;
+			}
+			return $slice(S, 0, end);
 		};
 		return implementation;
 	}
@@ -6349,7 +6516,7 @@
 		var $TypeError = type;
 		var $parseInteger = GetIntrinsic('%parseInt%');
 
-		var callBound = callBound$4;
+		var callBound = callBound$5;
 		var regexTester = requireSafeRegexTest();
 
 		var $strSlice = callBound('String.prototype.slice');
@@ -6386,10 +6553,10 @@
 		return StringToNumber$1;
 	}
 
-	var GetIntrinsic$2 = getIntrinsic;
+	var GetIntrinsic$3 = getIntrinsic;
 
-	var $TypeError$3 = type;
-	var $Number = GetIntrinsic$2('%Number%');
+	var $TypeError$4 = type;
+	var $Number = GetIntrinsic$3('%Number%');
 	var isPrimitive = requireIsPrimitive();
 
 	var ToPrimitive = ToPrimitive$1;
@@ -6400,10 +6567,10 @@
 	var ToNumber$1 = function ToNumber(argument) {
 		var value = isPrimitive(argument) ? argument : ToPrimitive(argument, $Number);
 		if (typeof value === 'symbol') {
-			throw new $TypeError$3('Cannot convert a Symbol value to a number');
+			throw new $TypeError$4('Cannot convert a Symbol value to a number');
 		}
 		if (typeof value === 'bigint') {
-			throw new $TypeError$3('Conversion from \'BigInt\' to \'number\' is not allowed.');
+			throw new $TypeError$4('Conversion from \'BigInt\' to \'number\' is not allowed.');
 		}
 		if (typeof value === 'string') {
 			return StringToNumber(value);
@@ -6462,9 +6629,9 @@
 		return isInteger$1;
 	}
 
-	var $TypeError$2 = type;
+	var $TypeError$3 = type;
 	var isObject$2 = isObject$4;
-	var callBound = callBound$4;
+	var callBound = callBound$5;
 	var OwnPropertyKeys = ownKeys;
 
 	var forEach = forEach$1;
@@ -6476,7 +6643,7 @@
 	var CreateDataPropertyOrThrow = requireCreateDataPropertyOrThrow();
 	var Get = requireGet();
 	var IsArray = IsArray$2;
-	var isPropertyKey$1 = isPropertyKey$2;
+	var isPropertyKey$1 = isPropertyKey$3;
 	var SameValue = requireSameValue();
 	var ToNumber = ToNumber$1;
 	var ToObject = ToObject$1;
@@ -6487,11 +6654,11 @@
 
 	var CopyDataProperties = function CopyDataProperties(target, source, excludedItems) {
 		if (!isObject$2(target)) {
-			throw new $TypeError$2('Assertion failed: "target" must be an Object');
+			throw new $TypeError$3('Assertion failed: "target" must be an Object');
 		}
 
 		if (!IsArray(excludedItems) || !every(excludedItems, isPropertyKey$1)) {
-			throw new $TypeError$2('Assertion failed: "excludedItems" must be a List of Property Keys');
+			throw new $TypeError$3('Assertion failed: "excludedItems" must be a List of Property Keys');
 		}
 
 		if (typeof source === 'undefined' || source === null) {
@@ -6532,21 +6699,21 @@
 
 	var CopyDataProperties$1 = /*@__PURE__*/getDefaultExportFromCjs(CopyDataProperties);
 
-	var $TypeError$1 = type;
+	var $TypeError$2 = type;
 
 	var hasOwn = hasown;
 	var isObject$1 = isObject$4;
 
-	var isPropertyKey = isPropertyKey$2;
+	var isPropertyKey = isPropertyKey$3;
 
 	// https://262.ecma-international.org/6.0/#sec-hasownproperty
 
 	var HasOwnProperty = function HasOwnProperty(O, P) {
 		if (!isObject$1(O)) {
-			throw new $TypeError$1('Assertion failed: `O` must be an Object');
+			throw new $TypeError$2('Assertion failed: `O` must be an Object');
 		}
 		if (!isPropertyKey(P)) {
-			throw new $TypeError$1('Assertion failed: `P` must be a Property Key');
+			throw new $TypeError$2('Assertion failed: `P` must be a Property Key');
 		}
 		return hasOwn(O, P);
 	};
@@ -6568,13 +6735,13 @@
 
 	var floor = floor$1;
 
-	var $TypeError = type;
+	var $TypeError$1 = type;
 
 	// https://262.ecma-international.org/14.0/#eqn-truncate
 
 	var truncate$1 = function truncate(x) {
 		if (typeof x !== 'number' && typeof x !== 'bigint') {
-			throw new $TypeError('argument must be a Number or a BigInt');
+			throw new $TypeError$1('argument must be a Number or a BigInt');
 		}
 		var result = x < 0 ? -floor(-x) : floor(x);
 		return result === 0 ? 0 : result; // in the spec, these are math values, so we filter out -0 here
@@ -6594,6 +6761,22 @@
 	};
 
 	var IsIntegralNumber$1 = /*@__PURE__*/getDefaultExportFromCjs(IsIntegralNumber);
+
+	var GetIntrinsic$2 = getIntrinsic;
+
+	var $String = GetIntrinsic$2('%String%');
+	var $TypeError = type;
+
+	// https://262.ecma-international.org/6.0/#sec-tostring
+
+	var ToString = function ToString(argument) {
+		if (typeof argument === 'symbol') {
+			throw new $TypeError('Cannot convert a Symbol value to a string');
+		}
+		return $String(argument);
+	};
+
+	var ToString$1 = /*@__PURE__*/getDefaultExportFromCjs(ToString);
 
 	var isObject = isObject$4;
 
