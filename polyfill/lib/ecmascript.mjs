@@ -1284,7 +1284,7 @@ export function ToTemporalInstant(item) {
     microsecond,
     nanosecond - offsetNanoseconds
   );
-  CheckISODaysRange(balanced.isoDate);
+  ValidateISODaysRange(balanced.isoDate);
   const epochNanoseconds = GetUTCEpochNanoseconds(balanced);
   ValidateEpochNanoseconds(epochNanoseconds);
   return new TemporalInstant(epochNanoseconds);
@@ -1425,13 +1425,13 @@ export function InterpretISODateTimeOffset(
       time.microsecond,
       time.nanosecond - offsetNs
     );
-    CheckISODaysRange(balanced.isoDate);
+    ValidateISODaysRange(balanced.isoDate);
     const epochNs = GetUTCEpochNanoseconds(balanced);
     ValidateEpochNanoseconds(epochNs);
     return epochNs;
   }
 
-  CheckISODaysRange(isoDate);
+  ValidateISODaysRange(isoDate);
   const utcEpochNs = GetUTCEpochNanoseconds(dt);
 
   // "prefer" or "reject"
@@ -1904,7 +1904,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
 export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
   // UTC fast path
   if (timeZone === 'UTC') {
-    CheckISODaysRange(isoDateTime.isoDate);
+    ValidateISODaysRange(isoDateTime.isoDate);
     const epochNs = GetUTCEpochNanoseconds(isoDateTime);
     ValidateEpochNanoseconds(epochNs);
     return [epochNs];
@@ -1923,7 +1923,7 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
       isoDateTime.time.microsecond,
       isoDateTime.time.nanosecond
     );
-    CheckISODaysRange(balanced.isoDate);
+    ValidateISODaysRange(balanced.isoDate);
     const epochNs = GetUTCEpochNanoseconds(balanced);
     ValidateEpochNanoseconds(epochNs);
     return [epochNs];
@@ -3030,7 +3030,7 @@ export function ISODateToEpochDays(year, month, day) {
 // which is ill-defined in how it handles large year numbers. If the issue
 // https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 // with no observable changes.
-function CheckISODaysRange({ year, month, day }) {
+function ValidateISODaysRange({ year, month, day }) {
   if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
     throw new RangeErrorCtor(`date/time value ${year}-${month}-${day} is outside the supported range`);
   }
