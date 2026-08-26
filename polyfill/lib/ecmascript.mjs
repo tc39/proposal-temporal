@@ -4236,26 +4236,26 @@ export function RoundTime(
   unit,
   roundingMode
 ) {
-  let quantity;
+  let quantity = 0;
   switch (unit) {
     case 'day':
     case 'hour':
-      quantity = ((((hour * 60 + minute) * 60 + second) * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
-      break;
+      quantity = hour * NANOSECONDS_PER_HOUR;
+    // fallthrough
     case 'minute':
-      quantity = (((minute * 60 + second) * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
-      break;
+      quantity += minute * NANOSECONDS_PER_MINUTE;
+    // fallthrough
     case 'second':
-      quantity = ((second * 1000 + millisecond) * 1000 + microsecond) * 1000 + nanosecond;
-      break;
+      quantity += second * NANOSECONDS_PER_SECOND;
+    // fallthrough
     case 'millisecond':
-      quantity = (millisecond * 1000 + microsecond) * 1000 + nanosecond;
-      break;
+      quantity += millisecond * NANOSECONDS_PER_MILLISECOND;
+    // fallthrough
     case 'microsecond':
-      quantity = microsecond * 1000 + nanosecond;
-      break;
+      quantity += microsecond * NANOSECONDS_PER_MICROSECOND;
+    // fallthrough
     case 'nanosecond':
-      quantity = nanosecond;
+      quantity += nanosecond;
   }
   const nsPerUnit = Call(MapPrototypeGet, NS_PER_TIME_UNIT, [unit]);
   const result = RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode) / nsPerUnit;
