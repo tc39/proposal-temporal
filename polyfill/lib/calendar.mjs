@@ -145,7 +145,7 @@ function CompareSurpasses(sign, year, month, day, target) {
   return false;
 }
 
-function ISODateSurpasses(sign, baseDate, isoDate2, years, months) {
+function ISODateSurpasses(sign, baseDate, years, months, isoDate2) {
   const y0 = baseDate.year + years;
   if (CompareSurpasses(sign, y0, baseDate.month, baseDate.day, isoDate2)) return true;
   if (months === 0) return false;
@@ -213,14 +213,14 @@ impl['iso8601'] = {
       let candidateYears = two.year - one.year;
       if (candidateYears !== 0) candidateYears -= sign;
       // loops at most twice
-      while (!ISODateSurpasses(sign, one, two, candidateYears, 0, 0, 0)) {
+      while (!ISODateSurpasses(sign, one, candidateYears, 0, two)) {
         years = candidateYears;
         candidateYears += sign;
       }
 
       let candidateMonths = sign;
       // loops at most 12 times
-      while (!ISODateSurpasses(sign, one, two, years, candidateMonths, 0, 0)) {
+      while (!ISODateSurpasses(sign, one, years, candidateMonths, two)) {
         months = candidateMonths;
         candidateMonths += sign;
       }
