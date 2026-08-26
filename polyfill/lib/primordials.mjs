@@ -46,7 +46,6 @@ export const {
     every: ArrayPrototypeEvery,
     find: ArrayPrototypeFind,
     findIndex: ArrayPrototypeFindIndex,
-    flatMap: ArrayPrototypeFlatMap,
     forEach: ArrayPrototypeForEach,
     includes: ArrayPrototypeIncludes,
     indexOf: ArrayPrototypeIndexOf,
