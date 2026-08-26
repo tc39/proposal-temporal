@@ -191,31 +191,18 @@ const ICU_LEGACY_TIME_ZONE_IDS = new SetCtor([
   'VST'
 ]);
 
-export function ToIntegerWithTruncation(value) {
-  const number = ToNumber(value);
-  if (number === 0) return 0;
+export function SnapToInteger(arg, nonIntHandling, property = 'value', minimum = -Infinity, maximum = Infinity) {
+  const number = ToNumber(arg);
   if (NumberIsNaN(number) || !NumberIsFinite(number)) {
-    throw new RangeErrorCtor('invalid number value');
+    throw new RangeErrorCtor(`'${property}' cannot be Infinity or NaN`);
   }
-  const integer = MathTrunc(number);
-  if (integer === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
-  return integer;
-}
-
-export function ToPositiveIntegerWithTruncation(value, property) {
-  const integer = ToIntegerWithTruncation(value);
-  if (integer <= 0) {
-    throw new RangeErrorCtor(`property '${property}' cannot be a a number less than one`);
-  }
-  return integer;
-}
-
-export function ToIntegerIfIntegral(value) {
-  const number = ToNumber(value);
-  if (!NumberIsFinite(number)) throw new RangeErrorCtor('infinity is out of range');
-  if (!IsIntegralNumber(number)) throw new RangeErrorCtor(`unsupported fractional value ${value}`);
-  if (number === 0) return 0; // ℝ(value) in spec text; converts -0 to 0
-  return number;
+  // ℝ(value) in spec text; converts -0 to 0
+  let mv = number === 0 ? 0 : number;
+  if (nonIntHandling === 'truncate') mv = MathTrunc(mv);
+  if (!IsIntegralNumber(mv)) throw new RangeErrorCtor(`'${property}' must be an integer, not ${arg}`);
+  if (mv < minimum) throw new RangeErrorCtor(`'${property}' cannot be less than ${minimum}`);
+  if (mv > maximum) throw new RangeErrorCtor(`'${property}' cannot be greater than ${maximum}`);
+  return mv;
 }
 
 // This convenience function isn't in the spec, but is useful in the polyfill
@@ -259,17 +246,17 @@ const CALENDAR_FIELD_KEYS = [
 
 const BUILTIN_CASTS = new MapCtor([
   ['era', ToString],
-  ['eraYear', ToIntegerWithTruncation],
-  ['year', ToIntegerWithTruncation],
-  ['month', (value) => ToPositiveIntegerWithTruncation(value, 'month')],
+  ['eraYear', (value) => SnapToInteger(value, 'truncate', 'eraYear')],
+  ['year', (value) => SnapToInteger(value, 'truncate', 'year')],
+  ['month', (value) => SnapToInteger(value, 'truncate', 'month', 1)],
   ['monthCode', ToMonthCode],
-  ['day', (value) => ToPositiveIntegerWithTruncation(value, 'day')],
-  ['hour', ToIntegerWithTruncation],
-  ['minute', ToIntegerWithTruncation],
-  ['second', ToIntegerWithTruncation],
-  ['millisecond', ToIntegerWithTruncation],
-  ['microsecond', ToIntegerWithTruncation],
-  ['nanosecond', ToIntegerWithTruncation],
+  ['day', (value) => SnapToInteger(value, 'truncate', 'day', 1)],
+  ['hour', (value) => SnapToInteger(value, 'truncate', 'hour')],
+  ['minute', (value) => SnapToInteger(value, 'truncate', 'minute')],
+  ['second', (value) => SnapToInteger(value, 'truncate', 'second')],
+  ['millisecond', (value) => SnapToInteger(value, 'truncate', 'millisecond')],
+  ['microsecond', (value) => SnapToInteger(value, 'truncate', 'microsecond')],
+  ['nanosecond', (value) => SnapToInteger(value, 'truncate', 'nanosecond')],
   ['offset', ToOffsetString],
   ['timeZone', ToTemporalTimeZoneIdentifier]
 ]);
@@ -646,11 +633,11 @@ export function ParseTemporalDurationStringRaw(isoString) {
     throw new RangeErrorCtor(`invalid duration: ${isoString}`);
   }
   const sign = match[1] === '-' ? -1 : 1;
-  const years = match[2] === undefined ? 0 : ToIntegerWithTruncation(match[2]) * sign;
-  const months = match[3] === undefined ? 0 : ToIntegerWithTruncation(match[3]) * sign;
-  const weeks = match[4] === undefined ? 0 : ToIntegerWithTruncation(match[4]) * sign;
-  const days = match[5] === undefined ? 0 : ToIntegerWithTruncation(match[5]) * sign;
-  const hours = match[6] === undefined ? 0 : ToIntegerWithTruncation(match[6]) * sign;
+  const years = match[2] === undefined ? 0 : SnapToInteger(match[2], 'truncate') * sign;
+  const months = match[3] === undefined ? 0 : SnapToInteger(match[3], 'truncate') * sign;
+  const weeks = match[4] === undefined ? 0 : SnapToInteger(match[4], 'truncate') * sign;
+  const days = match[5] === undefined ? 0 : SnapToInteger(match[5], 'truncate') * sign;
+  const hours = match[6] === undefined ? 0 : SnapToInteger(match[6], 'truncate') * sign;
   let fHours = match[7];
   let minutesStr = match[8];
   let fMinutes = match[9];
@@ -665,19 +652,21 @@ export function ParseTemporalDurationStringRaw(isoString) {
     if (minutesStr ?? fMinutes ?? secondsStr ?? fSeconds ?? false) {
       throw new RangeErrorCtor('only the smallest unit can be fractional');
     }
-    excessNanoseconds = ToIntegerWithTruncation(Call(StringPrototypeSlice, fHours + '000000000', [0, 9])) * 3600 * sign;
+    excessNanoseconds =
+      SnapToInteger(Call(StringPrototypeSlice, fHours + '000000000', [0, 9]), 'truncate') * 3600 * sign;
   } else {
-    minutes = minutesStr === undefined ? 0 : ToIntegerWithTruncation(minutesStr) * sign;
+    minutes = minutesStr === undefined ? 0 : SnapToInteger(minutesStr, 'truncate') * sign;
     if (fMinutes !== undefined) {
       if (secondsStr ?? fSeconds ?? false) {
         throw new RangeErrorCtor('only the smallest unit can be fractional');
       }
       excessNanoseconds =
-        ToIntegerWithTruncation(Call(StringPrototypeSlice, fMinutes + '000000000', [0, 9])) * 60 * sign;
+        SnapToInteger(Call(StringPrototypeSlice, fMinutes + '000000000', [0, 9]), 'truncate') * 60 * sign;
     } else {
-      seconds = secondsStr === undefined ? 0 : ToIntegerWithTruncation(secondsStr) * sign;
+      seconds = secondsStr === undefined ? 0 : SnapToInteger(secondsStr, 'truncate') * sign;
       if (fSeconds !== undefined) {
-        excessNanoseconds = ToIntegerWithTruncation(Call(StringPrototypeSlice, fSeconds + '000000000', [0, 9])) * sign;
+        excessNanoseconds =
+          SnapToInteger(Call(StringPrototypeSlice, fSeconds + '000000000', [0, 9]), 'truncate') * sign;
       }
     }
   }
@@ -761,7 +750,7 @@ export function ToTemporalPartialDurationRecord(temporalDurationLike) {
     const value = temporalDurationLike[property];
     if (value !== undefined) {
       any = true;
-      result[property] = ToIntegerIfIntegral(value);
+      result[property] = SnapToInteger(value, 'reject', property);
     }
   }
   if (!any) {
@@ -854,11 +843,7 @@ export function GetDirectionOption(options) {
 export function GetRoundingIncrementOption(options) {
   let increment = options.roundingIncrement;
   if (increment === undefined) return 1;
-  const integerIncrement = ToIntegerWithTruncation(increment);
-  if (integerIncrement < 1 || integerIncrement > 1e9) {
-    throw new RangeErrorCtor(`roundingIncrement must be at least 1 and at most 1e9, not ${increment}`);
-  }
-  return integerIncrement;
+  return SnapToInteger(increment, 'truncate', 'roundingIncrement', 1, 1e9);
 }
 
 export function ValidateTemporalRoundingIncrement(increment, dividend, inclusive) {
@@ -1116,7 +1101,7 @@ export function ToTemporalTimeRecord(bag, completeness = 'complete') {
     const field = fields[index];
     const value = bag[field];
     if (value !== undefined) {
-      result[field] = ToIntegerWithTruncation(value);
+      result[field] = SnapToInteger(value, 'truncate', field);
       any = true;
     } else if (completeness === 'complete') {
       result[field] = 0;

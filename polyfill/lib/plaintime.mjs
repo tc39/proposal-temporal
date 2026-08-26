@@ -16,12 +16,12 @@ import { GetSlot, TIME } from './slots.mjs';
 
 export class PlainTime {
   constructor(isoHour = 0, isoMinute = 0, isoSecond = 0, isoMillisecond = 0, isoMicrosecond = 0, isoNanosecond = 0) {
-    const hour = ES.ToIntegerWithTruncation(isoHour);
-    const minute = ES.ToIntegerWithTruncation(isoMinute);
-    const second = ES.ToIntegerWithTruncation(isoSecond);
-    const millisecond = ES.ToIntegerWithTruncation(isoMillisecond);
-    const microsecond = ES.ToIntegerWithTruncation(isoMicrosecond);
-    const nanosecond = ES.ToIntegerWithTruncation(isoNanosecond);
+    const hour = ES.SnapToInteger(isoHour, 'truncate', 'hour');
+    const minute = ES.SnapToInteger(isoMinute, 'truncate', 'minute');
+    const second = ES.SnapToInteger(isoSecond, 'truncate', 'second');
+    const millisecond = ES.SnapToInteger(isoMillisecond, 'truncate', 'millisecond');
+    const microsecond = ES.SnapToInteger(isoMicrosecond, 'truncate', 'microsecond');
+    const nanosecond = ES.SnapToInteger(isoNanosecond, 'truncate', 'nanosecond');
 
     ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
     const time = { hour, minute, second, millisecond, microsecond, nanosecond };

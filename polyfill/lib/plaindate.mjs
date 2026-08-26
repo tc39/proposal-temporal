@@ -7,9 +7,9 @@ import { CALENDAR, GetSlot, ISO_DATE, TIME } from './slots.mjs';
 
 export class PlainDate {
   constructor(isoYear, isoMonth, isoDay, calendar = 'iso8601') {
-    const year = ES.ToIntegerWithTruncation(isoYear);
-    const month = ES.ToIntegerWithTruncation(isoMonth);
-    const day = ES.ToIntegerWithTruncation(isoDay);
+    const year = ES.SnapToInteger(isoYear, 'truncate', 'isoYear');
+    const month = ES.SnapToInteger(isoMonth, 'truncate', 'isoMonth');
+    const day = ES.SnapToInteger(isoDay, 'truncate', 'isoDay');
     calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
     ES.RejectISODate(year, month, day);

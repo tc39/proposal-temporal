@@ -7,11 +7,11 @@ import { CALENDAR, GetSlot, ISO_DATE } from './slots.mjs';
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = 'iso8601', referenceISODay = 1) {
-    const year = ES.ToIntegerWithTruncation(isoYear);
-    const month = ES.ToIntegerWithTruncation(isoMonth);
+    const year = ES.SnapToInteger(isoYear, 'truncate', 'isoYear');
+    const month = ES.SnapToInteger(isoMonth, 'truncate', 'isoMonth');
     calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
-    const day = ES.ToIntegerWithTruncation(referenceISODay);
+    const day = ES.SnapToInteger(referenceISODay, 'truncate', 'referenceISODay');
 
     ES.RejectISODate(year, month, day);
     ES.CreateTemporalYearMonthSlots(this, { year, month, day }, calendar);
