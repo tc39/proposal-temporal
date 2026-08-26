@@ -38,13 +38,9 @@ export class PlainDateTime {
     calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
 
-    ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-
-    ES.CreateTemporalDateTimeSlots(
-      this,
-      { isoDate: { year, month, day }, time: { hour, minute, second, millisecond, microsecond, nanosecond } },
-      calendar
-    );
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    const time = ES.CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond);
+    ES.CreateTemporalDateTimeSlots(this, { isoDate, time }, calendar);
   }
   get calendarId() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');

@@ -23,9 +23,7 @@ export class PlainTime {
     const microsecond = ES.SnapToInteger(isoMicrosecond, 'truncate', 'microsecond');
     const nanosecond = ES.SnapToInteger(isoNanosecond, 'truncate', 'nanosecond');
 
-    ES.RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
-    const time = { hour, minute, second, millisecond, microsecond, nanosecond };
-
+    const time = ES.CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond);
     ES.CreateTemporalTimeSlots(this, time);
   }
 

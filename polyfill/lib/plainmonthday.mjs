@@ -13,8 +13,8 @@ export class PlainMonthDay {
     calendar = ES.CanonicalizeCalendar(calendar);
     const year = ES.SnapToInteger(referenceISOYear, 'truncate', 'referenceISOYear');
 
-    ES.RejectISODate(year, month, day);
-    ES.CreateTemporalMonthDaySlots(this, { year, month, day }, calendar);
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    ES.CreateTemporalMonthDaySlots(this, isoDate, calendar);
   }
 
   get monthCode() {

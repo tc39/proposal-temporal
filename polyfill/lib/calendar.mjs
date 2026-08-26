@@ -174,7 +174,7 @@ impl['iso8601'] = {
   monthDayToISOReferenceDate(fields, overflow) {
     const referenceISOYear = 1972;
     const { month, day } = ES.RegulateISODate(fields.year ?? referenceISOYear, fields.month, fields.day, overflow);
-    return { month, day, year: referenceISOYear };
+    return ES.CreateISODateRecordInfallible(referenceISOYear, month, day);
   },
   extraFields() {
     return [];

@@ -411,7 +411,7 @@ function processAnnotations(annotations) {
   return calendar;
 }
 
-export function ParseISODateTime(isoString) {
+function ParseISODateTime(isoString) {
   // ZDT is the superset of fields for every other Temporal type
   const match = Call(RegExpPrototypeExec, PARSE.zoneddatetime, [isoString]);
   if (!match) throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}`);
@@ -446,12 +446,15 @@ export function ParseISODateTime(isoString) {
     offset = match.groups.offset;
   }
   const tzAnnotation = match.groups.timeZoneID;
-  RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
+  // Note: Not assertions as in the spec, because our regexes use [0-9] and
+  // don't support the spec's Early Errors.
+  if (!IsValidISODate(year, month, day)) throw new RangeErrorCtor(`${isoString} is not a valid date`);
+  const time = hasTime ? CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond) : 'start-of-day';
   return {
     year,
     month,
     day,
-    time: hasTime ? { hour, minute, second, millisecond, microsecond, nanosecond } : 'start-of-day',
+    time,
     tzAnnotation,
     offset,
     z,
@@ -501,25 +504,26 @@ export function ParseTemporalTimeString(isoString) {
     microsecond = +Call(StringPrototypeSlice, fraction, [3, 6]);
     nanosecond = +Call(StringPrototypeSlice, fraction, [6, 9]);
     if (match.groups.z) throw new RangeErrorCtor('Z designator not supported for PlainTime');
+    // Not an assertion as in the spec, because our regexes use [0-9]
+    if (!IsValidTime(hour, minute, second, millisecond, microsecond, nanosecond)) {
+      throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}, time components invalid`);
+    }
   } else {
     const { time, z } = ParseISODateTime(isoString);
     if (time === 'start-of-day') throw new RangeErrorCtor(`time is missing in string: ${isoString}`);
     if (z) throw new RangeErrorCtor('Z designator not supported for PlainTime');
     ({ hour, minute, second, millisecond, microsecond, nanosecond } = time);
   }
-  RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
   // if it's a date-time string, OK
   if (Call(RegExpPrototypeTest, /[tT ][0-9][0-9]/, [isoString])) {
     return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
   }
   // Reject strings that are ambiguous with PlainMonthDay or PlainYearMonth.
   try {
-    const { month, day } = ParseTemporalMonthDayString(isoString);
-    RejectISODate(1972, month, day);
+    ParseTemporalMonthDayString(isoString);
   } catch {
     try {
-      const { year, month } = ParseTemporalYearMonthString(isoString);
-      RejectISODate(year, month, 1);
+      ParseTemporalYearMonthString(isoString);
     } catch {
       return { hour, minute, second, millisecond, microsecond, nanosecond, calendar };
     }
@@ -543,6 +547,11 @@ export function ParseTemporalYearMonthString(isoString) {
         throw new RangeErrorCtor('YYYY-MM format is only valid with iso8601 calendar');
       }
     }
+    // Not an assertion as in the spec, because our regexes don't have the
+    // spec's Early Errors
+    if (!IsValidISODate(year, month, referenceISODay)) {
+      throw new RangeErrorCtor(`${isoString} invalid for YYYY-MM format`);
+    }
   } else {
     let z;
     ({ year, month, calendar, day: referenceISODay, z } = ParseISODateTime(isoString));
@@ -558,11 +567,17 @@ export function ParseTemporalMonthDayString(isoString) {
     calendar = processAnnotations(match[3]);
     month = +match[1];
     day = +match[2];
+    referenceISOYear = 1972;
     if (calendar !== undefined) {
       calendar = ASCIILowercase(calendar);
       if (calendar !== 'iso8601') {
         throw new RangeErrorCtor('MM-DD format is only valid with iso8601 calendar');
       }
+    }
+    // Not an assertion as in the spec, because our regexes don't have the
+    // spec's Early Errors
+    if (!IsValidISODate(referenceISOYear, month, day)) {
+      throw new RangeErrorCtor(`${isoString} invalid for MM-DD format`);
     }
   } else {
     let z;
@@ -700,32 +715,26 @@ function ParseTemporalDurationString(isoString) {
 }
 
 export function RegulateISODate(year, month, day, overflow) {
-  switch (overflow) {
-    case 'reject':
-      RejectISODate(year, month, day);
-      break;
-    case 'constrain':
-      ({ year, month, day } = ConstrainISODate(year, month, day));
-      break;
+  if (overflow === 'constrain') {
+    month = ConstrainToRange(month, 1, 12);
+    const daysInMonth = ISODaysInMonth(year, month);
+    day = ConstrainToRange(day, 1, daysInMonth);
+    return CreateISODateRecordInfallible(year, month, day);
   }
-  return { year, month, day };
+  return CreateISODateRecord(year, month, day);
 }
 
 export function RegulateTime(hour, minute, second, millisecond, microsecond, nanosecond, overflow) {
-  switch (overflow) {
-    case 'reject':
-      RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
-      break;
-    case 'constrain':
-      hour = ConstrainToRange(hour, 0, 23);
-      minute = ConstrainToRange(minute, 0, 59);
-      second = ConstrainToRange(second, 0, 59);
-      millisecond = ConstrainToRange(millisecond, 0, 999);
-      microsecond = ConstrainToRange(microsecond, 0, 999);
-      nanosecond = ConstrainToRange(nanosecond, 0, 999);
-      break;
+  if (overflow === 'constrain') {
+    hour = ConstrainToRange(hour, 0, 23);
+    minute = ConstrainToRange(minute, 0, 59);
+    second = ConstrainToRange(second, 0, 59);
+    millisecond = ConstrainToRange(millisecond, 0, 999);
+    microsecond = ConstrainToRange(microsecond, 0, 999);
+    nanosecond = ConstrainToRange(nanosecond, 0, 999);
+    return CreateTimeRecordInfallible(hour, minute, second, millisecond, microsecond, nanosecond);
   }
-  return { hour, minute, second, millisecond, microsecond, nanosecond };
+  return CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
 export function ToTemporalPartialDurationRecord(temporalDurationLike) {
@@ -991,7 +1000,7 @@ export function GetTemporalRelativeToOption(options) {
     }
     if (!calendar) calendar = 'iso8601';
     calendar = CanonicalizeCalendar(calendar);
-    isoDate = { year, month, day };
+    isoDate = CreateISODateRecordInfallible(year, month, day);
   }
   if (timeZone === undefined) {
     return { plainRelativeTo: CreateTemporalDate(isoDate, calendar) };
@@ -1134,7 +1143,8 @@ export function ToTemporalDate(item, options = undefined) {
   if (!calendar) calendar = 'iso8601';
   calendar = CanonicalizeCalendar(calendar);
   GetTemporalOverflowOption(GetOptionsObject(options)); // validate and ignore
-  return CreateTemporalDate({ year, month, day }, calendar);
+  const isoDate = CreateISODateRecordInfallible(year, month, day);
+  return CreateTemporalDate(isoDate, calendar);
 }
 
 export function InterpretTemporalDateTimeFields(calendar, fields, overflow) {
@@ -1187,21 +1197,10 @@ export function ToTemporalDateTime(item, options = undefined) {
     ({ year, month, day, time, calendar, z } = ParseTemporalDateTimeString(RequireString(item)));
     if (z) throw new RangeErrorCtor('Z designator not supported for PlainDateTime');
     if (time === 'start-of-day') time = MidnightTimeRecord();
-    RejectDateTime(
-      year,
-      month,
-      day,
-      time.hour,
-      time.minute,
-      time.second,
-      time.millisecond,
-      time.microsecond,
-      time.nanosecond
-    );
     if (!calendar) calendar = 'iso8601';
     calendar = CanonicalizeCalendar(calendar);
     GetTemporalOverflowOption(GetOptionsObject(options));
-    isoDate = { year, month, day };
+    isoDate = CreateISODateRecordInfallible(year, month, day);
   }
   return CreateTemporalDateTime({ isoDate, time }, calendar);
 }
@@ -1317,9 +1316,10 @@ export function ToTemporalMonthDay(item, options = undefined) {
   GetTemporalOverflowOption(GetOptionsObject(options));
   if (calendar === 'iso8601') {
     const isoCalendarReferenceYear = 1972; // First leap year after Unix epoch
-    return CreateTemporalMonthDay({ year: isoCalendarReferenceYear, month, day }, calendar);
+    const isoDate = CreateISODateRecordInfallible(isoCalendarReferenceYear, month, day);
+    return CreateTemporalMonthDay(isoDate, calendar);
   }
-  let isoDate = { year: referenceISOYear, month, day };
+  let isoDate = CreateISODateRecordInfallible(referenceISOYear, month, day);
   RejectDateRange(isoDate);
   const result = ISODateToFields(calendar, isoDate, 'month-day');
   isoDate = CalendarMonthDayFromFields(calendar, result, 'constrain');
@@ -1375,8 +1375,7 @@ export function ToTemporalYearMonth(item, options = undefined) {
   calendar = CanonicalizeCalendar(calendar);
 
   GetTemporalOverflowOption(GetOptionsObject(options));
-  let isoDate = { year, month, day: referenceISODay };
-  RejectYearMonthRange(isoDate);
+  let isoDate = CreateISODateRecordInfallible(year, month, referenceISODay);
   const result = ISODateToFields(calendar, isoDate, 'year-month');
   isoDate = CalendarYearMonthFromFields(calendar, result, 'constrain');
   return CreateTemporalYearMonth(isoDate, calendar);
@@ -1509,7 +1508,7 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     disambiguation = GetTemporalDisambiguationOption(resolvedOptions);
     offsetOpt = GetTemporalOffsetOption(resolvedOptions, 'reject');
     GetTemporalOverflowOption(resolvedOptions); // validate and ignore
-    isoDate = { year, month, day };
+    isoDate = CreateISODateRecordInfallible(year, month, day);
   }
   let offsetBehaviour = 'option';
   if (hasUTCDesignator) {
@@ -2663,7 +2662,7 @@ export function AddDaysToISODate(isoDate, days) {
     ({ year, month } = BalanceISOYearMonth(year, month + 1));
   }
 
-  return { year, month, day };
+  return CreateISODateRecordInfallible(year, month, day);
 }
 
 export function BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
@@ -2727,7 +2726,7 @@ export function BalanceTime(hour, minute, second, millisecond, microsecond, nano
   microsecond += 0;
   nanosecond += 0;
 
-  return { deltaDays, hour, minute, second, millisecond, microsecond, nanosecond };
+  return CreateTimeRecordInfallible(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays);
 }
 
 export function DateDurationDays(dateDuration, plainRelativeTo) {
@@ -2773,9 +2772,47 @@ export function RejectToRange(value, min, max) {
   if (value < min || value > max) throw new RangeErrorCtor(`value out of range: ${min} <= ${value} <= ${max}`);
 }
 
-export function RejectISODate(year, month, day) {
-  RejectToRange(month, 1, 12);
-  RejectToRange(day, 1, ISODaysInMonth(year, month));
+function IsValidISODate(year, month, day) {
+  if (month < 1 || month > 12) return false;
+  const daysInMonth = ISODaysInMonth(year, month);
+  return day >= 1 && day <= daysInMonth;
+}
+
+export function CreateISODateRecord(year, month, day) {
+  if (!IsValidISODate(year, month, day)) throw new RangeErrorCtor(`${year}-${month}-${day} is not a valid ISO date`);
+  return { year, month, day };
+}
+
+// Separate function to validate spec's "! CreateISODateRecord(_year_, ...)"
+export function CreateISODateRecordInfallible(year, month, day) {
+  assert(IsValidISODate(year, month, day), `${year}-${month}-${day} must be a valid ISO date`);
+  return { year, month, day };
+}
+
+function IsValidTime(hour, minute, second, millisecond, microsecond, nanosecond) {
+  if (hour < 0 || hour > 23) return false;
+  if (minute < 0 || minute > 59) return false;
+  if (second < 0 || second > 59) return false;
+  if (millisecond < 0 || millisecond > 999) return false;
+  if (microsecond < 0 || microsecond > 999) return false;
+  return nanosecond >= 0 && nanosecond <= 999;
+}
+
+export function CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays = 0) {
+  if (!IsValidTime(hour, minute, second, millisecond, microsecond, nanosecond)) {
+    throw new RangeErrorCtor(
+      `${hour}, ${minute}, ${second}, ${millisecond}, ${microsecond}, ${nanosecond} is not a valid time`
+    );
+  }
+  return { hour, minute, second, millisecond, microsecond, nanosecond, deltaDays };
+}
+
+function CreateTimeRecordInfallible(hour, minute, second, millisecond, microsecond, nanosecond, deltaDays = 0) {
+  assert(
+    IsValidTime(hour, minute, second, millisecond, microsecond, nanosecond),
+    `${hour}, ${minute}, ${second}, ${millisecond}, ${microsecond}, ${nanosecond} must be a valid time`
+  );
+  return { hour, minute, second, millisecond, microsecond, nanosecond, deltaDays };
 }
 
 function RejectDateRange(isoDate) {
@@ -2786,20 +2823,6 @@ function RejectDateRange(isoDate) {
     const dateString = ISODateToString(isoDateTime.isoDate);
     throw new RangeErrorCtor(`${dateString} is outside of supported range`);
   }
-}
-
-export function RejectTime(hour, minute, second, millisecond, microsecond, nanosecond) {
-  RejectToRange(hour, 0, 23);
-  RejectToRange(minute, 0, 59);
-  RejectToRange(second, 0, 59);
-  RejectToRange(millisecond, 0, 999);
-  RejectToRange(microsecond, 0, 999);
-  RejectToRange(nanosecond, 0, 999);
-}
-
-export function RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
-  RejectISODate(year, month, day);
-  RejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
 export function RejectDateTimeRange(isoDateTime) {
@@ -4232,7 +4255,7 @@ export function RoundTime(
   const result = RoundNumberToIncrement(quantity, nsPerUnit * increment, roundingMode) / nsPerUnit;
   switch (unit) {
     case 'day':
-      return { deltaDays: result, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
+      return CreateTimeRecordInfallible(0, 0, 0, 0, 0, 0, result);
     case 'hour':
       return BalanceTime(result, 0, 0, 0, 0, 0);
     case 'minute':
