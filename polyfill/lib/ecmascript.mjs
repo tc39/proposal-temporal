@@ -2603,11 +2603,14 @@ export function DurationSign(duration) {
 }
 
 function DateDurationSign(dateDuration) {
-  const fieldNames = ['years', 'months', 'weeks', 'days'];
-  for (let index = 0; index < fieldNames.length; index++) {
-    const prop = dateDuration[fieldNames[index]];
-    if (prop !== 0) return prop < 0 ? -1 : 1;
-  }
+  if (dateDuration.years < 0) return -1;
+  if (dateDuration.years > 0) return 1;
+  if (dateDuration.months < 0) return -1;
+  if (dateDuration.months > 0) return 1;
+  if (dateDuration.weeks < 0) return -1;
+  if (dateDuration.weeks > 0) return 1;
+  if (dateDuration.days < 0) return -1;
+  if (dateDuration.days > 0) return 1;
   return 0;
 }
 
