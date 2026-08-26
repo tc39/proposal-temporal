@@ -18,7 +18,6 @@ import {
   TypeError as TypeErrorCtor,
 
   // class static functions and methods
-  ArrayPrototypeConcat,
   ArrayPrototypeEvery,
   ArrayPrototypeFilter,
   ArrayPrototypeFlatMap,
@@ -219,18 +218,6 @@ export function RequireString(value) {
   return value;
 }
 
-function ToMonthCode(value) {
-  const { monthNumber, isLeapMonth } = ParseMonthCode(value);
-  return CreateMonthCode(monthNumber, isLeapMonth);
-}
-
-function ToOffsetString(value) {
-  value = ToPrimitive(value, StringCtor);
-  RequireString(value);
-  ParseDateTimeUTCOffset(value);
-  return value;
-}
-
 const CALENDAR_FIELD_KEYS = [
   'era',
   'eraYear',
@@ -247,32 +234,6 @@ const CALENDAR_FIELD_KEYS = [
   'offset',
   'timeZone'
 ];
-
-const BUILTIN_CASTS = new MapCtor([
-  ['era', ToString],
-  ['eraYear', (value) => SnapToInteger(value, 'truncate', 'eraYear')],
-  ['year', (value) => SnapToInteger(value, 'truncate', 'year')],
-  ['month', (value) => SnapToInteger(value, 'truncate', 'month', 1)],
-  ['monthCode', ToMonthCode],
-  ['day', (value) => SnapToInteger(value, 'truncate', 'day', 1)],
-  ['hour', (value) => SnapToInteger(value, 'truncate', 'hour')],
-  ['minute', (value) => SnapToInteger(value, 'truncate', 'minute')],
-  ['second', (value) => SnapToInteger(value, 'truncate', 'second')],
-  ['millisecond', (value) => SnapToInteger(value, 'truncate', 'millisecond')],
-  ['microsecond', (value) => SnapToInteger(value, 'truncate', 'microsecond')],
-  ['nanosecond', (value) => SnapToInteger(value, 'truncate', 'nanosecond')],
-  ['offset', ToOffsetString],
-  ['timeZone', ToTemporalTimeZoneIdentifier]
-]);
-
-const BUILTIN_DEFAULTS = new MapCtor([
-  ['hour', 0],
-  ['minute', 0],
-  ['second', 0],
-  ['millisecond', 0],
-  ['microsecond', 0],
-  ['nanosecond', 0]
-]);
 
 // each item is [plural, singular, (length in ns)]
 const TEMPORAL_UNITS = [
@@ -970,9 +931,9 @@ export function GetTemporalRelativeToOption(options) {
     const fields = PrepareCalendarFields(
       calendar,
       relativeTo,
-      ['year', 'month', 'monthCode', 'day'],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'],
-      []
+      'date-fields',
+      'time-fields-with-time-zone-and-offset',
+      'no-required-fields'
     );
     ({ isoDate, time } = InterpretTemporalDateTimeFields(calendar, fields, 'constrain'));
     ({ offset, timeZone } = fields);
@@ -1078,26 +1039,102 @@ export function ISODateToFields(calendar, isoDate, type = 'date') {
   return fields;
 }
 
-export function PrepareCalendarFields(calendar, bag, calendarFieldNames, nonCalendarFieldNames, requiredFields) {
-  const extraFieldNames = calendarImplForID(calendar).extraFields(calendarFieldNames);
-  const fields = Call(ArrayPrototypeConcat, calendarFieldNames, [nonCalendarFieldNames, extraFieldNames]);
+export function PrepareCalendarFields(calendar, bag, calendarFields, nonCalendarFields, requiredFields) {
+  let propertyNames;
+  switch (calendarFields) {
+    case 'date-fields':
+      propertyNames = ['day', 'month', 'monthCode', 'year'];
+      break;
+    case 'year-month-fields':
+      propertyNames = ['month', 'monthCode', 'year'];
+      break;
+    case 'only-day':
+      propertyNames = ['day'];
+      break;
+    case 'only-year':
+      propertyNames = ['year'];
+      break;
+    default:
+      /* c8 ignore next */ assertNotReached(`invalid calendarFields ${calendarFields}`);
+  }
+  const extraFieldNames = calendarImplForID(calendar).extraFields(propertyNames);
+  switch (nonCalendarFields) {
+    case 'time-fields-with-time-zone-and-offset':
+      Call(ArrayPrototypePush, propertyNames, ['timeZone']);
+    // fallthrough
+    case 'time-fields-with-offset':
+      Call(ArrayPrototypePush, propertyNames, ['offset']);
+    //fallthrough
+    case 'time-fields':
+      Call(ArrayPrototypePush, propertyNames, ['hour', 'microsecond', 'millisecond', 'minute', 'nanosecond', 'second']);
+      break;
+    case 'no-non-calendar-fields':
+      break;
+    default:
+      /* c8 ignore next */ assertNotReached(`invalid nonCalendarFields ${nonCalendarFields}`);
+  }
+  Call(ArrayPrototypePush, propertyNames, extraFieldNames);
   const result = ObjectCreate(null);
-  let any = false;
-  Call(ArrayPrototypeSort, fields, []);
-  for (let index = 0; index < fields.length; index++) {
-    const property = fields[index];
+  if (requiredFields !== 'partial') {
+    result.hour = 0;
+    result.minute = 0;
+    result.second = 0;
+    result.millisecond = 0;
+    result.microsecond = 0;
+    result.nanosecond = 0;
+  }
+  let anyPresent = false;
+  Call(ArrayPrototypeSort, propertyNames, []);
+  for (let index = 0; index < propertyNames.length; index++) {
+    const property = propertyNames[index];
     const value = bag[property];
-    if (value !== undefined) {
-      any = true;
-      result[property] = Call(MapPrototypeGet, BUILTIN_CASTS, [property])(value);
-    } else if (requiredFields !== 'partial') {
-      if (Call(ArrayPrototypeIncludes, requiredFields, [property])) {
-        throw new TypeErrorCtor(`required property '${property}' missing or undefined`);
+    if (value === undefined) {
+      if (requiredFields === 'time-zone' && property === 'timeZone') {
+        throw new TypeErrorCtor("required property 'timeZone' missing or undefined");
       }
-      result[property] = Call(MapPrototypeGet, BUILTIN_DEFAULTS, [property]);
+    } else {
+      anyPresent = true;
+      switch (property) {
+        case 'eraYear':
+        case 'year':
+        case 'hour':
+        case 'minute':
+        case 'second':
+        case 'millisecond':
+        case 'microsecond':
+        case 'nanosecond':
+          result[property] = SnapToInteger(value, 'truncate', property);
+          break;
+        case 'month':
+        case 'day':
+          result[property] = SnapToInteger(value, 'truncate', property, 1);
+          break;
+        case 'era':
+          result.era = ToString(value);
+          break;
+        case 'timeZone':
+          result.timeZone = ToTemporalTimeZoneIdentifier(value);
+          break;
+        case 'monthCode':
+          {
+            const parsed = ParseMonthCode(value);
+            result.monthCode = CreateMonthCode(parsed.monthNumber, parsed.isLeapMonth);
+          }
+          break;
+        case 'offset':
+          {
+            const offset = ToPrimitive(value, StringCtor);
+            RequireString(offset);
+            ParseDateTimeUTCOffset(offset);
+            result.offset = offset;
+          }
+          break;
+        default:
+          /* c8 ignore next */ assertNotReached(`wrong property ${property}`);
+      }
     }
   }
-  if (requiredFields === 'partial' && !any) {
+  if (requiredFields === 'partial' && !anyPresent) {
     throw new TypeErrorCtor('no supported properties found');
   }
   return result;
@@ -1138,7 +1175,7 @@ export function ToTemporalDate(item, options = undefined) {
       return CreateTemporalDate(GetSlot(item, ISO_DATE_TIME).isoDate, GetSlot(item, CALENDAR));
     }
     const calendar = GetTemporalCalendarIdentifierWithISODefault(item);
-    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode', 'day'], [], []);
+    const fields = PrepareCalendarFields(calendar, item, 'date-fields', 'no-non-calendar-fields', 'no-required-fields');
     const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
     const isoDate = CalendarDateFromFields(calendar, fields, overflow);
     return CreateTemporalDate(isoDate, calendar);
@@ -1188,13 +1225,7 @@ export function ToTemporalDateTime(item, options = undefined) {
     }
 
     calendar = GetTemporalCalendarIdentifierWithISODefault(item);
-    const fields = PrepareCalendarFields(
-      calendar,
-      item,
-      ['year', 'month', 'monthCode', 'day'],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'],
-      []
-    );
+    const fields = PrepareCalendarFields(calendar, item, 'date-fields', 'time-fields', 'no-required-fields');
     const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
     ({ isoDate, time } = InterpretTemporalDateTimeFields(calendar, fields, overflow));
   } else {
@@ -1308,7 +1339,7 @@ export function ToTemporalMonthDay(item, options = undefined) {
       if (calendar === undefined) calendar = 'iso8601';
       calendar = ToTemporalCalendarIdentifier(calendar);
     }
-    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode', 'day'], [], []);
+    const fields = PrepareCalendarFields(calendar, item, 'date-fields', 'no-non-calendar-fields', 'no-required-fields');
     const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
     const isoDate = CalendarMonthDayFromFields(calendar, fields, overflow);
     return CreateTemporalMonthDay(isoDate, calendar);
@@ -1369,7 +1400,13 @@ export function ToTemporalYearMonth(item, options = undefined) {
       return CreateTemporalYearMonth(GetSlot(item, ISO_DATE), GetSlot(item, CALENDAR));
     }
     const calendar = GetTemporalCalendarIdentifierWithISODefault(item);
-    const fields = PrepareCalendarFields(calendar, item, ['year', 'month', 'monthCode'], [], []);
+    const fields = PrepareCalendarFields(
+      calendar,
+      item,
+      'year-month-fields',
+      'no-non-calendar-fields',
+      'no-required-fields'
+    );
     const overflow = GetTemporalOverflowOption(GetOptionsObject(options));
     const isoDate = CalendarYearMonthFromFields(calendar, fields, overflow);
     return CreateTemporalYearMonth(isoDate, calendar);
@@ -1482,9 +1519,9 @@ export function ToTemporalZonedDateTime(item, options = undefined) {
     const fields = PrepareCalendarFields(
       calendar,
       item,
-      ['year', 'month', 'monthCode', 'day'],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset', 'timeZone'],
-      ['timeZone']
+      'date-fields',
+      'time-fields-with-time-zone-and-offset',
+      'time-zone'
     );
     ({ offset, timeZone } = fields);
     const resolvedOptions = GetOptionsObject(options);

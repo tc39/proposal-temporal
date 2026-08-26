@@ -159,8 +159,8 @@ export class PlainDateTime {
     const partialDateTime = ES.PrepareCalendarFields(
       calendar,
       temporalDateTimeLike,
-      ['year', 'month', 'monthCode', 'day'],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'],
+      'date-fields',
+      'time-fields',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);

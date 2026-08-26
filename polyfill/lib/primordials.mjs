@@ -42,7 +42,6 @@ export const {
 export const {
   from: ArrayFrom,
   prototype: {
-    concat: ArrayPrototypeConcat,
     filter: ArrayPrototypeFilter,
     every: ArrayPrototypeEvery,
     find: ArrayPrototypeFind,
