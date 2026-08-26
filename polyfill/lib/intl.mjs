@@ -832,7 +832,7 @@ function extractOverrides(temporalObj, main) {
         `cannot format PlainYearMonth with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
+    const isoDateTime = { isoDate: GetSlot(temporalObj, ISO_DATE), time: ES.NoonTimeRecord() };
     const formatter = getSlotLazy(main, YM);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainYearMonth with only time options');
     const { epochNs, dayAdjust } = getAdjustedEpochNanoseconds(isoDateTime);
@@ -851,7 +851,7 @@ function extractOverrides(temporalObj, main) {
         `cannot format PlainMonthDay with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
+    const isoDateTime = { isoDate: GetSlot(temporalObj, ISO_DATE), time: ES.NoonTimeRecord() };
     const formatter = getSlotLazy(main, MD);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainMonthDay with only time options');
     return {
@@ -868,7 +868,7 @@ function extractOverrides(temporalObj, main) {
         `cannot format PlainDate with calendar ${calendar} in locale with calendar ${mainCalendar}`
       );
     }
-    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(temporalObj, ISO_DATE), ES.NoonTimeRecord());
+    const isoDateTime = { isoDate: GetSlot(temporalObj, ISO_DATE), time: ES.NoonTimeRecord() };
     const formatter = getSlotLazy(main, DATE);
     if (!formatter) throw new TypeErrorCtor('cannot format PlainDate with only time options');
     const { epochNs, dayAdjust } = getAdjustedEpochNanoseconds(isoDateTime);

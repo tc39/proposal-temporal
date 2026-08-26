@@ -776,10 +776,6 @@ export function ZeroDateDuration() {
   return { years: 0, months: 0, weeks: 0, days: 0 };
 }
 
-export function CombineISODateAndTimeRecord(isoDate, time) {
-  return { isoDate, time };
-}
-
 export function MidnightTimeRecord() {
   return { deltaDays: 0, hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
 }
@@ -1152,7 +1148,7 @@ export function InterpretTemporalDateTimeFields(calendar, fields, overflow) {
     fields.nanosecond,
     overflow
   );
-  return CombineISODateAndTimeRecord(isoDate, time);
+  return { isoDate, time };
 }
 
 export function ToTemporalDateTime(item, options = undefined) {
@@ -1171,7 +1167,7 @@ export function ToTemporalDateTime(item, options = undefined) {
     if (IsTemporalDate(item)) {
       GetTemporalOverflowOption(GetOptionsObject(options));
       return CreateTemporalDateTime(
-        CombineISODateAndTimeRecord(GetSlot(item, ISO_DATE), MidnightTimeRecord()),
+        { isoDate: GetSlot(item, ISO_DATE), time: MidnightTimeRecord() },
         GetSlot(item, CALENDAR)
       );
     }
@@ -1207,8 +1203,7 @@ export function ToTemporalDateTime(item, options = undefined) {
     GetTemporalOverflowOption(GetOptionsObject(options));
     isoDate = { year, month, day };
   }
-  const isoDateTime = CombineISODateAndTimeRecord(isoDate, time);
-  return CreateTemporalDateTime(isoDateTime, calendar);
+  return CreateTemporalDateTime({ isoDate, time }, calendar);
 }
 
 export function ToTemporalDuration(item) {
@@ -1406,7 +1401,7 @@ export function InterpretISODateTimeOffset(
     return GetStartOfDay(timeZone, isoDate);
   }
 
-  const dt = CombineISODateAndTimeRecord(isoDate, time);
+  const dt = { isoDate, time };
 
   if (offsetBehaviour === 'wall' || offsetOpt === 'ignore') {
     // Simple case: ISO string without a TZ offset (or caller wants to ignore
@@ -1887,7 +1882,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
       const timeDuration = TimeDuration.fromComponents(0, 0, 0, 0, 0, -nanoseconds);
       const earlierTime = AddTime(isoDateTime.time, timeDuration);
       const earlierDate = AddDaysToISODate(isoDateTime.isoDate, earlierTime.deltaDays);
-      const earlier = CombineISODateAndTimeRecord(earlierDate, earlierTime);
+      const earlier = { isoDate: earlierDate, time: earlierTime };
       return GetPossibleEpochNanoseconds(timeZone, earlier)[0];
     }
     case 'compatible':
@@ -1896,7 +1891,7 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
       const timeDuration = TimeDuration.fromComponents(0, 0, 0, 0, 0, nanoseconds);
       const laterTime = AddTime(isoDateTime.time, timeDuration);
       const laterDate = AddDaysToISODate(isoDateTime.isoDate, laterTime.deltaDays);
-      const later = CombineISODateAndTimeRecord(laterDate, laterTime);
+      const later = { isoDate: laterDate, time: laterTime };
       const possible = GetPossibleEpochNanoseconds(timeZone, later);
       return possible[possible.length - 1];
     }
@@ -1938,7 +1933,7 @@ export function GetPossibleEpochNanoseconds(timeZone, isoDateTime) {
 }
 
 export function GetStartOfDay(timeZone, isoDate) {
-  const isoDateTime = CombineISODateAndTimeRecord(isoDate, MidnightTimeRecord());
+  const isoDateTime = { isoDate, time: MidnightTimeRecord() };
   const possibleEpochNs = GetPossibleEpochNanoseconds(timeZone, isoDateTime);
   // If not a DST gap, return the single or earlier epochNs
   if (possibleEpochNs.length) return possibleEpochNs[0];
@@ -2674,7 +2669,7 @@ export function AddDaysToISODate(isoDate, days) {
 export function BalanceISODateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond) {
   const time = BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
   const isoDate = AddDaysToISODate({ year, month, day }, time.deltaDays);
-  return CombineISODateAndTimeRecord(isoDate, time);
+  return { isoDate, time };
 }
 
 export function BalanceTime(hour, minute, second, millisecond, microsecond, nanosecond) {
@@ -2785,7 +2780,7 @@ export function RejectISODate(year, month, day) {
 
 function RejectDateRange(isoDate) {
   // Noon avoids trouble at edges of DateTime range (excludes midnight)
-  const isoDateTime = CombineISODateAndTimeRecord(isoDate, NoonTimeRecord());
+  const isoDateTime = { isoDate, time: NoonTimeRecord() };
   const ns = GetUTCEpochNanoseconds(isoDateTime);
   if (ns.lesser(DATETIME_NS_MIN) || ns.greater(DATETIME_NS_MAX)) {
     const dateString = ISODateToString(isoDateTime.isoDate);
@@ -2824,9 +2819,9 @@ function AssertISODateTimeWithinLimits(isoDateTime) {
   );
 }
 
-// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
-// responsible for throwing. In the polyfill, ValidateEpochNanoseconds takes its
-// place so that we can DRY the throwing code.
+// In the spec, IsWithinEpochNanosecondsInterval returns a boolean and call
+// sites are responsible for throwing. In the polyfill, ValidateEpochNanoseconds
+// takes its place so that we can DRY the throwing code.
 export function ValidateEpochNanoseconds(epochNanoseconds) {
   if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
     throw new RangeErrorCtor('date/time value is outside of supported range');
@@ -3136,7 +3131,7 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
     const intermediateDate = AddDaysToISODate(isoDtEnd.isoDate, dayCorrection * sign);
 
     // Incorporate time parts from dtStart
-    intermediateDateTime = CombineISODateAndTimeRecord(intermediateDate, isoDtStart.time);
+    intermediateDateTime = { isoDate: intermediateDate, time: isoDtStart.time };
 
     // Convert intermediate datetime to epoch-nanoseconds (may disambiguate)
     const intermediateNs = GetEpochNanosecondsFor(timeZone, intermediateDateTime, 'compatible');
@@ -3228,7 +3223,7 @@ function ComputeNudgeWindow(
     startEpochNs = originEpochNs;
   } else {
     const start = CalendarDateAdd(calendar, isoDateTime.isoDate, startDuration, 'constrain');
-    const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
+    const startDateTime = { isoDate: start, time: isoDateTime.time };
     startEpochNs = timeZone
       ? GetEpochNanosecondsFor(timeZone, startDateTime, 'compatible')
       : GetUTCEpochNanoseconds(startDateTime);
@@ -3236,7 +3231,7 @@ function ComputeNudgeWindow(
 
   // Convert to bound-END to epoch-nanoseconds
   const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain');
-  const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
+  const endDateTime = { isoDate: end, time: isoDateTime.time };
   const endEpochNs = timeZone
     ? GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible')
     : GetUTCEpochNanoseconds(endDateTime);
@@ -3362,9 +3357,9 @@ function NudgeToZonedTime(sign, duration, isoDateTime, timeZone, calendar, incre
 
   // Apply to origin, output start/end of the day as PlainDateTimes
   const start = CalendarDateAdd(calendar, isoDateTime.isoDate, duration.date, 'constrain');
-  const startDateTime = CombineISODateAndTimeRecord(start, isoDateTime.time);
+  const startDateTime = { isoDate: start, time: isoDateTime.time };
   const endDate = AddDaysToISODate(start, sign);
-  const endDateTime = CombineISODateAndTimeRecord(endDate, isoDateTime.time);
+  const endDateTime = { isoDate: endDate, time: isoDateTime.time };
 
   // Compute the epoch-nanosecond start/end of the final whole-day interval
   // If duration has negative sign, startEpochNs will be after endEpochNs
@@ -3496,7 +3491,7 @@ function BubbleRelativeDuration(
 
     // Compute end-of-unit in epoch-nanoseconds
     const end = CalendarDateAdd(calendar, isoDateTime.isoDate, endDuration, 'constrain');
-    const endDateTime = CombineISODateAndTimeRecord(end, isoDateTime.time);
+    const endDateTime = { isoDate: end, time: isoDateTime.time };
     let endEpochNs;
     if (timeZone) {
       endEpochNs = GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible');
@@ -3813,8 +3808,8 @@ export function DifferenceTemporalPlainDate(operation, plainDate, other, options
   let duration = { date: dateDifference, time: TimeDuration.ZERO };
   const roundingIsNoop = settings.smallestUnit === 'day' && settings.roundingIncrement === 1;
   if (!roundingIsNoop) {
-    const isoDateTime = CombineISODateAndTimeRecord(isoDate, MidnightTimeRecord());
-    const isoDateTimeOther = CombineISODateAndTimeRecord(isoOther, MidnightTimeRecord());
+    const isoDateTime = { isoDate, time: MidnightTimeRecord() };
+    const isoDateTimeOther = { isoDate: isoOther, time: MidnightTimeRecord() };
     const originEpochNs = GetUTCEpochNanoseconds(isoDateTime);
     const destEpochNs = GetUTCEpochNanoseconds(isoDateTimeOther);
     duration = RoundRelativeDuration(
@@ -3913,8 +3908,8 @@ export function DifferenceTemporalPlainYearMonth(operation, yearMonth, other, op
   const dateDifference = CalendarDateUntil(calendar, thisDate, otherDate, settings.largestUnit);
   let duration = { date: AdjustDateDurationRecord(dateDifference, 0, 0), time: TimeDuration.ZERO };
   if (settings.smallestUnit !== 'month' || settings.roundingIncrement !== 1) {
-    const isoDateTime = CombineISODateAndTimeRecord(thisDate, MidnightTimeRecord());
-    const isoDateTimeOther = CombineISODateAndTimeRecord(otherDate, MidnightTimeRecord());
+    const isoDateTime = { isoDate: thisDate, time: MidnightTimeRecord() };
+    const isoDateTimeOther = { isoDate: otherDate, time: MidnightTimeRecord() };
     const originEpochNs = GetUTCEpochNanoseconds(isoDateTime);
     const destEpochNs = GetUTCEpochNanoseconds(isoDateTimeOther);
     duration = RoundRelativeDuration(
@@ -4028,7 +4023,7 @@ export function AddZonedDateTime(epochNs, timeZone, calendar, duration, overflow
   // time portion to be added in exact time.
   const dt = GetISODateTimeFor(timeZone, epochNs);
   const addedDate = CalendarDateAdd(calendar, dt.isoDate, duration.date, overflow);
-  const dtIntermediate = CombineISODateAndTimeRecord(addedDate, dt.time);
+  const dtIntermediate = { isoDate: addedDate, time: dt.time };
 
   // Note that 'compatible' is used below because this disambiguation behavior
   // is required by RFC 5545.
@@ -4103,8 +4098,7 @@ export function AddDurationToDateTime(operation, dateTime, durationLike, options
   RejectDuration(dateDuration.years, dateDuration.months, dateDuration.weeks, dateDuration.days, 0, 0, 0, 0, 0, 0);
   const addedDate = CalendarDateAdd(calendar, isoDateTime.isoDate, dateDuration, overflow);
 
-  const result = CombineISODateAndTimeRecord(addedDate, timeResult);
-  return CreateTemporalDateTime(result, calendar);
+  return CreateTemporalDateTime({ isoDate: addedDate, time: timeResult }, calendar);
 }
 
 export function AddDurationToTime(operation, temporalTime, durationLike) {
@@ -4204,7 +4198,7 @@ export function RoundISODateTime(isoDateTime, increment, unit, roundingMode) {
   AssertISODateTimeWithinLimits(isoDateTime);
   const time = RoundTime(isoDateTime.time, increment, unit, roundingMode);
   const isoDate = AddDaysToISODate(isoDateTime.isoDate, time.deltaDays);
-  return CombineISODateAndTimeRecord(isoDate, time);
+  return { isoDate, time };
 }
 
 export function RoundTime(

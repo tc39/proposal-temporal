@@ -167,7 +167,7 @@ export class PlainDate {
   toPlainDateTime(temporalTime = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
     const time = ES.ToTimeRecordOrMidnight(temporalTime);
-    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(this, ISO_DATE), time);
+    const isoDateTime = { isoDate: GetSlot(this, ISO_DATE), time };
     return ES.CreateTemporalDateTime(isoDateTime, GetSlot(this, CALENDAR));
   }
   toZonedDateTime(item) {
@@ -192,7 +192,7 @@ export class PlainDate {
       epochNs = ES.GetStartOfDay(timeZone, isoDate);
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
-      const isoDateTime = ES.CombineISODateAndTimeRecord(isoDate, GetSlot(temporalTime, TIME));
+      const isoDateTime = { isoDate, time: GetSlot(temporalTime, TIME) };
       epochNs = ES.GetEpochNanosecondsFor(timeZone, isoDateTime, 'compatible');
     }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, GetSlot(this, CALENDAR));

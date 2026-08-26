@@ -176,7 +176,7 @@ export class PlainDateTime {
   withPlainTime(temporalTime = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     const time = ES.ToTimeRecordOrMidnight(temporalTime);
-    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(this, ISO_DATE_TIME).isoDate, time);
+    const isoDateTime = { isoDate: GetSlot(this, ISO_DATE_TIME).isoDate, time };
     return ES.CreateTemporalDateTime(isoDateTime, GetSlot(this, CALENDAR));
   }
   withCalendar(calendar) {
@@ -188,7 +188,7 @@ export class PlainDateTime {
       isoDate: { year, month, day },
       time
     } = GetSlot(this, ISO_DATE_TIME);
-    return ES.CreateTemporalDateTime(ES.CombineISODateAndTimeRecord({ year, month, day }, time), calendar);
+    return ES.CreateTemporalDateTime({ isoDate: { year, month, day }, time }, calendar);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');

@@ -263,8 +263,8 @@ export class Duration {
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');
 
-      const isoDateTime = ES.CombineISODateAndTimeRecord(isoRelativeToDate, ES.MidnightTimeRecord());
-      const targetDateTime = ES.CombineISODateAndTimeRecord(targetDate, targetTime);
+      const isoDateTime = { isoDate: isoRelativeToDate, time: ES.MidnightTimeRecord() };
+      const targetDateTime = { isoDate: targetDate, time: targetTime };
       duration = ES.DifferencePlainDateTimeWithRounding(
         isoDateTime,
         targetDateTime,
@@ -335,8 +335,8 @@ export class Duration {
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');
 
-      const isoDateTime = ES.CombineISODateAndTimeRecord(isoRelativeToDate, ES.MidnightTimeRecord());
-      const targetDateTime = ES.CombineISODateAndTimeRecord(targetDate, targetTime);
+      const isoDateTime = { isoDate: isoRelativeToDate, time: ES.MidnightTimeRecord() };
+      const targetDateTime = { isoDate: targetDate, time: targetTime };
       return ES.DifferencePlainDateTimeWithTotal(isoDateTime, targetDateTime, calendar, unit);
     }
 
