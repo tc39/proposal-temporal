@@ -219,7 +219,7 @@ export class ZonedDateTime {
       epochNs = ES.GetStartOfDay(timeZone, iso);
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
-      const dt = ES.CombineISODateAndTimeRecord(iso, GetSlot(temporalTime, TIME));
+      const dt = { isoDate: iso, time: GetSlot(temporalTime, TIME) };
       epochNs = ES.GetEpochNanosecondsFor(timeZone, dt, 'compatible');
     }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, calendar);
