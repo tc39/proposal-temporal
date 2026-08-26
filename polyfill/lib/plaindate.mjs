@@ -107,8 +107,8 @@ export class PlainDate {
     const partialDate = ES.PrepareCalendarFields(
       calendar,
       temporalDateLike,
-      ['year', 'month', 'monthCode', 'day'],
-      [],
+      'date-fields',
+      'no-non-calendar-fields',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialDate);

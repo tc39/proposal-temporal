@@ -181,8 +181,8 @@ export class ZonedDateTime {
     const partialZonedDateTime = ES.PrepareCalendarFields(
       calendar,
       temporalZonedDateTimeLike,
-      ['year', 'month', 'monthCode', 'day'],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond', 'offset'],
+      'date-fields',
+      'time-fields-with-offset',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialZonedDateTime);
