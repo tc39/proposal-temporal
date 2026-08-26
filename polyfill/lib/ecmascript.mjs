@@ -123,21 +123,26 @@ import {
 
 import bigInt from 'big-integer';
 
-export const DAY_MS = 86400_000;
-export const DAY_NANOS = DAY_MS * 1e6;
+export const MILLISECONDS_PER_DAY = 86400_000;
+export const NANOSECONDS_PER_DAY = MILLISECONDS_PER_DAY * 1e6;
+const NANOSECONDS_PER_HOUR = 3600e9;
+const NANOSECONDS_PER_MINUTE = 60e9;
+const NANOSECONDS_PER_SECOND = 1e9;
+const NANOSECONDS_PER_MILLISECOND = 1e6;
+const NANOSECONDS_PER_MICROSECOND = 1e3;
 // Instant range is 100 million days (inclusive) before or after epoch.
-const MS_MAX = DAY_MS * 1e8;
-const NS_MIN = bigInt(DAY_NANOS).multiply(-1e8);
-export const NS_MAX = bigInt(DAY_NANOS).multiply(1e8);
+const MS_MAX = MILLISECONDS_PER_DAY * 1e8;
+const NS_MIN = bigInt(NANOSECONDS_PER_DAY).multiply(-1e8);
+export const NS_MAX = bigInt(NANOSECONDS_PER_DAY).multiply(1e8);
 // PlainDateTime range is 24 hours wider (exclusive) than the Instant range on
 // both ends, to allow for valid Instant=>PlainDateTime conversion for all
 // built-in time zones (whose offsets must have a magnitude less than 24 hours).
-const DATETIME_NS_MIN = NS_MIN.subtract(DAY_NANOS).add(bigInt.one);
-const DATETIME_NS_MAX = NS_MAX.add(DAY_NANOS).subtract(bigInt.one);
+const DATETIME_NS_MIN = NS_MIN.subtract(NANOSECONDS_PER_DAY).add(bigInt.one);
+const DATETIME_NS_MAX = NS_MAX.add(NANOSECONDS_PER_DAY).subtract(bigInt.one);
 // The pattern of leap years in the ISO 8601 calendar repeats every 400 years.
 // The constant below is the number of nanoseconds in 400 years. It is used to
 // avoid overflows when dealing with values at the edge legacy Date's range.
-const MS_IN_400_YEAR_CYCLE = (400 * 365 + 97) * DAY_MS;
+const MS_IN_400_YEAR_CYCLE = (400 * 365 + 97) * MILLISECONDS_PER_DAY;
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = DateUTC(1847, 0, 1); // 1847-01-01T00:00:00Z
@@ -275,12 +280,12 @@ const TEMPORAL_UNITS = [
   ['years', 'year', 'date'],
   ['months', 'month', 'date'],
   ['weeks', 'week', 'date'],
-  ['days', 'day', 'date', DAY_NANOS],
-  ['hours', 'hour', 'time', 3600e9],
-  ['minutes', 'minute', 'time', 60e9],
-  ['seconds', 'second', 'time', 1e9],
-  ['milliseconds', 'millisecond', 'time', 1e6],
-  ['microseconds', 'microsecond', 'time', 1e3],
+  ['days', 'day', 'date', NANOSECONDS_PER_DAY],
+  ['hours', 'hour', 'time', NANOSECONDS_PER_HOUR],
+  ['minutes', 'minute', 'time', NANOSECONDS_PER_MINUTE],
+  ['seconds', 'second', 'time', NANOSECONDS_PER_SECOND],
+  ['milliseconds', 'millisecond', 'time', NANOSECONDS_PER_MILLISECOND],
+  ['microseconds', 'microsecond', 'time', NANOSECONDS_PER_MICROSECOND],
   ['nanoseconds', 'nanosecond', 'time', 1]
 ];
 const SINGULAR_FOR = new MapCtor(TEMPORAL_UNITS);
@@ -609,7 +614,7 @@ export function ParseTimeZoneIdentifier(identifier) {
     const offsetNanoseconds = ParseDateTimeUTCOffset(identifier);
     // The regex limits the input to minutes precision, so we know that the
     // division below will result in an integer.
-    return { offsetMinutes: offsetNanoseconds / 60e9 };
+    return { offsetMinutes: offsetNanoseconds / NANOSECONDS_PER_MINUTE };
   }
   return { tzName: identifier };
 }
@@ -686,11 +691,11 @@ export function ParseTemporalDurationStringRaw(isoString) {
     }
   }
 
-  const nanoseconds = excessNanoseconds % 1000;
-  const microseconds = MathTrunc(excessNanoseconds / 1000) % 1000;
-  const milliseconds = MathTrunc(excessNanoseconds / 1e6) % 1000;
-  seconds += MathTrunc(excessNanoseconds / 1e9) % 60;
-  minutes += MathTrunc(excessNanoseconds / 60e9);
+  const nanoseconds = excessNanoseconds % NANOSECONDS_PER_MICROSECOND;
+  const microseconds = MathTrunc(excessNanoseconds / NANOSECONDS_PER_MICROSECOND) % 1000;
+  const milliseconds = MathTrunc(excessNanoseconds / NANOSECONDS_PER_MILLISECOND) % 1000;
+  seconds += MathTrunc(excessNanoseconds / NANOSECONDS_PER_SECOND) % 60;
+  minutes += MathTrunc(excessNanoseconds / NANOSECONDS_PER_MINUTE);
 
   RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
   return { years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds };
@@ -1438,7 +1443,7 @@ export function InterpretISODateTimeOffset(
   for (let index = 0; index < possibleEpochNs.length; index++) {
     const candidate = possibleEpochNs[index];
     const candidateOffset = utcEpochNs.subtract(candidate).toJSNumber();
-    const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, 60e9, 'halfExpand');
+    const roundedCandidateOffset = RoundNumberToIncrement(candidateOffset, NANOSECONDS_PER_MINUTE, 'halfExpand');
     if (candidateOffset === offsetNs || (matchMinute && roundedCandidateOffset === offsetNs)) {
       return candidate;
     }
@@ -1814,7 +1819,7 @@ export function TimeZoneEquals(one, two) {
 
 export function GetOffsetNanosecondsFor(timeZone, epochNs) {
   const offsetMinutes = ParseTimeZoneIdentifier(timeZone).offsetMinutes;
-  if (offsetMinutes !== undefined) return offsetMinutes * 60e9;
+  if (offsetMinutes !== undefined) return offsetMinutes * NANOSECONDS_PER_MINUTE;
 
   return GetNamedTimeZoneOffsetNanoseconds(timeZone, epochNs);
 }
@@ -1822,10 +1827,10 @@ export function GetOffsetNanosecondsFor(timeZone, epochNs) {
 export function FormatUTCOffsetNanoseconds(offsetNs) {
   const sign = offsetNs < 0 ? '-' : '+';
   const absoluteNs = MathAbs(offsetNs);
-  const hour = MathFloor(absoluteNs / 3600e9);
-  const minute = MathFloor(absoluteNs / 60e9) % 60;
-  const second = MathFloor(absoluteNs / 1e9) % 60;
-  const subSecondNs = absoluteNs % 1e9;
+  const hour = MathFloor(absoluteNs / NANOSECONDS_PER_HOUR);
+  const minute = MathFloor(absoluteNs / NANOSECONDS_PER_MINUTE) % 60;
+  const second = MathFloor(absoluteNs / NANOSECONDS_PER_SECOND) % 60;
+  const subSecondNs = absoluteNs % NANOSECONDS_PER_SECOND;
   const precision = second === 0 && subSecondNs === 0 ? 'minute' : 'auto';
   const timeString = FormatTimeString(hour, minute, second, subSecondNs, precision);
   return `${sign}${timeString}`;
@@ -1867,14 +1872,14 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
   if (disambiguation === 'reject') throw new RangeErrorCtor('multiple instants found');
   const utcns = GetUTCEpochNanoseconds(isoDateTime);
 
-  const dayBefore = utcns.minus(DAY_NANOS);
+  const dayBefore = utcns.minus(NANOSECONDS_PER_DAY);
   ValidateEpochNanoseconds(dayBefore);
   const offsetBefore = GetOffsetNanosecondsFor(timeZone, dayBefore);
-  const dayAfter = utcns.plus(DAY_NANOS);
+  const dayAfter = utcns.plus(NANOSECONDS_PER_DAY);
   ValidateEpochNanoseconds(dayAfter);
   const offsetAfter = GetOffsetNanosecondsFor(timeZone, dayAfter);
   const nanoseconds = offsetAfter - offsetBefore;
-  assert(MathAbs(nanoseconds) <= DAY_NANOS, 'UTC offset shift longer than 24 hours');
+  assert(MathAbs(nanoseconds) <= NANOSECONDS_PER_DAY, 'UTC offset shift longer than 24 hours');
 
   switch (disambiguation) {
     case 'earlier': {
@@ -1942,7 +1947,7 @@ export function GetStartOfDay(timeZone, isoDate) {
   assert(!IsOffsetTimeZoneIdentifier(timeZone), 'should only be reached with named time zone');
 
   const utcns = GetUTCEpochNanoseconds(isoDateTime);
-  const dayBefore = utcns.minus(DAY_NANOS);
+  const dayBefore = utcns.minus(NANOSECONDS_PER_DAY);
   ValidateEpochNanoseconds(dayBefore);
   return GetNamedTimeZoneNextTransition(timeZone, dayBefore);
 }
@@ -2165,7 +2170,7 @@ export function ParseDateTimeUTCOffset(string) {
   const minutes = +(match.groups.offsetMinute || 0);
   const seconds = +(match.groups.offsetSecond || 0);
   const nanoseconds = +Call(StringPrototypeSlice, (match.groups.offsetSubseconds || 0) + '000000000', [0, 9]);
-  const offsetNanoseconds = sign * (((hours * 60 + minutes) * 60 + seconds) * 1e9 + nanoseconds);
+  const offsetNanoseconds = sign * (((hours * 60 + minutes) * 60 + seconds) * NANOSECONDS_PER_SECOND + nanoseconds);
   return offsetNanoseconds;
 }
 
@@ -2306,8 +2311,8 @@ export function FormatOffsetTimeZoneIdentifier(offsetMinutes) {
 }
 
 export function FormatDateTimeUTCOffsetRounded(offsetNanoseconds) {
-  offsetNanoseconds = RoundNumberToIncrement(offsetNanoseconds, 60e9, 'halfExpand');
-  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / 60e9);
+  offsetNanoseconds = RoundNumberToIncrement(offsetNanoseconds, NANOSECONDS_PER_MINUTE, 'halfExpand');
+  return FormatOffsetTimeZoneIdentifier(offsetNanoseconds / NANOSECONDS_PER_MINUTE);
 }
 
 export function GetUTCEpochMilliseconds(isoDate, time) {
@@ -2376,12 +2381,12 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
 // accommodate twitchy zones, albeit at a performance penalty. 19 days is the
 // default window, past which we'd need to start adding many more special cases.
 function searchWindowForTransitions(id) {
-  if (id === 'Africa/El_Aaiun') return DAY_MS * 17;
-  if (id === 'America/Argentina/Tucuman') return DAY_MS * 12;
-  if (id === 'Europe/Tirane') return DAY_MS * 11;
-  if (id === 'Europe/Riga') return DAY_MS * 10;
-  if (id === 'Europe/Simferopol' || id === 'Europe/Vienna') return DAY_MS * 9;
-  if (id === 'Africa/Tunis') return DAY_MS * 8;
+  if (id === 'Africa/El_Aaiun') return MILLISECONDS_PER_DAY * 17;
+  if (id === 'America/Argentina/Tucuman') return MILLISECONDS_PER_DAY * 12;
+  if (id === 'Europe/Tirane') return MILLISECONDS_PER_DAY * 11;
+  if (id === 'Europe/Riga') return MILLISECONDS_PER_DAY * 10;
+  if (id === 'Europe/Simferopol' || id === 'Europe/Vienna') return MILLISECONDS_PER_DAY * 9;
+  if (id === 'Africa/Tunis') return MILLISECONDS_PER_DAY * 8;
   if (
     id === 'America/Boa_Vista' ||
     id === 'America/Fortaleza' ||
@@ -2392,9 +2397,9 @@ function searchWindowForTransitions(id) {
     id === 'Asia/Hebron' || // ditto
     id === 'Brazil/DeNoronha'
   ) {
-    return DAY_MS * 6;
+    return MILLISECONDS_PER_DAY * 6;
   }
-  return DAY_MS * 19;
+  return MILLISECONDS_PER_DAY * 19;
 }
 
 export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
@@ -2414,7 +2419,7 @@ export function GetNamedTimeZoneNextTransition(id, epochNanoseconds) {
   // transitions after that.
   const now = DateNow();
   const base = MathMax(epochMilliseconds, now);
-  const uppercap = base + DAY_MS * 366 * 3;
+  const uppercap = base + MILLISECONDS_PER_DAY * 366 * 3;
   let leftMs = epochMilliseconds;
   let leftOffsetNs = GetNamedTimeZoneOffsetNanosecondsImpl(id, leftMs);
   let rightMs = leftMs;
@@ -2451,7 +2456,7 @@ export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
   // are no transitions between the present day and 3 years from now, assume
   // there are none after.
   const now = DateNow();
-  const lookahead = now + DAY_MS * 366 * 3;
+  const lookahead = now + MILLISECONDS_PER_DAY * 366 * 3;
   if (epochMilliseconds > lookahead) {
     const prevBeforeLookahead = GetNamedTimeZonePreviousTransition(id, bigInt(lookahead).multiply(1e6));
     if (prevBeforeLookahead === null || prevBeforeLookahead.lt(bigInt(now).multiply(1e6))) {
@@ -2535,9 +2540,9 @@ function GetNamedTimeZoneEpochNanoseconds(id, isoDateTime) {
   // even if isoDateTime represents a valid wall time in a non-UTC time zone.
   // The TZDB does not describe any transitions that would occur in that extra
   // day, so we just clip in order not to throw in GetFormatterParts.
-  let nsEarlier = ns.minus(DAY_NANOS);
+  let nsEarlier = ns.minus(NANOSECONDS_PER_DAY);
   if (nsEarlier.lesser(NS_MIN)) nsEarlier = NS_MIN;
-  let nsLater = ns.plus(DAY_NANOS);
+  let nsLater = ns.plus(NANOSECONDS_PER_DAY);
   if (nsLater.greater(NS_MAX)) nsLater = NS_MAX;
   const earlierOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, nsEarlier);
   const laterOffsetNs = GetNamedTimeZoneOffsetNanoseconds(id, nsLater);
@@ -3045,7 +3050,8 @@ export function CombineDateAndTimeDuration(dateDuration, timeDuration) {
 // Caution: month is 0-based
 export function ISODateToEpochDays(year, month, day) {
   return (
-    GetUTCEpochMilliseconds({ year, month: month + 1, day }, { hour: 0, minute: 0, second: 0, millisecond: 0 }) / DAY_MS
+    GetUTCEpochMilliseconds({ year, month: month + 1, day }, { hour: 0, minute: 0, second: 0, millisecond: 0 }) /
+    MILLISECONDS_PER_DAY
   );
 }
 
@@ -3436,8 +3442,8 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
   const diffTime = roundedTime.subtract(timeDuration);
 
   // Determine if whole days expanded
-  const { quotient: wholeDays } = timeDuration.divmod(DAY_NANOS);
-  const { quotient: roundedWholeDays } = roundedTime.divmod(DAY_NANOS);
+  const { quotient: wholeDays } = timeDuration.divmod(NANOSECONDS_PER_DAY);
+  const { quotient: roundedWholeDays } = roundedTime.divmod(NANOSECONDS_PER_DAY);
   const didExpandDays = MathSign(roundedWholeDays - wholeDays) === timeDuration.sign();
 
   const nudgedEpochNs = diffTime.addToEpochNs(destEpochNs);
