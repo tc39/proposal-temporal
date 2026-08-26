@@ -13,8 +13,8 @@ export class PlainYearMonth {
     calendar = ES.CanonicalizeCalendar(calendar);
     const day = ES.SnapToInteger(referenceISODay, 'truncate', 'referenceISODay');
 
-    ES.RejectISODate(year, month, day);
-    ES.CreateTemporalYearMonthSlots(this, { year, month, day }, calendar);
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    ES.CreateTemporalYearMonthSlots(this, isoDate, calendar);
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
