@@ -26,15 +26,15 @@ export class PlainDateTime {
     nanosecond = 0,
     calendar = 'iso8601'
   ) {
-    const year = ES.ToIntegerWithTruncation(isoYear);
-    const month = ES.ToIntegerWithTruncation(isoMonth);
-    const day = ES.ToIntegerWithTruncation(isoDay);
-    hour = ES.ToIntegerWithTruncation(hour);
-    minute = ES.ToIntegerWithTruncation(minute);
-    second = ES.ToIntegerWithTruncation(second);
-    millisecond = ES.ToIntegerWithTruncation(millisecond);
-    microsecond = ES.ToIntegerWithTruncation(microsecond);
-    nanosecond = ES.ToIntegerWithTruncation(nanosecond);
+    const year = ES.SnapToInteger(isoYear, 'truncate', 'isoYear');
+    const month = ES.SnapToInteger(isoMonth, 'truncate', 'isoMonth');
+    const day = ES.SnapToInteger(isoDay, 'truncate', 'isoDay');
+    hour = ES.SnapToInteger(hour, 'truncate', 'hour');
+    minute = ES.SnapToInteger(minute, 'truncate', 'minute');
+    second = ES.SnapToInteger(second, 'truncate', 'second');
+    millisecond = ES.SnapToInteger(millisecond, 'truncate', 'millisecond');
+    microsecond = ES.SnapToInteger(microsecond, 'truncate', 'microsecond');
+    nanosecond = ES.SnapToInteger(nanosecond, 'truncate', 'nanosecond');
     calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
 

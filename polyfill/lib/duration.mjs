@@ -54,16 +54,16 @@ export class Duration {
     microseconds = 0,
     nanoseconds = 0
   ) {
-    years = ES.ToIntegerIfIntegral(years);
-    months = ES.ToIntegerIfIntegral(months);
-    weeks = ES.ToIntegerIfIntegral(weeks);
-    days = ES.ToIntegerIfIntegral(days);
-    hours = ES.ToIntegerIfIntegral(hours);
-    minutes = ES.ToIntegerIfIntegral(minutes);
-    seconds = ES.ToIntegerIfIntegral(seconds);
-    milliseconds = ES.ToIntegerIfIntegral(milliseconds);
-    microseconds = ES.ToIntegerIfIntegral(microseconds);
-    nanoseconds = ES.ToIntegerIfIntegral(nanoseconds);
+    years = ES.SnapToInteger(years, 'reject', 'years');
+    months = ES.SnapToInteger(months, 'reject', 'months');
+    weeks = ES.SnapToInteger(weeks, 'reject', 'weeks');
+    days = ES.SnapToInteger(days, 'reject', 'days');
+    hours = ES.SnapToInteger(hours, 'reject', 'hours');
+    minutes = ES.SnapToInteger(minutes, 'reject', 'minutes');
+    seconds = ES.SnapToInteger(seconds, 'reject', 'seconds');
+    milliseconds = ES.SnapToInteger(milliseconds, 'reject', 'milliseconds');
+    microseconds = ES.SnapToInteger(microseconds, 'reject', 'microseconds');
+    nanoseconds = ES.SnapToInteger(nanoseconds, 'reject', 'nanoseconds');
 
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
