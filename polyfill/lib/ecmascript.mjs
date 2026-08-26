@@ -41,7 +41,6 @@ import {
   IntlSupportedValuesOf,
   JSONStringify,
   MapPrototypeGet,
-  MapPrototypeHas,
   MapPrototypeSet,
   MathAbs,
   MathFloor,
@@ -217,22 +216,18 @@ export function RequireString(value) {
   return value;
 }
 
-// each item is [plural, singular]
-const TEMPORAL_UNITS = [
-  ['years', 'year'],
-  ['months', 'month'],
-  ['weeks', 'week'],
-  ['days', 'day'],
-  ['hours', 'hour'],
-  ['minutes', 'minute'],
-  ['seconds', 'second'],
-  ['milliseconds', 'millisecond'],
-  ['microseconds', 'microsecond'],
-  ['nanoseconds', 'nanosecond']
+const UNITS_DESCENDING = [
+  'year',
+  'month',
+  'week',
+  'day',
+  'hour',
+  'minute',
+  'second',
+  'millisecond',
+  'microsecond',
+  'nanosecond'
 ];
-const SINGULAR_FOR = new MapCtor(TEMPORAL_UNITS);
-// Iterable destructuring is acceptable in this first-run code.
-const UNITS_DESCENDING = Call(ArrayPrototypeMap, TEMPORAL_UNITS, [([, s]) => s]);
 
 const DURATION_FIELDS = [
   'days',
@@ -905,36 +900,31 @@ export function ToSecondsStringPrecisionRecord(smallestUnit, precision) {
 export const REQUIRED = SymbolCtor('~required~');
 
 export function GetTemporalUnitValuedOption(options, key, requiredOrUndefined = undefined) {
-  const allowedStrings = [];
-  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
-    const unitInfo = TEMPORAL_UNITS[index];
-    const plural = unitInfo[0];
-    const singular = unitInfo[1];
-    Call(ArrayPrototypePush, allowedStrings, [singular, plural]);
-  }
-  Call(ArrayPrototypePush, allowedStrings, ['auto']);
   const value = options[key];
   if (value === undefined) {
     if (requiredOrUndefined === REQUIRED) throw new RangeErrorCtor(`'${key}' option is required`);
     return undefined;
   }
-  let retval = ToString(value);
-  if (retval === 'auto') return 'auto';
-  validateStringValue(key, retval, allowedStrings);
-  if (Call(MapPrototypeHas, SINGULAR_FOR, [retval])) retval = Call(MapPrototypeGet, SINGULAR_FOR, [retval]);
-  return retval;
+  let stringValue = ToString(value);
+  if (stringValue === 'auto') return 'auto';
+  if (stringValue === 'year' || stringValue === 'years') return 'year';
+  if (stringValue === 'month' || stringValue === 'months') return 'month';
+  if (stringValue === 'week' || stringValue === 'weeks') return 'week';
+  if (stringValue === 'day' || stringValue === 'days') return 'day';
+  if (stringValue === 'hour' || stringValue === 'hours') return 'hour';
+  if (stringValue === 'minute' || stringValue === 'minutes') return 'minute';
+  if (stringValue === 'second' || stringValue === 'seconds') return 'second';
+  if (stringValue === 'millisecond' || stringValue === 'milliseconds') return 'millisecond';
+  if (stringValue === 'microsecond' || stringValue === 'microseconds') return 'microsecond';
+  if (stringValue === 'nanosecond' || stringValue === 'nanoseconds') return 'nanosecond';
+  throw new RangeErrorCtor(`invalid value ${stringValue} for ${key} property`);
 }
 
 export function ValidateTemporalUnitValue(value, unitGroup, extraValues = []) {
   if (value === undefined) return;
   if (Call(ArrayPrototypeIncludes, extraValues, [value])) return;
-  for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
-    const unitInfo = TEMPORAL_UNITS[index];
-    const plural = unitInfo[1];
-    if (value !== plural) continue;
-    if (IsDateUnit(value) && (unitGroup === 'date' || unitGroup === 'datetime')) return;
-    if (IsTimeUnit(value) && (unitGroup === 'time' || unitGroup === 'datetime')) return;
-  }
+  if (IsDateUnit(value) && (unitGroup === 'date' || unitGroup === 'datetime')) return;
+  if (IsTimeUnit(value) && (unitGroup === 'time' || unitGroup === 'datetime')) return;
   throw new RangeErrorCtor(`${value} not allowed as a ${unitGroup} unit`);
 }
 
