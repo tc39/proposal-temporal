@@ -737,21 +737,47 @@ export function NoonTimeRecord() {
   return { deltaDays: 0, hour: 12, minute: 0, second: 0, millisecond: 0, microsecond: 0, nanosecond: 0 };
 }
 
+// Helper function for throwing errors with good messages
+function validateStringValue(property, value, allowedValues) {
+  if (!Call(ArrayPrototypeIncludes, allowedValues, [value])) {
+    throw new RangeErrorCtor(
+      `${property} must be one of ${Call(ArrayPrototypeJoin, allowedValues, [', '])}, not ${value}`
+    );
+  }
+}
+
 export function GetTemporalOverflowOption(options) {
-  return GetOption(options, 'overflow', ['constrain', 'reject'], 'constrain');
+  const value = options.overflow;
+  if (value === undefined) return 'constrain';
+  const stringValue = ToString(value);
+  validateStringValue('overflow', stringValue, ['constrain', 'reject']);
+  return stringValue;
 }
 
 export function GetTemporalDisambiguationOption(options) {
-  return GetOption(options, 'disambiguation', ['compatible', 'earlier', 'later', 'reject'], 'compatible');
+  const value = options.disambiguation;
+  if (value === undefined) return 'compatible';
+  const stringValue = ToString(value);
+  validateStringValue('disambiguation', stringValue, ['compatible', 'earlier', 'later', 'reject']);
+  return stringValue;
 }
 
 export function GetRoundingModeOption(options, fallback) {
-  return GetOption(
-    options,
-    'roundingMode',
-    ['ceil', 'floor', 'expand', 'trunc', 'halfCeil', 'halfFloor', 'halfExpand', 'halfTrunc', 'halfEven'],
-    fallback
-  );
+  const value = options.roundingMode;
+  if (value === undefined) return fallback;
+  const stringValue = ToString(value);
+  validateStringValue('roundingMode', stringValue, [
+    'ceil',
+    'floor',
+    'expand',
+    'trunc',
+    'halfCeil',
+    'halfFloor',
+    'halfExpand',
+    'halfTrunc',
+    'halfEven'
+  ]);
+  return stringValue;
 }
 
 export function NegateRoundingMode(roundingMode) {
@@ -770,23 +796,43 @@ export function NegateRoundingMode(roundingMode) {
 }
 
 export function GetTemporalOffsetOption(options, fallback) {
-  return GetOption(options, 'offset', ['prefer', 'use', 'ignore', 'reject'], fallback);
+  const value = options.offset;
+  if (value === undefined) return fallback;
+  const stringValue = ToString(value);
+  validateStringValue('offset', stringValue, ['prefer', 'use', 'ignore', 'reject']);
+  return stringValue;
 }
 
 export function GetTemporalShowCalendarNameOption(options) {
-  return GetOption(options, 'calendarName', ['auto', 'always', 'never', 'critical'], 'auto');
+  const value = options.calendarName;
+  if (value === undefined) return 'auto';
+  const stringValue = ToString(value);
+  validateStringValue('calendarName', stringValue, ['auto', 'always', 'never', 'critical']);
+  return stringValue;
 }
 
 export function GetTemporalShowTimeZoneNameOption(options) {
-  return GetOption(options, 'timeZoneName', ['auto', 'never', 'critical'], 'auto');
+  const value = options.timeZoneName;
+  if (value === undefined) return 'auto';
+  const stringValue = ToString(value);
+  validateStringValue('timeZoneName', stringValue, ['auto', 'never', 'critical']);
+  return stringValue;
 }
 
 export function GetTemporalShowOffsetOption(options) {
-  return GetOption(options, 'offset', ['auto', 'never'], 'auto');
+  const value = options.offset;
+  if (value === undefined) return 'auto';
+  const stringValue = ToString(value);
+  validateStringValue('offset', stringValue, ['auto', 'never']);
+  return stringValue;
 }
 
 export function GetDirectionOption(options) {
-  return GetOption(options, 'direction', ['next', 'previous'], REQUIRED);
+  const value = options.direction;
+  if (value === undefined) throw new RangeErrorCtor("'direction' option is required");
+  const stringValue = ToString(value);
+  validateStringValue('direction', stringValue, ['next', 'previous']);
+  return stringValue;
 }
 
 export function GetRoundingIncrementOption(options) {
@@ -867,8 +913,14 @@ export function GetTemporalUnitValuedOption(options, key, requiredOrUndefined = 
     Call(ArrayPrototypePush, allowedStrings, [singular, plural]);
   }
   Call(ArrayPrototypePush, allowedStrings, ['auto']);
-  let retval = GetOption(options, key, allowedStrings, requiredOrUndefined);
-  if (retval === undefined) return undefined;
+  const value = options[key];
+  if (value === undefined) {
+    if (requiredOrUndefined === REQUIRED) throw new RangeErrorCtor(`'${key}' option is required`);
+    return undefined;
+  }
+  let retval = ToString(value);
+  if (retval === 'auto') return 'auto';
+  validateStringValue(key, retval, allowedStrings);
   if (Call(MapPrototypeHas, SINGULAR_FOR, [retval])) retval = Call(MapPrototypeGet, SINGULAR_FOR, [retval]);
   return retval;
 }
@@ -4468,21 +4520,6 @@ export function GetOptionsObject(options) {
   throw new TypeErrorCtor(
     `Options parameter must be an object, not ${options === null ? 'null' : `a ${typeof options}`}`
   );
-}
-
-export function GetOption(options, property, allowedValues, fallback) {
-  let value = options[property];
-  if (value !== undefined) {
-    value = ToString(value);
-    if (!Call(ArrayPrototypeIncludes, allowedValues, [value])) {
-      throw new RangeErrorCtor(
-        `${property} must be one of ${Call(ArrayPrototypeJoin, allowedValues, [', '])}, not ${value}`
-      );
-    }
-    return value;
-  }
-  if (fallback === REQUIRED) throw new RangeErrorCtor(`${property} option is required`);
-  return fallback;
 }
 
 // This is a temporary implementation. Ideally we'd rely on Intl.DateTimeFormat
