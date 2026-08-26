@@ -77,8 +77,8 @@ export class PlainYearMonth {
     const partialYearMonth = ES.PrepareCalendarFields(
       calendar,
       temporalYearMonthLike,
-      ['year', 'month', 'monthCode'],
-      [],
+      'year-month-fields',
+      'no-non-calendar-fields',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialYearMonth);
@@ -132,7 +132,13 @@ export class PlainYearMonth {
     const calendar = GetSlot(this, CALENDAR);
 
     const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE), 'year-month');
-    const inputFields = ES.PrepareCalendarFields(calendar, item, ['day'], [], []);
+    const inputFields = ES.PrepareCalendarFields(
+      calendar,
+      item,
+      'only-day',
+      'no-non-calendar-fields',
+      'no-required-fields'
+    );
     const mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
     const isoDate = ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');
     return ES.CreateTemporalDate(isoDate, calendar);
