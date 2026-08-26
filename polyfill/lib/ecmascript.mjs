@@ -976,13 +976,17 @@ export function DefaultTemporalLargestUnit(duration) {
   return 'nanosecond';
 }
 
-export function LargerOfTwoTemporalUnits(unit1, unit2) {
-  const i1 = Call(ArrayPrototypeIndexOf, UNITS_DESCENDING, [unit1]);
-  const i2 = Call(ArrayPrototypeIndexOf, UNITS_DESCENDING, [unit2]);
-  if (i1 > i2) {
-    return unit2;
-  }
-  return unit1;
+export function LargerOfTwoTemporalUnits(xUnit, yUnit) {
+  if (xUnit === 'year' || yUnit === 'year') return 'year';
+  if (xUnit === 'month' || yUnit === 'month') return 'month';
+  if (xUnit === 'week' || yUnit === 'week') return 'week';
+  if (xUnit === 'day' || yUnit === 'day') return 'day';
+  if (xUnit === 'hour' || yUnit === 'hour') return 'hour';
+  if (xUnit === 'minute' || yUnit === 'minute') return 'minute';
+  if (xUnit === 'second' || yUnit === 'second') return 'second';
+  if (xUnit === 'millisecond' || yUnit === 'millisecond') return 'millisecond';
+  if (xUnit === 'microsecond' || yUnit === 'microsecond') return 'microsecond';
+  return 'nanosecond';
 }
 
 export function IsCalendarUnit(unit) {
