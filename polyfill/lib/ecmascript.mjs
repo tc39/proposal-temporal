@@ -27,7 +27,6 @@ import {
   ArrayPrototypeJoin,
   ArrayPrototypeMap,
   ArrayPrototypePush,
-  ArrayPrototypeReduce,
   ArrayPrototypeSort,
   DateNow,
   DatePrototypeGetUTCFullYear,
@@ -275,25 +274,23 @@ const BUILTIN_DEFAULTS = new MapCtor([
   ['nanosecond', 0]
 ]);
 
-// each item is [plural, singular, category, (length in ns)]
+// each item is [plural, singular, (length in ns)]
 const TEMPORAL_UNITS = [
-  ['years', 'year', 'date'],
-  ['months', 'month', 'date'],
-  ['weeks', 'week', 'date'],
-  ['days', 'day', 'date', NANOSECONDS_PER_DAY],
-  ['hours', 'hour', 'time', NANOSECONDS_PER_HOUR],
-  ['minutes', 'minute', 'time', NANOSECONDS_PER_MINUTE],
-  ['seconds', 'second', 'time', NANOSECONDS_PER_SECOND],
-  ['milliseconds', 'millisecond', 'time', NANOSECONDS_PER_MILLISECOND],
-  ['microseconds', 'microsecond', 'time', NANOSECONDS_PER_MICROSECOND],
-  ['nanoseconds', 'nanosecond', 'time', 1]
+  ['years', 'year'],
+  ['months', 'month'],
+  ['weeks', 'week'],
+  ['days', 'day', NANOSECONDS_PER_DAY],
+  ['hours', 'hour', NANOSECONDS_PER_HOUR],
+  ['minutes', 'minute', NANOSECONDS_PER_MINUTE],
+  ['seconds', 'second', NANOSECONDS_PER_SECOND],
+  ['milliseconds', 'millisecond', NANOSECONDS_PER_MILLISECOND],
+  ['microseconds', 'microsecond', NANOSECONDS_PER_MICROSECOND],
+  ['nanoseconds', 'nanosecond', 1]
 ];
 const SINGULAR_FOR = new MapCtor(TEMPORAL_UNITS);
 // Iterable destructuring is acceptable in this first-run code.
 const UNITS_DESCENDING = Call(ArrayPrototypeMap, TEMPORAL_UNITS, [([, s]) => s]);
-const NS_PER_TIME_UNIT = new MapCtor(
-  Call(ArrayPrototypeFlatMap, TEMPORAL_UNITS, [([, s, , l]) => (l ? [[s, l]] : [])])
-);
+const NS_PER_TIME_UNIT = new MapCtor(Call(ArrayPrototypeFlatMap, TEMPORAL_UNITS, [([, s, l]) => (l ? [[s, l]] : [])]));
 
 const DURATION_FIELDS = [
   'days',
@@ -940,9 +937,9 @@ export function ValidateTemporalUnitValue(value, unitGroup, extraValues = []) {
   for (let index = 0; index < TEMPORAL_UNITS.length; index++) {
     const unitInfo = TEMPORAL_UNITS[index];
     const plural = unitInfo[1];
-    const category = unitInfo[2];
     if (value !== plural) continue;
-    if (unitGroup === 'datetime' || unitGroup === category) return;
+    if (IsDateUnit(value) && (unitGroup === 'date' || unitGroup === 'datetime')) return;
+    if (IsTimeUnit(value) && (unitGroup === 'time' || unitGroup === 'datetime')) return;
   }
   throw new RangeErrorCtor(`${value} not allowed as a ${unitGroup} unit`);
 }
@@ -1050,9 +1047,12 @@ export function IsCalendarUnit(unit) {
   return unit === 'year' || unit === 'month' || unit === 'week';
 }
 
-export function TemporalUnitCategory(unit) {
-  if (IsCalendarUnit(unit) || unit === 'day') return 'date';
-  return 'time';
+export function IsDateUnit(unit) {
+  return IsCalendarUnit(unit) || unit === 'day';
+}
+
+export function IsTimeUnit(unit) {
+  return !IsDateUnit(unit);
 }
 
 function calendarImplForID(calendar) {
@@ -3450,7 +3450,7 @@ function NudgeToDayOrTime(duration, destEpochNs, largestUnit, increment, smalles
 
   let days = 0;
   let remainder = roundedTime;
-  if (TemporalUnitCategory(largestUnit) === 'date') {
+  if (IsDateUnit(largestUnit)) {
     days = roundedWholeDays;
     remainder = roundedTime.add(TimeDuration.fromComponents(-roundedWholeDays * 24, 0, 0, 0, 0, 0));
   }
@@ -3705,7 +3705,7 @@ export function DifferenceZonedDateTimeWithRounding(
   smallestUnit,
   roundingMode
 ) {
-  if (TemporalUnitCategory(largestUnit) === 'time') {
+  if (IsTimeUnit(largestUnit)) {
     // The user is only asking for a time difference, so return difference of instants.
     return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
   }
@@ -3730,7 +3730,7 @@ export function DifferenceZonedDateTimeWithRounding(
 }
 
 export function DifferenceZonedDateTimeWithTotal(ns1, ns2, timeZone, calendar, unit) {
-  if (TemporalUnitCategory(unit) === 'time') {
+  if (IsTimeUnit(unit)) {
     // The user is only asking for a time difference, so return difference of instants.
     return TotalTimeDuration(TimeDuration.fromEpochNsDiff(ns2, ns1), unit);
   }
@@ -3741,18 +3741,15 @@ export function DifferenceZonedDateTimeWithTotal(ns1, ns2, timeZone, calendar, u
 }
 
 export function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
-  const ALLOWED_UNITS = Call(ArrayPrototypeReduce, TEMPORAL_UNITS, [
-    (allowed, unitInfo) => {
-      const p = unitInfo[0];
-      const s = unitInfo[1];
-      const c = unitInfo[2];
-      if ((group === 'datetime' || c === group) && !Call(ArrayPrototypeIncludes, disallowed, [s])) {
-        Call(ArrayPrototypePush, allowed, [s, p]);
-      }
-      return allowed;
-    },
-    []
-  ]);
+  const ALLOWED_UNITS = Call(
+    ArrayPrototypeFilter,
+    ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'],
+    [
+      (unit) =>
+        (group === 'datetime' || (group === 'date' && IsDateUnit(unit)) || (group === 'time' && IsTimeUnit(unit))) &&
+        !Call(ArrayPrototypeIncludes, disallowed, [unit])
+    ]
+  );
 
   let largestUnit = GetTemporalUnitValuedOption(options, 'largestUnit');
   const roundingIncrement = GetRoundingIncrementOption(options);
@@ -3977,7 +3974,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
   const Duration = GetIntrinsic('%Temporal.Duration%');
 
   let result;
-  if (TemporalUnitCategory(settings.largestUnit) !== 'date') {
+  if (IsTimeUnit(settings.largestUnit)) {
     // The user is only asking for a time difference, so return difference of instants.
     const duration = DifferenceInstant(
       ns1,
@@ -4083,7 +4080,7 @@ export function AddDurationToInstant(operation, instant, durationLike) {
   let duration = ToTemporalDuration(durationLike);
   if (operation === 'subtract') duration = CreateNegatedTemporalDuration(duration);
   const largestUnit = DefaultTemporalLargestUnit(duration);
-  if (TemporalUnitCategory(largestUnit) === 'date') {
+  if (IsDateUnit(largestUnit)) {
     throw new RangeErrorCtor(
       `Duration field ${largestUnit} not supported by Temporal.Instant. Try Temporal.ZonedDateTime instead.`
     );

@@ -229,7 +229,7 @@ export class Duration {
     };
     const maximum = maximumIncrements[smallestUnit];
     if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
-    if (roundingIncrement > 1 && ES.TemporalUnitCategory(smallestUnit) === 'date' && largestUnit !== smallestUnit) {
+    if (roundingIncrement > 1 && ES.IsDateUnit(smallestUnit) && largestUnit !== smallestUnit) {
       throw new RangeErrorCtor('For calendar units with roundingIncrement > 1, use largestUnit = smallestUnit');
     }
 
@@ -249,7 +249,7 @@ export class Duration {
         smallestUnit,
         roundingMode
       );
-      if (ES.TemporalUnitCategory(largestUnit) === 'date') largestUnit = 'hour';
+      if (ES.IsDateUnit(largestUnit)) largestUnit = 'hour';
       return ES.TemporalDurationFromInternal(duration, largestUnit);
     }
 
@@ -419,10 +419,7 @@ export class Duration {
     const duration1 = ES.ToInternalDurationRecord(one);
     const duration2 = ES.ToInternalDurationRecord(two);
 
-    if (
-      zonedRelativeTo &&
-      (ES.TemporalUnitCategory(largestUnit1) === 'date' || ES.TemporalUnitCategory(largestUnit2) === 'date')
-    ) {
+    if (zonedRelativeTo && (ES.IsDateUnit(largestUnit1) || ES.IsDateUnit(largestUnit2))) {
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);
