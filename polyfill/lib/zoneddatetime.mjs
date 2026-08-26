@@ -128,7 +128,7 @@ export class ZonedDateTime {
     const tomorrow = ES.AddDaysToISODate(today, 1);
     const todayNs = ES.GetStartOfDay(timeZone, today);
     const tomorrowNs = ES.GetStartOfDay(timeZone, tomorrow);
-    const diff = TimeDuration.fromEpochNsDiff(tomorrowNs, todayNs);
+    const diff = TimeDuration.fromEpochNsDiff(todayNs, tomorrowNs);
     return ES.TotalTimeDuration(diff, 'hour');
   }
   get daysInWeek() {
@@ -310,7 +310,7 @@ export class ZonedDateTime {
       if (thisNs.geq(endNs)) thisNs = endNs.minus(bigInt.one);
 
       const dayLengthNs = endNs.subtract(startNs);
-      const dayProgressNs = TimeDuration.fromEpochNsDiff(thisNs, startNs);
+      const dayProgressNs = TimeDuration.fromEpochNsDiff(startNs, thisNs);
       const roundedDayNs = dayProgressNs.round(dayLengthNs, roundingMode);
       epochNanoseconds = roundedDayNs.addToEpochNs(startNs);
     } else {

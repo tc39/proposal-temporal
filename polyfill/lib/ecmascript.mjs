@@ -3077,8 +3077,8 @@ function DifferenceTime(time1, time2) {
   return timeDuration;
 }
 
-function DifferenceInstant(ns1, ns2, increment, smallestUnit, roundingMode) {
-  let timeDuration = TimeDuration.fromEpochNsDiff(ns2, ns1);
+function DifferenceEpochNanoseconds(epochNanosecondsFrom, epochNanosecondsTo, increment, smallestUnit, roundingMode) {
+  let timeDuration = TimeDuration.fromEpochNsDiff(epochNanosecondsFrom, epochNanosecondsTo);
   timeDuration = RoundTimeDuration(timeDuration, increment, smallestUnit, roundingMode);
   return CombineDateAndTimeDuration(ZeroDateDuration(), timeDuration);
 }
@@ -3108,14 +3108,14 @@ function DifferenceISODateTime(isoDateTime1, isoDateTime2, calendar, largestUnit
   return CombineDateAndTimeDuration(dateDifference, timeDuration);
 }
 
-export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit) {
-  const nsDiff = ns2.subtract(ns1);
+export function DifferenceZonedDateTime(epochNanosecondsFrom, epochNanosecondsTo, timeZone, calendar, largestUnit) {
+  const nsDiff = epochNanosecondsTo.subtract(epochNanosecondsFrom);
   if (nsDiff.isZero()) return { date: ZeroDateDuration(), time: TimeDuration.ZERO };
   const sign = nsDiff.lt(0) ? 1 : -1;
 
   // Convert start/end instants to datetimes
-  const isoDtStart = GetISODateTimeFor(timeZone, ns1);
-  const isoDtEnd = GetISODateTimeFor(timeZone, ns2);
+  const isoDtStart = GetISODateTimeFor(timeZone, epochNanosecondsFrom);
+  const isoDtEnd = GetISODateTimeFor(timeZone, epochNanosecondsTo);
 
   // If year-month-day values are same-day,
   // there's no point involving the calendar/timezone for zdt->pdt conversions.
@@ -3131,13 +3131,14 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
     return { date: ZeroDateDuration(), time: timeDuration };
   }
 
-  // Simulate moving ns1 as many years/months/weeks/days as possible without
-  // surpassing ns2. This value is stored in intermediateDateTime/intermediateInstant/intermediateNs.
-  // We do not literally move years/months/weeks/days with calendar arithmetic,
-  // but rather assume intermediateDateTime will have the same time-parts as
-  // dtStart and the date-parts from dtEnd, and move backward from there.
-  // The number of days we move backward is stored in dayCorrection.
-  // Credit to Adam Shaw for devising this algorithm.
+  // Simulate moving epochNanosecondsFrom as many years/months/weeks/days as
+  // possible without surpassing epochNanosecondsTo. This value is stored in
+  // intermediateDateTime/intermediateInstant/intermediateNs. We do not
+  // literally move years/months/weeks/days with calendar arithmetic, but rather
+  // assume intermediateDateTime will have the same time-parts as dtStart and
+  // the date-parts from dtEnd, and move backward from there. The number of days
+  // we move backward is stored in dayCorrection. Credit to Adam Shaw for
+  // devising this algorithm.
   let dayCorrection = 0;
   let intermediateDateTime;
 
@@ -3166,9 +3167,9 @@ export function DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUni
     const intermediateNs = GetEpochNanosecondsFor(timeZone, intermediateDateTime, 'compatible');
 
     // Compute the nanosecond diff between the intermediate instant and the final destination
-    timeDuration = TimeDuration.fromEpochNsDiff(ns2, intermediateNs);
+    timeDuration = TimeDuration.fromEpochNsDiff(intermediateNs, epochNanosecondsTo);
 
-    // Did intermediateNs NOT surpass ns2?
+    // Did intermediateNs NOT surpass epochNanosecondsTo?
     // If so, exit the loop with success (without incrementing dayCorrection past maxDayCorrection)
     if (timeDuration.sign() !== sign) {
       break;
@@ -3345,8 +3346,8 @@ function NudgeToCalendarUnit(
   ({ r1, r2, startEpochNs, endEpochNs, startDuration, endDuration } = nudgeWindow);
 
   assert(!endEpochNs.equals(startEpochNs), 'startEpochNs must ≠ endEpochNs');
-  const numerator = TimeDuration.fromEpochNsDiff(destEpochNs, startEpochNs);
-  const denominator = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
+  const numerator = TimeDuration.fromEpochNsDiff(startEpochNs, destEpochNs);
+  const denominator = TimeDuration.fromEpochNsDiff(startEpochNs, endEpochNs);
   const unsignedRoundingMode = GetUnsignedRoundingMode(roundingMode, sign < 0 ? 'negative' : 'positive');
   const cmp = numerator.add(numerator).abs().subtract(denominator.abs()).sign();
   const even = (MathAbs(r1) / increment) % 2 === 0;
@@ -3396,7 +3397,7 @@ function NudgeToZonedTime(sign, duration, isoDateTime, timeZone, calendar, incre
   const endEpochNs = GetEpochNanosecondsFor(timeZone, endDateTime, 'compatible');
 
   // The signed amount of time from the start of the whole-day interval to the end
-  const daySpan = TimeDuration.fromEpochNsDiff(endEpochNs, startEpochNs);
+  const daySpan = TimeDuration.fromEpochNsDiff(startEpochNs, endEpochNs);
   if (daySpan.sign() !== sign) throw new RangeErrorCtor('time zone returned inconsistent Instants');
 
   // Compute time parts of the duration to nanoseconds and round
@@ -3707,7 +3708,7 @@ export function DifferenceZonedDateTimeWithRounding(
 ) {
   if (IsTimeUnit(largestUnit)) {
     // The user is only asking for a time difference, so return difference of instants.
-    return DifferenceInstant(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
+    return DifferenceEpochNanoseconds(ns1, ns2, roundingIncrement, smallestUnit, roundingMode);
   }
 
   const duration = DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, largestUnit);
@@ -3729,15 +3730,15 @@ export function DifferenceZonedDateTimeWithRounding(
   );
 }
 
-export function DifferenceZonedDateTimeWithTotal(ns1, ns2, timeZone, calendar, unit) {
+export function DifferenceZonedDateTimeWithTotal(epochNanosecondsFrom, epochNanosecondsTo, timeZone, calendar, unit) {
   if (IsTimeUnit(unit)) {
     // The user is only asking for a time difference, so return difference of instants.
-    return TotalTimeDuration(TimeDuration.fromEpochNsDiff(ns2, ns1), unit);
+    return TotalTimeDuration(TimeDuration.fromEpochNsDiff(epochNanosecondsFrom, epochNanosecondsTo), unit);
   }
 
-  const duration = DifferenceZonedDateTime(ns1, ns2, timeZone, calendar, unit);
-  const dateTime = GetISODateTimeFor(timeZone, ns1);
-  return TotalRelativeDuration(duration, ns1, ns2, dateTime, timeZone, calendar, unit);
+  const duration = DifferenceZonedDateTime(epochNanosecondsFrom, epochNanosecondsTo, timeZone, calendar, unit);
+  const dateTime = GetISODateTimeFor(timeZone, epochNanosecondsFrom);
+  return TotalRelativeDuration(duration, epochNanosecondsFrom, epochNanosecondsTo, dateTime, timeZone, calendar, unit);
 }
 
 export function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
@@ -3801,7 +3802,7 @@ export function DifferenceTemporalInstant(operation, instant, other, options) {
 
   const onens = GetSlot(instant, EPOCHNANOSECONDS);
   const twons = GetSlot(other, EPOCHNANOSECONDS);
-  const duration = DifferenceInstant(
+  const duration = DifferenceEpochNanoseconds(
     onens,
     twons,
     settings.roundingIncrement,
@@ -3976,7 +3977,7 @@ export function DifferenceTemporalZonedDateTime(operation, zonedDateTime, other,
   let result;
   if (IsTimeUnit(settings.largestUnit)) {
     // The user is only asking for a time difference, so return difference of instants.
-    const duration = DifferenceInstant(
+    const duration = DifferenceEpochNanoseconds(
       ns1,
       ns2,
       settings.roundingIncrement,
