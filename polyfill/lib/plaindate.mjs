@@ -12,9 +12,9 @@ export class PlainDate {
     const day = ES.SnapToInteger(isoDay, 'truncate', 'isoDay');
     calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
-    ES.RejectISODate(year, month, day);
 
-    ES.CreateTemporalDateSlots(this, { year, month, day }, calendar);
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    ES.CreateTemporalDateSlots(this, isoDate, calendar);
   }
   get calendarId() {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
