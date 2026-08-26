@@ -290,9 +290,8 @@ export class Duration {
       // Round in nanosecond (bigInt) space to avoid floating-point
       // precision loss when the sub-day remainder is tiny relative to
       // the number of days.
-      const DAY_NANOS = 86400 * 1e9;
       const rounded = ES.RoundTimeDuration(internalDuration.time, roundingIncrement, 'day', roundingMode);
-      const { quotient: days } = rounded.divmod(DAY_NANOS);
+      const { quotient: days } = rounded.divmod(ES.NANOSECONDS_PER_DAY);
       const dateDuration = { years: 0, months: 0, weeks: 0, days };
       internalDuration = ES.CombineDateAndTimeDuration(dateDuration, TimeDuration.ZERO);
     } else {

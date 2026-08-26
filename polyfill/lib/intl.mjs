@@ -125,7 +125,7 @@ function adjustRenderedWeekday(polyfilledFormatter, realFormatter, originalEpoch
   const weekdayFormatter = new IntlDateTimeFormat(GetSlot(polyfilledFormatter, LOCALE), options);
   // Weekday of 1970-01-01 is 4 (Thursday)
   const weekdayParts = ES.Call(IntlDateTimeFormatPrototypeFormatToParts, weekdayFormatter, [
-    (zdt.dayOfWeek - dayAdjust - 4) * ES.DAY_MS
+    (zdt.dayOfWeek - dayAdjust - 4) * ES.MILLISECONDS_PER_DAY
   ]);
   return findPart(weekdayParts, 'weekday');
 }
@@ -800,11 +800,11 @@ function getAdjustedEpochNanoseconds(isoDateTime) {
     ES.ValidateEpochNanoseconds(epochNs);
   } catch (e) {
     if (!(e instanceof RangeErrorCtor)) throw e;
-    const minAdjust = MathCeil(epochNs.abs().subtract(ES.NS_MAX).toJSNumber() / ES.DAY_NANOS);
+    const minAdjust = MathCeil(epochNs.abs().subtract(ES.NS_MAX).toJSNumber() / ES.NANOSECONDS_PER_DAY);
     const dayAdjust = minAdjust * (epochNs.geq(0) ? -1 : 1);
     return {
       dayAdjust,
-      epochNs: epochNs.add(dayAdjust * ES.DAY_NANOS)
+      epochNs: epochNs.add(dayAdjust * ES.NANOSECONDS_PER_DAY)
     };
   }
   return { dayAdjust: 0, epochNs };
