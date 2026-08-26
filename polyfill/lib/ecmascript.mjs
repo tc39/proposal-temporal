@@ -218,23 +218,6 @@ export function RequireString(value) {
   return value;
 }
 
-const CALENDAR_FIELD_KEYS = [
-  'era',
-  'eraYear',
-  'year',
-  'month',
-  'monthCode',
-  'day',
-  'hour',
-  'minute',
-  'second',
-  'millisecond',
-  'microsecond',
-  'nanosecond',
-  'offset',
-  'timeZone'
-];
-
 // each item is [plural, singular, (length in ns)]
 const TEMPORAL_UNITS = [
   ['years', 'year'],
@@ -1723,26 +1706,65 @@ export function CreateTemporalZonedDateTime(epochNanoseconds, timeZone, calendar
   return result;
 }
 
-function CalendarFieldKeysPresent(fields) {
-  return Call(ArrayPrototypeFilter, CALENDAR_FIELD_KEYS, [(key) => fields[key] !== undefined]);
-}
-
 export function CalendarMergeFields(calendar, fields, additionalFields) {
-  const additionalKeys = CalendarFieldKeysPresent(additionalFields);
-  const overriddenKeys = calendarImplForID(calendar).fieldKeysToIgnore(additionalKeys);
+  const overriddenKeys = calendarImplForID(calendar).fieldKeysToIgnore(additionalFields);
   const merged = ObjectCreate(null);
-  const fieldsKeys = CalendarFieldKeysPresent(fields);
-  for (let ix = 0; ix < CALENDAR_FIELD_KEYS.length; ix++) {
-    let propValue = undefined;
-    const key = CALENDAR_FIELD_KEYS[ix];
-    if (Call(ArrayPrototypeIncludes, fieldsKeys, [key]) && !Call(ArrayPrototypeIncludes, overriddenKeys, [key])) {
-      propValue = fields[key];
-    }
-    if (Call(ArrayPrototypeIncludes, additionalKeys, [key])) {
-      propValue = additionalFields[key];
-    }
-    if (propValue !== undefined) merged[key] = propValue;
+  if (fields.era !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['era'])) {
+    merged.era = fields.era;
   }
+  if (additionalFields.era !== undefined) merged.era = additionalFields.era;
+  if (fields.eraYear !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['eraYear'])) {
+    merged.eraYear = fields.eraYear;
+  }
+  if (additionalFields.eraYear !== undefined) merged.eraYear = additionalFields.eraYear;
+  if (fields.year !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['year'])) {
+    merged.year = fields.year;
+  }
+  if (additionalFields.year !== undefined) merged.year = additionalFields.year;
+  if (fields.month !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['month'])) {
+    merged.month = fields.month;
+  }
+  if (additionalFields.month !== undefined) merged.month = additionalFields.month;
+  if (fields.monthCode !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['monthCode'])) {
+    merged.monthCode = fields.monthCode;
+  }
+  if (additionalFields.monthCode !== undefined) merged.monthCode = additionalFields.monthCode;
+  if (fields.day !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['day'])) {
+    merged.day = fields.day;
+  }
+  if (additionalFields.day !== undefined) merged.day = additionalFields.day;
+  if (fields.hour !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['hour'])) {
+    merged.hour = fields.hour;
+  }
+  if (additionalFields.hour !== undefined) merged.hour = additionalFields.hour;
+  if (fields.minute !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['minute'])) {
+    merged.minute = fields.minute;
+  }
+  if (additionalFields.minute !== undefined) merged.minute = additionalFields.minute;
+  if (fields.second !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['second'])) {
+    merged.second = fields.second;
+  }
+  if (additionalFields.second !== undefined) merged.second = additionalFields.second;
+  if (fields.millisecond !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['millisecond'])) {
+    merged.millisecond = fields.millisecond;
+  }
+  if (additionalFields.millisecond !== undefined) merged.millisecond = additionalFields.millisecond;
+  if (fields.microsecond !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['microsecond'])) {
+    merged.microsecond = fields.microsecond;
+  }
+  if (additionalFields.microsecond !== undefined) merged.microsecond = additionalFields.microsecond;
+  if (fields.nanosecond !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['nanosecond'])) {
+    merged.nanosecond = fields.nanosecond;
+  }
+  if (additionalFields.nanosecond !== undefined) merged.nanosecond = additionalFields.nanosecond;
+  if (fields.offset !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['offset'])) {
+    merged.offset = fields.offset;
+  }
+  if (additionalFields.offset !== undefined) merged.offset = additionalFields.offset;
+  if (fields.timeZone !== undefined && !Call(ArrayPrototypeIncludes, overriddenKeys, ['timeZone'])) {
+    merged.timeZone = fields.timeZone;
+  }
+  if (additionalFields.timeZone !== undefined) merged.timeZone = additionalFields.timeZone;
   return merged;
 }
 
