@@ -21,11 +21,11 @@ import {
   ArrayPrototypeEvery,
   ArrayPrototypeFilter,
   ArrayPrototypeIncludes,
-  ArrayPrototypeIndexOf,
   ArrayPrototypeJoin,
   ArrayPrototypeMap,
   ArrayPrototypePush,
   ArrayPrototypeSort,
+  ArrayPrototypeUnshift,
   DateNow,
   DatePrototypeGetUTCFullYear,
   DatePrototypeGetUTCMonth,
@@ -215,19 +215,6 @@ export function RequireString(value) {
   }
   return value;
 }
-
-const UNITS_DESCENDING = [
-  'year',
-  'month',
-  'week',
-  'day',
-  'hour',
-  'minute',
-  'second',
-  'millisecond',
-  'microsecond',
-  'nanosecond'
-];
 
 const DURATION_FIELDS = [
   'days',
@@ -3598,29 +3585,29 @@ function BubbleRelativeDuration(
   timeZone,
   calendar,
   largestUnit,
-  smallestUnit
+  startUnit
 ) {
-  // smallestUnit is day or larger
-
-  if (smallestUnit === largestUnit) return duration;
+  // startUnit is month or day
+  if (LargerOfTwoTemporalUnits(startUnit, largestUnit) === startUnit) return duration;
 
   // Check to see if nudgedEpochNs has hit the boundary of any units higher than
   // smallestUnit, in which case increment the higher unit and clear smaller
   // units.
-  const largestUnitIndex = Call(ArrayPrototypeIndexOf, UNITS_DESCENDING, [largestUnit]);
-  const smallestUnitIndex = Call(ArrayPrototypeIndexOf, UNITS_DESCENDING, [smallestUnit]);
-  for (let unitIndex = smallestUnitIndex - 1; unitIndex >= largestUnitIndex; unitIndex--) {
+  const bubbleUnits = [];
+  if (largestUnit === 'year') Call(ArrayPrototypeUnshift, bubbleUnits, ['year']);
+  if (startUnit === 'day') {
+    if (largestUnit === 'month' || largestUnit === 'year') Call(ArrayPrototypeUnshift, bubbleUnits, ['month']);
     // The only situation where days and smaller bubble-up into weeks is when
     // largestUnit is 'week' (not to be confused with the situation where
     // smallestUnit is 'week', in which case days and smaller are ROUNDED-up
     // into weeks, but that has already happened by the time this function
     // executes)
-    // So, if days and smaller are NOT bubbled-up into weeks, and the current
-    // unit is weeks, skip.
-    const unit = UNITS_DESCENDING[unitIndex];
-    if (unit === 'week' && largestUnit !== 'week') {
-      continue;
-    }
+    // So, if days and smaller are NOT bubbled-up into weeks, skip weeks.
+    if (largestUnit === 'week') Call(ArrayPrototypeUnshift, bubbleUnits, ['week']);
+  }
+
+  for (let ix = 0; ix < bubbleUnits.length; ix++) {
+    const unit = bubbleUnits[ix];
 
     let endDuration;
     switch (unit) {
@@ -3655,14 +3642,11 @@ function BubbleRelativeDuration(
 
     const didExpandToEnd = nudgedEpochNs.compare(endEpochNs) !== -sign;
 
+    // NOT at end-of-unit. Stop looking for bubbling
+    if (!didExpandToEnd) return duration;
     // Is nudgedEpochNs at the end-of-unit? This means it should bubble-up to
     // the next highest unit (and possibly further...)
-    if (didExpandToEnd) {
-      duration = { date: endDuration, time: TimeDuration.ZERO };
-    } else {
-      // NOT at end-of-unit. Stop looking for bubbling
-      break;
-    }
+    duration = { date: endDuration, time: TimeDuration.ZERO };
   }
 
   return duration;
@@ -3726,7 +3710,7 @@ function RoundRelativeDuration(
   // Did nudging cause the duration to expand to the next day or larger?
   // Bubble-up smaller calendar units into higher ones, except for weeks, which
   // don't balance up into months
-  if (nudgeResult.didExpandCalendarUnit && smallestUnit !== 'week') {
+  if (nudgeResult.didExpandCalendarUnit && smallestUnit !== 'year' && smallestUnit !== 'week') {
     duration = BubbleRelativeDuration(
       sign,
       duration,

@@ -54,7 +54,8 @@ export const {
     push: ArrayPrototypePush,
     reduce: ArrayPrototypeReduce,
     slice: ArrayPrototypeSlice,
-    sort: ArrayPrototypeSort
+    sort: ArrayPrototypeSort,
+    unshift: ArrayPrototypeUnshift
   }
 } = Array;
 export const {
