@@ -61,8 +61,6 @@ import * as ES from './ecmascript.mjs';
 import { DefineIntrinsic } from './intrinsicclass.mjs';
 import { CreateMonthCode, ParseMonthCode } from './monthcode.mjs';
 
-const midnightTimeRecord = ES.MidnightTimeRecord();
-
 function arrayFromSet(src) {
   const valuesIterator = Call(SetPrototypeValues, src, []);
   return ArrayFrom({
@@ -241,8 +239,8 @@ impl['iso8601'] = {
 
     let weeks = 0;
     let days =
-      ES.ISODateToEpochDays(two.year, two.month - 1, two.day) -
-      ES.ISODateToEpochDays(constrained.year, constrained.month - 1, constrained.day);
+      ES.ISODateToEpochDays(two.year, two.month, two.day) -
+      ES.ISODateToEpochDays(constrained.year, constrained.month, constrained.day);
 
     if (largestUnit === 'week') {
       weeks = MathTrunc(days / 7);
@@ -1258,8 +1256,8 @@ const nonIsoHelperBase = {
     const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', cache);
     const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', cache);
     return (
-      ES.ISODateToEpochDays(twoIso.year, twoIso.month - 1, twoIso.day) -
-      ES.ISODateToEpochDays(oneIso.year, oneIso.month - 1, oneIso.day)
+      ES.ISODateToEpochDays(twoIso.year, twoIso.month, twoIso.day) -
+      ES.ISODateToEpochDays(oneIso.year, oneIso.month, oneIso.day)
     );
   },
   // This must be overridden to provide a hardcoded ISO reference year for the
@@ -2106,9 +2104,8 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const calendarFields = { day: undefined, monthString: undefined, relatedYear: undefined };
     const dateTimeFormat = this.getFormatter();
     const updateCalendarFields = () => {
-      // Abuse GetUTCEpochMilliseconds for automatic rebalancing.
-      const isoNumbers = { year: effectiveYear, month: 2, day: daysPastJan31 };
-      const ms = ES.GetUTCEpochMilliseconds(isoNumbers, midnightTimeRecord);
+      // Abuse ISODateToEpochDays for automatic rebalancing.
+      const ms = ES.ISODateToEpochDays(effectiveYear, 2, daysPastJan31) * ES.MILLISECONDS_PER_DAY;
       const fieldEntries = Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [ms]);
       for (let i = 0; i < fieldEntries.length; i++) {
         const { type, value } = fieldEntries[i];
@@ -2362,8 +2359,7 @@ const nonIsoGeneralImpl = {
     if (largestUnit === 'week' || largestUnit === 'day') {
       let weeks = 0;
       let days =
-        ES.ISODateToEpochDays(two.year, two.month - 1, two.day) -
-        ES.ISODateToEpochDays(one.year, one.month - 1, one.day);
+        ES.ISODateToEpochDays(two.year, two.month, two.day) - ES.ISODateToEpochDays(one.year, one.month, one.day);
 
       if (largestUnit === 'week') {
         weeks = MathTrunc(days / 7);

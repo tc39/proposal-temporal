@@ -80,6 +80,7 @@ import ToObject from 'es-abstract/2024/ToObject.js';
 import ToPrimitive from 'es-abstract/2024/ToPrimitive.js';
 import ToString from 'es-abstract/2024/ToString.js';
 import Type from 'es-abstract/2024/Type.js';
+import modulo from 'es-abstract/2024/modulo.js';
 
 import { assert, assertNotReached } from './assert.mjs';
 import { GetIntrinsic } from './intrinsicclass.mjs';
@@ -141,7 +142,7 @@ const DATETIME_NS_MAX = NS_MAX.add(NANOSECONDS_PER_DAY).subtract(bigInt.one);
 const MS_IN_400_YEAR_CYCLE = (400 * 365 + 97) * MILLISECONDS_PER_DAY;
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
-const BEFORE_FIRST_DST = DateUTC(1847, 0, 1); // 1847-01-01T00:00:00Z
+const BEFORE_FIRST_DST = ISODateToEpochDays(1847, 1, 1) * MILLISECONDS_PER_DAY; // 1847-01-01T00:00:00Z
 
 const BUILTIN_CALENDAR_IDS = [
   'iso8601',
@@ -2583,7 +2584,7 @@ export function GetNamedTimeZonePreviousTransition(id, epochNanoseconds) {
   // the previous transition for an instant far in the future may take an
   // extremely long time as it loops backward 2 weeks at a time.
   if (id === 'Africa/Casablanca' || id === 'Africa/El_Aaiun') {
-    const lastPrecomputed = DateUTC(2088, 0, 1); // 2088-01-01T00Z
+    const lastPrecomputed = ISODateToEpochDays(2088, 1, 1) * MILLISECONDS_PER_DAY; // 2088-01-01T00Z
     if (lastPrecomputed < epochMilliseconds) {
       return GetNamedTimeZonePreviousTransition(id, bigInt(lastPrecomputed).multiply(1e6));
     }
@@ -2852,8 +2853,8 @@ export function DateDurationDays(dateDuration, plainRelativeTo) {
   // balance years, months, and weeks down to days
   const isoDate = GetSlot(plainRelativeTo, ISO_DATE);
   const later = CalendarDateAdd(GetSlot(plainRelativeTo, CALENDAR), isoDate, yearsMonthsWeeksDuration, 'constrain');
-  const epochDaysEarlier = ISODateToEpochDays(isoDate.year, isoDate.month - 1, isoDate.day);
-  const epochDaysLater = ISODateToEpochDays(later.year, later.month - 1, later.day);
+  const epochDaysEarlier = ISODateToEpochDays(isoDate.year, isoDate.month, isoDate.day);
+  const epochDaysLater = ISODateToEpochDays(later.year, later.month, later.day);
   const yearsMonthsWeeksInDays = epochDaysLater - epochDaysEarlier;
   return dateDuration.days + yearsMonthsWeeksInDays;
 }
@@ -3158,12 +3159,27 @@ export function CombineDateAndTimeDuration(dateDuration, timeDuration) {
   return { date: dateDuration, time: timeDuration };
 }
 
-// Caution: month is 0-based
 export function ISODateToEpochDays(year, month, day) {
-  return (
-    GetUTCEpochMilliseconds({ year, month: month + 1, day }, { hour: 0, minute: 0, second: 0, millisecond: 0 }) /
-    MILLISECONDS_PER_DAY
-  );
+  const resolvedYear = year + MathFloor((month - 1) / 12);
+  const resolvedMonth = modulo(month - 1, 12) + 1;
+  let shiftedYear = resolvedYear;
+  let shiftedMonth = resolvedMonth - 3;
+  const dayIsInRange = day >= 1 && day <= ISODaysInMonth(resolvedYear, resolvedMonth);
+  if (shiftedMonth < 0) {
+    shiftedYear--;
+    shiftedMonth += 12;
+  }
+  assert(shiftedMonth >= 0 && shiftedMonth <= 11, 'shiftedMonth in range 0..11');
+  const cycle = MathFloor(shiftedYear / 400);
+  const yearOfCycle = modulo(shiftedYear, 400);
+  assert(yearOfCycle >= 0 && yearOfCycle <= 399, 'yearOfCycle in range 0..399');
+  const dayOfYear = MathTrunc((153 * shiftedMonth + 2) / 5) + day - 1;
+  assert(dayOfYear >= 0, 'dayOfYear positive');
+  if (dayIsInRange) assert(dayOfYear <= 365, 'dayOfYear in range 0..365');
+  const dayOfCycle = yearOfCycle * 365 + MathTrunc(yearOfCycle / 4) - MathTrunc(yearOfCycle / 100) + dayOfYear;
+  assert(dayOfCycle >= 0, 'dayOfCycle positive');
+  if (dayIsInRange) assert(dayOfCycle <= 146096, 'dayOfCycle in range 0..146096');
+  return cycle * 146097 + dayOfCycle - 719468;
 }
 
 // This is needed before calling GetUTCEpochNanoseconds, because it uses MakeDay
@@ -3171,7 +3187,7 @@ export function ISODateToEpochDays(year, month, day) {
 // https://github.com/tc39/ecma262/issues/1087 is fixed, this can be removed
 // with no observable changes.
 function ValidateISODaysRange({ year, month, day }) {
-  if (MathAbs(ISODateToEpochDays(year, month - 1, day)) > 1e8) {
+  if (MathAbs(ISODateToEpochDays(year, month, day)) > 1e8) {
     throw new RangeErrorCtor(`date/time value ${year}-${month}-${day} is outside the supported range`);
   }
 }
