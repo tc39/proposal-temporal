@@ -34,7 +34,6 @@ import {
   DatePrototypeGetUTCMinutes,
   DatePrototypeGetUTCSeconds,
   DatePrototypeGetUTCMilliseconds,
-  DateUTC,
   IntlDateTimeFormat,
   IntlDateTimeFormatPrototypeGetFormat,
   IntlDateTimeFormatPrototypeResolvedOptions,
@@ -136,10 +135,6 @@ export const NS_MAX = bigInt(NANOSECONDS_PER_DAY).multiply(1e8);
 // built-in time zones (whose offsets must have a magnitude less than 24 hours).
 const DATETIME_NS_MIN = NS_MIN.subtract(NANOSECONDS_PER_DAY).add(bigInt.one);
 const DATETIME_NS_MAX = NS_MAX.add(NANOSECONDS_PER_DAY).subtract(bigInt.one);
-// The pattern of leap years in the ISO 8601 calendar repeats every 400 years.
-// The constant below is the number of nanoseconds in 400 years. It is used to
-// avoid overflows when dealing with values at the edge legacy Date's range.
-const MS_IN_400_YEAR_CYCLE = (400 * 365 + 97) * MILLISECONDS_PER_DAY;
 const YEAR_MIN = -271821;
 const YEAR_MAX = 275760;
 const BEFORE_FIRST_DST = ISODateToEpochDays(1847, 1, 1) * MILLISECONDS_PER_DAY; // 1847-01-01T00:00:00Z
@@ -2431,26 +2426,20 @@ export function GetUTCEpochMilliseconds(isoDate, time) {
   const { year, month, day } = isoDate;
   const { hour, minute, second, millisecond /* ignored: microsecond, nanosecond */ } = time;
 
-  // The pattern of leap years in the ISO 8601 calendar repeats every 400
-  // years. To avoid overflowing at the edges of the range, we reduce the year
-  // to the remainder after dividing by 400, and then add back all the
-  // nanoseconds from the multiples of 400 years at the end.
-  const reducedYear = year % 400;
-  const yearCycles = (year - reducedYear) / 400;
-
-  // `Date.UTC(year, monthIndex, days)` maps year [0, 99] to [1900, 1999], so
-  // avoid that range.
-  const extraCycles = reducedYear >= 0 ? 5 : 0;
-  const ms = DateUTC(reducedYear + 400 * extraCycles, month - 1, day, hour, minute, second, millisecond);
-
-  return ms + MS_IN_400_YEAR_CYCLE * (yearCycles - extraCycles);
+  const epochDays = ISODateToEpochDays(year, month, day);
+  const millisecondOfDay = hour * 3600e3 + minute * 60e3 + second * 1e3 + millisecond;
+  return epochDays * MILLISECONDS_PER_DAY + millisecondOfDay;
 }
 
 export function GetUTCEpochNanoseconds(isoDateTime) {
-  const { isoDate, time } = isoDateTime;
-  const ms = GetUTCEpochMilliseconds(isoDate, time);
-  const subMs = time.microsecond * 1e3 + time.nanosecond;
-  return bigInt(ms).multiply(1e6).plus(subMs);
+  const {
+    isoDate: { year, month, day },
+    time: { hour, minute, second, millisecond, microsecond, nanosecond }
+  } = isoDateTime;
+  const epochDays = ISODateToEpochDays(year, month, day);
+  const nanosecondOfDay =
+    hour * 3600e9 + minute * 60e9 + second * 1e9 + millisecond * 1e6 + microsecond * 1e3 + nanosecond;
+  return bigInt(epochDays).multiply(NANOSECONDS_PER_DAY).plus(nanosecondOfDay);
 }
 
 export function GetISOPartsFromEpoch(epochNanoseconds) {
