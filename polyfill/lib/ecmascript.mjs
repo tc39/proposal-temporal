@@ -343,7 +343,7 @@ function ParseISODateTime(isoString) {
   const year = +yearString;
   const month = +match.groups.monthpart;
   const day = +match.groups.daypart;
-  assert(month !== undefined && day !== undefined, `Month and day must be present if string ${isoString} matched`);
+  assert(NumberIsFinite(month) && NumberIsFinite(day), `Month and day must be present if string ${isoString} matched`);
   const hasTime = match.groups.hour !== undefined;
   const hasMinute = match.groups.minute !== undefined;
   const hasSecond = match.groups.second !== undefined;
@@ -417,7 +417,7 @@ export function ParseTemporalTimeString(isoString) {
       throw new RangeErrorCtor(`invalid RFC 9557 string: ${isoString}, only seconds may be fractional`);
     }
     hour = +match.groups.hour;
-    assert(hour !== undefined, `Hour must be present if string ${isoString} matched`);
+    assert(hasHour, `Hour must be present if string ${isoString} matched`);
     minute = +(match.groups.minute ?? 0);
     second = +(match.groups.second ?? 0);
     if (second === 60) second = 59;
