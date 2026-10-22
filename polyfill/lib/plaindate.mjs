@@ -7,14 +7,14 @@ import { CALENDAR, GetSlot, ISO_DATE, TIME } from './slots.mjs';
 
 export class PlainDate {
   constructor(isoYear, isoMonth, isoDay, calendar = 'iso8601') {
-    const year = ES.ToIntegerWithTruncation(isoYear);
-    const month = ES.ToIntegerWithTruncation(isoMonth);
-    const day = ES.ToIntegerWithTruncation(isoDay);
+    const year = ES.SnapToInteger(isoYear, 'truncate', 'isoYear');
+    const month = ES.SnapToInteger(isoMonth, 'truncate', 'isoMonth');
+    const day = ES.SnapToInteger(isoDay, 'truncate', 'isoDay');
     calendar = calendar === undefined ? 'iso8601' : ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
-    ES.RejectISODate(year, month, day);
 
-    ES.CreateTemporalDateSlots(this, { year, month, day }, calendar);
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    ES.CreateTemporalDateSlots(this, isoDate, calendar);
   }
   get calendarId() {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
@@ -107,8 +107,8 @@ export class PlainDate {
     const partialDate = ES.PrepareCalendarFields(
       calendar,
       temporalDateLike,
-      ['year', 'month', 'monthCode', 'day'],
-      [],
+      'date-fields',
+      'no-non-calendar-fields',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialDate);
@@ -167,7 +167,7 @@ export class PlainDate {
   toPlainDateTime(temporalTime = undefined) {
     if (!ES.IsTemporalDate(this)) throw new TypeErrorCtor('invalid receiver');
     const time = ES.ToTimeRecordOrMidnight(temporalTime);
-    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(this, ISO_DATE), time);
+    const isoDateTime = { isoDate: GetSlot(this, ISO_DATE), time };
     return ES.CreateTemporalDateTime(isoDateTime, GetSlot(this, CALENDAR));
   }
   toZonedDateTime(item) {
@@ -192,7 +192,7 @@ export class PlainDate {
       epochNs = ES.GetStartOfDay(timeZone, isoDate);
     } else {
       temporalTime = ES.ToTemporalTime(temporalTime);
-      const isoDateTime = ES.CombineISODateAndTimeRecord(isoDate, GetSlot(temporalTime, TIME));
+      const isoDateTime = { isoDate, time: GetSlot(temporalTime, TIME) };
       epochNs = ES.GetEpochNanosecondsFor(timeZone, isoDateTime, 'compatible');
     }
     return ES.CreateTemporalZonedDateTime(epochNs, timeZone, GetSlot(this, CALENDAR));

@@ -7,14 +7,14 @@ import { CALENDAR, GetSlot, ISO_DATE } from './slots.mjs';
 
 export class PlainMonthDay {
   constructor(isoMonth, isoDay, calendar = 'iso8601', referenceISOYear = 1972) {
-    const month = ES.ToIntegerWithTruncation(isoMonth);
-    const day = ES.ToIntegerWithTruncation(isoDay);
+    const month = ES.SnapToInteger(isoMonth, 'truncate', 'isoMonth');
+    const day = ES.SnapToInteger(isoDay, 'truncate', 'isoDay');
     calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
-    const year = ES.ToIntegerWithTruncation(referenceISOYear);
+    const year = ES.SnapToInteger(referenceISOYear, 'truncate', 'referenceISOYear');
 
-    ES.RejectISODate(year, month, day);
-    ES.CreateTemporalMonthDaySlots(this, { year, month, day }, calendar);
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    ES.CreateTemporalMonthDaySlots(this, isoDate, calendar);
   }
 
   get monthCode() {
@@ -44,8 +44,8 @@ export class PlainMonthDay {
     const partialMonthDay = ES.PrepareCalendarFields(
       calendar,
       temporalMonthDayLike,
-      ['year', 'month', 'monthCode', 'day'],
-      [],
+      'date-fields',
+      'no-non-calendar-fields',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialMonthDay);
@@ -83,7 +83,13 @@ export class PlainMonthDay {
     const calendar = GetSlot(this, CALENDAR);
 
     const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE), 'month-day');
-    const inputFields = ES.PrepareCalendarFields(calendar, item, ['year'], [], []);
+    const inputFields = ES.PrepareCalendarFields(
+      calendar,
+      item,
+      'only-year',
+      'no-non-calendar-fields',
+      'no-required-fields'
+    );
     let mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
     const isoDate = ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');
     return ES.CreateTemporalDate(isoDate, calendar);

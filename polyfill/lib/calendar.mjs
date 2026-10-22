@@ -61,8 +61,6 @@ import * as ES from './ecmascript.mjs';
 import { DefineIntrinsic } from './intrinsicclass.mjs';
 import { CreateMonthCode, ParseMonthCode } from './monthcode.mjs';
 
-const midnightTimeRecord = ES.MidnightTimeRecord();
-
 function arrayFromSet(src) {
   const valuesIterator = Call(SetPrototypeValues, src, []);
   return ArrayFrom({
@@ -145,7 +143,7 @@ function CompareSurpasses(sign, year, month, day, target) {
   return false;
 }
 
-function ISODateSurpasses(sign, baseDate, isoDate2, years, months) {
+function ISODateSurpasses(sign, baseDate, years, months, isoDate2) {
   const y0 = baseDate.year + years;
   if (CompareSurpasses(sign, y0, baseDate.month, baseDate.day, isoDate2)) return true;
   if (months === 0) return false;
@@ -174,22 +172,27 @@ impl['iso8601'] = {
   monthDayToISOReferenceDate(fields, overflow) {
     const referenceISOYear = 1972;
     const { month, day } = ES.RegulateISODate(fields.year ?? referenceISOYear, fields.month, fields.day, overflow);
-    return { month, day, year: referenceISOYear };
+    return ES.CreateISODateRecordInfallible(referenceISOYear, month, day);
   },
   extraFields() {
     return [];
   },
-  fieldKeysToIgnore(keys) {
+  fieldKeysToIgnore(fields) {
     const result = new SetCtor();
-    for (let ix = 0; ix < keys.length; ix++) {
-      const key = keys[ix];
-      Call(SetPrototypeAdd, result, [key]);
-      if (key === 'month') {
-        Call(SetPrototypeAdd, result, ['monthCode']);
-      } else if (key === 'monthCode') {
-        Call(SetPrototypeAdd, result, ['month']);
-      }
+    if (fields.era !== undefined) Call(SetPrototypeAdd, result, ['era']);
+    if (fields.eraYear !== undefined) Call(SetPrototypeAdd, result, ['eraYear']);
+    if (fields.year !== undefined) Call(SetPrototypeAdd, result, ['year']);
+    if (fields.month !== undefined || fields.monthCode !== undefined) {
+      Call(SetPrototypeAdd, result, ['month']);
+      Call(SetPrototypeAdd, result, ['monthCode']);
     }
+    if (fields.day !== undefined) Call(SetPrototypeAdd, result, ['day']);
+    if (fields.hour !== undefined) Call(SetPrototypeAdd, result, ['hour']);
+    if (fields.minute !== undefined) Call(SetPrototypeAdd, result, ['minute']);
+    if (fields.second !== undefined) Call(SetPrototypeAdd, result, ['second']);
+    if (fields.millisecond !== undefined) Call(SetPrototypeAdd, result, ['millisecond']);
+    if (fields.microsecond !== undefined) Call(SetPrototypeAdd, result, ['microsecond']);
+    if (fields.nanosecond !== undefined) Call(SetPrototypeAdd, result, ['nanosecond']);
     return arrayFromSet(result);
   },
   dateAdd({ year, month, day }, { years = 0, months = 0, weeks = 0, days = 0 }, overflow) {
@@ -213,14 +216,14 @@ impl['iso8601'] = {
       let candidateYears = two.year - one.year;
       if (candidateYears !== 0) candidateYears -= sign;
       // loops at most twice
-      while (!ISODateSurpasses(sign, one, two, candidateYears, 0, 0, 0)) {
+      while (!ISODateSurpasses(sign, one, candidateYears, 0, two)) {
         years = candidateYears;
         candidateYears += sign;
       }
 
       let candidateMonths = sign;
       // loops at most 12 times
-      while (!ISODateSurpasses(sign, one, two, years, candidateMonths, 0, 0)) {
+      while (!ISODateSurpasses(sign, one, years, candidateMonths, two)) {
         months = candidateMonths;
         candidateMonths += sign;
       }
@@ -236,8 +239,8 @@ impl['iso8601'] = {
 
     let weeks = 0;
     let days =
-      ES.ISODateToEpochDays(two.year, two.month - 1, two.day) -
-      ES.ISODateToEpochDays(constrained.year, constrained.month - 1, constrained.day);
+      ES.ISODateToEpochDays(two.year, two.month, two.day) -
+      ES.ISODateToEpochDays(constrained.year, constrained.month, constrained.day);
 
     if (largestUnit === 'week') {
       weeks = MathTrunc(days / 7);
@@ -1253,8 +1256,8 @@ const nonIsoHelperBase = {
     const oneIso = this.calendarToIsoDate(calendarOne, 'constrain', cache);
     const twoIso = this.calendarToIsoDate(calendarTwo, 'constrain', cache);
     return (
-      ES.ISODateToEpochDays(twoIso.year, twoIso.month - 1, twoIso.day) -
-      ES.ISODateToEpochDays(oneIso.year, oneIso.month - 1, oneIso.day)
+      ES.ISODateToEpochDays(twoIso.year, twoIso.month, twoIso.day) -
+      ES.ISODateToEpochDays(oneIso.year, oneIso.month, oneIso.day)
     );
   },
   // This must be overridden to provide a hardcoded ISO reference year for the
@@ -2101,9 +2104,8 @@ const helperChinese = ObjectAssign({}, nonIsoHelperBase, {
     const calendarFields = { day: undefined, monthString: undefined, relatedYear: undefined };
     const dateTimeFormat = this.getFormatter();
     const updateCalendarFields = () => {
-      // Abuse GetUTCEpochMilliseconds for automatic rebalancing.
-      const isoNumbers = { year: effectiveYear, month: 2, day: daysPastJan31 };
-      const ms = ES.GetUTCEpochMilliseconds(isoNumbers, midnightTimeRecord);
+      // Abuse ISODateToEpochDays for automatic rebalancing.
+      const ms = ES.ISODateToEpochDays(effectiveYear, 2, daysPastJan31) * ES.MILLISECONDS_PER_DAY;
       const fieldEntries = Call(IntlDateTimeFormatPrototypeFormatToParts, dateTimeFormat, [ms]);
       for (let i = 0; i < fieldEntries.length; i++) {
         const { type, value } = fieldEntries[i];
@@ -2307,47 +2309,35 @@ const nonIsoGeneralImpl = {
     cache.setObject(result);
     return result;
   },
-  fieldKeysToIgnore(keys) {
+  fieldKeysToIgnore(fields) {
     const result = new SetCtor();
-    for (let ix = 0; ix < keys.length; ix++) {
-      const key = keys[ix];
-      Call(SetPrototypeAdd, result, [key]);
-      switch (key) {
-        case 'era':
-          Call(SetPrototypeAdd, result, ['eraYear']);
-          Call(SetPrototypeAdd, result, ['year']);
-          break;
-        case 'eraYear':
-          Call(SetPrototypeAdd, result, ['era']);
-          Call(SetPrototypeAdd, result, ['year']);
-          break;
-        case 'year':
-          Call(SetPrototypeAdd, result, ['era']);
-          Call(SetPrototypeAdd, result, ['eraYear']);
-          break;
-        case 'month':
-          Call(SetPrototypeAdd, result, ['monthCode']);
-          // See https://github.com/tc39/proposal-temporal/issues/1784
-          if (this.helper.erasBeginMidYear) {
-            Call(SetPrototypeAdd, result, ['era']);
-            Call(SetPrototypeAdd, result, ['eraYear']);
-          }
-          break;
-        case 'monthCode':
-          Call(SetPrototypeAdd, result, ['month']);
-          if (this.helper.erasBeginMidYear) {
-            Call(SetPrototypeAdd, result, ['era']);
-            Call(SetPrototypeAdd, result, ['eraYear']);
-          }
-          break;
-        case 'day':
-          if (this.helper.erasBeginMidYear) {
-            Call(SetPrototypeAdd, result, ['era']);
-            Call(SetPrototypeAdd, result, ['eraYear']);
-          }
-          break;
+    if (fields.era !== undefined || fields.eraYear !== undefined || fields.year !== undefined) {
+      Call(SetPrototypeAdd, result, ['era']);
+      Call(SetPrototypeAdd, result, ['eraYear']);
+      Call(SetPrototypeAdd, result, ['year']);
+    }
+    if (fields.month !== undefined || fields.monthCode !== undefined) {
+      Call(SetPrototypeAdd, result, ['month']);
+      Call(SetPrototypeAdd, result, ['monthCode']);
+      // See https://github.com/tc39/proposal-temporal/issues/1784
+      if (this.helper.erasBeginMidYear) {
+        Call(SetPrototypeAdd, result, ['era']);
+        Call(SetPrototypeAdd, result, ['eraYear']);
       }
     }
+    if (fields.day !== undefined) {
+      Call(SetPrototypeAdd, result, ['day']);
+      if (this.helper.erasBeginMidYear) {
+        Call(SetPrototypeAdd, result, ['era']);
+        Call(SetPrototypeAdd, result, ['eraYear']);
+      }
+    }
+    if (fields.hour !== undefined) Call(SetPrototypeAdd, result, ['hour']);
+    if (fields.minute !== undefined) Call(SetPrototypeAdd, result, ['minute']);
+    if (fields.second !== undefined) Call(SetPrototypeAdd, result, ['second']);
+    if (fields.millisecond !== undefined) Call(SetPrototypeAdd, result, ['millisecond']);
+    if (fields.microsecond !== undefined) Call(SetPrototypeAdd, result, ['microsecond']);
+    if (fields.nanosecond !== undefined) Call(SetPrototypeAdd, result, ['nanosecond']);
     return arrayFromSet(result);
   },
   dateAdd(isoDate, { years, months, weeks, days }, overflow) {
@@ -2369,8 +2359,7 @@ const nonIsoGeneralImpl = {
     if (largestUnit === 'week' || largestUnit === 'day') {
       let weeks = 0;
       let days =
-        ES.ISODateToEpochDays(two.year, two.month - 1, two.day) -
-        ES.ISODateToEpochDays(one.year, one.month - 1, one.day);
+        ES.ISODateToEpochDays(two.year, two.month, two.day) - ES.ISODateToEpochDays(one.year, one.month, one.day);
 
       if (largestUnit === 'week') {
         weeks = MathTrunc(days / 7);

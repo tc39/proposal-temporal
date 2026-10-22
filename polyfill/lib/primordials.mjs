@@ -42,12 +42,10 @@ export const {
 export const {
   from: ArrayFrom,
   prototype: {
-    concat: ArrayPrototypeConcat,
     filter: ArrayPrototypeFilter,
     every: ArrayPrototypeEvery,
     find: ArrayPrototypeFind,
     findIndex: ArrayPrototypeFindIndex,
-    flatMap: ArrayPrototypeFlatMap,
     forEach: ArrayPrototypeForEach,
     includes: ArrayPrototypeIncludes,
     indexOf: ArrayPrototypeIndexOf,
@@ -56,7 +54,8 @@ export const {
     push: ArrayPrototypePush,
     reduce: ArrayPrototypeReduce,
     slice: ArrayPrototypeSlice,
-    sort: ArrayPrototypeSort
+    sort: ArrayPrototypeSort,
+    unshift: ArrayPrototypeUnshift
   }
 } = Array;
 export const {
@@ -79,8 +78,7 @@ export const {
     setUTCMilliseconds: DatePrototypeSetUTCMilliseconds,
     toLocaleDateString: DatePrototypeToLocaleDateString,
     valueOf: DatePrototypeValueOf
-  },
-  UTC: DateUTC
+  }
 } = Date;
 export const {
   supportedValuesOf: IntlSupportedValuesOf,

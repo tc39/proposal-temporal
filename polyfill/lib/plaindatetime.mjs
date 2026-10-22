@@ -26,25 +26,21 @@ export class PlainDateTime {
     nanosecond = 0,
     calendar = 'iso8601'
   ) {
-    const year = ES.ToIntegerWithTruncation(isoYear);
-    const month = ES.ToIntegerWithTruncation(isoMonth);
-    const day = ES.ToIntegerWithTruncation(isoDay);
-    hour = ES.ToIntegerWithTruncation(hour);
-    minute = ES.ToIntegerWithTruncation(minute);
-    second = ES.ToIntegerWithTruncation(second);
-    millisecond = ES.ToIntegerWithTruncation(millisecond);
-    microsecond = ES.ToIntegerWithTruncation(microsecond);
-    nanosecond = ES.ToIntegerWithTruncation(nanosecond);
+    const year = ES.SnapToInteger(isoYear, 'truncate', 'isoYear');
+    const month = ES.SnapToInteger(isoMonth, 'truncate', 'isoMonth');
+    const day = ES.SnapToInteger(isoDay, 'truncate', 'isoDay');
+    hour = ES.SnapToInteger(hour, 'truncate', 'hour');
+    minute = ES.SnapToInteger(minute, 'truncate', 'minute');
+    second = ES.SnapToInteger(second, 'truncate', 'second');
+    millisecond = ES.SnapToInteger(millisecond, 'truncate', 'millisecond');
+    microsecond = ES.SnapToInteger(microsecond, 'truncate', 'microsecond');
+    nanosecond = ES.SnapToInteger(nanosecond, 'truncate', 'nanosecond');
     calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
 
-    ES.RejectDateTime(year, month, day, hour, minute, second, millisecond, microsecond, nanosecond);
-
-    ES.CreateTemporalDateTimeSlots(
-      this,
-      { isoDate: { year, month, day }, time: { hour, minute, second, millisecond, microsecond, nanosecond } },
-      calendar
-    );
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    const time = ES.CreateTimeRecord(hour, minute, second, millisecond, microsecond, nanosecond);
+    ES.CreateTemporalDateTimeSlots(this, { isoDate, time }, calendar);
   }
   get calendarId() {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
@@ -163,8 +159,8 @@ export class PlainDateTime {
     const partialDateTime = ES.PrepareCalendarFields(
       calendar,
       temporalDateTimeLike,
-      ['year', 'month', 'monthCode', 'day'],
-      ['hour', 'minute', 'second', 'millisecond', 'microsecond', 'nanosecond'],
+      'date-fields',
+      'time-fields',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialDateTime);
@@ -176,7 +172,7 @@ export class PlainDateTime {
   withPlainTime(temporalTime = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');
     const time = ES.ToTimeRecordOrMidnight(temporalTime);
-    const isoDateTime = ES.CombineISODateAndTimeRecord(GetSlot(this, ISO_DATE_TIME).isoDate, time);
+    const isoDateTime = { isoDate: GetSlot(this, ISO_DATE_TIME).isoDate, time };
     return ES.CreateTemporalDateTime(isoDateTime, GetSlot(this, CALENDAR));
   }
   withCalendar(calendar) {
@@ -188,7 +184,7 @@ export class PlainDateTime {
       isoDate: { year, month, day },
       time
     } = GetSlot(this, ISO_DATE_TIME);
-    return ES.CreateTemporalDateTime(ES.CombineISODateAndTimeRecord({ year, month, day }, time), calendar);
+    return ES.CreateTemporalDateTime({ isoDate: { year, month, day }, time }, calendar);
   }
   add(temporalDurationLike, options = undefined) {
     if (!ES.IsTemporalDateTime(this)) throw new TypeErrorCtor('invalid receiver');

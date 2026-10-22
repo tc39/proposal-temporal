@@ -44,8 +44,8 @@ export class TimeDuration {
     return new TimeDuration(totalNs);
   }
 
-  static fromEpochNsDiff(epochNs1, epochNs2) {
-    const diff = bigInt(epochNs1).subtract(epochNs2);
+  static fromEpochNsDiff(epochNanosecondsFrom, epochNanosecondsTo) {
+    const diff = bigInt(epochNanosecondsTo).subtract(epochNanosecondsFrom);
     // No extra validate step. Should instead fail assertion if too big
     return new TimeDuration(diff);
   }
