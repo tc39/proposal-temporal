@@ -3843,7 +3843,7 @@ export function DifferenceZonedDateTimeWithTotal(epochNanosecondsFrom, epochNano
 }
 
 export function GetDifferenceSettings(op, options, group, disallowed, fallbackSmallest, smallestLargestDefaultUnit) {
-  const ALLOWED_UNITS = Call(
+  const allowedUnits = Call(
     ArrayPrototypeFilter,
     ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'],
     [
@@ -3862,7 +3862,7 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
   if (!largestUnit) largestUnit = 'auto';
   if (Call(ArrayPrototypeIncludes, disallowed, [largestUnit])) {
     throw new RangeErrorCtor(
-      `largestUnit must be one of ${Call(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${largestUnit}`
+      `largestUnit must be one of ${Call(ArrayPrototypeJoin, allowedUnits, [', '])}, not ${largestUnit}`
     );
   }
 
@@ -3872,7 +3872,7 @@ export function GetDifferenceSettings(op, options, group, disallowed, fallbackSm
   if (!smallestUnit) smallestUnit = fallbackSmallest;
   if (Call(ArrayPrototypeIncludes, disallowed, [smallestUnit])) {
     throw new RangeErrorCtor(
-      `smallestUnit must be one of ${Call(ArrayPrototypeJoin, ALLOWED_UNITS, [', '])}, not ${smallestUnit}`
+      `smallestUnit must be one of ${Call(ArrayPrototypeJoin, allowedUnits, [', '])}, not ${smallestUnit}`
     );
   }
 
