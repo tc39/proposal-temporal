@@ -10,8 +10,8 @@
   "devDependencies": {
     "@tc39/ecma262-biblio": "=2.1.3018",
     "@tc39/ecma402-biblio": "=2.1.1211",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
     "ecmarkup": "^22.0.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
