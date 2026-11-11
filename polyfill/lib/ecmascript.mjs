@@ -2930,11 +2930,14 @@ function AssertISODateTimeWithinLimits(isoDateTime) {
   );
 }
 
-// In the spec, IsValidEpochNanoseconds returns a boolean and call sites are
-// responsible for throwing. In the polyfill, ValidateEpochNanoseconds takes its
-// place so that we can DRY the throwing code.
+export function IsWithinEpochNanosecondsInterval(epochNanoseconds) {
+  return !(epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX));
+}
+
+// Polyfill-only convenience function replacing some call sites of
+// IsWithinEpochNanosecondsInterval so that we can DRY the throwing code.
 export function ValidateEpochNanoseconds(epochNanoseconds) {
-  if (epochNanoseconds.lesser(NS_MIN) || epochNanoseconds.greater(NS_MAX)) {
+  if (!IsWithinEpochNanosecondsInterval(epochNanoseconds)) {
     throw new RangeErrorCtor('date/time value is outside of supported range');
   }
 }
