@@ -575,3 +575,10 @@ This calendar is currently not built in to JS environments.
 This serves as an example of how to build support for calendars that are not widespread in browsers.
 
 → [Nepali calendar](cookbook-nepali-calendar.md)
+
+### Custom time zone rules with iCalendar data
+
+Use Temporal to perform time zone calculations with time zones not in the time zone database.
+The iCalendar data format allows specifying custom rules for time zone UTC offset changes.
+
+→ [iCalendar time zones](cookbook-icalendar-time-zone.md)
