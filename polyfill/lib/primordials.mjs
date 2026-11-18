@@ -42,7 +42,6 @@ export const {
 export const {
   from: ArrayFrom,
   prototype: {
-    concat: ArrayPrototypeConcat,
     filter: ArrayPrototypeFilter,
     every: ArrayPrototypeEvery,
     find: ArrayPrototypeFind,
@@ -79,8 +78,7 @@ export const {
     setUTCMilliseconds: DatePrototypeSetUTCMilliseconds,
     toLocaleDateString: DatePrototypeToLocaleDateString,
     valueOf: DatePrototypeValueOf
-  },
-  UTC: DateUTC
+  }
 } = Date;
 export const {
   supportedValuesOf: IntlSupportedValuesOf,

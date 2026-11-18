@@ -6,6 +6,11 @@ intl402/DateTimeFormat/prototype/format/timedatestyle-en.js
 # Temporal test262 runner does not support $262.createRealm()
 intl402/DateTimeFormat/proto-from-ctor-realm.js
 
+# Normative-optional parts of DateTimeFormat are not implemented
+intl402/DateTimeFormat/intl-legacy-constructed-symbol-on-unwrap.js
+intl402/DateTimeFormat/intl-legacy-constructed-symbol-property.js
+intl402/DateTimeFormat/intl-legacy-constructed-symbol.js
+
 # https://github.com/tc39/ecma402/issues/402
 intl402/DateTimeFormat/prototype/resolvedOptions/hourCycle-default.js
 

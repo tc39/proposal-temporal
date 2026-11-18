@@ -54,16 +54,16 @@ export class Duration {
     microseconds = 0,
     nanoseconds = 0
   ) {
-    years = ES.ToIntegerIfIntegral(years);
-    months = ES.ToIntegerIfIntegral(months);
-    weeks = ES.ToIntegerIfIntegral(weeks);
-    days = ES.ToIntegerIfIntegral(days);
-    hours = ES.ToIntegerIfIntegral(hours);
-    minutes = ES.ToIntegerIfIntegral(minutes);
-    seconds = ES.ToIntegerIfIntegral(seconds);
-    milliseconds = ES.ToIntegerIfIntegral(milliseconds);
-    microseconds = ES.ToIntegerIfIntegral(microseconds);
-    nanoseconds = ES.ToIntegerIfIntegral(nanoseconds);
+    years = ES.SnapToInteger(years, 'reject', 'years');
+    months = ES.SnapToInteger(months, 'reject', 'months');
+    weeks = ES.SnapToInteger(weeks, 'reject', 'weeks');
+    days = ES.SnapToInteger(days, 'reject', 'days');
+    hours = ES.SnapToInteger(hours, 'reject', 'hours');
+    minutes = ES.SnapToInteger(minutes, 'reject', 'minutes');
+    seconds = ES.SnapToInteger(seconds, 'reject', 'seconds');
+    milliseconds = ES.SnapToInteger(milliseconds, 'reject', 'milliseconds');
+    microseconds = ES.SnapToInteger(microseconds, 'reject', 'microseconds');
+    nanoseconds = ES.SnapToInteger(nanoseconds, 'reject', 'nanoseconds');
 
     ES.RejectDuration(years, months, weeks, days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 
@@ -229,7 +229,7 @@ export class Duration {
     };
     const maximum = maximumIncrements[smallestUnit];
     if (maximum !== undefined) ES.ValidateTemporalRoundingIncrement(roundingIncrement, maximum, false);
-    if (roundingIncrement > 1 && ES.TemporalUnitCategory(smallestUnit) === 'date' && largestUnit !== smallestUnit) {
+    if (roundingIncrement > 1 && ES.IsDateUnit(smallestUnit) && largestUnit !== smallestUnit) {
       throw new RangeErrorCtor('For calendar units with roundingIncrement > 1, use largestUnit = smallestUnit');
     }
 
@@ -249,7 +249,7 @@ export class Duration {
         smallestUnit,
         roundingMode
       );
-      if (ES.TemporalUnitCategory(largestUnit) === 'date') largestUnit = 'hour';
+      if (ES.IsDateUnit(largestUnit)) largestUnit = 'hour';
       return ES.TemporalDurationFromInternal(duration, largestUnit);
     }
 
@@ -263,8 +263,8 @@ export class Duration {
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');
 
-      const isoDateTime = ES.CombineISODateAndTimeRecord(isoRelativeToDate, ES.MidnightTimeRecord());
-      const targetDateTime = ES.CombineISODateAndTimeRecord(targetDate, targetTime);
+      const isoDateTime = { isoDate: isoRelativeToDate, time: ES.MidnightTimeRecord() };
+      const targetDateTime = { isoDate: targetDate, time: targetTime };
       duration = ES.DifferencePlainDateTimeWithRounding(
         isoDateTime,
         targetDateTime,
@@ -290,9 +290,8 @@ export class Duration {
       // Round in nanosecond (bigInt) space to avoid floating-point
       // precision loss when the sub-day remainder is tiny relative to
       // the number of days.
-      const DAY_NANOS = 86400 * 1e9;
       const rounded = ES.RoundTimeDuration(internalDuration.time, roundingIncrement, 'day', roundingMode);
-      const { quotient: days } = rounded.divmod(DAY_NANOS);
+      const { quotient: days } = rounded.divmod(ES.NANOSECONDS_PER_DAY);
       const dateDuration = { years: 0, months: 0, weeks: 0, days };
       internalDuration = ES.CombineDateAndTimeDuration(dateDuration, TimeDuration.ZERO);
     } else {
@@ -335,8 +334,8 @@ export class Duration {
       const dateDuration = ES.AdjustDateDurationRecord(duration.date, targetTime.deltaDays);
       const targetDate = ES.CalendarDateAdd(calendar, isoRelativeToDate, dateDuration, 'constrain');
 
-      const isoDateTime = ES.CombineISODateAndTimeRecord(isoRelativeToDate, ES.MidnightTimeRecord());
-      const targetDateTime = ES.CombineISODateAndTimeRecord(targetDate, targetTime);
+      const isoDateTime = { isoDate: isoRelativeToDate, time: ES.MidnightTimeRecord() };
+      const targetDateTime = { isoDate: targetDate, time: targetTime };
       return ES.DifferencePlainDateTimeWithTotal(isoDateTime, targetDateTime, calendar, unit);
     }
 
@@ -420,10 +419,7 @@ export class Duration {
     const duration1 = ES.ToInternalDurationRecord(one);
     const duration2 = ES.ToInternalDurationRecord(two);
 
-    if (
-      zonedRelativeTo &&
-      (ES.TemporalUnitCategory(largestUnit1) === 'date' || ES.TemporalUnitCategory(largestUnit2) === 'date')
-    ) {
+    if (zonedRelativeTo && (ES.IsDateUnit(largestUnit1) || ES.IsDateUnit(largestUnit2))) {
       const timeZone = GetSlot(zonedRelativeTo, TIME_ZONE);
       const calendar = GetSlot(zonedRelativeTo, CALENDAR);
       const epochNs = GetSlot(zonedRelativeTo, EPOCHNANOSECONDS);

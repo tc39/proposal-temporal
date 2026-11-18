@@ -7,14 +7,14 @@ import { CALENDAR, GetSlot, ISO_DATE } from './slots.mjs';
 
 export class PlainYearMonth {
   constructor(isoYear, isoMonth, calendar = 'iso8601', referenceISODay = 1) {
-    const year = ES.ToIntegerWithTruncation(isoYear);
-    const month = ES.ToIntegerWithTruncation(isoMonth);
+    const year = ES.SnapToInteger(isoYear, 'truncate', 'isoYear');
+    const month = ES.SnapToInteger(isoMonth, 'truncate', 'isoMonth');
     calendar = ES.RequireString(calendar);
     calendar = ES.CanonicalizeCalendar(calendar);
-    const day = ES.ToIntegerWithTruncation(referenceISODay);
+    const day = ES.SnapToInteger(referenceISODay, 'truncate', 'referenceISODay');
 
-    ES.RejectISODate(year, month, day);
-    ES.CreateTemporalYearMonthSlots(this, { year, month, day }, calendar);
+    const isoDate = ES.CreateISODateRecord(year, month, day);
+    ES.CreateTemporalYearMonthSlots(this, isoDate, calendar);
   }
   get year() {
     if (!ES.IsTemporalYearMonth(this)) throw new TypeErrorCtor('invalid receiver');
@@ -77,8 +77,8 @@ export class PlainYearMonth {
     const partialYearMonth = ES.PrepareCalendarFields(
       calendar,
       temporalYearMonthLike,
-      ['year', 'month', 'monthCode'],
-      [],
+      'year-month-fields',
+      'no-non-calendar-fields',
       'partial'
     );
     fields = ES.CalendarMergeFields(calendar, fields, partialYearMonth);
@@ -132,7 +132,13 @@ export class PlainYearMonth {
     const calendar = GetSlot(this, CALENDAR);
 
     const fields = ES.ISODateToFields(calendar, GetSlot(this, ISO_DATE), 'year-month');
-    const inputFields = ES.PrepareCalendarFields(calendar, item, ['day'], [], []);
+    const inputFields = ES.PrepareCalendarFields(
+      calendar,
+      item,
+      'only-day',
+      'no-non-calendar-fields',
+      'no-required-fields'
+    );
     const mergedFields = ES.CalendarMergeFields(calendar, fields, inputFields);
     const isoDate = ES.CalendarDateFromFields(calendar, mergedFields, 'constrain');
     return ES.CreateTemporalDate(isoDate, calendar);

@@ -61,24 +61,24 @@ describe('Normalized time duration', () => {
 
   describe('fromEpochNsDiff()', () => {
     it('basic', () => {
-      check(TimeDuration.fromEpochNsDiff(1695930183_043174412n, 1695930174_412168313n), 8, 631006099);
-      check(TimeDuration.fromEpochNsDiff(1695930174_412168313n, 1695930183_043174412n), -8, -631006099);
+      check(TimeDuration.fromEpochNsDiff(1695930174_412168313n, 1695930183_043174412n), 8, 631006099);
+      check(TimeDuration.fromEpochNsDiff(1695930183_043174412n, 1695930174_412168313n), -8, -631006099);
     });
 
     it('pre-epoch', () => {
-      check(TimeDuration.fromEpochNsDiff(-80000_987_654_321n, -86400_123_456_789n), 6399, 135802468);
-      check(TimeDuration.fromEpochNsDiff(-86400_123_456_789n, -80000_987_654_321n), -6399, -135802468);
+      check(TimeDuration.fromEpochNsDiff(-86400_123_456_789n, -80000_987_654_321n), 6399, 135802468);
+      check(TimeDuration.fromEpochNsDiff(-80000_987_654_321n, -86400_123_456_789n), -6399, -135802468);
     });
 
     it('cross-epoch', () => {
-      check(TimeDuration.fromEpochNsDiff(1_000_001_000n, -2_000_002_000n), 3, 3000);
-      check(TimeDuration.fromEpochNsDiff(-2_000_002_000n, 1_000_001_000n), -3, -3000);
+      check(TimeDuration.fromEpochNsDiff(-2_000_002_000n, 1_000_001_000n), 3, 3000);
+      check(TimeDuration.fromEpochNsDiff(1_000_001_000n, -2_000_002_000n), -3, -3000);
     });
 
     it('maximum epoch difference', () => {
       const max = 86400_0000_0000_000_000_000n;
-      check(TimeDuration.fromEpochNsDiff(max, -max), 172800_0000_0000, 0);
-      check(TimeDuration.fromEpochNsDiff(-max, max), -172800_0000_0000, 0);
+      check(TimeDuration.fromEpochNsDiff(-max, max), 172800_0000_0000, 0);
+      check(TimeDuration.fromEpochNsDiff(max, -max), -172800_0000_0000, 0);
     });
   });
 
