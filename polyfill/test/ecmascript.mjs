@@ -304,6 +304,34 @@ describe('ECMAScript', () => {
       equal(ES.epochNsToMs(minus999999, 'ceil'), -1e12);
     });
   });
+
+  describe('time zone transitions', () => {
+    // https://github.com/tc39/proposal-temporal/issues/3332
+    // Africa/El_Aaiun has two transitions 16 days 23 hours apart, in 1976.
+    const ns = (iso) => bigInt(Date.parse(iso)).multiply(1e6);
+    const first = ns('1976-04-14T01:00:00Z');
+    const second = ns('1976-05-01T00:00:00Z');
+
+    it('finds the next transition when two are less than 17 days apart', () => {
+      equal(
+        ES.GetNamedTimeZoneNextTransition('Africa/El_Aaiun', ns('1976-04-14T00:30:00Z')).toString(),
+        first.toString()
+      );
+      equal(
+        ES.GetNamedTimeZoneNextTransition('Africa/El_Aaiun', ns('1976-03-28T00:30:00Z')).toString(),
+        first.toString()
+      );
+      equal(ES.GetNamedTimeZoneNextTransition('Africa/El_Aaiun', first).toString(), second.toString());
+    });
+
+    it('finds the previous transition when two are less than 17 days apart', () => {
+      equal(
+        ES.GetNamedTimeZonePreviousTransition('Africa/El_Aaiun', ns('1976-05-01T00:30:00Z')).toString(),
+        second.toString()
+      );
+      equal(ES.GetNamedTimeZonePreviousTransition('Africa/El_Aaiun', second).toString(), first.toString());
+    });
+  });
 });
 
 import { normalize } from 'path';

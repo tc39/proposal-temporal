@@ -2463,7 +2463,7 @@ export function GetNamedTimeZoneDateTimeParts(id, epochNanoseconds) {
 // accommodate twitchy zones, albeit at a performance penalty. 19 days is the
 // default window, past which we'd need to start adding many more special cases.
 function searchWindowForTransitions(id) {
-  if (id === 'Africa/El_Aaiun') return MILLISECONDS_PER_DAY * 17;
+  if (id === 'Africa/El_Aaiun') return MILLISECONDS_PER_DAY * 16;
   if (id === 'America/Argentina/Tucuman') return MILLISECONDS_PER_DAY * 12;
   if (id === 'Europe/Tirane') return MILLISECONDS_PER_DAY * 11;
   if (id === 'Europe/Riga') return MILLISECONDS_PER_DAY * 10;
