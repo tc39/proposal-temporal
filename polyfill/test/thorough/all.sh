@@ -17,6 +17,7 @@ there_were_errors=0
 for test in \
   calendardaymath \
   calendarisolike \
+  calendardifference \
   dateaddition \
   datedifference \
   datedifferencerounding \

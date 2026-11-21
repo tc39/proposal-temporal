@@ -1188,10 +1188,23 @@ const nonIsoHelperBase = {
     do {
       months += sign;
       current = next;
-      next = this.addMonthsCalendar(current, sign, 'constrain', cache);
-      // In case the day was constrained down, un-constrain it (even if that's
-      // not a real date)
-      next.day = calendarOne.day;
+      // Only the year and month of the next month are compared (its day is
+      // un-constrained to calendarOne.day), so step them arithmetically.
+      // addMonthsCalendar() would have to format an ISO date outside the
+      // supported range when calendarTwo is in the first or last month of it,
+      // and it returns cached calendar dates, so mutating next would corrupt
+      // later lookups that hit the same cache entry.
+      let { year, month } = current;
+      month += sign;
+      if (month < 1) {
+        year -= 1;
+        month = this.monthsInYear({ year }, cache);
+      } else if (month > this.monthsInYear({ year }, cache)) {
+        year += 1;
+        month = 1;
+      }
+      // The day may not exist in that month; that's fine for the comparison.
+      next = { year, month, day: calendarOne.day };
     } while (!CompareSurpasses(sign, next.year, next.month, next.day, calendarTwo));
     months -= sign; // correct for loop above which overshoots by 1
     const days = this.calendarDaysUntil(current, calendarTwo, cache);
