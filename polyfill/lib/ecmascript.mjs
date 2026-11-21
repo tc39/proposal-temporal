@@ -1957,7 +1957,9 @@ export function DisambiguatePossibleEpochNanoseconds(possibleEpochNs, timeZone, 
     }
   }
 
-  if (disambiguation === 'reject') throw new RangeErrorCtor('multiple instants found');
+  if (disambiguation === 'reject') {
+    throw new RangeErrorCtor('no instant found: the wall-clock time falls in a time zone gap');
+  }
   const utcns = GetUTCEpochNanoseconds(isoDateTime);
 
   const dayBefore = utcns.minus(NANOSECONDS_PER_DAY);
